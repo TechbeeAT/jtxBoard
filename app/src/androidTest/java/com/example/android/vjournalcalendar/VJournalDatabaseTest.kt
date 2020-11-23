@@ -59,9 +59,10 @@ class SleepDatabaseTest {
         var vJournalItem = vJournalItem()
         vJournalItem.description = "asdf"
         vJournalItem.comment = "asfd"
-        vJournalItem = VJournalDao.insert(vJournalItem)
+        vJournalItem.id = VJournalDao.insert(vJournalItem)
         val retrievedItem = VJournalDao.get(vJournalItem.id)
         assertEquals(vJournalItem, retrievedItem)
+
     }
 
 
@@ -71,6 +72,9 @@ class SleepDatabaseTest {
     fun closeDb() {
         db.close()
     }
+
+
+
 
 }
 

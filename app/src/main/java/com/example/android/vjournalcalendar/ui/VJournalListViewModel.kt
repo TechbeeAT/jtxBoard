@@ -19,8 +19,9 @@ class VJournalListViewModel(
 
 
     init {
-        initializeVJournalList()
         vjournal_item.value = vJournalItem(1, "desc", "comm")
+        initializeVJournalList()
+
 
 
     }
@@ -29,9 +30,11 @@ class VJournalListViewModel(
 
     private fun initializeVJournalList() {
         viewModelScope.launch {
-            var vJournalItemTest = vJournalItem(1, "TestDescription", "TestComment")
+            var vJournalItemTest = vJournalItem()
+            vJournalItemTest.comment = "coment"
+            vJournalItemTest.description = "desc"
             database.insert(vJournalItemTest)
-            //vjournal_item = database.getTestVJournalFromDatabase()
+            vjournal_item.value = database.getTestVJournalFromDatabase()
 
         }
     }

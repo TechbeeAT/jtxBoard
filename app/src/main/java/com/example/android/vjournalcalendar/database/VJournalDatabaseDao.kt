@@ -30,17 +30,17 @@ interface VJournalDatabaseDao {
     @Query("SELECT * FROM vjournalitems LIMIT 1")
     suspend fun getTestVJournalFromDatabase(): vJournalItem?
 
-    @Insert
-    suspend fun insert(vJournalItem: vJournalItem): vJournalItem
-
-    @Update
-    suspend fun update(vJournalItem: vJournalItem)
-
     @Query("SELECT * from vjournalitems WHERE id = :key")
     suspend fun get(key: Long): vJournalItem?
 
     @Query("SELECT * FROM vjournalitems ORDER BY id DESC")
-    fun getAllVJournalItems(): List<vJournalItem>
+    suspend fun getAllVJournalItems(): List<vJournalItem>
+
+    @Insert
+    suspend fun insert(vJournalItem: vJournalItem): Long
+
+    @Update
+    suspend fun update(vJournalItem: vJournalItem)
 
 }
 
