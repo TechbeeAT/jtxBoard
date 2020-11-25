@@ -10,7 +10,7 @@ data class vJournalItem(
         var id: Long = 0L,
 
         var description: String = "",
-        //var dtstamp: Long,
+        var dtstamp: Long = 0L,
         //var dtstart: Long,
         //var organizer: String,
         //var uid: Long,

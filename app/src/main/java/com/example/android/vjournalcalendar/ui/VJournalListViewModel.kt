@@ -19,10 +19,8 @@ class VJournalListViewModel(
 
 
     init {
-        vjournal_item.value = vJournalItem(1, "desc", "comm")
+        vjournal_item.value = vJournalItem(1, "desc", System.currentTimeMillis(),"comm")
         initializeVJournalList()
-
-
 
     }
 
@@ -31,8 +29,9 @@ class VJournalListViewModel(
     private fun initializeVJournalList() {
         viewModelScope.launch {
             var vJournalItemTest = vJournalItem()
-            vJournalItemTest.comment = "coment"
+            vJournalItemTest.comment = "comet"
             vJournalItemTest.description = "desc"
+            vJournalItemTest.dtstamp = System.currentTimeMillis()
             database.insert(vJournalItemTest)
             vjournal_item.value = database.getTestVJournalFromDatabase()
 
