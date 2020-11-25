@@ -18,10 +18,6 @@ package com.example.android.vjournalcalendar
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.android.vjournalcalendar.database.vJournalItem
-import com.example.android.vjournalcalendar.ui.VJournalListAdapter
 
 
 /**
@@ -48,32 +44,11 @@ import com.example.android.vjournalcalendar.ui.VJournalListAdapter
  */
 class MainActivity : AppCompatActivity() {
 
-    private var recyclerView: RecyclerView? = null
-    private var linearLayoutManager: LinearLayoutManager? = null
-    private var vJournalList: MutableList<vJournalItem>? = ArrayList()
-    private var vJournalListAdapter: VJournalListAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-
-
-        recyclerView = findViewById(R.id.vjournal_list_items_recycler_view)
-        linearLayoutManager = LinearLayoutManager(applicationContext)
-        recyclerView?.layoutManager = linearLayoutManager
-
-        recyclerView?.setHasFixedSize(true)
-
-        vJournalList?.add(vJournalItem(1, "desc1", System.currentTimeMillis(),"comm"))
-        vJournalList?.add(vJournalItem(2, "desc2", System.currentTimeMillis(),"comm"))
-        vJournalList?.add(vJournalItem(3, "desc3", System.currentTimeMillis(),"comm"))
-        vJournalList?.add(vJournalItem(4, "desc4", System.currentTimeMillis(),"comm"))
-
-        vJournalListAdapter = vJournalList?.let { VJournalListAdapter(applicationContext, it) }
-        recyclerView?.adapter = vJournalListAdapter
-
-
 
 
     }

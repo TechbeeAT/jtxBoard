@@ -5,17 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.VJournalListFragment">
-
-
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/vjournal_list_items_recycler_view"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
