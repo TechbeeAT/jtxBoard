@@ -35,7 +35,7 @@ interface VJournalDatabaseDao {
     suspend fun get(key: Long): vJournalItem?
 
     @Query("SELECT * FROM vjournalitems ORDER BY id DESC")
-    suspend fun getAllVJournalItems(): List<vJournalItem>
+    fun getAllVJournalItems(): LiveData<List<vJournalItem>>
 
     @Insert
     suspend fun insert(vJournalItem: vJournalItem): Long

@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 
 import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
 import com.example.android.vjournalcalendar.database.vJournalItem
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -15,29 +16,29 @@ class VJournalListViewModel(
         val database: VJournalDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
-    var vjournal_item = MutableLiveData<vJournalItem?>()
+        var vjournalList: LiveData<List<vJournalItem>> = database.getAllVJournalItems()
+        var vjournaListCount: Int = vjournalList.value?.count() ?: 0
 
 
     init {
-        vjournal_item.value = vJournalItem(1, "desc", System.currentTimeMillis(),"comm")
-        initializeVJournalList()
 
-    }
-
-
-
-    private fun initializeVJournalList() {
         viewModelScope.launch {
-            var vJournalItemTest = vJournalItem()
-            vJournalItemTest.comment = "comet"
-            vJournalItemTest.description = "desc"
-            vJournalItemTest.dtstamp = System.currentTimeMillis()
-            database.insert(vJournalItemTest)
-            vjournal_item.value = database.getTestVJournalFromDatabase()
-
+            insertTestData()
         }
     }
 
+
+
+    suspend fun insertTestData() {
+        database.insert(vJournalItem(0L, "desc1", System.currentTimeMillis(), "comment"))
+        database.insert(vJournalItem(0L, "desc2", System.currentTimeMillis(), "comment"))
+        database.insert(vJournalItem(0L, "desc3", System.currentTimeMillis(), "comment"))
+        database.insert(vJournalItem(0L, "desc4", System.currentTimeMillis(), "comment"))
+        database.insert(vJournalItem(0L, "desc5", System.currentTimeMillis(), "comment"))
+        database.insert(vJournalItem(0L, "desc6", System.currentTimeMillis(), "comment"))
+        database.insert(vJournalItem(0L, "desc7", System.currentTimeMillis(), "comment"))
+        database.insert(vJournalItem(0L, "desc8", System.currentTimeMillis(), "comment"))
+    }
 
 
     /**

@@ -26,7 +26,7 @@ import androidx.room.RoomDatabase
  * A database that stores vJournal information.
  * And a global method to get access to the database.
  */
-@Database(entities = [vJournalItem::class], version = 1, exportSchema = false)
+@Database(entities = [vJournalItem::class], version = 2, exportSchema = false)
 abstract class VJournalDatabase : RoomDatabase() {
 
     /**

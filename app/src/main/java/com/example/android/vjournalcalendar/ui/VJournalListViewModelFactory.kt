@@ -6,11 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
 
 
-/**
- * This is pretty much boiler plate code for a ViewModel Factory.
- *
- * Provides the SleepDatabaseDao and context to the ViewModel.
- */
+
 class VJournalListViewModelFactory (
         private val dataSource: VJournalDatabaseDao,
         private val application: Application) : ViewModelProvider.Factory {

@@ -4,6 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+        <data>
+                <variable
+                    name="vJournalListViewModel"
+                    type="com.example.android.vjournalcalendar.ui.VJournalListViewModel" />
+        </data>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
