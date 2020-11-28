@@ -10,7 +10,7 @@ data class vJournalItem(
 
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0L,
-
+        var summary: String? = "",
         var description: String = "",
         var dtstamp: Long = 0L,
         var dtstart: Long = 0L,
@@ -22,26 +22,24 @@ data class vJournalItem(
         //var class: String,
 
         //var comment: ArrayList<String> = arrayListOf()
-/*        val contact: String,
+        //  val contact: String,
         var created: Long?,
         var exdate: Long?,
         var lastModified: Long?,
-        var rdate: Long?,
-        var recurrenceId: Long?,
-        var relatedTo: Long?,
-        var rrule: String?,
-        var sequence: Long?,
-        var status: String?,
-        var summary: String?,
-        var url: String?,
-        var ianaProperty: String,
-        var xProperty: String,
+        var rdate: Long?
+        //var recurrenceId: Long?,
+        //var relatedTo: Long?,
+        //var rrule: String?,
+        //var sequence: Long?,
+        //var status: String?,
 
-        var vAlarm: String?,
-        var vTimezone: Long?,
-        var ianaComponent: String?,
-        var xComponent: String?
-*/
+        //var url: String?,
+        //var ianaProperty: String,
+        //var xProperty: String,
 
+        //var vAlarm: String?,
+        //var vTimezone: Long?,
+        //var ianaComponent: String?,
+        //var xComponent: String?
 
 )

@@ -15,6 +15,7 @@ import com.example.android.vjournalcalendar.R
 import com.example.android.vjournalcalendar.database.VJournalDatabase
 import com.example.android.vjournalcalendar.database.vJournalItem
 import com.example.android.vjournalcalendar.databinding.FragmentVjournalListBinding
+import com.google.android.material.snackbar.Snackbar
 
 class VJournalListFragment : Fragment() {
 
@@ -73,6 +74,15 @@ class VJournalListFragment : Fragment() {
 
 
         recyclerView?.adapter = vJournalListAdapter
+
+
+        val fab: View = requireNotNull(activity).findViewById(R.id.fab)
+        fab.setOnClickListener { view ->
+            Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null)
+                    .show()
+        }
+
 
         return binding.root
 

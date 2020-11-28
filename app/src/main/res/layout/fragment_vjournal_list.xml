@@ -16,4 +16,5 @@
             android:id="@+id/vjournal_list_items_recycler_view"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             />
+
 </layout>

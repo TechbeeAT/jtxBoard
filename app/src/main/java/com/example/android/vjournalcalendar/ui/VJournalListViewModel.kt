@@ -34,11 +34,11 @@ class VJournalListViewModel(
 
 
     suspend fun insertTestData() {
-        database.insert(vJournalItem(0L, "desc1", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1"))
-        database.insert(vJournalItem(0L, "desc2", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1"))
-        database.insert(vJournalItem(0L, "desc3", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1"))
-        database.insert(vJournalItem(0L, "desc4", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1"))
-        database.insert(vJournalItem(0L, "desc5", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1"))
+        database.insert(vJournalItem(0L, "summary1","desc1", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1", null, null, null, null))
+        database.insert(vJournalItem(0L,"summary1", "desc2", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1", null, null, null, null))
+        database.insert(vJournalItem(0L, "summary1","desc3", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1", null, null, null, null))
+        database.insert(vJournalItem(0L, "summary1","desc4", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1", null, null, null, null))
+        database.insert(vJournalItem(0L,"summary1", "desc5", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1", null, null, null, null))
     }
 
 
