@@ -2,8 +2,10 @@ package com.example.android.vjournalcalendar.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 
 @Entity(tableName = "vjournalitems")
+
 data class vJournalItem(
 
         @PrimaryKey(autoGenerate = true)
@@ -11,13 +13,15 @@ data class vJournalItem(
 
         var description: String = "",
         var dtstamp: Long = 0L,
-        //var dtstart: Long,
-        //var organizer: String,
-        //var uid: Long,
+        var dtstart: Long = 0L,
+        var organizer: String,
+        var uid: String,
         //var attach: String,
-        //var categories: String,
+
+        //var categories: ArrayList<String> = arrayListOf(),
         //var class: String,
-        var comment: String = ""
+
+        //var comment: ArrayList<String> = arrayListOf()
 /*        val contact: String,
         var created: Long?,
         var exdate: Long?,

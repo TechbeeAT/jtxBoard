@@ -59,6 +59,11 @@ class SleepDatabaseTest {
         var vJournalItem = vJournalItem()
         vJournalItem.description = "asdf"
         vJournalItem.comment = "asfd"
+        vJournalItem.dtstamp = System.currentTimeMillis()
+        vJournalItem.dtstamp = System.currentTimeMillis()
+        vJournalItem.uid = "uid"
+        vJournalItem.organizer = "organizer"
+        //vJournalItem.categories = listOf("cat1", "cat2")
         vJournalItem.id = VJournalDao.insert(vJournalItem)
         val retrievedItem = VJournalDao.get(vJournalItem.id)
         assertEquals(vJournalItem, retrievedItem)

@@ -17,10 +17,7 @@
 package com.example.android.vjournalcalendar.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 /**
  * Defines methods for using the SleepNight class with Room.
@@ -36,6 +33,11 @@ interface VJournalDatabaseDao {
 
     @Query("SELECT * FROM vjournalitems ORDER BY id DESC")
     fun getAllVJournalItems(): LiveData<List<vJournalItem>>
+
+    @Query("SELECT count(*) FROM vjournalitems ORDER BY id DESC")
+    fun getAllVJournalItemsCount(): LiveData<Int>
+
+
 
     @Insert
     suspend fun insert(vJournalItem: vJournalItem): Long

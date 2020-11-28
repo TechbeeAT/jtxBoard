@@ -73,6 +73,9 @@ dependencies {
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$version_room"
 
+    // Gson Serializer for Converters
+    implementation "com.google.code.gson:gson:$version_gson"
+
 
     // Testing
     testImplementation 'junit:junit:4.13.1'

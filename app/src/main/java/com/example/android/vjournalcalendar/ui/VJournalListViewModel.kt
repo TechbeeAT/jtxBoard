@@ -17,27 +17,28 @@ class VJournalListViewModel(
         application: Application) : AndroidViewModel(application) {
 
         var vjournalList: LiveData<List<vJournalItem>> = database.getAllVJournalItems()
-        var vjournaListCount: Int = vjournalList.value?.count() ?: 0
+        lateinit var vjournaListCount: LiveData<Int>
+
+
 
 
     init {
 
         viewModelScope.launch {
+            vjournaListCount = database.getAllVJournalItemsCount()
             insertTestData()
+
         }
     }
 
 
 
     suspend fun insertTestData() {
-        database.insert(vJournalItem(0L, "desc1", System.currentTimeMillis(), "comment"))
-        database.insert(vJournalItem(0L, "desc2", System.currentTimeMillis(), "comment"))
-        database.insert(vJournalItem(0L, "desc3", System.currentTimeMillis(), "comment"))
-        database.insert(vJournalItem(0L, "desc4", System.currentTimeMillis(), "comment"))
-        database.insert(vJournalItem(0L, "desc5", System.currentTimeMillis(), "comment"))
-        database.insert(vJournalItem(0L, "desc6", System.currentTimeMillis(), "comment"))
-        database.insert(vJournalItem(0L, "desc7", System.currentTimeMillis(), "comment"))
-        database.insert(vJournalItem(0L, "desc8", System.currentTimeMillis(), "comment"))
+        database.insert(vJournalItem(0L, "desc1", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1"))
+        database.insert(vJournalItem(0L, "desc2", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1"))
+        database.insert(vJournalItem(0L, "desc3", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1"))
+        database.insert(vJournalItem(0L, "desc4", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1"))
+        database.insert(vJournalItem(0L, "desc5", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1"))
     }
 
 

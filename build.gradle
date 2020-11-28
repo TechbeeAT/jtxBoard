@@ -28,6 +28,7 @@ buildscript {
         version_lifecycle = "2.2.0"
         version_navigation = '1.0.0'
         version_room = "2.2.5"
+        version_gson = "2.8.6"
     }
 
     repositories {
