@@ -9,11 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.vjournalcalendar.R
 import com.example.android.vjournalcalendar.database.VJournalDatabase
 import com.example.android.vjournalcalendar.database.vJournalItem
+import com.example.android.vjournalcalendar.databinding.FragmentVjournalItemBinding
 import com.example.android.vjournalcalendar.databinding.FragmentVjournalListBinding
 import com.google.android.material.snackbar.Snackbar
 
@@ -27,27 +29,23 @@ class VJournalListFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
 
         // Get a reference to the binding object and inflate the fragment views.
 
-        val binding: FragmentVjournalListBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_vjournal_list, container, false)
+        //val binding: FragmentVjournalListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_vjournal_list, container, false)
 
+        val binding: FragmentVjournalListBinding = FragmentVjournalListBinding.inflate(inflater, container, false)
 
 
         val application = requireNotNull(this.activity).application
         val dataSource = VJournalDatabase.getInstance(application).vJournalDatabaseDao
-
-
 
         val viewModelFactory = VJournalListViewModelFactory(dataSource, application)
         val vJournalListViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(VJournalListViewModel::class.java)
         binding.vJournalListViewModel = vJournalListViewModel
-
-
 
         binding.lifecycleOwner = this
 
@@ -56,7 +54,6 @@ class VJournalListFragment : Fragment() {
         recyclerView?.layoutManager = linearLayoutManager
 
         recyclerView?.setHasFixedSize(true)
-
 
 
         vJournalList = vJournalListViewModel.vjournalList
@@ -81,6 +78,9 @@ class VJournalListFragment : Fragment() {
             Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
                     .setAction("Action", null)
                     .show()
+
+            this.findNavController().navigate(
+                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment())
         }
 
 

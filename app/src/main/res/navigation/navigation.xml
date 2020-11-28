@@ -26,6 +26,14 @@
     <fragment
         android:id="@+id/vjournalListFragmentList"
         android:name="com.example.android.vjournalcalendar.ui.VJournalListFragment"
-        android:label="VJournalListFragment" />
+        android:label="VJournalListFragment" >
+        <action
+            android:id="@+id/action_vjournalListFragmentList_to_VJournalItemFragment"
+            app:destination="@id/vjournalItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/vjournalItemFragment"
+        android:name="com.example.android.vjournalcalendar.ui.VJournalItemFragment"
+        android:label="VJournalItemFragment" />
 
 </navigation>
