@@ -14,7 +14,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/vjournal_list_items_recycler_view"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            />
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
 
 </layout>
+
+
+
+

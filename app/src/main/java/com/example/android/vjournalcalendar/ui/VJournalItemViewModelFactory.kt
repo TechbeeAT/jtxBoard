@@ -7,12 +7,13 @@ import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
 
 
 class VJournalItemViewModelFactory (
+        private val vJournalItemId: Long,
         private val dataSource: VJournalDatabaseDao,
         private val application: Application) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(VJournalItemViewModel::class.java)) {
-            return VJournalItemViewModel(dataSource, application) as T
+            return VJournalItemViewModel(vJournalItemId, dataSource, application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -17,6 +17,7 @@
 package com.example.android.vjournalcalendar.database
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 
 /**
@@ -29,14 +30,13 @@ interface VJournalDatabaseDao {
     suspend fun getTestVJournalFromDatabase(): vJournalItem?
 
     @Query("SELECT * from vjournalitems WHERE id = :key")
-    suspend fun get(key: Long): vJournalItem?
+    fun get(key: Long): LiveData<vJournalItem?>
 
     @Query("SELECT * FROM vjournalitems ORDER BY id DESC")
     fun getAllVJournalItems(): LiveData<List<vJournalItem>>
 
     @Query("SELECT count(*) FROM vjournalitems ORDER BY id DESC")
     fun getAllVJournalItemsCount(): LiveData<Int>
-
 
 
     @Insert

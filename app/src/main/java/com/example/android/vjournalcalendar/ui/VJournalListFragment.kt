@@ -23,7 +23,6 @@ class VJournalListFragment : Fragment() {
 
     private var recyclerView: RecyclerView? = null
     private var linearLayoutManager: LinearLayoutManager? = null
-    private lateinit var vJournalList: LiveData<List<vJournalItem>>
     private var vJournalListAdapter: VJournalListAdapter? = null
 
 
@@ -32,35 +31,32 @@ class VJournalListFragment : Fragment() {
                               savedInstanceState: Bundle?): View {
 
         // Get a reference to the binding object and inflate the fragment views.
-
-        //val binding: FragmentVjournalListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_vjournal_list, container, false)
-
         val binding: FragmentVjournalListBinding = FragmentVjournalListBinding.inflate(inflater, container, false)
 
-
+        // set up DB DAO
         val application = requireNotNull(this.activity).application
         val dataSource = VJournalDatabase.getInstance(application).vJournalDatabaseDao
 
+        // create the view model through the view model factory
         val viewModelFactory = VJournalListViewModelFactory(dataSource, application)
         val vJournalListViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(VJournalListViewModel::class.java)
-        binding.vJournalListViewModel = vJournalListViewModel
 
+        binding.vJournalListViewModel = vJournalListViewModel
         binding.lifecycleOwner = this
 
+        // set up recycler view
         recyclerView = binding.vjournalListItemsRecyclerView
         linearLayoutManager = LinearLayoutManager(application.applicationContext)
         recyclerView?.layoutManager = linearLayoutManager
-
         recyclerView?.setHasFixedSize(true)
 
-
-        vJournalList = vJournalListViewModel.vjournalList
-
+        // create adapter and provide data
         vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vjournalList, vJournalListViewModel.vjournaListCount)
 
 
+        // make sure the list gets updated with observers
         vJournalListViewModel.vjournaListCount.observe(viewLifecycleOwner, Observer {
             vJournalListAdapter!!.notifyDataSetChanged()
         })
@@ -73,6 +69,7 @@ class VJournalListFragment : Fragment() {
         recyclerView?.adapter = vJournalListAdapter
 
 
+
         val fab: View = requireNotNull(activity).findViewById(R.id.fab)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
@@ -80,12 +77,13 @@ class VJournalListFragment : Fragment() {
                     .show()
 
             this.findNavController().navigate(
-                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment())
+                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment().setVJournalItemId(0))
+
+            fab.visibility = View.INVISIBLE
         }
 
 
         return binding.root
-
 
     }
 }

@@ -26,14 +26,27 @@
     <fragment
         android:id="@+id/vjournalListFragmentList"
         android:name="com.example.android.vjournalcalendar.ui.VJournalListFragment"
-        android:label="VJournalListFragment" >
-        <action
+        android:label="VJournalListFragment"
+        tools:layout="@layout/fragment_vjournal_list">
+
+    <action
             android:id="@+id/action_vjournalListFragmentList_to_VJournalItemFragment"
-            app:destination="@id/vjournalItemFragment" />
+            app:destination="@id/vjournalItemFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_right" />
     </fragment>
     <fragment
         android:id="@+id/vjournalItemFragment"
         android:name="com.example.android.vjournalcalendar.ui.VJournalItemFragment"
-        android:label="VJournalItemFragment" />
+        android:label="VJournalItemFragment"
+        tools:layout="@layout/fragment_vjournal_item">
+        <argument
+            android:name="vJournalItemId"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <action
+            android:id="@+id/action_vjournalItemFragment_to_vjournalListFragmentList"
+            app:destination="@id/vjournalListFragmentList" />
+    </fragment>
 
 </navigation>

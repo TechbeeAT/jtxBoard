@@ -11,12 +11,14 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/navigation" />
 
+
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        app:srcCompat="@drawable/ic_sleep_0"
+        app:srcCompat="@drawable/ic_vjournal_add"
         android:contentDescription="add"
         android:layout_margin="16dp" />
 
