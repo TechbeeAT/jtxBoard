@@ -34,11 +34,13 @@ class VJournalListViewModel(
 
 
     suspend fun insertTestData() {
-        database.insert(vJournalItem(0L, "summary1","desc1", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1", null, null, null, null))
-        database.insert(vJournalItem(0L,"summary1", "desc2", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1", null, null, null, null))
-        database.insert(vJournalItem(0L, "summary1","desc3", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1", null, null, null, null))
-        database.insert(vJournalItem(0L, "summary1","desc4", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1", null, null, null, null))
-        database.insert(vJournalItem(0L,"summary1", "desc5", System.currentTimeMillis(), System.currentTimeMillis(),"organizer1", "uid1", null, null, null, null))
+
+        val lipsumSummary = "Lorem ipsum dolor sit amet"
+        val lipsumDescription = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+
+
+        database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
+        database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
     }
 
 

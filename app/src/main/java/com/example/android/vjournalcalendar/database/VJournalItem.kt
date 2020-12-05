@@ -12,25 +12,32 @@ data class vJournalItem(
         var id: Long = 0L,
         var summary: String? = "",
         var description: String = "",
-        var dtstamp: Long = System.currentTimeMillis(),
         var dtstart: Long = System.currentTimeMillis(),
         var organizer: String = "",
-        var uid: String = "",
+        var uid: String = "",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
         //var attach: String,
 
-        //var categories: ArrayList<String> = arrayListOf(),
+        var categories: String = "", //make it an array or another structure?
         //var class: String,
 
         //var comment: ArrayList<String> = arrayListOf()
         //  val contact: String,
-        var created: Long? = System.currentTimeMillis(),
-        var exdate: Long? = System.currentTimeMillis(),
-        var lastModified: Long? = System.currentTimeMillis(),
-        var rdate: Long? = System.currentTimeMillis()
-        //var recurrenceId: Long?,
+
+        /*
+         The following properties specify change management information in  calendar components.
+         https://tools.ietf.org/html/rfc5545#section-3.8.7
+         */
+        var created: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.1
+        var dtstamp: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.2
+        var lastModified: Long = System.currentTimeMillis(), // see https://tools.ietf.org/html/rfc5545#section-3.8.7.3
+        var sequence: Long = 0                               // increase on every change (+1), see https://tools.ietf.org/html/rfc5545#section-3.8.7.4
+
+        //var exdate: Long? = System.currentTimeMillis(),   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
+        //var rdate: Long? = System.currentTimeMillis()     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
+        //var recurrenceId: Long?,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
+        //var rrule: String?,                               //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
+
         //var relatedTo: Long?,
-        //var rrule: String?,
-        //var sequence: Long?,
         //var status: String?,
 
         //var url: String?,

@@ -34,6 +34,15 @@
             app:destination="@id/vjournalItemFragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
+        <action
+            android:id="@+id/action_vjournalListFragmentList_to_VJournalItemEditFragment"
+            app:destination="@id/VJournalItemEditFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_right" />
+        <argument
+            android:name="vJournalItemId"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
     <fragment
         android:id="@+id/vjournalItemFragment"
@@ -45,8 +54,23 @@
             app:argType="long"
             android:defaultValue="0L" />
         <action
-            android:id="@+id/action_vjournalItemFragment_to_vjournalListFragmentList"
-            app:destination="@id/vjournalListFragmentList" />
+            android:id="@+id/action_vjournalItemFragment_to_VJournalItemEditFragment"
+            app:destination="@id/VJournalItemEditFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/VJournalItemEditFragment"
+        android:name="com.example.android.vjournalcalendar.ui.VJournalItemEditFragment"
+        android:label="VJournalItemEditFragment"
+        tools:layout="@layout/fragment_vjournal_item_edit">
+        <argument
+            android:name="vJournalItemEditId"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <action
+            android:id="@+id/action_VJournalItemEditFragment_to_vjournalItemFragment"
+            app:destination="@id/vjournalItemFragment" />
     </fragment>
 
 </navigation>

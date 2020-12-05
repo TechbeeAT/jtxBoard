@@ -70,20 +70,23 @@ class VJournalListFragment : Fragment() {
 
 
 
-        val fab: View = requireNotNull(activity).findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-                    .show()
-
-            this.findNavController().navigate(
-                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment().setVJournalItemId(0))
-
-            fab.visibility = View.INVISIBLE
-        }
-
-
         return binding.root
 
     }
+
+    override fun onStart() {
+
+        recyclerView?.scrollToPosition(50)
+
+        // initialize the floating action button only onStart, otherwise the fragment might not be created yet
+        val fab: View = requireNotNull(activity).findViewById(R.id.fab)
+        fab.setOnClickListener { view ->
+
+            this.findNavController().navigate(
+                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment().setVJournalItemEditId(0))
+
+        }
+        super.onStart()
+    }
+
 }

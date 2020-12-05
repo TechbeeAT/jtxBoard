@@ -29,6 +29,7 @@ buildscript {
         version_navigation = '1.0.0'
         version_room = "2.2.5"
         version_gson = "2.8.6"
+        version_material = "1.2.1"
     }
 
     repositories {

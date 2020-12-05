@@ -31,4 +31,8 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="CategoryChips" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+
+    </style>
+
 </resources>

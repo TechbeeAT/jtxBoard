@@ -1,20 +1,26 @@
 package com.example.android.vjournalcalendar.ui
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
+import android.text.format.DateFormat.is24HourFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import com.example.android.vjournalcalendar.R
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.android.vjournalcalendar.database.VJournalDatabase
-import com.example.android.vjournalcalendar.database.vJournalItem
 import com.example.android.vjournalcalendar.databinding.FragmentVjournalItemBinding
+import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 class VJournalItemFragment : Fragment() {
@@ -44,12 +50,27 @@ class VJournalItemFragment : Fragment() {
         binding.lifecycleOwner = this
 
 
-        vJournalItemViewModel.vJournalItem.observe(viewLifecycleOwner, Observer {
-            //vJournalItemViewModel
+        vJournalItemViewModel.editingClicked.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                vJournalItemViewModel.editingClicked.value = false
+                this.findNavController().navigate(
+                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVJournalItemEditFragment().setVJournalItemEditId(vJournalItemViewModel.vJournalItem.value!!.id))
+            }
         })
+
+
+        /*
+        val chip = inflater.inflate(R.layout.fragment_vjournal_item_categories_chip, binding.categoriesChipgroup, false) as Chip
+        chip.text = ("Chip #1")
+        //binding.categoriesChipgroup.addView(chip)
+*/
 
 
         return binding.root
     }
+
+
+
+
 }
 

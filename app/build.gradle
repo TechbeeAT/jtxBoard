@@ -76,6 +76,9 @@ dependencies {
     // Gson Serializer for Converters
     implementation "com.google.code.gson:gson:$version_gson"
 
+    // Material.io
+    implementation "com.google.android.material:material:${version_material}"
+
 
     // Testing
     testImplementation 'junit:junit:4.13.1'
