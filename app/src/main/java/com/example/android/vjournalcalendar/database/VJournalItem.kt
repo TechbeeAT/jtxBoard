@@ -4,6 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import java.lang.reflect.Constructor
+import java.text.DateFormat
+import java.text.DateFormat.getDateInstance
+import java.text.DateFormat.getTimeInstance
+import java.util.*
 
 @Entity(tableName = "vjournalitems")
 data class vJournalItem(

@@ -1,6 +1,7 @@
 package com.example.android.vjournalcalendar.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,8 @@ class VJournalListFragment : Fragment() {
     private var linearLayoutManager: LinearLayoutManager? = null
     private var vJournalListAdapter: VJournalListAdapter? = null
 
+    private lateinit var vJournalListViewModel: VJournalListViewModel
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +42,7 @@ class VJournalListFragment : Fragment() {
 
         // create the view model through the view model factory
         val viewModelFactory = VJournalListViewModelFactory(dataSource, application)
-        val vJournalListViewModel =
+        vJournalListViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(VJournalListViewModel::class.java)
 
@@ -53,20 +56,37 @@ class VJournalListFragment : Fragment() {
         recyclerView?.setHasFixedSize(true)
 
         // create adapter and provide data
-        vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vjournalList, vJournalListViewModel.vjournaListCount)
-
-
-        // make sure the list gets updated with observers
-        vJournalListViewModel.vjournaListCount.observe(viewLifecycleOwner, Observer {
-            vJournalListAdapter!!.notifyDataSetChanged()
-        })
-
-        vJournalListViewModel.vjournalList.observe(viewLifecycleOwner, Observer {
-            vJournalListAdapter!!.notifyDataSetChanged()
-        })
-
+        //vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vjournalList, vJournalListViewModel.vjournaListCount)
+        vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vjournalList)
 
         recyclerView?.adapter = vJournalListAdapter
+
+
+
+        // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
+        vJournalListViewModel.vjournalList.observe(viewLifecycleOwner, Observer {
+
+            vJournalListAdapter!!.notifyDataSetChanged()
+
+            val arguments = VJournalListFragmentArgs.fromBundle((arguments!!))
+
+            if (arguments.vJournalItemId != null && arguments.vJournalItemId != 0L) {
+                Log.println(Log.INFO, "vJournalListFragment", arguments.vJournalItemId.toString())
+                vJournalListViewModel.setFocusItem(arguments.vJournalItemId)
+            }
+        })
+
+
+        // Observe the focus item to scroll automatically to the right position (newly updated or inserted item)
+        vJournalListViewModel.vJournalFocusItem.observe(viewLifecycleOwner, Observer {
+
+            val pos = vJournalListViewModel.getFocusItemPosition()
+            //Log.println(Log.INFO, "vJournalListViewModel", "Item Position: ${pos.toString()}")
+
+            if (pos != null)
+                recyclerView?.scrollToPosition(pos)
+        })
+
 
 
 
@@ -76,7 +96,6 @@ class VJournalListFragment : Fragment() {
 
     override fun onStart() {
 
-        recyclerView?.scrollToPosition(50)
 
         // initialize the floating action button only onStart, otherwise the fragment might not be created yet
         val fab: View = requireNotNull(activity).findViewById(R.id.fab)

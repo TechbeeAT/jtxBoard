@@ -26,17 +26,11 @@ import androidx.room.*
 @Dao
 interface VJournalDatabaseDao {
 
-    @Query("SELECT * FROM vjournalitems LIMIT 1")
-    suspend fun getTestVJournalFromDatabase(): vJournalItem?
-
     @Query("SELECT * from vjournalitems WHERE id = :key")
     fun get(key: Long): LiveData<vJournalItem?>
 
-    @Query("SELECT * FROM vjournalitems ORDER BY id DESC")
+    @Query("SELECT * FROM vjournalitems ORDER BY dtstart DESC")
     fun getAllVJournalItems(): LiveData<List<vJournalItem>>
-
-    @Query("SELECT count(*) FROM vjournalitems ORDER BY id DESC")
-    fun getAllVJournalItemsCount(): LiveData<Int>
 
 
     @Insert

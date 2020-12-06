@@ -69,8 +69,8 @@
             app:argType="long"
             android:defaultValue="0L" />
         <action
-            android:id="@+id/action_VJournalItemEditFragment_to_vjournalItemFragment"
-            app:destination="@id/vjournalItemFragment" />
+            android:id="@+id/action_VJournalItemEditFragment_to_vjournalListFragmentList"
+            app:destination="@id/vjournalListFragmentList" />
     </fragment>
 
 </navigation>

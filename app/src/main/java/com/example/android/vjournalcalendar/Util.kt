@@ -17,7 +17,9 @@
 package com.example.android.vjournalcalendar
 
 import android.annotation.SuppressLint
+import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.util.*
 
 
 /**
@@ -29,10 +31,72 @@ import java.text.SimpleDateFormat
  * dd-yyyy - day in month and full year numerically
  * HH:mm - Hours and minutes in 24hr format
  */
+
+/*
 @SuppressLint("SimpleDateFormat")
-fun convertLongToDateString(systemTime: Long): String {
+fun convertLongToDateString2(systemTime: Long): String {
     return SimpleDateFormat("EEEE MMM-dd-yyyy' Time: 'HH:mm")
             .format(systemTime).toString()
 }
 
+ */
+
+
+@SuppressLint("SimpleDateFormat")
+fun convertLongToDateString(date: Long): String {
+    if (date == 0L)
+        return ""
+    return DateFormat.getDateInstance(DateFormat.LONG).format(date)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun convertLongToTimeString(time: Long): String {
+    if (time == 0L)
+        return ""
+    return DateFormat.getTimeInstance(DateFormat.SHORT).format(time)
+}
+
+
+@SuppressLint("SimpleDateFormat")
+fun convertLongToHourString(time: Long): String {
+    if (time == 0L)
+        return ""
+    val hour_formatter = SimpleDateFormat("HH")
+    return hour_formatter.format(Date(time)).toString()
+}
+
+
+@SuppressLint("SimpleDateFormat")
+fun convertLongToMinuteString(time: Long): String {
+    if (time == 0L)
+        return ""
+    val minute_formatter = SimpleDateFormat("mm")
+    return minute_formatter.format(Date(time)).toString()
+}
+
+@SuppressLint("SimpleDateFormat")
+fun convertLongToDayString(date: Long): String {
+    if (date == 0L)
+        return ""
+    val day_formatter = SimpleDateFormat("dd")
+    return day_formatter.format(Date(date)).toString()
+}
+
+
+@SuppressLint("SimpleDateFormat")
+fun convertLongToMonthString(date: Long): String {
+    if (date == 0L)
+        return ""
+    val month_formatter = SimpleDateFormat("MMMM")
+    return month_formatter.format(Date(date)).toString()
+}
+
+
+@SuppressLint("SimpleDateFormat")
+fun convertLongToYearString(date: Long): String {
+    if (date == 0L)
+        return ""
+    val year_formatter = SimpleDateFormat("yyyy")
+    return year_formatter.format(Date(date)).toString()
+}
 
