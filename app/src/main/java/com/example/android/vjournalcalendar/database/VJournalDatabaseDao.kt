@@ -32,6 +32,9 @@ interface VJournalDatabaseDao {
     @Query("SELECT * FROM vjournalitems ORDER BY dtstart DESC")
     fun getAllVJournalItems(): LiveData<List<vJournalItem>>
 
+    @Query("SELECT DISTINCT categories FROM vjournalitems ORDER BY categories")
+    fun getAllCategories(): LiveData<List<String>>
+
 
     @Insert
     suspend fun insert(vJournalItem: vJournalItem): Long
