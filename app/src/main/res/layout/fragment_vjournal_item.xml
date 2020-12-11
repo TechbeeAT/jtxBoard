@@ -7,146 +7,194 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="com.example.android.vjournalcalendar.UtilKt" />
 
         <variable
             name="vJournalItemViewModel"
             type="com.example.android.vjournalcalendar.ui.VJournalItemViewModel" />
     </data>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/vjournal_item_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.VJournalItemFragment">
-
-
-
-        <TextView
-            android:id="@+id/dtstart"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:text="@{vJournalItemViewModel.dtstartFormatted}"
-            android:textSize="18sp"
-            android:textStyle="italic"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="29. November 2020 11:58" />
-
-        <TextView
-            android:id="@+id/summary"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/vjournal_item_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textShortMessage"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:text="@{vJournalItemViewModel.vJournalItem.summary}"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dtstart"
-            tools:text="Summary ... Lorem ipsum dolor sit amet" />
+            android:layout_height="match_parent"
+            tools:context=".ui.VJournalItemFragment">
 
 
+            <TextView
+                android:id="@+id/dtstart_day"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="@{UtilKt.convertLongToDayString(vJournalItemViewModel.vJournalItem.dtstart)}"
+                android:textAlignment="center"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="31" />
 
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textWebEditText|textMultiLine"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:text="@{vJournalItemViewModel.vJournalItem.description}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/summary"
-            tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
+            <TextView
+                android:id="@+id/dtstart_month"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="@{UtilKt.convertLongToMonthString(vJournalItemViewModel.vJournalItem.dtstart)}"
+                android:textAlignment="center"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dtstart_day"
+                tools:text="December" />
 
+            <TextView
+                android:id="@+id/dtstart_year"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="@{UtilKt.convertLongToYearString(vJournalItemViewModel.vJournalItem.dtstart)}"
+                android:textAlignment="center"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dtstart_month"
+                tools:text="2020" />
 
-        <TextView
-            android:id="@+id/categories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:drawableStart="@drawable/ic_vjournal_category"
-            android:drawablePadding="4dp"
-            android:text="@{vJournalItemViewModel.vJournalItem.categories}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description"
-            tools:text="Category1, Category2" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/categoriesChipgroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/categories"
-            />
-
-
-        <TextView
-            android:id="@+id/organizer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:drawableStart="@drawable/ic_vjournal_organizer"
-            android:drawablePadding="4dp"
-            android:text="@{vJournalItemViewModel.vJournalItem.organizer}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/categoriesChipgroup"
-            tools:text="Organizer" />
-
-        <TextView
-            android:id="@+id/created"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
-            android:text="@{`Created: ` + vJournalItemViewModel.createdFormatted}"
-            android:textAlignment="viewEnd"
-            android:textSize="10sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/organizer"
-            tools:text="Created: 1. Dezember 2020" />
+            <TextView
+                android:id="@+id/dtstart_time"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="@{UtilKt.convertLongToTimeString(vJournalItemViewModel.vJournalItem.dtstart)}"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/top_barrier"
+                app:layout_constraintStart_toStartOf="@+id/dtstart_day"
+                app:layout_constraintTop_toBottomOf="@+id/dtstart_year"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="13:30" />
 
 
-        <TextView
-            android:id="@+id/lastModified"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="@{`Last modified: ` + vJournalItemViewModel.lastModifiedFormatted}"
-            android:textAlignment="viewEnd"
-            android:textSize="10sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/created"
-            tools:text="Last modified: 1. Dezember 2020" />
+            <TextView
+                android:id="@+id/organizer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:drawableStart="@drawable/ic_vjournal_organizer"
+                android:drawablePadding="4dp"
+                android:text="@{vJournalItemViewModel.vJournalItem.organizer}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/dtstart_day"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Organizer" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lastModified"
-            app:layout_constraintVertical_bias="1.0"
-            app:srcCompat="@drawable/ic_vjournal_edit"
-            android:onClick="@{() -> vJournalItemViewModel.editingClicked()}"/>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/categories_chipgroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:theme="@style/CategoryChips"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="0dp"
+                app:layout_constraintBottom_toTopOf="@id/top_barrier"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/dtstart_day"
+                app:layout_constraintTop_toBottomOf="@id/organizer"
+                app:layout_constraintVertical_bias="1.0" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/top_barrier"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:barrierDirection="top" />
 
 
+            <TextView
+                android:id="@+id/summary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@{vJournalItemViewModel.vJournalItem.summary}"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/top_barrier"
+                tools:text="Summary ... Lorem ipsum dolor sit amet" />
+
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@{vJournalItemViewModel.vJournalItem.description}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/summary"
+
+                app:layout_constraintTop_toBottomOf="@id/summary"
+                tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
+
+
+            <TextView
+                android:id="@+id/created"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="8dp"
+                android:text="@{`Created: ` + vJournalItemViewModel.createdFormatted}"
+                android:textAlignment="viewEnd"
+                android:textSize="10sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description"
+                tools:text="Created: 1. Dezember 2020" />
+
+
+            <TextView
+                android:id="@+id/lastModified"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@{`Last modified: ` + vJournalItemViewModel.lastModifiedFormatted}"
+                android:textAlignment="viewEnd"
+                android:textSize="10sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/created"
+                tools:text="Last modified: 1. Dezember 2020" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:onClick="@{() -> vJournalItemViewModel.editingClicked()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lastModified"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/ic_vjournal_edit" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
 
 
 

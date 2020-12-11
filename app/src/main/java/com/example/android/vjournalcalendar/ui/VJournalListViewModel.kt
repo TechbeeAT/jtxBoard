@@ -17,8 +17,9 @@ class VJournalListViewModel(
         val database: VJournalDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
-        var vjournalList: LiveData<List<vJournalItem>> = database.getAllVJournalItems()
         var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
+        var categoryFilterString: MutableLiveData<String> = MutableLiveData<String>("*")
+        var vJournalList: LiveData<List<vJournalItem>> = Transformations.switchMap(categoryFilterString) { filter -> if (filter == "%" || filter == "" || filter == null) database.getVJournalItems() else database.getVJournalItems("%$filter%")  }
 
 
     init {
@@ -45,14 +46,24 @@ class VJournalListViewModel(
 
     fun setFocusItem(vJournalItemId: Long) {
 
-        vJournalFocusItem.value = vjournalList.value?.find { focusItem ->
+        vJournalFocusItem.value = vJournalList.value?.find { focusItem ->
             focusItem.id == vJournalItemId
         }!!
 
     }
 
     fun getFocusItemPosition(): Int? {
-        return vjournalList.value?.indexOf(vJournalFocusItem.value)
+        return vJournalList.value?.indexOf(vJournalFocusItem.value)
+    }
+
+    fun setCategoryFilter(categoriesFilter: String) {
+        categoryFilterString.value = categoriesFilter
+/*
+        Log.println(Log.INFO, "categoryFilteredBefore", vJournalList.value!!.size.toString())
+        Log.println(Log.INFO, "categoryFilterString", categoryFilterString.value.toString())
+        vJournalList.apply { database.getVJournalItems(categoryFilterString.value.toString())   }
+        Log.println(Log.INFO, "categoryFilteredAfter", vJournalList.value!!.size.toString())
+*/
     }
 
 

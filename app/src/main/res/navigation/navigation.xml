@@ -43,6 +43,10 @@
             android:name="vJournalItemId"
             app:argType="long"
             android:defaultValue="0L" />
+        <argument
+            android:name="categoryFilterString"
+            app:argType="string"
+            android:defaultValue="%" />
     </fragment>
     <fragment
         android:id="@+id/vjournalItemFragment"
@@ -58,6 +62,10 @@
             app:destination="@id/VJournalItemEditFragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
+        <action
+            android:id="@+id/action_vjournalItemFragment_to_vjournalListFragmentList"
+            app:destination="@id/vjournalListFragmentList"
+            app:popUpTo="@id/vjournalListFragmentList" />
     </fragment>
     <fragment
         android:id="@+id/VJournalItemEditFragment"
@@ -70,7 +78,8 @@
             android:defaultValue="0L" />
         <action
             android:id="@+id/action_VJournalItemEditFragment_to_vjournalListFragmentList"
-            app:destination="@id/vjournalListFragmentList" />
+            app:destination="@id/vjournalListFragmentList"
+            app:popUpTo="@id/vjournalListFragmentList" />
     </fragment>
 
 </navigation>

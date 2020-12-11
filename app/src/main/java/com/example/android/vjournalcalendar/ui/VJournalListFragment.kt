@@ -30,6 +30,7 @@ class VJournalListFragment : Fragment() {
 
 
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
@@ -57,20 +58,23 @@ class VJournalListFragment : Fragment() {
 
         // create adapter and provide data
         //vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vjournalList, vJournalListViewModel.vjournaListCount)
-        vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vjournalList)
+        vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vJournalList)
 
         recyclerView?.adapter = vJournalListAdapter
 
 
+        val arguments = VJournalListFragmentArgs.fromBundle((arguments!!))
+
+        // set the filter String, default is "%"
+        vJournalListViewModel.setCategoryFilter(arguments.categoryFilterString)
+
+
 
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
-        vJournalListViewModel.vjournalList.observe(viewLifecycleOwner, Observer {
-
+        vJournalListViewModel.vJournalList.observe(viewLifecycleOwner, Observer {
             vJournalListAdapter!!.notifyDataSetChanged()
 
-            val arguments = VJournalListFragmentArgs.fromBundle((arguments!!))
-
-            if (arguments.vJournalItemId != null && arguments.vJournalItemId != 0L) {
+            if (arguments.vJournalItemId != 0L) {
                 Log.println(Log.INFO, "vJournalListFragment", arguments.vJournalItemId.toString())
                 vJournalListViewModel.setFocusItem(arguments.vJournalItemId)
             }
@@ -86,7 +90,6 @@ class VJournalListFragment : Fragment() {
             if (pos != null)
                 recyclerView?.scrollToPosition(pos)
         })
-
 
 
 

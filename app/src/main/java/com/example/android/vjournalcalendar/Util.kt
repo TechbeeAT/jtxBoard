@@ -100,3 +100,10 @@ fun convertLongToYearString(date: Long): String {
     return year_formatter.format(Date(date)).toString()
 }
 
+fun convertCategoriesCSVtoList(categoriesString: String): MutableList<String> {
+    return categoriesString.split(",").map { it.trim() }.toMutableList()
+}
+
+fun convertCategoriesListtoCSVString(categoriesList: MutableList<String>): String {
+    return categoriesList.joinToString(separator=",")
+}

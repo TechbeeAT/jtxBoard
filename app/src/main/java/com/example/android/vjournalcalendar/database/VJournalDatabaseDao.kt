@@ -29,8 +29,14 @@ interface VJournalDatabaseDao {
     @Query("SELECT * from vjournalitems WHERE id = :key")
     fun get(key: Long): LiveData<vJournalItem?>
 
+
     @Query("SELECT * FROM vjournalitems ORDER BY dtstart DESC")
-    fun getAllVJournalItems(): LiveData<List<vJournalItem>>
+    fun getVJournalItems(): LiveData<List<vJournalItem>>
+
+
+    @Query("SELECT * FROM vjournalitems WHERE categories LIKE :categories ORDER BY dtstart DESC")
+    fun getVJournalItems(categories: String): LiveData<List<vJournalItem>>
+
 
     @Query("SELECT DISTINCT categories FROM vjournalitems ORDER BY categories")
     fun getAllCategories(): LiveData<List<String>>
