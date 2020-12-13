@@ -48,5 +48,8 @@ interface VJournalDatabaseDao {
     @Update
     suspend fun update(vJournalItem: vJournalItem)
 
+    @Delete
+    fun delete(vJournalItem: vJournalItem)
+
 }
 

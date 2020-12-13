@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.android.vjournalcalendar.R
 import com.example.android.vjournalcalendar.database.VJournalDatabase
 import com.example.android.vjournalcalendar.database.vJournalItem
-import com.example.android.vjournalcalendar.databinding.FragmentVjournalItemBinding
 import com.example.android.vjournalcalendar.databinding.FragmentVjournalListBinding
 import com.google.android.material.snackbar.Snackbar
 
@@ -78,6 +77,7 @@ class VJournalListFragment : Fragment() {
                 Log.println(Log.INFO, "vJournalListFragment", arguments.vJournalItemId.toString())
                 vJournalListViewModel.setFocusItem(arguments.vJournalItemId)
             }
+
         })
 
 

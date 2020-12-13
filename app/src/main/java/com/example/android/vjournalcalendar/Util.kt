@@ -105,5 +105,5 @@ fun convertCategoriesCSVtoList(categoriesString: String): MutableList<String> {
 }
 
 fun convertCategoriesListtoCSVString(categoriesList: MutableList<String>): String {
-    return categoriesList.joinToString(separator=",")
+    return categoriesList.joinToString(separator=", ")
 }
