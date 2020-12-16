@@ -21,6 +21,8 @@ class VJournalListViewModel(
         var categoryFilterString: MutableLiveData<String> = MutableLiveData<String>("*")
         var vJournalList: LiveData<List<vJournalItem>> = Transformations.switchMap(categoryFilterString) { filter -> if (filter == "%" || filter == "" || filter == null) database.getVJournalItems() else database.getVJournalItems("%$filter%")  }
 
+        val allCategories: LiveData<List<String>> = database.getAllCategories()
+
 
     init {
 
@@ -38,8 +40,8 @@ class VJournalListViewModel(
         val lipsumDescription = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
 
 
-        //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
-        //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
+        database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0, "DRAFT"))
+        database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0, "DRAFT"))
     }
 
 

@@ -19,6 +19,12 @@
     <!-- App title and fragment titles -->
     <string name="app_name">VJournal Calendar</string>
 
+    <string-array name="vjournal_status">
+        <item>DRAFT</item>
+        <item>FINAL</item>
+        <item>CANCELLED</item>
+    </string-array>
+
 
     <!-- Output to TextView styled with a little HTML -->
     <string name="title"><![CDATA[<h3>HERE IS YOUR SLEEP DATA</h3>]]></string>

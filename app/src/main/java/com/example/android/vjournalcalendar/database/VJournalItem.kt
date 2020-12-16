@@ -9,6 +9,9 @@ import java.text.DateFormat.getDateInstance
 import java.text.DateFormat.getTimeInstance
 import java.util.*
 
+
+
+
 @Entity(tableName = "vjournalitems")
 data class vJournalItem(
 
@@ -34,7 +37,7 @@ data class vJournalItem(
         var created: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.1
         var dtstamp: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.2
         var lastModified: Long = System.currentTimeMillis(), // see https://tools.ietf.org/html/rfc5545#section-3.8.7.3
-        var sequence: Long = 0                               // increase on every change (+1), see https://tools.ietf.org/html/rfc5545#section-3.8.7.4
+        var sequence: Long = 0,                             // increase on every change (+1), see https://tools.ietf.org/html/rfc5545#section-3.8.7.4
 
         //var exdate: Long? = System.currentTimeMillis(),   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
         //var rdate: Long? = System.currentTimeMillis()     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
@@ -42,7 +45,7 @@ data class vJournalItem(
         //var rrule: String?,                               //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
 
         //var relatedTo: Long?,
-        //var status: String?,
+        var status: String? = ""
 
         //var url: String?,
         //var ianaProperty: String,
@@ -54,3 +57,5 @@ data class vJournalItem(
         //var xComponent: String?
         //
 )
+
+

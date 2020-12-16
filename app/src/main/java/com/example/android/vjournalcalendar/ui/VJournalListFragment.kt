@@ -1,23 +1,27 @@
 package com.example.android.vjournalcalendar.ui
 
+import android.app.SearchManager
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import android.view.*
+import android.widget.ArrayAdapter
+import androidx.appcompat.widget.SearchView
+import androidx.cursoradapter.widget.CursorAdapter
+import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.CursorLoader
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.vjournalcalendar.R
+import com.example.android.vjournalcalendar.convertCategoriesCSVtoList
+import com.example.android.vjournalcalendar.convertCategoriesListtoCSVString
 import com.example.android.vjournalcalendar.database.VJournalDatabase
-import com.example.android.vjournalcalendar.database.vJournalItem
 import com.example.android.vjournalcalendar.databinding.FragmentVjournalListBinding
-import com.google.android.material.snackbar.Snackbar
+
 
 class VJournalListFragment : Fragment() {
 
@@ -27,6 +31,7 @@ class VJournalListFragment : Fragment() {
 
     private lateinit var vJournalListViewModel: VJournalListViewModel
 
+    private lateinit var binding: FragmentVjournalListBinding
 
 
 
@@ -34,7 +39,7 @@ class VJournalListFragment : Fragment() {
                               savedInstanceState: Bundle?): View {
 
         // Get a reference to the binding object and inflate the fragment views.
-        val binding: FragmentVjournalListBinding = FragmentVjournalListBinding.inflate(inflater, container, false)
+        binding = FragmentVjournalListBinding.inflate(inflater, container, false)
 
         // set up DB DAO
         val application = requireNotNull(this.activity).application
@@ -48,6 +53,10 @@ class VJournalListFragment : Fragment() {
 
         binding.vJournalListViewModel = vJournalListViewModel
         binding.lifecycleOwner = this
+
+        // add menu
+        setHasOptionsMenu(true)
+
 
         // set up recycler view
         recyclerView = binding.vjournalListItemsRecyclerView
@@ -110,5 +119,67 @@ class VJournalListFragment : Fragment() {
         }
         super.onStart()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_vjournal_list, menu)
+
+        val searchMenuItem = menu.findItem(R.id.vjournal_list_search)
+        val searchView = searchMenuItem.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                if (query == "")
+                    vJournalListViewModel.setCategoryFilter("%")
+                else
+                    vJournalListViewModel.setCategoryFilter(query)
+                /*
+                if (list.contains(query)) {
+                    adapter.filter.filter(query)
+                } else {
+                    Toast.makeText(this@MainActivity, "No Match found", Toast.LENGTH_LONG).show()
+                }
+
+                 */
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (newText == "")
+                    vJournalListViewModel.setCategoryFilter("%")
+                else
+                    vJournalListViewModel.setCategoryFilter(newText)                //adapter.filter.filter(newText)
+                return false
+            }
+        })
+
+/*
+        searchView.setOnMenuItem
+
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+                android.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                //
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                //
+                return false
+            }
+        })
+
+                searchMenuItem.setOnMenuItemClickListener(object: SearchView.OnQueryTextListener   {
+
+        })
+
+ */
+
+    }
+
+
+
+
+
 
 }

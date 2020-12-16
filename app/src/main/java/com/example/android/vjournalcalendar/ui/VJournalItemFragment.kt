@@ -3,11 +3,10 @@ package com.example.android.vjournalcalendar.ui
 import android.app.Application
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.fragment.app.Fragment
@@ -18,6 +17,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.android.vjournalcalendar.R
 import com.example.android.vjournalcalendar.convertCategoriesCSVtoList
+import com.example.android.vjournalcalendar.convertLongToDateString
+import com.example.android.vjournalcalendar.convertLongToTimeString
 import com.example.android.vjournalcalendar.database.VJournalDatabase
 import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
 import com.example.android.vjournalcalendar.databinding.FragmentVjournalItemBinding
@@ -33,7 +34,7 @@ class VJournalItemFragment : Fragment() {
     lateinit var binding: FragmentVjournalItemBinding
     lateinit var application: Application
     lateinit var dataSource: VJournalDatabaseDao
-    lateinit var viewModelFactory:  VJournalItemViewModelFactory
+    lateinit var viewModelFactory: VJournalItemViewModelFactory
     lateinit var vJournalItemViewModel: VJournalItemViewModel
     lateinit var inflater: LayoutInflater
 
@@ -50,8 +51,11 @@ class VJournalItemFragment : Fragment() {
 
         val arguments = VJournalItemFragmentArgs.fromBundle((arguments!!))
 
+        // add menu
+        setHasOptionsMenu(true)
 
 
+        // set up view model
         viewModelFactory = VJournalItemViewModelFactory(arguments.vJournalItemId, dataSource, application)
         vJournalItemViewModel =
                 ViewModelProvider(
@@ -61,6 +65,7 @@ class VJournalItemFragment : Fragment() {
         binding.lifecycleOwner = this
 
 
+        // set up observers
         vJournalItemViewModel.editingClicked.observe(viewLifecycleOwner, Observer {
             if (it) {
                 vJournalItemViewModel.editingClicked.value = false
@@ -76,21 +81,16 @@ class VJournalItemFragment : Fragment() {
 
         })
 
-
-
-
         return binding.root
     }
 
-
-
+    // adds Chips to the categoriesChipgroup based on the categories List
     fun addChips(categories: List<String>) {
 
         categories.forEach() { category ->
 
             if (category == "")
                 return@forEach
-
 
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_categories_chip, binding.categoriesChipgroup, false) as Chip
             categoryChip.text = category
@@ -103,8 +103,32 @@ class VJournalItemFragment : Fragment() {
                         VJournalItemFragmentDirections.actionVjournalItemFragmentToVjournalListFragmentList().setCategoryFilterString(category)
                 )
             }
+        }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_vjournal_item, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.vjournal_item_share) {
+
+            var shareText: String = "${convertLongToDateString(vJournalItemViewModel.vJournalItem.value!!.dtstart)} ${convertLongToTimeString(vJournalItemViewModel.vJournalItem.value!!.dtstart)}\n"
+            shareText +=  "${vJournalItemViewModel.vJournalItem.value!!.summary}\n\n"
+            shareText += "${vJournalItemViewModel.vJournalItem.value!!.description}\n\n"
+            shareText += "Categories/Labels: ${vJournalItemViewModel.vJournalItem.value!!.categories}"
+
+            val shareIntent = Intent()
+            shareIntent.action = Intent.ACTION_SEND
+            shareIntent.type="text/plain"
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, vJournalItemViewModel.vJournalItem.value!!.summary)
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
+            startActivity(Intent(shareIntent))
+
 
         }
+        return super.onOptionsItemSelected(item)
     }
 
 }
