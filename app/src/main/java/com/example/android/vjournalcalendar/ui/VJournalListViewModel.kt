@@ -18,11 +18,16 @@ class VJournalListViewModel(
         application: Application) : AndroidViewModel(application) {
 
         var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
-        var categoryFilterString: MutableLiveData<String> = MutableLiveData<String>("*")
-        var vJournalList: LiveData<List<vJournalItem>> = Transformations.switchMap(categoryFilterString) { filter -> if (filter == "%" || filter == "" || filter == null) database.getVJournalItems() else database.getVJournalItems("%$filter%")  }
+        var filterString: MutableLiveData<String> = MutableLiveData<String>()
+        var vJournalList: LiveData<List<vJournalItem>> = Transformations.switchMap(filterString) { filter ->
+            if (filter.isNullOrBlank() || filter == "%")
+                database.getVJournalItems()
+            else
+                database.getVJournalItems("%${filter.replace(" ", "%")}%")
+            // Note: The tranformation could not handle multiple method calls in order to separate searches for
+        }
 
         val allCategories: LiveData<List<String>> = database.getAllCategories()
-
 
     init {
 
@@ -40,8 +45,8 @@ class VJournalListViewModel(
         val lipsumDescription = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
 
 
-        database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0, "DRAFT"))
-        database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0, "DRAFT"))
+        database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", "FINAL","PUBLIC", "", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
+        database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", "FINAL","PUBLIC", "", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
     }
 
 
@@ -58,15 +63,8 @@ class VJournalListViewModel(
         return vJournalList.value?.indexOf(vJournalFocusItem.value)
     }
 
-    fun setCategoryFilter(categoriesFilter: String) {
-        categoryFilterString.value = categoriesFilter
-/*
-        Log.println(Log.INFO, "categoryFilteredBefore", vJournalList.value!!.size.toString())
-        Log.println(Log.INFO, "categoryFilterString", categoryFilterString.value.toString())
-        vJournalList.apply { database.getVJournalItems(categoryFilterString.value.toString())   }
-        Log.println(Log.INFO, "categoryFilteredAfter", vJournalList.value!!.size.toString())
-*/
+    fun setFilter(filter: String) {
+        filterString.value = filter
     }
-
 
 }

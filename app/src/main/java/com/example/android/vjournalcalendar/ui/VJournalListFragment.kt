@@ -74,7 +74,7 @@ class VJournalListFragment : Fragment() {
         val arguments = VJournalListFragmentArgs.fromBundle((arguments!!))
 
         // set the filter String, default is "%"
-        vJournalListViewModel.setCategoryFilter(arguments.categoryFilterString)
+        vJournalListViewModel.setFilter(arguments.categoryFilterString)
 
 
 
@@ -111,11 +111,10 @@ class VJournalListFragment : Fragment() {
 
         // initialize the floating action button only onStart, otherwise the fragment might not be created yet
         val fab: View = requireNotNull(activity).findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener { _ ->
 
             this.findNavController().navigate(
                     VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment().setVJournalItemEditId(0))
-
         }
         super.onStart()
     }
@@ -129,10 +128,10 @@ class VJournalListFragment : Fragment() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                if (query == "")
-                    vJournalListViewModel.setCategoryFilter("%")
+                if (query.isNullOrEmpty())
+                    vJournalListViewModel.setFilter("%")
                 else
-                    vJournalListViewModel.setCategoryFilter(query)
+                    vJournalListViewModel.setFilter(query)
                 /*
                 if (list.contains(query)) {
                     adapter.filter.filter(query)
@@ -145,10 +144,10 @@ class VJournalListFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                if (newText == "")
-                    vJournalListViewModel.setCategoryFilter("%")
+                if (newText.isNullOrEmpty())
+                    vJournalListViewModel.setFilter("%")
                 else
-                    vJournalListViewModel.setCategoryFilter(newText)                //adapter.filter.filter(newText)
+                    vJournalListViewModel.setFilter(newText)
                 return false
             }
         })

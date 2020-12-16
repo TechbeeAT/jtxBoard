@@ -20,18 +20,11 @@
     <string name="app_name">VJournal Calendar</string>
 
     <string-array name="vjournal_status">
-        <item>DRAFT</item>
-        <item>FINAL</item>
-        <item>CANCELLED</item>
+        <item>Draft</item>
+        <item>Final</item>
+        <item>Cancelled</item>
     </string-array>
 
-
-    <!-- Output to TextView styled with a little HTML -->
-    <string name="title"><![CDATA[<h3>HERE IS YOUR SLEEP DATA</h3>]]></string>
-    <string name="start_time"><![CDATA[<b>Start:</b>]]></string>
-    <string name="end_time"><![CDATA[<b>End:</b>]]></string>
-    <string name="quality"><![CDATA[<b>Quality:</b>]]></string>
-    <string name="hours_slept"><![CDATA[<b>Hours:Minutes:Seconds</b>]]></string>
 
 
     <!-- Toast to play after Clear button has been pressed -->

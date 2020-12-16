@@ -1,15 +1,8 @@
 package com.example.android.vjournalcalendar.database
 
+import androidx.annotation.IntDef
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import java.lang.reflect.Constructor
-import java.text.DateFormat
-import java.text.DateFormat.getDateInstance
-import java.text.DateFormat.getTimeInstance
-import java.util.*
-
-
 
 
 @Entity(tableName = "vjournalitems")
@@ -24,8 +17,13 @@ data class vJournalItem(
         var uid: String = "",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
         //var attach: String,
 
-        var categories: String = "", //make it an array or another structure?
-        //var class: String,
+        var categories: String = "",
+
+        var status: String = "DRAFT",     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED
+        var classification: String = "PUBLIC",    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL
+
+        var url: String = "",
+
 
         //var comment: ArrayList<String> = arrayListOf()
         //  val contact: String,
@@ -45,9 +43,9 @@ data class vJournalItem(
         //var rrule: String?,                               //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
 
         //var relatedTo: Long?,
-        var status: String? = ""
 
-        //var url: String?,
+
+
         //var ianaProperty: String,
         //var xProperty: String,
 
@@ -57,5 +55,6 @@ data class vJournalItem(
         //var xComponent: String?
         //
 )
+
 
 

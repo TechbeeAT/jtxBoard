@@ -34,8 +34,8 @@ interface VJournalDatabaseDao {
     fun getVJournalItems(): LiveData<List<vJournalItem>>
 
 
-    @Query("SELECT * FROM vjournalitems WHERE categories LIKE :searchstring OR summary LIKE :searchstring OR description LIKE :searchstring  ORDER BY dtstart DESC")
-    fun getVJournalItems(searchstring: String): LiveData<List<vJournalItem>>
+    @Query("SELECT * FROM vjournalitems WHERE categories LIKE :filter OR summary LIKE :filter OR description LIKE :filter OR organizer LIKE :filter OR status LIKE :filter  ORDER BY dtstart DESC")
+    fun getVJournalItems(filter: String): LiveData<List<vJournalItem>>
 
 
     @Query("SELECT DISTINCT categories FROM vjournalitems ORDER BY categories")
