@@ -18,7 +18,7 @@ class VJournalListViewModel(
         application: Application) : AndroidViewModel(application) {
 
         var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
-        var filterString: MutableLiveData<String> = MutableLiveData<String>()
+        var filterString = MutableLiveData<String>()
         var vJournalList: LiveData<List<vJournalItem>> = Transformations.switchMap(filterString) { filter ->
             if (filter.isNullOrBlank() || filter == "%")
                 database.getVJournalItems()
@@ -29,11 +29,21 @@ class VJournalListViewModel(
 
         val allCategories: LiveData<List<String>> = database.getAllCategories()
 
+    companion object {
+        val SEARCH_JOURNALS_OR_NOTES = 0
+        val SEARCH_GLOBAL = 1
+        val SEARCH_CATEGORIES = 2
+        val SEARCH_ORGANIZER = 3
+        val SEARCH_STATUS = 4
+        val SEARCH_CLASSIFICATION = 5
+
+
+    }
+
     init {
 
         viewModelScope.launch {
             insertTestData()
-
         }
     }
 
@@ -45,8 +55,9 @@ class VJournalListViewModel(
         val lipsumDescription = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
 
 
-        database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", "FINAL","PUBLIC", "", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
-        database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer", "UID", "#category1, #category2", "FINAL","PUBLIC", "", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
+        //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer",  "#category1, #category2", "FINAL","PUBLIC", "", "uid", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
+        //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer",  "#category1, #category2", "FINAL","PUBLIC", "", "uid", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
+        database.insert(vJournalItem(summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
     }
 
 

@@ -1,29 +1,29 @@
 package com.example.android.vjournalcalendar.ui
 
-import android.app.SearchManager
+import android.app.Application
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ArrayAdapter
+import android.widget.DatePicker
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.cursoradapter.widget.CursorAdapter
-import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.loader.app.LoaderManager
-import androidx.loader.content.CursorLoader
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.vjournalcalendar.R
-import com.example.android.vjournalcalendar.convertCategoriesCSVtoList
-import com.example.android.vjournalcalendar.convertCategoriesListtoCSVString
 import com.example.android.vjournalcalendar.database.VJournalDatabase
 import com.example.android.vjournalcalendar.databinding.FragmentVjournalListBinding
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.tabs.TabLayout
+import java.lang.Math.abs
+import java.util.*
 
 
-class VJournalListFragment : Fragment() {
+class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
 
     private var recyclerView: RecyclerView? = null
     private var linearLayoutManager: LinearLayoutManager? = null
@@ -32,6 +32,7 @@ class VJournalListFragment : Fragment() {
     private lateinit var vJournalListViewModel: VJournalListViewModel
 
     private lateinit var binding: FragmentVjournalListBinding
+    private lateinit var application: Application
 
 
 
@@ -42,7 +43,7 @@ class VJournalListFragment : Fragment() {
         binding = FragmentVjournalListBinding.inflate(inflater, container, false)
 
         // set up DB DAO
-        val application = requireNotNull(this.activity).application
+        application = requireNotNull(this.activity).application
         val dataSource = VJournalDatabase.getInstance(application).vJournalDatabaseDao
 
         // create the view model through the view model factory
@@ -97,10 +98,25 @@ class VJournalListFragment : Fragment() {
             //Log.println(Log.INFO, "vJournalListViewModel", "Item Position: ${pos.toString()}")
 
             if (pos != null)
-                recyclerView?.scrollToPosition(pos)
+                recyclerView?.smoothScrollToPosition(pos)
         })
 
 
+
+        binding.tabLayoutJournalNotes.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                // Handle tab select
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                TODO("Not yet implemented")
+            }
+        })
 
         return binding.root
 
@@ -122,6 +138,8 @@ class VJournalListFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_vjournal_list, menu)
 
+        // START Set up Search
+
         val searchMenuItem = menu.findItem(R.id.vjournal_list_search)
         val searchView = searchMenuItem.actionView as SearchView
 
@@ -132,14 +150,7 @@ class VJournalListFragment : Fragment() {
                     vJournalListViewModel.setFilter("%")
                 else
                     vJournalListViewModel.setFilter(query)
-                /*
-                if (list.contains(query)) {
-                    adapter.filter.filter(query)
-                } else {
-                    Toast.makeText(this@MainActivity, "No Match found", Toast.LENGTH_LONG).show()
-                }
 
-                 */
                 return false
             }
 
@@ -151,6 +162,51 @@ class VJournalListFragment : Fragment() {
                 return false
             }
         })
+
+        // END Set up Search
+
+        // START Set up Datepicker
+        val gotodateMenuItem = menu.findItem(R.id.vjournal_list_gotodate)
+        gotodateMenuItem.setOnMenuItemClickListener {
+
+            val c = Calendar.getInstance()
+            c.timeInMillis = System.currentTimeMillis()
+
+            val year = c.get(Calendar.YEAR)
+            val month = c.get(Calendar.MONTH)
+            val day = c.get(Calendar.DAY_OF_MONTH)
+            val dpd = DatePickerDialog(activity!!, this, year, month, day)
+
+
+            val startItem = vJournalListViewModel.vJournalList.value?.lastOrNull()
+            val endItem = vJournalListViewModel.vJournalList.value?.firstOrNull()
+
+
+            if (startItem != null && endItem != null) {
+                dpd.datePicker.minDate = startItem.dtstart
+                dpd.datePicker.maxDate = endItem.dtstart
+            }
+
+            dpd.show()
+            true
+
+
+            /*
+            val materialDateBuilder: MaterialDatePicker.Builder<*> = MaterialDatePicker.Builder.datePicker()
+            materialDateBuilder.setTitleText("Go to date")
+            materialDateBuilder.setTheme(R.style.MaterialDatepicker)
+            val materialDatePicker = materialDateBuilder.build()
+
+            materialDatePicker.show(parentFragmentManager, "GOTO_MATERIAL_DATE_PICKER")
+            materialDatePicker.addOnPositiveButtonClickListener {
+                Toast.makeText(context, "Selected Date is : " + materialDatePicker.headerText, Toast.LENGTH_LONG)
+            }
+
+             */
+        }
+
+        // END Set up Datepicker
+
 
 /*
         searchView.setOnMenuItem
@@ -177,8 +233,39 @@ class VJournalListFragment : Fragment() {
     }
 
 
+    override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
+
+        val selectedDate = Calendar.getInstance()
+        selectedDate.set(Calendar.YEAR, year)
+        selectedDate.set(Calendar.MONTH, month)
+        selectedDate.set(Calendar.DAY_OF_MONTH, day)
 
 
+        var foundItem = vJournalListViewModel.vJournalList.value?.find { item ->
+            val cItem = Calendar.getInstance()
+            cItem.timeInMillis = item.dtstart
 
+            // if this condition is true, the item is considered as found
+            cItem.get(Calendar.YEAR) == year && cItem.get(Calendar.MONTH) == month && cItem.get(Calendar.DAY_OF_MONTH) == day
+        }
 
+        // if no exact match was found, find the closest match
+        if (foundItem == null) {
+            var datediff = 0L
+            vJournalListViewModel.vJournalList.value?.forEach { item ->
+                val cItem = Calendar.getInstance()
+                cItem.timeInMillis = item.dtstart
+
+                if (datediff == 0L || kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis) < datediff) {
+                    datediff = kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis)
+                    foundItem = item
+
+                }
+            }
+        }
+
+        if (foundItem != null)
+           vJournalListViewModel.setFocusItem(foundItem!!.id)
+
+    }
 }

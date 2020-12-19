@@ -3,6 +3,7 @@ package com.example.android.vjournalcalendar.database
 import androidx.annotation.IntDef
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 
 @Entity(tableName = "vjournalitems")
@@ -13,20 +14,21 @@ data class vJournalItem(
         var summary: String? = "",
         var description: String = "",
         var dtstart: Long = System.currentTimeMillis(),
+
         var organizer: String = "",
-        var uid: String = "",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
-        //var attach: String,
-
         var categories: String = "",
-
         var status: String = "DRAFT",     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED
         var classification: String = "PUBLIC",    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL
 
+        //var attach: String,
         var url: String = "",
 
 
         //var comment: ArrayList<String> = arrayListOf()
         //  val contact: String,
+
+        // TODO choose domain for UID
+        var uid: String = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.vjournal",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
 
         /*
          The following properties specify change management information in  calendar components.
@@ -53,7 +55,7 @@ data class vJournalItem(
         //var vTimezone: Long?,
         //var ianaComponent: String?,
         //var xComponent: String?
-        //
+
 )
 
 
