@@ -28,7 +28,7 @@ import androidx.room.TypeConverters
  * And a global method to get access to the database.
  */
 
-@Database(entities = [vJournalItem::class], version = 4, exportSchema = false)
+@Database(entities = [vJournalItem::class], version = 6, exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class VJournalDatabase : RoomDatabase() {
 

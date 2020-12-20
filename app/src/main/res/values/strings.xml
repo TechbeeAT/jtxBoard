@@ -25,6 +25,11 @@
         <item>Cancelled</item>
     </string-array>
 
+    <string-array name="vjournal_classification">
+        <item>Public</item>
+        <item>Private</item>
+        <item>Confidential</item>
+    </string-array>
 
 
     <!-- Toast to play after Clear button has been pressed -->

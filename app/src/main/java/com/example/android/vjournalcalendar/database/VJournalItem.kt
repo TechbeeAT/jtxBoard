@@ -11,6 +11,7 @@ data class vJournalItem(
 
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0L,
+        var component: String = "JOURNAL",          // JOURNAL or NOTE
         var summary: String? = "",
         var description: String = "",
         var dtstart: Long = System.currentTimeMillis(),
@@ -22,6 +23,9 @@ data class vJournalItem(
 
         //var attach: String,
         var url: String = "",
+        var attendee: String = "",
+        var contact: String = "",
+        var related: String = "",
 
 
         //var comment: ArrayList<String> = arrayListOf()
@@ -43,9 +47,6 @@ data class vJournalItem(
         //var rdate: Long? = System.currentTimeMillis()     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
         //var recurrenceId: Long?,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
         //var rrule: String?,                               //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
-
-        //var relatedTo: Long?,
-
 
 
         //var ianaProperty: String,

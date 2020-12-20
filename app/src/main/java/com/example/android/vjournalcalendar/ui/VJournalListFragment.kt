@@ -34,6 +34,8 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
     private lateinit var binding: FragmentVjournalListBinding
     private lateinit var application: Application
 
+    private lateinit var gotodateMenuItem: MenuItem
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -75,7 +77,8 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
         val arguments = VJournalListFragmentArgs.fromBundle((arguments!!))
 
         // set the filter String, default is "%"
-        vJournalListViewModel.setFilter(arguments.categoryFilterString)
+        //TODO add other filter criteria
+        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, arguments.categoryFilterString)
 
 
 
@@ -97,24 +100,36 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
             val pos = vJournalListViewModel.getFocusItemPosition()
             //Log.println(Log.INFO, "vJournalListViewModel", "Item Position: ${pos.toString()}")
 
-            if (pos != null)
+            if (pos != null && pos != -1)
                 recyclerView?.smoothScrollToPosition(pos)
         })
-
-
 
         binding.tabLayoutJournalNotes.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                // Handle tab select
+                when(tab?.position) {
+                    0 -> {
+                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, "JOURNAL")
+                        gotodateMenuItem.isVisible = true
+                    }
+                    1 -> {
+                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, "NOTE")
+                        gotodateMenuItem.isVisible = false     // no date search for notes
+                    }
+                    else -> {
+                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, "JOURNAL")
+                        gotodateMenuItem.isVisible = true
+                    }
+                }
             }
 
+
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                TODO("Not yet implemented")
+                // nothing to do
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                TODO("Not yet implemented")
+                // nothing to do
             }
         })
 
@@ -139,7 +154,6 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
         inflater.inflate(R.menu.menu_vjournal_list, menu)
 
         // START Set up Search
-
         val searchMenuItem = menu.findItem(R.id.vjournal_list_search)
         val searchView = searchMenuItem.actionView as SearchView
 
@@ -147,18 +161,18 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.isNullOrEmpty())
-                    vJournalListViewModel.setFilter("%")
+                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, "%")      // todo handle more
                 else
-                    vJournalListViewModel.setFilter(query)
+                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, "%$query%")
 
                 return false
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
                 if (newText.isNullOrEmpty())
-                    vJournalListViewModel.setFilter("%")
+                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, "%")      // todo handle more
                 else
-                    vJournalListViewModel.setFilter(newText)
+                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, "%$newText%")
                 return false
             }
         })
@@ -166,7 +180,7 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
         // END Set up Search
 
         // START Set up Datepicker
-        val gotodateMenuItem = menu.findItem(R.id.vjournal_list_gotodate)
+        gotodateMenuItem = menu.findItem(R.id.vjournal_list_gotodate)
         gotodateMenuItem.setOnMenuItemClickListener {
 
             val c = Calendar.getInstance()
@@ -235,12 +249,13 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
 
+        // create a Calendar Object out of the selected dates
         val selectedDate = Calendar.getInstance()
         selectedDate.set(Calendar.YEAR, year)
         selectedDate.set(Calendar.MONTH, month)
         selectedDate.set(Calendar.DAY_OF_MONTH, day)
 
-
+        // find the item with the same date
         var foundItem = vJournalListViewModel.vJournalList.value?.find { item ->
             val cItem = Calendar.getInstance()
             cItem.timeInMillis = item.dtstart

@@ -19,6 +19,8 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
     lateinit var dtstartFormatted: LiveData<String>
     lateinit var createdFormatted: LiveData<String>
     lateinit var lastModifiedFormatted: LiveData<String>
+    lateinit var isDateSet: LiveData<Boolean>
+
 
 
     var editingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
@@ -35,7 +37,7 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
             else
                 database.get(vJournalItemId)
 
-            setFormattedDates()
+            setupDates()
 
         }
     }
@@ -46,23 +48,29 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
 
 
 
-    private fun setFormattedDates() {
-        dtstartFormatted = Transformations.map(vJournalItem)  { _ ->
-            var formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(vJournalItem.value?.let { Date(it?.dtstart) })
-            var formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(vJournalItem.value?.let { Date(it.dtstart) })
-            var formattedDateTime = "$formattedDate $formattedTime"
-            formattedDateTime
+    private fun setupDates() {
+
+        isDateSet = Transformations.map(vJournalItem) { item ->
+            return@map item!!.dtstart != 0L                  //return true if dtstart != 0L
         }
 
-        createdFormatted = Transformations.map(vJournalItem)  { _ ->
+
+        dtstartFormatted = Transformations.map(vJournalItem) { _ ->
+            val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(vJournalItem.value!!.dtstart))
+            val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(vJournalItem.value!!.dtstart))
+            return@map "$formattedDate $formattedTime"
+        }
+
+        createdFormatted = Transformations.map(vJournalItem) { _ ->
             vJournalItem.value?.let { Date(it.created).toString() }
         }
 
-        lastModifiedFormatted = Transformations.map(vJournalItem)  { _ ->
+        lastModifiedFormatted = Transformations.map(vJournalItem) { _ ->
             vJournalItem.value?.let { Date(it.lastModified).toString() }
         }
-    }
 
+
+    }
 
 }
 

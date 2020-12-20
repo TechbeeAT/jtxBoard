@@ -35,7 +35,9 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="31" />
+                tools:text="31"
+                android:visibility="@{vJournalItemViewModel.isDateSet ? View.VISIBLE : View.GONE}"
+            />
 
             <TextView
                 android:id="@+id/dtstart_month"
@@ -48,7 +50,9 @@
                 app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dtstart_day"
-                tools:text="December" />
+                tools:text="December"
+                android:visibility="@{vJournalItemViewModel.isDateSet ? View.VISIBLE : View.GONE}"
+                />
 
             <TextView
                 android:id="@+id/dtstart_year"
@@ -61,7 +65,9 @@
                 app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dtstart_month"
-                tools:text="2020" />
+                tools:text="2020"
+                android:visibility="@{vJournalItemViewModel.isDateSet ? View.VISIBLE : View.GONE}"
+                />
 
             <TextView
                 android:id="@+id/dtstart_time"
@@ -75,7 +81,9 @@
                 app:layout_constraintStart_toStartOf="@+id/dtstart_day"
                 app:layout_constraintTop_toBottomOf="@+id/dtstart_year"
                 app:layout_constraintVertical_bias="0.0"
-                tools:text="13:30" />
+                tools:text="13:30"
+                android:visibility="@{vJournalItemViewModel.isDateSet ? View.VISIBLE : View.GONE}"
+                />
 
 
             <TextView

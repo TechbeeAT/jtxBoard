@@ -17,20 +17,7 @@ class VJournalListViewModel(
         val database: VJournalDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
-        var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
-        var filterString = MutableLiveData<String>()
-        var vJournalList: LiveData<List<vJournalItem>> = Transformations.switchMap(filterString) { filter ->
-            if (filter.isNullOrBlank() || filter == "%")
-                database.getVJournalItems()
-            else
-                database.getVJournalItems("%${filter.replace(" ", "%")}%")
-            // Note: The tranformation could not handle multiple method calls in order to separate searches for
-        }
-
-        val allCategories: LiveData<List<String>> = database.getAllCategories()
-
-    companion object {
-        val SEARCH_JOURNALS_OR_NOTES = 0
+        val SEARCH_COMPONENT = 0
         val SEARCH_GLOBAL = 1
         val SEARCH_CATEGORIES = 2
         val SEARCH_ORGANIZER = 3
@@ -38,7 +25,23 @@ class VJournalListViewModel(
         val SEARCH_CLASSIFICATION = 5
 
 
-    }
+        var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
+        var filterArray = MutableLiveData<Array<String>>().apply {
+            this.value = arrayOf("JOURNAL", "%", "%","%","%","%")
+        }
+
+
+        var vJournalList: LiveData<List<vJournalItem>> = Transformations.switchMap(filterArray) { filter ->
+            /*if (filter[SEARCH_GLOBAL].isNullOrBlank() || filter[SEARCH_GLOBAL] == "%")
+                database.getVJournalItems()
+            else */
+            //database.getVJournalItems("%${filter[SEARCH_GLOBAL].replace(" ", "%")}%")
+            database.getVJournalItems(filter[SEARCH_COMPONENT], filter[SEARCH_GLOBAL])
+            // Note: The tranformation could not handle multiple method calls in order to separate searches for
+        }
+
+        val allCategories: LiveData<List<String>> = database.getAllCategories()
+
 
     init {
 
@@ -58,6 +61,8 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer",  "#category1, #category2", "FINAL","PUBLIC", "", "uid", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
         //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer",  "#category1, #category2", "FINAL","PUBLIC", "", "uid", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
         database.insert(vJournalItem(summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
+        database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
+
     }
 
 
@@ -74,8 +79,11 @@ class VJournalListViewModel(
         return vJournalList.value?.indexOf(vJournalFocusItem.value)
     }
 
-    fun setFilter(filter: String) {
-        filterString.value = filter
+    fun setFilter(field: Int, searchString: String) {
+        filterArray.value?.set(field, searchString)
+        filterArray.postValue(filterArray.value)      // Post the filterArray to notify observers for Transformation Switchmap
+        //Log.println(Log.INFO, "array SearchGlobal", filterArray.value?.get(SEARCH_GLOBAL).toString())
+
     }
 
 }

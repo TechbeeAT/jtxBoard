@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <data>
+        <import type="android.view.View" />
+        <import type="com.example.android.vjournalcalendar.UtilKt" />
+
+
+        <variable
+            name="vJournalItemEditViewModel"
+            type="com.example.android.vjournalcalendar.ui.VJournalItemEditViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vjournal_item_edit_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".ui.VJournalItemEditFragment">
+
+
+        <TextView
+            android:id="@+id/dtstart_day"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:text="@{UtilKt.convertLongToDayString(vJournalItemEditViewModel.vJournalItem.dtstart)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="31" />
+
+        <TextView
+            android:id="@+id/dtstart_month"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:text="@{UtilKt.convertLongToMonthString(vJournalItemEditViewModel.vJournalItem.dtstart)}"
+            app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dtstart_day"
+            tools:text="December" />
+
+        <TextView
+            android:id="@+id/dtstart_year"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:text="@{UtilKt.convertLongToYearString(vJournalItemEditViewModel.vJournalItem.dtstart)}"
+            app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dtstart_month"
+            tools:text="2020" />
+
+        <TextView
+            android:id="@+id/dtstart_time"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@{UtilKt.convertLongToTimeString(vJournalItemEditViewModel.vJournalItem.dtstart)}"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/top_barrier"
+            app:layout_constraintStart_toStartOf="@+id/dtstart_day"
+            app:layout_constraintTop_toBottomOf="@+id/dtstart_year"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="13:30" />
+
+
+        <TextView
+            android:id="@+id/organizer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:drawableStart="@drawable/ic_vjournal_organizer"
+            android:drawablePadding="4dp"
+            android:text="@{vJournalItemEditViewModel.vJournalItem.organizer}"
+            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Organizer" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/categories_chipgroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:theme="@style/CategoryChips"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="0dp"
+            app:layout_constraintBottom_toTopOf="@id/categories_add"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
+            app:layout_constraintTop_toBottomOf="@id/organizer"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <AutoCompleteTextView
+            android:id="@+id/categories_add"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ems="10"
+            android:hint="Add category"
+            android:inputType="textShortMessage|textCapSentences"
+            app:layout_constraintBottom_toTopOf="@id/top_barrier"
+            app:layout_constraintEnd_toStartOf="@+id/categories_add_icon"
+            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
+            app:layout_constraintTop_toBottomOf="@id/categories_chipgroup"
+            tools:text="Add category"
+            android:imeOptions="actionDone" />
+
+
+        <ImageView
+            android:id="@+id/categories_add_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toTopOf="@id/top_barrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/categories_add"
+            app:layout_constraintTop_toBottomOf="@id/categories_chipgroup"
+            app:srcCompat="@drawable/ic_vjournal_add_category"
+            android:imeOptions="actionSend" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/top_barrier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top" />
+
+
+        <EditText
+            android:id="@+id/summary_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Add summary"
+            android:inputType="textShortMessage|textCapSentences"
+            android:text="@{vJournalItemEditViewModel.vJournalItem.summary}"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_barrier"
+            tools:text="Summary ... Lorem ipsum dolor sit amet" />
+
+
+        <EditText
+            android:id="@+id/description_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Add description"
+            android:inputType="textWebEditText|textMultiLine|textCapSentences"
+            android:maxLines="8"
+            android:text="@{vJournalItemEditViewModel.vJournalItem.description}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
+            app:layout_constraintStart_toStartOf="@+id/summary_edit"
+            app:layout_constraintTop_toBottomOf="@+id/summary_edit"
+            tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
+
+        <Spinner
+            android:id="@+id/status_spinner"
+            style="@android:style/Widget.Holo.Light.Spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:dropDownWidth="wrap_content"
+            android:entries="@array/vjournal_status"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/description_edit" />
+
+        <Spinner
+            android:id="@+id/classification_spinner"
+            style="@android:style/Widget.Holo.Light.Spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:dropDownWidth="wrap_content"
+            android:entries="@array/vjournal_classification"
+            app:layout_constraintStart_toEndOf="@+id/status_spinner"
+            app:layout_constraintTop_toTopOf="@+id/status_spinner" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/url_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="URL"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/status_spinner"
+            app:startIconDrawable="@drawable/ic_link"
+            app:endIconMode="clear_text"
+            app:helperTextEnabled="true"
+            app:helperText="URL related to this entry">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textUri"
+                android:text="@{vJournalItemEditViewModel.vJournalItem.url}"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/attendee_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Attendees"
+            app:endIconMode="clear_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/url_edit"
+            app:startIconDrawable="@drawable/ic_attendee"
+            app:helperTextEnabled="true"
+            app:helperText="E-Mail of attendees separated by commas">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textWebEmailAddress|textEmailAddress"
+                android:text="@{vJournalItemEditViewModel.vJournalItem.attendee}"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/contact_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contact information"
+            app:endIconMode="clear_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/attendee_edit"
+            app:startIconDrawable="@drawable/ic_contact"
+            app:helperTextEnabled="true"
+            app:helperText="Contact information of the responsible or owner of this entry">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences|textEmailAddress"
+                android:text="@{vJournalItemEditViewModel.vJournalItem.contact}"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/relatedto_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Related to ..."
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contact_edit"
+            app:startIconDrawable="@drawable/ic_link"
+            app:endIconMode="clear_text"
+            app:helperTextEnabled="true"
+            app:helperText="URL to a related calendar entry">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textUri"
+                android:text="@{vJournalItemEditViewModel.vJournalItem.related}"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:onClick="@{() -> vJournalItemEditViewModel.savingClicked()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relatedto_edit"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/ic_vjournal_save" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
+
+</layout>
