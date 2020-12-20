@@ -10,7 +10,7 @@
     android:layout_height="wrap_content"
     android:checkable="false"
     android:textSize="10sp"
-    android:theme="@style/CategoryChips"
+    android:theme="@style/Chips"
     app:chipIcon="@drawable/ic_vjournal_category"
     app:chipIconVisible="false"
     app:closeIconVisible="false"

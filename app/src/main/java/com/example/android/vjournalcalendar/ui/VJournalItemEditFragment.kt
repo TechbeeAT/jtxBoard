@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -20,6 +21,7 @@ import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
 import com.example.android.vjournalcalendar.database.vJournalItem
 import com.example.android.vjournalcalendar.databinding.FragmentVjournalItemEditBinding
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_vjournal_item_categories_chip.view.*
 import java.util.*
 
@@ -62,8 +64,8 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         vJournalItemEditViewModel.savingClicked.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                vJournalItemEditViewModel.summaryChanged = binding.summaryEdit.text.toString()
-                vJournalItemEditViewModel.descriptionChanged = binding.descriptionEdit.text.toString()
+                vJournalItemEditViewModel.summaryChanged = binding.summaryEdit.editText?.text.toString()
+                vJournalItemEditViewModel.descriptionChanged = binding.descriptionEdit.editText?.text.toString()
                 vJournalItemEditViewModel.urlChanged = binding.urlEdit.editText?.text.toString()
                 vJournalItemEditViewModel.attendeeChanged = binding.urlEdit.editText?.text.toString()
                 vJournalItemEditViewModel.contactChanged = binding.contactEdit.editText?.text.toString()
@@ -117,22 +119,48 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
             if (vJournalItemEditViewModel.vJournalItem.value != null)
                 addChips(convertCategoriesCSVtoList(vJournalItemEditViewModel.vJournalItem.value!!.categories))
 
-            // Set the default value of the Status Spinner
+
+
+            // Set the default value of the Status Chip
+            val statusItems = resources.getStringArray(R.array.vjournal_status)
             when(vJournalItemEditViewModel.vJournalItem.value?.status) {
-                "DRAFT" -> binding.statusSpinner.setSelection(0)
-                "FINAL" -> binding.statusSpinner.setSelection(1)
-                "CANCELLED" -> binding.statusSpinner.setSelection(2)
-                else -> binding.statusSpinner.visibility = View.GONE      // don't show the spinner if the value is not known in order to not mess with external data!
+                "DRAFT" -> binding.statusChip.text = statusItems[0]
+                "FINAL" -> binding.statusChip.text = statusItems[1]
+                "CANCELLED" -> binding.statusChip.text = statusItems[2]
+                else -> binding.statusChip.text = vJournalItemEditViewModel.vJournalItem.value?.status  // if the status is not one of the default status, show the actual status from the DB
             }
 
-            // Set the default value of the Classification Spinner
+            // Set the default value of the Classification Chip
+            val classificationItems = resources.getStringArray(R.array.vjournal_classification)
             when(vJournalItemEditViewModel.vJournalItem.value?.classification) {
-                "PUBLIC" -> binding.classificationSpinner.setSelection(0)
-                "PRIVATE" -> binding.classificationSpinner.setSelection(1)
-                "CONFIDENTIAL" -> binding.classificationSpinner.setSelection(2)
-                else -> binding.classificationSpinner.visibility = View.GONE      // don't show the spinner if the value is not known in order to not mess with external data!
+                "PUBLIC" -> binding.classificationChip.text = classificationItems[0]
+                "PRIVATE" -> binding.classificationChip.text = classificationItems[1]
+                "CONFIDENTIAL" -> binding.classificationChip.text = classificationItems[2]
+                else -> binding.classificationChip.text = vJournalItemEditViewModel.vJournalItem.value?.classification     // if the classification is not one of the default status, show the actual classification from the DB
             }
 
+
+
+
+            /*
+
+                // Set the default value of the Status Spinner
+                when(vJournalItemEditViewModel.vJournalItem.value?.status) {
+                    "DRAFT" -> binding.statusSpinner.setSelection(0)
+                    "FINAL" -> binding.statusSpinner.setSelection(1)
+                    "CANCELLED" -> binding.statusSpinner.setSelection(2)
+                    else -> binding.statusSpinner.visibility = View.GONE      // don't show the spinner if the value is not known in order to not mess with external data!
+                }
+
+                // Set the default value of the Classification Spinner
+                when(vJournalItemEditViewModel.vJournalItem.value?.classification) {
+                    "PUBLIC" -> binding.classificationSpinner.setSelection(0)
+                    "PRIVATE" -> binding.classificationSpinner.setSelection(1)
+                    "CONFIDENTIAL" -> binding.classificationSpinner.setSelection(2)
+                    else -> binding.classificationSpinner.visibility = View.GONE      // don't show the spinner if the value is not known in order to not mess with external data!
+                }
+
+    */
         })
 
         // Set up items to suggest for categories
@@ -142,9 +170,8 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                 val allCategoriesCSV = convertCategoriesListtoCSVString(vJournalItemEditViewModel.allCategories.value!!.toMutableList())
                 val allCategoriesList = convertCategoriesCSVtoList(allCategoriesCSV).distinct()
                 val arrayAdapter = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allCategoriesList)
-                binding.categoriesAdd.setAdapter(arrayAdapter)
+                binding.categoriesAddAutocomplete.setAdapter(arrayAdapter)
             }
-
         })
 
 
@@ -170,20 +197,23 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         // Transform the category input into a chip when the Add-Button is clicked
         // If the user entered multiple categories separated by comma, the values will be split in multiple categories
-        binding.categoriesAddIcon.setOnClickListener{
 
-            val addedCategories: List<String> = convertCategoriesCSVtoList(binding.categoriesAdd.text.toString())
+        binding.categoriesAdd.setEndIconOnClickListener {
+            // Respond to end icon presses
+            val addedCategories: List<String> = convertCategoriesCSVtoList(binding.categoriesAdd.editText?.text.toString())
             addChips(addedCategories)
-            binding.categoriesAdd.text.clear()
+            binding.categoriesAdd.editText?.text?.clear()
         }
 
+
+
         // Transform the category input into a chip when the Done button in the keyboard is clicked
-        binding.categoriesAdd.setOnEditorActionListener { v, actionId, event ->
+        binding.categoriesAdd.editText?.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    val addedCategories: List<String> = convertCategoriesCSVtoList(binding.categoriesAdd.text.toString())
+                    val addedCategories: List<String> = convertCategoriesCSVtoList(binding.categoriesAdd.editText?.text.toString())
                     addChips(addedCategories)
-                    binding.categoriesAdd.text.clear()
+                    binding.categoriesAdd.editText?.text?.clear()
                     true
                 }
                 else -> false
@@ -191,6 +221,85 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         }
 
 
+        binding.statusChip.setOnClickListener {
+
+            val statusItems = resources.getStringArray(R.array.vjournal_status)
+            val checkedStatus = when (vJournalItemEditViewModel.vJournalItem.value?.status) {
+                "DRAFT" -> 0
+                "FINAL" -> 1
+                "CANCELLED" -> 2
+                else -> 1
+            }
+
+            MaterialAlertDialogBuilder(context!!)
+                    //.setTitle(resources.getString(R.string.title))
+                    .setTitle("Set status")
+                    .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
+                        // Respond to neutral button press
+                        vJournalItemEditViewModel.statusChanged = vJournalItemEditViewModel.vJournalItem.value!!.status  // Reset to previous status
+                        // don't forget to update the UI
+                        binding.statusChip.text = statusItems[checkedStatus]
+                    }
+                    .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
+                        // Respond to positive button press, ATTENTION: "which" returns here -1 as this is the INT-value of the positive button!
+                    }
+                    // Single-choice items (initialized with checked item)
+                    .setSingleChoiceItems(statusItems, checkedStatus) { dialog, which ->
+                        // Respond to item chosen
+                        when(which) {
+                            0 -> vJournalItemEditViewModel.statusChanged = "DRAFT"
+                            1 -> vJournalItemEditViewModel.statusChanged = "FINAL"
+                            2 -> vJournalItemEditViewModel.statusChanged = "CANCELLED"
+                            // no else here, there's no other choice anyway and the user can cancel (this could be relevant, when the sync returns a status that is not one of the default 3)
+                        }
+                        // don't forget to update the UI
+                        binding.statusChip.text = statusItems[which]
+                    }
+                    .show()
+        }
+
+
+
+
+        binding.classificationChip.setOnClickListener {
+
+            val classificationItems = resources.getStringArray(R.array.vjournal_classification)
+            val checkedClassification = when (vJournalItemEditViewModel.vJournalItem.value?.classification) {
+                "PUBLIC" -> 0
+                "PRIVATE" -> 1
+                "CONFIDENTIAL" -> 2
+                else -> 0
+            }
+
+            MaterialAlertDialogBuilder(context!!)
+                    //.setTitle(resources.getString(R.string.title))
+                    .setTitle("Set classification")
+                    .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
+                        // Respond to neutral button press
+                        vJournalItemEditViewModel.classificationChanged = vJournalItemEditViewModel.vJournalItem.value!!.classification  // Reset to previous status
+
+                        // don't forget to update the UI
+                        binding.classificationChip.text = classificationItems[checkedClassification]
+                    }
+                    .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
+                        // Respond to positive button press
+                    }
+                    // Single-choice items (initialized with checked item)
+                    .setSingleChoiceItems(classificationItems, checkedClassification) { dialog, which ->
+                        // Respond to item chosen
+                        when(which) {
+                            0 -> vJournalItemEditViewModel.classificationChanged = "PUBLIC"
+                            1 -> vJournalItemEditViewModel.classificationChanged = "PRIVATE"
+                            2 -> vJournalItemEditViewModel.classificationChanged = "CONFIDENTIAL"
+                            // no else here, there's no other choice anyway and the user can cancel (this could be relevant, when the sync returns a classification that is not one of the default 3)
+                        }
+                        // don't forget to update the UI
+                        binding.classificationChip.text = classificationItems[which]
+                    }
+                    .show()
+        }
+
+        /*
         val statusSpinner = binding.statusSpinner
         statusSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
@@ -223,6 +332,15 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // do nothing
             }
+        }
+
+         */
+
+
+        binding.urlEdit.editText?.setOnFocusChangeListener { view, hasFocus ->
+                if(!(binding.urlEdit != null && isValidURL(binding.urlEdit.editText?.text.toString())))
+                    vJournalItemEditViewModel.urlError.value = "Please enter a valid URL"
+
         }
 
 

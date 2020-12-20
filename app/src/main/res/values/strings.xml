@@ -19,6 +19,10 @@
     <!-- App title and fragment titles -->
     <string name="app_name">VJournal Calendar</string>
 
+    <!-- Global Dialog Strings -->
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+
     <string-array name="vjournal_status">
         <item>Draft</item>
         <item>Final</item>

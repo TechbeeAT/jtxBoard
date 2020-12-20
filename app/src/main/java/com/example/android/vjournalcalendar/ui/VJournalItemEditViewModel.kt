@@ -1,6 +1,7 @@
 package com.example.android.vjournalcalendar.ui
 
 import android.app.Application
+import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.android.vjournalcalendar.convertCategoriesListtoCSVString
@@ -41,6 +42,9 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
     var dtstartChangedMinute: Int = 0
 
     var categoriesListChanged: MutableList<String> = mutableListOf()
+
+    val urlError = MutableLiveData<String>()
+
 
 
     init {
@@ -122,6 +126,10 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
         viewModelScope.launch(Dispatchers.IO) {
             database.delete(vJournalItem.value!!)
         }
+    }
+
+    fun clearUrlError(s: Editable) {
+        urlError.value = null
     }
 
 }

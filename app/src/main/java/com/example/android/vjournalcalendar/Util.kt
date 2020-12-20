@@ -17,6 +17,8 @@
 package com.example.android.vjournalcalendar
 
 import android.annotation.SuppressLint
+import android.text.TextUtils
+import android.util.Patterns
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -105,5 +107,13 @@ fun convertCategoriesCSVtoList(categoriesString: String): MutableList<String> {
 }
 
 fun convertCategoriesListtoCSVString(categoriesList: MutableList<String>): String {
-    return categoriesList.joinToString(separator=", ")
+    return categoriesList.joinToString(separator = ", ")
+}
+
+fun isValidEmail(emailString: String?): Boolean {
+    return !TextUtils.isEmpty(emailString) && Patterns.EMAIL_ADDRESS.matcher(emailString).matches()
+}
+
+fun isValidURL(urlString: String?): Boolean {
+    return !TextUtils.isEmpty(urlString) && Patterns.WEB_URL.matcher(urlString).matches()
 }

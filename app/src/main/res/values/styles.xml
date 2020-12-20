@@ -21,6 +21,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSurface">@color/white_text_color</item>
     </style>
 
     <!-- Basic styling for the buttons. -->
@@ -31,8 +32,11 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="CategoryChips" parent="Theme.MaterialComponents.Light">
+    <style name="Chips" parent="Theme.MaterialComponents.Light">
         <!-- ... -->
+    </style>
+
+    <style name="AlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
     </style>
 
     <!--

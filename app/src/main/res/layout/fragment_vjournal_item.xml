@@ -107,7 +107,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:theme="@style/CategoryChips"
+                android:theme="@style/Chips"
                 app:chipSpacingHorizontal="8dp"
                 app:chipSpacingVertical="0dp"
                 app:layout_constraintBottom_toTopOf="@id/top_barrier"
@@ -156,19 +156,188 @@
                 tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
 
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/status_chip"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:checkable="false"
+                android:theme="@style/Chips"
+                app:chipIcon="@drawable/ic_status"
+                app:chipIconVisible="true"
+                app:closeIconVisible="false"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description"
+                tools:text="Final" />
+
+            <com.google.android.material.chip.Chip
+
+                android:id="@+id/classification_chip"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:checkable="false"
+                android:theme="@style/Chips"
+                app:chipIcon="@drawable/ic_classification"
+                app:chipIconVisible="true"
+                app:closeIconVisible="false"
+                app:layout_constraintStart_toEndOf="@+id/status_chip"
+                app:layout_constraintTop_toTopOf="@+id/status_chip"
+                tools:text="Public" />
+
+
+            <ImageView
+                android:id="@+id/url_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/url_header"
+                app:srcCompat="@drawable/ic_link" />
+
+            <TextView
+                android:id="@+id/url_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="URL"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/url_icon"
+                app:layout_constraintTop_toBottomOf="@+id/status_chip" />
+
+            <TextView
+                android:id="@+id/url"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:autoLink="all"
+                android:text="@{vJournalItemViewModel.vJournalItem.url}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/url_icon"
+                app:layout_constraintTop_toBottomOf="@+id/url_header"
+                tools:text="https://www.bitfire.at/" />
+
+
+            <ImageView
+                android:id="@+id/attendee_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/attendee_header"
+                app:srcCompat="@drawable/ic_attendee" />
+
+            <TextView
+                android:id="@+id/attendee_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="Attendees"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/attendee_icon"
+                app:layout_constraintTop_toBottomOf="@+id/url" />
+
+            <TextView
+                android:id="@+id/attendee"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:autoLink="all"
+                android:text="@{vJournalItemViewModel.vJournalItem.attendee}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/attendee_icon"
+                app:layout_constraintTop_toBottomOf="@+id/attendee_header"
+                tools:text="john.doe@example.com, mary.doe@example.com" />
+
+
+            <ImageView
+                android:id="@+id/contact_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/contact_header"
+                app:srcCompat="@drawable/ic_contact" />
+
+            <TextView
+                android:id="@+id/contact_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="Contact"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/contact_icon"
+                app:layout_constraintTop_toBottomOf="@+id/attendee" />
+
+            <TextView
+                android:id="@+id/contact"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:autoLink="all"
+                android:text="@{vJournalItemViewModel.vJournalItem.contact}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/contact_icon"
+                app:layout_constraintTop_toBottomOf="@+id/contact_header"
+                tools:text="John Doe (john.doe@example.com)" />
+
+
+            <ImageView
+                android:id="@+id/relatedto_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/relatedto_header"
+                app:srcCompat="@drawable/ic_link" />
+
+            <TextView
+                android:id="@+id/relatedto_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="Related to"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/relatedto_icon"
+                app:layout_constraintTop_toBottomOf="@+id/contact" />
+
+            <TextView
+                android:id="@+id/relatedto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:autoLink="all"
+                android:text="@{vJournalItemViewModel.vJournalItem.related}"
+app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/relatedto_icon"
+                app:layout_constraintTop_toBottomOf="@+id/relatedto_header"
+                tools:text="https://example.com/remote.php/dav/calendars/johndoe/personal/097E4865-D073-4279-806C-3E2B3250C947.ics" />
+
+
             <TextView
                 android:id="@+id/created"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:text="@{`Created: ` + vJournalItemViewModel.createdFormatted}"
                 android:textAlignment="viewEnd"
                 android:textSize="10sp"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/description"
-                tools:text="Created: 1. Dezember 2020" />
+                app:layout_constraintTop_toBottomOf="@+id/relatedto"
+                tools:text="Created: Sun Dec 20 20:38:30 GMT+01:00 2020" />
 
 
             <TextView
@@ -182,15 +351,16 @@
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/created"
-                tools:text="Last modified: 1. Dezember 2020" />
+                tools:text="Last modified: Sun Dec 20 20:38:30 GMT+01:00 2020" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:onClick="@{() -> vJournalItemViewModel.editingClicked()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

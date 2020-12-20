@@ -100,7 +100,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:theme="@style/CategoryChips"
+            android:theme="@style/Chips"
             app:chipSpacingHorizontal="8dp"
             app:chipSpacingVertical="0dp"
             app:layout_constraintBottom_toTopOf="@id/categories_add"
@@ -109,34 +109,35 @@
             app:layout_constraintTop_toBottomOf="@id/organizer"
             app:layout_constraintVertical_bias="1.0" />
 
-        <AutoCompleteTextView
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/categories_add"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:ems="10"
             android:hint="Add category"
-            android:inputType="textShortMessage|textCapSentences"
-            app:layout_constraintBottom_toTopOf="@id/top_barrier"
-            app:layout_constraintEnd_toStartOf="@+id/categories_add_icon"
-            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-            app:layout_constraintTop_toBottomOf="@id/categories_chipgroup"
-            tools:text="Add category"
-            android:imeOptions="actionDone" />
-
-
-        <ImageView
-            android:id="@+id/categories_add_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            app:endIconContentDescription="Add category"
+            app:endIconDrawable="@drawable/ic_vjournal_add_category"
+            app:endIconMode="custom"
+            app:helperText="Add multiple categories separated with comma"
+            app:helperTextEnabled="true"
             app:layout_constraintBottom_toTopOf="@id/top_barrier"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/categories_add"
-            app:layout_constraintTop_toBottomOf="@id/categories_chipgroup"
-            app:srcCompat="@drawable/ic_vjournal_add_category"
-            android:imeOptions="actionSend" />
+            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
+            app:layout_constraintTop_toBottomOf="@id/categories_chipgroup">
+
+
+            <AutoCompleteTextView
+                android:id="@+id/categories_add_autocomplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ems="10"
+                android:imeOptions="actionDone"
+                android:inputType="textShortMessage|textCapSentences" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/top_barrier"
@@ -145,36 +146,50 @@
             app:barrierDirection="top" />
 
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/summary_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Add summary"
-            android:inputType="textShortMessage|textCapSentences"
-            android:text="@{vJournalItemEditViewModel.vJournalItem.summary}"
-            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:hint="Summary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/top_barrier"
-            tools:text="Summary ... Lorem ipsum dolor sit amet" />
+            app:layout_constraintTop_toBottomOf="@id/top_barrier">
 
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textShortMessage|textCapSentences"
+                android:text="@{vJournalItemEditViewModel.vJournalItem.summary}"
+                android:textStyle="bold"
+                tools:text="Summary ... Lorem ipsum dolor sit amet" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/description_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Add description"
-            android:inputType="textWebEditText|textMultiLine|textCapSentences"
-            android:maxLines="8"
-            android:text="@{vJournalItemEditViewModel.vJournalItem.description}"
+            android:layout_marginTop="8dp"
+            android:hint="Description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/dtstart_day"
             app:layout_constraintStart_toStartOf="@+id/summary_edit"
-            app:layout_constraintTop_toBottomOf="@+id/summary_edit"
-            tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
+            app:layout_constraintTop_toBottomOf="@+id/summary_edit">
 
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textWebEditText|textMultiLine|textCapSentences"
+                android:maxLines="8"
+                android:text="@{vJournalItemEditViewModel.vJournalItem.description}"
+                tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+<!--
         <Spinner
             android:id="@+id/status_spinner"
             style="@android:style/Widget.Holo.Light.Spinner"
@@ -195,90 +210,127 @@
             android:entries="@array/vjournal_classification"
             app:layout_constraintStart_toEndOf="@+id/status_spinner"
             app:layout_constraintTop_toTopOf="@+id/status_spinner" />
+-->
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/status_chip"
+            style="@style/Widget.MaterialComponents.Chip.Entry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:checkable="false"
+            android:theme="@style/Chips"
+            app:chipIcon="@drawable/ic_status"
+            app:chipIconVisible="true"
+            app:closeIconVisible="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/description_edit"
+            tools:text="Final" />
+
+        <com.google.android.material.chip.Chip
+
+            android:id="@+id/classification_chip"
+            style="@style/Widget.MaterialComponents.Chip.Entry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:checkable="false"
+            android:theme="@style/Chips"
+            app:chipIcon="@drawable/ic_classification"
+            app:chipIconVisible="true"
+            app:closeIconVisible="false"
+            app:layout_constraintStart_toEndOf="@+id/status_chip"
+            app:layout_constraintTop_toTopOf="@+id/status_chip"
+            tools:text="Public" />
+
 
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/url_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="URL"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/status_spinner"
-            app:startIconDrawable="@drawable/ic_link"
             app:endIconMode="clear_text"
+            app:error="@{vJournalItemEditViewModel.urlError}"
+            app:errorEnabled="true"
+            app:helperText="URL related to this entry"
             app:helperTextEnabled="true"
-            app:helperText="URL related to this entry">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/status_chip"
+            app:startIconDrawable="@drawable/ic_link">
 
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:afterTextChanged="@{vJournalItemEditViewModel::clearUrlError}"
                 android:inputType="textUri"
-                android:text="@{vJournalItemEditViewModel.vJournalItem.url}"
-                />
+                android:text="@{vJournalItemEditViewModel.vJournalItem.url}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/attendee_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="Attendees"
             app:endIconMode="clear_text"
+            app:helperText="E-Mail of attendees separated by commas"
+            app:helperTextEnabled="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/url_edit"
-            app:startIconDrawable="@drawable/ic_attendee"
-            app:helperTextEnabled="true"
-            app:helperText="E-Mail of attendees separated by commas">
+            app:startIconDrawable="@drawable/ic_attendee">
 
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textWebEmailAddress|textEmailAddress"
-                android:text="@{vJournalItemEditViewModel.vJournalItem.attendee}"
-                />
+                android:text="@{vJournalItemEditViewModel.vJournalItem.attendee}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/contact_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="Contact information"
             app:endIconMode="clear_text"
+            app:helperText="Contact information of the responsible or owner of this entry"
+            app:helperTextEnabled="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/attendee_edit"
-            app:startIconDrawable="@drawable/ic_contact"
-            app:helperTextEnabled="true"
-            app:helperText="Contact information of the responsible or owner of this entry">
+            app:startIconDrawable="@drawable/ic_contact">
 
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences|textEmailAddress"
-                android:text="@{vJournalItemEditViewModel.vJournalItem.contact}"
-                />
+                android:text="@{vJournalItemEditViewModel.vJournalItem.contact}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/relatedto_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="Related to ..."
+            app:endIconMode="clear_text"
+            app:helperText="URL to a related calendar entry"
+            app:helperTextEnabled="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/contact_edit"
-            app:startIconDrawable="@drawable/ic_link"
-            app:endIconMode="clear_text"
-            app:helperTextEnabled="true"
-            app:helperText="URL to a related calendar entry">
+            app:startIconDrawable="@drawable/ic_link">
 
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textUri"
-                android:text="@{vJournalItemEditViewModel.vJournalItem.related}"
-                />
+                android:text="@{vJournalItemEditViewModel.vJournalItem.related}" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
