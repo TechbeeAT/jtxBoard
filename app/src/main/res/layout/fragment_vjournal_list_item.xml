@@ -88,10 +88,12 @@
 
         <ImageView
             android:id="@+id/status_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="@+id/categories"
+            android:layout_marginEnd="8dp"
+            android:tint="@android:color/darker_gray"
+            app:layout_constraintEnd_toStartOf="@+id/status"
             app:layout_constraintTop_toBottomOf="@+id/description"
             app:srcCompat="@drawable/ic_status" />
 
@@ -99,19 +101,21 @@
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/status_icon"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintEnd_toStartOf="@+id/classification_icon"
             app:layout_constraintTop_toTopOf="@+id/status_icon"
-            tools:text="Final"/>
-
+            tools:text="Final" />
 
 
         <ImageView
             android:id="@+id/classification_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            app:layout_constraintStart_toEndOf="@+id/status"
+            android:layout_marginEnd="8dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:tint="@android:color/darker_gray"
+            app:layout_constraintEnd_toStartOf="@+id/classification"
             app:layout_constraintTop_toTopOf="@+id/status_icon"
             app:srcCompat="@drawable/ic_classification" />
 
@@ -119,10 +123,12 @@
             android:id="@+id/classification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/classification_icon"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/status_icon"
-            tools:text="Public"/>
+            tools:text="Public" />
 
         <TextView
             android:id="@+id/categories"
