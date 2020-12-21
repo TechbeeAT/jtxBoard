@@ -30,11 +30,11 @@ interface VJournalDatabaseDao {
     fun get(key: Long): LiveData<vJournalItem?>
 
 
-    @Query("SELECT * FROM vjournalitems ORDER BY dtstart DESC")
+    @Query("SELECT * FROM vjournalitems ORDER BY dtstart DESC, created DESC")
     fun getVJournalItems(): LiveData<List<vJournalItem>>
 
 
-    @Query("SELECT * FROM vjournalitems WHERE component = :component AND (categories LIKE :search_global OR summary LIKE :search_global OR description LIKE :search_global OR organizer LIKE :search_global OR status LIKE :search_global)  ORDER BY dtstart DESC")
+    @Query("SELECT * FROM vjournalitems WHERE component = :component AND (categories LIKE :search_global OR summary LIKE :search_global OR description LIKE :search_global OR organizer LIKE :search_global OR status LIKE :search_global)  ORDER BY dtstart DESC, created DESC")
     fun getVJournalItems(component: String, search_global: String): LiveData<List<vJournalItem>>
 
 

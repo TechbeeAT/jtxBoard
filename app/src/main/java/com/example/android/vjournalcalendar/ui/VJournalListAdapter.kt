@@ -75,6 +75,12 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.dtstartTime.visibility = View.GONE
             }
 
+            val statusArray = context.resources.getStringArray(R.array.vjournal_status)
+            holder.status.text = statusArray[vJournalItem.status]
+
+            val classificationArray = context.resources.getStringArray(R.array.vjournal_classification)
+            holder.classification.text = classificationArray[vJournalItem.classification]
+
 
 
             // turn to item view when the card is clicked
@@ -99,14 +105,15 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
 
         var categories = itemView.findViewById<TextView>(R.id.categories)
         //var categoriesIcon = itemView.findViewById<ImageView>(R.id.categories_icon)
+        var status = itemView.findViewById<TextView>(R.id.status)
+        var classification = itemView.findViewById<TextView>(R.id.classification)
+
 
         var dtstartDay = itemView.findViewById<TextView>(R.id.dtstart_day)
         var dtstartMonth = itemView.findViewById<TextView>(R.id.dtstart_month)
         var dtstartYear = itemView.findViewById<TextView>(R.id.dtstart_year)
         var dtstartTime = itemView.findViewById<TextView>(R.id.dtstart_time)
 
-
-        //var comment = itemView.findViewById<TextView>(R.id.comment)
 
     }
 

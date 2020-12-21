@@ -5,8 +5,8 @@
     <item
         android:id="@+id/vjournal_item_share"
         android:icon="@drawable/ic_vjournal_share"
+        android:iconTint="#000000"
         android:title="share"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
 
 </menu>

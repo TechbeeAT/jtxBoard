@@ -3,6 +3,7 @@ package com.example.android.vjournalcalendar.ui
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
+import com.example.android.vjournalcalendar.R
 
 import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
 import com.example.android.vjournalcalendar.database.vJournalItem
@@ -26,6 +27,7 @@ class VJournalListViewModel(
 
 
         var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
+
         var filterArray = MutableLiveData<Array<String>>().apply {
             this.value = arrayOf("JOURNAL", "%", "%","%","%","%")
         }
@@ -47,6 +49,26 @@ class VJournalListViewModel(
 
         viewModelScope.launch {
             insertTestData()
+
+
+/*
+            val statusArray = application.applicationContext.resources.getStringArray(R.array.vjournal_status)
+            when (vJournalItemViewModel.vJournalItem.value!!.status) {
+                "DRAFT" -> binding.statusChip.text = statusArray[0]
+                "FINAL" -> binding.statusChip.text = statusArray[1]
+                "CANCELLED" -> binding.statusChip.text = statusArray[2]
+                else -> binding.statusChip.text = vJournalItemViewModel.vJournalItem.value!!.status
+            }
+
+            val classificationArray = resources.getStringArray(R.array.vjournal_classification)
+            when (vJournalItemViewModel.vJournalItem.value!!.classification) {
+                "PUBLIC" -> binding.classificationChip.text = classificationArray[0]
+                "PRIVATE" -> binding.classificationChip.text = classificationArray[1]
+                "CONFIDENTIAL" -> binding.classificationChip.text = classificationArray[2]
+                else -> binding.classificationChip.text = vJournalItemViewModel.vJournalItem.value!!.classification
+            }
+
+ */
         }
     }
 

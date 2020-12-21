@@ -70,20 +70,10 @@ class VJournalItemFragment : Fragment() {
                 addChips(convertCategoriesCSVtoList(vJournalItemViewModel.vJournalItem.value!!.categories))
 
                 val statusArray = resources.getStringArray(R.array.vjournal_status)
-                when (vJournalItemViewModel.vJournalItem.value!!.status) {
-                    "DRAFT" -> binding.statusChip.text = statusArray[0]
-                    "FINAL" -> binding.statusChip.text = statusArray[1]
-                    "CANCELLED" -> binding.statusChip.text = statusArray[2]
-                    else -> binding.statusChip.text = vJournalItemViewModel.vJournalItem.value!!.status
-                }
+                binding.statusChip.text = statusArray[vJournalItemViewModel.vJournalItem.value!!.status]
 
                 val classificationArray = resources.getStringArray(R.array.vjournal_classification)
-                when (vJournalItemViewModel.vJournalItem.value!!.classification) {
-                    "PUBLIC" -> binding.classificationChip.text = classificationArray[0]
-                    "PRIVATE" -> binding.classificationChip.text = classificationArray[1]
-                    "CONFIDENTIAL" -> binding.classificationChip.text = classificationArray[2]
-                    else -> binding.classificationChip.text = vJournalItemViewModel.vJournalItem.value!!.classification
-                }
+                binding.classificationChip.text = classificationArray[vJournalItemViewModel.vJournalItem.value!!.classification]
 
             }
 

@@ -60,24 +60,6 @@
 
 
         <TextView
-            android:id="@+id/categories"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAlignment="textEnd"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"
-            android:textStyle="italic"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_barrier"
-            app:layout_constraintEnd_toEndOf="@+id/description"
-            app:layout_constraintStart_toStartOf="@+id/description"
-            app:layout_constraintTop_toBottomOf="@+id/description"
-            tools:text="#Category1, #Category2" />
-
-
-        <TextView
             android:id="@+id/summary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -103,6 +85,62 @@
             app:layout_constraintStart_toEndOf="@+id/dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/summary"
             tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
+
+        <ImageView
+            android:id="@+id/status_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/categories"
+            app:layout_constraintTop_toBottomOf="@+id/description"
+            app:srcCompat="@drawable/ic_status" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/status_icon"
+            app:layout_constraintTop_toTopOf="@+id/status_icon"
+            tools:text="Final"/>
+
+
+
+        <ImageView
+            android:id="@+id/classification_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toEndOf="@+id/status"
+            app:layout_constraintTop_toTopOf="@+id/status_icon"
+            app:srcCompat="@drawable/ic_classification" />
+
+        <TextView
+            android:id="@+id/classification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/classification_icon"
+            app:layout_constraintTop_toTopOf="@+id/status_icon"
+            tools:text="Public"/>
+
+        <TextView
+            android:id="@+id/categories"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_barrier"
+            app:layout_constraintEnd_toEndOf="@+id/description"
+            app:layout_constraintStart_toStartOf="@+id/description"
+            app:layout_constraintTop_toBottomOf="@+id/status_icon"
+            tools:text="Category1, Category2" />
+
 
         <androidx.constraintlayout.widget.Barrier
             android:id = "@+id/bottom_barrier"

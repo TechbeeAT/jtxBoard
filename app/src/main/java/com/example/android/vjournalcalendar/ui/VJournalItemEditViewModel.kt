@@ -26,8 +26,8 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
 
     var summaryChanged: String = ""
     var descriptionChanged: String = ""
-    var statusChanged: String = ""
-    var classificationChanged: String = ""
+    var statusChanged: Int = -1
+    var classificationChanged: Int = -1
 
     var urlChanged: String = ""
     var attendeeChanged: String = ""
@@ -35,11 +35,11 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
     var relatesChanged: String = ""
 
 
-    var dtstartChangedYear: Int = 0
-    var dtstartChangedMonth: Int = 0
-    var dtstartChangedDay: Int = 0
-    var dtstartChangedHour: Int = 0
-    var dtstartChangedMinute: Int = 0
+    var dtstartChangedYear: Int = -1
+    var dtstartChangedMonth: Int = -1
+    var dtstartChangedDay: Int = -1
+    var dtstartChangedHour: Int = -1
+    var dtstartChangedMinute: Int = -1
 
     var categoriesListChanged: MutableList<String> = mutableListOf()
 
@@ -83,8 +83,8 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
             vJournalItemUpdate.contact = contactChanged
             vJournalItemUpdate.related = relatesChanged
 
-            if(!statusChanged.isNullOrEmpty()) vJournalItemUpdate.status = statusChanged
-            if(!classificationChanged.isNullOrEmpty()) vJournalItemUpdate.classification = classificationChanged
+            if(statusChanged >= 0) vJournalItemUpdate.status = statusChanged
+            if(classificationChanged >= 0) vJournalItemUpdate.classification = classificationChanged
 
             vJournalItemUpdate.lastModified = System.currentTimeMillis()
             vJournalItemUpdate.dtstamp = System.currentTimeMillis()
@@ -92,15 +92,15 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
             var c: Calendar = Calendar.getInstance()
             c.timeInMillis = vJournalItemUpdate.dtstart
             Log.println(Log.INFO, "VJournalItemEditViewMod", "Value before: ${c.timeInMillis}")
-            if (dtstartChangedYear != 0)
+            if (dtstartChangedYear >= 0)
                 c.set(Calendar.YEAR, dtstartChangedYear)
-            if (dtstartChangedMonth != 0)
+            if (dtstartChangedMonth >= 0)
                 c.set(Calendar.MONTH, dtstartChangedMonth)
-            if (dtstartChangedYear != 0)
+            if (dtstartChangedYear >= 0)
                 c.set(Calendar.DAY_OF_MONTH, dtstartChangedDay)
-            if (dtstartChangedHour != 0)
+            if (dtstartChangedHour >= 0)
                 c.set(Calendar.HOUR_OF_DAY, dtstartChangedHour)
-            if (dtstartChangedMinute != 0)
+            if (dtstartChangedMinute >= 0)
                 c.set(Calendar.MINUTE, dtstartChangedMinute)
             Log.println(Log.INFO, "VJournalItemEditViewMod", "Value after: ${c.timeInMillis}")
 

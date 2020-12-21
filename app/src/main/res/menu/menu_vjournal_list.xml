@@ -5,7 +5,7 @@
     <item
         android:id="@+id/vjournal_list_search"
         android:icon="@drawable/ic_vjournal_search"
-        android:iconTint="#FFFFFF"
+        android:iconTint="#000000"
         android:queryHint="Search for keyword or #categories"
         android:title="Search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
@@ -14,7 +14,7 @@
     <item
         android:id="@+id/vjournal_list_gotodate"
         android:icon="@drawable/ic_vjournal_date"
-        android:iconTint="#FFFFFF"
+        android:iconTint="#000000"
         android:title="Go to date"
         app:showAsAction="ifRoom" />
 

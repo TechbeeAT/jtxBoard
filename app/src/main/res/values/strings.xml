@@ -27,12 +27,14 @@
         <item>Draft</item>
         <item>Final</item>
         <item>Cancelled</item>
+        <item>Unsupported</item>
     </string-array>
 
     <string-array name="vjournal_classification">
         <item>Public</item>
         <item>Private</item>
         <item>Confidential</item>
+        <item>Unsupported</item>
     </string-array>
 
 

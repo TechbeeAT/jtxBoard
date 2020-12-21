@@ -5,7 +5,7 @@
     <item
         android:id="@+id/vjournal_item_delete"
         android:icon="@drawable/ic_vjournal_delete"
+        android:iconTint="#000000"
         android:title="delete"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
 </menu>

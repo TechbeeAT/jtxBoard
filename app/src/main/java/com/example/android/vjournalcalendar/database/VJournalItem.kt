@@ -18,8 +18,8 @@ data class vJournalItem(
 
         var organizer: String = "",
         var categories: String = "",
-        var status: String = "DRAFT",     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED
-        var classification: String = "PUBLIC",    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL
+        var status: Int = 1,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, 3 = NOT SUPPORTED
+        var classification: Int = 0,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, 3 = NOT SUPPORTED
 
         //var attach: String,
         var url: String = "",
