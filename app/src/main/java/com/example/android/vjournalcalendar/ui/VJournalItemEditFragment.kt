@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import androidx.core.view.children
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,7 +18,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.vjournalcalendar.*
 import com.example.android.vjournalcalendar.database.VJournalDatabase
 import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
-import com.example.android.vjournalcalendar.database.vJournalItem
 import com.example.android.vjournalcalendar.databinding.FragmentVjournalItemEditBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -57,7 +56,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                 ViewModelProvider(
                         this, viewModelFactory).get(VJournalItemEditViewModel::class.java)
 
-        binding.vJournalItemEditViewModel = vJournalItemEditViewModel
+        binding.model = vJournalItemEditViewModel
         binding.lifecycleOwner = this
 
 
@@ -66,6 +65,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
             if (it == true) {
                 vJournalItemEditViewModel.summaryChanged = binding.summaryEdit.editText?.text.toString()
                 vJournalItemEditViewModel.descriptionChanged = binding.descriptionEdit.editText?.text.toString()
+                vJournalItemEditViewModel.organizerChanged = binding.organizer.selectedItem.toString()
                 vJournalItemEditViewModel.urlChanged = binding.urlEdit.editText?.text.toString()
                 vJournalItemEditViewModel.attendeeChanged = binding.attendeeEdit.editText?.text.toString()
                 vJournalItemEditViewModel.contactChanged = binding.contactEdit.editText?.text.toString()
@@ -87,7 +87,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                     Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG).show()
                     this.findNavController().navigate(VJournalItemEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList())
                 }
-                builder.setNegativeButton("Cancel") {_, _ ->
+                builder.setNegativeButton("Cancel") { _, _ ->
                     // Do nothing, just close the message
                 }
 
@@ -135,7 +135,12 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
             else
                 binding.classificationChip.text = statusItems[vJournalItemEditViewModel.vJournalItem.value!!.classification]  // if supported show the classification according to the String Array
 
-
+            // set the default selection for the spinner. The same snippet exists for the allOrganizers observer
+            if(vJournalItemEditViewModel.allOrganizers.value != null) {
+                var selectedOrganizerPos = vJournalItemEditViewModel.allOrganizers.value?.indexOf(vJournalItemEditViewModel.vJournalItem.value?.organizer)
+                if (selectedOrganizerPos != null)
+                    binding.organizer.setSelection(selectedOrganizerPos)
+            }
 
             /*
 
@@ -161,12 +166,29 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         // Set up items to suggest for categories
         vJournalItemEditViewModel.allCategories.observe(viewLifecycleOwner, {
             // Create the adapter and set it to the AutoCompleteTextView
-            if(vJournalItemEditViewModel.allCategories.value != null) {
+            if (vJournalItemEditViewModel.allCategories.value != null) {
                 val allCategoriesCSV = convertCategoriesListtoCSVString(vJournalItemEditViewModel.allCategories.value!!.toMutableList())
                 val allCategoriesList = convertCategoriesCSVtoList(allCategoriesCSV).distinct()
                 val arrayAdapter = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allCategoriesList)
                 binding.categoriesAddAutocomplete.setAdapter(arrayAdapter)
             }
+        })
+
+        vJournalItemEditViewModel.allOrganizers.observe(viewLifecycleOwner, {
+
+            // set up the adapter for the organizer spinner
+            val spinner: Spinner = binding.organizer
+            val adapter = ArrayAdapter<Any?>(context!!, android.R.layout.simple_spinner_item, vJournalItemEditViewModel.allOrganizers.value!!)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.setAdapter(adapter)
+
+            // set the default selection for the spinner. The same snippet exists for the vJournalItem observer
+            if(vJournalItemEditViewModel.allOrganizers.value != null) {
+                var selectedOrganizerPos = vJournalItemEditViewModel.allOrganizers.value?.indexOf(vJournalItemEditViewModel.vJournalItem.value?.organizer)
+                if (selectedOrganizerPos != null)
+                        spinner.setSelection(selectedOrganizerPos)
+            }
+
         })
 
 
@@ -269,6 +291,8 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                     }
                     .show()
         }
+
+
 
         /*
         val statusSpinner = binding.statusSpinner

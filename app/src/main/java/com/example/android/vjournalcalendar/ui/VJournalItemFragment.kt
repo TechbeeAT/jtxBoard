@@ -51,7 +51,7 @@ class VJournalItemFragment : Fragment() {
                 ViewModelProvider(
                         this, viewModelFactory).get(VJournalItemViewModel::class.java)
 
-        binding.vJournalItemViewModel = vJournalItemViewModel
+        binding.model = vJournalItemViewModel
         binding.lifecycleOwner = this
 
 

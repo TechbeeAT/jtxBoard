@@ -38,8 +38,11 @@ interface VJournalDatabaseDao {
     fun getVJournalItems(component: String, search_global: String): LiveData<List<vJournalItem>>
 
 
-    @Query("SELECT DISTINCT categories FROM vjournalitems ORDER BY categories")
+    @Query("SELECT DISTINCT categories FROM vjournalitems ORDER BY categories ASC")
     fun getAllCategories(): LiveData<List<String>>
+
+    @Query("SELECT DISTINCT organizer FROM vjournalitems ORDER BY organizer ASC")
+    fun getAllOrganizers(): LiveData<List<String>>
 
 
     @Insert

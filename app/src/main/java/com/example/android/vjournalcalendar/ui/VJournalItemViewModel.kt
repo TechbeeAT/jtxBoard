@@ -16,12 +16,11 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
                                 application: Application) : AndroidViewModel(application) {
 
     lateinit var vJournalItem: LiveData<vJournalItem?>
+
+    lateinit var datetimeVisible: LiveData<Boolean>
     lateinit var dtstartFormatted: LiveData<String>
     lateinit var createdFormatted: LiveData<String>
     lateinit var lastModifiedFormatted: LiveData<String>
-    lateinit var isDateSet: LiveData<Boolean>
-
-
 
     var editingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
@@ -37,6 +36,10 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
             else
                 database.get(vJournalItemId)
 
+            datetimeVisible = Transformations.map(vJournalItem) { item ->
+                return@map item?.component == "JOURNAL"           // true if component == JOURNAL
+            }
+
             setupDates()
 
         }
@@ -50,9 +53,6 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
 
     private fun setupDates() {
 
-        isDateSet = Transformations.map(vJournalItem) { item ->
-            return@map item!!.dtstart != 0L                  //return true if dtstart != 0L
-        }
 
 
         dtstartFormatted = Transformations.map(vJournalItem) { _ ->
@@ -69,9 +69,7 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
             vJournalItem.value?.let { Date(it.lastModified).toString() }
         }
 
-
     }
-
 }
 
 

@@ -11,7 +11,7 @@
 
 
         <variable
-            name="vJournalItemEditViewModel"
+            name="model"
             type="com.example.android.vjournalcalendar.ui.VJournalItemEditViewModel" />
     </data>
 
@@ -30,10 +30,11 @@
             android:id="@+id/dtstart_day"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
+            android:text="@{UtilKt.convertLongToDayString(model.vJournalItem.dtstart)}"
             android:textAlignment="center"
             android:textSize="36sp"
             android:textStyle="bold"
-            android:text="@{UtilKt.convertLongToDayString(vJournalItemEditViewModel.vJournalItem.dtstart)}"
+            android:visibility="@{model.datetimeVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="31" />
@@ -45,11 +46,13 @@
             android:textAlignment="center"
             android:textSize="10sp"
             android:textStyle="bold"
-            android:text="@{UtilKt.convertLongToMonthString(vJournalItemEditViewModel.vJournalItem.dtstart)}"
+            android:text="@{UtilKt.convertLongToMonthString(model.vJournalItem.dtstart)}"
             app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dtstart_day"
-            tools:text="December" />
+            tools:text="December"
+            android:visibility="@{model.datetimeVisible ? View.VISIBLE : View.GONE}"
+            />
 
         <TextView
             android:id="@+id/dtstart_year"
@@ -58,17 +61,19 @@
             android:textAlignment="center"
             android:textSize="10sp"
             android:textStyle="bold"
-            android:text="@{UtilKt.convertLongToYearString(vJournalItemEditViewModel.vJournalItem.dtstart)}"
+            android:text="@{UtilKt.convertLongToYearString(model.vJournalItem.dtstart)}"
             app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dtstart_month"
-            tools:text="2020" />
+            tools:text="2020"
+            android:visibility="@{model.datetimeVisible ? View.VISIBLE : View.GONE}"
+            />
 
         <TextView
             android:id="@+id/dtstart_time"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="@{UtilKt.convertLongToTimeString(vJournalItemEditViewModel.vJournalItem.dtstart)}"
+            android:text="@{UtilKt.convertLongToTimeString(model.vJournalItem.dtstart)}"
             android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -76,9 +81,12 @@
             app:layout_constraintStart_toStartOf="@+id/dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/dtstart_year"
             app:layout_constraintVertical_bias="0.0"
-            tools:text="13:30" />
+            tools:text="13:30"
+            android:visibility="@{model.datetimeVisible ? View.VISIBLE : View.GONE}"
+            />
 
 
+        <!--
         <TextView
             android:id="@+id/organizer"
             android:layout_width="0dp"
@@ -87,10 +95,36 @@
             android:layout_marginTop="8dp"
             android:drawableStart="@drawable/ic_vjournal_organizer"
             android:drawablePadding="4dp"
-            android:text="@{vJournalItemEditViewModel.vJournalItem.organizer}"
+            android:text="@{model.vJournalItem.organizer}"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/dtstart_day"
             app:layout_constraintTop_toTopOf="parent"
+            tools:text="Organizer" />
+        -->
+
+
+        <ImageView
+            android:id="@+id/organizer_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/organizer"
+            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
+            app:layout_constraintTop_toTopOf="@+id/organizer"
+            app:srcCompat="@drawable/ic_vjournal_organizer" />
+
+        <Spinner
+            android:id="@+id/organizer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:drawableStart="@drawable/ic_vjournal_organizer"
+            android:drawablePadding="4dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/organizer_icon"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Organizer" />
 
         <com.google.android.material.chip.ChipGroup
@@ -115,6 +149,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:hint="Add category"
             app:endIconContentDescription="Add category"
             app:endIconDrawable="@drawable/ic_vjournal_add_category"
@@ -161,7 +196,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textShortMessage|textCapSentences"
-                android:text="@{vJournalItemEditViewModel.vJournalItem.summary}"
+                android:text="@{model.vJournalItem.summary}"
                 android:textStyle="bold"
                 tools:text="Summary ... Lorem ipsum dolor sit amet" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -173,7 +208,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Description"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/summary_edit"
             app:layout_constraintStart_toEndOf="@+id/dtstart_day"
             app:layout_constraintStart_toStartOf="@+id/summary_edit"
             app:layout_constraintTop_toBottomOf="@+id/summary_edit">
@@ -184,7 +219,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textWebEditText|textMultiLine|textCapSentences"
                 android:maxLines="8"
-                android:text="@{vJournalItemEditViewModel.vJournalItem.description}"
+                android:text="@{model.vJournalItem.description}"
                 tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -253,7 +288,7 @@
             android:layout_marginTop="8dp"
             android:hint="URL"
             app:endIconMode="clear_text"
-            app:error="@{vJournalItemEditViewModel.urlError}"
+            app:error="@{model.urlError}"
             app:errorEnabled="true"
             app:helperText="URL related to this entry"
             app:helperTextEnabled="true"
@@ -265,9 +300,9 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:afterTextChanged="@{vJournalItemEditViewModel::clearUrlError}"
+                android:afterTextChanged="@{model::clearUrlError}"
                 android:inputType="textUri"
-                android:text="@{vJournalItemEditViewModel.vJournalItem.url}" />
+                android:text="@{model.vJournalItem.url}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -288,7 +323,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textWebEmailAddress|textEmailAddress"
-                android:text="@{vJournalItemEditViewModel.vJournalItem.attendee}" />
+                android:text="@{model.vJournalItem.attendee}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -309,7 +344,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences|textEmailAddress"
-                android:text="@{vJournalItemEditViewModel.vJournalItem.contact}" />
+                android:text="@{model.vJournalItem.contact}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -330,7 +365,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textUri"
-                android:text="@{vJournalItemEditViewModel.vJournalItem.related}" />
+                android:text="@{model.vJournalItem.related}" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -341,7 +376,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:onClick="@{() -> vJournalItemEditViewModel.savingClicked()}"
+            android:onClick="@{() -> model.savingClicked()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relatedto_edit"
