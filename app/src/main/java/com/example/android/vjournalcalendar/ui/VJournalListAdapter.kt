@@ -86,7 +86,7 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
             // turn to item view when the card is clicked
             holder.listItemCardView.setOnClickListener {
                 it.findNavController().navigate(
-                        VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment().setVJournalItemId(vJournalItem.id))
+                        VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment().setItem2show(vJournalItem.id))
             }
 
         }

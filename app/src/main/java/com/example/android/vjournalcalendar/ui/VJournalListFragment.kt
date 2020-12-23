@@ -78,35 +78,38 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
 
         // set the filter String, default is "%"
         //TODO add other filter criteria
-        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, arguments.categoryFilterString)
-
+        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_CATEGORIES, "%${arguments.category2filter}%")
 
 
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
         vJournalListViewModel.vJournalList.observe(viewLifecycleOwner, Observer {
             vJournalListAdapter!!.notifyDataSetChanged()
 
-            if (arguments.vJournalItemId != 0L) {
-                Log.println(Log.INFO, "vJournalListFragment", arguments.vJournalItemId.toString())
-                vJournalListViewModel.setFocusItem(arguments.vJournalItemId)
+            if (arguments.item2focus != 0L) {
+                //Log.println(Log.INFO, "vJournalListFragment", arguments.vJournalItemId.toString())
+                vJournalListViewModel.setFocusItem(arguments.item2focus)
             }
 
         })
 
 
         // Observe the focus item to scroll automatically to the right position (newly updated or inserted item)
-        vJournalListViewModel.vJournalFocusItem.observe(viewLifecycleOwner, Observer {
+        vJournalListViewModel.focusItemId.observe(viewLifecycleOwner, Observer {
 
             val pos = vJournalListViewModel.getFocusItemPosition()
-            //Log.println(Log.INFO, "vJournalListViewModel", "Item Position: ${pos.toString()}")
+            Log.println(Log.INFO, "vJournalListViewModel", "Item Position: ${pos.toString()}")
 
-            if (pos != null && pos != -1)
-                recyclerView?.smoothScrollToPosition(pos)
+            recyclerView?.scrollToPosition(pos)
+                //vJournalListViewModel.resetFocusItem()
+            Log.println(Log.INFO, "vJournalListViewModel", "Scrolling now to: ${pos.toString()}")
+
         })
 
         binding.tabLayoutJournalNotes.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
+                vJournalListViewModel.resetFocusItem()
+
                 when(tab?.position) {
                     0 -> {
                         vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, "JOURNAL")
@@ -145,7 +148,7 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
         fab.setOnClickListener { _ ->
 
             this.findNavController().navigate(
-                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment().setVJournalItemEditId(0))
+                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment().setItem2edit(0))
         }
         super.onStart()
     }

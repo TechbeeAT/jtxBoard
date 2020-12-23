@@ -46,7 +46,7 @@ class VJournalItemFragment : Fragment() {
 
 
         // set up view model
-        viewModelFactory = VJournalItemViewModelFactory(arguments.vJournalItemId, dataSource, application)
+        viewModelFactory = VJournalItemViewModelFactory(arguments.item2show, dataSource, application)
         vJournalItemViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(VJournalItemViewModel::class.java)
@@ -60,7 +60,7 @@ class VJournalItemFragment : Fragment() {
             if (it) {
                 vJournalItemViewModel.editingClicked.value = false
                 this.findNavController().navigate(
-                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVJournalItemEditFragment().setVJournalItemEditId(vJournalItemViewModel.vJournalItem.value!!.id))
+                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVJournalItemEditFragment().setItem2edit(vJournalItemViewModel.vJournalItem.value!!.id))
             }
         })
 
@@ -99,7 +99,7 @@ class VJournalItemFragment : Fragment() {
 
                 // Responds to chip click
                 this.findNavController().navigate(
-                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVjournalListFragmentList().setCategoryFilterString(category)
+                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVjournalListFragmentList().setCategory2filter(category)
                 )
             }
         }

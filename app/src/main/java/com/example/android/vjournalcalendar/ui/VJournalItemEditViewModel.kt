@@ -116,6 +116,7 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
 
             vJournalItemUpdate.dtstart = c.timeInMillis
 
+            categoriesListChanged = categoriesListChanged.sorted().toMutableList()
             vJournalItemUpdate.categories = convertCategoriesListtoCSVString(categoriesListChanged)
 
 

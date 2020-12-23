@@ -51,7 +51,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         setHasOptionsMenu(true)
 
 
-        this.viewModelFactory = VJournalItemEditViewModelFactory(arguments.vJournalItemEditId, dataSource, application)
+        this.viewModelFactory = VJournalItemEditViewModelFactory(arguments.item2edit, dataSource, application)
         vJournalItemEditViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(VJournalItemEditViewModel::class.java)
@@ -106,8 +106,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         vJournalItemEditViewModel.returnVJournalItemId.observe(viewLifecycleOwner, Observer {
             if (it != 0L) {
-                this.findNavController().navigate(VJournalItemEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList().setVJournalItemId(it))
-                //this.findNavController().popBackStack(R.id.VJournalItemEditFragment, true)
+                this.findNavController().navigate(VJournalItemEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList().setItem2focus(it))
             }
             vJournalItemEditViewModel.savingClicked.value = false
         })

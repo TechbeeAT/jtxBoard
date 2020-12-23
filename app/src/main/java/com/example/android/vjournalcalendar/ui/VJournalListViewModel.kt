@@ -26,7 +26,8 @@ class VJournalListViewModel(
         val SEARCH_CLASSIFICATION = 5
 
 
-        var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
+        //var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
+        var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
 
         var filterArray = MutableLiveData<Array<String>>().apply {
             this.value = arrayOf("JOURNAL", "%", "%","%","%","%")
@@ -38,7 +39,7 @@ class VJournalListViewModel(
                 database.getVJournalItems()
             else */
             //database.getVJournalItems("%${filter[SEARCH_GLOBAL].replace(" ", "%")}%")
-            database.getVJournalItems(filter[SEARCH_COMPONENT], filter[SEARCH_GLOBAL])
+            database.getVJournalItems(filter[SEARCH_COMPONENT], filter[SEARCH_GLOBAL], filter[SEARCH_CATEGORIES])
             // Note: The tranformation could not handle multiple method calls in order to separate searches for
         }
 
@@ -50,25 +51,6 @@ class VJournalListViewModel(
         viewModelScope.launch {
             insertTestData()
 
-
-/*
-            val statusArray = application.applicationContext.resources.getStringArray(R.array.vjournal_status)
-            when (vJournalItemViewModel.vJournalItem.value!!.status) {
-                "DRAFT" -> binding.statusChip.text = statusArray[0]
-                "FINAL" -> binding.statusChip.text = statusArray[1]
-                "CANCELLED" -> binding.statusChip.text = statusArray[2]
-                else -> binding.statusChip.text = vJournalItemViewModel.vJournalItem.value!!.status
-            }
-
-            val classificationArray = resources.getStringArray(R.array.vjournal_classification)
-            when (vJournalItemViewModel.vJournalItem.value!!.classification) {
-                "PUBLIC" -> binding.classificationChip.text = classificationArray[0]
-                "PRIVATE" -> binding.classificationChip.text = classificationArray[1]
-                "CONFIDENTIAL" -> binding.classificationChip.text = classificationArray[2]
-                else -> binding.classificationChip.text = vJournalItemViewModel.vJournalItem.value!!.classification
-            }
-
- */
         }
     }
 
@@ -90,15 +72,23 @@ class VJournalListViewModel(
 
 
     fun setFocusItem(vJournalItemId: Long) {
-
-        vJournalFocusItem.value = vJournalList.value?.find { focusItem ->
-            focusItem.id == vJournalItemId
-        }!!
-
+        focusItemId.value = vJournalItemId
     }
 
-    fun getFocusItemPosition(): Int? {
-        return vJournalList.value?.indexOf(vJournalFocusItem.value)
+    fun getFocusItemPosition(): Int {
+
+        val focusItem = vJournalList.value?.find {
+            focusItemId.value == it.id
+        }
+
+        return if(vJournalList.value != null && focusItem != null)
+            vJournalList.value!!.indexOf(focusItem)
+        else
+            -1
+    }
+
+    fun resetFocusItem() {
+        focusItemId.value = 0L
     }
 
     fun setFilter(field: Int, searchString: String) {
