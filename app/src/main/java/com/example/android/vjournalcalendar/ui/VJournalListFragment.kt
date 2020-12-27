@@ -1,13 +1,16 @@
 package com.example.android.vjournalcalendar.ui
 
 
+import android.app.Activity
 import android.app.Application
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.SearchView
@@ -160,12 +163,14 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             this.findNavController().navigate(
                     VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment().setItem2edit(0))
         }
+
         super.onStart()
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_vjournal_list, menu)
+
 
         // Tell the variable the menu item to later make it visible or invisible
         gotodateMenuItem = menu.findItem(R.id.vjournal_list_gotodate)
@@ -197,6 +202,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         if (item.itemId == R.id.vjournal_list_gotodate) {
 
 // START Set up Datepicker
@@ -222,10 +228,18 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 true
             }
 
+        if (item.itemId == R.id.vjournal_filter) {
+
+            this.findNavController().navigate(
+                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalFilterFragment())
+        }
 
 
-        return super.onOptionsItemSelected(item)
+
+            return super.onOptionsItemSelected(item)
     }
+
+
 
 
 

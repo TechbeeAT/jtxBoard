@@ -37,7 +37,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
     lateinit var inflater: LayoutInflater
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
 
         // Get a reference to the binding object and inflate the fragment views.
 
@@ -134,7 +134,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
             if (vJournalItemEditViewModel.vJournalItem.value?.classification == 3)      // if unsupported don't show the classification
                 binding.classificationChip.visibility = View.GONE
             else
-                binding.classificationChip.text = statusItems[vJournalItemEditViewModel.vJournalItem.value!!.classification]  // if supported show the classification according to the String Array
+                binding.classificationChip.text = classificationItems[vJournalItemEditViewModel.vJournalItem.value!!.classification]  // if supported show the classification according to the String Array
 
             // set the default selection for the spinner. The same snippet exists for the allOrganizers observer
             if(vJournalItemEditViewModel.allOrganizers.value != null) {

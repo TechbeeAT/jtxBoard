@@ -16,32 +16,18 @@
 
 package com.example.android.vjournalcalendar
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
+import java.util.*
 
 
-/**
- * This is the toy app for lesson 6 of the
- * Android App Development in Kotlin course on Udacity(https://www.udacity.com/course/???).
- *
- * The SleepQualityTracker app is a demo app that helps you collect information about your sleep.
- * - Start time, end time, quality, and time slept
- *
- * This app demonstrates the following views and techniques:
- * - Room database, DAO, and Coroutines
- *
- * It also uses and builds on the following techniques from previous lessons:
- * - Transformation map
- * - Data Binding in XML files
- * - ViewModel Factory
- * - Using Backing Properties to protect MutableLiveData
- * - Observable state LiveData variables to trigger navigation
- */
 
 /**
  * This main activity is just a container for our fragments,
@@ -56,6 +42,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
+        // Set up the toolbar with the navigation drawer
+
         val toolbar: Toolbar = findViewById(R.id.topAppBar)
         setSupportActionBar(toolbar)
 
@@ -66,5 +54,52 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
 
 
+        // React on selection in Navigation View
+        val navView: NavigationView = findViewById(R.id.nav_view)
+        navView.setNavigationItemSelectedListener { menuItem ->
+            // Handle menu item selected
+
+            when (menuItem.itemId) {
+                /*
+                R.id.nav_about ->
+                    startActivity(Intent(activity, AboutActivity::class.java))
+                R.id.nav_app_settings ->
+                    startActivity(Intent(activity, AppSettingsActivity::class.java))
+                R.id.nav_beta_feedback ->
+                    if (!UiUtils.launchUri(activity, Uri.parse(BETA_FEEDBACK_URI), Intent.ACTION_SENDTO, false))
+                        Toast.makeText(activity, R.string.install_email_client, Toast.LENGTH_LONG).show()
+
+                 */
+                R.id.nav_twitter ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_website ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_manual ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_faq ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_forums ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_donate ->
+                    //if (BuildConfig.FLAVOR != App.FLAVOR_GOOGLE_PLAY)
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_privacy ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+            }
+
+            true
+        }
+
+
     }
+
+
+
 }

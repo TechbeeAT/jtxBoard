@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+<data>
+    <variable
+        name="model"
+        type="com.example.android.vjournalcalendar.ui.VJournalFilterViewModel" />
+</data>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/organizer_filter_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Organizer"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/organizer_filter_icon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/organizer_filter_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/organizer_filter_label"
+        app:srcCompat="@drawable/ic_vjournal_organizer" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/organizer_filter_chipgroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/organizer_filter_label"
+        app:layout_constraintTop_toBottomOf="@+id/organizer_filter_label">
+
+    </com.google.android.material.chip.ChipGroup>
+
+
+    <ImageView
+        android:id="@+id/status_filter_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/status_filter_label"
+        app:srcCompat="@drawable/ic_status" />
+
+    <TextView
+        android:id="@+id/status_filter_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Status"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/status_filter_icon"
+        app:layout_constraintTop_toBottomOf="@id/organizer_filter_chipgroup" />
+
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/status_filter_chipgroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/status_filter_label"
+        app:layout_constraintTop_toBottomOf="@+id/status_filter_label">
+
+    </com.google.android.material.chip.ChipGroup>
+
+
+    <ImageView
+        android:id="@+id/classification_filter_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/classification_filter_label"
+        app:srcCompat="@drawable/ic_classification" />
+
+    <TextView
+        android:id="@+id/classification_filter_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Classification"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/classification_filter_icon"
+        app:layout_constraintTop_toBottomOf="@id/status_filter_chipgroup" />
+
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/classification_filter_chipgroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/classification_filter_label"
+        app:layout_constraintTop_toBottomOf="@+id/classification_filter_label">
+
+    </com.google.android.material.chip.ChipGroup>
+
+
+    <ImageView
+        android:id="@+id/category_filter_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/category_filter_label"
+        app:srcCompat="@drawable/ic_vjournal_category" />
+
+    <TextView
+        android:id="@+id/category_filter_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Category"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/category_filter_icon"
+        app:layout_constraintTop_toBottomOf="@id/classification_filter_chipgroup" />
+
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/category_filter_chipgroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/category_filter_label"
+        app:layout_constraintTop_toBottomOf="@+id/category_filter_label">
+
+    </com.google.android.material.chip.ChipGroup>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

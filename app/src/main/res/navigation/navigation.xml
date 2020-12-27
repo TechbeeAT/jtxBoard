@@ -47,6 +47,9 @@
             android:name="category2filter"
             app:argType="string"
             android:defaultValue="%" />
+        <action
+            android:id="@+id/action_vjournalListFragmentList_to_VJournalFilterFragment"
+            app:destination="@id/VJournalFilterFragment" />
     </fragment>
     <fragment
         android:id="@+id/vjournalItemFragment"
@@ -80,6 +83,15 @@
             android:id="@+id/action_VJournalItemEditFragment_to_vjournalListFragmentList"
             app:destination="@id/vjournalListFragmentList"
             app:popUpTo="@id/vjournalListFragmentList" />
+    </fragment>
+    <fragment
+        android:id="@+id/VJournalFilterFragment"
+        android:name="com.example.android.vjournalcalendar.ui.VJournalFilterFragment"
+        android:label="VJournalFilterFragment"
+        tools:layout="@layout/fragment_vjournal_filter">
+        <action
+            android:id="@+id/action_VJournalFilterFragment_to_vjournalListFragmentList"
+            app:destination="@id/vjournalListFragmentList" />
     </fragment>
 
 </navigation>

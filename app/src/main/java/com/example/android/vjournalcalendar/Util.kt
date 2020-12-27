@@ -103,11 +103,11 @@ fun convertLongToYearString(date: Long): String {
 }
 
 fun convertCategoriesCSVtoList(categoriesString: String): MutableList<String> {
-    return categoriesString.split(",").map { it.trim() }.toMutableList()
+    return categoriesString.split(",").map { it.trim() }.distinct() as MutableList<String>
 }
 
 fun convertCategoriesListtoCSVString(categoriesList: MutableList<String>): String {
-    return categoriesList.joinToString(separator = ", ")
+    return categoriesList.sorted().joinToString(separator = ", ")
 }
 
 fun isValidEmail(emailString: String?): Boolean {

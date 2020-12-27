@@ -17,5 +17,9 @@
         android:iconTint="#000000"
         android:title="Go to date"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/vjournal_filter"
+        android:title="Filter"
+        app:showAsAction="ifRoom" />
 
 </menu>
