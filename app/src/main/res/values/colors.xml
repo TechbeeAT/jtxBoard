@@ -16,11 +16,28 @@
 
 <resources>
 
-    <color name="colorPrimary">#6ab343</color>
-    <color name="colorPrimaryDark">#388310</color>
-    <color name="colorAccent">#6ab343</color>
+    <!-- colors -->
 
-    <color name="green_color">#388310</color>
-    <color name="white_text_color">#f0f0f0</color>
+    <color name="grey200">#eeeeee</color>
+    <color name="grey500">#9E9E9E</color>
+    <color name="grey700">#616161</color>
+    <color name="backgroundColor">@color/grey200</color>
+
+    <color name="primaryColor">#7cb342</color>
+    <color name="primaryLightColor">#aee571</color>
+    <color name="primaryDarkColor">#4b830d</color>
+    <color name="colorOnPrimary">@android:color/black</color>
+
+    <color name="secondaryColor">#ff6d00</color>
+    <color name="secondaryLightColor">#ff9e40</color>
+    <color name="secondaryDarkColor">#c43c00</color>
+    <color name="colorOnSecondary">@android:color/white</color>
+
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#000000</color>
+
+    <color name="errorColor">#d32f2f</color>
+    <color name="colorOnError">@android:color/white</color>
+
 
 </resources>

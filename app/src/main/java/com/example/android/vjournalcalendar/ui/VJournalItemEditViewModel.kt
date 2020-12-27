@@ -9,6 +9,7 @@ import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
 import com.example.android.vjournalcalendar.database.vJournalItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -20,12 +21,14 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allOrganizers: LiveData<List<String>>
 
-    lateinit var datetimeVisible: LiveData<Boolean>
+    lateinit var dateVisible: LiveData<Boolean>
+    lateinit var timeVisible: LiveData<Boolean>
 
     var returnVJournalItemId: MutableLiveData<Long> = MutableLiveData<Long>().apply { postValue(0L) }
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
+    lateinit var vJournalItemUpdated: MutableLiveData<vJournalItem>
 
     var summaryChanged: String = ""
     var descriptionChanged: String = ""
@@ -62,11 +65,28 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
             else
                 database.get(vJournalItemId)
 
+//            vJournalItemUpdated = vJournalItem as MutableLiveData<vJournalItem>
+
             allCategories = database.getAllCategories()
             allOrganizers = database.getAllOrganizers()
 
-            datetimeVisible = Transformations.map(vJournalItem) { item ->
+
+
+            dateVisible = Transformations.map(vJournalItem) { item ->
                 return@map item?.component == "JOURNAL"           // true if component == JOURNAL
+            }
+
+            timeVisible = Transformations.map(vJournalItem) { item ->
+                if (item?.dtstart == 0L || item?.component != "JOURNAL" )
+                    return@map false
+
+                val minute_formatter = SimpleDateFormat("mm")
+                val hour_formatter = SimpleDateFormat("HH")
+
+                if (minute_formatter.format(Date(item!!.dtstart)).toString() == "00" && hour_formatter.format(Date(item.dtstart)).toString() == "00")
+                    return@map false
+
+                return@map true
             }
 
         }

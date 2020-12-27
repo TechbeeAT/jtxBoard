@@ -35,12 +35,7 @@ class VJournalListViewModel(
 
 
         var vJournalList: LiveData<List<vJournalItem>> = Transformations.switchMap(filterArray) { filter ->
-            /*if (filter[SEARCH_GLOBAL].isNullOrBlank() || filter[SEARCH_GLOBAL] == "%")
-                database.getVJournalItems()
-            else */
-            //database.getVJournalItems("%${filter[SEARCH_GLOBAL].replace(" ", "%")}%")
-            database.getVJournalItems(filter[SEARCH_COMPONENT], filter[SEARCH_GLOBAL], filter[SEARCH_CATEGORIES])
-            // Note: The tranformation could not handle multiple method calls in order to separate searches for
+            database.getVJournalItems(filter[SEARCH_COMPONENT], filter[SEARCH_GLOBAL], filter[SEARCH_CATEGORIES], filter[SEARCH_ORGANIZER], filter[SEARCH_STATUS], filter[SEARCH_CLASSIFICATION])
         }
 
         val allCategories: LiveData<List<String>> = database.getAllCategories()
@@ -52,6 +47,7 @@ class VJournalListViewModel(
             insertTestData()
 
         }
+
     }
 
 

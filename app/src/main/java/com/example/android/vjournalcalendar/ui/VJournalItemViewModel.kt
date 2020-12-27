@@ -8,6 +8,7 @@ import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
 import com.example.android.vjournalcalendar.database.vJournalItem
 import kotlinx.coroutines.launch
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -17,7 +18,8 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
 
     lateinit var vJournalItem: LiveData<vJournalItem?>
 
-    lateinit var datetimeVisible: LiveData<Boolean>
+    lateinit var dateVisible: LiveData<Boolean>
+    lateinit var timeVisible: LiveData<Boolean>
     lateinit var dtstartFormatted: LiveData<String>
     lateinit var createdFormatted: LiveData<String>
     lateinit var lastModifiedFormatted: LiveData<String>
@@ -36,10 +38,6 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
             else
                 database.get(vJournalItemId)
 
-            datetimeVisible = Transformations.map(vJournalItem) { item ->
-                return@map item?.component == "JOURNAL"           // true if component == JOURNAL
-            }
-
             setupDates()
 
         }
@@ -52,6 +50,24 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
 
 
     private fun setupDates() {
+
+
+        dateVisible = Transformations.map(vJournalItem) { item ->
+            return@map item?.component == "JOURNAL"           // true if component == JOURNAL
+        }
+
+        timeVisible = Transformations.map(vJournalItem) { item ->
+            if (item?.dtstart == 0L || item?.component != "JOURNAL" )
+                return@map false
+
+            val minute_formatter = SimpleDateFormat("mm")
+            val hour_formatter = SimpleDateFormat("HH")
+
+            if (minute_formatter.format(Date(item!!.dtstart)).toString() == "00" && hour_formatter.format(Date(item.dtstart)).toString() == "00")
+                return@map false
+
+            return@map true
+        }
 
 
 

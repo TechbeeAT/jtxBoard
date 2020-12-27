@@ -30,6 +30,8 @@ buildscript {
         version_room = "2.2.5"
         version_gson = "2.8.6"
         version_material = "1.2.1"
+        version_appcompat = "1.2.0"
+        version_appcompat_v7 = "27.1.1"
     }
 
     repositories {

@@ -13,60 +13,68 @@
 
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayoutJournalNotes"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabMode="fixed">
+            android:layout_height="match_parent">
 
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/vjournals"
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayoutJournalNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="fixed">
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/vjournals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:icon="@drawable/ic_vjournal_date"
+                    android:text="Journals" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/notes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:icon="@drawable/ic_vjournal_note"
+                    android:text="Notes" />
+
+
+            </com.google.android.material.tabs.TabLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/vjournal_list_items_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tabLayoutJournalNotes"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager">
+
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:icon="@drawable/ic_vjournal_date"
-                android:text="Journals" />
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/notes"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:icon="@drawable/ic_vjournal_note"
-                android:text="Notes" />
-
-
-        </com.google.android.material.tabs.TabLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/vjournal_list_items_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tabLayoutJournalNotes"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="add"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                app:srcCompat="@drawable/ic_vjournal_add"
+                />
 
 
-        </androidx.recyclerview.widget.RecyclerView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:contentDescription="add"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            app:srcCompat="@drawable/ic_vjournal_add"
-            />
+        </RelativeLayout>
 
 
-    </RelativeLayout>
+
+
 
 </layout>
 

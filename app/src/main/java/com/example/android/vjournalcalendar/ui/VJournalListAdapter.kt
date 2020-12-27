@@ -59,15 +59,23 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 //holder.categoriesIcon.visibility = View.GONE
             }
 
-            if(vJournalItem.dtstart != 0L) {
+            if(vJournalItem.component == "JOURNAL") {
                 holder.dtstartDay.text = convertLongToDayString(vJournalItem.dtstart)
                 holder.dtstartMonth.text = convertLongToMonthString(vJournalItem.dtstart)
                 holder.dtstartYear.text = convertLongToYearString(vJournalItem.dtstart)
-                holder.dtstartTime.text = convertLongToTimeString(vJournalItem.dtstart)
                 holder.dtstartDay.visibility = View.VISIBLE
                 holder.dtstartMonth.visibility = View.VISIBLE
                 holder.dtstartYear.visibility = View.VISIBLE
-                holder.dtstartTime.visibility = View.VISIBLE
+
+                val minute_formatter = SimpleDateFormat("mm")
+                val hour_formatter = SimpleDateFormat("HH")
+                if (minute_formatter.format(Date(vJournalItem.dtstart)).toString() == "00" && hour_formatter.format(Date(vJournalItem.dtstart)).toString() == "00") {
+                    holder.dtstartTime.visibility = View.GONE
+                } else {
+                    holder.dtstartTime.text = convertLongToTimeString(vJournalItem.dtstart)
+                    holder.dtstartTime.visibility = View.VISIBLE
+                }
+
             } else {
                 holder.dtstartDay.visibility = View.GONE
                 holder.dtstartMonth.visibility = View.GONE

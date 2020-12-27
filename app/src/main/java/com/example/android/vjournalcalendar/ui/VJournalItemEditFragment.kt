@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Application
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
@@ -11,6 +12,7 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -193,22 +195,18 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         binding.dtstartTime.setOnClickListener {
             showDatepicker()
-            showTimepicker()
         }
 
         binding.dtstartYear.setOnClickListener {
             showDatepicker()
-            showTimepicker()
         }
 
         binding.dtstartMonth.setOnClickListener {
             showDatepicker()
-            showTimepicker()
         }
 
         binding.dtstartDay.setOnClickListener {
             showDatepicker()
-            showTimepicker()
         }
 
         // Transform the category input into a chip when the Add-Button is clicked
@@ -375,6 +373,8 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         vJournalItemEditViewModel.dtstartChangedYear = year
         vJournalItemEditViewModel.dtstartChangedMonth = month
         vJournalItemEditViewModel.dtstartChangedDay = day
+
+        showTimepicker()
 
     }
 

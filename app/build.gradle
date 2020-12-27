@@ -56,6 +56,10 @@ dependencies {
 
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$version_room"
+    implementation "androidx.appcompat:appcompat:$version_appcompat"
+    implementation "com.android.support:appcompat-v7:$version_appcompat-v7"
+    implementation 'androidx.drawerlayout:drawerlayout:1.0.0'
+
     kapt "androidx.room:room-compiler:$version_room"
     implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
 

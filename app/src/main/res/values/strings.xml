@@ -18,6 +18,8 @@
 
     <!-- App title and fragment titles -->
     <string name="app_name">VJournal Calendar</string>
+    <string name="navigation_drawer_subtitle">vJournal Subtitle</string>
+
 
     <!-- Global Dialog Strings -->
     <string name="cancel">Cancel</string>
@@ -40,5 +42,26 @@
 
     <!-- Toast to play after Clear button has been pressed -->
     <string name="cleared_message">All your data is gone forever.</string>
+
+    <!-- Menu Drawer Main -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_drawer_main_about">About</string>
+
+
+    <!-- fragment_vjournal_item_edit -->
+    <string name="item_edit_summary_hint">Summary</string>
+    <string name="item_edit_add_category_hint">Add category</string>
+    <string name="item_edit_description_hint">Description</string>
+    <string name="item_edit_attendees_hint">Attendees</string>
+    <string name="item_edit_contact_hint">Contact information</string>
+    <string name="item_edit_relatedto_hint">Related to ...</string>
+    <string name="item_edit_url_hint">URL</string>
+    <string name="item_edit_fab_save_contentDescription">Save</string>
+    <string name="item_view_url_header">URL</string>
+    <string name="item_view_attendees_header">Attendees</string>
+    <string name="item_view_contact_header">Contact</string>
+    <string name="item_view_relatedto_header">Related to</string>
+
 
 </resources>

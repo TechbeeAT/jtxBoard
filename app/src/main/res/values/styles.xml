@@ -16,21 +16,34 @@
 
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorSurface">@color/white_text_color</item>
+
+
+    <!-- app theme -->
+
+    <style name="AppTheme.Base" parent="Theme.MaterialComponents.Light.NoActionBar"/>
+    <style name="AppTheme" parent="AppTheme.Base">
+        <!-- see https://github.com/material-components/material-components-android/blob/master/docs/theming/Color.md for component color names -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>       <!-- additionally required for AppCompatActivity -->
+        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorSecondaryVariant">@color/secondaryLightColor</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+
+        <item name="colorError">@color/errorColor</item>
+        <item name="colorOnError">@color/colorOnError</item>
+
+        <item name="android:colorBackground">@color/backgroundColor</item>
+        <item name="colorSurface">@android:color/white</item>
     </style>
 
-    <!-- Basic styling for the buttons. -->
-    <style name="SleepButtons" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:textColor">@color/white_text_color</item>
-        <item name="colorAccent">@color/green_color</item>
-        <item name="colorControlHighlight">@color/green_color</item>
-        <item name="android:textStyle">bold</item>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
+
 
     <style name="Chips" parent="Theme.MaterialComponents.Light">
         <!-- ... -->

@@ -92,17 +92,17 @@
             android:layout_height="18dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:tint="@android:color/darker_gray"
+            app:tint="@android:color/darker_gray"
             app:layout_constraintEnd_toStartOf="@+id/status"
             app:layout_constraintTop_toBottomOf="@+id/description"
-            app:srcCompat="@drawable/ic_status" />
+            app:srcCompat="@drawable/ic_status"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="TextView"
             android:textColor="@android:color/darker_gray"
             app:layout_constraintEnd_toStartOf="@+id/classification_icon"
             app:layout_constraintTop_toTopOf="@+id/status_icon"
@@ -114,17 +114,17 @@
             android:layout_marginEnd="8dp"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:tint="@android:color/darker_gray"
+            app:tint="@android:color/darker_gray"
             app:layout_constraintEnd_toStartOf="@+id/classification"
             app:layout_constraintTop_toTopOf="@+id/status_icon"
-            app:srcCompat="@drawable/ic_classification" />
+            app:srcCompat="@drawable/ic_classification"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/classification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="TextView"
             android:textColor="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/status_icon"

@@ -1,13 +1,17 @@
 package com.example.android.vjournalcalendar.ui
 
+
 import android.app.Application
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.DatePicker
-import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.SearchView
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,15 +19,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.vjournalcalendar.R
+import com.example.android.vjournalcalendar.convertLongToDateString
+import com.example.android.vjournalcalendar.convertLongToTimeString
 import com.example.android.vjournalcalendar.database.VJournalDatabase
 import com.example.android.vjournalcalendar.databinding.FragmentVjournalListBinding
-import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import java.lang.Math.abs
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
-class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
+class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     private var recyclerView: RecyclerView? = null
     private var linearLayoutManager: LinearLayoutManager? = null
@@ -37,9 +44,9 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
     private lateinit var gotodateMenuItem: MenuItem
 
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
+
 
         // Get a reference to the binding object and inflate the fragment views.
         binding = FragmentVjournalListBinding.inflate(inflater, container, false)
@@ -47,6 +54,7 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
         // set up DB DAO
         application = requireNotNull(this.activity).application
         val dataSource = VJournalDatabase.getInstance(application).vJournalDatabaseDao
+
 
         // create the view model through the view model factory
         val viewModelFactory = VJournalListViewModelFactory(dataSource, application)
@@ -100,7 +108,7 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
             Log.println(Log.INFO, "vJournalListViewModel", "Item Position: ${pos.toString()}")
 
             recyclerView?.scrollToPosition(pos)
-                //vJournalListViewModel.resetFocusItem()
+            //vJournalListViewModel.resetFocusItem()
             Log.println(Log.INFO, "vJournalListViewModel", "Scrolling now to: ${pos.toString()}")
 
         })
@@ -110,7 +118,7 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 vJournalListViewModel.resetFocusItem()
 
-                when(tab?.position) {
+                when (tab?.position) {
                     0 -> {
                         vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, "JOURNAL")
                         gotodateMenuItem.isVisible = true
@@ -136,7 +144,9 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
             }
         })
 
+
         return binding.root
+
 
     }
 
@@ -153,101 +163,70 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
         super.onStart()
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_vjournal_list, menu)
 
-        // START Set up Search
+        // Tell the variable the menu item to later make it visible or invisible
+        gotodateMenuItem = menu.findItem(R.id.vjournal_list_gotodate)
+
+        // add listener for search!
         val searchMenuItem = menu.findItem(R.id.vjournal_list_search)
         val searchView = searchMenuItem.actionView as SearchView
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String): Boolean {
+                // nothing to do as the the search is already updated with the text input
+                return false
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+
                 if (query.isNullOrEmpty())
                     vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, "%")      // todo handle more
                 else
                     vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, "%$query%")
-
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                if (newText.isNullOrEmpty())
-                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, "%")      // todo handle more
-                else
-                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, "%$newText%")
                 return false
             }
         })
 
-        // END Set up Search
 
-        // START Set up Datepicker
-        gotodateMenuItem = menu.findItem(R.id.vjournal_list_gotodate)
-        gotodateMenuItem.setOnMenuItemClickListener {
-
-            val c = Calendar.getInstance()
-            c.timeInMillis = System.currentTimeMillis()
-
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-            val dpd = DatePickerDialog(activity!!, this, year, month, day)
-
-
-            val startItem = vJournalListViewModel.vJournalList.value?.lastOrNull()
-            val endItem = vJournalListViewModel.vJournalList.value?.firstOrNull()
-
-
-            if (startItem != null && endItem != null) {
-                dpd.datePicker.minDate = startItem.dtstart
-                dpd.datePicker.maxDate = endItem.dtstart
-            }
-
-            dpd.show()
-            true
-
-
-            /*
-            val materialDateBuilder: MaterialDatePicker.Builder<*> = MaterialDatePicker.Builder.datePicker()
-            materialDateBuilder.setTitleText("Go to date")
-            materialDateBuilder.setTheme(R.style.MaterialDatepicker)
-            val materialDatePicker = materialDateBuilder.build()
-
-            materialDatePicker.show(parentFragmentManager, "GOTO_MATERIAL_DATE_PICKER")
-            materialDatePicker.addOnPositiveButtonClickListener {
-                Toast.makeText(context, "Selected Date is : " + materialDatePicker.headerText, Toast.LENGTH_LONG)
-            }
-
-             */
-        }
-
-        // END Set up Datepicker
-
-
-/*
-        searchView.setOnMenuItem
-
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-                android.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                //
-                return false
-            }
-            override fun onQueryTextChange(newText: String?): Boolean {
-                //
-                return false
-            }
-        })
-
-                searchMenuItem.setOnMenuItemClickListener(object: SearchView.OnQueryTextListener   {
-
-        })
-
- */
 
     }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.vjournal_list_gotodate) {
+
+// START Set up Datepicker
+            val c = Calendar.getInstance()
+                c.timeInMillis = System.currentTimeMillis()
+
+                val year = c.get(Calendar.YEAR)
+                val month = c.get(Calendar.MONTH)
+                val day = c.get(Calendar.DAY_OF_MONTH)
+                val dpd = DatePickerDialog(activity!!, this, year, month, day)
+
+
+                val startItem = vJournalListViewModel.vJournalList.value?.lastOrNull()
+                val endItem = vJournalListViewModel.vJournalList.value?.firstOrNull()
+
+
+                if (startItem != null && endItem != null) {
+                    dpd.datePicker.minDate = startItem.dtstart
+                    dpd.datePicker.maxDate = endItem.dtstart
+                }
+
+                dpd.show()
+                true
+            }
+
+
+
+        return super.onOptionsItemSelected(item)
+    }
+
 
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
@@ -283,7 +262,71 @@ class VJournalListFragment : Fragment(),  DatePickerDialog.OnDateSetListener{
         }
 
         if (foundItem != null)
-           vJournalListViewModel.setFocusItem(foundItem!!.id)
+            vJournalListViewModel.setFocusItem(foundItem!!.id)
 
     }
 }
+
+
+    /*
+    binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+        when (menuItem.itemId) {
+            R.id.favorite -> {
+                // Handle favorite icon press
+                true
+            }
+            R.id.search -> {
+                // Handle search icon press
+                true
+            }
+            R.id.more -> {
+                // Handle more item (inside overflow menu) press
+                true
+            }
+            else -> false
+        }
+    }
+*/
+    // END Set up Search
+
+
+    /*
+    val materialDateBuilder: MaterialDatePicker.Builder<*> = MaterialDatePicker.Builder.datePicker()
+    materialDateBuilder.setTitleText("Go to date")
+    materialDateBuilder.setTheme(R.style.MaterialDatepicker)
+    val materialDatePicker = materialDateBuilder.build()
+
+    materialDatePicker.show(parentFragmentManager, "GOTO_MATERIAL_DATE_PICKER")
+    materialDatePicker.addOnPositiveButtonClickListener {
+        Toast.makeText(context, "Selected Date is : " + materialDatePicker.headerText, Toast.LENGTH_LONG)
+    }
+
+     */
+
+
+// END Set up Datepicker
+
+
+/*
+        searchView.setOnMenuItem
+
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+                android.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                //
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                //
+                return false
+            }
+        })
+
+                searchMenuItem.setOnMenuItemClickListener(object: SearchView.OnQueryTextListener   {
+
+        })
+
+ */
+
+
