@@ -64,7 +64,8 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
             if (it == true) {
                 vJournalItemEditViewModel.summaryChanged = binding.summaryEdit.editText?.text.toString()
                 vJournalItemEditViewModel.descriptionChanged = binding.descriptionEdit.editText?.text.toString()
-                vJournalItemEditViewModel.organizerChanged = binding.organizer.selectedItem.toString()
+                vJournalItemEditViewModel.collectionChanged = binding.collection.selectedItem.toString()
+                vJournalItemEditViewModel.organizerChanged = binding.organizerEdit.editText?.text.toString()
                 vJournalItemEditViewModel.urlChanged = binding.urlEdit.editText?.text.toString()
                 vJournalItemEditViewModel.attendeeChanged = binding.attendeeEdit.editText?.text.toString()
                 vJournalItemEditViewModel.contactChanged = binding.contactEdit.editText?.text.toString()
@@ -134,10 +135,10 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                 binding.classificationChip.text = classificationItems[vJournalItemEditViewModel.vJournalItem.value!!.classification]  // if supported show the classification according to the String Array
 
             // set the default selection for the spinner. The same snippet exists for the allOrganizers observer
-            if(vJournalItemEditViewModel.allOrganizers.value != null) {
-                var selectedOrganizerPos = vJournalItemEditViewModel.allOrganizers.value?.indexOf(vJournalItemEditViewModel.vJournalItem.value?.organizer)
-                if (selectedOrganizerPos != null)
-                    binding.organizer.setSelection(selectedOrganizerPos)
+            if(vJournalItemEditViewModel.allCollections.value != null) {
+                val selectedCollectionPos = vJournalItemEditViewModel.allCollections.value?.indexOf(vJournalItemEditViewModel.vJournalItem.value?.collection)
+                if (selectedCollectionPos != null)
+                    binding.collection.setSelection(selectedCollectionPos)
             }
 
             /*
@@ -172,19 +173,19 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
             }
         })
 
-        vJournalItemEditViewModel.allOrganizers.observe(viewLifecycleOwner, {
+        vJournalItemEditViewModel.allCollections.observe(viewLifecycleOwner, {
 
             // set up the adapter for the organizer spinner
-            val spinner: Spinner = binding.organizer
-            val adapter = ArrayAdapter<Any?>(context!!, android.R.layout.simple_spinner_item, vJournalItemEditViewModel.allOrganizers.value!!)
+            val spinner: Spinner = binding.collection
+            val adapter = ArrayAdapter<Any?>(context!!, android.R.layout.simple_spinner_item, vJournalItemEditViewModel.allCollections.value!!)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.setAdapter(adapter)
 
             // set the default selection for the spinner. The same snippet exists for the vJournalItem observer
-            if(vJournalItemEditViewModel.allOrganizers.value != null) {
-                var selectedOrganizerPos = vJournalItemEditViewModel.allOrganizers.value?.indexOf(vJournalItemEditViewModel.vJournalItem.value?.organizer)
-                if (selectedOrganizerPos != null)
-                        spinner.setSelection(selectedOrganizerPos)
+            if(vJournalItemEditViewModel.allCollections.value != null) {
+                val selectedCollectionPos = vJournalItemEditViewModel.allCollections.value?.indexOf(vJournalItemEditViewModel.vJournalItem.value?.collection)
+                if (selectedCollectionPos != null)
+                        spinner.setSelection(selectedCollectionPos)
             }
 
         })

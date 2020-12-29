@@ -19,7 +19,8 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
 
     lateinit var vJournalItem: LiveData<vJournalItem?>
     lateinit var allCategories: LiveData<List<String>>
-    lateinit var allOrganizers: LiveData<List<String>>
+    //lateinit var allOrganizers: LiveData<List<String>>
+    lateinit var allCollections: LiveData<List<String>>
 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
@@ -35,6 +36,7 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
     var statusChanged: Int = -1
     var classificationChanged: Int = -1
     var organizerChanged: String = ""
+    var collectionChanged: String = ""
 
     var urlChanged: String = ""
     var attendeeChanged: String = ""
@@ -68,7 +70,7 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
 //            vJournalItemUpdated = vJournalItem as MutableLiveData<vJournalItem>
 
             allCategories = database.getAllCategories()
-            allOrganizers = database.getAllOrganizers()
+            allCollections = database.getAllCollections()
 
 
 
@@ -112,6 +114,7 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
             vJournalItemUpdate.contact = contactChanged
             vJournalItemUpdate.related = relatesChanged
             vJournalItemUpdate.organizer = organizerChanged
+            vJournalItemUpdate.collection = collectionChanged
 
             if(statusChanged >= 0) vJournalItemUpdate.status = statusChanged
             if(classificationChanged >= 0) vJournalItemUpdate.classification = classificationChanged

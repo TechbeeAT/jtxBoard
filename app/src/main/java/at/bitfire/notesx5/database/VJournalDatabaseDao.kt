@@ -43,6 +43,9 @@ interface VJournalDatabaseDao {
     @Query("SELECT DISTINCT organizer FROM vjournalitems ORDER BY organizer ASC")
     fun getAllOrganizers(): LiveData<List<String>>
 
+    @Query("SELECT DISTINCT collection FROM vjournalitems ORDER BY collection ASC")
+    fun getAllCollections(): LiveData<List<String>>
+
 
     @Insert
     suspend fun insert(vJournalItem: vJournalItem): Long

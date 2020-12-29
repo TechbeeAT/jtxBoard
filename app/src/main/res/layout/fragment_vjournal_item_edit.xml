@@ -104,29 +104,29 @@
 
 
         <ImageView
-            android:id="@+id/organizer_icon"
+            android:id="@+id/collection_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/organizer"
+            app:layout_constraintBottom_toBottomOf="@+id/collection"
             app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-            app:layout_constraintTop_toTopOf="@+id/organizer"
-            app:srcCompat="@drawable/ic_vjournal_organizer"
+            app:layout_constraintTop_toTopOf="@+id/collection"
+            app:srcCompat="@drawable/ic_collection"
             tools:ignore="ContentDescription" />
 
         <Spinner
-            android:id="@+id/organizer"
+            android:id="@+id/collection"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:drawableStart="@drawable/ic_vjournal_organizer"
+            android:drawableStart="@drawable/ic_collection"
             android:drawablePadding="4dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/organizer_icon"
+            app:layout_constraintStart_toEndOf="@+id/collection_icon"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Organizer" />
+            tools:text="Collection" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/categories_chipgroup"
@@ -141,7 +141,7 @@
             app:layout_constraintBottom_toTopOf="@id/categories_add"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-            app:layout_constraintTop_toBottomOf="@id/organizer"
+            app:layout_constraintTop_toBottomOf="@id/collection"
             app:layout_constraintVertical_bias="1.0" />
 
 
@@ -328,6 +328,29 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/organizer_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/item_edit_organizer_hint"
+            app:endIconMode="clear_text"
+            app:helperText="Organizer of this entry"
+            app:helperTextEnabled="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/attendee_edit"
+            app:startIconDrawable="@drawable/ic_vjournal_organizer">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences|textEmailAddress"
+                android:text="@{model.vJournalItem.organizer}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/contact_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -337,7 +360,7 @@
             app:helperText="Contact information of the responsible or owner of this entry"
             app:helperTextEnabled="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/attendee_edit"
+            app:layout_constraintTop_toBottomOf="@+id/organizer_edit"
             app:startIconDrawable="@drawable/ic_contact">
 
 
@@ -347,6 +370,7 @@
                 android:inputType="textCapSentences|textEmailAddress"
                 android:text="@{model.vJournalItem.contact}" />
         </com.google.android.material.textfield.TextInputLayout>
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/relatedto_edit"

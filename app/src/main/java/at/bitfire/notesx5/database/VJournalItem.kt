@@ -11,6 +11,7 @@ data class vJournalItem(
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0L,
         var component: String = "JOURNAL",          // JOURNAL or NOTE
+        var collection: String = "LOCAL",
         var summary: String? = "",
         var description: String = "",
         var dtstart: Long = System.currentTimeMillis(),

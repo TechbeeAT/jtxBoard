@@ -64,12 +64,14 @@
     <string name="item_edit_add_category_hint">Add category</string>
     <string name="item_edit_description_hint">Description</string>
     <string name="item_edit_attendees_hint">Attendees</string>
+    <string name="item_edit_organizer_hint">Organizer</string>
     <string name="item_edit_contact_hint">Contact information</string>
     <string name="item_edit_relatedto_hint">Related to ...</string>
     <string name="item_edit_url_hint">URL</string>
     <string name="item_edit_fab_save_contentDescription">Save</string>
     <string name="item_view_url_header">URL</string>
     <string name="item_view_attendees_header">Attendees</string>
+    <string name="item_view_organizer_header">Organizer</string>
     <string name="item_view_contact_header">Contact</string>
     <string name="item_view_relatedto_header">Related to</string>
 

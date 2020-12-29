@@ -6,7 +6,9 @@
 
 
     <data>
+
         <import type="android.view.View" />
+
         <import type="at.bitfire.notesx5.UtilKt" />
 
         <variable
@@ -33,11 +35,10 @@
                 android:textAlignment="center"
                 android:textSize="36sp"
                 android:textStyle="bold"
+                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="31"
-                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-            />
+                tools:text="31" />
 
             <TextView
                 android:id="@+id/dtstart_month"
@@ -47,12 +48,11 @@
                 android:textAlignment="center"
                 android:textSize="10sp"
                 android:textStyle="bold"
+                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dtstart_day"
-                tools:text="December"
-                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                />
+                tools:text="December" />
 
             <TextView
                 android:id="@+id/dtstart_year"
@@ -62,12 +62,11 @@
                 android:textAlignment="center"
                 android:textSize="10sp"
                 android:textStyle="bold"
+                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dtstart_month"
-                tools:text="2020"
-                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                />
+                tools:text="2020" />
 
             <TextView
                 android:id="@+id/dtstart_time"
@@ -77,28 +76,27 @@
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@id/top_barrier"
                 app:layout_constraintStart_toStartOf="@+id/dtstart_day"
                 app:layout_constraintTop_toBottomOf="@+id/dtstart_year"
                 app:layout_constraintVertical_bias="0.0"
-                tools:text="13:30"
-                android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
-                />
+                tools:text="13:30" />
 
 
             <TextView
-                android:id="@+id/organizer"
+                android:id="@+id/collection"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:drawableStart="@drawable/ic_vjournal_organizer"
+                android:drawableStart="@drawable/ic_collection"
                 android:drawablePadding="4dp"
-                android:text="@{model.vJournalItem.organizer}"
+                android:text="@{model.vJournalItem.collection}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/dtstart_day"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Organizer" />
+                tools:text="Collection" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/categories_chipgroup"
@@ -261,6 +259,41 @@
 
 
             <ImageView
+                android:id="@+id/organizer_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/organizer_header"
+                app:srcCompat="@drawable/ic_attendee"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/organizer_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/item_view_organizer_header"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/organizer_icon"
+                app:layout_constraintTop_toBottomOf="@+id/attendee" />
+
+            <TextView
+                android:id="@+id/organizer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:autoLink="all"
+                android:text="@{model.vJournalItem.organizer}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/attendee_icon"
+                app:layout_constraintTop_toBottomOf="@+id/organizer_header"
+                tools:text="patrick.doe@example.com" />
+
+
+            <ImageView
                 android:id="@+id/contact_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -280,7 +313,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/contact_icon"
-                app:layout_constraintTop_toBottomOf="@+id/attendee" />
+                app:layout_constraintTop_toBottomOf="@+id/organizer" />
 
             <TextView
                 android:id="@+id/contact"
@@ -324,7 +357,7 @@
                 android:layout_marginStart="8dp"
                 android:autoLink="all"
                 android:text="@{model.vJournalItem.related}"
-app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/relatedto_icon"
                 app:layout_constraintTop_toBottomOf="@+id/relatedto_header"
                 tools:text="https://example.com/remote.php/dav/calendars/johndoe/personal/097E4865-D073-4279-806C-3E2B3250C947.ics" />
@@ -378,7 +411,6 @@ app:layout_constraintEnd_toEndOf="parent"
 
 
     </ScrollView>
-
 
 
 </layout>
