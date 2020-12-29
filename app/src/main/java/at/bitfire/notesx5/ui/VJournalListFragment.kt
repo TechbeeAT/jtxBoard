@@ -1,35 +1,23 @@
-package com.example.android.vjournalcalendar.ui
+package at.bitfire.notesx5.ui
 
 
-import android.app.Activity
 import android.app.Application
 import android.app.DatePickerDialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.DatePicker
-import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.SearchView
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.vjournalcalendar.R
-import com.example.android.vjournalcalendar.convertLongToDateString
-import com.example.android.vjournalcalendar.convertLongToTimeString
-import com.example.android.vjournalcalendar.database.VJournalDatabase
-import com.example.android.vjournalcalendar.databinding.FragmentVjournalListBinding
-import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
+import at.bitfire.notesx5.R
+import at.bitfire.notesx5.database.VJournalDatabase
+import at.bitfire.notesx5.databinding.FragmentVjournalListBinding
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
@@ -89,7 +77,8 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // set the filter String, default is "%"
         //TODO add other filter criteria
-        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_CATEGORIES, "%${arguments.category2filter}%")
+        if (!arguments.category2filter.isNullOrEmpty())
+            vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_CATEGORIES, arguments.category2filter!!)
 
 
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
@@ -123,15 +112,15 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
                 when (tab?.position) {
                     0 -> {
-                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, "JOURNAL")
+                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, arrayOf("JOURNAL"))
                         gotodateMenuItem.isVisible = true
                     }
                     1 -> {
-                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, "NOTE")
+                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, arrayOf("NOTE"))
                         gotodateMenuItem.isVisible = false     // no date search for notes
                     }
                     else -> {
-                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, "JOURNAL")
+                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, arrayOf("JOURNAL"))
                         gotodateMenuItem.isVisible = true
                     }
                 }
@@ -189,9 +178,9 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             override fun onQueryTextChange(query: String): Boolean {
 
                 if (query.isNullOrEmpty())
-                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, "%")      // todo handle more
+                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, arrayOf("%"))
                 else
-                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, "%$query%")
+                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, arrayOf("%$query%"))
                 return false
             }
         })

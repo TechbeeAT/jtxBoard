@@ -1,13 +1,10 @@
-package com.example.android.vjournalcalendar.ui
+package at.bitfire.notesx5.ui
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
-import com.example.android.vjournalcalendar.R
 
-import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
-import com.example.android.vjournalcalendar.database.vJournalItem
-import kotlinx.coroutines.coroutineScope
+import at.bitfire.notesx5.database.VJournalDatabaseDao
+import at.bitfire.notesx5.database.vJournalItem
 import kotlinx.coroutines.launch
 
 
@@ -29,16 +26,24 @@ class VJournalListViewModel(
         //var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
         var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
 
-        var filterArray = MutableLiveData<Array<String>>().apply {
-            this.value = arrayOf("JOURNAL", "%", "%","%","%","%")
+        var filterArray = MutableLiveData<Array<Array<String>>>().apply {
+            //this.value = arrayOf("JOURNAL", "%", "%","%","%","%")
+            this.value = arrayOf(arrayOf("JOURNAL"), arrayOf("%"), arrayOf("%"), arrayOf("%"), arrayOf("%"), arrayOf("%"))
         }
 
 
         var vJournalList: LiveData<List<vJournalItem>> = Transformations.switchMap(filterArray) { filter ->
-            database.getVJournalItems(filter[SEARCH_COMPONENT], filter[SEARCH_GLOBAL], filter[SEARCH_CATEGORIES], filter[SEARCH_ORGANIZER], filter[SEARCH_STATUS], filter[SEARCH_CLASSIFICATION])
+            database.getVJournalItems(filter[SEARCH_COMPONENT], filter[SEARCH_GLOBAL][0], filter[SEARCH_CATEGORIES], filter[SEARCH_ORGANIZER], filter[SEARCH_STATUS], filter[SEARCH_CLASSIFICATION])
         }
 
-        val allCategories: LiveData<List<String>> = database.getAllCategories()
+        var vJournalListFiltered: LiveData<List<vJournalItem>> = Transformations.map(vJournalList) {
+
+
+
+            return@map it
+
+        }
+
 
 
     init {
@@ -109,7 +114,7 @@ class VJournalListViewModel(
         focusItemId.value = 0L
     }
 
-    fun setFilter(field: Int, searchString: String) {
+    fun setFilter(field: Int, searchString: Array<String>) {
         filterArray.value?.set(field, searchString)
         filterArray.postValue(filterArray.value)      // Post the filterArray to notify observers for Transformation Switchmap
         //Log.println(Log.INFO, "array SearchGlobal", filterArray.value?.get(SEARCH_GLOBAL).toString())

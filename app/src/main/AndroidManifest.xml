@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.vjournalcalendar">
+    package="at.bitfire.notesx5">
 
     <application
         android:allowBackup="true"
@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_sleep_tracker_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.android.vjournalcalendar.MainActivity">
+        <activity android:name="at.bitfire.notesx5.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

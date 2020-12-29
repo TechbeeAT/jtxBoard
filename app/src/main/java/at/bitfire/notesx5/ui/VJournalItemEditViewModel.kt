@@ -1,12 +1,12 @@
-package com.example.android.vjournalcalendar.ui
+package at.bitfire.notesx5.ui
 
 import android.app.Application
 import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.android.vjournalcalendar.convertCategoriesListtoCSVString
-import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
-import com.example.android.vjournalcalendar.database.vJournalItem
+import at.bitfire.notesx5.convertCategoriesListtoCSVString
+import at.bitfire.notesx5.database.VJournalDatabaseDao
+import at.bitfire.notesx5.database.vJournalItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat

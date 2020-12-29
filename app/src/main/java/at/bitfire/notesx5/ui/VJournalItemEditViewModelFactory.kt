@@ -1,10 +1,10 @@
 
-package com.example.android.vjournalcalendar.ui
+package at.bitfire.notesx5.ui
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
+import at.bitfire.notesx5.database.VJournalDatabaseDao
 
 class VJournalItemEditViewModelFactory (
     private val vJournalItemId: Long,

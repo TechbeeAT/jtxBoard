@@ -28,7 +28,7 @@
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.vjournalcalendar.MainActivity">
+    tools:context="at.bitfire.android.vjournalcalendar.MainActivity">
 
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -95,7 +95,7 @@
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.vjournalcalendar.MainActivity">
+    tools:context="at.bitfire.android.vjournalcalendar.MainActivity">
 
 -->
 
@@ -106,7 +106,7 @@
         android:id="@+id/relative_layout_activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.android.vjournalcalendar.MainActivity">
+        tools:context="at.bitfire.notesx5.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topAppBarLayout"

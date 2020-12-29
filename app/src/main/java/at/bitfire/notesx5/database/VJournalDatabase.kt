@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.example.android.vjournalcalendar.database
+package at.bitfire.notesx5.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 
 
 /**

@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/vjournalListFragmentList"
-        android:name="com.example.android.vjournalcalendar.ui.VJournalListFragment"
+        android:name="at.bitfire.notesx5.ui.VJournalListFragment"
         android:label="VJournalListFragment"
         tools:layout="@layout/fragment_vjournal_list">
 
@@ -45,15 +45,31 @@
             android:defaultValue="0L" />
         <argument
             android:name="category2filter"
-            app:argType="string"
-            android:defaultValue="%" />
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_vjournalListFragmentList_to_VJournalFilterFragment"
             app:destination="@id/VJournalFilterFragment" />
+        <argument
+            android:name="organizer2filter"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="status2filter"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="classification2filter"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/vjournalItemFragment"
-        android:name="com.example.android.vjournalcalendar.ui.VJournalItemFragment"
+        android:name="at.bitfire.notesx5.ui.VJournalItemFragment"
         android:label="VJournalItemFragment"
         tools:layout="@layout/fragment_vjournal_item">
         <argument
@@ -72,7 +88,7 @@
     </fragment>
     <fragment
         android:id="@+id/VJournalItemEditFragment"
-        android:name="com.example.android.vjournalcalendar.ui.VJournalItemEditFragment"
+        android:name="at.bitfire.notesx5.ui.VJournalItemEditFragment"
         android:label="VJournalItemEditFragment"
         tools:layout="@layout/fragment_vjournal_item_edit">
         <argument
@@ -86,7 +102,7 @@
     </fragment>
     <fragment
         android:id="@+id/VJournalFilterFragment"
-        android:name="com.example.android.vjournalcalendar.ui.VJournalFilterFragment"
+        android:name="at.bitfire.notesx5.ui.VJournalFilterFragment"
         android:label="VJournalFilterFragment"
         tools:layout="@layout/fragment_vjournal_filter">
         <action

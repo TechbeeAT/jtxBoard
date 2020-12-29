@@ -1,11 +1,9 @@
-package com.example.android.vjournalcalendar.ui
+package at.bitfire.notesx5.ui
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
-import androidx.lifecycle.Observer
-import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
-import com.example.android.vjournalcalendar.database.vJournalItem
+import at.bitfire.notesx5.database.VJournalDatabaseDao
+import at.bitfire.notesx5.database.vJournalItem
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat

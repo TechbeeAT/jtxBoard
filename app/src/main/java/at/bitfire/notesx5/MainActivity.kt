@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package com.example.android.vjournalcalendar
+package at.bitfire.notesx5
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
-import java.util.*
-
 
 
 /**

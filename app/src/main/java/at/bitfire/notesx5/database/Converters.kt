@@ -1,7 +1,4 @@
-package com.example.android.vjournalcalendar.database
-
-import androidx.room.TypeConverter
-import com.google.gson.Gson
+package at.bitfire.notesx5.database
 
 public class Converters {
 

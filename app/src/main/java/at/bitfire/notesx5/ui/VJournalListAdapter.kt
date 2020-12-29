@@ -1,25 +1,18 @@
-package com.example.android.vjournalcalendar.ui
+package at.bitfire.notesx5.ui
 
 import android.content.Context
-import android.opengl.Visibility
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.vjournalcalendar.*
-import com.example.android.vjournalcalendar.database.vJournalItem
-import java.text.DateFormat
+import at.bitfire.notesx5.*
+import at.bitfire.notesx5.database.vJournalItem
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.time.hours
 
 class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<vJournalItem>>):
         RecyclerView.Adapter<VJournalListAdapter.VJournalItemHolder>() {

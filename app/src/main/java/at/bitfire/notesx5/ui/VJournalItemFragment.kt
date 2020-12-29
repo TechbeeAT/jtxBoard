@@ -1,4 +1,4 @@
-package com.example.android.vjournalcalendar.ui
+package at.bitfire.notesx5.ui
 
 import android.app.Application
 import android.content.Intent
@@ -8,13 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.android.vjournalcalendar.R
-import com.example.android.vjournalcalendar.convertCategoriesCSVtoList
-import com.example.android.vjournalcalendar.convertLongToDateString
-import com.example.android.vjournalcalendar.convertLongToTimeString
-import com.example.android.vjournalcalendar.database.VJournalDatabase
-import com.example.android.vjournalcalendar.database.VJournalDatabaseDao
-import com.example.android.vjournalcalendar.databinding.FragmentVjournalItemBinding
+import at.bitfire.notesx5.R
+import at.bitfire.notesx5.convertCategoriesCSVtoList
+import at.bitfire.notesx5.convertLongToDateString
+import at.bitfire.notesx5.convertLongToTimeString
+import at.bitfire.notesx5.database.VJournalDatabase
+import at.bitfire.notesx5.database.VJournalDatabaseDao
+import at.bitfire.notesx5.databinding.FragmentVjournalItemBinding
 import com.google.android.material.chip.Chip
 import java.util.*
 
@@ -97,9 +97,10 @@ class VJournalItemFragment : Fragment() {
 
             categoryChip.setOnClickListener {
 
+                val selectedCategoryArray = arrayOf(category)     // convert to array
                 // Responds to chip click
                 this.findNavController().navigate(
-                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVjournalListFragmentList().setCategory2filter(category)
+                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVjournalListFragmentList().setCategory2filter(selectedCategoryArray)
                 )
             }
         }

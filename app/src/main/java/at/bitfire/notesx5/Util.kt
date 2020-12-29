@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.vjournalcalendar
+package at.bitfire.notesx5
 
 import android.annotation.SuppressLint
 import android.text.TextUtils

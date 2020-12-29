@@ -7,12 +7,12 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="com.example.android.vjournalcalendar.UtilKt" />
+        <import type="at.bitfire.notesx5.UtilKt" />
 
 
         <variable
             name="model"
-            type="com.example.android.vjournalcalendar.ui.VJournalItemEditViewModel" />
+            type="at.bitfire.notesx5.ui.VJournalItemEditViewModel" />
     </data>
 
     <ScrollView

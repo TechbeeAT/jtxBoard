@@ -8,7 +8,7 @@
 
         <variable
             name="vJournalListViewModel"
-            type="com.example.android.vjournalcalendar.ui.VJournalListViewModel" />
+            type="at.bitfire.notesx5.ui.VJournalListViewModel" />
     </data>
 
 

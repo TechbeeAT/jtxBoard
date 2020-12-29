@@ -1,6 +1,5 @@
-package com.example.android.vjournalcalendar.database
+package at.bitfire.notesx5.database
 
-import androidx.annotation.IntDef
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
