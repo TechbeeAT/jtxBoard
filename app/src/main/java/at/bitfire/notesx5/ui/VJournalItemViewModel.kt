@@ -2,8 +2,7 @@ package at.bitfire.notesx5.ui
 
 import android.app.Application
 import androidx.lifecycle.*
-import at.bitfire.notesx5.database.VJournalDatabaseDao
-import at.bitfire.notesx5.database.vJournalItem
+import at.bitfire.notesx5.database.*
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -14,7 +13,7 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
                                 val database: VJournalDatabaseDao,
                                 application: Application) : AndroidViewModel(application) {
 
-    lateinit var vJournalItem: LiveData<vJournalItem?>
+    lateinit var vJournal: LiveData<VJournalWithEverything?>
 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
@@ -30,9 +29,9 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
         viewModelScope.launch {
 
             // insert a new value to initialize the vJournalItem or load the existing one from the DB
-            vJournalItem = if (vJournalItemId == 0L)
-                MutableLiveData<vJournalItem?>().apply {
-                    postValue(vJournalItem()) }
+            vJournal = if (vJournalItemId == 0L)
+                MutableLiveData<VJournalWithEverything?>().apply {
+                    postValue(VJournalWithEverything(VJournal(), null, null, null, null, null)) }
             else
                 database.get(vJournalItemId)
 
@@ -50,18 +49,18 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
     private fun setupDates() {
 
 
-        dateVisible = Transformations.map(vJournalItem) { item ->
-            return@map item?.component == "JOURNAL"           // true if component == JOURNAL
+        dateVisible = Transformations.map(vJournal) { item ->
+            return@map item?.vJournalItem?.component == "JOURNAL"           // true if component == JOURNAL
         }
 
-        timeVisible = Transformations.map(vJournalItem) { item ->
-            if (item?.dtstart == 0L || item?.component != "JOURNAL" )
+        timeVisible = Transformations.map(vJournal) { item ->
+            if (item?.vJournalItem?.dtstart == 0L || item?.vJournalItem?.component != "JOURNAL" )
                 return@map false
 
-            val minute_formatter = SimpleDateFormat("mm")
-            val hour_formatter = SimpleDateFormat("HH")
+            val minuteFormatter = SimpleDateFormat("mm")
+            val hourFormatter = SimpleDateFormat("HH")
 
-            if (minute_formatter.format(Date(item!!.dtstart)).toString() == "00" && hour_formatter.format(Date(item.dtstart)).toString() == "00")
+            if (minuteFormatter.format(Date(item.vJournalItem.dtstart)).toString() == "00" && hourFormatter.format(Date(item.vJournalItem.dtstart)).toString() == "00")
                 return@map false
 
             return@map true
@@ -69,18 +68,18 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
 
 
 
-        dtstartFormatted = Transformations.map(vJournalItem) { _ ->
-            val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(vJournalItem.value!!.dtstart))
-            val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(vJournalItem.value!!.dtstart))
+        dtstartFormatted = Transformations.map(vJournal) { item ->
+            val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item!!.vJournalItem.dtstart))
+            val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.vJournalItem.dtstart))
             return@map "$formattedDate $formattedTime"
         }
 
-        createdFormatted = Transformations.map(vJournalItem) { _ ->
-            vJournalItem.value?.let { Date(it.created).toString() }
+        createdFormatted = Transformations.map(vJournal) { item ->
+            item!!.vJournalItem.let { Date(it.created).toString() }
         }
 
-        lastModifiedFormatted = Transformations.map(vJournalItem) { _ ->
-            vJournalItem.value?.let { Date(it.lastModified).toString() }
+        lastModifiedFormatted = Transformations.map(vJournal) { item ->
+            item!!.vJournalItem.let { Date(it.lastModified).toString() }
         }
 
     }

@@ -27,7 +27,13 @@ import androidx.room.RoomDatabase
  * And a global method to get access to the database.
  */
 
-@Database(entities = [vJournalItem::class], version = 7, exportSchema = false)
+@Database(entities = [
+    VJournal::class,
+    VComment::class,
+    VCategory::class,
+    VAttendee::class,
+    VOrganizer::class,
+    VRelatedto::class], version = 14, exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class VJournalDatabase : RoomDatabase() {
 
@@ -82,7 +88,7 @@ abstract class VJournalDatabase : RoomDatabase() {
                     instance = Room.databaseBuilder(
                             context.applicationContext,
                             VJournalDatabase::class.java,
-                            "vjournal_database"
+                            "notesx5_database"
                     )
                             // Wipes and rebuilds instead of migrating if no Migration object.
                             // Migration is not part of this lesson. You can learn more about

@@ -5,14 +5,14 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 
-@Entity(tableName = "vjournalitems")
-data class vJournalItem(
+@Entity(tableName = "vjournals")
+data class VJournal(
 
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0L,
         var component: String = "JOURNAL",          // JOURNAL or NOTE
         var collection: String = "LOCAL",
-        var summary: String? = "",
+        var summary: String = "",
         var description: String = "",
         var dtstart: Long = System.currentTimeMillis(),
 
@@ -29,10 +29,8 @@ data class vJournalItem(
 
 
         //var comment: ArrayList<String> = arrayListOf()
-        //  val contact: String,
 
-        // TODO choose domain for UID
-        var uid: String = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.vjournal",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
+        var uid: String = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.notesx5",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
 
         /*
          The following properties specify change management information in  calendar components.

@@ -5,8 +5,9 @@ import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
 import at.bitfire.notesx5.convertCategoriesListtoCSVString
+import at.bitfire.notesx5.database.VJournal
 import at.bitfire.notesx5.database.VJournalDatabaseDao
-import at.bitfire.notesx5.database.vJournalItem
+import at.bitfire.notesx5.database.VJournalWithEverything
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -17,7 +18,7 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
                                 val database: VJournalDatabaseDao,
                                 application: Application) : AndroidViewModel(application) {
 
-    lateinit var vJournalItem: LiveData<vJournalItem?>
+    lateinit var vJournalItem: LiveData<VJournalWithEverything?>
     lateinit var allCategories: LiveData<List<String>>
     //lateinit var allOrganizers: LiveData<List<String>>
     lateinit var allCollections: LiveData<List<String>>
@@ -29,7 +30,7 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
-    lateinit var vJournalItemUpdated: MutableLiveData<vJournalItem>
+    lateinit var vJournalItemUpdated: MutableLiveData<VJournal>
 
     var summaryChanged: String = ""
     var descriptionChanged: String = ""
@@ -62,8 +63,8 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
 
             // insert a new value to initialize the vJournalItem or load the existing one from the DB
             vJournalItem = if (vJournalItemId == 0L)
-                MutableLiveData<vJournalItem?>().apply {
-                    postValue(vJournalItem()) }
+                MutableLiveData<VJournalWithEverything>().apply {
+                    postValue(VJournalWithEverything(VJournal(), null, null, null, null, null)) }
             else
                 database.get(vJournalItemId)
 
@@ -75,17 +76,17 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
 
 
             dateVisible = Transformations.map(vJournalItem) { item ->
-                return@map item?.component == "JOURNAL"           // true if component == JOURNAL
+                return@map item?.vJournalItem?.component == "JOURNAL"           // true if component == JOURNAL
             }
 
             timeVisible = Transformations.map(vJournalItem) { item ->
-                if (item?.dtstart == 0L || item?.component != "JOURNAL" )
+                if (item?.vJournalItem?.dtstart == 0L || item?.vJournalItem?.component != "JOURNAL" )
                     return@map false
 
-                val minute_formatter = SimpleDateFormat("mm")
-                val hour_formatter = SimpleDateFormat("HH")
+                val minuteFormatter = SimpleDateFormat("mm")
+                val hourFormatter = SimpleDateFormat("HH")
 
-                if (minute_formatter.format(Date(item!!.dtstart)).toString() == "00" && hour_formatter.format(Date(item.dtstart)).toString() == "00")
+                if (minuteFormatter.format(Date(item.vJournalItem.dtstart)).toString() == "00" && hourFormatter.format(Date(item.vJournalItem.dtstart)).toString() == "00")
                     return@map false
 
                 return@map true
@@ -106,7 +107,7 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
 
     fun update() {
         viewModelScope.launch() {
-            var vJournalItemUpdate = vJournalItem.value!!.copy()
+            var vJournalItemUpdate = vJournalItem.value!!.vJournalItem.copy()
             vJournalItemUpdate.summary = summaryChanged
             vJournalItemUpdate.description = descriptionChanged
             vJournalItemUpdate.url = urlChanged
@@ -158,7 +159,7 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
 
     fun delete () {
         viewModelScope.launch(Dispatchers.IO) {
-            database.delete(vJournalItem.value!!)
+            database.delete(vJournalItem.value!!.vJournalItem)
         }
     }
 

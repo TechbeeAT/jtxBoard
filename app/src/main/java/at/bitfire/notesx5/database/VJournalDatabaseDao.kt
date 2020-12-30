@@ -25,36 +25,76 @@ import androidx.room.*
 @Dao
 interface VJournalDatabaseDao {
 
+    /*
     @Query("SELECT * from vjournalitems WHERE id = :key")
-    fun get(key: Long): LiveData<vJournalItem?>
+    fun get(key: Long): LiveData<VJournalItem?>
 
 
-    @Query("SELECT * FROM vjournalitems ORDER BY dtstart DESC, created DESC")
-    fun getVJournalItems(): LiveData<List<vJournalItem>>
+     */
+
+    @Query("SELECT * FROM vjournals ORDER BY dtstart DESC, created DESC")
+    fun getVJournalItems(): LiveData<List<VJournal>>
 
 
-    @Query("SELECT * FROM vjournalitems WHERE component LIKE :component AND (categories LIKE :search_global OR summary LIKE :search_global OR description LIKE :search_global OR organizer LIKE :search_global OR status LIKE :search_global)  AND categories LIKE :search_category AND organizer LIKE :search_organizer AND status LIKE :search_status AND classification LIKE :search_classification ORDER BY dtstart DESC, created DESC")
-    fun getVJournalItems(component: Array<String>, search_global: String, search_category: Array<String>, search_organizer: Array<String>, search_status: Array<String>, search_classification: Array<String>): LiveData<List<vJournalItem>>
+    @Query("SELECT * FROM vjournals WHERE component LIKE :component AND (categories LIKE :search_global OR summary LIKE :search_global OR description LIKE :search_global OR organizer LIKE :search_global OR status LIKE :search_global)  AND categories LIKE :search_category AND organizer LIKE :search_organizer AND status LIKE :search_status AND classification LIKE :search_classification ORDER BY dtstart DESC, created DESC")
+    fun getVJournalItems(component: Array<String>, search_global: String, search_category: Array<String>, search_organizer: Array<String>, search_status: Array<String>, search_classification: Array<String>): LiveData<List<VJournal>>
 
 
-    @Query("SELECT DISTINCT categories FROM vjournalitems ORDER BY categories ASC")
+    @Query("SELECT DISTINCT categories FROM vjournals ORDER BY categories ASC")
     fun getAllCategories(): LiveData<List<String>>
 
-    @Query("SELECT DISTINCT organizer FROM vjournalitems ORDER BY organizer ASC")
+    @Query("SELECT DISTINCT organizer FROM vjournals ORDER BY organizer ASC")
     fun getAllOrganizers(): LiveData<List<String>>
 
-    @Query("SELECT DISTINCT collection FROM vjournalitems ORDER BY collection ASC")
+    @Query("SELECT DISTINCT collection FROM vjournals ORDER BY collection ASC")
     fun getAllCollections(): LiveData<List<String>>
 
 
-    @Insert
-    suspend fun insert(vJournalItem: vJournalItem): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(vJournalItem: VJournal): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAttendee(vAttendee: VAttendee): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCategory(vCategory: VCategory): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertComment(vComment: VComment): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrganizer(vOrganizer: VOrganizer): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRelatedto(vRelatedto: VRelatedto): Long
+
+
+
+    /*
+   @Insert(onConflict = OnConflictStrategy.REPLACE)
+   suspend fun insert(vJournalItem: vJournalItem, VAttendee: List<VAttendee>, vCategory: List<vCategory>, vComment: List<vComment>, vOrganizer: vOrganizer, vRelatedto: List<vRelatedto>): Long
+
+
+    */
 
     @Update
-    suspend fun update(vJournalItem: vJournalItem)
+    suspend fun update(vJournal: VJournal)
 
+
+
+        // TODO Take care to delete also child elements!
     @Delete
-    fun delete(vJournalItem: vJournalItem)
+    fun delete(vJournal: VJournal)
+
+
+    //@Transaction
+    @Query ("SELECT * FROM vjournals")
+    fun getVJournalItemWithEverything(): LiveData<List<VJournalWithEverything>>
+
+    @Query("SELECT * from vjournals WHERE id = :key")
+    fun get(key: Long): LiveData<VJournalWithEverything?>
+
 
 }
 

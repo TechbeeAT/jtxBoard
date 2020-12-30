@@ -2,9 +2,8 @@ package at.bitfire.notesx5.ui
 
 import android.app.Application
 import androidx.lifecycle.*
+import at.bitfire.notesx5.database.*
 
-import at.bitfire.notesx5.database.VJournalDatabaseDao
-import at.bitfire.notesx5.database.vJournalItem
 import kotlinx.coroutines.launch
 
 
@@ -32,17 +31,21 @@ class VJournalListViewModel(
         }
 
 
-        var vJournalList: LiveData<List<vJournalItem>> = Transformations.switchMap(filterArray) { filter ->
+    var vJournalList: LiveData<List<VJournalWithEverything>> = database.getVJournalItemWithEverything()
+
+    /*
+        var vJournalList: LiveData<List<VJournalItem>> = Transformations.switchMap(filterArray) { filter ->
             database.getVJournalItems(filter[SEARCH_COMPONENT], filter[SEARCH_GLOBAL][0], filter[SEARCH_CATEGORIES], filter[SEARCH_ORGANIZER], filter[SEARCH_STATUS], filter[SEARCH_CLASSIFICATION])
         }
 
-        var vJournalListFiltered: LiveData<List<vJournalItem>> = Transformations.map(vJournalList) {
+     */
 
-
-
+    /*
+        var vJournalListFiltered: LiveData<List<VJournalItem>> = Transformations.map(vJournalList) {
             return@map it
-
         }
+*/
+        // var vJournalListWithEverything = database.getVJournalItemWithEverything()
 
 
 
@@ -83,11 +86,20 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer",  "#category1, #category2", "FINAL","PUBLIC", "", "uid", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
         //database.insert(vJournalItem(summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
 
-        database.insert(vJournalItem(component="JOURNAL", summary=rfcSummary, description=rfcDesc, organizer="LOCAL", categories="Appointment, Education"))
-        database.insert(vJournalItem(component="JOURNAL", summary=jSummary, description=jDesc, organizer="LOCAL", categories="Appointment, Education"))
+        var newEntry = database.insert(VJournal(component="JOURNAL", summary=rfcSummary, description=rfcDesc))
+        database.insertAttendee(VAttendee(attendee="test@test.de", journalLinkId = newEntry))
+        database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry))
+        database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry))
 
-        database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary, description=noteDesc, organizer="LOCAL", categories="JourFixe, BestProject"))
-        database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary2, description=noteDesc2, organizer="LOCAL", categories="Shopping"))
+        database.insertComment(VComment(comment = "comment", journalLinkId = newEntry))
+        database.insertOrganizer(VOrganizer(organizer = "organizer", journalLinkId = newEntry))
+        database.insertRelatedto(VRelatedto(relatedto = "related to", journalLinkId = newEntry))
+
+
+        //database.insert(vJournalItem(component="JOURNAL", summary=jSummary, description=jDesc, organizer="LOCAL", categories="Appointment, Education"))
+
+        //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary, description=noteDesc, organizer="LOCAL", categories="JourFixe, BestProject"))
+        //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary2, description=noteDesc2, organizer="LOCAL", categories="Shopping"))
 
 
     }
@@ -101,7 +113,7 @@ class VJournalListViewModel(
     fun getFocusItemPosition(): Int {
 
         val focusItem = vJournalList.value?.find {
-            focusItemId.value == it.id
+            focusItemId.value == it.vJournalItem.id
         }
 
         return if(vJournalList.value != null && focusItem != null)

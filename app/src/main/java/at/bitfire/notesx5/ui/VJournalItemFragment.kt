@@ -9,9 +9,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.R
-import at.bitfire.notesx5.convertCategoriesCSVtoList
 import at.bitfire.notesx5.convertLongToDateString
 import at.bitfire.notesx5.convertLongToTimeString
+import at.bitfire.notesx5.database.VCategory
 import at.bitfire.notesx5.database.VJournalDatabase
 import at.bitfire.notesx5.database.VJournalDatabaseDao
 import at.bitfire.notesx5.databinding.FragmentVjournalItemBinding
@@ -30,7 +30,7 @@ class VJournalItemFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
 
         // Get a reference to the binding object and inflate the fragment views.
         this.inflater = inflater
@@ -60,20 +60,20 @@ class VJournalItemFragment : Fragment() {
             if (it) {
                 vJournalItemViewModel.editingClicked.value = false
                 this.findNavController().navigate(
-                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVJournalItemEditFragment().setItem2edit(vJournalItemViewModel.vJournalItem.value!!.id))
+                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVJournalItemEditFragment().setItem2edit(vJournalItemViewModel.vJournal.value!!.vJournalItem.id))
             }
         })
 
-        vJournalItemViewModel.vJournalItem.observe(viewLifecycleOwner, {
+        vJournalItemViewModel.vJournal.observe(viewLifecycleOwner, {
 
-            if (vJournalItemViewModel.vJournalItem.value != null) {
-                addChips(convertCategoriesCSVtoList(vJournalItemViewModel.vJournalItem.value!!.categories))
+            if (it?.vCategory != null) {
+                addChips(vJournalItemViewModel.vJournal.value!!.vCategory!!)
 
                 val statusArray = resources.getStringArray(R.array.vjournal_status)
-                binding.statusChip.text = statusArray[vJournalItemViewModel.vJournalItem.value!!.status]
+                binding.statusChip.text = statusArray[vJournalItemViewModel.vJournal.value!!.vJournalItem.status]
 
                 val classificationArray = resources.getStringArray(R.array.vjournal_classification)
-                binding.classificationChip.text = classificationArray[vJournalItemViewModel.vJournalItem.value!!.classification]
+                binding.classificationChip.text = classificationArray[vJournalItemViewModel.vJournal.value!!.vJournalItem.classification]
 
             }
 
@@ -84,20 +84,20 @@ class VJournalItemFragment : Fragment() {
     }
 
     // adds Chips to the categoriesChipgroup based on the categories List
-    fun addChips(categories: List<String>) {
+    fun addChips(categories: List<VCategory>) {
 
         categories.forEach() { category ->
 
-            if (category == "")
+            if (category.categories == "")
                 return@forEach
 
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_categories_chip, binding.categoriesChipgroup, false) as Chip
-            categoryChip.text = category
+            categoryChip.text = category.categories
             binding.categoriesChipgroup.addView(categoryChip)
 
             categoryChip.setOnClickListener {
 
-                val selectedCategoryArray = arrayOf(category)     // convert to array
+                val selectedCategoryArray = arrayOf(category.categories)     // convert to array
                 // Responds to chip click
                 this.findNavController().navigate(
                         VJournalItemFragmentDirections.actionVjournalItemFragmentToVjournalListFragmentList().setCategory2filter(selectedCategoryArray)
@@ -114,15 +114,15 @@ class VJournalItemFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.vjournal_item_share) {
 
-            var shareText: String = "${convertLongToDateString(vJournalItemViewModel.vJournalItem.value!!.dtstart)} ${convertLongToTimeString(vJournalItemViewModel.vJournalItem.value!!.dtstart)}\n"
-            shareText +=  "${vJournalItemViewModel.vJournalItem.value!!.summary}\n\n"
-            shareText += "${vJournalItemViewModel.vJournalItem.value!!.description}\n\n"
-            shareText += "Categories/Labels: ${vJournalItemViewModel.vJournalItem.value!!.categories}"
+            var shareText: String = "${convertLongToDateString(vJournalItemViewModel.vJournal.value!!.vJournalItem.dtstart)} ${convertLongToTimeString(vJournalItemViewModel.vJournal.value!!.vJournalItem.dtstart)}\n"
+            shareText +=  "${vJournalItemViewModel.vJournal.value!!.vJournalItem.summary}\n\n"
+            shareText += "${vJournalItemViewModel.vJournal.value!!.vJournalItem.description}\n\n"
+            shareText += "Categories/Labels: ${vJournalItemViewModel.vJournal.value!!.vJournalItem.categories}"
 
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.type="text/plain"
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, vJournalItemViewModel.vJournalItem.value!!.summary)
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, vJournalItemViewModel.vJournal.value!!.vJournalItem.summary)
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
             startActivity(Intent(shareIntent))
 

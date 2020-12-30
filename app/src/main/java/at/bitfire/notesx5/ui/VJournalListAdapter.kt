@@ -10,11 +10,11 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.vJournalItem
+import at.bitfire.notesx5.database.VJournalWithEverything
 import java.text.SimpleDateFormat
 import java.util.*
 
-class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<vJournalItem>>):
+class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<VJournalWithEverything>>):
         RecyclerView.Adapter<VJournalListAdapter.VJournalItemHolder>() {
 
 
@@ -38,34 +38,34 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
 
     override fun onBindViewHolder(holder: VJournalItemHolder, position: Int) {
 
-        var vJournalItem = vJournalList.value?.get(position)
+        var vJournalList = vJournalList.value?.get(position)
 
-        if (vJournalItem != null) {
+        if (vJournalList != null) {
 
-            holder.summary.text = vJournalItem.summary
-            holder.description.text = vJournalItem.description
+            holder.summary.text = vJournalList.vJournalItem.summary
+            holder.description.text = vJournalList.vJournalItem.description
 
-            if (vJournalItem.categories != "") {
-                holder.categories.text = vJournalItem.categories
+            if (vJournalList.vJournalItem.categories != "") {
+                holder.categories.text = vJournalList.vJournalItem.categories
             } else {
                 holder.categories.visibility = View.GONE
                 //holder.categoriesIcon.visibility = View.GONE
             }
 
-            if(vJournalItem.component == "JOURNAL") {
-                holder.dtstartDay.text = convertLongToDayString(vJournalItem.dtstart)
-                holder.dtstartMonth.text = convertLongToMonthString(vJournalItem.dtstart)
-                holder.dtstartYear.text = convertLongToYearString(vJournalItem.dtstart)
+            if(vJournalList.vJournalItem.component == "JOURNAL") {
+                holder.dtstartDay.text = convertLongToDayString(vJournalList.vJournalItem.dtstart)
+                holder.dtstartMonth.text = convertLongToMonthString(vJournalList.vJournalItem.dtstart)
+                holder.dtstartYear.text = convertLongToYearString(vJournalList.vJournalItem.dtstart)
                 holder.dtstartDay.visibility = View.VISIBLE
                 holder.dtstartMonth.visibility = View.VISIBLE
                 holder.dtstartYear.visibility = View.VISIBLE
 
                 val minute_formatter = SimpleDateFormat("mm")
                 val hour_formatter = SimpleDateFormat("HH")
-                if (minute_formatter.format(Date(vJournalItem.dtstart)).toString() == "00" && hour_formatter.format(Date(vJournalItem.dtstart)).toString() == "00") {
+                if (minute_formatter.format(Date(vJournalList.vJournalItem.dtstart)).toString() == "00" && hour_formatter.format(Date(vJournalList.vJournalItem.dtstart)).toString() == "00") {
                     holder.dtstartTime.visibility = View.GONE
                 } else {
-                    holder.dtstartTime.text = convertLongToTimeString(vJournalItem.dtstart)
+                    holder.dtstartTime.text = convertLongToTimeString(vJournalList.vJournalItem.dtstart)
                     holder.dtstartTime.visibility = View.VISIBLE
                 }
 
@@ -77,17 +77,17 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
             }
 
             val statusArray = context.resources.getStringArray(R.array.vjournal_status)
-            holder.status.text = statusArray[vJournalItem.status]
+            holder.status.text = statusArray[vJournalList.vJournalItem.status]
 
             val classificationArray = context.resources.getStringArray(R.array.vjournal_classification)
-            holder.classification.text = classificationArray[vJournalItem.classification]
+            holder.classification.text = classificationArray[vJournalList.vJournalItem.classification]
 
 
 
             // turn to item view when the card is clicked
             holder.listItemCardView.setOnClickListener {
                 it.findNavController().navigate(
-                        VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment().setItem2show(vJournalItem.id))
+                        VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment().setItem2show(vJournalList.vJournalItem.id))
             }
 
         }
