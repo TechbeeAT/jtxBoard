@@ -14,12 +14,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class VJournalItemEditViewModel(    private val vJournalItemId: Long,
+class VJournalItemEditViewModel(private val vJournalItemId: Long,
                                 val database: VJournalDatabaseDao,
                                 application: Application) : AndroidViewModel(application) {
 
     lateinit var vJournalItem: LiveData<VJournalWithEverything?>
     lateinit var allCategories: LiveData<List<String>>
+
     //lateinit var allOrganizers: LiveData<List<String>>
     lateinit var allCollections: LiveData<List<String>>
 
@@ -30,8 +31,11 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
-    lateinit var vJournalItemUpdated: MutableLiveData<VJournal>
+    lateinit var vJournalItemUpdated: MutableLiveData<VJournalWithEverything>
 
+
+
+    /*
     var summaryChanged: String = ""
     var descriptionChanged: String = ""
     var statusChanged: Int = -1
@@ -43,7 +47,7 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
     var attendeeChanged: String = ""
     var contactChanged: String = ""
     var relatesChanged: String = ""
-
+*/
 
     var dtstartChangedYear: Int = -1
     var dtstartChangedMonth: Int = -1
@@ -56,7 +60,6 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
     val urlError = MutableLiveData<String>()
 
 
-
     init {
 
         viewModelScope.launch() {
@@ -64,11 +67,16 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
             // insert a new value to initialize the vJournalItem or load the existing one from the DB
             vJournalItem = if (vJournalItemId == 0L)
                 MutableLiveData<VJournalWithEverything>().apply {
-                    postValue(VJournalWithEverything(VJournal(), null, null, null, null, null)) }
-            else
+                    postValue(VJournalWithEverything(VJournal(), null, null, null, null, null))
+                }
+            else {
                 database.get(vJournalItemId)
+            }
 
-//            vJournalItemUpdated = vJournalItem as MutableLiveData<vJournalItem>
+            vJournalItemUpdated =  Transformations.map(vJournalItem) {
+                it
+            } as MutableLiveData<VJournalWithEverything>
+
 
             allCategories = database.getAllCategories()
             allCollections = database.getAllCollections()
@@ -80,7 +88,7 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
             }
 
             timeVisible = Transformations.map(vJournalItem) { item ->
-                if (item?.vJournalItem?.dtstart == 0L || item?.vJournalItem?.component != "JOURNAL" )
+                if (item?.vJournalItem?.dtstart == 0L || item?.vJournalItem?.component != "JOURNAL")
                     return@map false
 
                 val minuteFormatter = SimpleDateFormat("mm")
@@ -91,10 +99,9 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
 
                 return@map true
             }
-
         }
-    }
 
+    }
 
 
     fun savingClicked() {
@@ -107,24 +114,15 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
 
     fun update() {
         viewModelScope.launch() {
-            var vJournalItemUpdate = vJournalItem.value!!.vJournalItem.copy()
-            vJournalItemUpdate.summary = summaryChanged
-            vJournalItemUpdate.description = descriptionChanged
-            vJournalItemUpdate.url = urlChanged
-            vJournalItemUpdate.attendee = attendeeChanged
-            vJournalItemUpdate.contact = contactChanged
-            vJournalItemUpdate.related = relatesChanged
-            vJournalItemUpdate.organizer = organizerChanged
-            vJournalItemUpdate.collection = collectionChanged
+            //TODO: check if the item got a new sequence in the meantime!
 
-            if(statusChanged >= 0) vJournalItemUpdate.status = statusChanged
-            if(classificationChanged >= 0) vJournalItemUpdate.classification = classificationChanged
+            vJournalItemUpdated.value!!.vJournalItem.lastModified = System.currentTimeMillis()
+            vJournalItemUpdated.value!!.vJournalItem.dtstamp = System.currentTimeMillis()
 
-            vJournalItemUpdate.lastModified = System.currentTimeMillis()
-            vJournalItemUpdate.dtstamp = System.currentTimeMillis()
 
+            /*
             var c: Calendar = Calendar.getInstance()
-            c.timeInMillis = vJournalItemUpdate.dtstart
+            c.timeInMillis = vJournalItemUpdated.value!!.vJournalItem.dtstart
             Log.println(Log.INFO, "VJournalItemEditViewMod", "Value before: ${c.timeInMillis}")
             if (dtstartChangedYear >= 0)
                 c.set(Calendar.YEAR, dtstartChangedYear)
@@ -138,26 +136,28 @@ class VJournalItemEditViewModel(    private val vJournalItemId: Long,
                 c.set(Calendar.MINUTE, dtstartChangedMinute)
             Log.println(Log.INFO, "VJournalItemEditViewMod", "Value after: ${c.timeInMillis}")
 
-            vJournalItemUpdate.dtstart = c.timeInMillis
+            vJournalItemUpdated.value!!.vJournalItem.dtstart = c.timeInMillis
+
+
+             */
 
             categoriesListChanged = categoriesListChanged.sorted().toMutableList()
-            vJournalItemUpdate.categories = convertCategoriesListtoCSVString(categoriesListChanged)
+            vJournalItemUpdated.value!!.vJournalItem.categories = convertCategoriesListtoCSVString(categoriesListChanged)
 
 
-            if (vJournalItemUpdate.id == 0L) {
+            if (vJournalItemUpdated.value!!.vJournalItem.id == 0L) {
                 //Log.println(Log.INFO, "VJournalItemViewModel", "creating a new one")
-                returnVJournalItemId.value = database.insert(vJournalItemUpdate)
+                returnVJournalItemId.value = database.insert(vJournalItemUpdated.value!!.vJournalItem)
                 //Log.println(Log.INFO, "vJournalItemViewModel", vJournalItemUpdate.id.toString())
-            }
-            else {
-                returnVJournalItemId.value = vJournalItemUpdate.id
-                vJournalItemUpdate.sequence++
-                database.update(vJournalItemUpdate)
+            } else {
+                returnVJournalItemId.value = vJournalItemUpdated.value!!.vJournalItem.id
+                vJournalItemUpdated.value!!.vJournalItem.sequence++
+                database.update(vJournalItemUpdated.value!!.vJournalItem)
             }
         }
     }
 
-    fun delete () {
+    fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
             database.delete(vJournalItem.value!!.vJournalItem)
         }

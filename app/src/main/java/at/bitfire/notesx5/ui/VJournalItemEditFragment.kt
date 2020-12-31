@@ -62,14 +62,15 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         vJournalItemEditViewModel.savingClicked.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                vJournalItemEditViewModel.summaryChanged = binding.summaryEdit.editText?.text.toString()
-                vJournalItemEditViewModel.descriptionChanged = binding.descriptionEdit.editText?.text.toString()
-                vJournalItemEditViewModel.collectionChanged = binding.collection.selectedItem.toString()
-                vJournalItemEditViewModel.organizerChanged = binding.organizerEdit.editText?.text.toString()
-                vJournalItemEditViewModel.urlChanged = binding.urlEdit.editText?.text.toString()
-                vJournalItemEditViewModel.attendeeChanged = binding.attendeeEdit.editText?.text.toString()
-                vJournalItemEditViewModel.contactChanged = binding.contactEdit.editText?.text.toString()
-                vJournalItemEditViewModel.relatesChanged = binding.relatedtoEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.summary = binding.summaryEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.description = binding.descriptionEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.collection = binding.collection.selectedItem.toString()
+                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.organizer = binding.organizerEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.url = binding.urlEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.attendee = binding.attendeeEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.contact = binding.contactEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.related = binding.relatedtoEdit.editText?.text.toString()
+
                 vJournalItemEditViewModel.update()
             }
         })
@@ -92,7 +93,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                 }
 
                 builder.setNeutralButton("Mark as cancelled") { _, _ ->
-                    vJournalItemEditViewModel.statusChanged = 2    // 2 = CANCELLED
+                    vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.status = 2    // 2 = CANCELLED
                     vJournalItemEditViewModel.savingClicked()
 
                     var summary = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.summary
@@ -140,27 +141,9 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                 if (selectedCollectionPos != null)
                     binding.collection.setSelection(selectedCollectionPos)
             }
-
-            /*
-
-                // Set the default value of the Status Spinner
-                when(vJournalItemEditViewModel.vJournalItem.value?.status) {
-                    "DRAFT" -> binding.statusSpinner.setSelection(0)
-                    "FINAL" -> binding.statusSpinner.setSelection(1)
-                    "CANCELLED" -> binding.statusSpinner.setSelection(2)
-                    else -> binding.statusSpinner.visibility = View.GONE      // don't show the spinner if the value is not known in order to not mess with external data!
-                }
-
-                // Set the default value of the Classification Spinner
-                when(vJournalItemEditViewModel.vJournalItem.value?.classification) {
-                    "PUBLIC" -> binding.classificationSpinner.setSelection(0)
-                    "PRIVATE" -> binding.classificationSpinner.setSelection(1)
-                    "CONFIDENTIAL" -> binding.classificationSpinner.setSelection(2)
-                    else -> binding.classificationSpinner.visibility = View.GONE      // don't show the spinner if the value is not known in order to not mess with external data!
-                }
-
-    */
         })
+
+
 
         // Set up items to suggest for categories
         vJournalItemEditViewModel.allCategories.observe(viewLifecycleOwner, {
@@ -244,7 +227,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                     .setTitle("Set status")
                     .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
                         // Respond to neutral button press
-                        vJournalItemEditViewModel.statusChanged = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.status  // Reset to previous status
+                        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.status = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.status  // Reset to previous status
                         binding.statusChip.text = statusItems[checkedStatus]   // don't forget to update the UI
                     }
                     .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
@@ -253,7 +236,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                     // Single-choice items (initialized with checked item)
                     .setSingleChoiceItems(statusItems, checkedStatus) { dialog, which ->
                         // Respond to item chosen
-                        vJournalItemEditViewModel.statusChanged = which
+                        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.status = which
                         binding.statusChip.text = statusItems[which]     // don't forget to update the UI
                     }
                     .show()
@@ -272,7 +255,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                     .setTitle("Set classification")
                     .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
                         // Respond to neutral button press
-                        vJournalItemEditViewModel.classificationChanged = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.classification  // Reset to previous classification
+                        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.classification = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.classification  // Reset to previous classification
                         binding.classificationChip.text = classificationItems[checkedClassification]   // don't forget to update the UI
                     }
                     .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
@@ -281,50 +264,13 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                     // Single-choice items (initialized with checked item)
                     .setSingleChoiceItems(classificationItems, checkedClassification) { dialog, which ->
                         // Respond to item chosen
-                        vJournalItemEditViewModel.classificationChanged = which
+                        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.classification = which
                         binding.classificationChip.text = classificationItems[which]     // don't forget to update the UI
                     }
                     .show()
         }
 
 
-
-        /*
-        val statusSpinner = binding.statusSpinner
-        statusSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                // An item was selected. You can retrieve the selected item using
-                when(pos) {
-                    0 -> vJournalItemEditViewModel.statusChanged = "DRAFT"
-                    1 -> vJournalItemEditViewModel.statusChanged = "FINAL"
-                    2 -> vJournalItemEditViewModel.statusChanged = "CANCELLED"
-                    // no else here! if external data is not one of those 3, the spinner is not shown (see observer)
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-            //do nothing
-            }
-        }
-
-        val classificationSpinner = binding.classificationSpinner
-        classificationSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                // An item was selected. You can retrieve the selected item using
-                when(pos) {
-                    0 -> vJournalItemEditViewModel.classificationChanged = "PUBLIC"
-                    1 -> vJournalItemEditViewModel.classificationChanged = "PRIVATE"
-                    2 -> vJournalItemEditViewModel.classificationChanged = "CONFIDENTIAL"
-                    // no else here! if external data is not one of those 3, the spinner is not shown (see observer)
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // do nothing
-            }
-        }
-
-         */
 
 
         binding.urlEdit.editText?.setOnFocusChangeListener { view, hasFocus ->
@@ -338,26 +284,12 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         return binding.root
     }
 
-    override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
-        val c = Calendar.getInstance()
-        c.set(Calendar.HOUR_OF_DAY, hourOfDay)
-        c.set(Calendar.MINUTE, minute)
-
-        //var formattedTime = convertLongToTimeString(c.timeInMillis)
-        //Log.println(Log.INFO, "OnTimeSet", "Here are the values: $formattedTime")
-
-        binding.dtstartTime.text = convertLongToTimeString(c.timeInMillis)
-
-        vJournalItemEditViewModel.dtstartChangedHour = hourOfDay
-        vJournalItemEditViewModel.dtstartChangedMinute = minute
-
-    }
-
-
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
 
         val c = Calendar.getInstance()
+        c.timeInMillis = vJournalItemEditViewModel.vJournalItemUpdated.value?.vJournalItem?.dtstart!!
+
         c.set(Calendar.YEAR, year)
         c.set(Calendar.MONTH, month)
         c.set(Calendar.DAY_OF_MONTH, day)
@@ -368,17 +300,34 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         binding.dtstartMonth.text = convertLongToMonthString(c.timeInMillis)
         binding.dtstartDay.text = convertLongToDayString(c.timeInMillis)
 
-        vJournalItemEditViewModel.dtstartChangedYear = year
-        vJournalItemEditViewModel.dtstartChangedMonth = month
-        vJournalItemEditViewModel.dtstartChangedDay = day
+        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.dtstart = c.timeInMillis
 
         showTimepicker()
 
     }
 
+
+    override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
+        val c = Calendar.getInstance()
+        c.timeInMillis = vJournalItemEditViewModel.vJournalItemUpdated.value?.vJournalItem?.dtstart!!
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay)
+        c.set(Calendar.MINUTE, minute)
+
+        //var formattedTime = convertLongToTimeString(c.timeInMillis)
+        //Log.println(Log.INFO, "OnTimeSet", "Here are the values: $formattedTime")
+
+        binding.dtstartTime.text = convertLongToTimeString(c.timeInMillis)
+
+        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.dtstart = c.timeInMillis
+
+    }
+
+
+
+
     fun showDatepicker() {
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalItemEditViewModel.vJournalItem.value?.vJournalItem?.dtstart!!
+        c.timeInMillis = vJournalItemEditViewModel.vJournalItemUpdated.value?.vJournalItem?.dtstart!!
 
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
@@ -388,7 +337,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
     fun showTimepicker() {
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalItemEditViewModel.vJournalItem.value?.vJournalItem?.dtstart!!
+        c.timeInMillis = vJournalItemEditViewModel.vJournalItemUpdated.value?.vJournalItem?.dtstart!!
 
         val hourOfDay = c.get(Calendar.HOUR_OF_DAY)
         val minute = c.get(Calendar.MINUTE)
