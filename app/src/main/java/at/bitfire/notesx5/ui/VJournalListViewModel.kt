@@ -2,6 +2,7 @@ package at.bitfire.notesx5.ui
 
 import android.app.Application
 import androidx.lifecycle.*
+import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*
 
 import kotlinx.coroutines.launch
@@ -15,43 +16,24 @@ class VJournalListViewModel(
         application: Application) : AndroidViewModel(application) {
 
 
-    var searchComponent = MutableLiveData<List<String>>(listOf("JOURNAL"))
-    var searchGlobal = MutableLiveData<List<String>>(listOf("%"))
-    var searchCategories = MutableLiveData<List<String>>()
-    var searchOrganizer = MutableLiveData<List<String>>()
-    var searchStatus = MutableLiveData<List<String>>()
-    var searchClassification = MutableLiveData<List<String>>()
+    var searchComponent = "JOURNAL"
+    var searchText: String = ""
+    var searchCategories: MutableList<String>? = mutableListOf()
+    var searchOrganizer: MutableList<String> = mutableListOf()
+    var searchStatus: MutableList<String> = mutableListOf()
+    var searchClassification: MutableList<String> = mutableListOf()
 
-    private val search = MediatorLiveData<List<String>>()
-
+    private var listQuery:  MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
+    var vJournalList: LiveData<List<VJournalEntity>> = Transformations.switchMap(listQuery) {
+        database.getVJournalEntity(it)
+    }
 
     //var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
     var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
 
 
-    var vJournalList: LiveData<List<VJournalEntity>> = Transformations.switchMap(search) {
-
-        // search only globally and filter the right component if no further filter criteria was passed
-        if (searchCategories.value.isNullOrEmpty() || searchOrganizer.value.isNullOrEmpty() || searchStatus.value.isNullOrEmpty() || searchStatus.value.isNullOrEmpty() )
-            database.getVJournalEntity(searchComponent.value!!, "%${searchGlobal.value?.joinToString(separator = "%")}%")
-
-        // apply all filter criteria. ALL filter criteria must be passed!
-        else if (!searchCategories.value.isNullOrEmpty() && !searchOrganizer.value.isNullOrEmpty() && !searchStatus.value.isNullOrEmpty() && !searchStatus.value.isNullOrEmpty())
-            database.getVJournalEntity(searchComponent.value!!, "%")
-
-        else
-            database.getVJournalEntity(listOf("JOURNAL"), "%")     // Hardcoded fallback
-    }
-
 
     init {
-
-        search.addSource(searchComponent) { component -> search.value = component }
-        search.addSource(searchGlobal) { global -> search.value = global }
-        search.addSource(searchCategories) { categories -> search.value = categories }
-        search.addSource(searchOrganizer) { organizer -> search.value = organizer }
-        search.addSource(searchStatus) { status -> search.value = status }
-        search.addSource(searchClassification) { classification -> search.value = classification }
 
         viewModelScope.launch {
             insertTestData()
@@ -134,5 +116,33 @@ class VJournalListViewModel(
         focusItemId.value = 0L
     }
 
+    fun constructQuery(): SimpleSQLiteQuery  {
 
+        var args = arrayListOf<String>()
+
+// Beginning of query string
+        var queryString = "SELECT DISTINCT vjournals.* FROM vjournals " +
+                "LEFT JOIN vcategories ON vjournals.id = vcategories.journalLinkId " +
+                "LEFT JOIN vattendees ON vjournals.id = vattendees.journalLinkId " +
+                "LEFT JOIN vcomments ON vjournals.id = vcomments.journalLinkId " +
+                "LEFT JOIN vorganizer ON vjournals.id = vorganizer.journalLinkId " +
+                "LEFT JOIN vRelatedto ON vjournals.id = vRelatedto.journalLinkId "
+
+        // First query parameter Component must always be present!
+        queryString += "WHERE component = ? "
+        args.add(searchComponent)
+
+        // Query for the given text search from the action bar
+        if (searchText.isNotEmpty() && searchText.length >= 2) {
+            queryString += "AND (summary LIKE ? OR description LIKE ?) "
+            args.add(searchText!!)
+            args.add(searchText!!)
+        }
+
+        return SimpleSQLiteQuery(queryString, args.toArray())
+    }
+
+    fun updateSearch() {
+        listQuery.postValue(constructQuery())
+    }
 }

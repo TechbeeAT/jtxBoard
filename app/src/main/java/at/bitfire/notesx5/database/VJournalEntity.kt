@@ -7,11 +7,12 @@ data class VJournalEntity (
         @Embedded
         var vJournalItem: VJournal = VJournal(),
 
+
         @Relation(parentColumn = "id", entityColumn = "journalLinkId")
         var vComment: List<VComment>?,
 
         @Relation(parentColumn = "id", entityColumn = "journalLinkId", entity = VCategory::class)
-        var vCategory: List<VCategory>?,
+        var vCategory: List<VCategory>? = null,
 
         @Relation(parentColumn = "id", entityColumn = "journalLinkId")
         var vAttendee: List<VAttendee>?,

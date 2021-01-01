@@ -133,18 +133,20 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
                 when (tab?.position) {
                     0 -> {
-                        vJournalListViewModel.searchComponent.value = listOf("JOURNAL")
+                        vJournalListViewModel.searchComponent = "JOURNAL"
                         gotodateMenuItem.isVisible = true
                     }
                     1 -> {
-                        vJournalListViewModel.searchComponent.value = listOf("NOTE")
+                        vJournalListViewModel.searchComponent = "NOTE"
                         gotodateMenuItem.isVisible = false     // no date search for notes
                     }
                     else -> {
-                        vJournalListViewModel.searchComponent.value = listOf("JOURNAL")
+                        vJournalListViewModel.searchComponent = "JOURNAL"
                         gotodateMenuItem.isVisible = true
                     }
                 }
+                vJournalListViewModel.updateSearch()
+
             }
 
 
@@ -199,10 +201,11 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             override fun onQueryTextChange(query: String): Boolean {
 
                 if (query.isEmpty())
-                    vJournalListViewModel.searchGlobal.value = listOf("%")
+                    vJournalListViewModel.searchText = "%"
                 else
-                    vJournalListViewModel.searchGlobal.value = listOf("%$query%")
+                    vJournalListViewModel.searchText = "%$query%"
 
+                vJournalListViewModel.updateSearch()
                 return false
             }
         })

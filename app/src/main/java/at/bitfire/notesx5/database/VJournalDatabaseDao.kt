@@ -18,6 +18,9 @@ package at.bitfire.notesx5.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
+
 
 /**
  * Defines methods for using the SleepNight class with Room.
@@ -82,22 +85,32 @@ interface VJournalDatabaseDao {
 
 
     @Transaction
-    @Query ("SELECT * FROM vjournals")
+    @Query("SELECT * FROM vjournals")
     fun getVJournalEntity(): LiveData<List<VJournalEntity>>
 
     @Transaction
     @Query("SELECT * FROM vjournals WHERE component IN (:component) AND (summary LIKE :searchGlobal OR description LIKE :searchGlobal) ORDER BY dtstart DESC, created DESC")
     fun getVJournalEntity(component: List<String>, searchGlobal: String): LiveData<List<VJournalEntity>>
 
+    /*
     @Transaction
     @Query("SELECT * FROM vjournals WHERE component IN (:component) AND (summary LIKE :searchGlobal OR description LIKE :searchGlobal) AND categories IN (:searchCategories) AND organizer IN (:searchOrganizer) AND status IN (:searchStatus) AND classification IN (:searchClassification) ORDER BY dtstart DESC, created DESC")
     fun getVJournalEntity(component: List<String>, searchGlobal: String, searchCategories: List<String>, searchOrganizer: List<String>, searchStatus: List<String>, searchClassification: List<String>): LiveData<List<VJournalEntity>>
+
+
+     */
+
+    @Transaction
+    @RawQuery
+    fun getVJournalEntity(query: SupportSQLiteQuery): LiveData<List<VJournalEntity>>
+
+
 
     @Query("SELECT * from vjournals WHERE id = :key")
     fun get(key: Long): LiveData<VJournalEntity?>
 
 
-
-
 }
+
+
 
