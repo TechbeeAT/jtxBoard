@@ -13,7 +13,7 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
                                 val database: VJournalDatabaseDao,
                                 application: Application) : AndroidViewModel(application) {
 
-    lateinit var vJournal: LiveData<VJournalWithEverything?>
+    lateinit var vJournal: LiveData<VJournalEntity?>
 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
@@ -30,8 +30,8 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
 
             // insert a new value to initialize the vJournalItem or load the existing one from the DB
             vJournal = if (vJournalItemId == 0L)
-                MutableLiveData<VJournalWithEverything?>().apply {
-                    postValue(VJournalWithEverything(VJournal(), null, null, null, null, null)) }
+                MutableLiveData<VJournalEntity?>().apply {
+                    postValue(VJournalEntity(VJournal(), null, null, null, null, null)) }
             else
                 database.get(vJournalItemId)
 

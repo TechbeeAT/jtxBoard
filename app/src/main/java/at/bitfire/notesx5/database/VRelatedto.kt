@@ -1,10 +1,15 @@
 package at.bitfire.notesx5.database
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "vRelatedto")
+@Entity(tableName = "vRelatedto",
+        foreignKeys = [ForeignKey(entity = VJournal::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("journalLinkId"),
+                onDelete = ForeignKey.CASCADE)])
 data class VRelatedto (
 
         @PrimaryKey(autoGenerate = true)

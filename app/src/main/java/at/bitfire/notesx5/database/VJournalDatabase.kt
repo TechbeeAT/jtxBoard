@@ -33,7 +33,7 @@ import androidx.room.RoomDatabase
     VCategory::class,
     VAttendee::class,
     VOrganizer::class,
-    VRelatedto::class], version = 14, exportSchema = false)
+    VRelatedto::class], version = 17, exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class VJournalDatabase : RoomDatabase() {
 

@@ -2,12 +2,11 @@ package at.bitfire.notesx5.ui
 
 import android.app.Application
 import android.text.Editable
-import android.util.Log
 import androidx.lifecycle.*
 import at.bitfire.notesx5.convertCategoriesListtoCSVString
 import at.bitfire.notesx5.database.VJournal
 import at.bitfire.notesx5.database.VJournalDatabaseDao
-import at.bitfire.notesx5.database.VJournalWithEverything
+import at.bitfire.notesx5.database.VJournalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -18,7 +17,7 @@ class VJournalItemEditViewModel(private val vJournalItemId: Long,
                                 val database: VJournalDatabaseDao,
                                 application: Application) : AndroidViewModel(application) {
 
-    lateinit var vJournalItem: LiveData<VJournalWithEverything?>
+    lateinit var vJournalItem: LiveData<VJournalEntity?>
     lateinit var allCategories: LiveData<List<String>>
 
     //lateinit var allOrganizers: LiveData<List<String>>
@@ -31,7 +30,7 @@ class VJournalItemEditViewModel(private val vJournalItemId: Long,
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
-    lateinit var vJournalItemUpdated: MutableLiveData<VJournalWithEverything>
+    lateinit var vJournalItemUpdated: MutableLiveData<VJournalEntity>
 
 
 
@@ -66,8 +65,8 @@ class VJournalItemEditViewModel(private val vJournalItemId: Long,
 
             // insert a new value to initialize the vJournalItem or load the existing one from the DB
             vJournalItem = if (vJournalItemId == 0L)
-                MutableLiveData<VJournalWithEverything>().apply {
-                    postValue(VJournalWithEverything(VJournal(), null, null, null, null, null))
+                MutableLiveData<VJournalEntity>().apply {
+                    postValue(VJournalEntity(VJournal(), null, null, null, null, null))
                 }
             else {
                 database.get(vJournalItemId)
@@ -75,7 +74,7 @@ class VJournalItemEditViewModel(private val vJournalItemId: Long,
 
             vJournalItemUpdated =  Transformations.map(vJournalItem) {
                 it
-            } as MutableLiveData<VJournalWithEverything>
+            } as MutableLiveData<VJournalEntity>
 
 
             allCategories = database.getAllCategories()

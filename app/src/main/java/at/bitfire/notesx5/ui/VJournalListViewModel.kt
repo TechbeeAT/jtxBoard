@@ -1,7 +1,6 @@
 package at.bitfire.notesx5.ui
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import at.bitfire.notesx5.database.*
 
@@ -30,18 +29,18 @@ class VJournalListViewModel(
     var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
 
 
-    var vJournalList: LiveData<List<VJournalWithEverything>> = Transformations.switchMap(search) {
+    var vJournalList: LiveData<List<VJournalEntity>> = Transformations.switchMap(search) {
 
         // search only globally and filter the right component if no further filter criteria was passed
         if (searchCategories.value.isNullOrEmpty() || searchOrganizer.value.isNullOrEmpty() || searchStatus.value.isNullOrEmpty() || searchStatus.value.isNullOrEmpty() )
-            database.getVJournalItemWithEverything(searchComponent.value!!, "%${searchGlobal.value?.joinToString(separator = "%")}%")
+            database.getVJournalEntity(searchComponent.value!!, "%${searchGlobal.value?.joinToString(separator = "%")}%")
 
         // apply all filter criteria. ALL filter criteria must be passed!
         else if (!searchCategories.value.isNullOrEmpty() && !searchOrganizer.value.isNullOrEmpty() && !searchStatus.value.isNullOrEmpty() && !searchStatus.value.isNullOrEmpty())
-            database.getVJournalItemWithEverything(searchComponent.value!!, "%")
+            database.getVJournalEntity(searchComponent.value!!, "%")
 
         else
-            database.getVJournalItemWithEverything(listOf("JOURNAL"), "%")     // Hardcoded fallback
+            database.getVJournalEntity(listOf("JOURNAL"), "%")     // Hardcoded fallback
     }
 
 
