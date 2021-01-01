@@ -17,6 +17,7 @@
 package at.bitfire.notesx5.database
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 
 /**
@@ -71,13 +72,6 @@ interface VJournalDatabaseDao {
 
 
 
-    /*
-   @Insert(onConflict = OnConflictStrategy.REPLACE)
-   suspend fun insert(vJournalItem: vJournalItem, VAttendee: List<VAttendee>, vCategory: List<vCategory>, vComment: List<vComment>, vOrganizer: vOrganizer, vRelatedto: List<vRelatedto>): Long
-
-
-    */
-
     @Update
     suspend fun update(vJournal: VJournal)
 
@@ -88,12 +82,22 @@ interface VJournalDatabaseDao {
     fun delete(vJournal: VJournal)
 
 
-    //@Transaction
+    @Transaction
     @Query ("SELECT * FROM vjournals")
     fun getVJournalItemWithEverything(): LiveData<List<VJournalWithEverything>>
 
+    @Transaction
+    @Query("SELECT * FROM vjournals WHERE component IN (:component) AND (summary LIKE :searchGlobal OR description LIKE :searchGlobal) ORDER BY dtstart DESC, created DESC")
+    fun getVJournalItemWithEverything(component: List<String>, searchGlobal: String): LiveData<List<VJournalWithEverything>>
+
+    @Transaction
+    @Query("SELECT * FROM vjournals WHERE component IN (:component) AND (summary LIKE :searchGlobal OR description LIKE :searchGlobal) AND categories IN (:searchCategories) AND organizer IN (:searchOrganizer) AND status IN (:searchStatus) AND classification IN (:searchClassification) ORDER BY dtstart DESC, created DESC")
+    fun getVJournalItemWithEverything(component: List<String>, searchGlobal: String, searchCategories: List<String>, searchOrganizer: List<String>, searchStatus: List<String>, searchClassification: List<String>): LiveData<List<VJournalWithEverything>>
+
     @Query("SELECT * from vjournals WHERE id = :key")
     fun get(key: Long): LiveData<VJournalWithEverything?>
+
+
 
 
 }

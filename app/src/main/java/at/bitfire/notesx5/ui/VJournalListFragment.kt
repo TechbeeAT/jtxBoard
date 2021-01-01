@@ -77,9 +77,13 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // set the filter String, default is "%"
         //TODO add other filter criteria
+        // TODO uncomment again!!!!
+        /*
         if (!arguments.category2filter.isNullOrEmpty())
             vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_CATEGORIES, arguments.category2filter!!)
 
+
+         */
 
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
         vJournalListViewModel.vJournalList.observe(viewLifecycleOwner, Observer {
@@ -92,7 +96,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         })
 
         vJournalListViewModel.vJournalList.observe(viewLifecycleOwner, {
-            if (vJournalListViewModel.vJournalList.value != null)
+            if (vJournalListViewModel.vJournalList.value?.size!! > 0)
                 Log.println(Log.INFO, "getVJournalItemswithComments", vJournalListViewModel.vJournalList.value!![0]!!.vJournalItem.summary.toString())
             
             vJournalListViewModel.vJournalList.value?.forEach { it ->
@@ -129,15 +133,15 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
                 when (tab?.position) {
                     0 -> {
-                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, arrayOf("JOURNAL"))
+                        vJournalListViewModel.searchComponent.value = listOf("JOURNAL")
                         gotodateMenuItem.isVisible = true
                     }
                     1 -> {
-                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, arrayOf("NOTE"))
+                        vJournalListViewModel.searchComponent.value = listOf("NOTE")
                         gotodateMenuItem.isVisible = false     // no date search for notes
                     }
                     else -> {
-                        vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_COMPONENT, arrayOf("JOURNAL"))
+                        vJournalListViewModel.searchComponent.value = listOf("JOURNAL")
                         gotodateMenuItem.isVisible = true
                     }
                 }
@@ -194,10 +198,11 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
             override fun onQueryTextChange(query: String): Boolean {
 
-                if (query.isNullOrEmpty())
-                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, arrayOf("%"))
+                if (query.isEmpty())
+                    vJournalListViewModel.searchGlobal.value = listOf("%")
                 else
-                    vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_GLOBAL, arrayOf("%$query%"))
+                    vJournalListViewModel.searchGlobal.value = listOf("%$query%")
+
                 return false
             }
         })
@@ -231,7 +236,6 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 }
 
                 dpd.show()
-                true
             }
 
         if (item.itemId == R.id.vjournal_filter) {

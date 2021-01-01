@@ -1,6 +1,7 @@
 package at.bitfire.notesx5.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import at.bitfire.notesx5.database.*
 
@@ -14,42 +15,44 @@ class VJournalListViewModel(
         val database: VJournalDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
-        val SEARCH_COMPONENT = 0
-        val SEARCH_GLOBAL = 1
-        val SEARCH_CATEGORIES = 2
-        val SEARCH_ORGANIZER = 3
-        val SEARCH_STATUS = 4
-        val SEARCH_CLASSIFICATION = 5
+
+    var searchComponent = MutableLiveData<List<String>>(listOf("JOURNAL"))
+    var searchGlobal = MutableLiveData<List<String>>(listOf("%"))
+    var searchCategories = MutableLiveData<List<String>>()
+    var searchOrganizer = MutableLiveData<List<String>>()
+    var searchStatus = MutableLiveData<List<String>>()
+    var searchClassification = MutableLiveData<List<String>>()
+
+    private val search = MediatorLiveData<List<String>>()
 
 
-        //var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
-        var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
-
-        var filterArray = MutableLiveData<Array<Array<String>>>().apply {
-            //this.value = arrayOf("JOURNAL", "%", "%","%","%","%")
-            this.value = arrayOf(arrayOf("JOURNAL"), arrayOf("%"), arrayOf("%"), arrayOf("%"), arrayOf("%"), arrayOf("%"))
-        }
+    //var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
+    var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
 
 
-    var vJournalList: LiveData<List<VJournalWithEverything>> = database.getVJournalItemWithEverything()
+    var vJournalList: LiveData<List<VJournalWithEverything>> = Transformations.switchMap(search) {
 
-    /*
-        var vJournalList: LiveData<List<VJournalItem>> = Transformations.switchMap(filterArray) { filter ->
-            database.getVJournalItems(filter[SEARCH_COMPONENT], filter[SEARCH_GLOBAL][0], filter[SEARCH_CATEGORIES], filter[SEARCH_ORGANIZER], filter[SEARCH_STATUS], filter[SEARCH_CLASSIFICATION])
-        }
+        // search only globally and filter the right component if no further filter criteria was passed
+        if (searchCategories.value.isNullOrEmpty() || searchOrganizer.value.isNullOrEmpty() || searchStatus.value.isNullOrEmpty() || searchStatus.value.isNullOrEmpty() )
+            database.getVJournalItemWithEverything(searchComponent.value!!, "%${searchGlobal.value?.joinToString(separator = "%")}%")
 
-     */
+        // apply all filter criteria. ALL filter criteria must be passed!
+        else if (!searchCategories.value.isNullOrEmpty() && !searchOrganizer.value.isNullOrEmpty() && !searchStatus.value.isNullOrEmpty() && !searchStatus.value.isNullOrEmpty())
+            database.getVJournalItemWithEverything(searchComponent.value!!, "%")
 
-    /*
-        var vJournalListFiltered: LiveData<List<VJournalItem>> = Transformations.map(vJournalList) {
-            return@map it
-        }
-*/
-        // var vJournalListWithEverything = database.getVJournalItemWithEverything()
-
+        else
+            database.getVJournalItemWithEverything(listOf("JOURNAL"), "%")     // Hardcoded fallback
+    }
 
 
     init {
+
+        search.addSource(searchComponent) { component -> search.value = component }
+        search.addSource(searchGlobal) { global -> search.value = global }
+        search.addSource(searchCategories) { categories -> search.value = categories }
+        search.addSource(searchOrganizer) { organizer -> search.value = organizer }
+        search.addSource(searchStatus) { status -> search.value = status }
+        search.addSource(searchClassification) { classification -> search.value = classification }
 
         viewModelScope.launch {
             insertTestData()
@@ -57,7 +60,6 @@ class VJournalListViewModel(
         }
 
     }
-
 
 
     private suspend fun insertTestData() {
@@ -86,8 +88,8 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer",  "#category1, #category2", "FINAL","PUBLIC", "", "uid", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
         //database.insert(vJournalItem(summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
 
-        var newEntry = database.insert(VJournal(component="JOURNAL", summary=rfcSummary, description=rfcDesc))
-        database.insertAttendee(VAttendee(attendee="test@test.de", journalLinkId = newEntry))
+        val newEntry = database.insert(VJournal(component = "JOURNAL", summary = rfcSummary, description = rfcDesc))
+        database.insertAttendee(VAttendee(attendee = "test@test.de", journalLinkId = newEntry))
         database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry))
         database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry))
 
@@ -101,9 +103,16 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary, description=noteDesc, organizer="LOCAL", categories="JourFixe, BestProject"))
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary2, description=noteDesc2, organizer="LOCAL", categories="Shopping"))
 
+        val newEntry2 = database.insert(VJournal(component = "NOTE", summary = noteSummary, description = noteDesc))
+        database.insertAttendee(VAttendee(attendee = "test@test.de", journalLinkId = newEntry2))
+        database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry2))
+        database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry2))
+
+        database.insertComment(VComment(comment = "comment", journalLinkId = newEntry2))
+        database.insertOrganizer(VOrganizer(organizer = "organizer", journalLinkId = newEntry2))
+        database.insertRelatedto(VRelatedto(relatedto = "related to", journalLinkId = newEntry2))
 
     }
-
 
 
     fun setFocusItem(vJournalItemId: Long) {
@@ -116,7 +125,7 @@ class VJournalListViewModel(
             focusItemId.value == it.vJournalItem.id
         }
 
-        return if(vJournalList.value != null && focusItem != null)
+        return if (vJournalList.value != null && focusItem != null)
             vJournalList.value!!.indexOf(focusItem)
         else
             -1
@@ -126,11 +135,5 @@ class VJournalListViewModel(
         focusItemId.value = 0L
     }
 
-    fun setFilter(field: Int, searchString: Array<String>) {
-        filterArray.value?.set(field, searchString)
-        filterArray.postValue(filterArray.value)      // Post the filterArray to notify observers for Transformation Switchmap
-        //Log.println(Log.INFO, "array SearchGlobal", filterArray.value?.get(SEARCH_GLOBAL).toString())
-
-    }
 
 }
