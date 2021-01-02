@@ -8,9 +8,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:checkable="true"
-    android:theme="@style/Chips"
+    android:clickable="true"
     app:checkedIconEnabled="true"
     app:chipIcon="@drawable/ic_vjournal_category"
     app:chipIconVisible="false"
     app:closeIconVisible="false"
-    tools:text="Chip #1" />
+    tools:text="Chip #1"
+
+    />

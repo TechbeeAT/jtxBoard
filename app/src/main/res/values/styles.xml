@@ -45,11 +45,6 @@
     </style>
 
 
-    <style name="Chips" parent="Theme.MaterialComponents.Light">
-        <!-- ... -->
-    </style>
-
-
 
     <style name="AlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
     </style>
