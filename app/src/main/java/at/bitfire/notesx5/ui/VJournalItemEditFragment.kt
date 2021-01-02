@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
+import at.bitfire.notesx5.database.VCategory
 import at.bitfire.notesx5.database.VJournalDatabase
 import at.bitfire.notesx5.database.VJournalDatabaseDao
 import at.bitfire.notesx5.databinding.FragmentVjournalItemEditBinding
@@ -62,14 +63,14 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         vJournalItemEditViewModel.savingClicked.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.summary = binding.summaryEdit.editText?.text.toString()
-                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.description = binding.descriptionEdit.editText?.text.toString()
-                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.collection = binding.collection.selectedItem.toString()
-                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.organizer = binding.organizerEdit.editText?.text.toString()
-                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.url = binding.urlEdit.editText?.text.toString()
-                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.attendee = binding.attendeeEdit.editText?.text.toString()
-                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.contact = binding.contactEdit.editText?.text.toString()
-                vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.related = binding.relatedtoEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalUpdated.value!!.summary = binding.summaryEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalUpdated.value!!.description = binding.descriptionEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalUpdated.value!!.collection = binding.collection.selectedItem.toString()
+                vJournalItemEditViewModel.vJournalUpdated.value!!.organizer = binding.organizerEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalUpdated.value!!.url = binding.urlEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalUpdated.value!!.attendee = binding.attendeeEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalUpdated.value!!.contact = binding.contactEdit.editText?.text.toString()
+                vJournalItemEditViewModel.vJournalUpdated.value!!.related = binding.relatedtoEdit.editText?.text.toString()
 
                 vJournalItemEditViewModel.update()
             }
@@ -83,20 +84,24 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                 builder.setTitle("Delete \"${vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.summary}\"")
                 builder.setMessage("Are you sure you want to delete \"${vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.summary}\"?")
                 builder.setPositiveButton("Delete") { _, _ ->
-                    var summary = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.summary
+                    val direction = VJournalItemEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
+                    direction.component2show = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.component
+
+                    val summary = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.summary
                     vJournalItemEditViewModel.delete()
                     Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG).show()
-                    this.findNavController().navigate(VJournalItemEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList())
+
+                    this.findNavController().navigate(direction)
                 }
                 builder.setNegativeButton("Cancel") { _, _ ->
                     // Do nothing, just close the message
                 }
 
                 builder.setNeutralButton("Mark as cancelled") { _, _ ->
-                    vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.status = 2    // 2 = CANCELLED
+                    vJournalItemEditViewModel.vJournalUpdated.value!!.status = 2    // 2 = CANCELLED
                     vJournalItemEditViewModel.savingClicked()
 
-                    var summary = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.summary
+                    val summary = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.summary
                     Toast.makeText(context, "\"$summary\" marked as Cancelled.", Toast.LENGTH_LONG).show()
 
                 }
@@ -107,18 +112,26 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         vJournalItemEditViewModel.returnVJournalItemId.observe(viewLifecycleOwner, Observer {
             if (it != 0L) {
-                this.findNavController().navigate(VJournalItemEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList().setItem2focus(it))
+                val direction = VJournalItemEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
+                direction.component2show = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.component
+                direction.item2focus = it
+                this.findNavController().navigate(direction)
             }
             vJournalItemEditViewModel.savingClicked.value = false
         })
 
 
+
         vJournalItemEditViewModel.vJournalItem.observe(viewLifecycleOwner, {
 
-            // Add the chips for existing categories
-            if (vJournalItemEditViewModel.vJournalItem.value != null)
-                addChips(convertCategoriesCSVtoList(vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.categories))
+            if(it?.vJournalItem == null || it.vCategory == null)
+                return@observe
 
+            vJournalItemEditViewModel.vJournalUpdated.postValue(it.vJournalItem)
+            vJournalItemEditViewModel.vCategoryUpdated.addAll(it.vCategory!!)
+
+            // Add the chips for existing categories
+            addChips(vJournalItemEditViewModel.vCategoryUpdated)
 
             // Set the default value of the Status Chip
             val statusItems = resources.getStringArray(R.array.vjournal_status)
@@ -149,9 +162,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         vJournalItemEditViewModel.allCategories.observe(viewLifecycleOwner, {
             // Create the adapter and set it to the AutoCompleteTextView
             if (vJournalItemEditViewModel.allCategories.value != null) {
-                val allCategoriesCSV = convertCategoriesListtoCSVString(vJournalItemEditViewModel.allCategories.value!!.toMutableList())
-                val allCategoriesList = convertCategoriesCSVtoList(allCategoriesCSV).distinct()
-                val arrayAdapter = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allCategoriesList)
+                val arrayAdapter = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, vJournalItemEditViewModel.allCategories.value!!)
                 binding.categoriesAddAutocomplete.setAdapter(arrayAdapter)
             }
         })
@@ -195,9 +206,14 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         binding.categoriesAdd.setEndIconOnClickListener {
             // Respond to end icon presses
-            val addedCategories: List<String> = convertCategoriesCSVtoList(binding.categoriesAdd.editText?.text.toString())
-            addChips(addedCategories)
+            vJournalItemEditViewModel.vCategoryUpdated.add(VCategory(categories=binding.categoriesAdd.editText?.text.toString()))
+            addChips(listOf(VCategory(categories = binding.categoriesAdd.editText?.text.toString())))
             binding.categoriesAdd.editText?.text?.clear()
+
+
+            // TODO: SAVE added categories!!!
+            //vJournalItemEditViewModel.vJournalItemUpdated.value!!.vCategory?.plus(category)
+            // .add(category))
         }
 
 
@@ -206,9 +222,15 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         binding.categoriesAdd.editText?.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    val addedCategories: List<String> = convertCategoriesCSVtoList(binding.categoriesAdd.editText?.text.toString())
-                    addChips(addedCategories)
+                    vJournalItemEditViewModel.vCategoryUpdated.add(VCategory(categories=binding.categoriesAdd.editText?.text.toString()))
+                    addChips(listOf(VCategory(categories = binding.categoriesAdd.editText?.text.toString())))
                     binding.categoriesAdd.editText?.text?.clear()
+
+
+                    // TODO: SAVE added categories!!!
+                    //vJournalItemEditViewModel.vJournalItemUpdated.value!!.vCategory?.plus(category)
+                    // .add(category))
+
                     true
                 }
                 else -> false
@@ -227,7 +249,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                     .setTitle("Set status")
                     .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
                         // Respond to neutral button press
-                        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.status = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.status  // Reset to previous status
+                        vJournalItemEditViewModel.vJournalUpdated.value!!.status = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.status  // Reset to previous status
                         binding.statusChip.text = statusItems[checkedStatus]   // don't forget to update the UI
                     }
                     .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
@@ -236,7 +258,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                     // Single-choice items (initialized with checked item)
                     .setSingleChoiceItems(statusItems, checkedStatus) { dialog, which ->
                         // Respond to item chosen
-                        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.status = which
+                        vJournalItemEditViewModel.vJournalUpdated.value!!.status = which
                         binding.statusChip.text = statusItems[which]     // don't forget to update the UI
                     }
                     .show()
@@ -255,7 +277,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                     .setTitle("Set classification")
                     .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
                         // Respond to neutral button press
-                        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.classification = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.classification  // Reset to previous classification
+                        vJournalItemEditViewModel.vJournalUpdated.value!!.classification = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.classification  // Reset to previous classification
                         binding.classificationChip.text = classificationItems[checkedClassification]   // don't forget to update the UI
                     }
                     .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
@@ -264,7 +286,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                     // Single-choice items (initialized with checked item)
                     .setSingleChoiceItems(classificationItems, checkedClassification) { dialog, which ->
                         // Respond to item chosen
-                        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.classification = which
+                        vJournalItemEditViewModel.vJournalUpdated.value!!.classification = which
                         binding.classificationChip.text = classificationItems[which]     // don't forget to update the UI
                     }
                     .show()
@@ -288,7 +310,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
 
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalItemEditViewModel.vJournalItemUpdated.value?.vJournalItem?.dtstart!!
+        c.timeInMillis = vJournalItemEditViewModel.vJournalUpdated.value?.dtstart!!
 
         c.set(Calendar.YEAR, year)
         c.set(Calendar.MONTH, month)
@@ -300,7 +322,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         binding.dtstartMonth.text = convertLongToMonthString(c.timeInMillis)
         binding.dtstartDay.text = convertLongToDayString(c.timeInMillis)
 
-        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.dtstart = c.timeInMillis
+        vJournalItemEditViewModel.vJournalUpdated.value!!.dtstart = c.timeInMillis
 
         showTimepicker()
 
@@ -309,7 +331,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalItemEditViewModel.vJournalItemUpdated.value?.vJournalItem?.dtstart!!
+        c.timeInMillis = vJournalItemEditViewModel.vJournalUpdated.value?.dtstart!!
         c.set(Calendar.HOUR_OF_DAY, hourOfDay)
         c.set(Calendar.MINUTE, minute)
 
@@ -318,7 +340,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         binding.dtstartTime.text = convertLongToTimeString(c.timeInMillis)
 
-        vJournalItemEditViewModel.vJournalItemUpdated.value!!.vJournalItem.dtstart = c.timeInMillis
+        vJournalItemEditViewModel.vJournalUpdated.value!!.dtstart = c.timeInMillis
 
     }
 
@@ -327,7 +349,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
     fun showDatepicker() {
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalItemEditViewModel.vJournalItemUpdated.value?.vJournalItem?.dtstart!!
+        c.timeInMillis = vJournalItemEditViewModel.vJournalUpdated.value?.dtstart!!
 
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
@@ -337,7 +359,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
     fun showTimepicker() {
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalItemEditViewModel.vJournalItemUpdated.value?.vJournalItem?.dtstart!!
+        c.timeInMillis = vJournalItemEditViewModel.vJournalUpdated.value?.dtstart!!
 
         val hourOfDay = c.get(Calendar.HOUR_OF_DAY)
         val minute = c.get(Calendar.MINUTE)
@@ -345,17 +367,15 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
     }
 
 
-    fun addChips(categories: List<String>) {
+    private fun addChips(categories: List<VCategory>?) {
 
-        categories.forEach() { category ->
+        categories?.forEach() { category ->
 
-            if (category == "")
+            if (category.categories.isBlank())
                 return@forEach
 
-            vJournalItemEditViewModel.categoriesListChanged.add(category)
-
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
-            categoryChip.text = category
+            categoryChip.text = category.categories
             binding.categoriesChipgroup.addView(categoryChip)
 
             categoryChip.setOnClickListener {
@@ -364,7 +384,9 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
             categoryChip.setOnCloseIconClickListener { chip ->
                 // Responds to chip's close icon click if one is present
-                vJournalItemEditViewModel.categoriesListChanged.remove(category)
+                // Delete by re-assigning an edited, mutable category list
+                // TODO: Delete the category from the list!!!
+                val currentCategories = vJournalItemEditViewModel.vCategoryUpdated.removeIf { it.categories == category.categories}
                 chip.visibility = View.GONE
             }
 

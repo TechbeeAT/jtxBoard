@@ -18,7 +18,6 @@ package at.bitfire.notesx5.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 
 
@@ -32,9 +31,6 @@ interface VJournalDatabaseDao {
     @Query("SELECT * from vjournalitems WHERE id = :key")
     fun get(key: Long): LiveData<VJournalItem?>
 
-
-     */
-
     @Query("SELECT * FROM vjournals ORDER BY dtstart DESC, created DESC")
     fun getVJournalItems(): LiveData<List<VJournal>>
 
@@ -42,20 +38,23 @@ interface VJournalDatabaseDao {
     @Query("SELECT * FROM vjournals WHERE component LIKE :component AND (categories LIKE :search_global OR summary LIKE :search_global OR description LIKE :search_global OR organizer LIKE :search_global OR status LIKE :search_global)  AND categories LIKE :search_category AND organizer LIKE :search_organizer AND status LIKE :search_status AND classification LIKE :search_classification ORDER BY dtstart DESC, created DESC")
     fun getVJournalItems(component: Array<String>, search_global: String, search_category: Array<String>, search_organizer: Array<String>, search_status: Array<String>, search_classification: Array<String>): LiveData<List<VJournal>>
 
+     */
 
-    @Query("SELECT DISTINCT categories FROM vjournals ORDER BY categories ASC")
+    @Query("SELECT DISTINCT categories FROM vcategories ORDER BY categories ASC")
     fun getAllCategories(): LiveData<List<String>>
 
-    @Query("SELECT DISTINCT organizer FROM vjournals ORDER BY organizer ASC")
+    @Query("SELECT DISTINCT organizer FROM vorganizer ORDER BY organizer ASC")
     fun getAllOrganizers(): LiveData<List<String>>
 
     @Query("SELECT DISTINCT collection FROM vjournals ORDER BY collection ASC")
     fun getAllCollections(): LiveData<List<String>>
 
-
+/*
+INSERTs
+ */
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(vJournalItem: VJournal): Long
+    suspend fun insertJournal(vJournalItem: VJournal): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAttendee(vAttendee: VAttendee): Long
@@ -72,6 +71,14 @@ interface VJournalDatabaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRelatedto(vRelatedto: VRelatedto): Long
 
+/*
+DELETEs
+ */
+
+    @Delete()
+    fun deleteCategory(vCategory: VCategory)
+
+
 
 
     @Update
@@ -84,6 +91,7 @@ interface VJournalDatabaseDao {
     fun delete(vJournal: VJournal)
 
 
+    /*
     @Transaction
     @Query("SELECT * FROM vjournals")
     fun getVJournalEntity(): LiveData<List<VJournalEntity>>
@@ -92,20 +100,14 @@ interface VJournalDatabaseDao {
     @Query("SELECT * FROM vjournals WHERE component IN (:component) AND (summary LIKE :searchGlobal OR description LIKE :searchGlobal) ORDER BY dtstart DESC, created DESC")
     fun getVJournalEntity(component: List<String>, searchGlobal: String): LiveData<List<VJournalEntity>>
 
-    /*
-    @Transaction
-    @Query("SELECT * FROM vjournals WHERE component IN (:component) AND (summary LIKE :searchGlobal OR description LIKE :searchGlobal) AND categories IN (:searchCategories) AND organizer IN (:searchOrganizer) AND status IN (:searchStatus) AND classification IN (:searchClassification) ORDER BY dtstart DESC, created DESC")
-    fun getVJournalEntity(component: List<String>, searchGlobal: String, searchCategories: List<String>, searchOrganizer: List<String>, searchStatus: List<String>, searchClassification: List<String>): LiveData<List<VJournalEntity>>
-
-
-     */
+*/
 
     @Transaction
     @RawQuery
     fun getVJournalEntity(query: SupportSQLiteQuery): LiveData<List<VJournalEntity>>
 
 
-
+    @Transaction
     @Query("SELECT * from vjournals WHERE id = :key")
     fun get(key: Long): LiveData<VJournalEntity?>
 

@@ -28,6 +28,8 @@ class VJournalItemFragment : Fragment() {
     lateinit var vJournalItemViewModel: VJournalItemViewModel
     lateinit var inflater: LayoutInflater
 
+    var displayedCategoryChips = mutableListOf<VCategory>()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -66,34 +68,39 @@ class VJournalItemFragment : Fragment() {
 
         vJournalItemViewModel.vJournal.observe(viewLifecycleOwner, {
 
-            if (it?.vCategory != null) {
-                addChips(vJournalItemViewModel.vJournal.value!!.vCategory!!)
+            if (it?.vJournalItem != null) {
 
                 val statusArray = resources.getStringArray(R.array.vjournal_status)
                 binding.statusChip.text = statusArray[vJournalItemViewModel.vJournal.value!!.vJournalItem.status]
 
                 val classificationArray = resources.getStringArray(R.array.vjournal_classification)
                 binding.classificationChip.text = classificationArray[vJournalItemViewModel.vJournal.value!!.vJournalItem.classification]
-
             }
+        })
 
-
+        vJournalItemViewModel.vCategory.observe(viewLifecycleOwner, {
+            if (it != null)
+                addChips(vJournalItemViewModel.vJournal.value!!.vCategory!!)
         })
 
         return binding.root
     }
 
     // adds Chips to the categoriesChipgroup based on the categories List
-    fun addChips(categories: List<VCategory>) {
+    private fun addChips(categories: List<VCategory>) {
 
         categories.forEach() { category ->
 
-            if (category.categories == "")
+            if (category.categories == "")     // don't add empty categories
+                return@forEach
+
+            if(displayedCategoryChips.indexOf(category) != -1)    // only show categories that are not there yet
                 return@forEach
 
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_categories_chip, binding.categoriesChipgroup, false) as Chip
             categoryChip.text = category.categories
             binding.categoriesChipgroup.addView(categoryChip)
+            displayedCategoryChips.add(category)
 
             categoryChip.setOnClickListener {
 
@@ -115,13 +122,14 @@ class VJournalItemFragment : Fragment() {
         if (item.itemId == R.id.vjournal_item_share) {
 
             var shareText: String = "${convertLongToDateString(vJournalItemViewModel.vJournal.value!!.vJournalItem.dtstart)} ${convertLongToTimeString(vJournalItemViewModel.vJournal.value!!.vJournalItem.dtstart)}\n"
-            shareText +=  "${vJournalItemViewModel.vJournal.value!!.vJournalItem.summary}\n\n"
+            shareText += "${vJournalItemViewModel.vJournal.value!!.vJournalItem.summary}\n\n"
             shareText += "${vJournalItemViewModel.vJournal.value!!.vJournalItem.description}\n\n"
-            shareText += "Categories/Labels: ${vJournalItemViewModel.vJournal.value!!.vJournalItem.categories}"
+            //todo add category again
+            //shareText += "Categories/Labels: ${vJournalItemViewModel.vJournal.value!!.vCategory}"
 
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
-            shareIntent.type="text/plain"
+            shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, vJournalItemViewModel.vJournal.value!!.vJournalItem.summary)
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
             startActivity(Intent(shareIntent))

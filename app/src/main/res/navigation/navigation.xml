@@ -66,6 +66,15 @@
             app:argType="string[]"
             app:nullable="true"
             android:defaultValue="@null" />
+        <argument
+            android:name="collection2filter"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="component2show"
+            app:argType="string"
+            android:defaultValue="JOURNAL" />
     </fragment>
     <fragment
         android:id="@+id/vjournalItemFragment"

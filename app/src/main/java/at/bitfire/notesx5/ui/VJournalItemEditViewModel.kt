@@ -2,8 +2,10 @@ package at.bitfire.notesx5.ui
 
 import android.app.Application
 import android.text.Editable
+import android.util.Log
 import androidx.lifecycle.*
 import at.bitfire.notesx5.convertCategoriesListtoCSVString
+import at.bitfire.notesx5.database.VCategory
 import at.bitfire.notesx5.database.VJournal
 import at.bitfire.notesx5.database.VJournalDatabaseDao
 import at.bitfire.notesx5.database.VJournalEntity
@@ -20,7 +22,6 @@ class VJournalItemEditViewModel(private val vJournalItemId: Long,
     lateinit var vJournalItem: LiveData<VJournalEntity?>
     lateinit var allCategories: LiveData<List<String>>
 
-    //lateinit var allOrganizers: LiveData<List<String>>
     lateinit var allCollections: LiveData<List<String>>
 
     lateinit var dateVisible: LiveData<Boolean>
@@ -30,31 +31,9 @@ class VJournalItemEditViewModel(private val vJournalItemId: Long,
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
-    lateinit var vJournalItemUpdated: MutableLiveData<VJournalEntity>
+    var vJournalUpdated: MutableLiveData<VJournal> = MutableLiveData<VJournal>().apply { postValue(VJournal()) }
+    var vCategoryUpdated: MutableList<VCategory> = mutableListOf(VCategory())
 
-
-
-    /*
-    var summaryChanged: String = ""
-    var descriptionChanged: String = ""
-    var statusChanged: Int = -1
-    var classificationChanged: Int = -1
-    var organizerChanged: String = ""
-    var collectionChanged: String = ""
-
-    var urlChanged: String = ""
-    var attendeeChanged: String = ""
-    var contactChanged: String = ""
-    var relatesChanged: String = ""
-*/
-
-    var dtstartChangedYear: Int = -1
-    var dtstartChangedMonth: Int = -1
-    var dtstartChangedDay: Int = -1
-    var dtstartChangedHour: Int = -1
-    var dtstartChangedMinute: Int = -1
-
-    var categoriesListChanged: MutableList<String> = mutableListOf()
 
     val urlError = MutableLiveData<String>()
 
@@ -71,10 +50,6 @@ class VJournalItemEditViewModel(private val vJournalItemId: Long,
             else {
                 database.get(vJournalItemId)
             }
-
-            vJournalItemUpdated =  Transformations.map(vJournalItem) {
-                it
-            } as MutableLiveData<VJournalEntity>
 
 
             allCategories = database.getAllCategories()
@@ -112,46 +87,65 @@ class VJournalItemEditViewModel(private val vJournalItemId: Long,
     }
 
     fun update() {
+        var insertedOrUpdatedItemId = 0L
+
+        //TODO: check if the item got a new sequence in the meantime!
+
+        vJournalUpdated.value!!.lastModified = System.currentTimeMillis()
+        vJournalUpdated.value!!.dtstamp = System.currentTimeMillis()
+
+        deleteOldCategories()
+
         viewModelScope.launch() {
-            //TODO: check if the item got a new sequence in the meantime!
 
-            vJournalItemUpdated.value!!.vJournalItem.lastModified = System.currentTimeMillis()
-            vJournalItemUpdated.value!!.vJournalItem.dtstamp = System.currentTimeMillis()
+            insertedOrUpdatedItemId = insertOrUpdateVJournal()
+            insertNewCategories(insertedOrUpdatedItemId)
+            returnVJournalItemId.value = insertedOrUpdatedItemId
+        }
 
+    }
 
-            /*
-            var c: Calendar = Calendar.getInstance()
-            c.timeInMillis = vJournalItemUpdated.value!!.vJournalItem.dtstart
-            Log.println(Log.INFO, "VJournalItemEditViewMod", "Value before: ${c.timeInMillis}")
-            if (dtstartChangedYear >= 0)
-                c.set(Calendar.YEAR, dtstartChangedYear)
-            if (dtstartChangedMonth >= 0)
-                c.set(Calendar.MONTH, dtstartChangedMonth)
-            if (dtstartChangedYear >= 0)
-                c.set(Calendar.DAY_OF_MONTH, dtstartChangedDay)
-            if (dtstartChangedHour >= 0)
-                c.set(Calendar.HOUR_OF_DAY, dtstartChangedHour)
-            if (dtstartChangedMinute >= 0)
-                c.set(Calendar.MINUTE, dtstartChangedMinute)
-            Log.println(Log.INFO, "VJournalItemEditViewMod", "Value after: ${c.timeInMillis}")
+    private suspend fun insertOrUpdateVJournal(): Long {
+        if (vJournalUpdated.value!!.id == 0L) {
 
-            vJournalItemUpdated.value!!.vJournalItem.dtstart = c.timeInMillis
+            //Log.println(Log.INFO, "VJournalItemViewModel", "creating a new one")
+            return database.insertJournal(vJournalUpdated.value!!)
+            //Log.println(Log.INFO, "vJournalItemViewModel", vJournalItemUpdate.id.toString())
+        } else {
+            vJournalUpdated.value!!.sequence++
+            database.update(vJournalUpdated.value!!)
+            return vJournalUpdated.value!!.id
+        }
+    }
 
+    private suspend fun insertNewCategories(insertedOrUpdatedItemId: Long) {
 
-             */
+        Log.println(Log.INFO, "vCategoryUpdated", "Size of Array: ${vCategoryUpdated.size}")
+        if (vCategoryUpdated != vJournalItem.value!!.vCategory) {   // make effort of updating only if the categories changed
+            Log.println(Log.INFO, "vCategoryUpdated", "Categories are not the same and need to be updated")
 
-            categoriesListChanged = categoriesListChanged.sorted().toMutableList()
-            vJournalItemUpdated.value!!.vJournalItem.categories = convertCategoriesListtoCSVString(categoriesListChanged)
+            vCategoryUpdated.forEach { newVCategory ->
+                Log.println(Log.INFO, "vCategoryUpdated", "Checking #${newVCategory.categoryId} with value ${newVCategory.categories} and journalLinkId ${newVCategory.journalLinkId}")
 
+                if (newVCategory.categoryId == 0L && newVCategory.categories.isNotBlank()) {                                     //Insert only categories that don't have an ID yet (= new ones)
+                    newVCategory.journalLinkId = insertedOrUpdatedItemId                    //Update the foreign key for newly added categories
+                    viewModelScope.launch() {
+                        database.insertCategory(newVCategory)
+                    }
+                    Log.println(Log.INFO, "vCategoryUpdated", "${newVCategory.categories} added")
+                }
+            }
+        }
+    }
 
-            if (vJournalItemUpdated.value!!.vJournalItem.id == 0L) {
-                //Log.println(Log.INFO, "VJournalItemViewModel", "creating a new one")
-                returnVJournalItemId.value = database.insert(vJournalItemUpdated.value!!.vJournalItem)
-                //Log.println(Log.INFO, "vJournalItemViewModel", vJournalItemUpdate.id.toString())
-            } else {
-                returnVJournalItemId.value = vJournalItemUpdated.value!!.vJournalItem.id
-                vJournalItemUpdated.value!!.vJournalItem.sequence++
-                database.update(vJournalItemUpdated.value!!.vJournalItem)
+    fun deleteOldCategories() {
+        // if the old category cannot be found in the new list, then delete it!
+        vJournalItem.value!!.vCategory?.forEach { oldVCategory ->
+            if (!vCategoryUpdated.contains(oldVCategory)) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    database.deleteCategory(oldVCategory)
+                }
+                Log.println(Log.INFO, "vCategory", "${oldVCategory.categories} deleted")
             }
         }
     }

@@ -30,7 +30,7 @@
             android:id="@+id/dtstart_day"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="@{UtilKt.convertLongToDayString(model.vJournalItemUpdated.VJournalItem.dtstart)}"
+            android:text="@{UtilKt.convertLongToDayString(model.vJournalUpdated.dtstart)}"
             android:textAlignment="center"
             android:textSize="36sp"
             android:textStyle="bold"
@@ -46,7 +46,7 @@
             android:textAlignment="center"
             android:textSize="10sp"
             android:textStyle="bold"
-            android:text="@{UtilKt.convertLongToMonthString(model.vJournalItemUpdated.VJournalItem.dtstart)}"
+            android:text="@{UtilKt.convertLongToMonthString(model.vJournalUpdated.dtstart)}"
             app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dtstart_day"
@@ -61,7 +61,7 @@
             android:textAlignment="center"
             android:textSize="10sp"
             android:textStyle="bold"
-            android:text="@{UtilKt.convertLongToYearString(model.vJournalItemUpdated.VJournalItem.dtstart)}"
+            android:text="@{UtilKt.convertLongToYearString(model.vJournalUpdated.dtstart)}"
             app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dtstart_month"
@@ -73,7 +73,7 @@
             android:id="@+id/dtstart_time"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="@{UtilKt.convertLongToTimeString(model.vJournalItemUpdated.VJournalItem.dtstart)}"
+            android:text="@{UtilKt.convertLongToTimeString(model.vJournalUpdated.dtstart)}"
             android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -197,7 +197,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textShortMessage|textCapSentences"
-                android:text="@{model.vJournalItemUpdated.VJournalItem.summary}"
+                android:text="@{model.vJournalUpdated.summary}"
                 android:textStyle="bold"
                 tools:text="Summary ... Lorem ipsum dolor sit amet" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -220,7 +220,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textWebEditText|textMultiLine|textCapSentences"
                 android:maxLines="8"
-                android:text="@{model.vJournalItemUpdated.VJournalItem.description}"
+                android:text="@{model.vJournalUpdated.description}"
                 tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -303,7 +303,7 @@
                 android:layout_height="wrap_content"
                 android:afterTextChanged="@{model::clearUrlError}"
                 android:inputType="textUri"
-                android:text="@{model.vJournalItemUpdated.VJournalItem.url}" />
+                android:text="@{model.vJournalUpdated.url}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -324,7 +324,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textWebEmailAddress|textEmailAddress"
-                android:text="@{model.vJournalItemUpdated.VJournalItem.attendee}" />
+                android:text="@{model.vJournalUpdated.attendee}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -345,7 +345,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences|textEmailAddress"
-                android:text="@{model.vJournalItemUpdated.VJournalItem.organizer}" />
+                android:text="@{model.vJournalUpdated.organizer}" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -368,7 +368,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences|textEmailAddress"
-                android:text="@{model.vJournalItemUpdated.VJournalItem.contact}" />
+                android:text="@{model.vJournalUpdated.contact}" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -390,7 +390,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textUri"
-                android:text="@{model.vJournalItemUpdated.VJournalItem.related}" />
+                android:text="@{model.vJournalUpdated.related}" />
         </com.google.android.material.textfield.TextInputLayout>
 
 

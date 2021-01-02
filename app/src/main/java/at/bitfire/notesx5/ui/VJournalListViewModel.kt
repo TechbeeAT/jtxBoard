@@ -6,6 +6,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*
 
 import kotlinx.coroutines.launch
+import java.io.File.separator
 
 
 /**
@@ -22,6 +23,8 @@ class VJournalListViewModel(
     var searchOrganizer: MutableList<String> = mutableListOf()
     var searchStatus: MutableList<String> = mutableListOf()
     var searchClassification: MutableList<String> = mutableListOf()
+    var searchCollection: MutableList<String> = mutableListOf()
+
 
     private var listQuery:  MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
     var vJournalList: LiveData<List<VJournalEntity>> = Transformations.switchMap(listQuery) {
@@ -69,7 +72,7 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer",  "#category1, #category2", "FINAL","PUBLIC", "", "uid", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
         //database.insert(vJournalItem(summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
 
-        val newEntry = database.insert(VJournal(component = "JOURNAL", summary = rfcSummary, description = rfcDesc))
+        val newEntry = database.insertJournal(VJournal(component = "JOURNAL", summary = rfcSummary, description = rfcDesc))
         database.insertAttendee(VAttendee(attendee = "test@test.de", journalLinkId = newEntry))
         database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry))
         database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry))
@@ -84,7 +87,7 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary, description=noteDesc, organizer="LOCAL", categories="JourFixe, BestProject"))
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary2, description=noteDesc2, organizer="LOCAL", categories="Shopping"))
 
-        val newEntry2 = database.insert(VJournal(component = "NOTE", summary = noteSummary, description = noteDesc))
+        val newEntry2 = database.insertJournal(VJournal(component = "NOTE", summary = noteSummary, description = noteDesc))
         database.insertAttendee(VAttendee(attendee = "test@test.de", journalLinkId = newEntry2))
         database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry2))
         database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry2))
@@ -135,8 +138,14 @@ class VJournalListViewModel(
         // Query for the given text search from the action bar
         if (searchText.isNotEmpty() && searchText.length >= 2) {
             queryString += "AND (summary LIKE ? OR description LIKE ?) "
-            args.add(searchText!!)
-            args.add(searchText!!)
+            args.add(searchText)
+            args.add(searchText)
+        }
+
+        // Query for the passed filter criteria from VJournalFilterFragment
+        if (searchCategories?.size!! > 0) {
+            queryString += "AND vcategories.categories IN (?) "
+            args.add(searchCategories!!.joinToString(separator=","))
         }
 
         return SimpleSQLiteQuery(queryString, args.toArray())

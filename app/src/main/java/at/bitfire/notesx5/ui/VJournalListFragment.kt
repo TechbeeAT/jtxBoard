@@ -73,17 +73,26 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         recyclerView?.adapter = vJournalListAdapter
 
 
+        // pass filter arguments to view model
         val arguments = VJournalListFragmentArgs.fromBundle((arguments!!))
-
-        // set the filter String, default is "%"
-        //TODO add other filter criteria
-        // TODO uncomment again!!!!
-        /*
         if (!arguments.category2filter.isNullOrEmpty())
-            vJournalListViewModel.setFilter(vJournalListViewModel.SEARCH_CATEGORIES, arguments.category2filter!!)
+            vJournalListViewModel.searchCategories = arguments.category2filter!!.toMutableList()
+
+        if (!arguments.organizer2filter.isNullOrEmpty())
+            vJournalListViewModel.searchOrganizer = arguments.organizer2filter!!.toMutableList()
+
+        if (!arguments.classification2filter.isNullOrEmpty())
+            vJournalListViewModel.searchClassification = arguments.classification2filter!!.toMutableList()
+
+        if (!arguments.status2filter.isNullOrEmpty())
+            vJournalListViewModel.searchStatus = arguments.status2filter!!.toMutableList()
+
+        if (!arguments.collection2filter.isNullOrEmpty())
+            vJournalListViewModel.searchCollection = arguments.collection2filter!!.toMutableList()
 
 
-         */
+
+
 
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
         vJournalListViewModel.vJournalList.observe(viewLifecycleOwner, Observer {

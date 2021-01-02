@@ -1,6 +1,7 @@
 package at.bitfire.notesx5.ui
 
 import android.app.Application
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.*
 import at.bitfire.notesx5.database.*
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
                                 application: Application) : AndroidViewModel(application) {
 
     lateinit var vJournal: LiveData<VJournalEntity?>
+    lateinit var vCategory: LiveData<List<VCategory>>
 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
@@ -34,6 +36,10 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
                     postValue(VJournalEntity(VJournal(), null, null, null, null, null)) }
             else
                 database.get(vJournalItemId)
+
+            vCategory = Transformations.map(vJournal) {
+                it?.vCategory
+            }
 
             setupDates()
 
