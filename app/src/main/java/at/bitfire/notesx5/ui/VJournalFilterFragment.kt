@@ -33,9 +33,16 @@ class VJournalFilterFragment : Fragment()  {
 
     private var displayedCategoryChips: MutableList<String> = mutableListOf()
     private var displayedOrganizerChips: MutableList<String> = mutableListOf()
+    private var displayedStatusChips: MutableList<String> = mutableListOf()
+    private var displayedClassificationChips: MutableList<String> = mutableListOf()
+    private var displayedCollectionChips: MutableList<String> = mutableListOf()
+
 
     val categories2filter: MutableList<String> = mutableListOf()
     val organizers2filter: MutableList<String> = mutableListOf()
+    val status2filter: MutableList<String> = mutableListOf()
+    val classification2filter: MutableList<String> = mutableListOf()
+    val collection2filter: MutableList<String> = mutableListOf()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -68,8 +75,8 @@ class VJournalFilterFragment : Fragment()  {
         val statusItems = resources.getStringArray(R.array.vjournal_status).toList()
         val classificationItems = resources.getStringArray(R.array.vjournal_classification).toList()
 
-        addChips(binding.statusFilterChipgroup, statusItems)
-        addChips(binding.classificationFilterChipgroup, classificationItems)
+        addChips(binding.statusFilterChipgroup, statusItems, displayedStatusChips, status2filter, true)
+        addChips(binding.classificationFilterChipgroup, classificationItems, displayedClassificationChips, classification2filter, true)
 
 
         // observe and set chips for categories
@@ -77,16 +84,16 @@ class VJournalFilterFragment : Fragment()  {
 
             // Add the chips for categories
             if (vJournalFilterViewModel.allCategories.value != null)
-                addCategoryChips(binding.categoryFilterChipgroup, vJournalFilterViewModel.allCategories.value!!)
+                addChips(binding.categoryFilterChipgroup, vJournalFilterViewModel.allCategories.value!!, displayedCategoryChips, categories2filter, false)
 
         })
 
         //observe and set list for organizers
         vJournalFilterViewModel.allOrganizers.observe(viewLifecycleOwner, {
 
-            // Add the chips for organizers
+            // Add the chips for collections
             if (vJournalFilterViewModel.allOrganizers.value != null)
-                addOrganizerChips(binding.organizerFilterChipgroup, vJournalFilterViewModel.allOrganizers.value!!)
+                addChips(binding.organizerFilterChipgroup, vJournalFilterViewModel.allOrganizers.value!!, displayedOrganizerChips, organizers2filter, false)
         })
 
 
@@ -95,7 +102,46 @@ class VJournalFilterFragment : Fragment()  {
     }
 
 
+    /**
+     * Generic method to add a Chip to a Chip to the passed [chipGroup].
+     * [displayed] is a MutableList that saves the already created Chips in order to not display the same category twice (can be an issue especially with loading of data from the DB.
+     * [selected] takes a MutableList to save the selected items
+     * [returnIndex] == true when the index of the selected item should be stored in [selected] (relevant for Status and Classification), otherwise the displayed String is stored in [selected]
+     */
+    fun addChips(chipGroup: ChipGroup, list: List<String>, displayed: MutableList<String>, selected: MutableList<String>, returnIndex: Boolean)  {
 
+        list.forEach() { listItem ->
+
+            if (listItem == "" || displayed.contains(listItem))   // don't show empty items and only show items that are not there yet
+                return@forEach
+
+            val chip = inflater.inflate(R.layout.fragment_vjournal_filter_chip, chipGroup, false) as Chip
+            chip.text = listItem
+            chipGroup.addView(chip)
+            displayed.add(listItem)
+
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                // Responds to chip checked/unchecked
+                if(isChecked)
+                    // If returnIndex == true, add the Int Index to the List, otherwise add the name
+                    if(returnIndex)
+                        selected.add(list.indexOf(listItem).toString())
+                    else
+                        selected.add(listItem)
+                // If returnIndex == true, remove the Int Index to the List, otherwise remove the name
+                if(!isChecked)
+                    if(returnIndex)
+                        selected.remove(list.indexOf(listItem).toString())
+                    else
+                        selected.remove(listItem)
+            }
+        }
+    }
+
+
+
+
+    /*
     private fun addChips(chipGroup: ChipGroup, chipList: List<String>) {
 
         chipList.forEach() { chipText ->
@@ -157,6 +203,8 @@ class VJournalFilterFragment : Fragment()  {
         }
     }
 
+
+ */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_vjournal_filter, menu)
     }
@@ -175,35 +223,16 @@ class VJournalFilterFragment : Fragment()  {
                 //val selectedCategoryArray = arrayOf(category)     // convert to array
                 // Responds to chip click
 
-                val status2filter = binding.statusFilterChipgroup.checkedChipIds.toIntArray()
-                        . map { it. toString() }. toTypedArray()
-                val classification2filter = binding.classificationFilterChipgroup.checkedChipIds.toIntArray()
-                        . map { it. toString() }. toTypedArray()
-
-
-                /*
-                binding.categoryFilterChipgroup.checkedChipIds.forEach {
-                    categories2filter.add(vJournalFilterViewModel.allCategories.value?.get(it)!!)
-                }
-
-                val organizers2filter: MutableList<String> = mutableListOf()
-                binding.organizerFilterChipgroup.checkedChipIds.forEach {
-                    organizers2filter.add(vJournalFilterViewModel.allOrganizers.value?.get(it)!!)
-                }
-
-                 */
-
 
                 val direction = VJournalFilterFragmentDirections.actionVJournalFilterFragmentToVjournalListFragmentList()
-                direction.status2filter = status2filter
-                direction.classification2filter = classification2filter
+                direction.status2filter = status2filter.toTypedArray()
+                direction.classification2filter = classification2filter.toTypedArray()
                 direction.organizer2filter = organizers2filter.toTypedArray()
                 direction.category2filter = categories2filter.toTypedArray()
 
                 this.findNavController().navigate(direction)
             }
         }
-
 
 
         return super.onOptionsItemSelected(item)

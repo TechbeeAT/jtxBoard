@@ -1,6 +1,7 @@
 package at.bitfire.notesx5.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*
@@ -19,7 +20,7 @@ class VJournalListViewModel(
 
     var searchComponent = "JOURNAL"
     var searchText: String = ""
-    var searchCategories: MutableList<String>? = mutableListOf()
+    var searchCategories: MutableList<String> = mutableListOf()
     var searchOrganizer: MutableList<String> = mutableListOf()
     var searchStatus: MutableList<String> = mutableListOf()
     var searchClassification: MutableList<String> = mutableListOf()
@@ -29,7 +30,7 @@ class VJournalListViewModel(
     private var listQuery:  MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
     var vJournalList: LiveData<List<VJournalEntity>> = Transformations.switchMap(listQuery) {
         database.getVJournalEntity(it)
-    }
+        }
 
     //var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
     var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
@@ -125,11 +126,11 @@ class VJournalListViewModel(
 
 // Beginning of query string
         var queryString = "SELECT DISTINCT vjournals.* FROM vjournals " +
-                "LEFT JOIN vcategories ON vjournals.id = vcategories.journalLinkId " +
-                "LEFT JOIN vattendees ON vjournals.id = vattendees.journalLinkId " +
-                "LEFT JOIN vcomments ON vjournals.id = vcomments.journalLinkId " +
-                "LEFT JOIN vorganizer ON vjournals.id = vorganizer.journalLinkId " +
-                "LEFT JOIN vRelatedto ON vjournals.id = vRelatedto.journalLinkId "
+                "LEFT JOIN vcategories ON vjournals.id = vcategories.journalLinkId "  // +
+           //     "LEFT JOIN vattendees ON vjournals.id = vattendees.journalLinkId " +
+           //     "LEFT JOIN vcomments ON vjournals.id = vcomments.journalLinkId " +
+           //     "LEFT JOIN vorganizer ON vjournals.id = vorganizer.journalLinkId " +
+           //     "LEFT JOIN vRelatedto ON vjournals.id = vRelatedto.journalLinkId "
 
         // First query parameter Component must always be present!
         queryString += "WHERE component = ? "
@@ -143,10 +144,31 @@ class VJournalListViewModel(
         }
 
         // Query for the passed filter criteria from VJournalFilterFragment
-        if (searchCategories?.size!! > 0) {
+        if (searchCategories.size > 0) {
             queryString += "AND vcategories.categories IN (?) "
-            args.add(searchCategories!!.joinToString(separator=","))
+            args.add(searchCategories.joinToString(separator=","))
         }
+
+        // Query for the passed filter criteria from VJournalFilterFragment
+        if (searchStatus.size > 0) {
+            queryString += "AND status IN (?) "
+            args.add(searchStatus.joinToString(separator=","))
+        }
+
+        // Query for the passed filter criteria from VJournalFilterFragment
+        if (searchClassification.size > 0) {
+            queryString += "AND classification IN (?) "
+            args.add(searchClassification.joinToString(separator=","))
+            Log.println(Log.INFO, "searchClassification", searchClassification.joinToString(separator=","))
+        }
+
+        // Query for the passed filter criteria from VJournalFilterFragment
+        if (searchCollection.size > 0) {
+            queryString += "AND collection IN (?) "
+            args.add(searchCollection.joinToString(separator=","))
+        }
+
+        Log.println(Log.INFO, "queryString", queryString)
 
         return SimpleSQLiteQuery(queryString, args.toArray())
     }
