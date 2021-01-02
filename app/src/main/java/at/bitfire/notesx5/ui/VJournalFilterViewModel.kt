@@ -12,16 +12,8 @@ import java.util.*
 class VJournalFilterViewModel(      val database: VJournalDatabaseDao,
                                     application: Application) : AndroidViewModel(application) {
 
-    private val allCategoriesRaw = database.getAllCategories()
     val allOrganizers = database.getAllOrganizers()
-
-    val allCategories = Transformations.map(allCategoriesRaw) { allCategoriesRaw ->
-        val allDistinct: MutableList<String> = mutableListOf()
-        allCategoriesRaw.forEach {
-            allDistinct.addAll(convertCategoriesCSVtoList(it))
-        }
-        return@map allDistinct.distinct().sorted()
-    }
+    val allCategories = database.getAllCategories()
 
 
     init {

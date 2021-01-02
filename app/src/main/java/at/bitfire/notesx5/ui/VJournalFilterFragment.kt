@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
+import at.bitfire.notesx5.database.VCategory
 import at.bitfire.notesx5.database.VJournalDatabase
 import at.bitfire.notesx5.database.VJournalDatabaseDao
 import at.bitfire.notesx5.databinding.FragmentVjournalFilterBinding
@@ -29,6 +30,13 @@ class VJournalFilterFragment : Fragment()  {
     lateinit var viewModelFactory:  VJournalFilterViewModelFactory
     lateinit var vJournalFilterViewModel: VJournalFilterViewModel
     lateinit var inflater: LayoutInflater
+
+    private var displayedCategoryChips: MutableList<String> = mutableListOf()
+    private var displayedOrganizerChips: MutableList<String> = mutableListOf()
+
+    val categories2filter: MutableList<String> = mutableListOf()
+    val organizers2filter: MutableList<String> = mutableListOf()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -69,7 +77,7 @@ class VJournalFilterFragment : Fragment()  {
 
             // Add the chips for categories
             if (vJournalFilterViewModel.allCategories.value != null)
-                addChips(binding.categoryFilterChipgroup, vJournalFilterViewModel.allCategories.value!!)
+                addCategoryChips(binding.categoryFilterChipgroup, vJournalFilterViewModel.allCategories.value!!)
 
         })
 
@@ -78,7 +86,7 @@ class VJournalFilterFragment : Fragment()  {
 
             // Add the chips for organizers
             if (vJournalFilterViewModel.allOrganizers.value != null)
-                addChips(binding.organizerFilterChipgroup, vJournalFilterViewModel.allOrganizers.value!!)
+                addOrganizerChips(binding.organizerFilterChipgroup, vJournalFilterViewModel.allOrganizers.value!!)
         })
 
 
@@ -88,7 +96,7 @@ class VJournalFilterFragment : Fragment()  {
 
 
 
-    fun addChips(chipGroup: ChipGroup, chipList: List<String>) {
+    private fun addChips(chipGroup: ChipGroup, chipList: List<String>) {
 
         chipList.forEach() { chipText ->
 
@@ -102,6 +110,52 @@ class VJournalFilterFragment : Fragment()  {
         }
     }
 
+
+    fun addCategoryChips(chipGroup: ChipGroup, categories: List<String>) {
+
+        categories.forEach() { category ->
+
+            if (category == "" || displayedCategoryChips.contains(category))   // don't show empty categories and only show categories that are not there yet
+                return@forEach
+
+            val chip = inflater.inflate(R.layout.fragment_vjournal_filter_chip, chipGroup, false) as Chip
+            chip.text = category
+            chipGroup.addView(chip)
+            displayedCategoryChips.add(category)
+
+            chip.setOnCheckedChangeListener { chip, isChecked ->
+                // Responds to chip checked/unchecked
+                if(isChecked)
+                    categories2filter.add(category)
+                if(!isChecked)
+                    categories2filter.remove(category)
+            }
+
+        }
+    }
+
+    fun addOrganizerChips(chipGroup: ChipGroup, organizers: List<String>) {
+
+        organizers.forEach() { organizer ->
+
+            if (organizer == "" || displayedOrganizerChips.contains(organizer))   // don't show empty categories and only show categories that are not there yet
+                return@forEach
+
+            val chip = inflater.inflate(R.layout.fragment_vjournal_filter_chip, chipGroup, false) as Chip
+            chip.text = organizer
+            chipGroup.addView(chip)
+            displayedOrganizerChips.add(organizer)
+
+            chip.setOnCheckedChangeListener { chip, isChecked ->
+                // Responds to chip checked/unchecked
+                if(isChecked)
+                    organizers2filter.add(organizer)
+                if(!isChecked)
+                    organizers2filter.remove(organizer)
+            }
+
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_vjournal_filter, menu)
@@ -127,7 +181,7 @@ class VJournalFilterFragment : Fragment()  {
                         . map { it. toString() }. toTypedArray()
 
 
-                val categories2filter: MutableList<String> = mutableListOf()
+                /*
                 binding.categoryFilterChipgroup.checkedChipIds.forEach {
                     categories2filter.add(vJournalFilterViewModel.allCategories.value?.get(it)!!)
                 }
@@ -136,6 +190,8 @@ class VJournalFilterFragment : Fragment()  {
                 binding.organizerFilterChipgroup.checkedChipIds.forEach {
                     organizers2filter.add(vJournalFilterViewModel.allOrganizers.value?.get(it)!!)
                 }
+
+                 */
 
 
                 val direction = VJournalFilterFragmentDirections.actionVJournalFilterFragmentToVjournalListFragmentList()

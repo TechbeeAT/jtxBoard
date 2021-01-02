@@ -9,6 +9,7 @@
     android:layout_height="wrap_content"
     android:checkable="true"
     android:theme="@style/Chips"
+    app:checkedIconEnabled="true"
     app:chipIcon="@drawable/ic_vjournal_category"
     app:chipIconVisible="false"
     app:closeIconVisible="false"

@@ -75,22 +75,26 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // pass filter arguments to view model
         val arguments = VJournalListFragmentArgs.fromBundle((arguments!!))
-        if (!arguments.category2filter.isNullOrEmpty())
+        if (!arguments.category2filter.isNullOrEmpty()) {
             vJournalListViewModel.searchCategories = arguments.category2filter!!.toMutableList()
+            Log.println(Log.INFO, "searchCategories", arguments.category2filter!!.toMutableList().joinToString(separator=", "))
 
-        if (!arguments.organizer2filter.isNullOrEmpty())
+        }
+
+        if (arguments.organizer2filter?.isNotEmpty() == true)
             vJournalListViewModel.searchOrganizer = arguments.organizer2filter!!.toMutableList()
 
-        if (!arguments.classification2filter.isNullOrEmpty())
+        if (arguments.classification2filter?.isNotEmpty() == true)
             vJournalListViewModel.searchClassification = arguments.classification2filter!!.toMutableList()
 
-        if (!arguments.status2filter.isNullOrEmpty())
+        if (arguments.status2filter?.isNotEmpty() == true)
             vJournalListViewModel.searchStatus = arguments.status2filter!!.toMutableList()
 
-        if (!arguments.collection2filter.isNullOrEmpty())
+        if (arguments.collection2filter?.isNotEmpty() == true)
             vJournalListViewModel.searchCollection = arguments.collection2filter!!.toMutableList()
 
-
+        if(arguments.organizer2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.status2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
+            vJournalListViewModel.updateSearch()   // updateSearch() only if there was at least one filter criteria
 
 
 
@@ -104,6 +108,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             }
         })
 
+        /*
         vJournalListViewModel.vJournalList.observe(viewLifecycleOwner, {
             if (vJournalListViewModel.vJournalList.value?.size!! > 0)
                 Log.println(Log.INFO, "getVJournalItemswithComments", vJournalListViewModel.vJournalList.value!![0]!!.vJournalItem.summary.toString())
@@ -122,6 +127,8 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         })
 
+
+         */
 
         // Observe the focus item to scroll automatically to the right position (newly updated or inserted item)
         vJournalListViewModel.focusItemId.observe(viewLifecycleOwner, Observer {
