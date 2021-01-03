@@ -199,4 +199,13 @@ class VJournalListViewModel(
     fun updateSearch() {
         listQuery.postValue(constructQuery())
     }
+
+    fun clearFilter() {
+       searchCategories.clear()
+       searchOrganizer.clear()
+       searchStatus.clear()
+       searchClassification.clear()
+       searchCollection.clear()
+       updateSearch()
+    }
 }

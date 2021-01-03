@@ -258,6 +258,10 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                     VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalFilterFragment())
         }
 
+        if (item.itemId == R.id.vjournal_clear_filter) {
+            vJournalListViewModel.clearFilter()
+        }
+
 
 
             return super.onOptionsItemSelected(item)

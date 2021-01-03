@@ -23,4 +23,9 @@
         android:title="Filter"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/vjournal_clear_filter"
+        android:title="Clear filter"
+        app:showAsAction="never" />
+
 </menu>
