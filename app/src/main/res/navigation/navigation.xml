@@ -111,7 +111,8 @@
         tools:layout="@layout/fragment_vjournal_filter">
         <action
             android:id="@+id/action_VJournalFilterFragment_to_vjournalListFragmentList"
-            app:destination="@id/vjournalListFragmentList" />
+            app:destination="@id/vjournalListFragmentList"
+            app:popUpTo="@id/vjournalListFragmentList" />
     </fragment>
 
 </navigation>
