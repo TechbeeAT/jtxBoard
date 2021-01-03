@@ -126,11 +126,11 @@ class VJournalListViewModel(
 
 // Beginning of query string
         var queryString = "SELECT DISTINCT vjournals.* FROM vjournals " +
-                "LEFT JOIN vcategories ON vjournals.id = vcategories.journalLinkId "  // +
-           //     "LEFT JOIN vattendees ON vjournals.id = vattendees.journalLinkId " +
-           //     "LEFT JOIN vcomments ON vjournals.id = vcomments.journalLinkId " +
-           //     "LEFT JOIN vorganizer ON vjournals.id = vorganizer.journalLinkId " +
-           //     "LEFT JOIN vRelatedto ON vjournals.id = vRelatedto.journalLinkId "
+        "LEFT JOIN vcategories ON vjournals.id = vcategories.journalLinkId "  // +
+        //     "LEFT JOIN vattendees ON vjournals.id = vattendees.journalLinkId " +
+        //     "LEFT JOIN vcomments ON vjournals.id = vcomments.journalLinkId " +
+        //     "LEFT JOIN vorganizer ON vjournals.id = vorganizer.journalLinkId " +
+        //     "LEFT JOIN vRelatedto ON vjournals.id = vRelatedto.journalLinkId "
 
         // First query parameter Component must always be present!
         queryString += "WHERE component = ? "
@@ -145,30 +145,53 @@ class VJournalListViewModel(
 
         // Query for the passed filter criteria from VJournalFilterFragment
         if (searchCategories.size > 0) {
-            queryString += "AND vcategories.categories IN (?) "
-            args.add(searchCategories.joinToString(separator=","))
+            queryString += "AND vcategories.categories IN ("
+            searchCategories.forEach {
+                queryString += "?,"
+                args.add(it)
+            }
+            queryString = queryString.removeSuffix(",")      // remove the last comma
+            queryString += ") "
         }
 
         // Query for the passed filter criteria from VJournalFilterFragment
         if (searchStatus.size > 0) {
-            queryString += "AND status IN (?) "
-            args.add(searchStatus.joinToString(separator=","))
+            queryString += "AND status IN ("
+            searchStatus.forEach {
+                queryString += "?,"
+                args.add(it)
+            }
+            queryString = queryString.removeSuffix(",")      // remove the last comma
+            queryString += ") "
         }
 
         // Query for the passed filter criteria from VJournalFilterFragment
         if (searchClassification.size > 0) {
-            queryString += "AND classification IN (?) "
-            args.add(searchClassification.joinToString(separator=","))
-            Log.println(Log.INFO, "searchClassification", searchClassification.joinToString(separator=","))
+            queryString += "AND classification IN ("
+            searchClassification.forEach {
+                queryString += "?,"
+                args.add(it)
+            }
+            queryString = queryString.removeSuffix(",")      // remove the last comma
+            queryString += ") "
         }
 
         // Query for the passed filter criteria from VJournalFilterFragment
         if (searchCollection.size > 0) {
-            queryString += "AND collection IN (?) "
-            args.add(searchCollection.joinToString(separator=","))
+            queryString += "AND collection IN ("
+            searchCollection.forEach {
+                queryString += "?,"
+                args.add(it)
+            }
+            queryString = queryString.removeSuffix(",")      // remove the last comma
+            queryString += ") "
         }
 
+        queryString += "ORDER BY dtstart DESC, created DESC "
+
         Log.println(Log.INFO, "queryString", queryString)
+        Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator=", "))
+
 
         return SimpleSQLiteQuery(queryString, args.toArray())
     }

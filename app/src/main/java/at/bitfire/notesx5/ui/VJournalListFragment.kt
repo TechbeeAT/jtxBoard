@@ -75,14 +75,9 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // pass filter arguments to view model
         val arguments = VJournalListFragmentArgs.fromBundle((arguments!!))
-        if (!arguments.category2filter.isNullOrEmpty()) {
+
+        if (arguments.category2filter?.isNotEmpty() == true)
             vJournalListViewModel.searchCategories = arguments.category2filter!!.toMutableList()
-            Log.println(Log.INFO, "searchCategories", arguments.category2filter!!.toMutableList().joinToString(separator=", "))
-
-        }
-
-        if (arguments.organizer2filter?.isNotEmpty() == true)
-            vJournalListViewModel.searchOrganizer = arguments.organizer2filter!!.toMutableList()
 
         if (arguments.classification2filter?.isNotEmpty() == true)
             vJournalListViewModel.searchClassification = arguments.classification2filter!!.toMutableList()
@@ -93,7 +88,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (arguments.collection2filter?.isNotEmpty() == true)
             vJournalListViewModel.searchCollection = arguments.collection2filter!!.toMutableList()
 
-        if(arguments.organizer2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.status2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
+        if(arguments.category2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.status2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
             vJournalListViewModel.updateSearch()   // updateSearch() only if there was at least one filter criteria
 
 

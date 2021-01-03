@@ -25,34 +25,34 @@
 
 
         <TextView
-            android:id="@+id/organizer_filter_label"
+            android:id="@+id/collection_filter_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Organizer"
+            android:text="Collection"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/organizer_filter_icon"
+            app:layout_constraintStart_toEndOf="@+id/collection_filter_icon"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/organizer_filter_icon"
+            android:id="@+id/collection_filter_icon"
             android:layout_width="24sp"
             android:layout_height="24sp"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/organizer_filter_label"
-            app:srcCompat="@drawable/ic_vjournal_organizer" />
+            app:layout_constraintTop_toTopOf="@+id/collection_filter_label"
+            app:srcCompat="@drawable/ic_collection" />
 
     <com.google.android.material.chip.ChipGroup
-        android:id="@+id/organizer_filter_chipgroup"
+        android:id="@+id/collection_filter_chipgroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/organizer_filter_label"
-        app:layout_constraintTop_toBottomOf="@+id/organizer_filter_label">
+        app:layout_constraintStart_toStartOf="@+id/collection_filter_label"
+        app:layout_constraintTop_toBottomOf="@+id/collection_filter_label">
 
     </com.google.android.material.chip.ChipGroup>
 
@@ -76,7 +76,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/status_filter_icon"
-            app:layout_constraintTop_toBottomOf="@id/organizer_filter_chipgroup" />
+            app:layout_constraintTop_toBottomOf="@id/collection_filter_chipgroup" />
 
 
     <com.google.android.material.chip.ChipGroup

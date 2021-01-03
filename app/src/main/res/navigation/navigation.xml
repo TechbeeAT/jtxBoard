@@ -52,11 +52,6 @@
             android:id="@+id/action_vjournalListFragmentList_to_VJournalFilterFragment"
             app:destination="@id/VJournalFilterFragment" />
         <argument
-            android:name="organizer2filter"
-            app:argType="string[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
-        <argument
             android:name="status2filter"
             app:argType="string[]"
             app:nullable="true"

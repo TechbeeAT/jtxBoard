@@ -39,7 +39,6 @@ class VJournalFilterFragment : Fragment()  {
 
 
     val categories2filter: MutableList<String> = mutableListOf()
-    val organizers2filter: MutableList<String> = mutableListOf()
     val status2filter: MutableList<String> = mutableListOf()
     val classification2filter: MutableList<String> = mutableListOf()
     val collection2filter: MutableList<String> = mutableListOf()
@@ -93,7 +92,7 @@ class VJournalFilterFragment : Fragment()  {
 
             // Add the chips for collections
             if (vJournalFilterViewModel.allOrganizers.value != null)
-                addChips(binding.organizerFilterChipgroup, vJournalFilterViewModel.allOrganizers.value!!, displayedOrganizerChips, organizers2filter, false)
+                addChips(binding.collectionFilterChipgroup, vJournalFilterViewModel.allOrganizers.value!!, displayedOrganizerChips, collection2filter, false)
         })
 
 
@@ -214,7 +213,7 @@ class VJournalFilterFragment : Fragment()  {
 
         when (item.itemId) {
             R.id.vjournal_filter_reset -> {
-                binding.organizerFilterChipgroup.clearCheck()
+                binding.collectionFilterChipgroup.clearCheck()
                 binding.statusFilterChipgroup.clearCheck()
                 binding.classificationFilterChipgroup.clearCheck()
                 binding.categoryFilterChipgroup.clearCheck()
@@ -227,16 +226,13 @@ class VJournalFilterFragment : Fragment()  {
                 val direction = VJournalFilterFragmentDirections.actionVJournalFilterFragmentToVjournalListFragmentList()
                 direction.status2filter = status2filter.toTypedArray()
                 direction.classification2filter = classification2filter.toTypedArray()
-                direction.organizer2filter = organizers2filter.toTypedArray()
+                direction.collection2filter = collection2filter.toTypedArray()
                 direction.category2filter = categories2filter.toTypedArray()
 
                 this.findNavController().navigate(direction)
             }
         }
 
-
         return super.onOptionsItemSelected(item)
     }
-
-
 }
