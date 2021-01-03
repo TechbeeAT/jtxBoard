@@ -59,6 +59,12 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         binding.model = vJournalItemEditViewModel
         binding.lifecycleOwner = this
 
+        val statusItems = resources.getStringArray(R.array.vjournal_status)
+        binding.statusChip.text = statusItems[1]   // Set default of status Chip to 1 (=FINAL), might be overwritten by observer, but sets the default for new items
+        val classificationItems = resources.getStringArray(R.array.vjournal_classification)
+        binding.classificationChip.text = classificationItems[0]   // Set default of classification Chip to 0 (=PUBLIC), might be overwritten by observer, but sets the default for new items
+
+
 
 
         vJournalItemEditViewModel.savingClicked.observe(viewLifecycleOwner, Observer {
@@ -134,16 +140,13 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
             addChips(vJournalItemEditViewModel.vCategoryUpdated)
 
             // Set the default value of the Status Chip
-            val statusItems = resources.getStringArray(R.array.vjournal_status)
-            if (vJournalItemEditViewModel.vJournalItem.value?.vJournalItem?.status == 3)      // if unsupported don't show the status
+            if (vJournalItemEditViewModel.vJournalItem.value?.vJournalItem?.status == -1)      // if unsupported don't show the status
                 binding.statusChip.visibility = View.GONE
             else
                 binding.statusChip.text = statusItems[vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.status]   // if supported show the status according to the String Array
 
-
             // Set the default value of the Classification Chip
-            val classificationItems = resources.getStringArray(R.array.vjournal_classification)
-            if (vJournalItemEditViewModel.vJournalItem.value?.vJournalItem?.classification == 3)      // if unsupported don't show the classification
+            if (vJournalItemEditViewModel.vJournalItem.value?.vJournalItem?.classification == -1)      // if unsupported don't show the classification
                 binding.classificationChip.visibility = View.GONE
             else
                 binding.classificationChip.text = classificationItems[vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.classification]  // if supported show the classification according to the String Array
