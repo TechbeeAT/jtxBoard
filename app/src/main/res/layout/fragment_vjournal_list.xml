@@ -12,6 +12,9 @@
     </data>
 
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
         <RelativeLayout
@@ -54,27 +57,21 @@
             </androidx.recyclerview.widget.RecyclerView>
 
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:contentDescription="add"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                app:srcCompat="@drawable/ic_vjournal_add"
-                />
-
-
-
         </RelativeLayout>
 
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="add"
+            app:srcCompat="@drawable/ic_vjournal_add"
+            />
 
-
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>
 

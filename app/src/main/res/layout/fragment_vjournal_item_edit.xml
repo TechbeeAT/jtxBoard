@@ -15,6 +15,11 @@
             type="at.bitfire.notesx5.ui.VJournalItemEditViewModel" />
     </data>
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -391,6 +396,14 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_save"
             android:layout_width="wrap_content"
@@ -399,19 +412,11 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:onClick="@{() -> model.savingClicked()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relatedto_edit"
-            app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/ic_vjournal_save"
             android:contentDescription="@string/item_edit_fab_save_contentDescription" />
 
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </ScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 </layout>
