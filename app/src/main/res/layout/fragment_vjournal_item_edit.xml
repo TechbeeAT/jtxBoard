@@ -155,16 +155,19 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
             android:hint="@string/item_edit_add_category_hint"
             app:endIconContentDescription="Add category"
             app:endIconDrawable="@drawable/ic_vjournal_add_category"
             app:endIconMode="custom"
-            app:helperText="Add multiple categories separated with comma"
             app:helperTextEnabled="true"
+            app:startIconDrawable="@drawable/ic_vjournal_category"
             app:layout_constraintBottom_toTopOf="@id/top_barrier"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/dtstart_day"
             app:layout_constraintTop_toBottomOf="@id/categories_chipgroup">
+
+
 
 
             <AutoCompleteTextView
