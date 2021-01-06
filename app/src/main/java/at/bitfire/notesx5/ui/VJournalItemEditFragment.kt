@@ -248,6 +248,17 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
             val checkedStatus = vJournalItemEditViewModel.vJournalItem.value!!.vJournal.status
 
             MaterialAlertDialogBuilder(context!!)
+                    .setTitle("Set status")
+                    .setItems(statusItems) { dialog, which ->
+                        // Respond to item chosen
+                        vJournalItemEditViewModel.vJournalUpdated.value!!.status = which
+                        binding.statusChip.text = statusItems[which]     // don't forget to update the UI
+                    }
+                    .setIcon(R.drawable.ic_status)
+                    .show()
+
+            /*
+            MaterialAlertDialogBuilder(context!!)
                     //.setTitle(resources.getString(R.string.title))
                     .setTitle("Set status")
                     .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
@@ -265,6 +276,8 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                         binding.statusChip.text = statusItems[which]     // don't forget to update the UI
                     }
                     .show()
+
+             */
         }
 
 
@@ -274,6 +287,20 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
             val classificationItems = resources.getStringArray(R.array.vjournal_classification)
             val checkedClassification = vJournalItemEditViewModel.vJournalItem.value!!.vJournal.classification
+
+
+
+            MaterialAlertDialogBuilder(context!!)
+                    .setTitle("Set classification")
+                    .setItems(classificationItems) { dialog, which ->
+                        // Respond to item chosen
+                        vJournalItemEditViewModel.vJournalUpdated.value!!.classification = which
+                        binding.classificationChip.text = classificationItems[which]     // don't forget to update the UI
+                    }
+                    .setIcon(R.drawable.ic_classification)
+                    .show()
+
+            /*
 
             MaterialAlertDialogBuilder(context!!)
                     //.setTitle(resources.getString(R.string.title))
@@ -293,6 +320,8 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                         binding.classificationChip.text = classificationItems[which]     // don't forget to update the UI
                     }
                     .show()
+
+             */
         }
 
 
