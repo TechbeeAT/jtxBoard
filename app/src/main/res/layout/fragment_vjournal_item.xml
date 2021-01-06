@@ -364,6 +364,55 @@
                 app:layout_constraintTop_toBottomOf="@+id/relatedto_header"
                 tools:text="https://example.com/remote.php/dav/calendars/johndoe/personal/097E4865-D073-4279-806C-3E2B3250C947.ics" />
 
+            <ImageView
+                android:id="@+id/comments_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/comments_header"
+                app:srcCompat="@drawable/ic_comments"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/comments_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/item_view_comments_header"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/comments_icon"
+                app:layout_constraintTop_toBottomOf="@id/relatedto"/>
+
+
+            <LinearLayout
+                android:id="@+id/comments_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:divider="?android:dividerHorizontal"
+                android:showDividers="middle"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/comments_header" >
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/add_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add comment"
+                app:icon="@drawable/ic_comment_add"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/comments_linearlayout" />
+
 
             <TextView
                 android:id="@+id/created"
@@ -376,7 +425,7 @@
                 android:textSize="10sp"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/relatedto"
+                app:layout_constraintTop_toBottomOf="@+id/add_comment"
                 tools:text="Created: Sun Dec 20 20:38:30 GMT+01:00 2020" />
 
 
@@ -392,7 +441,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/created"
                 tools:text="Last modified: Sun Dec 20 20:38:30 GMT+01:00 2020" />
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

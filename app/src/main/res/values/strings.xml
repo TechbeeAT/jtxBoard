@@ -74,6 +74,8 @@
     <string name="item_view_organizer_header">Organizer</string>
     <string name="item_view_contact_header">Contact</string>
     <string name="item_view_relatedto_header">Related to</string>
+    <string name="item_view_comments_header">Comments</string>
+
 
 
 </resources>

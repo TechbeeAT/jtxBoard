@@ -89,6 +89,12 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
         }
 
     }
+
+    fun upsertComment(comment: VComment) {
+        viewModelScope.launch() {
+            database.insertComment(comment)
+        }
+    }
 }
 
 

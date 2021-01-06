@@ -10,19 +10,19 @@ data class VJournalEntity (
 
 
         @Relation(parentColumn = "id", entityColumn = "journalLinkId")
-        var vComment: List<VComment>?,
+        var vComment: List<VComment>? = null,
 
         @Relation(parentColumn = "id", entityColumn = "journalLinkId", entity = VCategory::class)
         var vCategory: List<VCategory>? = null,
 
         @Relation(parentColumn = "id", entityColumn = "journalLinkId")
-        var vAttendee: List<VAttendee>?,
+        var vAttendee: List<VAttendee>? = null,
 
         @Relation(parentColumn = "id", entityColumn = "journalLinkId")
-        var vOrganizer: List<VOrganizer>?,
+        var vOrganizer: List<VOrganizer>? = null,
 
         @Relation(parentColumn = "id", entityColumn = "journalLinkId")
-        var vRelatedto: List<VRelatedto>?
+        var vRelatedto: List<VRelatedto>? = null
 
 
 )
