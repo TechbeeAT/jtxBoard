@@ -245,8 +245,8 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 
                 if (startItem != null && endItem != null) {
-                    dpd.datePicker.minDate = startItem.vJournalItem.dtstart
-                    dpd.datePicker.maxDate = endItem.vJournalItem.dtstart
+                    dpd.datePicker.minDate = startItem.vJournal.dtstart
+                    dpd.datePicker.maxDate = endItem.vJournal.dtstart
                 }
 
                 dpd.show()
@@ -282,7 +282,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         // find the item with the same date
         var foundItem = vJournalListViewModel.vJournalList.value?.find { item ->
             val cItem = Calendar.getInstance()
-            cItem.timeInMillis = item.vJournalItem.dtstart
+            cItem.timeInMillis = item.vJournal.dtstart
 
             // if this condition is true, the item is considered as found
             cItem.get(Calendar.YEAR) == year && cItem.get(Calendar.MONTH) == month && cItem.get(Calendar.DAY_OF_MONTH) == day
@@ -293,7 +293,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             var datediff = 0L
             vJournalListViewModel.vJournalList.value?.forEach { item ->
                 val cItem = Calendar.getInstance()
-                cItem.timeInMillis = item.vJournalItem.dtstart
+                cItem.timeInMillis = item.vJournal.dtstart
 
                 if (datediff == 0L || kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis) < datediff) {
                     datediff = kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis)
@@ -304,7 +304,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         }
 
         if (foundItem != null)
-            vJournalListViewModel.setFocusItem(foundItem!!.vJournalItem.id)
+            vJournalListViewModel.setFocusItem(foundItem!!.vJournal.id)
 
     }
 }

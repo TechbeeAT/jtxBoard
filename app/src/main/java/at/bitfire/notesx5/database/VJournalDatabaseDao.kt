@@ -19,6 +19,8 @@ package at.bitfire.notesx5.database
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
+import at.bitfire.notesx5.database.relations.VJournalEntity
+import at.bitfire.notesx5.database.relations.VJournalWithCategory
 
 
 /**
@@ -40,7 +42,7 @@ interface VJournalDatabaseDao {
 
      */
 
-    @Query("SELECT DISTINCT categories FROM vcategories ORDER BY categories ASC")
+    @Query("SELECT DISTINCT text FROM vcategories ORDER BY text ASC")
     fun getAllCategories(): LiveData<List<String>>
 
     @Query("SELECT DISTINCT organizer FROM vorganizer ORDER BY organizer ASC")
@@ -105,6 +107,10 @@ DELETEs
     @Transaction
     @RawQuery
     fun getVJournalEntity(query: SupportSQLiteQuery): LiveData<List<VJournalEntity>>
+
+    @Transaction
+    @RawQuery
+    fun getVJournalWithCategory(query: SupportSQLiteQuery): LiveData<List<VJournalWithCategory>>
 
 
     @Transaction

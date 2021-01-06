@@ -87,13 +87,13 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
                 // show Alert Dialog before the item gets really deleted
                 val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Delete \"${vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.summary}\"")
-                builder.setMessage("Are you sure you want to delete \"${vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.summary}\"?")
+                builder.setTitle("Delete \"${vJournalItemEditViewModel.vJournalItem.value!!.vJournal.summary}\"")
+                builder.setMessage("Are you sure you want to delete \"${vJournalItemEditViewModel.vJournalItem.value!!.vJournal.summary}\"?")
                 builder.setPositiveButton("Delete") { _, _ ->
                     val direction = VJournalItemEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
-                    direction.component2show = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.component
+                    direction.component2show = vJournalItemEditViewModel.vJournalItem.value!!.vJournal.component
 
-                    val summary = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.summary
+                    val summary = vJournalItemEditViewModel.vJournalItem.value!!.vJournal.summary
                     vJournalItemEditViewModel.delete()
                     Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG).show()
 
@@ -107,7 +107,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                     vJournalItemEditViewModel.vJournalUpdated.value!!.status = 2    // 2 = CANCELLED
                     vJournalItemEditViewModel.savingClicked()
 
-                    val summary = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.summary
+                    val summary = vJournalItemEditViewModel.vJournalItem.value!!.vJournal.summary
                     Toast.makeText(context, "\"$summary\" marked as Cancelled.", Toast.LENGTH_LONG).show()
 
                 }
@@ -119,7 +119,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         vJournalItemEditViewModel.returnVJournalItemId.observe(viewLifecycleOwner, Observer {
             if (it != 0L) {
                 val direction = VJournalItemEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
-                direction.component2show = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.component
+                direction.component2show = vJournalItemEditViewModel.vJournalItem.value!!.vJournal.component
                 direction.item2focus = it
                 this.findNavController().navigate(direction)
             }
@@ -130,30 +130,30 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         vJournalItemEditViewModel.vJournalItem.observe(viewLifecycleOwner, {
 
-            if(it?.vJournalItem == null || it.vCategory == null)
+            if(it?.vJournal == null || it.vCategory == null)
                 return@observe
 
-            vJournalItemEditViewModel.vJournalUpdated.postValue(it.vJournalItem)
+            vJournalItemEditViewModel.vJournalUpdated.postValue(it.vJournal)
             vJournalItemEditViewModel.vCategoryUpdated.addAll(it.vCategory!!)
 
             // Add the chips for existing categories
             addChips(vJournalItemEditViewModel.vCategoryUpdated)
 
             // Set the default value of the Status Chip
-            if (vJournalItemEditViewModel.vJournalItem.value?.vJournalItem?.status == -1)      // if unsupported don't show the status
+            if (vJournalItemEditViewModel.vJournalItem.value?.vJournal?.status == -1)      // if unsupported don't show the status
                 binding.statusChip.visibility = View.GONE
             else
-                binding.statusChip.text = statusItems[vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.status]   // if supported show the status according to the String Array
+                binding.statusChip.text = statusItems[vJournalItemEditViewModel.vJournalItem.value!!.vJournal.status]   // if supported show the status according to the String Array
 
             // Set the default value of the Classification Chip
-            if (vJournalItemEditViewModel.vJournalItem.value?.vJournalItem?.classification == -1)      // if unsupported don't show the classification
+            if (vJournalItemEditViewModel.vJournalItem.value?.vJournal?.classification == -1)      // if unsupported don't show the classification
                 binding.classificationChip.visibility = View.GONE
             else
-                binding.classificationChip.text = classificationItems[vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.classification]  // if supported show the classification according to the String Array
+                binding.classificationChip.text = classificationItems[vJournalItemEditViewModel.vJournalItem.value!!.vJournal.classification]  // if supported show the classification according to the String Array
 
             // set the default selection for the spinner. The same snippet exists for the allOrganizers observer
             if(vJournalItemEditViewModel.allCollections.value != null) {
-                val selectedCollectionPos = vJournalItemEditViewModel.allCollections.value?.indexOf(vJournalItemEditViewModel.vJournalItem.value?.vJournalItem?.collection)
+                val selectedCollectionPos = vJournalItemEditViewModel.allCollections.value?.indexOf(vJournalItemEditViewModel.vJournalItem.value?.vJournal?.collection)
                 if (selectedCollectionPos != null)
                     binding.collection.setSelection(selectedCollectionPos)
             }
@@ -180,7 +180,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
             // set the default selection for the spinner. The same snippet exists for the vJournalItem observer
             if(vJournalItemEditViewModel.allCollections.value != null) {
-                val selectedCollectionPos = vJournalItemEditViewModel.allCollections.value?.indexOf(vJournalItemEditViewModel.vJournalItem.value?.vJournalItem?.collection)
+                val selectedCollectionPos = vJournalItemEditViewModel.allCollections.value?.indexOf(vJournalItemEditViewModel.vJournalItem.value?.vJournal?.collection)
                 if (selectedCollectionPos != null)
                         spinner.setSelection(selectedCollectionPos)
             }
@@ -209,8 +209,8 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         binding.categoriesAdd.setEndIconOnClickListener {
             // Respond to end icon presses
-            vJournalItemEditViewModel.vCategoryUpdated.add(VCategory(categories=binding.categoriesAdd.editText?.text.toString()))
-            addChips(listOf(VCategory(categories = binding.categoriesAdd.editText?.text.toString())))
+            vJournalItemEditViewModel.vCategoryUpdated.add(VCategory(text=binding.categoriesAdd.editText?.text.toString()))
+            addChips(listOf(VCategory(text = binding.categoriesAdd.editText?.text.toString())))
             binding.categoriesAdd.editText?.text?.clear()
 
 
@@ -225,8 +225,8 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         binding.categoriesAdd.editText?.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    vJournalItemEditViewModel.vCategoryUpdated.add(VCategory(categories=binding.categoriesAdd.editText?.text.toString()))
-                    addChips(listOf(VCategory(categories = binding.categoriesAdd.editText?.text.toString())))
+                    vJournalItemEditViewModel.vCategoryUpdated.add(VCategory(text=binding.categoriesAdd.editText?.text.toString()))
+                    addChips(listOf(VCategory(text = binding.categoriesAdd.editText?.text.toString())))
                     binding.categoriesAdd.editText?.text?.clear()
 
 
@@ -245,14 +245,14 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         binding.statusChip.setOnClickListener {
 
             val statusItems = resources.getStringArray(R.array.vjournal_status)
-            val checkedStatus = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.status
+            val checkedStatus = vJournalItemEditViewModel.vJournalItem.value!!.vJournal.status
 
             MaterialAlertDialogBuilder(context!!)
                     //.setTitle(resources.getString(R.string.title))
                     .setTitle("Set status")
                     .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
                         // Respond to neutral button press
-                        vJournalItemEditViewModel.vJournalUpdated.value!!.status = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.status  // Reset to previous status
+                        vJournalItemEditViewModel.vJournalUpdated.value!!.status = vJournalItemEditViewModel.vJournalItem.value!!.vJournal.status  // Reset to previous status
                         binding.statusChip.text = statusItems[checkedStatus]   // don't forget to update the UI
                     }
                     .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
@@ -273,14 +273,14 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
         binding.classificationChip.setOnClickListener {
 
             val classificationItems = resources.getStringArray(R.array.vjournal_classification)
-            val checkedClassification = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.classification
+            val checkedClassification = vJournalItemEditViewModel.vJournalItem.value!!.vJournal.classification
 
             MaterialAlertDialogBuilder(context!!)
                     //.setTitle(resources.getString(R.string.title))
                     .setTitle("Set classification")
                     .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
                         // Respond to neutral button press
-                        vJournalItemEditViewModel.vJournalUpdated.value!!.classification = vJournalItemEditViewModel.vJournalItem.value!!.vJournalItem.classification  // Reset to previous classification
+                        vJournalItemEditViewModel.vJournalUpdated.value!!.classification = vJournalItemEditViewModel.vJournalItem.value!!.vJournal.classification  // Reset to previous classification
                         binding.classificationChip.text = classificationItems[checkedClassification]   // don't forget to update the UI
                     }
                     .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
@@ -374,11 +374,11 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
 
         categories?.forEach() { category ->
 
-            if (category.categories.isBlank())
+            if (category.text.isBlank())
                 return@forEach
 
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
-            categoryChip.text = category.categories
+            categoryChip.text = category.text
             binding.categoriesChipgroup.addView(categoryChip)
 
             categoryChip.setOnClickListener {
@@ -389,7 +389,7 @@ class VJournalItemEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener,
                 // Responds to chip's close icon click if one is present
                 // Delete by re-assigning an edited, mutable category list
                 // TODO: Delete the category from the list!!!
-                val currentCategories = vJournalItemEditViewModel.vCategoryUpdated.removeIf { it.categories == category.categories}
+                val currentCategories = vJournalItemEditViewModel.vCategoryUpdated.removeIf { it.text == category.text}
                 chip.visibility = View.GONE
             }
 

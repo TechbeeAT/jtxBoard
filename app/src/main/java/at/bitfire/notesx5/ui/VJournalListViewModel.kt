@@ -5,9 +5,10 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*
+import at.bitfire.notesx5.database.relations.VJournalEntity
+import at.bitfire.notesx5.database.relations.VJournalWithCategory
 
 import kotlinx.coroutines.launch
-import java.io.File.separator
 
 
 /**
@@ -28,8 +29,8 @@ class VJournalListViewModel(
 
 
     private var listQuery:  MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
-    var vJournalList: LiveData<List<VJournalEntity>> = Transformations.switchMap(listQuery) {
-        database.getVJournalEntity(it)
+    var vJournalList: LiveData<List<VJournalWithCategory>> = Transformations.switchMap(listQuery) {
+        database.getVJournalWithCategory(it)
         }
 
     //var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
@@ -75,10 +76,10 @@ class VJournalListViewModel(
 
         val newEntry = database.insertJournal(VJournal(component = "JOURNAL", summary = rfcSummary, description = rfcDesc))
         database.insertAttendee(VAttendee(attendee = "test@test.de", journalLinkId = newEntry))
-        database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry))
-        database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry))
+        database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry))
+        database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry))
 
-        database.insertComment(VComment(comment = "comment", journalLinkId = newEntry))
+        database.insertComment(VComment(text = "comment", journalLinkId = newEntry))
         database.insertOrganizer(VOrganizer(organizer = "organizer", journalLinkId = newEntry))
         database.insertRelatedto(VRelatedto(relatedto = "related to", journalLinkId = newEntry))
 
@@ -90,10 +91,10 @@ class VJournalListViewModel(
 
         val newEntry2 = database.insertJournal(VJournal(component = "NOTE", summary = noteSummary, description = noteDesc))
         database.insertAttendee(VAttendee(attendee = "test@test.de", journalLinkId = newEntry2))
-        database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry2))
-        database.insertCategory(VCategory(categories = "cat", journalLinkId = newEntry2))
+        database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry2))
+        database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry2))
 
-        database.insertComment(VComment(comment = "comment", journalLinkId = newEntry2))
+        database.insertComment(VComment(text = "comment", journalLinkId = newEntry2))
         database.insertOrganizer(VOrganizer(organizer = "organizer", journalLinkId = newEntry2))
         database.insertRelatedto(VRelatedto(relatedto = "related to", journalLinkId = newEntry2))
 
@@ -107,7 +108,7 @@ class VJournalListViewModel(
     fun getFocusItemPosition(): Int {
 
         val focusItem = vJournalList.value?.find {
-            focusItemId.value == it.vJournalItem.id
+            focusItemId.value == it.vJournal.id
         }
 
         return if (vJournalList.value != null && focusItem != null)
@@ -122,7 +123,7 @@ class VJournalListViewModel(
 
     fun constructQuery(): SimpleSQLiteQuery  {
 
-        var args = arrayListOf<String>()
+        val args = arrayListOf<String>()
 
 // Beginning of query string
         var queryString = "SELECT DISTINCT vjournals.* FROM vjournals " +

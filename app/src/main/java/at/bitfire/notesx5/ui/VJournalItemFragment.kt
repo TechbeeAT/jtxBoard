@@ -62,19 +62,19 @@ class VJournalItemFragment : Fragment() {
             if (it) {
                 vJournalItemViewModel.editingClicked.value = false
                 this.findNavController().navigate(
-                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVJournalItemEditFragment().setItem2edit(vJournalItemViewModel.vJournal.value!!.vJournalItem.id))
+                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVJournalItemEditFragment().setItem2edit(vJournalItemViewModel.vJournal.value!!.vJournal.id))
             }
         })
 
         vJournalItemViewModel.vJournal.observe(viewLifecycleOwner, {
 
-            if (it?.vJournalItem != null) {
+            if (it?.vJournal != null) {
 
                 val statusArray = resources.getStringArray(R.array.vjournal_status)
-                binding.statusChip.text = statusArray[vJournalItemViewModel.vJournal.value!!.vJournalItem.status]
+                binding.statusChip.text = statusArray[vJournalItemViewModel.vJournal.value!!.vJournal.status]
 
                 val classificationArray = resources.getStringArray(R.array.vjournal_classification)
-                binding.classificationChip.text = classificationArray[vJournalItemViewModel.vJournal.value!!.vJournalItem.classification]
+                binding.classificationChip.text = classificationArray[vJournalItemViewModel.vJournal.value!!.vJournal.classification]
             }
         })
 
@@ -91,20 +91,20 @@ class VJournalItemFragment : Fragment() {
 
         categories.forEach() { category ->
 
-            if (category.categories == "")     // don't add empty categories
+            if (category.text.isBlank())     // don't add empty categories
                 return@forEach
 
             if(displayedCategoryChips.indexOf(category) != -1)    // only show categories that are not there yet
                 return@forEach
 
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_categories_chip, binding.categoriesChipgroup, false) as Chip
-            categoryChip.text = category.categories
+            categoryChip.text = category.text
             binding.categoriesChipgroup.addView(categoryChip)
             displayedCategoryChips.add(category)
 
             categoryChip.setOnClickListener {
 
-                val selectedCategoryArray = arrayOf(category.categories)     // convert to array
+                val selectedCategoryArray = arrayOf(category.text)     // convert to array
                 // Responds to chip click
                 this.findNavController().navigate(
                         VJournalItemFragmentDirections.actionVjournalItemFragmentToVjournalListFragmentList().setCategory2filter(selectedCategoryArray)
@@ -121,16 +121,16 @@ class VJournalItemFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.vjournal_item_share) {
 
-            var shareText: String = "${convertLongToDateString(vJournalItemViewModel.vJournal.value!!.vJournalItem.dtstart)} ${convertLongToTimeString(vJournalItemViewModel.vJournal.value!!.vJournalItem.dtstart)}\n"
-            shareText += "${vJournalItemViewModel.vJournal.value!!.vJournalItem.summary}\n\n"
-            shareText += "${vJournalItemViewModel.vJournal.value!!.vJournalItem.description}\n\n"
+            var shareText: String = "${convertLongToDateString(vJournalItemViewModel.vJournal.value!!.vJournal.dtstart)} ${convertLongToTimeString(vJournalItemViewModel.vJournal.value!!.vJournal.dtstart)}\n"
+            shareText += "${vJournalItemViewModel.vJournal.value!!.vJournal.summary}\n\n"
+            shareText += "${vJournalItemViewModel.vJournal.value!!.vJournal.description}\n\n"
             //todo add category again
             //shareText += "Categories/Labels: ${vJournalItemViewModel.vJournal.value!!.vCategory}"
 
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.type = "text/plain"
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, vJournalItemViewModel.vJournal.value!!.vJournalItem.summary)
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, vJournalItemViewModel.vJournal.value!!.vJournal.summary)
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
             startActivity(Intent(shareIntent))
 

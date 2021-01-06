@@ -1,9 +1,9 @@
 package at.bitfire.notesx5.ui
 
 import android.app.Application
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.*
 import at.bitfire.notesx5.database.*
+import at.bitfire.notesx5.database.relations.VJournalEntity
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -56,17 +56,17 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
 
 
         dateVisible = Transformations.map(vJournal) { item ->
-            return@map item?.vJournalItem?.component == "JOURNAL"           // true if component == JOURNAL
+            return@map item?.vJournal?.component == "JOURNAL"           // true if component == JOURNAL
         }
 
         timeVisible = Transformations.map(vJournal) { item ->
-            if (item?.vJournalItem?.dtstart == 0L || item?.vJournalItem?.component != "JOURNAL" )
+            if (item?.vJournal?.dtstart == 0L || item?.vJournal?.component != "JOURNAL" )
                 return@map false
 
             val minuteFormatter = SimpleDateFormat("mm")
             val hourFormatter = SimpleDateFormat("HH")
 
-            if (minuteFormatter.format(Date(item.vJournalItem.dtstart)).toString() == "00" && hourFormatter.format(Date(item.vJournalItem.dtstart)).toString() == "00")
+            if (minuteFormatter.format(Date(item.vJournal.dtstart)).toString() == "00" && hourFormatter.format(Date(item.vJournal.dtstart)).toString() == "00")
                 return@map false
 
             return@map true
@@ -75,17 +75,17 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
 
 
         dtstartFormatted = Transformations.map(vJournal) { item ->
-            val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item!!.vJournalItem.dtstart))
-            val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.vJournalItem.dtstart))
+            val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item!!.vJournal.dtstart))
+            val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.vJournal.dtstart))
             return@map "$formattedDate $formattedTime"
         }
 
         createdFormatted = Transformations.map(vJournal) { item ->
-            item!!.vJournalItem.let { Date(it.created).toString() }
+            item!!.vJournal.let { Date(it.created).toString() }
         }
 
         lastModifiedFormatted = Transformations.map(vJournal) { item ->
-            item!!.vJournalItem.let { Date(it.lastModified).toString() }
+            item!!.vJournal.let { Date(it.lastModified).toString() }
         }
 
     }

@@ -4,11 +4,10 @@ import android.app.Application
 import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
-import at.bitfire.notesx5.convertCategoriesListtoCSVString
 import at.bitfire.notesx5.database.VCategory
 import at.bitfire.notesx5.database.VJournal
 import at.bitfire.notesx5.database.VJournalDatabaseDao
-import at.bitfire.notesx5.database.VJournalEntity
+import at.bitfire.notesx5.database.relations.VJournalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -58,17 +57,17 @@ class VJournalItemEditViewModel(private val vJournalItemId: Long,
 
 
             dateVisible = Transformations.map(vJournalItem) { item ->
-                return@map item?.vJournalItem?.component == "JOURNAL"           // true if component == JOURNAL
+                return@map item?.vJournal?.component == "JOURNAL"           // true if component == JOURNAL
             }
 
             timeVisible = Transformations.map(vJournalItem) { item ->
-                if (item?.vJournalItem?.dtstart == 0L || item?.vJournalItem?.component != "JOURNAL")
+                if (item?.vJournal?.dtstart == 0L || item?.vJournal?.component != "JOURNAL")
                     return@map false
 
                 val minuteFormatter = SimpleDateFormat("mm")
                 val hourFormatter = SimpleDateFormat("HH")
 
-                if (minuteFormatter.format(Date(item.vJournalItem.dtstart)).toString() == "00" && hourFormatter.format(Date(item.vJournalItem.dtstart)).toString() == "00")
+                if (minuteFormatter.format(Date(item.vJournal.dtstart)).toString() == "00" && hourFormatter.format(Date(item.vJournal.dtstart)).toString() == "00")
                     return@map false
 
                 return@map true
@@ -125,14 +124,14 @@ class VJournalItemEditViewModel(private val vJournalItemId: Long,
             Log.println(Log.INFO, "vCategoryUpdated", "Categories are not the same and need to be updated")
 
             vCategoryUpdated.forEach { newVCategory ->
-                Log.println(Log.INFO, "vCategoryUpdated", "Checking #${newVCategory.categoryId} with value ${newVCategory.categories} and journalLinkId ${newVCategory.journalLinkId}")
+                Log.println(Log.INFO, "vCategoryUpdated", "Checking #${newVCategory.categoryId} with value ${newVCategory.text} and journalLinkId ${newVCategory.journalLinkId}")
 
-                if (newVCategory.categoryId == 0L && newVCategory.categories.isNotBlank()) {                                     //Insert only categories that don't have an ID yet (= new ones)
+                if (newVCategory.categoryId == 0L && newVCategory.text.isNotBlank()) {                                     //Insert only categories that don't have an ID yet (= new ones)
                     newVCategory.journalLinkId = insertedOrUpdatedItemId                    //Update the foreign key for newly added categories
                     viewModelScope.launch() {
                         database.insertCategory(newVCategory)
                     }
-                    Log.println(Log.INFO, "vCategoryUpdated", "${newVCategory.categories} added")
+                    Log.println(Log.INFO, "vCategoryUpdated", "${newVCategory.text} added")
                 }
             }
         }
@@ -145,14 +144,14 @@ class VJournalItemEditViewModel(private val vJournalItemId: Long,
                 viewModelScope.launch(Dispatchers.IO) {
                     database.deleteCategory(oldVCategory)
                 }
-                Log.println(Log.INFO, "vCategory", "${oldVCategory.categories} deleted")
+                Log.println(Log.INFO, "vCategory", "${oldVCategory.text} deleted")
             }
         }
     }
 
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
-            database.delete(vJournalItem.value!!.vJournalItem)
+            database.delete(vJournalItem.value!!.vJournal)
         }
     }
 

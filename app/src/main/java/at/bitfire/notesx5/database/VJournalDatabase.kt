@@ -28,12 +28,14 @@ import androidx.room.RoomDatabase
  */
 
 @Database(entities = [
-    VJournal::class,
-    VComment::class,
-    VCategory::class,
     VAttendee::class,
+    VCategory::class,
+    VComment::class,
+    VContact::class,
+    VJournal::class,
     VOrganizer::class,
-    VRelatedto::class], version = 18, exportSchema = false)
+    VRelatedto::class,
+    VResource::class], version = 19, exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class VJournalDatabase : RoomDatabase() {
 

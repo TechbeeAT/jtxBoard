@@ -1,11 +1,12 @@
-package at.bitfire.notesx5.database
+package at.bitfire.notesx5.database.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import at.bitfire.notesx5.database.*
 
 data class VJournalEntity (
         @Embedded
-        var vJournalItem: VJournal = VJournal(),
+        var vJournal: VJournal = VJournal(),
 
 
         @Relation(parentColumn = "id", entityColumn = "journalLinkId")

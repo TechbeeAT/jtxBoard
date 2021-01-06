@@ -15,7 +15,7 @@ data class VComment (
     @PrimaryKey(autoGenerate = true)
     var commentId: Long = 0L,
     var journalLinkId: Long = 0L,
-    var comment: String = "",
+    var text: String = "",
     var altrepparam: String = "",
     var languageparam: String = ""
 )
