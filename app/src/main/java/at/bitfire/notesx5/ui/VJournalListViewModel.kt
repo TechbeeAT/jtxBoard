@@ -23,8 +23,8 @@ class VJournalListViewModel(
     var searchText: String = ""
     var searchCategories: MutableList<String> = mutableListOf()
     var searchOrganizer: MutableList<String> = mutableListOf()
-    var searchStatus: MutableList<String> = mutableListOf()
-    var searchClassification: MutableList<String> = mutableListOf()
+    var searchStatus: MutableList<Int> = mutableListOf()
+    var searchClassification: MutableList<Int> = mutableListOf()
     var searchCollection: MutableList<String> = mutableListOf()
 
 
@@ -146,7 +146,7 @@ class VJournalListViewModel(
 
         // Query for the passed filter criteria from VJournalFilterFragment
         if (searchCategories.size > 0) {
-            queryString += "AND vcategories.categories IN ("
+            queryString += "AND vcategories.text IN ("
             searchCategories.forEach {
                 queryString += "?,"
                 args.add(it)
@@ -160,7 +160,7 @@ class VJournalListViewModel(
             queryString += "AND status IN ("
             searchStatus.forEach {
                 queryString += "?,"
-                args.add(it)
+                args.add(it.toString())
             }
             queryString = queryString.removeSuffix(",")      // remove the last comma
             queryString += ") "
@@ -171,7 +171,7 @@ class VJournalListViewModel(
             queryString += "AND classification IN ("
             searchClassification.forEach {
                 queryString += "?,"
-                args.add(it)
+                args.add(it.toString())
             }
             queryString = queryString.removeSuffix(",")      // remove the last comma
             queryString += ") "

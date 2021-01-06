@@ -255,7 +255,13 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (item.itemId == R.id.vjournal_filter) {
 
             this.findNavController().navigate(
-                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalFilterFragment())
+                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalFilterFragment().apply {
+                        this.category2preselect = vJournalListViewModel.searchCategories.toTypedArray()
+                        this.classification2preselect = vJournalListViewModel.searchClassification.toIntArray()
+                        this.status2preselect = vJournalListViewModel.searchStatus.toIntArray()
+                        this.collection2preselect = vJournalListViewModel.searchCollection.toTypedArray()
+                        this.component2preselect = vJournalListViewModel.searchComponent
+                    })
         }
 
         if (item.itemId == R.id.vjournal_clear_filter) {

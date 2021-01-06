@@ -39,6 +39,9 @@
             app:destination="@id/VJournalItemEditFragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
+        <action
+            android:id="@+id/action_vjournalListFragmentList_to_VJournalFilterFragment"
+            app:destination="@id/VJournalFilterFragment" />
         <argument
             android:name="item2focus"
             app:argType="long"
@@ -48,17 +51,14 @@
             app:argType="string[]"
             app:nullable="true"
             android:defaultValue="@null" />
-        <action
-            android:id="@+id/action_vjournalListFragmentList_to_VJournalFilterFragment"
-            app:destination="@id/VJournalFilterFragment" />
         <argument
             android:name="status2filter"
-            app:argType="string[]"
+            app:argType="integer[]"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
             android:name="classification2filter"
-            app:argType="string[]"
+            app:argType="integer[]"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
@@ -113,6 +113,31 @@
             android:id="@+id/action_VJournalFilterFragment_to_vjournalListFragmentList"
             app:destination="@id/vjournalListFragmentList"
             app:popUpTo="@id/vjournalListFragmentList" />
+        <argument
+            android:name="category2preselect"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="status2preselect"
+            app:argType="integer[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="classification2preselect"
+            app:argType="integer[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="collection2preselect"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="component2preselect"
+            app:argType="string"
+            android:defaultValue="JOURNAL" />
+
     </fragment>
 
 </navigation>

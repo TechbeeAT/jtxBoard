@@ -12,7 +12,7 @@ import java.util.*
 class VJournalFilterViewModel(      val database: VJournalDatabaseDao,
                                     application: Application) : AndroidViewModel(application) {
 
-    val allOrganizers = database.getAllOrganizers()
+    val allCollections = database.getAllCollections()
     val allCategories = database.getAllCategories()
 
 

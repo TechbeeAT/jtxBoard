@@ -19,6 +19,7 @@ import com.google.android.material.chip.ChipGroup
 import kotlinx.android.synthetic.main.fragment_vjournal_filter.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item_categories_chip.view.*
+import kotlinx.android.synthetic.main.fragment_vjournal_list_item.*
 import java.util.*
 
 
@@ -32,16 +33,20 @@ class VJournalFilterFragment : Fragment()  {
     lateinit var inflater: LayoutInflater
 
     private var displayedCategoryChips: MutableList<String> = mutableListOf()
-    private var displayedOrganizerChips: MutableList<String> = mutableListOf()
     private var displayedStatusChips: MutableList<String> = mutableListOf()
     private var displayedClassificationChips: MutableList<String> = mutableListOf()
     private var displayedCollectionChips: MutableList<String> = mutableListOf()
 
 
-    val categories2filter: MutableList<String> = mutableListOf()
-    val status2filter: MutableList<String> = mutableListOf()
-    val classification2filter: MutableList<String> = mutableListOf()
-    val collection2filter: MutableList<String> = mutableListOf()
+    private val categoriesSelected: MutableList<String> = mutableListOf()
+    private val statusSelected: MutableList<Int> = mutableListOf()
+    private val classificationSelected: MutableList<Int> = mutableListOf()
+    private val collectionSelected: MutableList<String> = mutableListOf()
+
+    private var categoriesPreselected: MutableList<String> = mutableListOf()
+    private var statusPreselected: MutableList<String> = mutableListOf()
+    private var classificationPreselected: MutableList<String> = mutableListOf()
+    private var collectionPreselected: MutableList<String> = mutableListOf()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -61,6 +66,7 @@ class VJournalFilterFragment : Fragment()  {
         setHasOptionsMenu(true)
 
 
+
         this.viewModelFactory = VJournalFilterViewModelFactory(dataSource, application)
         vJournalFilterViewModel =
                 ViewModelProvider(
@@ -70,12 +76,36 @@ class VJournalFilterFragment : Fragment()  {
         binding.lifecycleOwner = this
 
 
+
+        // get previously selected items from arguments
+        val arguments = VJournalFilterFragmentArgs.fromBundle((arguments!!))
+
+        if (arguments.category2preselect?.isNotEmpty() == true)
+            categoriesPreselected = arguments.category2preselect!!.toMutableList()
+
+        if (arguments.classification2preselect?.isNotEmpty() == true) {
+            arguments.classification2preselect!!.forEach {
+                classificationPreselected.add(resources.getStringArray(R.array.vjournal_classification)[it])
+            }
+        }
+
+        if (arguments.status2preselect?.isNotEmpty() == true) {
+            arguments.status2preselect!!.forEach {
+                statusPreselected.add(resources.getStringArray(R.array.vjournal_status)[it])
+            }
+        }
+
+        if (arguments.collection2preselect?.isNotEmpty() == true)
+            collectionPreselected = arguments.collection2preselect!!.toMutableList()
+
+
+
         // Set Chips for Status and Classification
         val statusItems = resources.getStringArray(R.array.vjournal_status).toList()
         val classificationItems = resources.getStringArray(R.array.vjournal_classification).toList()
 
-        addChips(binding.statusFilterChipgroup, statusItems, displayedStatusChips, status2filter, true)
-        addChips(binding.classificationFilterChipgroup, classificationItems, displayedClassificationChips, classification2filter, true)
+        addChipsInt(binding.statusFilterChipgroup, statusItems, displayedStatusChips, statusSelected, statusPreselected)
+        addChipsInt(binding.classificationFilterChipgroup, classificationItems, displayedClassificationChips, classificationSelected, classificationPreselected)
 
 
         // observe and set chips for categories
@@ -83,16 +113,16 @@ class VJournalFilterFragment : Fragment()  {
 
             // Add the chips for categories
             if (vJournalFilterViewModel.allCategories.value != null)
-                addChips(binding.categoryFilterChipgroup, vJournalFilterViewModel.allCategories.value!!, displayedCategoryChips, categories2filter, false)
+                addChips(binding.categoryFilterChipgroup, vJournalFilterViewModel.allCategories.value!!, displayedCategoryChips, categoriesSelected, categoriesPreselected)
 
         })
 
         //observe and set list for organizers
-        vJournalFilterViewModel.allOrganizers.observe(viewLifecycleOwner, {
+        vJournalFilterViewModel.allCollections.observe(viewLifecycleOwner, {
 
             // Add the chips for collections
-            if (vJournalFilterViewModel.allOrganizers.value != null)
-                addChips(binding.collectionFilterChipgroup, vJournalFilterViewModel.allOrganizers.value!!, displayedOrganizerChips, collection2filter, false)
+            if (vJournalFilterViewModel.allCollections.value != null)
+                addChips(binding.collectionFilterChipgroup, vJournalFilterViewModel.allCollections.value!!, displayedCollectionChips, collectionSelected, collectionPreselected)
         })
 
 
@@ -102,12 +132,12 @@ class VJournalFilterFragment : Fragment()  {
 
 
     /**
-     * Generic method to add a Chip to a Chip to the passed [chipGroup].
+     * Method to add Chips to a [chipGroup] based on the String value for Classification and Status.
      * [displayed] is a MutableList that saves the already created Chips in order to not display the same category twice (can be an issue especially with loading of data from the DB.
      * [selected] takes a MutableList to save the selected items
-     * [returnIndex] == true when the index of the selected item should be stored in [selected] (relevant for Status and Classification), otherwise the displayed String is stored in [selected]
+     * [preselected] items can be passed through arguments
      */
-    fun addChips(chipGroup: ChipGroup, list: List<String>, displayed: MutableList<String>, selected: MutableList<String>, returnIndex: Boolean)  {
+    private fun addChips(chipGroup: ChipGroup, list: List<String>, displayed: MutableList<String>, selected: MutableList<String>, preselected: MutableList<String>)  {
 
         list.forEach() { listItem ->
 
@@ -117,22 +147,53 @@ class VJournalFilterFragment : Fragment()  {
             val chip = inflater.inflate(R.layout.fragment_vjournal_filter_chip, chipGroup, false) as Chip
             chip.text = listItem
             chipGroup.addView(chip)
+            if(preselected.contains(listItem)) {   // if the current item is in the list of preselected items, then check it
+                chip.isChecked = true
+                selected.add(listItem)
+            }
             displayed.add(listItem)
 
             chip.setOnCheckedChangeListener { _, isChecked ->
                 // Responds to chip checked/unchecked
                 if(isChecked)
-                    // If returnIndex == true, add the Int Index to the List, otherwise add the name
-                    if(returnIndex)
-                        selected.add(list.indexOf(listItem).toString())
-                    else
                         selected.add(listItem)
                 // If returnIndex == true, remove the Int Index to the List, otherwise remove the name
                 if(!isChecked)
-                    if(returnIndex)
-                        selected.remove(list.indexOf(listItem).toString())
-                    else
                         selected.remove(listItem)
+            }
+        }
+    }
+
+
+
+    /**
+     * Method to add Chips to a [chipGroup] based on the Int value for Classification and Status.
+     * [displayed] is a MutableList that saves the already created Chips in order to not display the same category twice (can be an issue especially with loading of data from the DB.
+     * [selected] takes a MutableList to save the selected items
+     * [preselected] items can be passed through arguments
+     */
+    private fun addChipsInt(chipGroup: ChipGroup, list: List<String>, displayed: MutableList<String>, selected: MutableList<Int>, preselected: MutableList<String>)  {
+
+        list.forEach() { listItem ->
+
+            if (listItem == "" || displayed.contains(listItem))   // don't show empty items and only show items that are not there yet
+                return@forEach
+
+            val chip = inflater.inflate(R.layout.fragment_vjournal_filter_chip, chipGroup, false) as Chip
+            chip.text = listItem
+            chipGroup.addView(chip)
+            if(preselected.contains(listItem)) {   // if the current item is in the list of preselected items, then check it
+                chip.isChecked = true
+                selected.add(list.indexOf(listItem))
+            }
+            displayed.add(listItem)
+
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                // Responds to chip checked/unchecked
+                if(isChecked)
+                    selected.add(list.indexOf(listItem))      // add the index of the selected value
+                if(!isChecked)
+                        selected.remove(list.indexOf(listItem))  // remove the index of the selected value
             }
         }
     }
@@ -223,11 +284,13 @@ class VJournalFilterFragment : Fragment()  {
                 // Responds to chip click
 
 
-                val direction = VJournalFilterFragmentDirections.actionVJournalFilterFragmentToVjournalListFragmentList()
-                direction.status2filter = status2filter.toTypedArray()
-                direction.classification2filter = classification2filter.toTypedArray()
-                direction.collection2filter = collection2filter.toTypedArray()
-                direction.category2filter = categories2filter.toTypedArray()
+                val direction = VJournalFilterFragmentDirections.actionVJournalFilterFragmentToVjournalListFragmentList().apply {
+                    this.status2filter = statusSelected.toIntArray()
+                    this.classification2filter = classificationSelected.toIntArray()
+                    this.collection2filter = collectionSelected.toTypedArray()
+                    this.category2filter = categoriesSelected.toTypedArray()
+                }
+
 
                 this.findNavController().navigate(direction)
             }
