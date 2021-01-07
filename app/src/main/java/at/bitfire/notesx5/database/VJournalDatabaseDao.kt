@@ -77,8 +77,11 @@ INSERTs
 DELETEs
  */
 
-    @Delete()
+    @Delete
     fun deleteCategory(vCategory: VCategory)
+
+    @Delete
+    fun deleteComment(vComment: VComment)
 
 
 

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.relations.VJournalEntity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -93,6 +94,12 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
     fun upsertComment(comment: VComment) {
         viewModelScope.launch() {
             database.insertComment(comment)
+        }
+    }
+
+    fun deleteComment(comment: VComment) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.deleteComment(comment)
         }
     }
 }

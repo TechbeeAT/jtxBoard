@@ -5,6 +5,8 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.text.TextPaint
+import android.text.TextUtils
 import android.view.*
 import android.widget.EditText
 import android.widget.Toast
@@ -21,6 +23,7 @@ import at.bitfire.notesx5.database.VJournalDatabase
 import at.bitfire.notesx5.database.VJournalDatabaseDao
 import at.bitfire.notesx5.databinding.FragmentVjournalItemBinding
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_vjournal_item_comment.view.*
 import java.util.*
@@ -119,6 +122,11 @@ class VJournalItemFragment : Fragment() {
                         }
                         builder.setNegativeButton("Cancel") { _, _ ->
                             // Do nothing, just close the message
+                        }
+
+                        builder.setNeutralButton("Delete") { _, _ ->
+                            vJournalItemViewModel.deleteComment(comment)
+                            Snackbar.make(this.view!!, "Comment deleted: ${comment.text}", Snackbar.LENGTH_LONG).show()
                         }
 
                         builder.show()
