@@ -45,7 +45,7 @@ class VJournalEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener, Dat
 
         this.dataSource = VJournalDatabase.getInstance(application).vJournalDatabaseDao
 
-        val arguments = VJournalItemEditFragmentArgs.fromBundle((arguments!!))
+        val arguments = VJournalEditFragmentArgs.fromBundle((arguments!!))
 
         // add menu
         setHasOptionsMenu(true)
@@ -90,7 +90,7 @@ class VJournalEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener, Dat
                 builder.setTitle("Delete \"${vJournalEditViewModel.vJournalItem.value!!.vJournal.summary}\"")
                 builder.setMessage("Are you sure you want to delete \"${vJournalEditViewModel.vJournalItem.value!!.vJournal.summary}\"?")
                 builder.setPositiveButton("Delete") { _, _ ->
-                    val direction = VJournalItemEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
+                    val direction = VJournalEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
                     direction.component2show = vJournalEditViewModel.vJournalItem.value!!.vJournal.component
 
                     val summary = vJournalEditViewModel.vJournalItem.value!!.vJournal.summary
@@ -118,7 +118,7 @@ class VJournalEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener, Dat
 
         vJournalEditViewModel.returnVJournalItemId.observe(viewLifecycleOwner, Observer {
             if (it != 0L) {
-                val direction = VJournalItemEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
+                val direction = VJournalEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
                 direction.component2show = vJournalEditViewModel.vJournalItem.value!!.vJournal.component
                 direction.item2focus = it
                 this.findNavController().navigate(direction)
