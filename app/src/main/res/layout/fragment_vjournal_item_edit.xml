@@ -12,7 +12,7 @@
 
         <variable
             name="model"
-            type="at.bitfire.notesx5.ui.VJournalItemEditViewModel" />
+            type="at.bitfire.notesx5.ui.VJournalEditViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -28,7 +28,7 @@
         android:id="@+id/vjournal_item_edit_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.VJournalItemEditFragment">
+        tools:context=".ui.VJournalEditFragment">
 
 
         <TextView

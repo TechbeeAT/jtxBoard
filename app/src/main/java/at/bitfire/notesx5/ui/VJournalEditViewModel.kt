@@ -14,9 +14,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class VJournalItemEditViewModel(private val vJournalItemId: Long,
-                                val database: VJournalDatabaseDao,
-                                application: Application) : AndroidViewModel(application) {
+class VJournalEditViewModel(private val vJournalItemId: Long,
+                            val database: VJournalDatabaseDao,
+                            application: Application) : AndroidViewModel(application) {
 
     lateinit var vJournalItem: LiveData<VJournalEntity?>
     lateinit var allCategories: LiveData<List<String>>
