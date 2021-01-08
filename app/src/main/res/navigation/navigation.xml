@@ -103,6 +103,11 @@
             android:id="@+id/action_VJournalItemEditFragment_to_vjournalListFragmentList"
             app:destination="@id/vjournalListFragmentList"
             app:popUpTo="@id/vjournalListFragmentList" />
+        <argument
+            android:name="component4new"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="JOURNAL" />
     </fragment>
     <fragment
         android:id="@+id/VJournalFilterFragment"

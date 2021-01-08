@@ -17,15 +17,26 @@
         android:iconTint="#000000"
         android:title="Go to date"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/vjournal_filter"
-        android:icon="@drawable/ic_filter"
-        android:title="Filter"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/vjournal_clear_filter"
-        android:title="Clear filter"
-        app:showAsAction="never" />
+    <group android:id="@+id/menugroup_filter" >
+        <item
+            android:id="@+id/vjournal_filter"
+            android:icon="@drawable/ic_filter"
+            android:title="Filter"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/vjournal_clear_filter"
+            android:title="Clear filter"
+            app:showAsAction="never" />
+    </group>
+    <group android:id="@+id/menugroup_add_item" >
+        <item
+            android:id="@+id/add_journal"
+            android:title="Add Journal"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/add_note"
+            android:title="Add Note"
+            app:showAsAction="never" />
+    </group>
 
 </menu>

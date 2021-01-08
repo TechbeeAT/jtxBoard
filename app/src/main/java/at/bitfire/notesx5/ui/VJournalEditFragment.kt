@@ -59,6 +59,15 @@ class VJournalEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener, Dat
         binding.model = vJournalEditViewModel
         binding.lifecycleOwner = this
 
+/*
+        if(arguments.item2edit == 0L) {
+            when (arguments.component4new) {
+                "JOURNAL" -> vJournalEditViewModel.vJournalUpdated.value!!.component = "JOURNAL"
+                "NOTE" -> vJournalEditViewModel.vJournalUpdated.value!!.component = "NOTE"
+            }
+        }
+*/
+
         val statusItems = resources.getStringArray(R.array.vjournal_status)
         binding.statusChip.text = statusItems[1]   // Set default of status Chip to 1 (=FINAL), might be overwritten by observer, but sets the default for new items
         val classificationItems = resources.getStringArray(R.array.vjournal_classification)
@@ -135,6 +144,7 @@ class VJournalEditFragment : Fragment(), TimePickerDialog.OnTimeSetListener, Dat
 
             vJournalEditViewModel.vJournalUpdated.postValue(it.vJournal)
             vJournalEditViewModel.vCategoryUpdated.addAll(it.vCategory!!)
+
 
             // Add the chips for existing categories
             addChips(vJournalEditViewModel.vCategoryUpdated)

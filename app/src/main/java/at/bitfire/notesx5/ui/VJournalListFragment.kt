@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.*
 import android.widget.DatePicker
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -193,6 +194,8 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_vjournal_list, menu)
+        MenuCompat.setGroupDividerEnabled(menu, true);
+
 
 
         // Tell the variable the menu item to later make it visible or invisible
@@ -266,6 +269,22 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         if (item.itemId == R.id.vjournal_clear_filter) {
             vJournalListViewModel.clearFilter()
+        }
+
+        if (item.itemId == R.id.add_journal) {
+            this.findNavController().navigate(
+                VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment().apply {
+                    item2edit = 0
+                    component4new = "JOURNAL"
+                })
+        }
+
+        if (item.itemId == R.id.add_note) {
+            this.findNavController().navigate(
+                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment().apply {
+                        item2edit = 0
+                        component4new = "NOTE"
+                    })
         }
 
 
