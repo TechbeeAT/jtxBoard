@@ -1,15 +1,17 @@
 package at.bitfire.notesx5.ui
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.text.InputType
-import android.text.TextPaint
-import android.text.TextUtils
+import android.util.Log
 import android.view.*
+import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,10 +19,7 @@ import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.R
 import at.bitfire.notesx5.convertLongToDateString
 import at.bitfire.notesx5.convertLongToTimeString
-import at.bitfire.notesx5.database.VCategory
-import at.bitfire.notesx5.database.VComment
-import at.bitfire.notesx5.database.VJournalDatabase
-import at.bitfire.notesx5.database.VJournalDatabaseDao
+import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.databinding.FragmentVjournalItemBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
@@ -33,12 +32,19 @@ class VJournalItemFragment : Fragment() {
 
     lateinit var binding: FragmentVjournalItemBinding
     lateinit var application: Application
+    lateinit var inflater: LayoutInflater
     lateinit var dataSource: VJournalDatabaseDao
     lateinit var viewModelFactory: VJournalItemViewModelFactory
     lateinit var vJournalItemViewModel: VJournalItemViewModel
-    lateinit var inflater: LayoutInflater
+
 
     var displayedCategoryChips = mutableListOf<VCategory>()
+
+    val allContactsWithName: MutableList<String> = mutableListOf()
+    val allContactsWithNameAndMail: MutableList<String> = mutableListOf()
+    val allContactsAsAttendee: MutableList<VAttendee> = mutableListOf()
+
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -98,7 +104,7 @@ class VJournalItemFragment : Fragment() {
                     binding.commentsLinearlayout.addView(commentView)
 
                     // set on Click Listener to open a dialog to update the comment
-                    commentView.setOnClickListener{
+                    commentView.setOnClickListener {
 
                         // set up the values for the TextInputEditText
                         val updatedText: TextInputEditText = TextInputEditText(context!!)
@@ -135,32 +141,6 @@ class VJournalItemFragment : Fragment() {
                 }
 
 
-/*
-                val commentAdapterEntries: ArrayList<String> = arrayListOf()
-                vJournalItemViewModel.vJournal.value!!.vComment?.forEach { comment ->
-                    commentAdapterEntries.add(comment.text)
-                }
-
-                val commentsArrayAdapter: ArrayAdapter<String> = ArrayAdapter(
-                        context!!,  // Die aktuelle Umgebung (diese Activity)
-                        R.layout.fragment_vjournal_item_comment,  // Die ID des Zeilenlayouts (der XML-Layout Datei)
-                        R.id.comment_textview,  // Die ID eines TextView-Elements im Zeilenlayout
-                        commentAdapterEntries) // Beispieldaten in einer ArrayList
-
-                binding.commentsListview.adapter = commentsArrayAdapter
-
- */
-/*
-
-                vJournalItemViewModel.vJournal.value!!.vComment?.forEach { comment ->
-                    val commentTextView = TextView(context)
-                    commentTextView.text = comment.text
-                    binding.commentsLinearlayout.addView(commentTextView)
-                }
-
-
- */
-
             }
         })
 
@@ -170,7 +150,7 @@ class VJournalItemFragment : Fragment() {
         })
 
 
-        binding.addComment.setOnClickListener{
+        binding.addComment.setOnClickListener {
 
             val newComment: TextInputEditText = TextInputEditText(context!!)
             newComment.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
@@ -183,14 +163,197 @@ class VJournalItemFragment : Fragment() {
             builder.setView(newComment)
 
             builder.setPositiveButton("Save") { _, _ ->
-               vJournalItemViewModel.upsertComment(VComment(journalLinkId=vJournalItemViewModel.vJournal.value!!.vJournal.id, text = newComment.text.toString()))
+               vJournalItemViewModel.upsertComment(VComment(journalLinkId = vJournalItemViewModel.vJournal.value!!.vJournal.id, text = newComment.text.toString()))
             }
             builder.setNegativeButton("Cancel") { _, _ ->
                 // Do nothing, just close the message
             }
 
             builder.show()
+
         }
+
+
+        binding.urlAddButton.setOnClickListener{
+
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Set URL")
+            builder.setIcon(R.drawable.ic_url_add)
+
+           // val dialog = R.layout.fragment_vjournal_item_dialog_url
+            val dialog = inflater.inflate(R.layout.fragment_vjournal_item_dialog_url, null)
+            val editText = dialog.findViewById<EditText>(R.id.url_dialog_edittext)
+
+            editText.setText(vJournalItemViewModel.vJournal.value?.vJournal?.url)
+
+            builder.setView(dialog)
+
+
+            builder.setPositiveButton("Save") { _, _ ->
+                vJournalItemViewModel.updateUrl(editText.text.toString())
+            }
+            builder.setNegativeButton("Cancel") { _, _ ->
+                // Do nothing, just close the message
+            }
+
+            if (!vJournalItemViewModel.vJournal.value!!.vJournal.url.isNullOrBlank())
+            {
+                builder.setNeutralButton("Delete") { _, _ ->
+                    vJournalItemViewModel.updateUrl("")
+                }
+            }
+
+            builder.show()
+        }
+
+        binding.contactAddButton.setOnClickListener{
+
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Set Contact")
+            builder.setIcon(R.drawable.ic_contact)
+
+            val dialog = inflater.inflate(R.layout.fragment_vjournal_item_dialog_contact, null)
+            val editText = dialog.findViewById<EditText>(R.id.contact_dialog_edittext)
+            editText.setText(vJournalItemViewModel.vJournal.value?.vJournal?.contact)
+
+            builder.setView(dialog)
+
+
+            builder.setPositiveButton("Save") { _, _ ->
+                vJournalItemViewModel.updateContact(editText.text.toString())
+            }
+            builder.setNegativeButton("Cancel") { _, _ ->
+                // Do nothing, just close the message
+            }
+
+            if (!vJournalItemViewModel.vJournal.value!!.vJournal.contact.isNullOrBlank())
+            {
+                builder.setNeutralButton("Delete") { _, _ ->
+                    vJournalItemViewModel.updateContact("")
+                }
+            }
+
+            builder.show()
+        }
+
+
+/*
+        binding.attendeeAddButton.setOnClickListener{
+
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Set Attendees")
+            builder.setIcon(R.drawable.ic_attendee)
+
+            val dialog = inflater.inflate(R.layout.fragment_vjournal_item_dialog_attendee, null)
+            val editText = dialog.findViewById<AutoCompleteTextView>(R.id.attendee_add_autocompletetextview)
+            val attendeesAddChipgroup = dialog.findViewById<ChipGroup>(R.id.attendees_add_chipgroup)
+            editText.setAdapter(loadContacts())
+
+            builder.setView(dialog)
+
+
+            builder.setPositiveButton("Save") { _, _ ->
+                //vJournalItemViewModel.upsertComment(VComment(journalLinkId = vJournalItemViewModel.vJournal.value!!.vAttendee., text = editText.text.toString()))
+            }
+            builder.setNegativeButton("Cancel") { _, _ ->
+                // Do nothing, just close the message
+            }
+
+            if (!vJournalItemViewModel.vJournal.value!!.vAttendee.isNullOrEmpty())
+            {
+                builder.setNeutralButton("Delete") { _, _ ->
+                    // Do nothing, just close the message
+                }
+            }
+
+            builder.show()
+
+
+            editText.setOnItemClickListener(AdapterView.OnItemClickListener { parent, arg1, pos, id ->
+                val item: String = parent.getItemAtPosition(pos) as String
+                Log.println(Log.INFO, "AutoCompleteValues", "Position: $pos, Id: $id, String: $item")
+
+
+                val attendeeChip = inflater.inflate(R.layout.fragment_vjournal_item_chip_person, attendeesAddChipgroup, false) as Chip
+                attendeeChip.text = editText.text
+                attendeesAddChipgroup.addView(attendeeChip)
+
+
+                attendeeChip.setOnCloseIconClickListener { chip ->
+                    // Responds to chip's close icon click if one is present
+                    // Delete by re-assigning an edited, mutable category list
+                    // TODO: Delete the category from the list!!!
+                    //val currentCategories = vJournalEditViewModel.vCategoryUpdated.removeIf { it.text == category.text}
+                    chip.visibility = View.GONE
+                }
+
+                editText.text.clear()
+            })
+
+
+            // Transform the category input into a chip when the Done button in the keyboard is clicked
+            editText.setOnEditorActionListener { v, actionId, event ->
+                return@setOnEditorActionListener when (actionId) {
+                    EditorInfo.IME_ACTION_DONE -> {
+                        //vJournalEditViewModel.vCategoryUpdated.add(VCategory(text = binding.categoriesAdd.editText?.text.toString()))
+                        //addChips(listOf(VCategory(text = binding.categoriesAdd.editText?.text.toString())))
+
+                        val attendeeChip = inflater.inflate(R.layout.fragment_vjournal_item_chip_person, attendeesAddChipgroup, false) as Chip
+                        attendeeChip.text = editText.text
+                        attendeesAddChipgroup.addView(attendeeChip)
+
+
+                        attendeeChip.setOnCloseIconClickListener { chip ->
+                            // Responds to chip's close icon click if one is present
+                            // Delete by re-assigning an edited, mutable category list
+                            // TODO: Delete the category from the list!!!
+                            //val currentCategories = vJournalEditViewModel.vCategoryUpdated.removeIf { it.text == category.text}
+                            chip.visibility = View.GONE
+                        }
+
+
+
+                        editText.text.clear()
+
+
+                        // TODO: SAVE added categories!!!
+                        //vJournalItemEditViewModel.vJournalItemUpdated.value!!.vCategory?.plus(category)
+                        // .add(category))
+
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+
+
+ */
+
+/*
+
+            val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
+            categoryChip.text = category.text
+            binding.categoriesChipgroup.addView(categoryChip)
+
+            categoryChip.setOnClickListener {
+                // Responds to chip click
+            }
+
+            categoryChip.setOnCloseIconClickListener { chip ->
+                // Responds to chip's close icon click if one is present
+                // Delete by re-assigning an edited, mutable category list
+                // TODO: Delete the category from the list!!!
+                val currentCategories = vJournalEditViewModel.vCategoryUpdated.removeIf { it.text == category.text}
+                chip.visibility = View.GONE
+            }
+
+            categoryChip.setOnCheckedChangeListener { chip, isChecked ->
+                // Responds to chip checked/unchecked
+            }
+
+ */
+
 
 
         return binding.root
@@ -247,6 +410,49 @@ class VJournalItemFragment : Fragment() {
 
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+
+
+
+    fun loadContacts():  ArrayAdapter<String> {
+
+
+        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_CONTACTS), 1)
+
+
+        /*
+        Template: https://stackoverflow.com/questions/10117049/get-only-email-address-from-contact-list-android
+         */
+
+        val context = activity
+        val cr = context!!.contentResolver
+        val PROJECTION = arrayOf(ContactsContract.RawContacts._ID,
+                ContactsContract.Contacts.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Email.DATA)
+        val order = ContactsContract.Contacts.DISPLAY_NAME
+        val filter = ContactsContract.CommonDataKinds.Email.DATA + " NOT LIKE ''"
+        val cur = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, PROJECTION, filter, null, order)
+
+        if (cur!!.count > 0) {
+            while (cur.moveToNext()) {
+
+                val name = cur.getString(1)    // according to projection 0 = DISPLAY_NAME, 1 = Email.DATA
+                val emlAddr = cur.getString(2)
+                Log.println(Log.INFO, "cursor: ", "$name: $emlAddr")
+                allContactsWithNameAndMail.add("$name ($emlAddr)")
+                allContactsAsAttendee.add(VAttendee(cnparam = name, attendee = emlAddr))
+
+            }
+            cur.close()
+
+        }
+
+        val arrayAdapter = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsWithNameAndMail)
+       // binding.organizerAddAutocomplete.setAdapter(arrayAdapter)
+        return arrayAdapter
+
     }
 
 }

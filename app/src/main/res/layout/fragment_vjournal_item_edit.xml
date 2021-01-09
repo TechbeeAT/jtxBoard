@@ -133,20 +133,19 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Collection" />
 
+
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/categories_chipgroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
             app:chipSpacingHorizontal="8dp"
             app:chipSpacingVertical="0dp"
-            app:layout_constraintBottom_toTopOf="@id/categories_add"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-            app:layout_constraintTop_toBottomOf="@id/collection"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintBottom_toTopOf="@+id/categories_add"
+            app:layout_constraintEnd_toEndOf="@+id/categories_add"
+            app:layout_constraintStart_toStartOf="@+id/categories_add"
+            app:layout_constraintTop_toBottomOf="@+id/collection" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -155,19 +154,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
             android:hint="@string/item_edit_add_category_hint"
             app:endIconContentDescription="Add category"
             app:endIconDrawable="@drawable/ic_vjournal_add_category"
             app:endIconMode="custom"
             app:helperTextEnabled="true"
-            app:startIconDrawable="@drawable/ic_vjournal_category"
             app:layout_constraintBottom_toTopOf="@id/top_barrier"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-            app:layout_constraintTop_toBottomOf="@id/categories_chipgroup">
-
-
+            app:layout_constraintTop_toBottomOf="@+id/collection"
+            app:startIconDrawable="@drawable/ic_vjournal_category">
 
 
             <AutoCompleteTextView
@@ -175,11 +171,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:singleLine="false"
                 android:imeOptions="actionDone"
-                android:inputType="textShortMessage|textCapSentences"
-                />
+                android:inputType="textShortMessage|textCapSentences" />
+
 
         </com.google.android.material.textfield.TextInputLayout>
+
+
 
 
         <androidx.constraintlayout.widget.Barrier
@@ -231,29 +230,6 @@
                 tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
         </com.google.android.material.textfield.TextInputLayout>
 
-
-<!--
-        <Spinner
-            android:id="@+id/status_spinner"
-            style="@android:style/Widget.Holo.Light.Spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:dropDownWidth="wrap_content"
-            android:entries="@array/vjournal_status"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description_edit" />
-
-        <Spinner
-            android:id="@+id/classification_spinner"
-            style="@android:style/Widget.Holo.Light.Spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:dropDownWidth="wrap_content"
-            android:entries="@array/vjournal_classification"
-            app:layout_constraintStart_toEndOf="@+id/status_spinner"
-            app:layout_constraintTop_toTopOf="@+id/status_spinner" />
--->
 
         <com.google.android.material.chip.Chip
             android:id="@+id/status_chip"
@@ -332,25 +308,32 @@
                 android:text="@{model.vJournalUpdated.attendee}" />
         </com.google.android.material.textfield.TextInputLayout>
 
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/organizer_edit"
+            android:id="@+id/organizer_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/item_edit_organizer_hint"
-            app:endIconMode="clear_text"
             app:helperText="Organizer of this entry"
+            app:endIconMode="clear_text"
             app:helperTextEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/attendee_edit"
             app:startIconDrawable="@drawable/ic_vjournal_organizer">
 
 
-            <com.google.android.material.textfield.TextInputEditText
+            <AutoCompleteTextView
+                android:id="@+id/organizer_add_autocomplete"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapSentences|textEmailAddress"
-                android:text="@{model.vJournalUpdated.organizer}" />
+                android:layout_height="60dp"
+                android:ems="10"
+                android:imeOptions="actionDone"
+                android:inputType="textShortMessage|textCapSentences"
+                android:text="@{model.VOrganizerUpdated.caladdress}" />
+
+
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -365,16 +348,20 @@
             app:helperText="Contact information of the responsible or owner of this entry"
             app:helperTextEnabled="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/organizer_edit"
+            app:layout_constraintTop_toBottomOf="@+id/organizer_add"
             app:startIconDrawable="@drawable/ic_contact">
 
 
-            <com.google.android.material.textfield.TextInputEditText
+            <AutoCompleteTextView
+                android:id="@+id/contact_add_autocomplete"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapSentences|textEmailAddress"
+                android:layout_height="60dp"
+                android:ems="10"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences|textEmailAddress|textShortMessage"
                 android:text="@{model.vJournalUpdated.contact}" />
         </com.google.android.material.textfield.TextInputLayout>
+
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -397,7 +384,6 @@
                 android:inputType="textUri"
                 android:text="@{model.vJournalUpdated.related}" />
         </com.google.android.material.textfield.TextInputLayout>
-
 
 
 

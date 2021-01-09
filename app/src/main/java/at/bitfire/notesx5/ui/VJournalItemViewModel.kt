@@ -24,6 +24,12 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
     lateinit var createdFormatted: LiveData<String>
     lateinit var lastModifiedFormatted: LiveData<String>
 
+    lateinit var urlVisible: LiveData<Boolean>
+    lateinit var attendeesVisible: LiveData<Boolean>
+    lateinit var organizerVisible: LiveData<Boolean>
+    lateinit var contactVisible: LiveData<Boolean>
+    lateinit var relatedtoVisible: LiveData<Boolean>
+
     var editingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
 
@@ -43,6 +49,22 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
             }
 
             setupDates()
+
+            urlVisible = Transformations.map(vJournal) { item ->
+                return@map !item?.vJournal?.url.isNullOrBlank()      // true if url is NOT null or empty
+            }
+            attendeesVisible = Transformations.map(vJournal) { item ->
+                return@map !item?.vAttendee.isNullOrEmpty()      // true if attendees is NOT null or empty
+            }
+            organizerVisible = Transformations.map(vJournal) { item ->
+                return@map !(item?.vOrganizer == null)      // true if organizer is NOT null or empty
+            }
+            contactVisible = Transformations.map(vJournal) { item ->
+                return@map !item?.vJournal?.contact.isNullOrBlank()      // true if contact is NOT null or empty
+            }
+            relatedtoVisible = Transformations.map(vJournal) { item ->
+                return@map !item?.vRelatedto.isNullOrEmpty()      // true if relatedto is NOT null or empty
+            }
 
         }
     }
@@ -100,6 +122,22 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
     fun deleteComment(comment: VComment) {
         viewModelScope.launch(Dispatchers.IO) {
             database.deleteComment(comment)
+        }
+    }
+
+    fun updateUrl (url: String) {
+        val updatedVJournal = vJournal.value!!.vJournal.copy()
+        updatedVJournal.url = url
+        viewModelScope.launch(Dispatchers.IO) {
+            database.update(updatedVJournal)
+        }
+    }
+
+    fun updateContact (contact: String) {
+        val updatedVJournal = vJournal.value!!.vJournal.copy()
+        updatedVJournal.contact = contact
+        viewModelScope.launch(Dispatchers.IO) {
+            database.update(updatedVJournal)
         }
     }
 }

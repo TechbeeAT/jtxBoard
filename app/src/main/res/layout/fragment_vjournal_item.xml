@@ -108,15 +108,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="68dp"
                 android:layout_marginEnd="8dp"
                 app:chipSpacingHorizontal="8dp"
                 app:chipSpacingVertical="0dp"
                 app:layout_constraintBottom_toTopOf="@id/top_barrier"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-                app:layout_constraintTop_toBottomOf="@id/organizer"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toBottomOf="@+id/collection" />
 
 
             <androidx.constraintlayout.widget.Barrier
@@ -189,12 +188,71 @@
                 app:layout_constraintTop_toTopOf="@+id/status_chip"
                 tools:text="Public" />
 
+            <ImageButton
+                android:id="@+id/url_add_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/ic_link"
+                app:layout_constraintBottom_toBottomOf="@+id/classification_chip"
+                app:layout_constraintEnd_toStartOf="@+id/attendee_add_button"
+                app:layout_constraintTop_toBottomOf="@+id/status_chip"
+                app:srcCompat="@drawable/ic_link" />
+
+            <ImageButton
+                android:id="@+id/attendee_add_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_attendee"
+                app:layout_constraintBottom_toBottomOf="@+id/url_add_button"
+                app:layout_constraintEnd_toStartOf="@+id/organizer_add_button"
+                app:layout_constraintTop_toTopOf="@+id/url_add_button"
+                app:srcCompat="@drawable/ic_attendee" />
+
+
+            <ImageButton
+                android:id="@+id/organizer_add_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_organizer"
+                app:layout_constraintBottom_toBottomOf="@+id/url_add_button"
+                app:layout_constraintEnd_toStartOf="@+id/contact_add_button"
+                app:layout_constraintTop_toTopOf="@+id/url_add_button"
+                app:srcCompat="@drawable/ic_organizer" />
+
+
+            <ImageButton
+                android:id="@+id/contact_add_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_contact"
+                app:layout_constraintBottom_toBottomOf="@+id/url_add_button"
+                app:layout_constraintEnd_toStartOf="@+id/relatedto_add_button"
+                app:layout_constraintTop_toTopOf="@+id/url_add_button"
+                app:srcCompat="@drawable/ic_contact" />
+
+            <ImageButton
+                android:id="@+id/relatedto_add_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/ic_link"
+                app:layout_constraintBottom_toBottomOf="@+id/url_add_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/url_add_button"
+                app:srcCompat="@drawable/ic_link" />
 
             <ImageView
                 android:id="@+id/url_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/url_header"
                 app:srcCompat="@drawable/ic_link"
@@ -205,12 +263,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/item_view_url_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toEndOf="@+id/url_icon"
-                app:layout_constraintTop_toBottomOf="@+id/status_chip" />
+                app:layout_constraintTop_toBottomOf="@+id/url_add_button" />
 
             <TextView
                 android:id="@+id/url"
@@ -219,6 +278,7 @@
                 android:layout_marginStart="8dp"
                 android:autoLink="all"
                 android:text="@{model.vJournal.VJournal.url}"
+                android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/url_icon"
                 app:layout_constraintTop_toBottomOf="@+id/url_header"
@@ -230,6 +290,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/attendee_header"
                 app:srcCompat="@drawable/ic_attendee"
@@ -244,6 +305,7 @@
                 android:text="@string/item_view_attendees_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toEndOf="@+id/attendee_icon"
                 app:layout_constraintTop_toBottomOf="@+id/url" />
 
@@ -254,6 +316,7 @@
                 android:layout_marginStart="8dp"
                 android:autoLink="all"
                 android:text="@{model.vJournal.VJournal.attendee}"
+                android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/attendee_icon"
                 app:layout_constraintTop_toBottomOf="@+id/attendee_header"
@@ -265,9 +328,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/organizer_header"
-                app:srcCompat="@drawable/ic_attendee"
+                app:srcCompat="@drawable/ic_organizer"
                 tools:ignore="ContentDescription" />
 
             <TextView
@@ -279,6 +343,7 @@
                 android:text="@string/item_view_organizer_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toEndOf="@+id/organizer_icon"
                 app:layout_constraintTop_toBottomOf="@+id/attendee" />
 
@@ -288,7 +353,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:autoLink="all"
-                android:text="@{model.vJournal.VJournal.organizer}"
+                android:text="@{model.vJournal.VOrganizer.caladdress}"
+                android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/attendee_icon"
                 app:layout_constraintTop_toBottomOf="@+id/organizer_header"
@@ -300,6 +366,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/contact_header"
                 app:srcCompat="@drawable/ic_contact"
@@ -314,6 +381,7 @@
                 android:text="@string/item_view_contact_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toEndOf="@+id/contact_icon"
                 app:layout_constraintTop_toBottomOf="@+id/organizer" />
 
@@ -324,6 +392,7 @@
                 android:layout_marginStart="8dp"
                 android:autoLink="all"
                 android:text="@{model.vJournal.VJournal.contact}"
+                android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/contact_icon"
                 app:layout_constraintTop_toBottomOf="@+id/contact_header"
@@ -335,6 +404,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/relatedto_header"
                 app:srcCompat="@drawable/ic_link"
@@ -349,6 +419,7 @@
                 android:text="@string/item_view_relatedto_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toEndOf="@+id/relatedto_icon"
                 app:layout_constraintTop_toBottomOf="@+id/contact" />
 
@@ -359,6 +430,7 @@
                 android:layout_marginStart="8dp"
                 android:autoLink="all"
                 android:text="@{model.vJournal.VJournal.related}"
+                android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/relatedto_icon"
                 app:layout_constraintTop_toBottomOf="@+id/relatedto_header"

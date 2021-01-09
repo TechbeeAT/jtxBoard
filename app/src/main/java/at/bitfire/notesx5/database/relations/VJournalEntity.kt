@@ -19,7 +19,7 @@ data class VJournalEntity (
         var vAttendee: List<VAttendee>? = null,
 
         @Relation(parentColumn = "id", entityColumn = "journalLinkId")
-        var vOrganizer: List<VOrganizer>? = null,
+        var vOrganizer: VOrganizer? = null,
 
         @Relation(parentColumn = "id", entityColumn = "journalLinkId")
         var vRelatedto: List<VRelatedto>? = null

@@ -45,7 +45,7 @@ interface VJournalDatabaseDao {
     @Query("SELECT DISTINCT text FROM vcategories ORDER BY text ASC")
     fun getAllCategories(): LiveData<List<String>>
 
-    @Query("SELECT DISTINCT organizer FROM vorganizer ORDER BY organizer ASC")
+    @Query("SELECT DISTINCT caladdress FROM vorganizer ORDER BY caladdress ASC")
     fun getAllOrganizers(): LiveData<List<String>>
 
     @Query("SELECT DISTINCT collection FROM vjournals ORDER BY collection ASC")

@@ -80,7 +80,7 @@ class VJournalListViewModel(
         database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry))
 
         database.insertComment(VComment(text = "comment", journalLinkId = newEntry))
-        database.insertOrganizer(VOrganizer(organizer = "organizer", journalLinkId = newEntry))
+        database.insertOrganizer(VOrganizer(caladdress = "organizer", journalLinkId = newEntry))
         database.insertRelatedto(VRelatedto(relatedto = "related to", journalLinkId = newEntry))
 
 
@@ -95,7 +95,7 @@ class VJournalListViewModel(
         database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry2))
 
         database.insertComment(VComment(text = "comment", journalLinkId = newEntry2))
-        database.insertOrganizer(VOrganizer(organizer = "organizer", journalLinkId = newEntry2))
+        database.insertOrganizer(VOrganizer(caladdress = "organizer", journalLinkId = newEntry2))
         database.insertRelatedto(VRelatedto(relatedto = "related to", journalLinkId = newEntry2))
 
     }

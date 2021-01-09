@@ -7,6 +7,7 @@ import androidx.lifecycle.*
 import at.bitfire.notesx5.database.VCategory
 import at.bitfire.notesx5.database.VJournal
 import at.bitfire.notesx5.database.VJournalDatabaseDao
+import at.bitfire.notesx5.database.VOrganizer
 import at.bitfire.notesx5.database.relations.VJournalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,6 +33,7 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
     var vJournalUpdated: MutableLiveData<VJournal> = MutableLiveData<VJournal>().apply { postValue(VJournal()) }
     var vCategoryUpdated: MutableList<VCategory> = mutableListOf(VCategory())
+    var vOrganizerUpdated: MutableLiveData<VOrganizer> = MutableLiveData<VOrganizer>().apply { postValue(VOrganizer()) }
 
 
     val urlError = MutableLiveData<String>()
@@ -99,6 +101,7 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
             insertedOrUpdatedItemId = insertOrUpdateVJournal()
             insertNewCategories(insertedOrUpdatedItemId)
+            upsertOrganizer(insertedOrUpdatedItemId)
             returnVJournalItemId.value = insertedOrUpdatedItemId
         }
 
@@ -136,6 +139,12 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
             }
         }
     }
+
+    private suspend fun upsertOrganizer(insertedOrUpdatedItemId: Long) {
+        vOrganizerUpdated.value!!.journalLinkId = insertedOrUpdatedItemId
+        database.insertOrganizer(vOrganizerUpdated.value!!)
+    }
+
 
     fun deleteOldCategories() {
         // if the old category cannot be found in the new list, then delete it!

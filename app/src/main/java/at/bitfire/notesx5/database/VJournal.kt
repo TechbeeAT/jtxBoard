@@ -16,7 +16,7 @@ data class VJournal(
         var description: String = "",
         var dtstart: Long = System.currentTimeMillis(),
 
-        var organizer: String = "",
+        //var organizer: String = "",
         //var categories: String = "",
         var status: Int = 1,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, 3 = NOT SUPPORTED
         var classification: Int = 0,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, 3 = NOT SUPPORTED

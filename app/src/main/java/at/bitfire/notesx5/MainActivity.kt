@@ -93,10 +93,5 @@ class MainActivity : AppCompatActivity() {
 
             true
         }
-
-
     }
-
-
-
 }

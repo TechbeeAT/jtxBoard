@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/chip_1"
+    style="@style/Widget.MaterialComponents.Chip.Entry"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:checkable="false"
+    android:ellipsize="end"
+    app:chipIcon="@drawable/ic_person"
+    tools:text="John Doe (john@doe.com)" />

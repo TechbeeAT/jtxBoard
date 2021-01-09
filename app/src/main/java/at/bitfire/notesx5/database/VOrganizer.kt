@@ -17,7 +17,7 @@ data class VOrganizer (
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0L,
         var journalLinkId: Long = 0L,
-        var organizer: String = "",
+        var caladdress: String = "",
         var cnparam: String = "",
         var dirparam: String = "",
         var sentbyparam: String = "",
