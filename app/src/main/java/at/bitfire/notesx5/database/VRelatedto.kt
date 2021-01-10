@@ -15,7 +15,7 @@ data class VRelatedto (
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0L,
         var journalLinkId: Long = 0L,
-        var relatedto: String = "",
+        var text: String = "",
         var reltypeparam: String = "",
         var otherparam: String = ""
 )

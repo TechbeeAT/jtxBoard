@@ -75,13 +75,13 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
 
         val newEntry = database.insertJournal(VJournal(component = "JOURNAL", summary = rfcSummary, description = rfcDesc))
-        database.insertAttendee(VAttendee(attendee = "test@test.de", journalLinkId = newEntry))
+        database.insertAttendee(VAttendee(caladdress = "test@test.de", journalLinkId = newEntry))
         database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry))
         database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry))
 
         database.insertComment(VComment(text = "comment", journalLinkId = newEntry))
         database.insertOrganizer(VOrganizer(caladdress = "organizer", journalLinkId = newEntry))
-        database.insertRelatedto(VRelatedto(relatedto = "related to", journalLinkId = newEntry))
+        database.insertRelatedto(VRelatedto(text = "related to", journalLinkId = newEntry))
 
 
         //database.insert(vJournalItem(component="JOURNAL", summary=jSummary, description=jDesc, organizer="LOCAL", categories="Appointment, Education"))
@@ -90,13 +90,13 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary2, description=noteDesc2, organizer="LOCAL", categories="Shopping"))
 
         val newEntry2 = database.insertJournal(VJournal(component = "NOTE", summary = noteSummary, description = noteDesc))
-        database.insertAttendee(VAttendee(attendee = "test@test.de", journalLinkId = newEntry2))
+        database.insertAttendee(VAttendee(caladdress = "test@test.de", journalLinkId = newEntry2))
         database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry2))
         database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry2))
 
         database.insertComment(VComment(text = "comment", journalLinkId = newEntry2))
         database.insertOrganizer(VOrganizer(caladdress = "organizer", journalLinkId = newEntry2))
-        database.insertRelatedto(VRelatedto(relatedto = "related to", journalLinkId = newEntry2))
+        database.insertRelatedto(VRelatedto(text = "related to", journalLinkId = newEntry2))
 
     }
 

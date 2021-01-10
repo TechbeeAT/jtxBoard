@@ -15,7 +15,7 @@ data class VAttendee (
         @PrimaryKey(autoGenerate = true)         // TODO Doublecheck ALL types here, crosscheck with RFC 5545
         var attendeeId: Long = 0L,
         var journalLinkId: Long = 0L,
-        var attendee: String = "",
+        var caladdress: String = "",
         var cutypeparam: String = "INDIVIDUAL",
         var memberparam: String = "",
         var roleparam: String = "",
