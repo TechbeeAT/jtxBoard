@@ -17,13 +17,18 @@
 package at.bitfire.notesx5
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+
+
+const val CONTACT_READ_PERMISSION_CODE = 100   // this is necessary for the app permission, 100 ist just a freely chosen value
 
 
 /**
@@ -94,4 +99,22 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
+
+
+
+    // this is called when the user accepts a permission
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+
+        if (requestCode == CONTACT_READ_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Contacts Read Permission Granted", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, "Contacts Read Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
 }

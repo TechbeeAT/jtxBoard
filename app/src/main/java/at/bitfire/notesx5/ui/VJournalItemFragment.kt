@@ -415,6 +415,7 @@ class VJournalItemFragment : Fragment() {
 
 
 
+    /*
 
     fun loadContacts():  ArrayAdapter<String> {
 
@@ -455,5 +456,7 @@ class VJournalItemFragment : Fragment() {
 
     }
 
+
+     */
 }
 

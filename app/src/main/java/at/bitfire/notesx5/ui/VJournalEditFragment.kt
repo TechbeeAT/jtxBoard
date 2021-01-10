@@ -5,35 +5,33 @@ import android.app.AlertDialog
 import android.app.Application
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.ContentResolver
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.text.Editable
-import android.text.Spanned
 import android.text.format.DateFormat.is24HourFormat
-import android.text.style.ImageSpan
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.VAttendee
 import at.bitfire.notesx5.database.VCategory
 import at.bitfire.notesx5.database.VJournalDatabase
 import at.bitfire.notesx5.database.VJournalDatabaseDao
 import at.bitfire.notesx5.databinding.FragmentVjournalItemEditBinding
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_vjournal_item.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item_categories_chip.view.*
 import java.util.*
+
+
 
 
 
@@ -44,7 +42,7 @@ class VJournalEditFragment : Fragment(),
     lateinit var binding: FragmentVjournalItemEditBinding
     lateinit var application: Application
     lateinit var dataSource: VJournalDatabaseDao
-    lateinit var viewModelFactory:  VJournalEditViewModelFactory
+    lateinit var viewModelFactory: VJournalEditViewModelFactory
     lateinit var vJournalEditViewModel: VJournalEditViewModel
     lateinit var inflater: LayoutInflater
 
@@ -52,7 +50,6 @@ class VJournalEditFragment : Fragment(),
     val allContactsNameAndMail: MutableList<String> = mutableListOf()
 
     var displayedCategoryChips = mutableListOf<VCategory>()
-
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -71,9 +68,24 @@ class VJournalEditFragment : Fragment(),
         // add menu
         setHasOptionsMenu(true)
 
-        loadContacts()
+        if (ContextCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.READ_CONTACTS)
+                == PackageManager.PERMISSION_GRANTED) {
+            loadContacts()
+        } else {
+            //request for permission to load contacts
 
-        ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_CONTACTS), PackageManager.PERMISSION_GRANTED)
+
+            MaterialAlertDialogBuilder(context!!)
+                    .setTitle("App Permission")
+                    .setMessage("NOTESx5 can propose Attendee, Contact and Organizer data as input values for your entries. Read Permissions on your contacts is needed to enable this feature.")
+                    .setPositiveButton("Ok") { dialog, which ->
+                        ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_READ_PERMISSION_CODE)
+
+                    }
+                    .setNegativeButton("Cancel") { dialog, which -> }
+                    .show()
+
+        }
 
 
         this.viewModelFactory = VJournalEditViewModelFactory(arguments.item2edit, dataSource, application)
@@ -97,8 +109,6 @@ class VJournalEditFragment : Fragment(),
         binding.statusChip.text = statusItems[1]   // Set default of status Chip to 1 (=FINAL), might be overwritten by observer, but sets the default for new items
         val classificationItems = resources.getStringArray(R.array.vjournal_classification)
         binding.classificationChip.text = classificationItems[0]   // Set default of classification Chip to 0 (=PUBLIC), might be overwritten by observer, but sets the default for new items
-
-
 
 
         vJournalEditViewModel.savingClicked.observe(viewLifecycleOwner, Observer {
@@ -197,7 +207,6 @@ class VJournalEditFragment : Fragment(),
         })
 
 
-
         // Set up items to suggest for categories
         vJournalEditViewModel.allCategories.observe(viewLifecycleOwner, {
             // Create the adapter and set it to the AutoCompleteTextView
@@ -251,7 +260,6 @@ class VJournalEditFragment : Fragment(),
             binding.categoriesAdd.editText?.text?.clear()
 
         }
-
 
 
         // Transform the category input into a chip when the Done button in the keyboard is clicked
@@ -331,8 +339,8 @@ class VJournalEditFragment : Fragment(),
 
 
         binding.urlEdit.editText?.setOnFocusChangeListener { view, hasFocus ->
-                if((!binding.urlEdit.editText?.text.isNullOrEmpty() && !isValidURL(binding.urlEdit.editText?.text.toString())))
-                    vJournalEditViewModel.urlError.value = "Please enter a valid URL"
+            if ((!binding.urlEdit.editText?.text.isNullOrEmpty() && !isValidURL(binding.urlEdit.editText?.text.toString())))
+                vJournalEditViewModel.urlError.value = "Please enter a valid URL"
 
         }
 
@@ -380,8 +388,6 @@ class VJournalEditFragment : Fragment(),
     }
 
 
-
-
     fun showDatepicker() {
         val c = Calendar.getInstance()
         c.timeInMillis = vJournalEditViewModel.vJournalUpdated.value?.dtstart!!
@@ -410,7 +416,7 @@ class VJournalEditFragment : Fragment(),
             if (category.text.isBlank())
                 return@forEach
 
-            if(displayedCategoryChips.indexOf(category) != -1)    // only show categories that are not there yet
+            if (displayedCategoryChips.indexOf(category) != -1)    // only show categories that are not there yet
                 return@forEach
 
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
@@ -423,7 +429,7 @@ class VJournalEditFragment : Fragment(),
             }
 
             categoryChip.setOnCloseIconClickListener { chip ->
-                vJournalEditViewModel.vCategoryUpdated.removeIf { it.text == category.text}
+                vJournalEditViewModel.vCategoryUpdated.removeIf { it.text == category.text }
                 chip.visibility = View.GONE
             }
 
@@ -448,14 +454,7 @@ class VJournalEditFragment : Fragment(),
     }
 
 
-
-
-
     fun loadContacts() {
-
-
-        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_CONTACTS), 1)
-
 
         /*
         Template: https://stackoverflow.com/questions/10117049/get-only-email-address-from-contact-list-android
@@ -492,7 +491,4 @@ class VJournalEditFragment : Fragment(),
         binding.contactAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
 
     }
-
-
 }
-
