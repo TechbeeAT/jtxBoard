@@ -20,13 +20,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.VCategory
+import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.VJournalDatabase
 import at.bitfire.notesx5.database.VJournalDatabaseDao
-import at.bitfire.notesx5.databinding.FragmentVjournalItemEditBinding
+import at.bitfire.notesx5.databinding.FragmentVjournalEditBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_vjournal_item.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item_categories_chip.view.*
 import java.util.*
@@ -39,7 +38,7 @@ class VJournalEditFragment : Fragment(),
         TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
 
-    lateinit var binding: FragmentVjournalItemEditBinding
+    lateinit var binding: FragmentVjournalEditBinding
     lateinit var application: Application
     lateinit var dataSource: VJournalDatabaseDao
     lateinit var viewModelFactory: VJournalEditViewModelFactory
@@ -49,7 +48,7 @@ class VJournalEditFragment : Fragment(),
     val allContactsMail: MutableList<String> = mutableListOf()
     val allContactsNameAndMail: MutableList<String> = mutableListOf()
 
-    var displayedCategoryChips = mutableListOf<VCategory>()
+    var displayedCategoryChips = mutableListOf<Category>()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -58,7 +57,7 @@ class VJournalEditFragment : Fragment(),
         // Get a reference to the binding object and inflate the fragment views.
 
         this.inflater = inflater
-        this.binding = FragmentVjournalItemEditBinding.inflate(inflater, container, false)
+        this.binding = FragmentVjournalEditBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
         this.dataSource = VJournalDatabase.getInstance(application).vJournalDatabaseDao
@@ -116,7 +115,7 @@ class VJournalEditFragment : Fragment(),
                 vJournalEditViewModel.vJournalUpdated.value!!.summary = binding.summaryEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.description = binding.descriptionEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.collection = binding.collection.selectedItem.toString()
-                vJournalEditViewModel.vOrganizerUpdated.value!!.caladdress = binding.organizerAdd.editText?.text.toString()
+                vJournalEditViewModel.organizerUpdated.value!!.caladdress = binding.organizerAdd.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.url = binding.urlEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.attendee = binding.attendeeEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.contact = binding.contactEdit.editText?.text.toString()
@@ -174,17 +173,17 @@ class VJournalEditFragment : Fragment(),
 
         vJournalEditViewModel.vJournalItem.observe(viewLifecycleOwner, {
 
-            if (it?.vJournal == null || it.vCategory == null)
+            if (it?.vJournal == null || it.category == null)
                 return@observe
 
             vJournalEditViewModel.vJournalUpdated.postValue(it.vJournal)
-            if (it.vOrganizer != null)
-                vJournalEditViewModel.vOrganizerUpdated.postValue(it.vOrganizer)
-            vJournalEditViewModel.vCategoryUpdated.addAll(it.vCategory!!)
+            if (it.organizer != null)
+                vJournalEditViewModel.organizerUpdated.postValue(it.organizer)
+            vJournalEditViewModel.categoryUpdated.addAll(it.category!!)
 
 
             // Add the chips for existing categories
-            addChips(vJournalEditViewModel.vCategoryUpdated)
+            addChips(vJournalEditViewModel.categoryUpdated)
 
             // Set the default value of the Status Chip
             if (vJournalEditViewModel.vJournalItem.value?.vJournal?.status == -1)      // if unsupported don't show the status
@@ -255,8 +254,8 @@ class VJournalEditFragment : Fragment(),
 
         binding.categoriesAdd.setEndIconOnClickListener {
             // Respond to end icon presses
-            vJournalEditViewModel.vCategoryUpdated.add(VCategory(text = binding.categoriesAdd.editText?.text.toString()))
-            addChips(listOf(VCategory(text = binding.categoriesAdd.editText?.text.toString())))
+            vJournalEditViewModel.categoryUpdated.add(Category(text = binding.categoriesAdd.editText?.text.toString()))
+            addChips(listOf(Category(text = binding.categoriesAdd.editText?.text.toString())))
             binding.categoriesAdd.editText?.text?.clear()
 
         }
@@ -266,8 +265,8 @@ class VJournalEditFragment : Fragment(),
         binding.categoriesAdd.editText?.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    vJournalEditViewModel.vCategoryUpdated.add(VCategory(text = binding.categoriesAdd.editText?.text.toString()))
-                    addChips(listOf(VCategory(text = binding.categoriesAdd.editText?.text.toString())))
+                    vJournalEditViewModel.categoryUpdated.add(Category(text = binding.categoriesAdd.editText?.text.toString()))
+                    addChips(listOf(Category(text = binding.categoriesAdd.editText?.text.toString())))
                     binding.categoriesAdd.editText?.text?.clear()
 
                     true
@@ -408,7 +407,7 @@ class VJournalEditFragment : Fragment(),
     }
 
 
-    private fun addChips(categories: List<VCategory>?) {
+    private fun addChips(categories: List<Category>?) {
 
 
         categories?.forEach() { category ->
@@ -419,7 +418,7 @@ class VJournalEditFragment : Fragment(),
             if (displayedCategoryChips.indexOf(category) != -1)    // only show categories that are not there yet
                 return@forEach
 
-            val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
+            val categoryChip = inflater.inflate(R.layout.fragment_vjournal_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
             categoryChip.text = category.text
             binding.categoriesChipgroup.addView(categoryChip)
             displayedCategoryChips.add(category)
@@ -429,7 +428,7 @@ class VJournalEditFragment : Fragment(),
             }
 
             categoryChip.setOnCloseIconClickListener { chip ->
-                vJournalEditViewModel.vCategoryUpdated.removeIf { it.text == category.text }
+                vJournalEditViewModel.categoryUpdated.removeIf { it.text == category.text }
                 chip.visibility = View.GONE
             }
 

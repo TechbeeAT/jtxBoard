@@ -1,22 +1,22 @@
-package at.bitfire.notesx5.database
+package at.bitfire.notesx5.database.properties
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.util.*
+import at.bitfire.notesx5.database.VJournal
 
-@Entity(tableName = "vrelatedto",
+@Entity(tableName = "category",
         foreignKeys = [ForeignKey(entity = VJournal::class,
                 parentColumns = arrayOf("id"),
                 childColumns = arrayOf("journalLinkId"),
                 onDelete = ForeignKey.CASCADE)])
-data class VRelatedto (
+data class Category (
 
         @PrimaryKey(autoGenerate = true)
-        var id: Long = 0L,
+        var categoryId: Long = 0L,
         var journalLinkId: Long = 0L,
         var text: String = "",
-        var reltypeparam: String = "",
-        var otherparam: String = ""
+        var languageparam: String = "",
+        var otherparam: String = "",
 )
 

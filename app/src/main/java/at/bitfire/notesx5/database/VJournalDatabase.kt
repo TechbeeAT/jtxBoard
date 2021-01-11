@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import at.bitfire.notesx5.database.properties.*
 
 
 /**
@@ -28,14 +29,14 @@ import androidx.room.RoomDatabase
  */
 
 @Database(entities = [
-    VAttendee::class,
-    VCategory::class,
-    VComment::class,
-    VContact::class,
+    Attendee::class,
+    Category::class,
+    Comment::class,
+    Contact::class,
     VJournal::class,
-    VOrganizer::class,
-    VRelatedto::class,
-    VResource::class], version = 23, exportSchema = false)
+    Organizer::class,
+    Relatedto::class,
+    Resource::class], version = 24, exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class VJournalDatabase : RoomDatabase() {
 

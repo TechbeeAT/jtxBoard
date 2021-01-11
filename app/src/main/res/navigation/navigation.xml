@@ -94,7 +94,7 @@
         android:id="@+id/VJournalItemEditFragment"
         android:name="at.bitfire.notesx5.ui.VJournalEditFragment"
         android:label="VJournalItemEditFragment"
-        tools:layout="@layout/fragment_vjournal_item_edit">
+        tools:layout="@layout/fragment_vjournal_edit">
         <argument
             android:name="item2edit"
             app:argType="long"

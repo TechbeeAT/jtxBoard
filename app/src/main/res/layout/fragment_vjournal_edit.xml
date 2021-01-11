@@ -331,7 +331,7 @@
                 android:ems="10"
                 android:imeOptions="actionDone"
                 android:inputType="textShortMessage|textCapSentences"
-                android:text="@{model.VOrganizerUpdated.caladdress}" />
+                android:text="@{model.organizerUpdated.caladdress}" />
 
 
         </com.google.android.material.textfield.TextInputLayout>

@@ -5,15 +5,13 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*
-import at.bitfire.notesx5.database.relations.VJournalEntity
+import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.relations.VJournalWithCategory
 
 import kotlinx.coroutines.launch
 
 
-/**
- * ViewModel for SleepTrackerFragment.
- */
+
 class VJournalListViewModel(
         val database: VJournalDatabaseDao,
         application: Application) : AndroidViewModel(application) {
@@ -75,13 +73,13 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
 
         val newEntry = database.insertJournal(VJournal(component = "JOURNAL", summary = rfcSummary, description = rfcDesc))
-        database.insertAttendee(VAttendee(caladdress = "test@test.de", journalLinkId = newEntry))
-        database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry))
-        database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry))
+        database.insertAttendee(Attendee(caladdress = "test@test.de", journalLinkId = newEntry))
+        database.insertCategory(Category(text = "cat", journalLinkId = newEntry))
+        database.insertCategory(Category(text = "cat", journalLinkId = newEntry))
 
-        database.insertComment(VComment(text = "comment", journalLinkId = newEntry))
-        database.insertOrganizer(VOrganizer(caladdress = "organizer", journalLinkId = newEntry))
-        database.insertRelatedto(VRelatedto(text = "related to", journalLinkId = newEntry))
+        database.insertComment(Comment(text = "comment", journalLinkId = newEntry))
+        database.insertOrganizer(Organizer(caladdress = "organizer", journalLinkId = newEntry))
+        database.insertRelatedto(Relatedto(text = "related to", journalLinkId = newEntry))
 
 
         //database.insert(vJournalItem(component="JOURNAL", summary=jSummary, description=jDesc, organizer="LOCAL", categories="Appointment, Education"))
@@ -90,13 +88,13 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary2, description=noteDesc2, organizer="LOCAL", categories="Shopping"))
 
         val newEntry2 = database.insertJournal(VJournal(component = "NOTE", summary = noteSummary, description = noteDesc))
-        database.insertAttendee(VAttendee(caladdress = "test@test.de", journalLinkId = newEntry2))
-        database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry2))
-        database.insertCategory(VCategory(text = "cat", journalLinkId = newEntry2))
+        database.insertAttendee(Attendee(caladdress = "test@test.de", journalLinkId = newEntry2))
+        database.insertCategory(Category(text = "cat", journalLinkId = newEntry2))
+        database.insertCategory(Category(text = "cat", journalLinkId = newEntry2))
 
-        database.insertComment(VComment(text = "comment", journalLinkId = newEntry2))
-        database.insertOrganizer(VOrganizer(caladdress = "organizer", journalLinkId = newEntry2))
-        database.insertRelatedto(VRelatedto(text = "related to", journalLinkId = newEntry2))
+        database.insertComment(Comment(text = "comment", journalLinkId = newEntry2))
+        database.insertOrganizer(Organizer(caladdress = "organizer", journalLinkId = newEntry2))
+        database.insertRelatedto(Relatedto(text = "related to", journalLinkId = newEntry2))
 
     }
 

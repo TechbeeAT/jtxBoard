@@ -3,6 +3,8 @@ package at.bitfire.notesx5.ui
 import android.app.Application
 import androidx.lifecycle.*
 import at.bitfire.notesx5.database.*
+import at.bitfire.notesx5.database.properties.Category
+import at.bitfire.notesx5.database.properties.Comment
 import at.bitfire.notesx5.database.relations.VJournalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +18,7 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
                                 application: Application) : AndroidViewModel(application) {
 
     lateinit var vJournal: LiveData<VJournalEntity?>
-    lateinit var vCategory: LiveData<List<VCategory>>
+    lateinit var category: LiveData<List<Category>>
 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
@@ -44,8 +46,8 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
             else
                 database.get(vJournalItemId)
 
-            vCategory = Transformations.map(vJournal) {
-                it?.vCategory
+            category = Transformations.map(vJournal) {
+                it?.category
             }
 
             setupDates()
@@ -54,16 +56,16 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
                 return@map !item?.vJournal?.url.isNullOrBlank()      // true if url is NOT null or empty
             }
             attendeesVisible = Transformations.map(vJournal) { item ->
-                return@map !item?.vAttendee.isNullOrEmpty()      // true if attendees is NOT null or empty
+                return@map !item?.attendee.isNullOrEmpty()      // true if attendees is NOT null or empty
             }
             organizerVisible = Transformations.map(vJournal) { item ->
-                return@map !(item?.vOrganizer == null)      // true if organizer is NOT null or empty
+                return@map !(item?.organizer == null)      // true if organizer is NOT null or empty
             }
             contactVisible = Transformations.map(vJournal) { item ->
                 return@map !item?.vJournal?.contact.isNullOrBlank()      // true if contact is NOT null or empty
             }
             relatedtoVisible = Transformations.map(vJournal) { item ->
-                return@map !item?.vRelatedto.isNullOrEmpty()      // true if relatedto is NOT null or empty
+                return@map !item?.relatedto.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
 
         }
@@ -113,13 +115,13 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
 
     }
 
-    fun upsertComment(comment: VComment) {
+    fun upsertComment(comment: Comment) {
         viewModelScope.launch() {
             database.insertComment(comment)
         }
     }
 
-    fun deleteComment(comment: VComment) {
+    fun deleteComment(comment: Comment) {
         viewModelScope.launch(Dispatchers.IO) {
             database.deleteComment(comment)
         }

@@ -353,7 +353,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:autoLink="all"
-                android:text="@{model.vJournal.VOrganizer.caladdress}"
+                android:text="@{model.vJournal.organizer.caladdress}"
                 android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/attendee_icon"

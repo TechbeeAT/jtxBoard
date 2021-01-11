@@ -1,22 +1,26 @@
-package at.bitfire.notesx5.database
+package at.bitfire.notesx5.database.properties
+
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.util.*
+import at.bitfire.notesx5.database.VJournal
 
-@Entity(tableName = "vcategories",
+
+@Entity(tableName = "organizer",
         foreignKeys = [ForeignKey(entity = VJournal::class,
                 parentColumns = arrayOf("id"),
                 childColumns = arrayOf("journalLinkId"),
                 onDelete = ForeignKey.CASCADE)])
-data class VCategory (
+data class Organizer (
 
         @PrimaryKey(autoGenerate = true)
-        var categoryId: Long = 0L,
+        var id: Long = 0L,
         var journalLinkId: Long = 0L,
-        var text: String = "",
+        var caladdress: String = "",
+        var cnparam: String = "",
+        var dirparam: String = "",
+        var sentbyparam: String = "",
         var languageparam: String = "",
         var otherparam: String = "",
 )
-

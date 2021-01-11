@@ -4,10 +4,10 @@ import android.app.Application
 import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
-import at.bitfire.notesx5.database.VCategory
+import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.VJournal
 import at.bitfire.notesx5.database.VJournalDatabaseDao
-import at.bitfire.notesx5.database.VOrganizer
+import at.bitfire.notesx5.database.properties.Organizer
 import at.bitfire.notesx5.database.relations.VJournalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,8 +32,8 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
     var vJournalUpdated: MutableLiveData<VJournal> = MutableLiveData<VJournal>().apply { postValue(VJournal()) }
-    var vCategoryUpdated: MutableList<VCategory> = mutableListOf(VCategory())
-    var vOrganizerUpdated: MutableLiveData<VOrganizer> = MutableLiveData<VOrganizer>().apply { postValue(VOrganizer()) }
+    var categoryUpdated: MutableList<Category> = mutableListOf(Category())
+    var organizerUpdated: MutableLiveData<Organizer> = MutableLiveData<Organizer>().apply { postValue(Organizer()) }
 
 
     val urlError = MutableLiveData<String>()
@@ -87,8 +87,10 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
         deleteClicked.value = true
     }
 
+
+
     fun update() {
-        var insertedOrUpdatedItemId = 0L
+        var insertedOrUpdatedItemId: Long
 
         //TODO: check if the item got a new sequence in the meantime!
 
@@ -122,11 +124,11 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
     private suspend fun insertNewCategories(insertedOrUpdatedItemId: Long) {
 
-        Log.println(Log.INFO, "vCategoryUpdated", "Size of Array: ${vCategoryUpdated.size}")
-        if (vCategoryUpdated != vJournalItem.value!!.vCategory) {   // make effort of updating only if the categories changed
+        Log.println(Log.INFO, "vCategoryUpdated", "Size of Array: ${categoryUpdated.size}")
+        if (categoryUpdated != vJournalItem.value!!.category) {   // make effort of updating only if the categories changed
             Log.println(Log.INFO, "vCategoryUpdated", "Categories are not the same and need to be updated")
 
-            vCategoryUpdated.forEach { newVCategory ->
+            categoryUpdated.forEach { newVCategory ->
                 Log.println(Log.INFO, "vCategoryUpdated", "Checking #${newVCategory.categoryId} with value ${newVCategory.text} and journalLinkId ${newVCategory.journalLinkId}")
 
                 if (newVCategory.categoryId == 0L && newVCategory.text.isNotBlank()) {                                     //Insert only categories that don't have an ID yet (= new ones)
@@ -141,19 +143,19 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
     }
 
     private suspend fun upsertOrganizer(insertedOrUpdatedItemId: Long) {
-        vOrganizerUpdated.value!!.journalLinkId = insertedOrUpdatedItemId
-        database.insertOrganizer(vOrganizerUpdated.value!!)
+        organizerUpdated.value!!.journalLinkId = insertedOrUpdatedItemId
+        database.insertOrganizer(organizerUpdated.value!!)
     }
 
 
     fun deleteOldCategories() {
         // if the old category cannot be found in the new list, then delete it!
-        vJournalItem.value!!.vCategory?.forEach { oldVCategory ->
-            if (!vCategoryUpdated.contains(oldVCategory)) {
+        vJournalItem.value!!.category?.forEach { oldVCategory ->
+            if (!categoryUpdated.contains(oldVCategory)) {
                 viewModelScope.launch(Dispatchers.IO) {
                     database.deleteCategory(oldVCategory)
                 }
-                Log.println(Log.INFO, "vCategory", "${oldVCategory.text} deleted")
+                Log.println(Log.INFO, "Category", "${oldVCategory.text} deleted")
             }
         }
     }

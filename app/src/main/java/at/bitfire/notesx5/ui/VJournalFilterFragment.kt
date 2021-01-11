@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.VCategory
 import at.bitfire.notesx5.database.VJournalDatabase
 import at.bitfire.notesx5.database.VJournalDatabaseDao
 import at.bitfire.notesx5.databinding.FragmentVjournalFilterBinding

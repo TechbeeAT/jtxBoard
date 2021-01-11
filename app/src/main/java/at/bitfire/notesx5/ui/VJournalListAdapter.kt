@@ -10,7 +10,6 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.relations.VJournalEntity
 import at.bitfire.notesx5.database.relations.VJournalWithCategory
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,9 +45,9 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
             holder.summary.text = vJournalList.vJournal.summary
             holder.description.text = vJournalList.vJournal.description
 
-            if (vJournalList.vCategory?.isNotEmpty() == true) {
+            if (vJournalList.category?.isNotEmpty() == true) {
                 var categoriesList = mutableListOf<String>()
-                vJournalList.vCategory!!.forEach { categoriesList.add(it.text)  }
+                vJournalList.category!!.forEach { categoriesList.add(it.text)  }
                 holder.categories.text = categoriesList.joinToString(separator=", ")
             } else {
                 holder.categories.visibility = View.GONE

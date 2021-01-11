@@ -19,6 +19,7 @@ package at.bitfire.notesx5.database
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
+import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.relations.VJournalEntity
 import at.bitfire.notesx5.database.relations.VJournalWithCategory
 
@@ -42,10 +43,10 @@ interface VJournalDatabaseDao {
 
      */
 
-    @Query("SELECT DISTINCT text FROM vcategories ORDER BY text ASC")
+    @Query("SELECT DISTINCT text FROM category ORDER BY text ASC")
     fun getAllCategories(): LiveData<List<String>>
 
-    @Query("SELECT DISTINCT caladdress FROM vorganizer ORDER BY caladdress ASC")
+    @Query("SELECT DISTINCT caladdress FROM organizer ORDER BY caladdress ASC")
     fun getAllOrganizers(): LiveData<List<String>>
 
     @Query("SELECT DISTINCT collection FROM vjournals ORDER BY collection ASC")
@@ -59,29 +60,29 @@ INSERTs
     suspend fun insertJournal(vJournalItem: VJournal): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAttendee(vAttendee: VAttendee): Long
+    suspend fun insertAttendee(attendee: Attendee): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCategory(vCategory: VCategory): Long
+    suspend fun insertCategory(category: Category): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertComment(vComment: VComment): Long
+    suspend fun insertComment(comment: Comment): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrganizer(vOrganizer: VOrganizer): Long
+    suspend fun insertOrganizer(organizer: Organizer): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRelatedto(vRelatedto: VRelatedto): Long
+    suspend fun insertRelatedto(relatedto: Relatedto): Long
 
 /*
 DELETEs
  */
 
     @Delete
-    fun deleteCategory(vCategory: VCategory)
+    fun deleteCategory(category: Category)
 
     @Delete
-    fun deleteComment(vComment: VComment)
+    fun deleteComment(comment: Comment)
 
 
 

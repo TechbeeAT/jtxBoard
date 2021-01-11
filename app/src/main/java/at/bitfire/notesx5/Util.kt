@@ -102,6 +102,7 @@ fun convertLongToYearString(date: Long): String {
     return year_formatter.format(Date(date)).toString()
 }
 
+/*
 fun convertCategoriesCSVtoList(categoriesString: String): MutableList<String> {
     return categoriesString.split(",").map { it.trim() }.distinct() as MutableList<String>
 }
@@ -109,6 +110,7 @@ fun convertCategoriesCSVtoList(categoriesString: String): MutableList<String> {
 fun convertCategoriesListtoCSVString(categoriesList: MutableList<String>): String {
     return categoriesList.sorted().joinToString(separator = ", ")
 }
+ */
 
 fun isValidEmail(emailString: String?): Boolean {
     return !TextUtils.isEmpty(emailString) && Patterns.EMAIL_ADDRESS.matcher(emailString).matches()
