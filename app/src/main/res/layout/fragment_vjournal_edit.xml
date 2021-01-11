@@ -309,34 +309,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/organizer_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/item_edit_organizer_hint"
-            app:helperText="Organizer of this entry"
-            app:endIconMode="clear_text"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/attendee_edit"
-            app:startIconDrawable="@drawable/ic_vjournal_organizer">
-
-
-            <AutoCompleteTextView
-                android:id="@+id/organizer_add_autocomplete"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:ems="10"
-                android:imeOptions="actionDone"
-                android:inputType="textShortMessage|textCapSentences"
-                android:text="@{model.organizerUpdated.caladdress}" />
-
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/contact_edit"
@@ -348,7 +320,7 @@
             app:helperText="Contact information of the responsible or owner of this entry"
             app:helperTextEnabled="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/organizer_add"
+            app:layout_constraintTop_toBottomOf="@+id/attendee_edit"
             app:startIconDrawable="@drawable/ic_contact">
 
 

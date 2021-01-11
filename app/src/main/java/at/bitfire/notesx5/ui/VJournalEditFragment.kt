@@ -115,7 +115,6 @@ class VJournalEditFragment : Fragment(),
                 vJournalEditViewModel.vJournalUpdated.value!!.summary = binding.summaryEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.description = binding.descriptionEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.collection = binding.collection.selectedItem.toString()
-                vJournalEditViewModel.organizerUpdated.value!!.caladdress = binding.organizerAdd.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.url = binding.urlEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.attendee = binding.attendeeEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.contact = binding.contactEdit.editText?.text.toString()
@@ -475,16 +474,12 @@ class VJournalEditFragment : Fragment(),
                 val emlAddr = cur.getString(2)
                 Log.println(Log.INFO, "cursor: ", "$name: $emlAddr")
                 allContactsNameAndMail.add("$name ($emlAddr)")
-                allContactsMail.add(emlAddr)
                 //allContactsAsAttendee.add(VAttendee(cnparam = name, attendee = emlAddr))
 
             }
             cur.close()
 
         }
-
-        val arrayAdapterMail = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsMail)
-        binding.organizerAddAutocomplete.setAdapter(arrayAdapterMail)
 
         val arrayAdapterNameAndMail = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsNameAndMail)
         binding.contactAddAutocomplete.setAdapter(arrayAdapterNameAndMail)

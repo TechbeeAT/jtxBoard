@@ -103,10 +103,8 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
             insertedOrUpdatedItemId = insertOrUpdateVJournal()
             insertNewCategories(insertedOrUpdatedItemId)
-            upsertOrganizer(insertedOrUpdatedItemId)
             returnVJournalItemId.value = insertedOrUpdatedItemId
         }
-
     }
 
     private suspend fun insertOrUpdateVJournal(): Long {
@@ -142,10 +140,6 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
         }
     }
 
-    private suspend fun upsertOrganizer(insertedOrUpdatedItemId: Long) {
-        organizerUpdated.value!!.journalLinkId = insertedOrUpdatedItemId
-        database.insertOrganizer(organizerUpdated.value!!)
-    }
 
 
     fun deleteOldCategories() {
