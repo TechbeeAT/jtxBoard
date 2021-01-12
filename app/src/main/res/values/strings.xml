@@ -66,6 +66,7 @@
     <string name="item_edit_attendees_hint">Attendees</string>
     <string name="item_edit_organizer_hint">Organizer</string>
     <string name="item_edit_contact_hint">Contact information</string>
+    <string name="item_edit_comment_hint">Add comment</string>
     <string name="item_edit_relatedto_hint">Related to ...</string>
     <string name="item_edit_url_hint">URL</string>
     <string name="item_edit_fab_save_contentDescription">Save</string>

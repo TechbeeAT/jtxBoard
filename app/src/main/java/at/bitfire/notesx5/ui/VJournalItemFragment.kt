@@ -36,7 +36,6 @@ class VJournalItemFragment : Fragment() {
     lateinit var vJournalItemViewModel: VJournalItemViewModel
 
 
-    var displayedCategoryChips = mutableListOf<Category>()
 
     val allContactsWithName: MutableList<String> = mutableListOf()
     val allContactsWithNameAndMail: MutableList<String> = mutableListOf()
@@ -143,6 +142,7 @@ class VJournalItemFragment : Fragment() {
         })
 
         vJournalItemViewModel.category.observe(viewLifecycleOwner, {
+            binding.categoriesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
             if (it != null)
                 addChips(vJournalItemViewModel.vJournal.value!!.category!!)
         })
@@ -365,13 +365,9 @@ class VJournalItemFragment : Fragment() {
             if (category.text.isBlank())     // don't add empty categories
                 return@forEach
 
-            if(displayedCategoryChips.indexOf(category) != -1)    // only show categories that are not there yet
-                return@forEach
-
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_categories_chip, binding.categoriesChipgroup, false) as Chip
             categoryChip.text = category.text
             binding.categoriesChipgroup.addView(categoryChip)
-            displayedCategoryChips.add(category)
 
             categoryChip.setOnClickListener {
 

@@ -336,26 +336,72 @@
 
 
 
+
+        <ImageView
+            android:id="@+id/comments_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/comments_header"
+            app:srcCompat="@drawable/ic_comments"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/comments_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/item_view_comments_header"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/comments_icon"
+            app:layout_constraintTop_toBottomOf="@id/contact_edit"/>
+
+
+        <LinearLayout
+            android:id="@+id/comments_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:divider="?android:dividerHorizontal"
+            android:showDividers="middle"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/comments_header" >
+
+
+        </LinearLayout>
+
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/relatedto_edit"
+            android:id="@+id/comment_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="@string/item_edit_relatedto_hint"
-            app:endIconMode="clear_text"
-            app:helperText="URL to a related calendar entry"
+            android:layout_marginBottom="64dp"
+            android:hint="@string/item_edit_comment_hint"
+            app:endIconContentDescription="Add category"
+            app:endIconDrawable="@drawable/ic_comment_add"
+            app:endIconMode="custom"
+            app:helperText="Add a comment"
             app:helperTextEnabled="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/contact_edit"
-            app:startIconDrawable="@drawable/ic_link">
+            app:layout_constraintTop_toBottomOf="@+id/comments_linearlayout"
+            app:layout_constraintVertical_bias="0.0">
 
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/comment_add_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textUri"
-                android:text="@{model.vJournalUpdated.related}" />
+                android:inputType="textWebEmailAddress|textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
+
 
 
 

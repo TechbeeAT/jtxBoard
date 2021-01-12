@@ -8,6 +8,7 @@ import android.app.TimePickerDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
 import android.view.*
@@ -23,15 +24,16 @@ import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.VJournalDatabase
 import at.bitfire.notesx5.database.VJournalDatabaseDao
+import at.bitfire.notesx5.database.properties.Comment
 import at.bitfire.notesx5.databinding.FragmentVjournalEditBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_vjournal_item.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item_categories_chip.view.*
+import kotlinx.android.synthetic.main.fragment_vjournal_item_comment.view.*
 import java.util.*
-
-
-
 
 
 class VJournalEditFragment : Fragment(),
@@ -64,6 +66,10 @@ class VJournalEditFragment : Fragment(),
 
         val arguments = VJournalEditFragmentArgs.fromBundle((arguments!!))
 
+        val statusItems = resources.getStringArray(R.array.vjournal_status)
+        val classificationItems = resources.getStringArray(R.array.vjournal_classification)
+
+
         // add menu
         setHasOptionsMenu(true)
 
@@ -72,18 +78,14 @@ class VJournalEditFragment : Fragment(),
             loadContacts()
         } else {
             //request for permission to load contacts
-
-
             MaterialAlertDialogBuilder(context!!)
                     .setTitle("App Permission")
                     .setMessage("NOTESx5 can propose Attendee, Contact and Organizer data as input values for your entries. Read Permissions on your contacts is needed to enable this feature.")
                     .setPositiveButton("Ok") { dialog, which ->
                         ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_READ_PERMISSION_CODE)
-
                     }
                     .setNegativeButton("Cancel") { dialog, which -> }
                     .show()
-
         }
 
 
@@ -104,9 +106,8 @@ class VJournalEditFragment : Fragment(),
         }
 */
 
-        val statusItems = resources.getStringArray(R.array.vjournal_status)
+
         binding.statusChip.text = statusItems[1]   // Set default of status Chip to 1 (=FINAL), might be overwritten by observer, but sets the default for new items
-        val classificationItems = resources.getStringArray(R.array.vjournal_classification)
         binding.classificationChip.text = classificationItems[0]   // Set default of classification Chip to 0 (=PUBLIC), might be overwritten by observer, but sets the default for new items
 
 
@@ -118,7 +119,7 @@ class VJournalEditFragment : Fragment(),
                 vJournalEditViewModel.vJournalUpdated.value!!.url = binding.urlEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.attendee = binding.attendeeEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.contact = binding.contactEdit.editText?.text.toString()
-                vJournalEditViewModel.vJournalUpdated.value!!.related = binding.relatedtoEdit.editText?.text.toString()
+                //vJournalEditViewModel.vJournalUpdated.value!!.related = binding.relatedtoEdit.editText?.text.toString()
 
                 vJournalEditViewModel.update()
             }
@@ -172,17 +173,22 @@ class VJournalEditFragment : Fragment(),
 
         vJournalEditViewModel.vJournalItem.observe(viewLifecycleOwner, {
 
+            //TODO: Check if the Sequence was updated in the meantime and notify user!
+
             if (it?.vJournal == null || it.category == null)
                 return@observe
 
             vJournalEditViewModel.vJournalUpdated.postValue(it.vJournal)
-            if (it.organizer != null)
-                vJournalEditViewModel.organizerUpdated.postValue(it.organizer)
-            vJournalEditViewModel.categoryUpdated.addAll(it.category!!)
 
+            binding.commentsLinearlayout.removeAllViews()
+            vJournalEditViewModel.vJournalItem.value?.comment?.forEach { singleComment ->
+                addCommentView(singleComment, container)
+            }
 
-            // Add the chips for existing categories
-            addChips(vJournalEditViewModel.categoryUpdated)
+            binding.categoriesChipgroup.removeAllViews()
+            vJournalEditViewModel.vJournalItem.value?.category?.forEach {  singleCategory ->
+                addCategoryChip(singleCategory)
+            }
 
             // Set the default value of the Status Chip
             if (vJournalEditViewModel.vJournalItem.value?.vJournal?.status == -1)      // if unsupported don't show the status
@@ -254,7 +260,7 @@ class VJournalEditFragment : Fragment(),
         binding.categoriesAdd.setEndIconOnClickListener {
             // Respond to end icon presses
             vJournalEditViewModel.categoryUpdated.add(Category(text = binding.categoriesAdd.editText?.text.toString()))
-            addChips(listOf(Category(text = binding.categoriesAdd.editText?.text.toString())))
+            addCategoryChip(Category(text = binding.categoriesAdd.editText?.text.toString()))
             binding.categoriesAdd.editText?.text?.clear()
 
         }
@@ -265,7 +271,7 @@ class VJournalEditFragment : Fragment(),
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     vJournalEditViewModel.categoryUpdated.add(Category(text = binding.categoriesAdd.editText?.text.toString()))
-                    addChips(listOf(Category(text = binding.categoriesAdd.editText?.text.toString())))
+                    addCategoryChip(Category(text = binding.categoriesAdd.editText?.text.toString()))
                     binding.categoriesAdd.editText?.text?.clear()
 
                     true
@@ -276,9 +282,32 @@ class VJournalEditFragment : Fragment(),
 
 
 
-        binding.statusChip.setOnClickListener {
+        binding.commentAdd.setEndIconOnClickListener {
+            // Respond to end icon presses
+            val newComment = Comment(text = binding.commentAdd.editText?.text.toString())
+            vJournalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
+            addCommentView(newComment, container)      // add the new comment
+            binding.commentAdd.editText?.text?.clear()  // clear the field
 
-            val statusItems = resources.getStringArray(R.array.vjournal_status)
+        }
+
+
+        // Transform the comment input into a view when the Done button in the keyboard is clicked
+        binding.commentAdd.editText?.setOnEditorActionListener { v, actionId, event ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    val newComment = Comment(text = binding.commentAdd.editText?.text.toString())
+                    vJournalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
+                    addCommentView(newComment, container)      // add the new comment
+                    binding.commentAdd.editText?.text?.clear()  // clear the field
+                    true
+                }
+                else -> false
+            }
+        }
+
+
+        binding.statusChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(context!!)
                     .setTitle("Set status")
@@ -289,10 +318,7 @@ class VJournalEditFragment : Fragment(),
                     }
                     .setIcon(R.drawable.ic_status)
                     .show()
-
         }
-
-
 
 
         binding.classificationChip.setOnClickListener {
@@ -308,41 +334,13 @@ class VJournalEditFragment : Fragment(),
                     }
                     .setIcon(R.drawable.ic_classification)
                     .show()
-
-            /*
-
-            MaterialAlertDialogBuilder(context!!)
-                    //.setTitle(resources.getString(R.string.title))
-                    .setTitle("Set classification")
-                    .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which ->
-                        // Respond to neutral button press
-                        vJournalItemEditViewModel.vJournalUpdated.value!!.classification = vJournalItemEditViewModel.vJournalItem.value!!.vJournal.classification  // Reset to previous classification
-                        binding.classificationChip.text = classificationItems[checkedClassification]   // don't forget to update the UI
-                    }
-                    .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
-                        // Respond to positive button press
-                    }
-                    // Single-choice items (initialized with checked item)
-                    .setSingleChoiceItems(classificationItems, checkedClassification) { dialog, which ->
-                        // Respond to item chosen
-                        vJournalItemEditViewModel.vJournalUpdated.value!!.classification = which
-                        binding.classificationChip.text = classificationItems[which]     // don't forget to update the UI
-                    }
-                    .show()
-
-             */
         }
-
-
 
 
         binding.urlEdit.editText?.setOnFocusChangeListener { view, hasFocus ->
             if ((!binding.urlEdit.editText?.text.isNullOrEmpty() && !isValidURL(binding.urlEdit.editText?.text.toString())))
                 vJournalEditViewModel.urlError.value = "Please enter a valid URL"
-
         }
-
-
 
         return binding.root
     }
@@ -406,16 +404,10 @@ class VJournalEditFragment : Fragment(),
     }
 
 
-    private fun addChips(categories: List<Category>?) {
-
-
-        categories?.forEach() { category ->
+    private fun addCategoryChip(category: Category) {
 
             if (category.text.isBlank())
-                return@forEach
-
-            if (displayedCategoryChips.indexOf(category) != -1)    // only show categories that are not there yet
-                return@forEach
+                return
 
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
             categoryChip.text = category.text
@@ -427,14 +419,55 @@ class VJournalEditFragment : Fragment(),
             }
 
             categoryChip.setOnCloseIconClickListener { chip ->
-                vJournalEditViewModel.categoryUpdated.removeIf { it.text == category.text }
+                vJournalEditViewModel.categoryDeleted.add(category)  // add the category to the list for categories to be deleted
                 chip.visibility = View.GONE
             }
 
             categoryChip.setOnCheckedChangeListener { chip, isChecked ->
                 // Responds to chip checked/unchecked
             }
+    }
 
+    private fun addCommentView(comment: Comment, container: ViewGroup?) {
+
+            val commentView = inflater.inflate(R.layout.fragment_vjournal_item_comment, container, false);
+            commentView.comment_textview.text = comment.text
+            binding.commentsLinearlayout.addView(commentView)
+
+            // set on Click Listener to open a dialog to update the comment
+            commentView.setOnClickListener {
+
+                // set up the values for the TextInputEditText
+                val updatedText: TextInputEditText = TextInputEditText(context!!)
+                updatedText.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                updatedText.setText(comment.text)
+                updatedText.isSingleLine = false;
+                updatedText.maxLines = 8
+
+                // set up the builder for the AlertDialog
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Edit comment")
+                builder.setIcon(R.drawable.ic_comment_add)
+                builder.setView(updatedText)
+
+
+                builder.setPositiveButton("Save") { _, _ ->
+                    // update the comment
+                    val updatedComment = comment.copy()
+                    updatedComment.text = updatedText.text.toString()
+                    vJournalEditViewModel.commentUpdated.add(updatedComment)
+                    it.comment_textview.text = updatedComment.text
+                }
+                builder.setNegativeButton("Cancel") { _, _ ->
+                    // Do nothing, just close the message
+                }
+
+                builder.setNeutralButton("Delete") { _, _ ->
+                    vJournalEditViewModel.commentDeleted.add(comment)
+                    it.visibility = View.GONE
+                }
+
+                builder.show()
 
         }
     }

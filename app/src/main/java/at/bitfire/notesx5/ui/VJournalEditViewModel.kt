@@ -7,6 +7,7 @@ import androidx.lifecycle.*
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.VJournal
 import at.bitfire.notesx5.database.VJournalDatabaseDao
+import at.bitfire.notesx5.database.properties.Comment
 import at.bitfire.notesx5.database.properties.Organizer
 import at.bitfire.notesx5.database.relations.VJournalEntity
 import kotlinx.coroutines.Dispatchers
@@ -31,10 +32,12 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
-    var vJournalUpdated: MutableLiveData<VJournal> = MutableLiveData<VJournal>().apply { postValue(VJournal()) }
+    var vJournalUpdated: MutableLiveData<VJournal> = MutableLiveData<VJournal>()
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
-    var organizerUpdated: MutableLiveData<Organizer> = MutableLiveData<Organizer>().apply { postValue(Organizer()) }
+    var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
 
+    var categoryDeleted: MutableList<Category> = mutableListOf(Category())
+    var commentDeleted: MutableList<Comment> = mutableListOf(Comment())
 
     val urlError = MutableLiveData<String>()
 
@@ -97,12 +100,17 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
         vJournalUpdated.value!!.lastModified = System.currentTimeMillis()
         vJournalUpdated.value!!.dtstamp = System.currentTimeMillis()
 
+        commentUpdated.removeAll(commentDeleted)    // make sure to not accidentially upsert a comment that was deleted
+        categoryUpdated.removeAll(categoryDeleted)  // make sure to not accidentially upsert a category that was deleted
+
         deleteOldCategories()
+        deleteOldComments()
 
         viewModelScope.launch() {
 
             insertedOrUpdatedItemId = insertOrUpdateVJournal()
             insertNewCategories(insertedOrUpdatedItemId)
+            insertNewComments(insertedOrUpdatedItemId)
             returnVJournalItemId.value = insertedOrUpdatedItemId
         }
     }
@@ -122,37 +130,46 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
     private suspend fun insertNewCategories(insertedOrUpdatedItemId: Long) {
 
-        Log.println(Log.INFO, "vCategoryUpdated", "Size of Array: ${categoryUpdated.size}")
-        if (categoryUpdated != vJournalItem.value!!.category) {   // make effort of updating only if the categories changed
-            Log.println(Log.INFO, "vCategoryUpdated", "Categories are not the same and need to be updated")
-
-            categoryUpdated.forEach { newVCategory ->
-                Log.println(Log.INFO, "vCategoryUpdated", "Checking #${newVCategory.categoryId} with value ${newVCategory.text} and journalLinkId ${newVCategory.journalLinkId}")
-
-                if (newVCategory.categoryId == 0L && newVCategory.text.isNotBlank()) {                                     //Insert only categories that don't have an ID yet (= new ones)
-                    newVCategory.journalLinkId = insertedOrUpdatedItemId                    //Update the foreign key for newly added categories
-                    viewModelScope.launch() {
-                        database.insertCategory(newVCategory)
-                    }
-                    Log.println(Log.INFO, "vCategoryUpdated", "${newVCategory.text} added")
-                }
+        categoryUpdated.forEach { newCategory ->
+            newCategory.journalLinkId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
+            viewModelScope.launch() {
+                database.insertCategory(newCategory)
             }
+            Log.println(Log.INFO, "CategoryUpdated", "${newCategory.text} added")
         }
     }
 
 
 
-    fun deleteOldCategories() {
-        // if the old category cannot be found in the new list, then delete it!
-        vJournalItem.value!!.category?.forEach { oldVCategory ->
-            if (!categoryUpdated.contains(oldVCategory)) {
+    private fun deleteOldCategories() {
+        categoryDeleted.forEach { cat2del ->
                 viewModelScope.launch(Dispatchers.IO) {
-                    database.deleteCategory(oldVCategory)
+                    database.deleteCategory(cat2del)
                 }
-                Log.println(Log.INFO, "Category", "${oldVCategory.text} deleted")
+                Log.println(Log.INFO, "Category", "${cat2del.text} deleted")
             }
+    }
+
+    private fun deleteOldComments() {
+        commentDeleted.forEach { com2del ->
+            viewModelScope.launch(Dispatchers.IO) {
+                database.deleteComment(com2del)
+            }
+            Log.println(Log.INFO, "Comment", "${com2del.text} deleted")
         }
     }
+
+    private suspend fun insertNewComments(insertedOrUpdatedItemId: Long) {
+
+        commentUpdated.forEach { newComment ->
+             newComment.journalLinkId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
+             viewModelScope.launch() {
+                 database.insertComment(newComment)
+             }
+            Log.println(Log.INFO, "CommentUpdated", "${newComment.text} added")
+        }
+    }
+
 
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
