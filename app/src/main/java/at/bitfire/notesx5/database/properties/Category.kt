@@ -2,6 +2,7 @@ package at.bitfire.notesx5.database.properties
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import at.bitfire.notesx5.database.VJournal
 
@@ -9,7 +10,8 @@ import at.bitfire.notesx5.database.VJournal
         foreignKeys = [ForeignKey(entity = VJournal::class,
                 parentColumns = arrayOf("id"),
                 childColumns = arrayOf("journalLinkId"),
-                onDelete = ForeignKey.CASCADE)])
+                onDelete = ForeignKey.CASCADE)],
+        indices = [Index(value = ["categoryId", "journalLinkId", "text"])])
 data class Category (
 
         @PrimaryKey(autoGenerate = true)

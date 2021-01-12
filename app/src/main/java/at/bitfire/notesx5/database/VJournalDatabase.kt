@@ -36,7 +36,7 @@ import at.bitfire.notesx5.database.properties.*
     VJournal::class,
     Organizer::class,
     Relatedto::class,
-    Resource::class], version = 24, exportSchema = false)
+    Resource::class], version = 25, exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class VJournalDatabase : RoomDatabase() {
 

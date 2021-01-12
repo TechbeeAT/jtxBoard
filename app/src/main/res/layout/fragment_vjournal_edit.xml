@@ -365,13 +365,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:divider="?android:dividerHorizontal"
-            android:showDividers="middle"
             android:orientation="vertical"
+            android:showDividers="middle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/comments_header" >
+            app:layout_constraintTop_toBottomOf="@+id/comments_header">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true">
+
+
+            </com.google.android.material.card.MaterialCardView>
 
 
         </LinearLayout>
@@ -381,7 +392,9 @@
             android:id="@+id/comment_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="64dp"
             android:hint="@string/item_edit_comment_hint"
             app:endIconContentDescription="Add category"
@@ -390,9 +403,9 @@
             app:helperText="Add a comment"
             app:helperTextEnabled="true"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/comments_linearlayout"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintTop_toBottomOf="@id/comments_linearlayout">
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -401,7 +414,6 @@
                 android:layout_height="wrap_content"
                 android:inputType="textWebEmailAddress|textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
-
 
 
 

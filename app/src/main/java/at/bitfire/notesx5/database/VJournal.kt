@@ -1,11 +1,12 @@
 package at.bitfire.notesx5.database
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.*
 
 
-@Entity(tableName = "vjournals")
+@Entity(tableName = "vjournals", indices = [Index(value = ["id", "summary", "description"])])
 data class VJournal(
 
         @PrimaryKey(autoGenerate = true)
