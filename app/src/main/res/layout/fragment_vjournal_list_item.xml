@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_item_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/list_item_card_view">
+    android:layout_marginTop="4dp"
+    android:checkable="true"
+    android:clickable="true"
+    android:focusable="true">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -92,10 +96,10 @@
             android:layout_height="18dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            app:tint="@android:color/darker_gray"
             app:layout_constraintEnd_toStartOf="@+id/status"
             app:layout_constraintTop_toBottomOf="@+id/description"
             app:srcCompat="@drawable/ic_status"
+            app:tint="@android:color/darker_gray"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -111,13 +115,13 @@
 
         <ImageView
             android:id="@+id/classification_icon"
-            android:layout_marginEnd="8dp"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            app:tint="@android:color/darker_gray"
+            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toStartOf="@+id/classification"
             app:layout_constraintTop_toTopOf="@+id/status_icon"
             app:srcCompat="@drawable/ic_classification"
+            app:tint="@android:color/darker_gray"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -149,7 +153,7 @@
 
 
         <androidx.constraintlayout.widget.Barrier
-            android:id = "@+id/bottom_barrier"
+            android:id="@+id/bottom_barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="top" />
@@ -167,4 +171,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
