@@ -6,14 +6,14 @@ import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
-import at.bitfire.notesx5.database.relations.VJournalWithCategory
+import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 
 import kotlinx.coroutines.launch
 
 
 
 class VJournalListViewModel(
-        val database: VJournalDatabaseDao,
+        val database: ICalDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
 
@@ -27,7 +27,7 @@ class VJournalListViewModel(
 
 
     private var listQuery:  MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
-    var vJournalList: LiveData<List<VJournalWithCategory>> = Transformations.switchMap(listQuery) {
+    var vJournalList: LiveData<List<ICalEntityWithCategory>> = Transformations.switchMap(listQuery) {
         database.getVJournalWithCategory(it)
         }
 
@@ -72,14 +72,14 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer",  "#category1, #category2", "FINAL","PUBLIC", "", "uid", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
         //database.insert(vJournalItem(summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
 
-        val newEntry = database.insertJournal(VJournal(component = "JOURNAL", summary = rfcSummary, description = rfcDesc))
-        database.insertAttendee(Attendee(caladdress = "test@test.de", journalLinkId = newEntry))
-        database.insertCategory(Category(text = "cat", journalLinkId = newEntry))
-        database.insertCategory(Category(text = "cat", journalLinkId = newEntry))
+        val newEntry = database.insertJournal(ICalObject(component = "JOURNAL", summary = rfcSummary, description = rfcDesc))
+        database.insertAttendee(Attendee(caladdress = "test@test.de", icalLinkId = newEntry))
+        database.insertCategory(Category(text = "cat", icalLinkId = newEntry))
+        database.insertCategory(Category(text = "cat", icalLinkId = newEntry))
 
-        database.insertComment(Comment(text = "comment", journalLinkId = newEntry))
-        database.insertOrganizer(Organizer(caladdress = "organizer", journalLinkId = newEntry))
-        database.insertRelatedto(Relatedto(text = "related to", journalLinkId = newEntry))
+        database.insertComment(Comment(text = "comment", icalLinkId = newEntry))
+        database.insertOrganizer(Organizer(caladdress = "organizer", icalLinkId = newEntry))
+        database.insertRelatedto(Relatedto(text = "related to", icalLinkId = newEntry))
 
 
         //database.insert(vJournalItem(component="JOURNAL", summary=jSummary, description=jDesc, organizer="LOCAL", categories="Appointment, Education"))
@@ -87,14 +87,14 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary, description=noteDesc, organizer="LOCAL", categories="JourFixe, BestProject"))
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary2, description=noteDesc2, organizer="LOCAL", categories="Shopping"))
 
-        val newEntry2 = database.insertJournal(VJournal(component = "NOTE", summary = noteSummary, description = noteDesc))
-        database.insertAttendee(Attendee(caladdress = "test@test.de", journalLinkId = newEntry2))
-        database.insertCategory(Category(text = "cat", journalLinkId = newEntry2))
-        database.insertCategory(Category(text = "cat", journalLinkId = newEntry2))
+        val newEntry2 = database.insertJournal(ICalObject(component = "NOTE", summary = noteSummary, description = noteDesc))
+        database.insertAttendee(Attendee(caladdress = "test@test.de", icalLinkId = newEntry2))
+        database.insertCategory(Category(text = "cat", icalLinkId = newEntry2))
+        database.insertCategory(Category(text = "cat", icalLinkId = newEntry2))
 
-        database.insertComment(Comment(text = "comment", journalLinkId = newEntry2))
-        database.insertOrganizer(Organizer(caladdress = "organizer", journalLinkId = newEntry2))
-        database.insertRelatedto(Relatedto(text = "related to", journalLinkId = newEntry2))
+        database.insertComment(Comment(text = "comment", icalLinkId = newEntry2))
+        database.insertOrganizer(Organizer(caladdress = "organizer", icalLinkId = newEntry2))
+        database.insertRelatedto(Relatedto(text = "related to", icalLinkId = newEntry2))
 
     }
 
@@ -124,12 +124,12 @@ class VJournalListViewModel(
         val args = arrayListOf<String>()
 
 // Beginning of query string
-        var queryString = "SELECT DISTINCT vjournals.* FROM vjournals " +
-        "LEFT JOIN vcategories ON vjournals.id = vcategories.journalLinkId "  // +
-        //     "LEFT JOIN vattendees ON vjournals.id = vattendees.journalLinkId " +
-        //     "LEFT JOIN vcomments ON vjournals.id = vcomments.journalLinkId " +
-        //     "LEFT JOIN vorganizer ON vjournals.id = vorganizer.journalLinkId " +
-        //     "LEFT JOIN vRelatedto ON vjournals.id = vRelatedto.journalLinkId "
+        var queryString = "SELECT DISTINCT icalobject.* FROM icalobject " +
+        "LEFT JOIN category ON icalobject.id = category.icalLinkId "  // +
+        //     "LEFT JOIN vattendees ON icalobject.id = vattendees.icalLinkId " +
+        //     "LEFT JOIN vcomments ON icalobject.id = vcomments.icalLinkId " +
+        //     "LEFT JOIN vorganizer ON icalobject.id = vorganizer.icalLinkId " +
+        //     "LEFT JOIN vRelatedto ON icalobject.id = vRelatedto.icalLinkId "
 
         // First query parameter Component must always be present!
         queryString += "WHERE component = ? "

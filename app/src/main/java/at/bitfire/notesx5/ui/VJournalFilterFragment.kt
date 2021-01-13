@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.VJournalDatabase
-import at.bitfire.notesx5.database.VJournalDatabaseDao
+import at.bitfire.notesx5.database.ICalDatabase
+import at.bitfire.notesx5.database.ICalDatabaseDao
 import at.bitfire.notesx5.databinding.FragmentVjournalFilterBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -26,7 +26,7 @@ class VJournalFilterFragment : Fragment()  {
 
     lateinit var binding: FragmentVjournalFilterBinding
     lateinit var application: Application
-    lateinit var dataSource: VJournalDatabaseDao
+    lateinit var dataSource: ICalDatabaseDao
     lateinit var viewModelFactory:  VJournalFilterViewModelFactory
     lateinit var vJournalFilterViewModel: VJournalFilterViewModel
     lateinit var inflater: LayoutInflater
@@ -57,7 +57,7 @@ class VJournalFilterFragment : Fragment()  {
         this.binding = FragmentVjournalFilterBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
-        this.dataSource = VJournalDatabase.getInstance(application).vJournalDatabaseDao
+        this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
         //val arguments = VJournalItemEditFragmentArgs.fromBundle((arguments!!))
 

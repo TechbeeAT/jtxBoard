@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 
-@Entity(tableName = "vjournals", indices = [Index(value = ["id", "summary", "description"])])
-data class VJournal(
+@Entity(tableName = "icalobject", indices = [Index(value = ["id", "summary", "description"])])
+data class ICalObject(
 
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0L,

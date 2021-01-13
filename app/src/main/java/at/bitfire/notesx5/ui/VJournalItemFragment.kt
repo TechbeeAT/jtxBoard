@@ -31,7 +31,7 @@ class VJournalItemFragment : Fragment() {
     lateinit var binding: FragmentVjournalItemBinding
     lateinit var application: Application
     lateinit var inflater: LayoutInflater
-    lateinit var dataSource: VJournalDatabaseDao
+    lateinit var dataSource: ICalDatabaseDao
     lateinit var viewModelFactory: VJournalItemViewModelFactory
     lateinit var vJournalItemViewModel: VJournalItemViewModel
 
@@ -52,7 +52,7 @@ class VJournalItemFragment : Fragment() {
         this.binding = FragmentVjournalItemBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
-        this.dataSource = VJournalDatabase.getInstance(application).vJournalDatabaseDao
+        this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
         val arguments = VJournalItemFragmentArgs.fromBundle((arguments!!))
 
@@ -161,7 +161,7 @@ class VJournalItemFragment : Fragment() {
             builder.setView(newComment)
 
             builder.setPositiveButton("Save") { _, _ ->
-               vJournalItemViewModel.upsertComment(Comment(journalLinkId = vJournalItemViewModel.vJournal.value!!.vJournal.id, text = newComment.text.toString()))
+               vJournalItemViewModel.upsertComment(Comment(icalLinkId = vJournalItemViewModel.vJournal.value!!.vJournal.id, text = newComment.text.toString()))
             }
             builder.setNegativeButton("Cancel") { _, _ ->
                 // Do nothing, just close the message

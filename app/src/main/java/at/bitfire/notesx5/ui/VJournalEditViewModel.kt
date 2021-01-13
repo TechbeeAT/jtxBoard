@@ -5,11 +5,10 @@ import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
 import at.bitfire.notesx5.database.properties.Category
-import at.bitfire.notesx5.database.VJournal
-import at.bitfire.notesx5.database.VJournalDatabaseDao
+import at.bitfire.notesx5.database.ICalObject
+import at.bitfire.notesx5.database.ICalDatabaseDao
 import at.bitfire.notesx5.database.properties.Comment
-import at.bitfire.notesx5.database.properties.Organizer
-import at.bitfire.notesx5.database.relations.VJournalEntity
+import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -17,10 +16,10 @@ import java.util.*
 
 
 class VJournalEditViewModel(private val vJournalItemId: Long,
-                            val database: VJournalDatabaseDao,
+                            val database: ICalDatabaseDao,
                             application: Application) : AndroidViewModel(application) {
 
-    lateinit var vJournalItem: LiveData<VJournalEntity?>
+    lateinit var vJournalItem: LiveData<ICalEntity?>
     lateinit var allCategories: LiveData<List<String>>
 
     lateinit var allCollections: LiveData<List<String>>
@@ -32,7 +31,7 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
-    var vJournalUpdated: MutableLiveData<VJournal> = MutableLiveData<VJournal>()
+    var vJournalUpdated: MutableLiveData<ICalObject> = MutableLiveData<ICalObject>()
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
 
@@ -48,8 +47,8 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
             // insert a new value to initialize the vJournalItem or load the existing one from the DB
             vJournalItem = if (vJournalItemId == 0L)
-                MutableLiveData<VJournalEntity>().apply {
-                    postValue(VJournalEntity(VJournal(), null, null, null, null, null))
+                MutableLiveData<ICalEntity>().apply {
+                    postValue(ICalEntity(ICalObject(), null, null, null, null, null))
                 }
             else {
                 database.get(vJournalItemId)
@@ -131,7 +130,7 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
     private suspend fun insertNewCategories(insertedOrUpdatedItemId: Long) {
 
         categoryUpdated.forEach { newCategory ->
-            newCategory.journalLinkId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
+            newCategory.icalLinkId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
             viewModelScope.launch() {
                 database.insertCategory(newCategory)
             }
@@ -162,7 +161,7 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
     private suspend fun insertNewComments(insertedOrUpdatedItemId: Long) {
 
         commentUpdated.forEach { newComment ->
-             newComment.journalLinkId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
+             newComment.icalLinkId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
              viewModelScope.launch() {
                  database.insertComment(newComment)
              }

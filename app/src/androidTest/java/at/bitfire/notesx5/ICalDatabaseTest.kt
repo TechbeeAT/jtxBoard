@@ -6,29 +6,27 @@ import androidx.test.platform.app.InstrumentationRegistry
 import at.bitfire.notesx5.database.*
 import org.junit.After
 import org.junit.Before
-import org.junit.Test
 
-import org.junit.Assert.*
 import org.junit.runner.RunWith
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
-class VJournalDatabaseTest {
+class ICalDatabaseTest {
 
 
-    private lateinit var VJournalDao: VJournalDatabaseDao
-    private lateinit var db: VJournalDatabase
+    private lateinit var ICalDao: ICalDatabaseDao
+    private lateinit var db: ICalDatabase
 
     @Before
     fun createDb() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         // Using an in-memory database because the information stored here disappears when the
         // process is killed.
-        db = Room.inMemoryDatabaseBuilder(context, VJournalDatabase::class.java)
+        db = Room.inMemoryDatabaseBuilder(context, ICalDatabase::class.java)
                 // Allowing main thread queries, just for testing.
                 .allowMainThreadQueries()
                 .build()
-        VJournalDao = db.vJournalDatabaseDao
+        ICalDao = db.iCalDatabaseDao
     }
     /*
 

@@ -13,12 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import at.bitfire.notesx5.R
-import at.bitfire.notesx5.database.VJournalDatabase
+import at.bitfire.notesx5.database.ICalDatabase
 import at.bitfire.notesx5.databinding.FragmentVjournalListBinding
 import com.google.android.material.tabs.TabLayout
 import java.util.*
@@ -49,7 +47,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // set up DB DAO
         application = requireNotNull(this.activity).application
-        val dataSource = VJournalDatabase.getInstance(application).vJournalDatabaseDao
+        val dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
 
         // create the view model through the view model factory

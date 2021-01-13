@@ -11,11 +11,11 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.relations.VJournalWithCategory
+import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 import java.text.SimpleDateFormat
 import java.util.*
 
-class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<VJournalWithCategory>>):
+class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<ICalEntityWithCategory>>):
         RecyclerView.Adapter<VJournalListAdapter.VJournalItemHolder>() {
 
 

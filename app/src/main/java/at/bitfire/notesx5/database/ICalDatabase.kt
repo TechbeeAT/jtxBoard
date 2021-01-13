@@ -33,17 +33,17 @@ import at.bitfire.notesx5.database.properties.*
     Category::class,
     Comment::class,
     Contact::class,
-    VJournal::class,
+    ICalObject::class,
     Organizer::class,
     Relatedto::class,
-    Resource::class], version = 26, exportSchema = false)
+    Resource::class], version = 27, exportSchema = false)
 //@TypeConverters(Converters::class)
-abstract class VJournalDatabase : RoomDatabase() {
+abstract class ICalDatabase : RoomDatabase() {
 
     /**
      * Connects the database to the DAO.
      */
-    abstract val vJournalDatabaseDao: VJournalDatabaseDao
+    abstract val iCalDatabaseDao: ICalDatabaseDao
 
     /**
      * Define a companion object, this allows us to add functions on the SleepDatabase class.
@@ -59,7 +59,7 @@ abstract class VJournalDatabase : RoomDatabase() {
          *  thread to shared data are visible to other threads.
          */
         @Volatile
-        private var INSTANCE: VJournalDatabase? = null
+        private var INSTANCE: ICalDatabase? = null
 
         /**
          * Helper function to get the database.
@@ -78,7 +78,7 @@ abstract class VJournalDatabase : RoomDatabase() {
          *
          * @param context The application context Singleton, used to get access to the filesystem.
          */
-        fun getInstance(context: Context): VJournalDatabase {
+        fun getInstance(context: Context): ICalDatabase {
             // Multiple threads can ask for the database at the same time, ensure we only initialize
             // it once by using synchronized. Only one thread may enter a synchronized block at a
             // time.
@@ -90,7 +90,7 @@ abstract class VJournalDatabase : RoomDatabase() {
                 if (instance == null) {
                     instance = Room.databaseBuilder(
                             context.applicationContext,
-                            VJournalDatabase::class.java,
+                            ICalDatabase::class.java,
                             "notesx5_database"
                     )
                             // Wipes and rebuilds instead of migrating if no Migration object.

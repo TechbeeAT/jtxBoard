@@ -6,10 +6,10 @@ import androidx.room.Relation
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Category
 
-data class VJournalWithCategory (
+data class ICalEntityWithCategory (
         @Embedded
-        var vJournal: VJournal = VJournal(),
+        var vJournal: ICalObject = ICalObject(),
 
-        @Relation(parentColumn = "id", entityColumn = "journalLinkId", entity = Category::class)
+        @Relation(parentColumn = "id", entityColumn = "icalLinkId", entity = Category::class)
         var category: List<Category>? = null
 )

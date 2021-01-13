@@ -22,13 +22,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.properties.Category
-import at.bitfire.notesx5.database.VJournalDatabase
-import at.bitfire.notesx5.database.VJournalDatabaseDao
+import at.bitfire.notesx5.database.ICalDatabase
+import at.bitfire.notesx5.database.ICalDatabaseDao
 import at.bitfire.notesx5.database.properties.Comment
 import at.bitfire.notesx5.databinding.FragmentVjournalEditBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_vjournal_item.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item_categories_chip.view.*
@@ -42,7 +41,7 @@ class VJournalEditFragment : Fragment(),
 
     lateinit var binding: FragmentVjournalEditBinding
     lateinit var application: Application
-    lateinit var dataSource: VJournalDatabaseDao
+    lateinit var dataSource: ICalDatabaseDao
     lateinit var viewModelFactory: VJournalEditViewModelFactory
     lateinit var vJournalEditViewModel: VJournalEditViewModel
     lateinit var inflater: LayoutInflater
@@ -62,7 +61,7 @@ class VJournalEditFragment : Fragment(),
         this.binding = FragmentVjournalEditBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
-        this.dataSource = VJournalDatabase.getInstance(application).vJournalDatabaseDao
+        this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
         val arguments = VJournalEditFragmentArgs.fromBundle((arguments!!))
 

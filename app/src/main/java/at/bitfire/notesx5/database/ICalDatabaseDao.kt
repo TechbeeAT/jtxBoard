@@ -20,15 +20,15 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import at.bitfire.notesx5.database.properties.*
-import at.bitfire.notesx5.database.relations.VJournalEntity
-import at.bitfire.notesx5.database.relations.VJournalWithCategory
+import at.bitfire.notesx5.database.relations.ICalEntity
+import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 
 
 /**
  * Defines methods for using the SleepNight class with Room.
  */
 @Dao
-interface VJournalDatabaseDao {
+interface ICalDatabaseDao {
 
     /*
     @Query("SELECT * from vjournalitems WHERE id = :key")
@@ -49,7 +49,7 @@ interface VJournalDatabaseDao {
     @Query("SELECT DISTINCT caladdress FROM organizer ORDER BY caladdress ASC")
     fun getAllOrganizers(): LiveData<List<String>>
 
-    @Query("SELECT DISTINCT collection FROM vjournals ORDER BY collection ASC")
+    @Query("SELECT DISTINCT collection FROM icalobject ORDER BY collection ASC")
     fun getAllCollections(): LiveData<List<String>>
 
 /*
@@ -57,7 +57,7 @@ INSERTs
  */
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertJournal(vJournalItem: VJournal): Long
+    suspend fun insertJournal(vJournalItem: ICalObject): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAttendee(attendee: Attendee): Long
@@ -88,13 +88,13 @@ DELETEs
 
 
     @Update
-    suspend fun update(vJournal: VJournal)
+    suspend fun update(vJournal: ICalObject)
 
 
 
         // TODO Take care to delete also child elements!
     @Delete
-    fun delete(vJournal: VJournal)
+    fun delete(vJournal: ICalObject)
 
 
     /*
@@ -110,16 +110,16 @@ DELETEs
 
     @Transaction
     @RawQuery
-    fun getVJournalEntity(query: SupportSQLiteQuery): LiveData<List<VJournalEntity>>
+    fun getVJournalEntity(query: SupportSQLiteQuery): LiveData<List<ICalEntity>>
 
     @Transaction
     @RawQuery
-    fun getVJournalWithCategory(query: SupportSQLiteQuery): LiveData<List<VJournalWithCategory>>
+    fun getVJournalWithCategory(query: SupportSQLiteQuery): LiveData<List<ICalEntityWithCategory>>
 
 
     @Transaction
-    @Query("SELECT * from vjournals WHERE id = :key")
-    fun get(key: Long): LiveData<VJournalEntity?>
+    @Query("SELECT * from icalobject WHERE id = :key")
+    fun get(key: Long): LiveData<ICalEntity?>
 
 
 }

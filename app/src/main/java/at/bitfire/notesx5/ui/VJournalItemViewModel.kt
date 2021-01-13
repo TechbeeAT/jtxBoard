@@ -5,7 +5,7 @@ import androidx.lifecycle.*
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Comment
-import at.bitfire.notesx5.database.relations.VJournalEntity
+import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.DateFormat
@@ -13,11 +13,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class VJournalItemViewModel(    private val vJournalItemId: Long,
-                                val database: VJournalDatabaseDao,
-                                application: Application) : AndroidViewModel(application) {
+class VJournalItemViewModel(private val vJournalItemId: Long,
+                            val database: ICalDatabaseDao,
+                            application: Application) : AndroidViewModel(application) {
 
-    lateinit var vJournal: LiveData<VJournalEntity?>
+    lateinit var vJournal: LiveData<ICalEntity?>
     lateinit var category: LiveData<List<Category>>
 
     lateinit var dateVisible: LiveData<Boolean>
@@ -41,8 +41,8 @@ class VJournalItemViewModel(    private val vJournalItemId: Long,
 
             // insert a new value to initialize the vJournalItem or load the existing one from the DB
             vJournal = if (vJournalItemId == 0L)
-                MutableLiveData<VJournalEntity?>().apply {
-                    postValue(VJournalEntity(VJournal(), null, null, null, null, null)) }
+                MutableLiveData<ICalEntity?>().apply {
+                    postValue(ICalEntity(ICalObject(), null, null, null, null, null)) }
             else
                 database.get(vJournalItemId)
 
