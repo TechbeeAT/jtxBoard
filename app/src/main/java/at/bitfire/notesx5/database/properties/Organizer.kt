@@ -18,9 +18,9 @@ data class Organizer (
         var id: Long = 0L,
         var journalLinkId: Long = 0L,
         var caladdress: String = "",
-        var cnparam: String = "",
-        var dirparam: String = "",
-        var sentbyparam: String = "",
-        var languageparam: String = "",
-        var otherparam: String = "",
+        var cnparam: String? = null,
+        var dirparam: String? = null,
+        var sentbyparam: String? = null,
+        var languageparam: String? = null,
+        var otherparam: String? = null
 )

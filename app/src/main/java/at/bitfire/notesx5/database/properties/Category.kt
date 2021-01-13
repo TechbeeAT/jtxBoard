@@ -11,14 +11,17 @@ import at.bitfire.notesx5.database.VJournal
                 parentColumns = arrayOf("id"),
                 childColumns = arrayOf("journalLinkId"),
                 onDelete = ForeignKey.CASCADE)],
-        indices = [Index(value = ["categoryId", "journalLinkId", "text"])])
+        indices = [Index(value = ["categoryId", "journalLinkId"]),
+                Index(value = ["categoryId"]),
+                Index(value = ["text"])])
+
 data class Category (
 
         @PrimaryKey(autoGenerate = true)
         var categoryId: Long = 0L,
         var journalLinkId: Long = 0L,
         var text: String = "",
-        var languageparam: String = "",
-        var otherparam: String = "",
+        var languageparam: String? = null,
+        var otherparam: String? = null
 )
 

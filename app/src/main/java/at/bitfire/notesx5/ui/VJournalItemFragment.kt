@@ -362,7 +362,7 @@ class VJournalItemFragment : Fragment() {
 
         categories.forEach() { category ->
 
-            if (category.text.isBlank())     // don't add empty categories
+            if (category.text.isNullOrBlank())     // don't add empty categories
                 return@forEach
 
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_categories_chip, binding.categoriesChipgroup, false) as Chip

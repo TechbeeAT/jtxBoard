@@ -39,26 +39,30 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
 
     override fun onBindViewHolder(holder: VJournalItemHolder, position: Int) {
 
-        val vJournalList = vJournalList.value?.get(position)
 
-        if (vJournalList != null) {
+        if (vJournalList.value?.size == 0)    // only continue if there are items in the list
+            return
 
-            holder.summary.text = vJournalList.vJournal.summary
-            holder.description.text = vJournalList.vJournal.description
+        val vJournalItem = vJournalList.value?.get(position)
 
-            if (vJournalList.category?.isNotEmpty() == true) {
+        if (vJournalItem != null ) {
+
+            holder.summary.text = vJournalItem.vJournal.summary
+            holder.description.text = vJournalItem.vJournal.description
+
+            if (vJournalItem.category?.isNotEmpty() == true) {
                 val categoriesList = mutableListOf<String>()
-                vJournalList.category!!.forEach { categoriesList.add(it.text)  }
+                vJournalItem.category!!.forEach { categoriesList.add(it.text)  }
                 holder.categories.text = categoriesList.joinToString(separator=", ")
             } else {
                 holder.categories.visibility = View.GONE
                 //holder.categoriesIcon.visibility = View.GONE
             }
 
-            if(vJournalList.vJournal.component == "JOURNAL") {
-                holder.dtstartDay.text = convertLongToDayString(vJournalList.vJournal.dtstart)
-                holder.dtstartMonth.text = convertLongToMonthString(vJournalList.vJournal.dtstart)
-                holder.dtstartYear.text = convertLongToYearString(vJournalList.vJournal.dtstart)
+            if(vJournalItem.vJournal.component == "JOURNAL") {
+                holder.dtstartDay.text = convertLongToDayString(vJournalItem.vJournal.dtstart)
+                holder.dtstartMonth.text = convertLongToMonthString(vJournalItem.vJournal.dtstart)
+                holder.dtstartYear.text = convertLongToYearString(vJournalItem.vJournal.dtstart)
                 holder.dtstartDay.visibility = View.VISIBLE
                 holder.dtstartMonth.visibility = View.VISIBLE
                 holder.dtstartYear.visibility = View.VISIBLE
@@ -69,10 +73,10 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
 
                 val minute_formatter = SimpleDateFormat("mm")
                 val hour_formatter = SimpleDateFormat("HH")
-                if (minute_formatter.format(Date(vJournalList.vJournal.dtstart)).toString() == "00" && hour_formatter.format(Date(vJournalList.vJournal.dtstart)).toString() == "00") {
+                if (minute_formatter.format(Date(vJournalItem.vJournal.dtstart)).toString() == "00" && hour_formatter.format(Date(vJournalItem.vJournal.dtstart)).toString() == "00") {
                     holder.dtstartTime.visibility = View.GONE
                 } else {
-                    holder.dtstartTime.text = convertLongToTimeString(vJournalList.vJournal.dtstart)
+                    holder.dtstartTime.text = convertLongToTimeString(vJournalItem.vJournal.dtstart)
                     holder.dtstartTime.visibility = View.VISIBLE
                 }
 
@@ -88,16 +92,16 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
             }
 
             val statusArray = context.resources.getStringArray(R.array.vjournal_status)
-            holder.status.text = statusArray[vJournalList.vJournal.status]
+            holder.status.text = statusArray[vJournalItem.vJournal.status]
 
             val classificationArray = context.resources.getStringArray(R.array.vjournal_classification)
-            holder.classification.text = classificationArray[vJournalList.vJournal.classification]
+            holder.classification.text = classificationArray[vJournalItem.vJournal.classification]
 
 
             // turn to item view when the card is clicked
             holder.listItemCardView.setOnClickListener {
                 it.findNavController().navigate(
-                        VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment().setItem2show(vJournalList.vJournal.id))
+                        VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment().setItem2show(vJournalItem.vJournal.id))
             }
 
         }

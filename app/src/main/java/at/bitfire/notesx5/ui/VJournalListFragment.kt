@@ -104,33 +104,13 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         vJournalListViewModel.vJournalList.observe(viewLifecycleOwner, Observer {
             vJournalListAdapter!!.notifyDataSetChanged()
 
-            if (arguments.item2focus != 0L) {
+            if (arguments.item2focus != 0L && vJournalListViewModel.vJournalList.value?.size!! > 0) {
                 //Log.println(Log.INFO, "vJournalListFragment", arguments.vJournalItemId.toString())
                 vJournalListViewModel.setFocusItem(arguments.item2focus)
             }
         })
 
-        /*
-        vJournalListViewModel.vJournalList.observe(viewLifecycleOwner, {
-            if (vJournalListViewModel.vJournalList.value?.size!! > 0)
-                Log.println(Log.INFO, "getVJournalItemswithComments", vJournalListViewModel.vJournalList.value!![0]!!.vJournalItem.summary.toString())
-            
-            vJournalListViewModel.vJournalList.value?.forEach { it ->
 
-                it.vComment?.forEach {
-                    Log.println(Log.INFO, "getVJournalItemswithComments", it.comment.toString())
-                }
-
-                it.vCategory?.forEach {
-                    Log.println(Log.INFO, "getVJournalItemswithComments", it.categories.toString())
-                }
-
-            }
-
-        })
-
-
-         */
 
         // Observe the focus item to scroll automatically to the right position (newly updated or inserted item)
         vJournalListViewModel.focusItemId.observe(viewLifecycleOwner, Observer {
@@ -149,6 +129,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 vJournalListViewModel.resetFocusItem()
 
+
                 when (tab?.position) {
                     0 -> {
                         vJournalListViewModel.searchComponent = "JOURNAL"
@@ -159,6 +140,11 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                         vJournalListViewModel.searchComponent = "NOTE"
                         gotodateMenuItem.isVisible = false     // no date search for notes
                         staggeredGridLayoutManager!!.spanCount = 2
+                    }
+                    2 -> {
+                        vJournalListViewModel.searchComponent = "TODO"
+                        gotodateMenuItem.isVisible = false     // no date search for notes
+                        staggeredGridLayoutManager!!.spanCount = 1
                     }
                     else -> {
                         vJournalListViewModel.searchComponent = "JOURNAL"

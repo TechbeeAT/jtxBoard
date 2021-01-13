@@ -16,8 +16,8 @@ data class Comment (
     var commentId: Long = 0L,
     var journalLinkId: Long = 0L,
     var text: String = "",
-    var altrepparam: String = "",
-    var languageparam: String = ""
+    var altrepparam: String? = null,
+    var languageparam: String? = null
 )
 
 

@@ -305,7 +305,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textWebEmailAddress|textEmailAddress"
-                android:text="@{model.vJournalUpdated.attendee}" />
+                android:text="to be done" />
         </com.google.android.material.textfield.TextInputLayout>
 
 

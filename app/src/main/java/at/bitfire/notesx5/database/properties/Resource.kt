@@ -17,8 +17,8 @@ data class Resource (
         var id: Long = 0L,
         var journalLinkId: Long = 0L,
         var text: String = "",
-        var reltypeparam: String = "",
-        var otherparam: String = ""
+        var reltypeparam: String? = null,
+        var otherparam: String? = null
 )
 
 

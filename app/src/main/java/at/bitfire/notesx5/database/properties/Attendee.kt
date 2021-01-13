@@ -17,16 +17,16 @@ data class Attendee (
         var journalLinkId: Long = 0L,
         var caladdress: String = "",
         var cutypeparam: String = "INDIVIDUAL",
-        var memberparam: String = "",
-        var roleparam: String = "",
-        var partstatparam: String = "",
-        var rsvpparam: String = "",
-        var deltoparam: String = "",
-        var delfromparam: String = "",
-        var sentbyparam: String = "",
-        var cnparam: String = "",
-        var dirparam: String = "",
-        var languageparam: String = "",
-        var otherparam: String = ""
+        var memberparam: String? = null,
+        var roleparam: String? = null,
+        var partstatparam: String? = null,
+        var rsvpparam: String? = null,
+        var deltoparam: String? = null,
+        var delfromparam: String? = null,
+        var sentbyparam: String? = null,
+        var cnparam: String? = null,
+        var dirparam: String? = null,
+        var languageparam: String? = null,
+        var otherparam: String? = null
 
 )

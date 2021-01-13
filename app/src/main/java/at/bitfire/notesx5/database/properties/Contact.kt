@@ -16,8 +16,8 @@ data class Contact (
         @PrimaryKey(autoGenerate = true)
         var contactId: Long = 0L,
         var journalLinkId: Long = 0L,
-        var text: String = "",
-        var languageparam: String = "",
-        var otherparam: String = "",
+        var text: String? = null,
+        var languageparam: String? = null,
+        var otherparam: String? = null
 )
 

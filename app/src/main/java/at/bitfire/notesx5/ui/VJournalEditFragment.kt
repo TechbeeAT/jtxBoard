@@ -117,7 +117,7 @@ class VJournalEditFragment : Fragment(),
                 vJournalEditViewModel.vJournalUpdated.value!!.description = binding.descriptionEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.collection = binding.collection.selectedItem.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.url = binding.urlEdit.editText?.text.toString()
-                vJournalEditViewModel.vJournalUpdated.value!!.attendee = binding.attendeeEdit.editText?.text.toString()
+                //vJournalEditViewModel.vJournalUpdated.value!!.attendee = binding.attendeeEdit.editText?.text.toString()
                 vJournalEditViewModel.vJournalUpdated.value!!.contact = binding.contactEdit.editText?.text.toString()
                 //vJournalEditViewModel.vJournalUpdated.value!!.related = binding.relatedtoEdit.editText?.text.toString()
 
@@ -406,7 +406,7 @@ class VJournalEditFragment : Fragment(),
 
     private fun addCategoryChip(category: Category) {
 
-            if (category.text.isBlank())
+            if (category.text.isNullOrBlank())
                 return
 
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_edit_categories_chip, binding.categoriesChipgroup, false) as Chip

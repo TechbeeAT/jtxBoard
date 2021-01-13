@@ -13,9 +13,14 @@ data class VJournal(
         var id: Long = 0L,
         var component: String = "JOURNAL",          // JOURNAL or NOTE
         var collection: String = "LOCAL",
-        var summary: String = "",
-        var description: String = "",
+        var summary: String? = null,
+        var description: String? = null,
         var dtstart: Long = System.currentTimeMillis(),
+        var dtstartTimezone: String? = null,
+
+        var dtend: Long? = null,
+        var dtendTimezone: String? = null,
+
 
         //var organizer: String = "",
         //var categories: String = "",
@@ -23,10 +28,19 @@ data class VJournal(
         var classification: Int = 0,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, 3 = NOT SUPPORTED
 
         //var attach: String,
-        var url: String = "",
-        var attendee: String = "",
-        var contact: String = "",
-        var related: String = "",
+        var url: String? = null,
+        //var attendee: String = "",
+        var contact: String? = null,
+        //var related: String = "",
+        var geoLat: Float? = null,
+        var geoLong: Float? = null,
+        var location: String? = null,
+
+        var percent: Int? = null,    // VTODO only!
+        var priority: Int? = null,   // VTODO and VEVENT
+
+        var due: Long? = null,      // VTODO only!
+        var completed: Long? = null, // VTODO only!
 
 
         var uid: String = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.notesx5",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
