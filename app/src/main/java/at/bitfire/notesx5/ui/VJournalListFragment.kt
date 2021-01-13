@@ -13,8 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import at.bitfire.notesx5.R
 import at.bitfire.notesx5.database.VJournalDatabase
 import at.bitfire.notesx5.databinding.FragmentVjournalListBinding
@@ -25,7 +27,9 @@ import java.util.*
 class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     private var recyclerView: RecyclerView? = null
-    private var linearLayoutManager: LinearLayoutManager? = null
+    //private var linearLayoutManager: LinearLayoutManager? = null
+    private var staggeredGridLayoutManager: StaggeredGridLayoutManager? = null
+
     private var vJournalListAdapter: VJournalListAdapter? = null
 
     private lateinit var vJournalListViewModel: VJournalListViewModel
@@ -63,8 +67,10 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // set up recycler view
         recyclerView = binding.vjournalListItemsRecyclerView
-        linearLayoutManager = LinearLayoutManager(application.applicationContext)
-        recyclerView?.layoutManager = linearLayoutManager
+        //linearLayoutManager = LinearLayoutManager(application.applicationContext)
+        staggeredGridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+
+        recyclerView?.layoutManager = staggeredGridLayoutManager
         recyclerView?.setHasFixedSize(true)
 
         // create adapter and provide data
@@ -147,14 +153,17 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                     0 -> {
                         vJournalListViewModel.searchComponent = "JOURNAL"
                         gotodateMenuItem.isVisible = true
+                        staggeredGridLayoutManager!!.spanCount = 1
                     }
                     1 -> {
                         vJournalListViewModel.searchComponent = "NOTE"
                         gotodateMenuItem.isVisible = false     // no date search for notes
+                        staggeredGridLayoutManager!!.spanCount = 2
                     }
                     else -> {
                         vJournalListViewModel.searchComponent = "JOURNAL"
                         gotodateMenuItem.isVisible = true
+                        staggeredGridLayoutManager!!.spanCount = 1
                     }
                 }
                 vJournalListViewModel.updateSearch()

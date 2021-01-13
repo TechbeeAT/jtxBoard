@@ -5,6 +5,7 @@
     android:id="@+id/list_item_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
     android:layout_marginTop="4dp"
     android:checkable="true"
     android:clickable="true"
@@ -56,7 +57,6 @@
             android:textAlignment="center"
             android:textSize="12sp"
             android:textStyle="italic"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_barrier"
             app:layout_constraintStart_toStartOf="@+id/dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/dtstart_year"
             app:layout_constraintVertical_bias="0.0"
@@ -145,28 +145,10 @@
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             android:textStyle="italic"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_barrier"
             app:layout_constraintEnd_toEndOf="@+id/description"
             app:layout_constraintStart_toStartOf="@+id/description"
             app:layout_constraintTop_toBottomOf="@+id/status_icon"
             tools:text="Category1, Category2" />
-
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/bottom_barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="top" />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bottom_barrier" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

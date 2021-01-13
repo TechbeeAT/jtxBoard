@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.LiveData
@@ -38,7 +39,7 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
 
     override fun onBindViewHolder(holder: VJournalItemHolder, position: Int) {
 
-        var vJournalList = vJournalList.value?.get(position)
+        val vJournalList = vJournalList.value?.get(position)
 
         if (vJournalList != null) {
 
@@ -46,7 +47,7 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
             holder.description.text = vJournalList.vJournal.description
 
             if (vJournalList.category?.isNotEmpty() == true) {
-                var categoriesList = mutableListOf<String>()
+                val categoriesList = mutableListOf<String>()
                 vJournalList.category!!.forEach { categoriesList.add(it.text)  }
                 holder.categories.text = categoriesList.joinToString(separator=", ")
             } else {
@@ -61,6 +62,10 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.dtstartDay.visibility = View.VISIBLE
                 holder.dtstartMonth.visibility = View.VISIBLE
                 holder.dtstartYear.visibility = View.VISIBLE
+                holder.status.visibility = View.VISIBLE
+                holder.statusIcon.visibility = View.VISIBLE
+                holder.classification.visibility = View.VISIBLE
+                holder.classificationIcon.visibility = View.VISIBLE
 
                 val minute_formatter = SimpleDateFormat("mm")
                 val hour_formatter = SimpleDateFormat("HH")
@@ -76,6 +81,10 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.dtstartMonth.visibility = View.GONE
                 holder.dtstartYear.visibility = View.GONE
                 holder.dtstartTime.visibility = View.GONE
+                holder.status.visibility = View.GONE
+                holder.statusIcon.visibility = View.GONE
+                holder.classification.visibility = View.GONE
+                holder.classificationIcon.visibility = View.GONE
             }
 
             val statusArray = context.resources.getStringArray(R.array.vjournal_status)
@@ -83,7 +92,6 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
 
             val classificationArray = context.resources.getStringArray(R.array.vjournal_classification)
             holder.classification.text = classificationArray[vJournalList.vJournal.classification]
-
 
 
             // turn to item view when the card is clicked
@@ -106,16 +114,19 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
         var description = itemView.findViewById<TextView>(R.id.description)
 
 
-        var categories = itemView.findViewById<TextView>(R.id.categories)
+        var categories: TextView = itemView.findViewById<TextView>(R.id.categories)
         //var categoriesIcon = itemView.findViewById<ImageView>(R.id.categories_icon)
-        var status = itemView.findViewById<TextView>(R.id.status)
-        var classification = itemView.findViewById<TextView>(R.id.classification)
+        var status: TextView = itemView.findViewById<TextView>(R.id.status)
+        var classification: TextView = itemView.findViewById<TextView>(R.id.classification)
+        var statusIcon: ImageView = itemView.findViewById<ImageView>(R.id.status_icon)
+        var classificationIcon: ImageView = itemView.findViewById<ImageView>(R.id.classification_icon)
 
 
-        var dtstartDay = itemView.findViewById<TextView>(R.id.dtstart_day)
-        var dtstartMonth = itemView.findViewById<TextView>(R.id.dtstart_month)
-        var dtstartYear = itemView.findViewById<TextView>(R.id.dtstart_year)
-        var dtstartTime = itemView.findViewById<TextView>(R.id.dtstart_time)
+
+        var dtstartDay: TextView = itemView.findViewById<TextView>(R.id.dtstart_day)
+        var dtstartMonth: TextView = itemView.findViewById<TextView>(R.id.dtstart_month)
+        var dtstartYear: TextView = itemView.findViewById<TextView>(R.id.dtstart_year)
+        var dtstartTime: TextView = itemView.findViewById<TextView>(R.id.dtstart_time)
 
 
     }
