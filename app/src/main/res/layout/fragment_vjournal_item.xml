@@ -108,7 +108,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="68dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 app:chipSpacingHorizontal="8dp"
                 app:chipSpacingVertical="0dp"
@@ -472,18 +472,57 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/comments_header" >
 
+            </LinearLayout>
+
+
+
+            <ImageView
+                android:id="@+id/feedback_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/feedback_header"
+                app:srcCompat="@drawable/ic_feedback"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/feedback_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="Feedback / Linked Notes"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/feedback_icon"
+                app:layout_constraintTop_toBottomOf="@id/comments_linearlayout"/>
+
+
+            <LinearLayout
+                android:id="@+id/feedback_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:divider="?android:dividerHorizontal"
+                android:showDividers="middle"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/feedback_header" >
 
             </LinearLayout>
 
             <Button
-                android:id="@+id/add_comment"
+                android:id="@+id/add_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add comment"
+                android:text="Add note"
                 app:icon="@drawable/ic_comment_add"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/comments_linearlayout" />
+                app:layout_constraintTop_toBottomOf="@+id/feedback_linearlayout" />
 
 
             <TextView
@@ -497,7 +536,7 @@
                 android:textSize="10sp"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_comment"
+                app:layout_constraintTop_toBottomOf="@+id/add_note"
                 tools:text="Created: Sun Dec 20 20:38:30 GMT+01:00 2020" />
 
 

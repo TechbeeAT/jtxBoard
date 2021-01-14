@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,12 +16,11 @@ import at.bitfire.notesx5.convertLongToTimeString
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
-import at.bitfire.notesx5.database.properties.Comment
 import at.bitfire.notesx5.databinding.FragmentVjournalItemBinding
 import com.google.android.material.chip.Chip
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.fragment_vjournal_item_comment.view.*
+import kotlinx.android.synthetic.main.fragment_vjournal_edit_comment.view.*
+import kotlinx.android.synthetic.main.fragment_vjournal_item_relatedto.view.*
 import java.util.*
 
 
@@ -34,7 +32,6 @@ class VJournalItemFragment : Fragment() {
     lateinit var dataSource: ICalDatabaseDao
     lateinit var viewModelFactory: VJournalItemViewModelFactory
     lateinit var vJournalItemViewModel: VJournalItemViewModel
-
 
 
     val allContactsWithName: MutableList<String> = mutableListOf()
@@ -96,50 +93,70 @@ class VJournalItemFragment : Fragment() {
 
                 binding.commentsLinearlayout.removeAllViews()
                 vJournalItemViewModel.vJournal.value!!.comment?.forEach { comment ->
-                    val commentView = inflater.inflate(R.layout.fragment_vjournal_item_comment, container, false);
+                    val commentView = inflater.inflate(R.layout.fragment_vjournal_edit_comment, container, false);
                     commentView.comment_textview.text = comment.text
                     binding.commentsLinearlayout.addView(commentView)
-
-                    // set on Click Listener to open a dialog to update the comment
-                    commentView.setOnClickListener {
-
-                        // set up the values for the TextInputEditText
-                        val updatedText: TextInputEditText = TextInputEditText(context!!)
-                        updatedText.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-                        updatedText.setText(comment.text)
-                        updatedText.isSingleLine = false;
-                        updatedText.maxLines = 8
-
-                        // set up the builder for the AlertDialog
-                        val builder = AlertDialog.Builder(requireContext())
-                        builder.setTitle("Edit comment")
-                        builder.setIcon(R.drawable.ic_comment_add)
-                        builder.setView(updatedText)
-
-
-                        builder.setPositiveButton("Save") { _, _ ->
-                            // update the comment
-                            val updatedComment = comment.copy()
-                            updatedComment.text = updatedText.text.toString()
-                            vJournalItemViewModel.upsertComment(updatedComment)
-                        }
-                        builder.setNegativeButton("Cancel") { _, _ ->
-                            // Do nothing, just close the message
-                        }
-
-                        builder.setNeutralButton("Delete") { _, _ ->
-                            vJournalItemViewModel.deleteComment(comment)
-                            Snackbar.make(this.view!!, "Comment deleted: ${comment.text}", Snackbar.LENGTH_LONG).show()
-                        }
-
-                        builder.show()
-                    }
-
                 }
-
-
             }
         })
+
+
+
+        vJournalItemViewModel.relatedICalObjects.observe(viewLifecycleOwner, {
+
+            if (it?.size != 0)
+            {
+                binding.feedbackLinearlayout.removeAllViews()
+                it.forEach { relatedICalObject ->
+                    val relatedView = inflater.inflate(R.layout.fragment_vjournal_item_relatedto, container, false);
+                    relatedView.related_textview.text = relatedICalObject?.summary
+                    binding.feedbackLinearlayout.addView(relatedView)
+                }
+            }
+        })
+
+
+            /*
+
+            // set on Click Listener to open a dialog to update the comment
+            commentView.setOnClickListener {
+
+                // set up the values for the TextInputEditText
+                val updatedText: TextInputEditText = TextInputEditText(context!!)
+                updatedText.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                updatedText.setText(comment.text)
+                updatedText.isSingleLine = false;
+                updatedText.maxLines = 8
+
+                // set up the builder for the AlertDialog
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Edit comment")
+                builder.setIcon(R.drawable.ic_comment_add)
+                builder.setView(updatedText)
+
+
+                builder.setPositiveButton("Save") { _, _ ->
+                    // update the comment
+                    val updatedComment = comment.copy()
+                    updatedComment.text = updatedText.text.toString()
+                    vJournalItemViewModel.upsertComment(updatedComment)
+                }
+                builder.setNegativeButton("Cancel") { _, _ ->
+                    // Do nothing, just close the message
+                }
+
+                builder.setNeutralButton("Delete") { _, _ ->
+                    vJournalItemViewModel.deleteComment(comment)
+                    Snackbar.make(this.view!!, "Comment deleted: ${comment.text}", Snackbar.LENGTH_LONG).show()
+                }
+
+                builder.show()
+            }
+
+        }
+
+
+             */
 
         vJournalItemViewModel.category.observe(viewLifecycleOwner, {
             binding.categoriesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
@@ -148,21 +165,23 @@ class VJournalItemFragment : Fragment() {
         })
 
 
-        binding.addComment.setOnClickListener {
 
-            val newComment: TextInputEditText = TextInputEditText(context!!)
-            newComment.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-            newComment.isSingleLine = false;
-            newComment.maxLines = 8
+        binding.addNote.setOnClickListener {
+
+            val newNote = TextInputEditText(context!!)
+            newNote.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            newNote.isSingleLine = false;
+            newNote.maxLines = 8
 
             val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Add comment")
+            builder.setTitle("Add feedback / note")
             builder.setIcon(R.drawable.ic_comment_add)
-            builder.setView(newComment)
+            builder.setView(newNote)
 
             builder.setPositiveButton("Save") { _, _ ->
-               vJournalItemViewModel.upsertComment(Comment(icalLinkId = vJournalItemViewModel.vJournal.value!!.vJournal.id, text = newComment.text.toString()))
+                vJournalItemViewModel.insertRelatedNote(ICalObject(component = "NOTE", summary = newNote.text.toString()))
             }
+
             builder.setNegativeButton("Cancel") { _, _ ->
                 // Do nothing, just close the message
             }
@@ -171,68 +190,6 @@ class VJournalItemFragment : Fragment() {
 
         }
 
-
-        binding.urlAddButton.setOnClickListener{
-
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Set URL")
-            builder.setIcon(R.drawable.ic_url_add)
-
-           // val dialog = R.layout.fragment_vjournal_item_dialog_url
-            val dialog = inflater.inflate(R.layout.fragment_vjournal_item_dialog_url, null)
-            val editText = dialog.findViewById<EditText>(R.id.url_dialog_edittext)
-
-            editText.setText(vJournalItemViewModel.vJournal.value?.vJournal?.url)
-
-            builder.setView(dialog)
-
-
-            builder.setPositiveButton("Save") { _, _ ->
-                vJournalItemViewModel.updateUrl(editText.text.toString())
-            }
-            builder.setNegativeButton("Cancel") { _, _ ->
-                // Do nothing, just close the message
-            }
-
-            if (!vJournalItemViewModel.vJournal.value!!.vJournal.url.isNullOrBlank())
-            {
-                builder.setNeutralButton("Delete") { _, _ ->
-                    vJournalItemViewModel.updateUrl("")
-                }
-            }
-
-            builder.show()
-        }
-
-        binding.contactAddButton.setOnClickListener{
-
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Set Contact")
-            builder.setIcon(R.drawable.ic_contact)
-
-            val dialog = inflater.inflate(R.layout.fragment_vjournal_item_dialog_contact, null)
-            val editText = dialog.findViewById<EditText>(R.id.contact_dialog_edittext)
-            editText.setText(vJournalItemViewModel.vJournal.value?.vJournal?.contact)
-
-            builder.setView(dialog)
-
-
-            builder.setPositiveButton("Save") { _, _ ->
-                vJournalItemViewModel.updateContact(editText.text.toString())
-            }
-            builder.setNegativeButton("Cancel") { _, _ ->
-                // Do nothing, just close the message
-            }
-
-            if (!vJournalItemViewModel.vJournal.value!!.vJournal.contact.isNullOrBlank())
-            {
-                builder.setNeutralButton("Delete") { _, _ ->
-                    vJournalItemViewModel.updateContact("")
-                }
-            }
-
-            builder.show()
-        }
 
 
 /*

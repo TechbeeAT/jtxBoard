@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Category
-import at.bitfire.notesx5.database.properties.Comment
+import at.bitfire.notesx5.database.properties.Relatedto
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,6 +19,7 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
 
     lateinit var vJournal: LiveData<ICalEntity?>
     lateinit var category: LiveData<List<Category>>
+    lateinit var relatedICalObjects: LiveData<List<ICalObject?>>
 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
@@ -50,6 +51,12 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
                 it?.category
             }
 
+
+            relatedICalObjects = Transformations.switchMap(vJournal) {
+                it?.vJournal?.id?.let { parentId -> database.getRelated(parentId) }
+            }
+
+
             setupDates()
 
             urlVisible = Transformations.map(vJournal) { item ->
@@ -67,7 +74,6 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
             relatedtoVisible = Transformations.map(vJournal) { item ->
                 return@map !item?.relatedto.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
-
         }
     }
 
@@ -115,15 +121,17 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
 
     }
 
-    fun upsertComment(comment: Comment) {
+    fun insertRelatedNote(note: ICalObject) {
         viewModelScope.launch() {
-            database.insertComment(comment)
+            val newNoteId = database.insertJournal(note)
+            database.upsertRelatedto(Relatedto(icalObjectId = vJournal.value!!.vJournal.id, linkedICalObjectId = newNoteId, reltypeparam = "CHILD", text = note.uid))
+
         }
     }
 
-    fun deleteComment(comment: Comment) {
+    fun deleteNote(note: ICalObject) {
         viewModelScope.launch(Dispatchers.IO) {
-            database.deleteComment(comment)
+            database.delete(note)
         }
     }
 

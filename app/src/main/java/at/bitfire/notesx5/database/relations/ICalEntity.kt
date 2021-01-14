@@ -10,19 +10,19 @@ data class ICalEntity (
         var vJournal: ICalObject = ICalObject(),
 
 
-        @Relation(parentColumn = "id", entityColumn = "icalLinkId")
+        @Relation(parentColumn = "id", entityColumn = "icalObjectId")
         var comment: List<Comment>? = null,
 
-        @Relation(parentColumn = "id", entityColumn = "icalLinkId", entity = Category::class)
+        @Relation(parentColumn = "id", entityColumn = "icalObjectId", entity = Category::class)
         var category: List<Category>? = null,
 
-        @Relation(parentColumn = "id", entityColumn = "icalLinkId")
+        @Relation(parentColumn = "id", entityColumn = "icalObjectId")
         var attendee: List<Attendee>? = null,
 
-        @Relation(parentColumn = "id", entityColumn = "icalLinkId")
+        @Relation(parentColumn = "id", entityColumn = "icalObjectId")
         var organizer: Organizer? = null,
 
-        @Relation(parentColumn = "id", entityColumn = "icalLinkId")
+        @Relation(parentColumn = "id", entityColumn = "icalObjectId")
         var relatedto: List<Relatedto>? = null
 
 

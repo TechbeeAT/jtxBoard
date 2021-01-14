@@ -29,9 +29,9 @@ import at.bitfire.notesx5.databinding.FragmentVjournalEditBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.android.synthetic.main.fragment_vjournal_edit_comment.view.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item_categories_chip.view.*
-import kotlinx.android.synthetic.main.fragment_vjournal_item_comment.view.*
 import java.util.*
 
 
@@ -429,7 +429,7 @@ class VJournalEditFragment : Fragment(),
 
     private fun addCommentView(comment: Comment, container: ViewGroup?) {
 
-            val commentView = inflater.inflate(R.layout.fragment_vjournal_item_comment, container, false);
+            val commentView = inflater.inflate(R.layout.fragment_vjournal_edit_comment, container, false);
             commentView.comment_textview.text = comment.text
             binding.commentsLinearlayout.addView(commentView)
 
@@ -465,9 +465,7 @@ class VJournalEditFragment : Fragment(),
                     vJournalEditViewModel.commentDeleted.add(comment)
                     it.visibility = View.GONE
                 }
-
                 builder.show()
-
         }
     }
 

@@ -130,7 +130,7 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
     private suspend fun insertNewCategories(insertedOrUpdatedItemId: Long) {
 
         categoryUpdated.forEach { newCategory ->
-            newCategory.icalLinkId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
+            newCategory.icalObjectId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
             viewModelScope.launch() {
                 database.insertCategory(newCategory)
             }
@@ -161,7 +161,7 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
     private suspend fun insertNewComments(insertedOrUpdatedItemId: Long) {
 
         commentUpdated.forEach { newComment ->
-             newComment.icalLinkId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
+             newComment.icalObjectId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
              viewModelScope.launch() {
                  database.insertComment(newComment)
              }
@@ -179,8 +179,5 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
     fun clearUrlError(s: Editable) {
         urlError.value = null
     }
-
 }
-
-
 

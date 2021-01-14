@@ -72,7 +72,7 @@ INSERTs
     suspend fun insertOrganizer(organizer: Organizer): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRelatedto(relatedto: Relatedto): Long
+    suspend fun upsertRelatedto(relatedto: Relatedto): Long
 
 /*
 DELETEs
@@ -83,6 +83,9 @@ DELETEs
 
     @Delete
     fun deleteComment(comment: Comment)
+
+    @Delete
+    fun deleteRelatedto(rel: Relatedto)
 
 
 
@@ -120,6 +123,12 @@ DELETEs
     @Transaction
     @Query("SELECT * from icalobject WHERE id = :key")
     fun get(key: Long): LiveData<ICalEntity?>
+
+
+    // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
+    @Transaction
+    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey")
+    fun getRelated(parentKey: Long): LiveData<List<ICalObject?>>
 
 
 }

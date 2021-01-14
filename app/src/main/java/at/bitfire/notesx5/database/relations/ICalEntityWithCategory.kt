@@ -10,6 +10,6 @@ data class ICalEntityWithCategory (
         @Embedded
         var vJournal: ICalObject = ICalObject(),
 
-        @Relation(parentColumn = "id", entityColumn = "icalLinkId", entity = Category::class)
+        @Relation(parentColumn = "id", entityColumn = "icalObjectId", entity = Category::class)
         var category: List<Category>? = null
 )
