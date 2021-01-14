@@ -91,22 +91,6 @@
             />
 
 
-        <!--
-        <TextView
-            android:id="@+id/organizer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:drawableStart="@drawable/ic_vjournal_organizer"
-            android:drawablePadding="4dp"
-            android:text="@{model.vJournalItem.organizer}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Organizer" />
-        -->
-
 
         <ImageView
             android:id="@+id/collection_icon"
@@ -134,50 +118,27 @@
             tools:text="Collection" />
 
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/categories_chipgroup"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            app:chipSpacingHorizontal="8dp"
-            app:chipSpacingVertical="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/categories_add"
-            app:layout_constraintEnd_toEndOf="@+id/categories_add"
-            app:layout_constraintStart_toStartOf="@+id/categories_add"
-            app:layout_constraintTop_toBottomOf="@+id/collection" />
-
-
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/categories_add"
+            android:id="@+id/dtstart_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:hint="@string/item_edit_add_category_hint"
-            app:endIconContentDescription="Add category"
-            app:endIconDrawable="@drawable/ic_vjournal_add_category"
-            app:endIconMode="custom"
-            app:helperTextEnabled="true"
-            app:layout_constraintBottom_toTopOf="@id/top_barrier"
+            android:hint="hint..."
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-            app:layout_constraintTop_toBottomOf="@+id/collection"
-            app:startIconDrawable="@drawable/ic_vjournal_category">
+            app:layout_constraintTop_toBottomOf="@+id/collection">
 
 
-            <AutoCompleteTextView
-                android:id="@+id/categories_add_autocomplete"
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:singleLine="false"
-                android:imeOptions="actionDone"
-                android:inputType="textShortMessage|textCapSentences" />
-
-
+                android:inputType="textWebEditText|textMultiLine|textCapSentences"
+                android:maxLines="1"
+                android:text="tbd"
+                tools:text="dtstart...tbd" />
         </com.google.android.material.textfield.TextInputLayout>
-
 
 
 
@@ -262,18 +223,20 @@
             tools:text="Public" />
 
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/url_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:hint="@string/item_edit_url_hint"
             app:endIconMode="clear_text"
             app:error="@{model.urlError}"
             app:errorEnabled="true"
             app:helperText="URL related to this entry"
             app:helperTextEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/status_chip"
             app:startIconDrawable="@drawable/ic_link">
@@ -287,40 +250,22 @@
                 android:text="@{model.vJournalUpdated.url}" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/attendee_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/item_edit_attendees_hint"
-            app:endIconMode="clear_text"
-            app:helperText="E-Mail of attendees separated by commas"
-            app:helperTextEnabled="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/url_edit"
-            app:startIconDrawable="@drawable/ic_attendee">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textWebEmailAddress|textEmailAddress"
-                android:text="to be done" />
-        </com.google.android.material.textfield.TextInputLayout>
-
 
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/contact_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:hint="@string/item_edit_contact_hint"
             app:endIconMode="clear_text"
             app:helperText="Contact information of the responsible or owner of this entry"
             app:helperTextEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/attendee_edit"
+            app:layout_constraintTop_toBottomOf="@+id/url_edit"
             app:startIconDrawable="@drawable/ic_contact">
 
 
@@ -334,6 +279,148 @@
                 android:text="@{model.vJournalUpdated.contact}" />
         </com.google.android.material.textfield.TextInputLayout>
 
+
+
+
+
+
+        <ImageView
+            android:id="@+id/categories_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/categories_header"
+            app:srcCompat="@drawable/ic_vjournal_category"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/categories_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="Categories"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/categories_icon"
+            app:layout_constraintTop_toBottomOf="@id/contact_edit"/>
+
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/categories_chipgroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/categories_header" />
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/categories_add"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="@string/item_edit_add_category_hint"
+            app:endIconContentDescription="Add category"
+            app:endIconDrawable="@drawable/ic_vjournal_add_category"
+            app:endIconMode="custom"
+            app:helperTextEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/categories_chipgroup"
+            >
+
+
+            <AutoCompleteTextView
+                android:id="@+id/categories_add_autocomplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:singleLine="false"
+                android:imeOptions="actionDone"
+                android:inputType="textShortMessage|textCapSentences" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+        <ImageView
+            android:id="@+id/attendees_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/attendees_header"
+            app:srcCompat="@drawable/ic_attendee"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/attendees_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="Attendees"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/attendees_icon"
+            app:layout_constraintTop_toBottomOf="@id/categories_add"/>
+
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/attendees_chipgroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/attendees_header" />
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/attendees_add"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="@string/item_edit_attendees_hint"
+            app:endIconContentDescription="Add attendee"
+            app:endIconDrawable="@drawable/ic_attendee_add"
+            app:endIconMode="custom"
+            app:helperTextEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/attendees_chipgroup"
+            >
+
+
+            <AutoCompleteTextView
+                android:id="@+id/attendees_add_autocomplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:singleLine="false"
+                android:imeOptions="actionDone"
+                android:inputType="textShortMessage|textCapSentences" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
 
 
 
@@ -357,7 +444,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/comments_icon"
-            app:layout_constraintTop_toBottomOf="@id/contact_edit"/>
+            app:layout_constraintTop_toBottomOf="@id/attendees_add"/>
 
 
         <LinearLayout

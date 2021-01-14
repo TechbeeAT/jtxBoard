@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -21,9 +22,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.ICalDatabase
 import at.bitfire.notesx5.database.ICalDatabaseDao
+import at.bitfire.notesx5.database.properties.Attendee
+import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Comment
 import at.bitfire.notesx5.databinding.FragmentVjournalEditBinding
 import com.google.android.material.chip.Chip
@@ -185,7 +187,7 @@ class VJournalEditFragment : Fragment(),
             }
 
             binding.categoriesChipgroup.removeAllViews()
-            vJournalEditViewModel.vJournalItem.value?.category?.forEach {  singleCategory ->
+            vJournalEditViewModel.vJournalItem.value?.category?.forEach { singleCategory ->
                 addCategoryChip(singleCategory)
             }
 
@@ -278,6 +280,15 @@ class VJournalEditFragment : Fragment(),
                 else -> false
             }
         }
+
+        binding.attendeesAddAutocomplete.setOnItemClickListener { adapterView, view, i, l ->
+            //TODO
+            val newAttendee = binding.attendeesAddAutocomplete.adapter.getItem(i).toString()
+            addAttendeeChip(Attendee(caladdress = newAttendee))
+            binding.attendeesAddAutocomplete.text.clear()
+        }
+
+
 
 
 
@@ -427,6 +438,28 @@ class VJournalEditFragment : Fragment(),
             }
     }
 
+
+    private fun addAttendeeChip(attendee: Attendee) {
+
+        val attendeeChip = inflater.inflate(R.layout.fragment_vjournal_edit_attendees_chip, binding.attendeesChipgroup, false) as Chip
+        attendeeChip.text = attendee.caladdress
+        binding.attendeesChipgroup.addView(attendeeChip)
+
+        attendeeChip.setOnClickListener {
+            // Responds to chip click
+        }
+
+        attendeeChip.setOnCloseIconClickListener { chip ->
+            //vJournalEditViewModel.categoryDeleted.add(attendee)  // add the category to the list for categories to be deleted
+            chip.visibility = View.GONE
+        }
+
+        attendeeChip.setOnCheckedChangeListener { chip, isChecked ->
+            // Responds to chip checked/unchecked
+        }
+    }
+
+
     private fun addCommentView(comment: Comment, container: ViewGroup?) {
 
             val commentView = inflater.inflate(R.layout.fragment_vjournal_edit_comment, container, false);
@@ -502,7 +535,7 @@ class VJournalEditFragment : Fragment(),
 
                 val name = cur.getString(1)    // according to projection 0 = DISPLAY_NAME, 1 = Email.DATA
                 val emlAddr = cur.getString(2)
-                Log.println(Log.INFO, "cursor: ", "$name: $emlAddr")
+                //Log.println(Log.INFO, "cursor: ", "$name: $emlAddr")
                 allContactsNameAndMail.add("$name ($emlAddr)")
                 //allContactsAsAttendee.add(VAttendee(cnparam = name, attendee = emlAddr))
 
@@ -512,7 +545,10 @@ class VJournalEditFragment : Fragment(),
         }
 
         val arrayAdapterNameAndMail = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsNameAndMail)
+
         binding.contactAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
+        binding.attendeesAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
+
 
     }
 }
