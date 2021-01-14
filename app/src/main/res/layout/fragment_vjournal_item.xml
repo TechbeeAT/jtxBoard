@@ -441,6 +441,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/comments_header"
                 app:srcCompat="@drawable/ic_comments"
@@ -452,6 +453,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
                 android:text="@string/item_view_comments_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -468,6 +470,7 @@
                 android:divider="?android:dividerHorizontal"
                 android:showDividers="middle"
                 android:orientation="vertical"
+                android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/comments_header" >
@@ -515,9 +518,10 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/add_note"
+                android:id="@+id/add_feedback"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Add note"
                 app:icon="@drawable/ic_comment_add"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -536,7 +540,7 @@
                 android:textSize="10sp"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_note"
+                app:layout_constraintTop_toBottomOf="@+id/add_feedback"
                 tools:text="Created: Sun Dec 20 20:38:30 GMT+01:00 2020" />
 
 

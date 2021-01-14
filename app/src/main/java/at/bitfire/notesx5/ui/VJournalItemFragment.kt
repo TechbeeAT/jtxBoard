@@ -166,7 +166,7 @@ class VJournalItemFragment : Fragment() {
 
 
 
-        binding.addNote.setOnClickListener {
+        binding.addFeedback.setOnClickListener {
 
             val newNote = TextInputEditText(context!!)
             newNote.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES

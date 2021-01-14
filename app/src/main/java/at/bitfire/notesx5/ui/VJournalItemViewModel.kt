@@ -31,6 +31,7 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
     lateinit var attendeesVisible: LiveData<Boolean>
     lateinit var organizerVisible: LiveData<Boolean>
     lateinit var contactVisible: LiveData<Boolean>
+    lateinit var commentsVisible: LiveData<Boolean>
     lateinit var relatedtoVisible: LiveData<Boolean>
 
     var editingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
@@ -74,6 +75,10 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
             relatedtoVisible = Transformations.map(vJournal) { item ->
                 return@map !item?.relatedto.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
+            commentsVisible = Transformations.map(vJournal) { item ->
+                return@map !item?.comment.isNullOrEmpty()      // true if relatedto is NOT null or empty
+            }
+
         }
     }
 

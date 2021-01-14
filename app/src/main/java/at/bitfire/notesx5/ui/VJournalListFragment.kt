@@ -272,7 +272,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 })
         }
 
-        if (item.itemId == R.id.add_note) {
+        if (item.itemId == R.id.add_feedback) {
             this.findNavController().navigate(
                     VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment().apply {
                         item2edit = 0

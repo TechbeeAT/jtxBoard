@@ -34,7 +34,7 @@
             android:title="Add Journal"
             app:showAsAction="never" />
         <item
-            android:id="@+id/add_note"
+            android:id="@+id/add_feedback"
             android:title="Add Note"
             app:showAsAction="never" />
     </group>
