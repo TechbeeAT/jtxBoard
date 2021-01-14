@@ -91,10 +91,10 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.classificationIcon.visibility = View.GONE
             }
 
-            val statusArray = context.resources.getStringArray(R.array.vjournal_status)
+            val statusArray = context.resources.getStringArray(R.array.ical_status)
             holder.status.text = statusArray[vJournalItem.vJournal.status]
 
-            val classificationArray = context.resources.getStringArray(R.array.vjournal_classification)
+            val classificationArray = context.resources.getStringArray(R.array.ical_classification)
             holder.classification.text = classificationArray[vJournalItem.vJournal.classification]
 
 

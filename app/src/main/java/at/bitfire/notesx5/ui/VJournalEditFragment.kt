@@ -10,11 +10,9 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -67,8 +65,8 @@ class VJournalEditFragment : Fragment(),
 
         val arguments = VJournalEditFragmentArgs.fromBundle((arguments!!))
 
-        val statusItems = resources.getStringArray(R.array.vjournal_status)
-        val classificationItems = resources.getStringArray(R.array.vjournal_classification)
+        val statusItems = resources.getStringArray(R.array.ical_status)
+        val classificationItems = resources.getStringArray(R.array.ical_classification)
 
 
         // add menu
@@ -333,7 +331,7 @@ class VJournalEditFragment : Fragment(),
 
         binding.classificationChip.setOnClickListener {
 
-            val classificationItems = resources.getStringArray(R.array.vjournal_classification)
+            val classificationItems = resources.getStringArray(R.array.ical_classification)
 
             MaterialAlertDialogBuilder(context!!)
                     .setTitle("Set classification")

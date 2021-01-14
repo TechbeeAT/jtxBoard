@@ -84,10 +84,10 @@ class VJournalItemFragment : Fragment() {
 
             if (it?.vJournal != null) {
 
-                val statusArray = resources.getStringArray(R.array.vjournal_status)
+                val statusArray = resources.getStringArray(R.array.ical_status)
                 binding.statusChip.text = statusArray[vJournalItemViewModel.vJournal.value!!.vJournal.status]
 
-                val classificationArray = resources.getStringArray(R.array.vjournal_classification)
+                val classificationArray = resources.getStringArray(R.array.ical_classification)
                 binding.classificationChip.text = classificationArray[vJournalItemViewModel.vJournal.value!!.vJournal.classification]
 
 

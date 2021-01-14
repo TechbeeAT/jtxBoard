@@ -24,18 +24,25 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
 
-    <string-array name="vjournal_status">
+    <string-array name="ical_status">
         <item>Draft</item>
         <item>Final</item>
         <item>Cancelled</item>
        <!-- <item>Unsupported</item> -->
     </string-array>
 
-    <string-array name="vjournal_classification">
+    <string-array name="ical_classification">
         <item>Public</item>
         <item>Private</item>
         <item>Confidential</item>
        <!-- <item>Unsupported</item> -->
+    </string-array>
+
+    <string-array name="timezones">
+        <item>GMT</item>
+        <item>PST</item>
+        <item>...</item>
+        <!-- <item>Unsupported</item> -->
     </string-array>
 
 
