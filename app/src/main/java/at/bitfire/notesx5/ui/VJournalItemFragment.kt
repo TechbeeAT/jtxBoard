@@ -21,7 +21,6 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_vjournal_edit_comment.view.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item_relatedto.view.*
-import java.util.*
 
 
 class VJournalItemFragment : Fragment() {
@@ -158,12 +157,19 @@ class VJournalItemFragment : Fragment() {
 
              */
 
-        vJournalItemViewModel.category.observe(viewLifecycleOwner, {
+        vJournalItemViewModel.categories.observe(viewLifecycleOwner, {
             binding.categoriesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
-            if (it != null)
-                addChips(vJournalItemViewModel.vJournal.value!!.category!!)
+            it.forEach { category ->
+                addCategoryChip(category)
+            }
         })
 
+        vJournalItemViewModel.attendees.observe(viewLifecycleOwner, {
+            binding.attendeeChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
+            it.forEach { attendee ->
+                addAttendeeChip(attendee)
+            }
+        })
 
 
         binding.addFeedback.setOnClickListener {
@@ -314,28 +320,49 @@ class VJournalItemFragment : Fragment() {
         return binding.root
     }
 
-    // adds Chips to the categoriesChipgroup based on the categories List
-    private fun addChips(categories: List<Category>) {
 
-        categories.forEach() { category ->
 
-            if (category.text.isNullOrBlank())     // don't add empty categories
-                return@forEach
+    private fun addCategoryChip(category: Category) {
 
-            val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_categories_chip, binding.categoriesChipgroup, false) as Chip
-            categoryChip.text = category.text
-            binding.categoriesChipgroup.addView(categoryChip)
+        if (category.text.isBlank())     // don't add empty categories
+            return
 
-            categoryChip.setOnClickListener {
+        val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_categories_chip, binding.categoriesChipgroup, false) as Chip
+        categoryChip.text = category.text
+        binding.categoriesChipgroup.addView(categoryChip)
 
-                val selectedCategoryArray = arrayOf(category.text)     // convert to array
-                // Responds to chip click
-                this.findNavController().navigate(
-                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVjournalListFragmentList().setCategory2filter(selectedCategoryArray)
-                )
-            }
+        categoryChip.setOnClickListener {
+            val selectedCategoryArray = arrayOf(category.text)     // convert to array
+            // Responds to chip click
+            this.findNavController().navigate(
+                    VJournalItemFragmentDirections.actionVjournalItemFragmentToVjournalListFragmentList().setCategory2filter(selectedCategoryArray)
+            )
+        }
+
+
+    }
+
+
+
+    private fun addAttendeeChip(attendee: Attendee) {
+
+        val attendeeChip = inflater.inflate(R.layout.fragment_vjournal_item_attendees_chip, binding.attendeeChipgroup, false) as Chip
+        attendeeChip.text = attendee.caladdress
+        binding.attendeeChipgroup.addView(attendeeChip)
+
+        attendeeChip.setOnClickListener {
+            // Responds to chip click
+        }
+
+        attendeeChip.setOnCloseIconClickListener { chip ->
+            //vJournalEditViewModel.categoryDeleted.add(attendee)  // add the category to the list for categories to be deleted
+        }
+
+        attendeeChip.setOnCheckedChangeListener { chip, isChecked ->
+            // Responds to chip checked/unchecked
         }
     }
+
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -362,52 +389,5 @@ class VJournalItemFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-
-
-
-    /*
-
-    fun loadContacts():  ArrayAdapter<String> {
-
-
-        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_CONTACTS), 1)
-
-
-        /*
-        Template: https://stackoverflow.com/questions/10117049/get-only-email-address-from-contact-list-android
-         */
-
-        val context = activity
-        val cr = context!!.contentResolver
-        val PROJECTION = arrayOf(ContactsContract.RawContacts._ID,
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Email.DATA)
-        val order = ContactsContract.Contacts.DISPLAY_NAME
-        val filter = ContactsContract.CommonDataKinds.Email.DATA + " NOT LIKE ''"
-        val cur = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, PROJECTION, filter, null, order)
-
-        if (cur!!.count > 0) {
-            while (cur.moveToNext()) {
-
-                val name = cur.getString(1)    // according to projection 0 = DISPLAY_NAME, 1 = Email.DATA
-                val emlAddr = cur.getString(2)
-                Log.println(Log.INFO, "cursor: ", "$name: $emlAddr")
-                allContactsWithNameAndMail.add("$name ($emlAddr)")
-                allContactsAsAttendee.add(VAttendee(cnparam = name, attendee = emlAddr))
-
-            }
-            cur.close()
-
-        }
-
-        val arrayAdapter = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsWithNameAndMail)
-       // binding.organizerAddAutocomplete.setAdapter(arrayAdapter)
-        return arrayAdapter
-
-    }
-
-
-     */
 }
 

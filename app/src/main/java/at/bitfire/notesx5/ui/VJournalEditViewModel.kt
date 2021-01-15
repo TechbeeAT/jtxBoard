@@ -7,6 +7,7 @@ import androidx.lifecycle.*
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.ICalDatabaseDao
+import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Comment
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
@@ -34,9 +35,12 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
+    var attendeeUpdated: MutableList<Attendee> = mutableListOf(Attendee())
 
     var categoryDeleted: MutableList<Category> = mutableListOf(Category())
     var commentDeleted: MutableList<Comment> = mutableListOf(Comment())
+    var attendeeDeleted: MutableList<Attendee> = mutableListOf(Attendee())
+
 
     var possibleTimezones: MutableList<String> = mutableListOf("").also { it.addAll(TimeZone.getAvailableIDs().toList()) }
 
@@ -45,6 +49,8 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
 
     val urlError = MutableLiveData<String>()
+    val attendeesError = MutableLiveData<String>()
+
 
 
     init {
@@ -107,15 +113,20 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
         commentUpdated.removeAll(commentDeleted)    // make sure to not accidentially upsert a comment that was deleted
         categoryUpdated.removeAll(categoryDeleted)  // make sure to not accidentially upsert a category that was deleted
+        attendeeUpdated.removeAll(attendeeDeleted)  // make sure to not accidentially upsert a attendee that was deleted
+
 
         deleteOldCategories()
         deleteOldComments()
+        deleteOldAttendees()
+
 
         viewModelScope.launch() {
 
             insertedOrUpdatedItemId = insertOrUpdateVJournal()
             insertNewCategories(insertedOrUpdatedItemId)
             insertNewComments(insertedOrUpdatedItemId)
+            insertNewAttendees(insertedOrUpdatedItemId)
             returnVJournalItemId.value = insertedOrUpdatedItemId
         }
     }
@@ -155,15 +166,6 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
             }
     }
 
-    private fun deleteOldComments() {
-        commentDeleted.forEach { com2del ->
-            viewModelScope.launch(Dispatchers.IO) {
-                database.deleteComment(com2del)
-            }
-            Log.println(Log.INFO, "Comment", "${com2del.text} deleted")
-        }
-    }
-
     private suspend fun insertNewComments(insertedOrUpdatedItemId: Long) {
 
         commentUpdated.forEach { newComment ->
@@ -176,6 +178,40 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
     }
 
 
+    private fun deleteOldComments() {
+        commentDeleted.forEach { com2del ->
+            viewModelScope.launch(Dispatchers.IO) {
+                database.deleteComment(com2del)
+            }
+            Log.println(Log.INFO, "Comment", "${com2del.text} deleted")
+        }
+    }
+
+
+
+    private suspend fun insertNewAttendees(insertedOrUpdatedItemId: Long) {
+
+        attendeeUpdated.forEach { newAttendee ->
+            newAttendee.icalObjectId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
+            viewModelScope.launch() {
+                database.insertAttendee(newAttendee)
+            }
+            Log.println(Log.INFO, "Attendee", "${newAttendee.caladdress} added")
+        }
+    }
+
+
+    private fun deleteOldAttendees() {
+        attendeeDeleted.forEach { att2del ->
+            viewModelScope.launch(Dispatchers.IO) {
+                database.deleteAttendee(att2del)
+            }
+            Log.println(Log.INFO, "Comment", "${att2del.caladdress} deleted")
+        }
+    }
+
+
+
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
             database.delete(vJournalItem.value!!.vJournal)
@@ -184,6 +220,10 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
     fun clearUrlError(s: Editable) {
         urlError.value = null
+    }
+
+    fun clearAttendeesError(s: Editable) {
+        attendeesError.value = null
     }
 
     fun updateDateTimeVisibility() {

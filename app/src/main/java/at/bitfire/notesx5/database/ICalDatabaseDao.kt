@@ -87,6 +87,9 @@ DELETEs
     @Delete
     fun deleteRelatedto(rel: Relatedto)
 
+    @Delete
+    fun deleteAttendee(attendee: Attendee)
+
 
 
 

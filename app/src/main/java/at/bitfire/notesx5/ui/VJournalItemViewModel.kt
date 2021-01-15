@@ -3,13 +3,13 @@ package at.bitfire.notesx5.ui
 import android.app.Application
 import androidx.lifecycle.*
 import at.bitfire.notesx5.database.*
+import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Relatedto
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -18,7 +18,8 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
                             application: Application) : AndroidViewModel(application) {
 
     lateinit var vJournal: LiveData<ICalEntity?>
-    lateinit var category: LiveData<List<Category>>
+    lateinit var categories: LiveData<List<Category>>
+    lateinit var attendees: LiveData<List<Attendee>>
     lateinit var relatedICalObjects: LiveData<List<ICalObject?>>
 
     lateinit var dateVisible: LiveData<Boolean>
@@ -48,8 +49,12 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
             else
                 database.get(vJournalItemId)
 
-            category = Transformations.map(vJournal) {
+            categories = Transformations.map(vJournal) {
                 it?.category
+            }
+
+            attendees = Transformations.map(vJournal) {
+                it?.attendee
             }
 
 

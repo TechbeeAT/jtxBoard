@@ -6,9 +6,9 @@
 
     android:id="@+id/chip_1"
     style="@style/Widget.MaterialComponents.Chip.Entry"
-    android:layout_width="200dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:checkable="false"
-    android:ellipsize="end"
+    android:checkable="true"
+    app:closeIconVisible="false"
     app:chipIcon="@drawable/ic_person"
-    tools:text="John Doe (john@doe.com)" />
+    tools:text="Chip #1" />

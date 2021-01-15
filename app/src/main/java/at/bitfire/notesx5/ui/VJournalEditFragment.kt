@@ -192,6 +192,11 @@ class VJournalEditFragment : Fragment(),
                 addCategoryChip(singleCategory)
             }
 
+            binding.attendeesChipgroup.removeAllViews()
+            vJournalEditViewModel.vJournalItem.value?.attendee?.forEach { singleAttendee ->
+                addAttendeeChip(singleAttendee)
+            }
+
             // Set the default value of the Status Chip
             if (vJournalEditViewModel.vJournalItem.value?.vJournal?.status == -1)      // if unsupported don't show the status
                 binding.statusChip.visibility = View.GONE
@@ -293,10 +298,40 @@ class VJournalEditFragment : Fragment(),
             //TODO
             val newAttendee = binding.attendeesAddAutocomplete.adapter.getItem(i).toString()
             addAttendeeChip(Attendee(caladdress = newAttendee))
+            vJournalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
             binding.attendeesAddAutocomplete.text.clear()
         }
 
+        binding.attendeesAdd.setEndIconOnClickListener {
 
+            if ((!binding.attendeesAdd.editText?.text.isNullOrEmpty() && !isValidEmail(binding.attendeesAdd.editText?.text.toString())))
+                vJournalEditViewModel.attendeesError.value = "Please enter a valid email-address"
+            else {
+                val newAttendee = binding.attendeesAdd.editText?.text.toString()
+                addAttendeeChip(Attendee(caladdress = newAttendee))
+                vJournalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
+                binding.attendeesAddAutocomplete.text.clear()
+            }
+        }
+
+        // Transform the category input into a chip when the Done button in the keyboard is clicked
+        binding.attendeesAdd.editText?.setOnEditorActionListener { v, actionId, event ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    if ((!binding.attendeesAdd.editText?.text.isNullOrEmpty() && !isValidEmail(binding.attendeesAdd.editText?.text.toString())))
+                        vJournalEditViewModel.attendeesError.value = "Please enter a valid email-address"
+                    else {
+                        val newAttendee = binding.attendeesAdd.editText?.text.toString()
+                        addAttendeeChip(Attendee(caladdress = newAttendee))
+                        vJournalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
+                        binding.attendeesAddAutocomplete.text.clear()
+                    }
+
+                    true
+                }
+                else -> false
+            }
+        }
 
 
 
@@ -340,8 +375,6 @@ class VJournalEditFragment : Fragment(),
 
 
         binding.classificationChip.setOnClickListener {
-
-            val classificationItems = resources.getStringArray(R.array.ical_classification)
 
             MaterialAlertDialogBuilder(context!!)
                     .setTitle("Set classification")
@@ -449,7 +482,7 @@ class VJournalEditFragment : Fragment(),
 
     private fun addCategoryChip(category: Category) {
 
-            if (category.text.isNullOrBlank())
+            if (category.text.isBlank())
                 return
 
             val categoryChip = inflater.inflate(R.layout.fragment_vjournal_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
@@ -473,6 +506,9 @@ class VJournalEditFragment : Fragment(),
 
 
     private fun addAttendeeChip(attendee: Attendee) {
+
+        if (attendee.caladdress.isBlank())
+            return
 
         val attendeeChip = inflater.inflate(R.layout.fragment_vjournal_edit_attendees_chip, binding.attendeesChipgroup, false) as Chip
         attendeeChip.text = attendee.caladdress

@@ -250,18 +250,23 @@
                 app:layout_constraintStart_toEndOf="@+id/attendee_icon"
                 app:layout_constraintTop_toBottomOf="@+id/url" />
 
-            <TextView
-                android:id="@+id/attendee"
+
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/attendee_chipgroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:autoLink="all"
-                android:text="to be done"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="0dp"
                 android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/attendee_icon"
-                app:layout_constraintTop_toBottomOf="@+id/attendee_header"
-                tools:text="john.doe@example.com, mary.doe@example.com" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/attendee_header" />
+
+
 
 
             <ImageView
@@ -286,7 +291,7 @@
                 android:textStyle="bold"
                 android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toEndOf="@+id/organizer_icon"
-                app:layout_constraintTop_toBottomOf="@+id/attendee" />
+                app:layout_constraintTop_toBottomOf="@+id/attendee_chipgroup" />
 
             <TextView
                 android:id="@+id/organizer"

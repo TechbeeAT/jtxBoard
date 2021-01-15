@@ -411,6 +411,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/item_edit_attendees_hint"
+            app:errorEnabled="true"
+            app:error="@{model.urlError}"
             app:endIconContentDescription="Add attendee"
             app:endIconDrawable="@drawable/ic_attendee_add"
             app:endIconMode="custom"
@@ -426,6 +428,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:afterTextChanged="@{model::clearUrlError}"
                 android:singleLine="false"
                 android:imeOptions="actionDone"
                 android:inputType="textShortMessage|textCapSentences" />
