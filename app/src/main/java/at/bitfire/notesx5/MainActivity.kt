@@ -20,12 +20,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import java.util.*
 
 
 const val CONTACT_READ_PERMISSION_CODE = 100   // this is necessary for the app permission, 100 ist just a freely chosen value
@@ -93,7 +95,6 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.nav_privacy ->
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
-
             }
 
             true

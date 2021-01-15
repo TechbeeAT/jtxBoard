@@ -179,6 +179,9 @@ class VJournalEditFragment : Fragment(),
 
             vJournalEditViewModel.vJournalUpdated.postValue(it.vJournal)
 
+            if(it.vJournal.dtstartTimezone == "ALLDAY")
+                binding.allDaySwitch.isChecked = true
+
             binding.commentsLinearlayout.removeAllViews()
             vJournalEditViewModel.vJournalItem.value?.comment?.forEach { singleComment ->
                 addCommentView(singleComment, container)
@@ -207,6 +210,13 @@ class VJournalEditFragment : Fragment(),
                 if (selectedCollectionPos != null)
                     binding.collection.setSelection(selectedCollectionPos)
             }
+
+
+        })
+
+        vJournalEditViewModel.vJournalUpdated.observe(viewLifecycleOwner, {
+            vJournalEditViewModel.updateDateTimeVisibility()
+
         })
 
 
@@ -350,6 +360,30 @@ class VJournalEditFragment : Fragment(),
                 vJournalEditViewModel.urlError.value = "Please enter a valid URL"
         }
 
+        binding.allDaySwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+
+            if (vJournalEditViewModel.vJournalUpdated.value == null)
+                return@setOnCheckedChangeListener
+
+            if (isChecked) {
+                vJournalEditViewModel.vJournalUpdated.value!!.dtstartTimezone = "ALLDAY"
+
+                // make sure that the time gets reset to 0
+                val c = Calendar.getInstance()
+                c.timeInMillis = vJournalEditViewModel.vJournalUpdated.value?.dtstart!!
+                c.set(Calendar.HOUR_OF_DAY, 0)
+                c.set(Calendar.MINUTE, 0)
+                vJournalEditViewModel.vJournalUpdated.value!!.dtstart = c.timeInMillis
+            }
+            else {
+                vJournalEditViewModel.vJournalUpdated.value!!.dtstartTimezone = ""
+                binding.timezoneSpinner.setSelection(0)
+            }
+            vJournalEditViewModel.updateDateTimeVisibility()
+        }
+
+
+
         return binding.root
     }
 
@@ -371,7 +405,8 @@ class VJournalEditFragment : Fragment(),
 
         vJournalEditViewModel.vJournalUpdated.value!!.dtstart = c.timeInMillis
 
-        showTimepicker()
+        if(!binding.allDaySwitch.isChecked)     // let the user set the time only if the allDaySwitch is not set!
+            showTimepicker()
 
     }
 

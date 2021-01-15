@@ -71,9 +71,7 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.classification.visibility = View.VISIBLE
                 holder.classificationIcon.visibility = View.VISIBLE
 
-                val minute_formatter = SimpleDateFormat("mm")
-                val hour_formatter = SimpleDateFormat("HH")
-                if (minute_formatter.format(Date(vJournalItem.vJournal.dtstart)).toString() == "00" && hour_formatter.format(Date(vJournalItem.vJournal.dtstart)).toString() == "00") {
+                if(vJournalItem.vJournal.dtstartTimezone == "ALLDAY") {
                     holder.dtstartTime.visibility = View.GONE
                 } else {
                     holder.dtstartTime.text = convertLongToTimeString(vJournalItem.vJournal.dtstart)

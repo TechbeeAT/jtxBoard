@@ -24,19 +24,25 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
     lateinit var allCollections: LiveData<List<String>>
 
-    lateinit var dateVisible: LiveData<Boolean>
-    lateinit var timeVisible: LiveData<Boolean>
+
 
     var returnVJournalItemId: MutableLiveData<Long> = MutableLiveData<Long>().apply { postValue(0L) }
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
     var vJournalUpdated: MutableLiveData<ICalObject> = MutableLiveData<ICalObject>()
+
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
 
     var categoryDeleted: MutableList<Category> = mutableListOf(Category())
     var commentDeleted: MutableList<Comment> = mutableListOf(Comment())
+
+    var possibleTimezones: MutableList<String> = mutableListOf("").also { it.addAll(TimeZone.getAvailableIDs().toList()) }
+
+    var dateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
+    var timeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
+
 
     val urlError = MutableLiveData<String>()
 
@@ -59,25 +65,25 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
             allCollections = database.getAllCollections()
 
 
+/*
+            dateVisible = Transformations.map(vJournalUpdated) { item ->
+                if (item?.component == "JOURNAL")   // show for JOURNAL only
+                    return@map true
 
-            dateVisible = Transformations.map(vJournalItem) { item ->
-                return@map item?.vJournal?.component == "JOURNAL"           // true if component == JOURNAL
+                return@map false
             }
 
-            timeVisible = Transformations.map(vJournalItem) { item ->
-                if (item?.vJournal?.dtstart == 0L || item?.vJournal?.component != "JOURNAL")
-                    return@map false
+            timeVisible = Transformations.map(vJournalUpdated) { item ->
+                if (item?.component == "JOURNAL" && item.dtstartTimezone != "ALLDAY")   // show for JOURNAL but only if the timezone is NOT set to ALLDAY
+                    return@map true
 
-                val minuteFormatter = SimpleDateFormat("mm")
-                val hourFormatter = SimpleDateFormat("HH")
-
-                if (minuteFormatter.format(Date(item.vJournal.dtstart)).toString() == "00" && hourFormatter.format(Date(item.vJournal.dtstart)).toString() == "00")
-                    return@map false
-
-                return@map true
+                return@map false
             }
+
+
+
+ */
         }
-
     }
 
 
@@ -178,6 +184,11 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
     fun clearUrlError(s: Editable) {
         urlError.value = null
+    }
+
+    fun updateDateTimeVisibility() {
+        dateVisible.value = vJournalUpdated.value?.component == "JOURNAL"    // simplified IF: Show date only if component == JOURNAL
+        timeVisible.value = vJournalUpdated.value?.component == "JOURNAL" &&  vJournalUpdated.value?.dtstartTimezone != "ALLDAY" // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
     }
 }
 

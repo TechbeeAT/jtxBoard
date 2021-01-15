@@ -58,7 +58,31 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
             }
 
 
-            setupDates()
+            dateVisible = Transformations.map(vJournal) { item ->
+                return@map item?.vJournal?.component == "JOURNAL"           // true if component == JOURNAL
+            }
+
+            timeVisible = Transformations.map(vJournal) { item ->
+                return@map item?.vJournal?.component == "JOURNAL" && item?.vJournal.dtstartTimezone != "ALLDAY"           // true if component == JOURNAL and it is not an All Day Event
+
+            }
+
+            dtstartFormatted = Transformations.map(vJournal) { item ->
+                val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item!!.vJournal.dtstart))
+                val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.vJournal.dtstart))
+                return@map "$formattedDate $formattedTime"
+            }
+
+            createdFormatted = Transformations.map(vJournal) { item ->
+                item!!.vJournal.let { Date(it.created).toString() }
+            }
+
+            lastModifiedFormatted = Transformations.map(vJournal) { item ->
+                item!!.vJournal.let { Date(it.lastModified).toString() }
+            }
+
+
+
 
             urlVisible = Transformations.map(vJournal) { item ->
                 return@map !item?.vJournal?.url.isNullOrBlank()      // true if url is NOT null or empty
@@ -88,43 +112,6 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
 
 
 
-    private fun setupDates() {
-
-
-        dateVisible = Transformations.map(vJournal) { item ->
-            return@map item?.vJournal?.component == "JOURNAL"           // true if component == JOURNAL
-        }
-
-        timeVisible = Transformations.map(vJournal) { item ->
-            if (item?.vJournal?.dtstart == 0L || item?.vJournal?.component != "JOURNAL" )
-                return@map false
-
-            val minuteFormatter = SimpleDateFormat("mm")
-            val hourFormatter = SimpleDateFormat("HH")
-
-            if (minuteFormatter.format(Date(item.vJournal.dtstart)).toString() == "00" && hourFormatter.format(Date(item.vJournal.dtstart)).toString() == "00")
-                return@map false
-
-            return@map true
-        }
-
-
-
-        dtstartFormatted = Transformations.map(vJournal) { item ->
-            val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item!!.vJournal.dtstart))
-            val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.vJournal.dtstart))
-            return@map "$formattedDate $formattedTime"
-        }
-
-        createdFormatted = Transformations.map(vJournal) { item ->
-            item!!.vJournal.let { Date(it.created).toString() }
-        }
-
-        lastModifiedFormatted = Transformations.map(vJournal) { item ->
-            item!!.vJournal.let { Date(it.lastModified).toString() }
-        }
-
-    }
 
     fun insertRelatedNote(note: ICalObject) {
         viewModelScope.launch() {
