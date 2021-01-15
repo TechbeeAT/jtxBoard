@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
+import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -110,7 +111,7 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
 
     class VJournalItemHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
-        var listItemCardView = itemView.findViewById<CardView>(R.id.list_item_card_view)
+        var listItemCardView = itemView.findViewById<MaterialCardView>(R.id.list_item_card_view)
 
         var summary = itemView.findViewById<TextView>(R.id.summary)
         var description = itemView.findViewById<TextView>(R.id.description)
