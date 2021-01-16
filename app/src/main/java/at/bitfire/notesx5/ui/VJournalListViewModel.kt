@@ -72,7 +72,7 @@ class VJournalListViewModel(
         //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer",  "#category1, #category2", "FINAL","PUBLIC", "", "uid", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
         //database.insert(vJournalItem(summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
 
-        val newEntry = database.insertJournal(ICalObject(component = "JOURNAL", summary = rfcSummary, description = rfcDesc))
+        val newEntry = database.insertJournal(ICalObject(component = "JOURNAL", summary = rfcSummary, description = rfcDesc, dtstart = System.currentTimeMillis()))
         database.insertAttendee(Attendee(caladdress = "test@test.de", icalObjectId = newEntry))
         database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
         database.insertCategory(Category(text = "cat", icalObjectId = newEntry))

@@ -95,19 +95,13 @@
         android:name="at.bitfire.notesx5.ui.VJournalEditFragment"
         android:label="VJournalItemEditFragment"
         tools:layout="@layout/fragment_vjournal_edit">
-        <argument
-            android:name="item2edit"
-            app:argType="long"
-            android:defaultValue="0L" />
         <action
             android:id="@+id/action_VJournalItemEditFragment_to_vjournalListFragmentList"
             app:destination="@id/vjournalListFragmentList"
             app:popUpTo="@id/vjournalListFragmentList" />
         <argument
-            android:name="component4new"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="JOURNAL" />
+            android:name="icalentity"
+            app:argType="at.bitfire.notesx5.database.relations.ICalEntity" />
     </fragment>
     <fragment
         android:id="@+id/VJournalFilterFragment"

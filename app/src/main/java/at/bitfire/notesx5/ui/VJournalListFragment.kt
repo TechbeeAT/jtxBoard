@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import at.bitfire.notesx5.R
 import at.bitfire.notesx5.database.ICalDatabase
+import at.bitfire.notesx5.database.ICalObject
+import at.bitfire.notesx5.database.relations.ICalEntity
 import at.bitfire.notesx5.databinding.FragmentVjournalListBinding
 import com.google.android.material.tabs.TabLayout
 import java.util.*
@@ -172,13 +174,13 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     override fun onStart() {
 
-
         // initialize the floating action button only onStart, otherwise the fragment might not be created yet
         val fab: View = requireNotNull(activity).findViewById(R.id.fab)
         fab.setOnClickListener { _ ->
 
+            val newICalObject = ICalEntity(ICalObject(id = 0L, component = "JOURNAL"))
             this.findNavController().navigate(
-                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment().setItem2edit(0))
+                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
         }
 
         super.onStart()
@@ -240,9 +242,9 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 val endItem = vJournalListViewModel.vJournalList.value?.firstOrNull()
 
 
-                if (startItem != null && endItem != null) {
-                    dpd.datePicker.minDate = startItem.vJournal.dtstart
-                    dpd.datePicker.maxDate = endItem.vJournal.dtstart
+                if (startItem?.vJournal?.dtstart != null && endItem?.vJournal?.dtend != null) {
+                    dpd.datePicker.minDate = startItem.vJournal.dtstart!!
+                    dpd.datePicker.maxDate = endItem.vJournal.dtstart!!
                 }
 
                 dpd.show()
@@ -265,19 +267,16 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         }
 
         if (item.itemId == R.id.add_journal) {
+            val newICalObject = ICalEntity(ICalObject(id = 0L, component = "JOURNAL", dtstart = System.currentTimeMillis()))
             this.findNavController().navigate(
-                VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment().apply {
-                    item2edit = 0
-                    component4new = "JOURNAL"
-                })
+                VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
         }
 
         if (item.itemId == R.id.add_feedback) {
+            val newICalObject = ICalEntity(ICalObject(id = 0L, component = "NOTE"))
+
             this.findNavController().navigate(
-                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment().apply {
-                        item2edit = 0
-                        component4new = "NOTE"
-                    })
+                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
         }
 
 
@@ -300,7 +299,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         // find the item with the same date
         var foundItem = vJournalListViewModel.vJournalList.value?.find { item ->
             val cItem = Calendar.getInstance()
-            cItem.timeInMillis = item.vJournal.dtstart
+            cItem.timeInMillis = item.vJournal.dtstart?: 0L
 
             // if this condition is true, the item is considered as found
             cItem.get(Calendar.YEAR) == year && cItem.get(Calendar.MONTH) == month && cItem.get(Calendar.DAY_OF_MONTH) == day
@@ -311,7 +310,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             var datediff = 0L
             vJournalListViewModel.vJournalList.value?.forEach { item ->
                 val cItem = Calendar.getInstance()
-                cItem.timeInMillis = item.vJournal.dtstart
+                cItem.timeInMillis = item.vJournal.dtstart?: 0L
 
                 if (datediff == 0L || kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis) < datediff) {
                     datediff = kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis)

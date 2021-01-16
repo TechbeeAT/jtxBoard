@@ -1,10 +1,13 @@
 package at.bitfire.notesx5.database.relations
 
+import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Relation
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class ICalEntity (
         @Embedded
         var vJournal: ICalObject = ICalObject(),
@@ -26,4 +29,4 @@ data class ICalEntity (
         var relatedto: List<Relatedto>? = null
 
 
-)
+): Parcelable

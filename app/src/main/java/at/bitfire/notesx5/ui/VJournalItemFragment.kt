@@ -16,6 +16,7 @@ import at.bitfire.notesx5.convertLongToTimeString
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
+import at.bitfire.notesx5.database.relations.ICalEntity
 import at.bitfire.notesx5.databinding.FragmentVjournalItemBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
@@ -75,7 +76,8 @@ class VJournalItemFragment : Fragment() {
             if (it) {
                 vJournalItemViewModel.editingClicked.value = false
                 this.findNavController().navigate(
-                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVJournalItemEditFragment().setItem2edit(vJournalItemViewModel.vJournal.value!!.vJournal.id))
+                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVJournalItemEditFragment(vJournalItemViewModel.vJournal.value!!)
+                )
             }
         })
 

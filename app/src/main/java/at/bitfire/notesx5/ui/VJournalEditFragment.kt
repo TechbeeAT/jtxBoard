@@ -88,7 +88,7 @@ class VJournalEditFragment : Fragment(),
         }
 
 
-        this.viewModelFactory = VJournalEditViewModelFactory(arguments.item2edit, dataSource, application)
+        this.viewModelFactory = VJournalEditViewModelFactory(arguments.icalentity, dataSource, application)
         vJournalEditViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(VJournalEditViewModel::class.java)
@@ -96,30 +96,13 @@ class VJournalEditFragment : Fragment(),
         binding.model = vJournalEditViewModel
         binding.lifecycleOwner = this
 
-/*
-        if(arguments.item2edit == 0L) {
-            when (arguments.component4new) {
-                "JOURNAL" -> vJournalEditViewModel.vJournalUpdated.value!!.component = "JOURNAL"
-                "NOTE" -> vJournalEditViewModel.vJournalUpdated.value!!.component = "NOTE"
-            }
-        }
-*/
-
-
         binding.statusChip.text = statusItems[1]   // Set default of status Chip to 1 (=FINAL), might be overwritten by observer, but sets the default for new items
         binding.classificationChip.text = classificationItems[0]   // Set default of classification Chip to 0 (=PUBLIC), might be overwritten by observer, but sets the default for new items
 
 
         vJournalEditViewModel.savingClicked.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                vJournalEditViewModel.vJournalUpdated.value!!.summary = binding.summaryEdit.editText?.text.toString()
-                vJournalEditViewModel.vJournalUpdated.value!!.description = binding.descriptionEdit.editText?.text.toString()
-                vJournalEditViewModel.vJournalUpdated.value!!.collection = binding.collection.selectedItem.toString()
-                vJournalEditViewModel.vJournalUpdated.value!!.url = binding.urlEdit.editText?.text.toString()
-                //vJournalEditViewModel.vJournalUpdated.value!!.attendee = binding.attendeeEdit.editText?.text.toString()
-                vJournalEditViewModel.vJournalUpdated.value!!.contact = binding.contactEdit.editText?.text.toString()
-                //vJournalEditViewModel.vJournalUpdated.value!!.related = binding.relatedtoEdit.editText?.text.toString()
-
+                vJournalEditViewModel.iCalObjectUpdated.value!!.collection = binding.collection.selectedItem.toString()
                 vJournalEditViewModel.update()
             }
         })
@@ -129,13 +112,13 @@ class VJournalEditFragment : Fragment(),
 
                 // show Alert Dialog before the item gets really deleted
                 val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Delete \"${vJournalEditViewModel.vJournalItem.value!!.vJournal.summary}\"")
-                builder.setMessage("Are you sure you want to delete \"${vJournalEditViewModel.vJournalItem.value!!.vJournal.summary}\"?")
+                builder.setTitle("Delete \"${vJournalEditViewModel.iCalObjectUpdated.value?.summary}\"")
+                builder.setMessage("Are you sure you want to delete \"${vJournalEditViewModel.iCalObjectUpdated.value?.summary}\"?")
                 builder.setPositiveButton("Delete") { _, _ ->
                     val direction = VJournalEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
-                    direction.component2show = vJournalEditViewModel.vJournalItem.value!!.vJournal.component
+                    direction.component2show = vJournalEditViewModel.iCalObjectUpdated.value!!.component
 
-                    val summary = vJournalEditViewModel.vJournalItem.value!!.vJournal.summary
+                    val summary = vJournalEditViewModel.iCalObjectUpdated.value?.summary
                     vJournalEditViewModel.delete()
                     Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG).show()
 
@@ -146,10 +129,10 @@ class VJournalEditFragment : Fragment(),
                 }
 
                 builder.setNeutralButton("Mark as cancelled") { _, _ ->
-                    vJournalEditViewModel.vJournalUpdated.value!!.status = 2    // 2 = CANCELLED
+                    vJournalEditViewModel.iCalObjectUpdated.value!!.status = 2    // 2 = CANCELLED
                     vJournalEditViewModel.savingClicked()
 
-                    val summary = vJournalEditViewModel.vJournalItem.value!!.vJournal.summary
+                    val summary = vJournalEditViewModel.iCalObjectUpdated.value?.summary
                     Toast.makeText(context, "\"$summary\" marked as Cancelled.", Toast.LENGTH_LONG).show()
 
                 }
@@ -161,68 +144,71 @@ class VJournalEditFragment : Fragment(),
         vJournalEditViewModel.returnVJournalItemId.observe(viewLifecycleOwner, Observer {
             if (it != 0L) {
                 val direction = VJournalEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
-                direction.component2show = vJournalEditViewModel.vJournalItem.value!!.vJournal.component
+                direction.component2show = vJournalEditViewModel.iCalObjectUpdated.value!!.component
                 direction.item2focus = it
                 this.findNavController().navigate(direction)
             }
             vJournalEditViewModel.savingClicked.value = false
         })
 
-
-
-        vJournalEditViewModel.vJournalItem.observe(viewLifecycleOwner, {
-
-            //TODO: Check if the Sequence was updated in the meantime and notify user!
-
-            if (it?.vJournal == null || it.category == null)
-                return@observe
-
-            vJournalEditViewModel.vJournalUpdated.postValue(it.vJournal)
-
-            if(it.vJournal.dtstartTimezone == "ALLDAY")
-                binding.allDaySwitch.isChecked = true
-
-            binding.commentsLinearlayout.removeAllViews()
-            vJournalEditViewModel.vJournalItem.value?.comment?.forEach { singleComment ->
-                addCommentView(singleComment, container)
+        vJournalEditViewModel.timeVisible.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.timezoneIcon.visibility = View.GONE
+                binding.timezoneSpinner.visibility = View.GONE
+                binding.dtstartTime.visibility = View.GONE
+            } else {
+                binding.timezoneIcon.visibility = View.VISIBLE
+                binding.timezoneSpinner.visibility = View.VISIBLE
+                binding.dtstartTime.visibility = View.VISIBLE
             }
+        }
 
-            binding.categoriesChipgroup.removeAllViews()
-            vJournalEditViewModel.vJournalItem.value?.category?.forEach { singleCategory ->
-                addCategoryChip(singleCategory)
-            }
-
-            binding.attendeesChipgroup.removeAllViews()
-            vJournalEditViewModel.vJournalItem.value?.attendee?.forEach { singleAttendee ->
-                addAttendeeChip(singleAttendee)
-            }
-
-            // Set the default value of the Status Chip
-            if (vJournalEditViewModel.vJournalItem.value?.vJournal?.status == -1)      // if unsupported don't show the status
-                binding.statusChip.visibility = View.GONE
-            else
-                binding.statusChip.text = statusItems[vJournalEditViewModel.vJournalItem.value!!.vJournal.status]   // if supported show the status according to the String Array
-
-            // Set the default value of the Classification Chip
-            if (vJournalEditViewModel.vJournalItem.value?.vJournal?.classification == -1)      // if unsupported don't show the classification
-                binding.classificationChip.visibility = View.GONE
-            else
-                binding.classificationChip.text = classificationItems[vJournalEditViewModel.vJournalItem.value!!.vJournal.classification]  // if supported show the classification according to the String Array
-
-            // set the default selection for the spinner. The same snippet exists for the allOrganizers observer
-            if (vJournalEditViewModel.allCollections.value != null) {
-                val selectedCollectionPos = vJournalEditViewModel.allCollections.value?.indexOf(vJournalEditViewModel.vJournalItem.value?.vJournal?.collection)
-                if (selectedCollectionPos != null)
-                    binding.collection.setSelection(selectedCollectionPos)
-            }
+        vJournalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {
+            binding.dtstartDay.text = convertLongToDayString(it.dtstart)
+            binding.dtstartMonth.text = convertLongToMonthString(it.dtstart)
+            binding.dtstartYear.text = convertLongToYearString(it.dtstart)
+            binding.dtstartTime.text = convertLongToTimeString(it.dtstart)
+        }
 
 
-        })
 
-        vJournalEditViewModel.vJournalUpdated.observe(viewLifecycleOwner, {
-            vJournalEditViewModel.updateDateTimeVisibility()
+        //TODO: Check if the Sequence was updated in the meantime and notify user!
 
-        })
+        if(vJournalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone == "ALLDAY")
+            binding.allDaySwitch.isChecked = true
+
+        vJournalEditViewModel.iCalEntity.comment?.forEach { singleComment ->
+            addCommentView(singleComment, container)
+        }
+
+        vJournalEditViewModel.iCalEntity.category?.forEach { singleCategory ->
+            addCategoryChip(singleCategory)
+        }
+
+        vJournalEditViewModel.iCalEntity.attendee?.forEach { singleAttendee ->
+            addAttendeeChip(singleAttendee)
+        }
+
+        // Set the default value of the Status Chip
+        if (vJournalEditViewModel.iCalEntity.vJournal.status == -1)      // if unsupported don't show the status
+            binding.statusChip.visibility = View.GONE
+        else
+            binding.statusChip.text = statusItems[vJournalEditViewModel.iCalEntity.vJournal.status]   // if supported show the status according to the String Array
+
+        // Set the default value of the Classification Chip
+        if (vJournalEditViewModel.iCalEntity.vJournal.classification == -1)      // if unsupported don't show the classification
+            binding.classificationChip.visibility = View.GONE
+        else
+            binding.classificationChip.text = classificationItems[vJournalEditViewModel.iCalEntity.vJournal.classification]  // if supported show the classification according to the String Array
+
+
+        // set the default selection for the spinner. The same snippet exists for the allOrganizers observer
+        if (vJournalEditViewModel.allCollections.value != null) {
+            val selectedCollectionPos = vJournalEditViewModel.allCollections.value?.indexOf(vJournalEditViewModel.iCalEntity.vJournal.collection)
+            if (selectedCollectionPos != null)
+                binding.collection.setSelection(selectedCollectionPos)
+        }
+
 
 
         // Set up items to suggest for categories
@@ -244,7 +230,7 @@ class VJournalEditFragment : Fragment(),
 
             // set the default selection for the spinner. The same snippet exists for the vJournalItem observer
             if (vJournalEditViewModel.allCollections.value != null) {
-                val selectedCollectionPos = vJournalEditViewModel.allCollections.value?.indexOf(vJournalEditViewModel.vJournalItem.value?.vJournal?.collection)
+                val selectedCollectionPos = vJournalEditViewModel.allCollections.value?.indexOf(vJournalEditViewModel.iCalEntity.vJournal.collection)
                 if (selectedCollectionPos != null)
                     spinner.setSelection(selectedCollectionPos)
             }
@@ -366,7 +352,7 @@ class VJournalEditFragment : Fragment(),
                     .setTitle("Set status")
                     .setItems(statusItems) { dialog, which ->
                         // Respond to item chosen
-                        vJournalEditViewModel.vJournalUpdated.value!!.status = which
+                        vJournalEditViewModel.iCalObjectUpdated.value!!.status = which
                         binding.statusChip.text = statusItems[which]     // don't forget to update the UI
                     }
                     .setIcon(R.drawable.ic_status)
@@ -380,7 +366,7 @@ class VJournalEditFragment : Fragment(),
                     .setTitle("Set classification")
                     .setItems(classificationItems) { dialog, which ->
                         // Respond to item chosen
-                        vJournalEditViewModel.vJournalUpdated.value!!.classification = which
+                        vJournalEditViewModel.iCalObjectUpdated.value!!.classification = which
                         binding.classificationChip.text = classificationItems[which]     // don't forget to update the UI
                     }
                     .setIcon(R.drawable.ic_classification)
@@ -395,24 +381,23 @@ class VJournalEditFragment : Fragment(),
 
         binding.allDaySwitch.setOnCheckedChangeListener { buttonView, isChecked ->
 
-            if (vJournalEditViewModel.vJournalUpdated.value == null)
+            if (vJournalEditViewModel.iCalObjectUpdated.value == null)
                 return@setOnCheckedChangeListener
 
             if (isChecked) {
-                vJournalEditViewModel.vJournalUpdated.value!!.dtstartTimezone = "ALLDAY"
+                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = "ALLDAY"
 
                 // make sure that the time gets reset to 0
                 val c = Calendar.getInstance()
-                c.timeInMillis = vJournalEditViewModel.vJournalUpdated.value?.dtstart!!
+                c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
                 c.set(Calendar.HOUR_OF_DAY, 0)
                 c.set(Calendar.MINUTE, 0)
-                vJournalEditViewModel.vJournalUpdated.value!!.dtstart = c.timeInMillis
+                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
             }
             else {
-                vJournalEditViewModel.vJournalUpdated.value!!.dtstartTimezone = ""
+                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ""
                 binding.timezoneSpinner.setSelection(0)
             }
-            vJournalEditViewModel.updateDateTimeVisibility()
         }
 
 
@@ -424,7 +409,7 @@ class VJournalEditFragment : Fragment(),
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
 
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalEditViewModel.vJournalUpdated.value?.dtstart!!
+        c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
 
         c.set(Calendar.YEAR, year)
         c.set(Calendar.MONTH, month)
@@ -436,7 +421,7 @@ class VJournalEditFragment : Fragment(),
         binding.dtstartMonth.text = convertLongToMonthString(c.timeInMillis)
         binding.dtstartDay.text = convertLongToDayString(c.timeInMillis)
 
-        vJournalEditViewModel.vJournalUpdated.value!!.dtstart = c.timeInMillis
+        vJournalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
 
         if(!binding.allDaySwitch.isChecked)     // let the user set the time only if the allDaySwitch is not set!
             showTimepicker()
@@ -446,7 +431,7 @@ class VJournalEditFragment : Fragment(),
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalEditViewModel.vJournalUpdated.value?.dtstart!!
+        c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
         c.set(Calendar.HOUR_OF_DAY, hourOfDay)
         c.set(Calendar.MINUTE, minute)
 
@@ -455,14 +440,14 @@ class VJournalEditFragment : Fragment(),
 
         binding.dtstartTime.text = convertLongToTimeString(c.timeInMillis)
 
-        vJournalEditViewModel.vJournalUpdated.value!!.dtstart = c.timeInMillis
+        vJournalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
 
     }
 
 
     fun showDatepicker() {
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalEditViewModel.vJournalUpdated.value?.dtstart!!
+        c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
 
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
@@ -472,7 +457,7 @@ class VJournalEditFragment : Fragment(),
 
     fun showTimepicker() {
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalEditViewModel.vJournalUpdated.value?.dtstart!!
+        c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
 
         val hourOfDay = c.get(Calendar.HOUR_OF_DAY)
         val minute = c.get(Calendar.MINUTE)

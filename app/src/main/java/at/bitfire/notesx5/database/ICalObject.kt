@@ -1,21 +1,23 @@
 package at.bitfire.notesx5.database
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
-
+@Parcelize
 @Entity(tableName = "icalobject", indices = [Index(value = ["id", "summary", "description"])])
 data class ICalObject(
 
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0L,
-        var component: String = "JOURNAL",          // JOURNAL or NOTE
+        var component: String = "NOTE",          // JOURNAL or NOTE
         var collection: String = "LOCAL",
         var summary: String? = null,
         var description: String? = null,
-        var dtstart: Long = System.currentTimeMillis(),
+        var dtstart: Long? = null,
         var dtstartTimezone: String? = null,
 
         var dtend: Long? = null,
@@ -68,7 +70,7 @@ data class ICalObject(
         //var ianaComponent: String?,
         //var xComponent: String?
 
-)
+): Parcelable
 
 
 

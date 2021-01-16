@@ -16,22 +16,20 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class VJournalEditViewModel(private val vJournalItemId: Long,
+class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
                             val database: ICalDatabaseDao,
                             application: Application) : AndroidViewModel(application) {
 
-    lateinit var vJournalItem: LiveData<ICalEntity?>
+    val iCalEntity = iCalEntity2edit
+
     lateinit var allCategories: LiveData<List<String>>
-
     lateinit var allCollections: LiveData<List<String>>
-
-
 
     var returnVJournalItemId: MutableLiveData<Long> = MutableLiveData<Long>().apply { postValue(0L) }
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
-    var vJournalUpdated: MutableLiveData<ICalObject> = MutableLiveData<ICalObject>()
+    var iCalObjectUpdated: MutableLiveData<ICalObject> = MutableLiveData<ICalObject>().apply { postValue(iCalEntity.vJournal)}
 
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
@@ -44,51 +42,20 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
     var possibleTimezones: MutableList<String> = mutableListOf("").also { it.addAll(TimeZone.getAvailableIDs().toList()) }
 
-    var dateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
-    var timeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
-
+    var dateVisible: LiveData<Boolean> = Transformations.map(iCalObjectUpdated) { it.component == "JOURNAL" }
+    var timeVisible: LiveData<Boolean> = Transformations.map(iCalObjectUpdated) { it.component == "JOURNAL" &&  it.dtstartTimezone != "ALLDAY"} // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
 
     val urlError = MutableLiveData<String>()
     val attendeesError = MutableLiveData<String>()
-
 
 
     init {
 
         viewModelScope.launch() {
 
-            // insert a new value to initialize the vJournalItem or load the existing one from the DB
-            vJournalItem = if (vJournalItemId == 0L)
-                MutableLiveData<ICalEntity>().apply {
-                    postValue(ICalEntity(ICalObject(), null, null, null, null, null))
-                }
-            else {
-                database.get(vJournalItemId)
-            }
-
-
             allCategories = database.getAllCategories()
             allCollections = database.getAllCollections()
 
-
-/*
-            dateVisible = Transformations.map(vJournalUpdated) { item ->
-                if (item?.component == "JOURNAL")   // show for JOURNAL only
-                    return@map true
-
-                return@map false
-            }
-
-            timeVisible = Transformations.map(vJournalUpdated) { item ->
-                if (item?.component == "JOURNAL" && item.dtstartTimezone != "ALLDAY")   // show for JOURNAL but only if the timezone is NOT set to ALLDAY
-                    return@map true
-
-                return@map false
-            }
-
-
-
- */
         }
     }
 
@@ -108,8 +75,8 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
         //TODO: check if the item got a new sequence in the meantime!
 
-        vJournalUpdated.value!!.lastModified = System.currentTimeMillis()
-        vJournalUpdated.value!!.dtstamp = System.currentTimeMillis()
+        iCalObjectUpdated.value!!.lastModified = System.currentTimeMillis()
+        iCalObjectUpdated.value!!.dtstamp = System.currentTimeMillis()
 
         commentUpdated.removeAll(commentDeleted)    // make sure to not accidentially upsert a comment that was deleted
         categoryUpdated.removeAll(categoryDeleted)  // make sure to not accidentially upsert a category that was deleted
@@ -132,15 +99,15 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
     }
 
     private suspend fun insertOrUpdateVJournal(): Long {
-        if (vJournalUpdated.value!!.id == 0L) {
+        if (iCalObjectUpdated.value!!.id == 0L) {
 
             //Log.println(Log.INFO, "VJournalItemViewModel", "creating a new one")
-            return database.insertJournal(vJournalUpdated.value!!)
+            return database.insertJournal(iCalObjectUpdated.value!!)
             //Log.println(Log.INFO, "vJournalItemViewModel", vJournalItemUpdate.id.toString())
         } else {
-            vJournalUpdated.value!!.sequence++
-            database.update(vJournalUpdated.value!!)
-            return vJournalUpdated.value!!.id
+            iCalObjectUpdated.value!!.sequence++
+            database.update(iCalObjectUpdated.value!!)
+            return iCalObjectUpdated.value!!.id
         }
     }
 
@@ -214,7 +181,7 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
 
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
-            database.delete(vJournalItem.value!!.vJournal)
+            database.delete(iCalEntity.vJournal)
         }
     }
 
@@ -226,9 +193,12 @@ class VJournalEditViewModel(private val vJournalItemId: Long,
         attendeesError.value = null
     }
 
+    /*
     fun updateDateTimeVisibility() {
-        dateVisible.value = vJournalUpdated.value?.component == "JOURNAL"    // simplified IF: Show date only if component == JOURNAL
-        timeVisible.value = vJournalUpdated.value?.component == "JOURNAL" &&  vJournalUpdated.value?.dtstartTimezone != "ALLDAY" // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
+        dateVisible.value = iCalObjectUpdated.value?.component == "JOURNAL"    // simplified IF: Show date only if component == JOURNAL
+        timeVisible.value = iCalObjectUpdated.value?.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY" // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
     }
+
+     */
 }
 

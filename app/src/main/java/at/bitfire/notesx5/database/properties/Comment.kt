@@ -1,10 +1,13 @@
 package at.bitfire.notesx5.database.properties
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import at.bitfire.notesx5.database.ICalObject
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "comment",
         foreignKeys = [ForeignKey(entity = ICalObject::class,
                 parentColumns = arrayOf("id"),
@@ -18,7 +21,7 @@ data class Comment (
     var text: String = "",
     var altrepparam: String? = null,
     var languageparam: String? = null
-)
+): Parcelable
 
 
 

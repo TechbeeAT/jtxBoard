@@ -45,23 +45,23 @@ fun convertLongToDateString2(systemTime: Long): String {
 
 
 @SuppressLint("SimpleDateFormat")
-fun convertLongToDateString(date: Long): String {
-    if (date == 0L)
+fun convertLongToDateString(date: Long?): String {
+    if (date == null || date == 0L)
         return ""
     return DateFormat.getDateInstance(DateFormat.LONG).format(date)
 }
 
 @SuppressLint("SimpleDateFormat")
-fun convertLongToTimeString(time: Long): String {
-    if (time == 0L)
+fun convertLongToTimeString(time: Long?): String {
+    if (time == null || time == 0L)
         return ""
     return DateFormat.getTimeInstance(DateFormat.SHORT).format(time)
 }
 
 
 @SuppressLint("SimpleDateFormat")
-fun convertLongToHourString(time: Long): String {
-    if (time == 0L)
+fun convertLongToHourString(time: Long?): String {
+    if (time == null || time == 0L)
         return ""
     val hour_formatter = SimpleDateFormat("HH")
     return hour_formatter.format(Date(time)).toString()
@@ -70,15 +70,15 @@ fun convertLongToHourString(time: Long): String {
 
 @SuppressLint("SimpleDateFormat")
 fun convertLongToMinuteString(time: Long): String {
-    if (time == 0L)
+    if (time == null || time == 0L)
         return ""
     val minute_formatter = SimpleDateFormat("mm")
     return minute_formatter.format(Date(time)).toString()
 }
 
 @SuppressLint("SimpleDateFormat")
-fun convertLongToDayString(date: Long): String {
-    if (date == 0L)
+fun convertLongToDayString(date: Long?): String {
+    if (date == null || date == 0L)
         return ""
     val day_formatter = SimpleDateFormat("dd")
     return day_formatter.format(Date(date)).toString()
@@ -86,8 +86,8 @@ fun convertLongToDayString(date: Long): String {
 
 
 @SuppressLint("SimpleDateFormat")
-fun convertLongToMonthString(date: Long): String {
-    if (date == 0L)
+fun convertLongToMonthString(date: Long?): String {
+    if (date == null || date == 0L)
         return ""
     val month_formatter = SimpleDateFormat("MMMM")
     return month_formatter.format(Date(date)).toString()
@@ -95,8 +95,8 @@ fun convertLongToMonthString(date: Long): String {
 
 
 @SuppressLint("SimpleDateFormat")
-fun convertLongToYearString(date: Long): String {
-    if (date == 0L)
+fun convertLongToYearString(date: Long?): String {
+    if (date == null || date == 0L)
         return ""
     val year_formatter = SimpleDateFormat("yyyy")
     return year_formatter.format(Date(date)).toString()

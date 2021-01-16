@@ -73,9 +73,13 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
             }
 
             dtstartFormatted = Transformations.map(vJournal) { item ->
-                val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item!!.vJournal.dtstart))
-                val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.vJournal.dtstart))
-                return@map "$formattedDate $formattedTime"
+                if (item!!.vJournal.dtstart != null) {
+                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.vJournal.dtstart!!))
+                    val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.vJournal.dtstart!!))
+                    return@map "$formattedDate $formattedTime"
+                } else
+                    return@map ""
+
             }
 
             createdFormatted = Transformations.map(vJournal) { item ->
