@@ -15,6 +15,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -50,6 +51,8 @@ class VJournalEditFragment : Fragment(),
     val allContactsNameAndMail: MutableList<String> = mutableListOf()
 
     var displayedCategoryChips = mutableListOf<Category>()
+
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -95,9 +98,6 @@ class VJournalEditFragment : Fragment(),
 
         binding.model = vJournalEditViewModel
         binding.lifecycleOwner = this
-
-        binding.statusChip.text = statusItems[1]   // Set default of status Chip to 1 (=FINAL), might be overwritten by observer, but sets the default for new items
-        binding.classificationChip.text = classificationItems[0]   // Set default of classification Chip to 0 (=PUBLIC), might be overwritten by observer, but sets the default for new items
 
 
         vJournalEditViewModel.savingClicked.observe(viewLifecycleOwner, Observer {
@@ -152,6 +152,8 @@ class VJournalEditFragment : Fragment(),
         })
 
         vJournalEditViewModel.timeVisible.observe(viewLifecycleOwner) {
+
+            //TODO: Check if this can be done without observer (with livedata directly)
             if (it) {
                 binding.timezoneIcon.visibility = View.GONE
                 binding.timezoneSpinner.visibility = View.GONE
@@ -164,6 +166,7 @@ class VJournalEditFragment : Fragment(),
         }
 
         vJournalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {
+            //TODO: Check if this can be done without observer (with livedata directly)
             binding.dtstartDay.text = convertLongToDayString(it.dtstart)
             binding.dtstartMonth.text = convertLongToMonthString(it.dtstart)
             binding.dtstartYear.text = convertLongToYearString(it.dtstart)
@@ -191,13 +194,13 @@ class VJournalEditFragment : Fragment(),
 
         // Set the default value of the Status Chip
         if (vJournalEditViewModel.iCalEntity.vJournal.status == -1)      // if unsupported don't show the status
-            binding.statusChip.visibility = View.GONE
+            binding.statusChip.text = vJournalEditViewModel.iCalEntity.vJournal.statusX
         else
             binding.statusChip.text = statusItems[vJournalEditViewModel.iCalEntity.vJournal.status]   // if supported show the status according to the String Array
 
         // Set the default value of the Classification Chip
         if (vJournalEditViewModel.iCalEntity.vJournal.classification == -1)      // if unsupported don't show the classification
-            binding.classificationChip.visibility = View.GONE
+            binding.classificationChip.text = vJournalEditViewModel.iCalEntity.vJournal.classificationX
         else
             binding.classificationChip.text = classificationItems[vJournalEditViewModel.iCalEntity.vJournal.classification]  // if supported show the classification according to the String Array
 
@@ -495,21 +498,50 @@ class VJournalEditFragment : Fragment(),
         if (attendee.caladdress.isBlank())
             return
 
+        val attendeeRoles = resources.getStringArray(R.array.ical_attendee_roles)
+
         val attendeeChip = inflater.inflate(R.layout.fragment_vjournal_edit_attendees_chip, binding.attendeesChipgroup, false) as Chip
         attendeeChip.text = attendee.caladdress
+        when (attendee.roleparam) {
+            0 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_chair, null)
+            1 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
+            2 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_optparticipant, null)
+            3 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_nonparticipant, null)
+            else -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
+        }
+        attendeeChip.chipIcon
         binding.attendeesChipgroup.addView(attendeeChip)
 
+
         attendeeChip.setOnClickListener {
-            // Responds to chip click
+
+            MaterialAlertDialogBuilder(context!!)
+                    .setTitle("Set attendee role")
+                    .setItems(attendeeRoles) { dialog, which ->
+                        // Respond to item chosen
+                        val curIndex = vJournalEditViewModel.attendeeUpdated.indexOf(attendee)    // find the attendee in the original list
+                        if (curIndex == -1)
+                            vJournalEditViewModel.attendeeUpdated.add(attendee)                   // add the attendee to the list of updated items if it was not there yet
+                        else
+                            vJournalEditViewModel.attendeeUpdated[curIndex].roleparam = which      // update the roleparam
+                        attendee.roleparam = which
+
+                        when (which) {
+                            0 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_chair, null)
+                            1 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
+                            2 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_optparticipant, null)
+                            3 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_nonparticipant, null)
+                            else -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
+                        }
+
+                    }
+                    .setIcon(R.drawable.ic_attendee)
+                    .show()
         }
 
         attendeeChip.setOnCloseIconClickListener { chip ->
-            //vJournalEditViewModel.categoryDeleted.add(attendee)  // add the category to the list for categories to be deleted
+            vJournalEditViewModel.attendeeDeleted.add(attendee)  // add the category to the list for categories to be deleted
             chip.visibility = View.GONE
-        }
-
-        attendeeChip.setOnCheckedChangeListener { chip, isChecked ->
-            // Responds to chip checked/unchecked
         }
     }
 

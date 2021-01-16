@@ -26,8 +26,10 @@ data class ICalObject(
 
         //var organizer: String = "",
         //var categories: String = "",
-        var status: Int = 1,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, 3 = NOT SUPPORTED
-        var classification: Int = 0,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, 3 = NOT SUPPORTED
+        var status: Int = 1,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
+        var statusX: String? = null,
+        var classification: Int = 0,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
+        var classificationX: String? = null,
 
         //var attach: String,
         var url: String? = null,

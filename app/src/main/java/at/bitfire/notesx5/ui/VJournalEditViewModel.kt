@@ -42,8 +42,8 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
 
     var possibleTimezones: MutableList<String> = mutableListOf("").also { it.addAll(TimeZone.getAvailableIDs().toList()) }
 
-    var dateVisible: LiveData<Boolean> = Transformations.map(iCalObjectUpdated) { it.component == "JOURNAL" }
-    var timeVisible: LiveData<Boolean> = Transformations.map(iCalObjectUpdated) { it.component == "JOURNAL" &&  it.dtstartTimezone != "ALLDAY"} // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
+    var dateVisible: LiveData<Boolean> = Transformations.map(iCalObjectUpdated) { it?.component == "JOURNAL" }
+    var timeVisible: LiveData<Boolean> = Transformations.map(iCalObjectUpdated) { it?.component == "JOURNAL" &&  it.dtstartTimezone != "ALLDAY"} // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
 
     val urlError = MutableLiveData<String>()
     val attendeesError = MutableLiveData<String>()

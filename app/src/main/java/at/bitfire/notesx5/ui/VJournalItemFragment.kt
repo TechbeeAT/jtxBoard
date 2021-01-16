@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -350,6 +351,13 @@ class VJournalItemFragment : Fragment() {
 
         val attendeeChip = inflater.inflate(R.layout.fragment_vjournal_item_attendees_chip, binding.attendeeChipgroup, false) as Chip
         attendeeChip.text = attendee.caladdress
+        when (attendee.roleparam) {
+            0 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_chair, null)
+            1 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
+            2 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_optparticipant, null)
+            3 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_nonparticipant, null)
+            else -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
+        }
         binding.attendeeChipgroup.addView(attendeeChip)
 
         attendeeChip.setOnClickListener {
