@@ -52,6 +52,9 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
     var categoriesVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var attendeesVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var commentsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var progressVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var priorityVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+
 
     var showAll: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
     var allDay: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.vJournal.dtstartTimezone == "ALLDAY")
@@ -66,6 +69,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
 
     init {
 
+        /*
         dateVisible.postValue(iCalEntity.vJournal.component == "JOURNAL")
         timeVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
         alldayVisible.postValue(iCalEntity.vJournal.component == "JOURNAL")
@@ -77,7 +81,13 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
         categoriesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
         attendeesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
         commentsVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        progressVisible.postValue(iCalEntity.vJournal.component == "NOTE")
+        priorityVisible.postValue(iCalEntity.vJournal.component == "NOTE" && showAll.value == true)
 
+
+         */
+
+        updateVisibility()
 
         viewModelScope.launch() {
 
@@ -100,6 +110,8 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
         categoriesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
         attendeesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
         commentsVisible.postValue((iCalEntity.vJournal.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
+        progressVisible.postValue(iCalEntity.vJournal.component == "TODO")
+        priorityVisible.postValue(iCalEntity.vJournal.component == "TODO" && showAll.value == true)
 
     }
 
@@ -236,12 +248,5 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
         attendeesError.value = null
     }
 
-    /*
-    fun updateDateTimeVisibility() {
-        dateVisible.value = iCalObjectUpdated.value?.component == "JOURNAL"    // simplified IF: Show date only if component == JOURNAL
-        timeVisible.value = iCalObjectUpdated.value?.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY" // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
-    }
-
-     */
 }
 

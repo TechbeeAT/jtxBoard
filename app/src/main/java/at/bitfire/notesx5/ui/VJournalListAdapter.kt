@@ -6,14 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 import com.google.android.material.card.MaterialCardView
-import java.text.SimpleDateFormat
+import com.google.android.material.slider.Slider
 import java.util.*
 
 class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<ICalEntityWithCategory>>):
@@ -49,7 +48,10 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
         if (vJournalItem != null ) {
 
             holder.summary.text = vJournalItem.vJournal.summary
-            holder.description.text = vJournalItem.vJournal.description
+            if(vJournalItem.vJournal.description.isNullOrEmpty())
+                holder.description.visibility = View.GONE
+            else
+               holder.description.text = vJournalItem.vJournal.description
 
             if (vJournalItem.category?.isNotEmpty() == true) {
                 val categoriesList = mutableListOf<String>()
@@ -71,14 +73,40 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.statusIcon.visibility = View.VISIBLE
                 holder.classification.visibility = View.VISIBLE
                 holder.classificationIcon.visibility = View.VISIBLE
+                holder.progressLabel.visibility = View.GONE
+                holder.progressSlider.visibility = View.GONE
 
-                if(vJournalItem.vJournal.dtstartTimezone == "ALLDAY") {
+                if (vJournalItem.vJournal.dtstartTimezone == "ALLDAY") {
                     holder.dtstartTime.visibility = View.GONE
                 } else {
                     holder.dtstartTime.text = convertLongToTimeString(vJournalItem.vJournal.dtstart)
                     holder.dtstartTime.visibility = View.VISIBLE
                 }
 
+            } else if(vJournalItem.vJournal.component == "NOTE") {
+                holder.dtstartDay.visibility = View.GONE
+                holder.dtstartMonth.visibility = View.GONE
+                holder.dtstartYear.visibility = View.GONE
+                holder.dtstartTime.visibility = View.GONE
+                holder.status.visibility = View.GONE
+                holder.statusIcon.visibility = View.GONE
+                holder.classification.visibility = View.GONE
+                holder.classificationIcon.visibility = View.GONE
+                holder.progressLabel.visibility = View.GONE
+                holder.progressSlider.visibility = View.GONE
+
+            } else if(vJournalItem.vJournal.component == "TODO") {
+                holder.dtstartDay.visibility = View.GONE
+                holder.dtstartMonth.visibility = View.GONE
+                holder.dtstartYear.visibility = View.GONE
+                holder.dtstartTime.visibility = View.GONE
+                holder.status.visibility = View.VISIBLE
+                holder.statusIcon.visibility = View.VISIBLE
+                holder.classification.visibility = View.GONE
+                holder.classificationIcon.visibility = View.GONE
+                holder.progressLabel.visibility = View.VISIBLE
+                holder.progressSlider.value = vJournalItem.vJournal.percent?.toFloat()?:0F
+                holder.progressSlider.visibility = View.VISIBLE
             } else {
                 holder.dtstartDay.visibility = View.GONE
                 holder.dtstartMonth.visibility = View.GONE
@@ -88,9 +116,15 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.statusIcon.visibility = View.GONE
                 holder.classification.visibility = View.GONE
                 holder.classificationIcon.visibility = View.GONE
+                holder.progressLabel.visibility = View.GONE
+                holder.progressSlider.visibility = View.GONE
             }
 
-            val statusArray = context.resources.getStringArray(R.array.ical_status)
+            val statusArray = if (vJournalItem.vJournal.component == "TODO")
+                context.resources.getStringArray(R.array.vtodo_status)
+            else
+                context.resources.getStringArray(R.array.vjournal_status)
+
             holder.status.text = statusArray[vJournalItem.vJournal.status]
 
             val classificationArray = context.resources.getStringArray(R.array.ical_classification)
@@ -123,6 +157,11 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
         var classification: TextView = itemView.findViewById<TextView>(R.id.classification)
         var statusIcon: ImageView = itemView.findViewById<ImageView>(R.id.status_icon)
         var classificationIcon: ImageView = itemView.findViewById<ImageView>(R.id.classification_icon)
+
+        var progressLabel: TextView = itemView.findViewById<TextView>(R.id.progress_label)
+        var progressSlider: Slider = itemView.findViewById<Slider>(R.id.progress_slider)
+
+
 
 
 

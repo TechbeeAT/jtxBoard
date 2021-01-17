@@ -22,7 +22,7 @@
             android:id="@+id/vjournal_filter"
             android:icon="@drawable/ic_filter"
             android:title="Filter"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="never" />
         <item
             android:id="@+id/vjournal_clear_filter"
             android:title="Clear filter"
@@ -34,8 +34,12 @@
             android:title="Add Journal"
             app:showAsAction="never" />
         <item
-            android:id="@+id/add_feedback"
+            android:id="@+id/add_note"
             android:title="Add Note"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/add_todo"
+            android:title="Add Todo"
             app:showAsAction="never" />
     </group>
 

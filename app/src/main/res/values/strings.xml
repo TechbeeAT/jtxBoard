@@ -24,12 +24,22 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
 
-    <string-array name="ical_status">
+    <string-array name="vjournal_status">
         <item>Draft</item>
         <item>Final</item>
         <item>Cancelled</item>
        <!-- <item>Unsupported</item> -->
     </string-array>
+
+    <string-array name="vtodo_status">
+        <item>Open</item>
+        <item>In progress</item>
+        <item>Done</item>
+        <item>Cancelled</item>
+        <!-- <item>Unsupported</item> -->
+    </string-array>
+
+
 
     <string-array name="ical_classification">
         <item>Public</item>

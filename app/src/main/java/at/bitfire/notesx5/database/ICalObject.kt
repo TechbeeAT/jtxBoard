@@ -44,6 +44,7 @@ data class ICalObject(
         var priority: Int? = null,   // VTODO and VEVENT
 
         var due: Long? = null,      // VTODO only!
+        var dueTimezone: String? = null, //VTODO only!
         var completed: Long? = null, // VTODO only!
 
 

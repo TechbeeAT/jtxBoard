@@ -17,7 +17,6 @@ import at.bitfire.notesx5.convertLongToTimeString
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
-import at.bitfire.notesx5.database.relations.ICalEntity
 import at.bitfire.notesx5.databinding.FragmentVjournalItemBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
@@ -86,7 +85,11 @@ class VJournalItemFragment : Fragment() {
 
             if (it?.vJournal != null) {
 
-                val statusArray = resources.getStringArray(R.array.ical_status)
+                val statusArray = if (vJournalItemViewModel.vJournal.value!!.vJournal.component == "TODO")
+                    resources.getStringArray(R.array.vtodo_status)
+                else
+                    resources.getStringArray(R.array.vjournal_status)
+
                 binding.statusChip.text = statusArray[vJournalItemViewModel.vJournal.value!!.vJournal.status]
 
                 val classificationArray = resources.getStringArray(R.array.ical_classification)
@@ -175,7 +178,7 @@ class VJournalItemFragment : Fragment() {
         })
 
 
-        binding.addFeedback.setOnClickListener {
+        binding.addNote.setOnClickListener {
 
             val newNote = TextInputEditText(context!!)
             newNote.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES

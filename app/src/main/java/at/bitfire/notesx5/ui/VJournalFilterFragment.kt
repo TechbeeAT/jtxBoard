@@ -90,7 +90,7 @@ class VJournalFilterFragment : Fragment()  {
 
         if (arguments.status2preselect?.isNotEmpty() == true) {
             arguments.status2preselect!!.forEach {
-                statusPreselected.add(resources.getStringArray(R.array.ical_status)[it])
+                statusPreselected.add(resources.getStringArray(R.array.vjournal_status)[it])
             }
         }
 
@@ -100,7 +100,7 @@ class VJournalFilterFragment : Fragment()  {
 
 
         // Set Chips for Status and Classification
-        val statusItems = resources.getStringArray(R.array.ical_status).toList()
+        val statusItems = resources.getStringArray(R.array.vjournal_status).toList()
         val classificationItems = resources.getStringArray(R.array.ical_classification).toList()
 
         addChipsInt(binding.statusFilterChipgroup, statusItems, displayedStatusChips, statusSelected, statusPreselected)

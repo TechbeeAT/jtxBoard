@@ -219,8 +219,6 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             }
         })
 
-
-
     }
 
 
@@ -272,8 +270,15 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
         }
 
-        if (item.itemId == R.id.add_feedback) {
+        if (item.itemId == R.id.add_note) {
             val newICalObject = ICalEntity(ICalObject(id = 0L, component = "NOTE"))
+
+            this.findNavController().navigate(
+                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
+        }
+
+        if (item.itemId == R.id.add_todo) {
+            val newICalObject = ICalEntity(ICalObject(id = 0L, component = "TODO"))
 
             this.findNavController().navigate(
                     VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
@@ -281,7 +286,8 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 
 
-            return super.onOptionsItemSelected(item)
+
+        return super.onOptionsItemSelected(item)
     }
 
 

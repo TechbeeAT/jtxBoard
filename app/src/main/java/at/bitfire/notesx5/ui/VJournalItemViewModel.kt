@@ -34,6 +34,8 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
     lateinit var contactVisible: LiveData<Boolean>
     lateinit var commentsVisible: LiveData<Boolean>
     lateinit var relatedtoVisible: LiveData<Boolean>
+    lateinit var progressVisible: LiveData<Boolean>
+    lateinit var priorityVisible: LiveData<Boolean>
 
     var editingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
@@ -111,7 +113,12 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
             commentsVisible = Transformations.map(vJournal) { item ->
                 return@map !item?.comment.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
-
+            progressVisible = Transformations.map(vJournal) { item ->
+                return@map item?.vJournal?.percent != null      // true if percent (progress) is NOT null
+            }
+            priorityVisible = Transformations.map(vJournal) { item ->
+                return@map item?.vJournal?.priority != null      // true if priority is NOT null
+            }
         }
     }
 

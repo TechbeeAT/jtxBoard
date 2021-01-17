@@ -53,8 +53,6 @@ class VJournalEditFragment : Fragment(),
     var displayedCategoryChips = mutableListOf<Category>()
 
 
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
@@ -67,9 +65,6 @@ class VJournalEditFragment : Fragment(),
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
         val arguments = VJournalEditFragmentArgs.fromBundle((arguments!!))
-
-        val statusItems = resources.getStringArray(R.array.ical_status)
-        val classificationItems = resources.getStringArray(R.array.ical_classification)
 
 
         // add menu
@@ -100,9 +95,20 @@ class VJournalEditFragment : Fragment(),
         binding.lifecycleOwner = this
 
 
+        val classificationItems = resources.getStringArray(R.array.ical_classification)
+        val statusItems = if (vJournalEditViewModel.iCalEntity.vJournal.component == "TODO") {
+            resources.getStringArray(R.array.vtodo_status)
+        } else {
+            resources.getStringArray(R.array.vjournal_status)
+        }
+
+
         vJournalEditViewModel.savingClicked.observe(viewLifecycleOwner, Observer {
             if (it == true) {
                 vJournalEditViewModel.iCalObjectUpdated.value!!.collection = binding.collection.selectedItem.toString()
+
+                vJournalEditViewModel.iCalObjectUpdated.value!!.percent = binding.progressSlider.value.toInt()
+                vJournalEditViewModel.iCalObjectUpdated.value!!.priority = binding.prioritySlider.value.toInt()
                 vJournalEditViewModel.update()
             }
         })
@@ -180,15 +186,13 @@ class VJournalEditFragment : Fragment(),
                 c.set(Calendar.HOUR_OF_DAY, 0)
                 c.set(Calendar.MINUTE, 0)
                 vJournalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
-            }
-            else {
+            } else {
                 vJournalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ""
                 binding.timezoneSpinner.setSelection(0)
             }
 
             vJournalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
         }
-
 
 
         //TODO: Check if the Sequence was updated in the meantime and notify user!
@@ -225,7 +229,6 @@ class VJournalEditFragment : Fragment(),
             if (selectedCollectionPos != null)
                 binding.collection.setSelection(selectedCollectionPos)
         }
-
 
 
         // Set up items to suggest for categories
@@ -418,7 +421,7 @@ class VJournalEditFragment : Fragment(),
 
         vJournalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
 
-        if(!vJournalEditViewModel.allDay.value!!)     // let the user set the time only if the allDaySwitch is not set!
+        if (!vJournalEditViewModel.allDay.value!!)     // let the user set the time only if the allDaySwitch is not set!
             showTimepicker()
 
     }
@@ -462,26 +465,26 @@ class VJournalEditFragment : Fragment(),
 
     private fun addCategoryChip(category: Category) {
 
-            if (category.text.isBlank())
-                return
+        if (category.text.isBlank())
+            return
 
-            val categoryChip = inflater.inflate(R.layout.fragment_vjournal_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
-            categoryChip.text = category.text
-            binding.categoriesChipgroup.addView(categoryChip)
-            displayedCategoryChips.add(category)
+        val categoryChip = inflater.inflate(R.layout.fragment_vjournal_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
+        categoryChip.text = category.text
+        binding.categoriesChipgroup.addView(categoryChip)
+        displayedCategoryChips.add(category)
 
-            categoryChip.setOnClickListener {
-                // Responds to chip click
-            }
+        categoryChip.setOnClickListener {
+            // Responds to chip click
+        }
 
-            categoryChip.setOnCloseIconClickListener { chip ->
-                vJournalEditViewModel.categoryDeleted.add(category)  // add the category to the list for categories to be deleted
-                chip.visibility = View.GONE
-            }
+        categoryChip.setOnCloseIconClickListener { chip ->
+            vJournalEditViewModel.categoryDeleted.add(category)  // add the category to the list for categories to be deleted
+            chip.visibility = View.GONE
+        }
 
-            categoryChip.setOnCheckedChangeListener { chip, isChecked ->
-                // Responds to chip checked/unchecked
-            }
+        categoryChip.setOnCheckedChangeListener { chip, isChecked ->
+            // Responds to chip checked/unchecked
+        }
     }
 
 
@@ -540,43 +543,43 @@ class VJournalEditFragment : Fragment(),
 
     private fun addCommentView(comment: Comment, container: ViewGroup?) {
 
-            val commentView = inflater.inflate(R.layout.fragment_vjournal_edit_comment, container, false);
-            commentView.comment_textview.text = comment.text
-            binding.commentsLinearlayout.addView(commentView)
+        val commentView = inflater.inflate(R.layout.fragment_vjournal_edit_comment, container, false);
+        commentView.comment_textview.text = comment.text
+        binding.commentsLinearlayout.addView(commentView)
 
-            // set on Click Listener to open a dialog to update the comment
-            commentView.setOnClickListener {
+        // set on Click Listener to open a dialog to update the comment
+        commentView.setOnClickListener {
 
-                // set up the values for the TextInputEditText
-                val updatedText: TextInputEditText = TextInputEditText(context!!)
-                updatedText.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-                updatedText.setText(comment.text)
-                updatedText.isSingleLine = false;
-                updatedText.maxLines = 8
+            // set up the values for the TextInputEditText
+            val updatedText: TextInputEditText = TextInputEditText(context!!)
+            updatedText.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            updatedText.setText(comment.text)
+            updatedText.isSingleLine = false;
+            updatedText.maxLines = 8
 
-                // set up the builder for the AlertDialog
-                val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Edit comment")
-                builder.setIcon(R.drawable.ic_comment_add)
-                builder.setView(updatedText)
+            // set up the builder for the AlertDialog
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Edit comment")
+            builder.setIcon(R.drawable.ic_comment_add)
+            builder.setView(updatedText)
 
 
-                builder.setPositiveButton("Save") { _, _ ->
-                    // update the comment
-                    val updatedComment = comment.copy()
-                    updatedComment.text = updatedText.text.toString()
-                    vJournalEditViewModel.commentUpdated.add(updatedComment)
-                    it.comment_textview.text = updatedComment.text
-                }
-                builder.setNegativeButton("Cancel") { _, _ ->
-                    // Do nothing, just close the message
-                }
+            builder.setPositiveButton("Save") { _, _ ->
+                // update the comment
+                val updatedComment = comment.copy()
+                updatedComment.text = updatedText.text.toString()
+                vJournalEditViewModel.commentUpdated.add(updatedComment)
+                it.comment_textview.text = updatedComment.text
+            }
+            builder.setNegativeButton("Cancel") { _, _ ->
+                // Do nothing, just close the message
+            }
 
-                builder.setNeutralButton("Delete") { _, _ ->
-                    vJournalEditViewModel.commentDeleted.add(comment)
-                    it.visibility = View.GONE
-                }
-                builder.show()
+            builder.setNeutralButton("Delete") { _, _ ->
+                vJournalEditViewModel.commentDeleted.add(comment)
+                it.visibility = View.GONE
+            }
+            builder.show()
         }
     }
 
