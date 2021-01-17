@@ -151,19 +151,7 @@ class VJournalEditFragment : Fragment(),
             vJournalEditViewModel.savingClicked.value = false
         })
 
-        vJournalEditViewModel.timeVisible.observe(viewLifecycleOwner) {
 
-            //TODO: Check if this can be done without observer (with livedata directly)
-            if (it) {
-                binding.timezoneIcon.visibility = View.GONE
-                binding.timezoneSpinner.visibility = View.GONE
-                binding.dtstartTime.visibility = View.GONE
-            } else {
-                binding.timezoneIcon.visibility = View.VISIBLE
-                binding.timezoneSpinner.visibility = View.VISIBLE
-                binding.dtstartTime.visibility = View.VISIBLE
-            }
-        }
 
         vJournalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {
             //TODO: Check if this can be done without observer (with livedata directly)
@@ -173,12 +161,38 @@ class VJournalEditFragment : Fragment(),
             binding.dtstartTime.text = convertLongToTimeString(it.dtstart)
         }
 
+        vJournalEditViewModel.showAll.observe(viewLifecycleOwner) {
+            vJournalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
+        }
+
+
+        vJournalEditViewModel.allDay.observe(viewLifecycleOwner) {
+
+            if (vJournalEditViewModel.iCalObjectUpdated.value == null)     // don't do anything if the object was not initialized yet
+                return@observe
+
+            if (it) {
+                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = "ALLDAY"
+
+                // make sure that the time gets reset to 0
+                val c = Calendar.getInstance()
+                c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+                c.set(Calendar.HOUR_OF_DAY, 0)
+                c.set(Calendar.MINUTE, 0)
+                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+            }
+            else {
+                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ""
+                binding.timezoneSpinner.setSelection(0)
+            }
+
+            vJournalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
+        }
+
 
 
         //TODO: Check if the Sequence was updated in the meantime and notify user!
 
-        if(vJournalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone == "ALLDAY")
-            binding.allDaySwitch.isChecked = true
 
         vJournalEditViewModel.iCalEntity.comment?.forEach { singleComment ->
             addCommentView(singleComment, container)
@@ -382,28 +396,6 @@ class VJournalEditFragment : Fragment(),
                 vJournalEditViewModel.urlError.value = "Please enter a valid URL"
         }
 
-        binding.allDaySwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-
-            if (vJournalEditViewModel.iCalObjectUpdated.value == null)
-                return@setOnCheckedChangeListener
-
-            if (isChecked) {
-                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = "ALLDAY"
-
-                // make sure that the time gets reset to 0
-                val c = Calendar.getInstance()
-                c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
-                c.set(Calendar.HOUR_OF_DAY, 0)
-                c.set(Calendar.MINUTE, 0)
-                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
-            }
-            else {
-                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ""
-                binding.timezoneSpinner.setSelection(0)
-            }
-        }
-
-
 
         return binding.root
     }
@@ -426,7 +418,7 @@ class VJournalEditFragment : Fragment(),
 
         vJournalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
 
-        if(!binding.allDaySwitch.isChecked)     // let the user set the time only if the allDaySwitch is not set!
+        if(!vJournalEditViewModel.allDay.value!!)     // let the user set the time only if the allDaySwitch is not set!
             showTimepicker()
 
     }

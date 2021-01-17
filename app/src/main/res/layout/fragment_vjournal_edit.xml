@@ -124,17 +124,19 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="All day"
-            android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
+            android:checked="@={model.allDay}"
             app:layout_constraintStart_toEndOf="@+id/dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/collection"
-            app:switchPadding="8dp" />
+            app:switchPadding="8dp"
+            android:visibility="@{model.alldayVisible ? View.VISIBLE : View.GONE}"
+            />
 
         <ImageView
             android:id="@+id/timezone_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toEndOf="@+id/all_day_switch"
             app:layout_constraintTop_toTopOf="@+id/timezone_spinner"
             app:srcCompat="@drawable/ic_timezone" />
@@ -146,7 +148,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:entries="@{model.possibleTimezones}"
-            android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
             android:spinnerMode="dialog"
             app:layout_constraintBottom_toBottomOf="@+id/all_day_switch"
             app:layout_constraintEnd_toEndOf="parent"
@@ -216,7 +218,9 @@
             app:closeIconVisible="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description_edit"
-            tools:text="Final" />
+            tools:text="Final"
+            android:visibility="@{model.statusVisible ? View.VISIBLE : View.GONE}"
+            />
 
         <com.google.android.material.chip.Chip
 
@@ -231,8 +235,23 @@
             app:closeIconVisible="false"
             app:layout_constraintStart_toEndOf="@+id/status_chip"
             app:layout_constraintTop_toTopOf="@+id/status_chip"
-            tools:text="Public" />
+            tools:text="Public"
+            android:visibility="@{model.classificationVisible ? View.VISIBLE : View.GONE}"
+            />
 
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/show_all_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:checked="@={model.showAll}"
+            android:text="Show all"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/description_edit"
+            app:switchPadding="8dp"
+            tools:checked="false" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/url_edit"
@@ -250,7 +269,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/status_chip"
-            app:startIconDrawable="@drawable/ic_link">
+            app:startIconDrawable="@drawable/ic_link"
+            android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
+            >
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -277,7 +298,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/url_edit"
-            app:startIconDrawable="@drawable/ic_contact">
+            app:startIconDrawable="@drawable/ic_contact"
+            android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
+            >
 
 
             <AutoCompleteTextView
@@ -303,7 +326,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/categories_header"
             app:srcCompat="@drawable/ic_category"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
+            />
 
         <TextView
             android:id="@+id/categories_header"
@@ -315,7 +340,9 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/categories_icon"
-            app:layout_constraintTop_toBottomOf="@id/contact_edit"/>
+            app:layout_constraintTop_toBottomOf="@id/contact_edit"
+            android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
+            />
 
 
         <com.google.android.material.chip.ChipGroup
@@ -329,7 +356,11 @@
             app:chipSpacingVertical="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/categories_header" />
+            app:layout_constraintTop_toBottomOf="@+id/categories_header"
+            android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
+            >
+
+        </com.google.android.material.chip.ChipGroup>
 
 
 
@@ -347,6 +378,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/categories_chipgroup"
+            android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
+
             >
 
 
@@ -374,7 +407,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/attendees_header"
             app:srcCompat="@drawable/ic_attendee"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+            />
 
         <TextView
             android:id="@+id/attendees_header"
@@ -386,7 +421,10 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/attendees_icon"
-            app:layout_constraintTop_toBottomOf="@id/categories_add"/>
+            app:layout_constraintTop_toBottomOf="@id/categories_add"
+            android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+
+            />
 
 
         <com.google.android.material.chip.ChipGroup
@@ -400,7 +438,9 @@
             app:chipSpacingVertical="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/attendees_header" />
+            app:layout_constraintTop_toBottomOf="@+id/attendees_header"
+            android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+            />
 
 
 
@@ -420,6 +460,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/attendees_chipgroup"
+            android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
             >
 
 
@@ -446,7 +487,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/comments_header"
             app:srcCompat="@drawable/ic_comments"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+            />
 
         <TextView
             android:id="@+id/comments_header"
@@ -458,7 +501,9 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/comments_icon"
-            app:layout_constraintTop_toBottomOf="@id/attendees_add"/>
+            app:layout_constraintTop_toBottomOf="@id/attendees_add"
+            android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+            />
 
 
         <LinearLayout
@@ -473,7 +518,9 @@
             android:showDividers="middle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/comments_header">
+            app:layout_constraintTop_toBottomOf="@+id/comments_header"
+            android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+            >
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -506,7 +553,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/comments_linearlayout">
+            app:layout_constraintTop_toBottomOf="@id/comments_linearlayout"
+            android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+            >
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -515,7 +564,6 @@
                 android:layout_height="wrap_content"
                 android:inputType="textWebEmailAddress|textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

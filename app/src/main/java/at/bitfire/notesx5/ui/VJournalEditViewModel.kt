@@ -12,7 +12,6 @@ import at.bitfire.notesx5.database.properties.Comment
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -42,15 +41,42 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
 
     var possibleTimezones: MutableList<String> = mutableListOf("").also { it.addAll(TimeZone.getAvailableIDs().toList()) }
 
-    var dateVisible: LiveData<Boolean> = Transformations.map(iCalObjectUpdated) { it?.component == "JOURNAL" }
-    var timeVisible: LiveData<Boolean> = Transformations.map(iCalObjectUpdated) { it?.component == "JOURNAL" &&  it.dtstartTimezone != "ALLDAY"} // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
+    var dateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var timeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var alldayVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var timezoneVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var statusVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var classificationVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var urlVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var contactVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var categoriesVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var attendeesVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var commentsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+
+    var showAll: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    var allDay: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.vJournal.dtstartTimezone == "ALLDAY")
+
+
+
 
     val urlError = MutableLiveData<String>()
     val attendeesError = MutableLiveData<String>()
 
 
+
     init {
 
+        dateVisible.postValue(iCalEntity.vJournal.component == "JOURNAL")
+        timeVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
+        alldayVisible.postValue(iCalEntity.vJournal.component == "JOURNAL")
+        timezoneVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
+        statusVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        classificationVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        urlVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        contactVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        categoriesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        attendeesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        commentsVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
 
 
         viewModelScope.launch() {
@@ -61,6 +87,21 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
         }
     }
 
+    fun updateVisibility() {
+
+        dateVisible.postValue(iCalEntity.vJournal.component == "JOURNAL")
+        timeVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
+        alldayVisible.postValue(iCalEntity.vJournal.component == "JOURNAL")
+        timezoneVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
+        statusVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        classificationVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        urlVisible.postValue((iCalEntity.vJournal.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
+        contactVisible.postValue((iCalEntity.vJournal.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
+        categoriesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        attendeesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        commentsVisible.postValue((iCalEntity.vJournal.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
+
+    }
 
     fun savingClicked() {
         savingClicked.value = true
