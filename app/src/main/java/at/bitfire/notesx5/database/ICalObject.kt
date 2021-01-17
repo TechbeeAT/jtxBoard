@@ -72,6 +72,8 @@ data class ICalObject(
         //var ianaComponent: String?,
         //var xComponent: String?
 
+        val color: String
+
 ): Parcelable
 
 

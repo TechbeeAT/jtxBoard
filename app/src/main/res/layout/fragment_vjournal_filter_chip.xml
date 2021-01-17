@@ -10,7 +10,7 @@
     android:checkable="true"
     android:clickable="true"
     app:checkedIconEnabled="true"
-    app:chipIcon="@drawable/ic_vjournal_category"
+    app:chipIcon="@drawable/ic_category"
     app:chipIconVisible="false"
     app:closeIconVisible="false"
     tools:text="Chip #1"

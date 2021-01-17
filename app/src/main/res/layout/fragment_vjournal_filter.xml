@@ -132,7 +132,7 @@
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/category_filter_label"
-            app:srcCompat="@drawable/ic_vjournal_category" />
+            app:srcCompat="@drawable/ic_category" />
 
         <TextView
             android:id="@+id/category_filter_label"

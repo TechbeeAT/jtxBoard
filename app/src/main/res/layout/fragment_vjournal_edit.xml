@@ -302,7 +302,7 @@
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/categories_header"
-            app:srcCompat="@drawable/ic_vjournal_category"
+            app:srcCompat="@drawable/ic_category"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -341,7 +341,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/item_edit_add_category_hint"
             app:endIconContentDescription="Add category"
-            app:endIconDrawable="@drawable/ic_vjournal_add_category"
+            app:endIconDrawable="@drawable/ic_category_add"
             app:endIconMode="custom"
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"

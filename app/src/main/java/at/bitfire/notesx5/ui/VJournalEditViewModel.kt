@@ -51,6 +51,8 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
 
     init {
 
+
+
         viewModelScope.launch() {
 
             allCategories = database.getAllCategories()
