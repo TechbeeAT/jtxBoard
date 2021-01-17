@@ -77,5 +77,12 @@ data class ICalObject(
 
 ): Parcelable
 
-
+{
+        companion object Factory {
+                fun createJournal(): ICalObject = ICalObject(component = "JOURNAL", dtstart = System.currentTimeMillis(), status = 1)
+                fun createNote(): ICalObject = ICalObject(component = "NOTE", status = 1)
+                fun createNote(summary: String) = ICalObject(component = "NOTE", status = 1, summary = summary)
+                fun createTodo() = ICalObject(component = "TODO", status = 0, percent = 0, priority = 4)
+        }
+}
 

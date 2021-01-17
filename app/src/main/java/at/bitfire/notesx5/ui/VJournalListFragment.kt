@@ -178,7 +178,13 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         val fab: View = requireNotNull(activity).findViewById(R.id.fab)
         fab.setOnClickListener { _ ->
 
-            val newICalObject = ICalEntity(ICalObject(id = 0L, component = "JOURNAL"))
+            val newICalObject =
+                    when(binding.tabLayoutJournalNotes.selectedTabPosition) {
+                        0 -> ICalEntity(ICalObject.createJournal())
+                        1 -> ICalEntity(ICalObject.createNote())
+                        2 -> ICalEntity(ICalObject.createTodo())
+                        else -> ICalEntity(ICalObject.createJournal())
+                    }
             this.findNavController().navigate(
                     VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
         }
@@ -265,20 +271,20 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         }
 
         if (item.itemId == R.id.add_journal) {
-            val newICalObject = ICalEntity(ICalObject(id = 0L, component = "JOURNAL", dtstart = System.currentTimeMillis()))
+            val newICalObject = ICalEntity(ICalObject.createJournal())
             this.findNavController().navigate(
                 VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
         }
 
         if (item.itemId == R.id.add_note) {
-            val newICalObject = ICalEntity(ICalObject(id = 0L, component = "NOTE"))
+            val newICalObject = ICalEntity(ICalObject.createNote())
 
             this.findNavController().navigate(
                     VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
         }
 
         if (item.itemId == R.id.add_todo) {
-            val newICalObject = ICalEntity(ICalObject(id = 0L, component = "TODO"))
+            val newICalObject = ICalEntity(ICalObject.createTodo())
 
             this.findNavController().navigate(
                     VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))

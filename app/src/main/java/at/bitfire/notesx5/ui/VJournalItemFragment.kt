@@ -191,7 +191,7 @@ class VJournalItemFragment : Fragment() {
             builder.setView(newNote)
 
             builder.setPositiveButton("Save") { _, _ ->
-                vJournalItemViewModel.insertRelatedNote(ICalObject(component = "NOTE", summary = newNote.text.toString()))
+                vJournalItemViewModel.insertRelatedNote(ICalObject.createNote(summary = newNote.text.toString()))
             }
 
             builder.setNegativeButton("Cancel") { _, _ ->

@@ -130,9 +130,12 @@ class VJournalEditFragment : Fragment(),
 
                     this.findNavController().navigate(direction)
                 }
+                /*
                 builder.setNegativeButton("Cancel") { _, _ ->
                     // Do nothing, just close the message
                 }
+
+                 */
 
                 builder.setNeutralButton("Mark as cancelled") { _, _ ->
                     vJournalEditViewModel.iCalObjectUpdated.value!!.status = 2    // 2 = CANCELLED
