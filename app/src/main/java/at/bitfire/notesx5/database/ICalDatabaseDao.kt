@@ -74,6 +74,10 @@ INSERTs
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertRelatedto(relatedto: Relatedto): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertSubtask(subtask: ICalObject): Long
+
+
 /*
 DELETEs
  */
@@ -90,6 +94,8 @@ DELETEs
     @Delete
     fun deleteAttendee(attendee: Attendee)
 
+    @Query("DELETE FROM relatedto WHERE relatedto.icalObjectId = :parentId and relatedto.linkedICalObjectId = :childId")
+    fun deleteRelatedto(parentId: Long, childId: Long)
 
 
 
@@ -130,8 +136,14 @@ DELETEs
 
     // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
     @Transaction
-    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey")
-    fun getRelated(parentKey: Long): LiveData<List<ICalObject?>>
+    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey and icalobject.component = 'NOTE'")
+    fun getRelatedNotes(parentKey: Long): LiveData<List<ICalObject?>>
+
+    // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
+    @Transaction
+    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey and icalobject.component = 'TODO'")
+    fun getRelatedTodos(parentKey: Long): LiveData<List<ICalObject?>>
+
 
 
 }

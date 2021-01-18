@@ -9,6 +9,7 @@ import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.ICalDatabaseDao
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Comment
+import at.bitfire.notesx5.database.properties.Relatedto
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +25,8 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allCollections: LiveData<List<String>>
 
+    lateinit var relatedTodos: LiveData<List<ICalObject?>>
+
     var returnVJournalItemId: MutableLiveData<Long> = MutableLiveData<Long>().apply { postValue(0L) }
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
@@ -33,10 +36,14 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
     var attendeeUpdated: MutableList<Attendee> = mutableListOf(Attendee())
+    var subtaskUpdated: MutableList<ICalObject> = mutableListOf()
+    var subtaskRelationsUpdated: MutableList<Relatedto> = mutableListOf()
+
 
     var categoryDeleted: MutableList<Category> = mutableListOf(Category())
     var commentDeleted: MutableList<Comment> = mutableListOf(Comment())
     var attendeeDeleted: MutableList<Attendee> = mutableListOf(Attendee())
+    var subtaskDeleted: MutableList<ICalObject> = mutableListOf()
 
 
     var possibleTimezones: MutableList<String> = mutableListOf("").also { it.addAll(TimeZone.getAvailableIDs().toList()) }
@@ -54,6 +61,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
     var commentsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var progressVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var priorityVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var subtasksVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
 
     var showAll: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
@@ -69,30 +77,16 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
 
     init {
 
-        /*
-        dateVisible.postValue(iCalEntity.vJournal.component == "JOURNAL")
-        timeVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
-        alldayVisible.postValue(iCalEntity.vJournal.component == "JOURNAL")
-        timezoneVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
-        statusVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
-        classificationVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
-        urlVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
-        contactVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
-        categoriesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
-        attendeesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
-        commentsVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
-        progressVisible.postValue(iCalEntity.vJournal.component == "NOTE")
-        priorityVisible.postValue(iCalEntity.vJournal.component == "NOTE" && showAll.value == true)
-
-
-         */
-
         updateVisibility()
 
         viewModelScope.launch() {
 
+            relatedTodos =  database.getRelatedTodos(iCalEntity.vJournal.id)
+
             allCategories = database.getAllCategories()
             allCollections = database.getAllCollections()
+
+
 
         }
     }
@@ -103,7 +97,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
         timeVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
         alldayVisible.postValue(iCalEntity.vJournal.component == "JOURNAL")
         timezoneVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
-        statusVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
+        statusVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || iCalEntity.vJournal.component == "TODO" || showAll.value == true)
         classificationVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
         urlVisible.postValue((iCalEntity.vJournal.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
         contactVisible.postValue((iCalEntity.vJournal.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
@@ -112,6 +106,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
         commentsVisible.postValue((iCalEntity.vJournal.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
         progressVisible.postValue(iCalEntity.vJournal.component == "TODO")
         priorityVisible.postValue(iCalEntity.vJournal.component == "TODO" && showAll.value == true)
+        subtasksVisible.postValue(iCalEntity.vJournal.component == "TODO")
 
     }
 
@@ -136,11 +131,13 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
         commentUpdated.removeAll(commentDeleted)    // make sure to not accidentially upsert a comment that was deleted
         categoryUpdated.removeAll(categoryDeleted)  // make sure to not accidentially upsert a category that was deleted
         attendeeUpdated.removeAll(attendeeDeleted)  // make sure to not accidentially upsert a attendee that was deleted
+        subtaskUpdated.removeAll(subtaskDeleted)
 
 
         deleteOldCategories()
         deleteOldComments()
         deleteOldAttendees()
+        deleteOldSubtasks()
 
 
         viewModelScope.launch() {
@@ -149,8 +146,11 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
             insertNewCategories(insertedOrUpdatedItemId)
             insertNewComments(insertedOrUpdatedItemId)
             insertNewAttendees(insertedOrUpdatedItemId)
+            insertNewSubtasks(insertedOrUpdatedItemId)
+            //insertNewSubtaskRelation(insertedOrUpdatedItemId)
             returnVJournalItemId.value = insertedOrUpdatedItemId
         }
+
     }
 
     private suspend fun insertOrUpdateVJournal(): Long {
@@ -223,6 +223,8 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
     }
 
 
+
+
     private fun deleteOldAttendees() {
         attendeeDeleted.forEach { att2del ->
             viewModelScope.launch(Dispatchers.IO) {
@@ -232,6 +234,36 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
         }
     }
 
+
+
+    private suspend fun insertNewSubtasks(insertedOrUpdatedItemId: Long) {
+
+        subtaskUpdated.forEach { subtask ->
+            // attention, linkedICalObjectId is actually set in DAO!
+            subtask.id = database.upsertSubtask(subtask)
+            database.upsertRelatedto(Relatedto(icalObjectId = insertedOrUpdatedItemId, linkedICalObjectId = subtask.id, reltypeparam = "CHILD", text = subtask.uid))
+
+            Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
+        }
+    }
+
+
+
+
+
+    private fun deleteOldSubtasks() {
+
+        if(iCalObjectUpdated.value?.id == null)      // This should not be possible to have no Id at this point, just to be sure!
+            return
+
+        subtaskDeleted.forEach { subtask2del ->
+            viewModelScope.launch(Dispatchers.IO) {
+                database.delete(subtask2del)
+                database.deleteRelatedto(iCalObjectUpdated.value!!.id, subtask2del.id)
+            }
+            Log.println(Log.INFO, "Subtask", "${subtask2del.summary} deleted")
+        }
+    }
 
 
     fun delete() {

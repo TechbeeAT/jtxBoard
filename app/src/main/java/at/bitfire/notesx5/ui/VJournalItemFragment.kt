@@ -107,7 +107,7 @@ class VJournalItemFragment : Fragment() {
 
 
 
-        vJournalItemViewModel.relatedICalObjects.observe(viewLifecycleOwner, {
+        vJournalItemViewModel.relatedNotes.observe(viewLifecycleOwner, {
 
             if (it?.size != 0)
             {

@@ -233,6 +233,97 @@
             app:layout_constraintStart_toEndOf="@+id/progress_label"
             app:layout_constraintTop_toBottomOf="@+id/description_edit" />
 
+
+
+
+        <ImageView
+            android:id="@+id/subtasks_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/subtasks_header"
+            app:srcCompat="@drawable/ic_comments"
+            tools:ignore="ContentDescription"
+            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+            />
+
+        <TextView
+            android:id="@+id/subtasks_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="Subtasks"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/subtasks_icon"
+            app:layout_constraintTop_toBottomOf="@id/progress_slider"
+            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+            />
+
+
+        <LinearLayout
+            android:id="@+id/subtasks_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:divider="?android:dividerHorizontal"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subtasks_header"
+            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+            >
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true">
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+        </LinearLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/subtasks_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="64dp"
+            android:hint="Subtask hint"
+            app:endIconContentDescription="Add subtask"
+            app:endIconDrawable="@drawable/ic_comment_add"
+            app:endIconMode="custom"
+            app:helperText="Add a subtask"
+            app:helperTextEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/subtasks_linearlayout"
+            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+            >
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/subtasks_add_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
         <com.google.android.material.chip.Chip
             android:id="@+id/status_chip"
             style="@style/Widget.MaterialComponents.Chip.Entry"
@@ -246,7 +337,7 @@
             app:chipIconVisible="true"
             app:closeIconVisible="false"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progress_slider"
+            app:layout_constraintTop_toBottomOf="@+id/subtasks_add"
             tools:text="Final" />
 
         <com.google.android.material.chip.Chip
@@ -270,10 +361,10 @@
             android:id="@+id/show_all_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:checked="@={model.showAll}"
             android:text="Show all"
+            app:layout_constraintBottom_toBottomOf="@+id/status_chip"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/status_chip"
             app:switchPadding="8dp"

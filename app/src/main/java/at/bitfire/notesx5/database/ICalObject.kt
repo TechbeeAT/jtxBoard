@@ -83,6 +83,8 @@ data class ICalObject(
                 fun createNote(): ICalObject = ICalObject(component = "NOTE", status = 1)
                 fun createNote(summary: String) = ICalObject(component = "NOTE", status = 1, summary = summary)
                 fun createTodo() = ICalObject(component = "TODO", status = 0, percent = 0, priority = 4)
+                fun createSubtask(summary: String) = ICalObject(component = "TODO", summary = summary, status = 0, percent = 0, priority = 4)
+
         }
 }
 

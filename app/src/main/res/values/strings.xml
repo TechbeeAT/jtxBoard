@@ -32,7 +32,7 @@
     </string-array>
 
     <string-array name="vtodo_status">
-        <item>Open</item>
+        <item>Todo</item>
         <item>In progress</item>
         <item>Done</item>
         <item>Cancelled</item>
@@ -94,7 +94,5 @@
     <string name="item_view_contact_header">Contact</string>
     <string name="item_view_relatedto_header">Related to</string>
     <string name="item_view_comments_header">Comments</string>
-
-
 
 </resources>

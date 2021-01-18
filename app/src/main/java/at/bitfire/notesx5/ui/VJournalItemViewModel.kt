@@ -20,7 +20,7 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
     lateinit var vJournal: LiveData<ICalEntity?>
     lateinit var categories: LiveData<List<Category>>
     lateinit var attendees: LiveData<List<Attendee>>
-    lateinit var relatedICalObjects: LiveData<List<ICalObject?>>
+    lateinit var relatedNotes: LiveData<List<ICalObject?>>
 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
@@ -60,8 +60,8 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
             }
 
 
-            relatedICalObjects = Transformations.switchMap(vJournal) {
-                it?.vJournal?.id?.let { parentId -> database.getRelated(parentId) }
+            relatedNotes = Transformations.switchMap(vJournal) {
+                it?.vJournal?.id?.let { parentId -> database.getRelatedNotes(parentId) }
             }
 
 
@@ -139,6 +139,7 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
 
     fun deleteNote(note: ICalObject) {
         viewModelScope.launch(Dispatchers.IO) {
+            //todo delete also link in relatedto!
             database.delete(note)
         }
     }

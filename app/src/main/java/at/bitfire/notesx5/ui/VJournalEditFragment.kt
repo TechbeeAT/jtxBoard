@@ -23,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.ICalDatabase
 import at.bitfire.notesx5.database.ICalDatabaseDao
+import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Comment
@@ -31,6 +32,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_vjournal_edit_comment.view.*
+import kotlinx.android.synthetic.main.fragment_vjournal_edit_subtask.view.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item_categories_chip.view.*
 import java.util.*
@@ -197,6 +199,14 @@ class VJournalEditFragment : Fragment(),
             vJournalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
         }
 
+        vJournalEditViewModel.relatedTodos.observe(viewLifecycleOwner) {
+
+            it.forEach {singleSubtask ->
+                addSubtasksView(singleSubtask, container)
+            }
+        }
+
+
 
         //TODO: Check if the Sequence was updated in the meantime and notify user!
 
@@ -362,6 +372,30 @@ class VJournalEditFragment : Fragment(),
                     vJournalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
                     addCommentView(newComment, container)      // add the new comment
                     binding.commentAdd.editText?.text?.clear()  // clear the field
+                    true
+                }
+                else -> false
+            }
+        }
+
+        binding.subtasksAdd.setEndIconOnClickListener {
+            // Respond to end icon presses
+            val newSubtask = ICalObject.createSubtask(summary = binding.subtasksAdd.editText?.text.toString())
+            vJournalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
+            addSubtasksView(newSubtask, container)      // add the new comment
+            binding.subtasksAdd.editText?.text?.clear()  // clear the field
+
+        }
+
+
+        // Transform the comment input into a view when the Done button in the keyboard is clicked
+        binding.subtasksAdd.editText?.setOnEditorActionListener { v, actionId, event ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    val newSubtask = ICalObject.createSubtask(summary = binding.subtasksAdd.editText?.text.toString())
+                    vJournalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
+                    addSubtasksView(newSubtask, container)      // add the new comment
+                    binding.subtasksAdd.editText?.text?.clear()  // clear the field
                     true
                 }
                 else -> false
@@ -580,6 +614,55 @@ class VJournalEditFragment : Fragment(),
 
             builder.setNeutralButton("Delete") { _, _ ->
                 vJournalEditViewModel.commentDeleted.add(comment)
+                it.visibility = View.GONE
+            }
+            builder.show()
+        }
+    }
+
+
+
+    private fun addSubtasksView(subtask: ICalObject?, container: ViewGroup?) {
+
+        if (subtask == null)
+            return
+
+        val subtaskView = inflater.inflate(R.layout.fragment_vjournal_edit_subtask, container, false);
+        subtaskView.subtask_textview.text = subtask.summary
+        subtaskView.subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
+        binding.subtasksLinearlayout.addView(subtaskView)
+
+        // set on Click Listener to open a dialog to update the comment
+        subtaskView.setOnClickListener {
+
+            // set up the values for the TextInputEditText
+            val updatedSummary: TextInputEditText = TextInputEditText(context!!)
+            updatedSummary.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            updatedSummary.setText(subtask.summary)
+            updatedSummary.isSingleLine = false;
+            updatedSummary.maxLines = 2
+
+            // set up the builder for the AlertDialog
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Edit subtask")
+            builder.setIcon(R.drawable.ic_comment_add)
+            builder.setView(updatedSummary)
+
+
+            builder.setPositiveButton("Save") { _, _ ->
+
+                val updatedSubtask = subtask.copy()
+                updatedSubtask.summary = updatedSummary.text.toString()
+                vJournalEditViewModel.subtaskUpdated.add(updatedSubtask)
+                it.subtask_textview.text = updatedSubtask.summary
+
+            }
+            builder.setNegativeButton("Cancel") { _, _ ->
+                // Do nothing, just close the message
+            }
+
+            builder.setNeutralButton("Delete") { _, _ ->
+                vJournalEditViewModel.subtaskDeleted.add(subtask)
                 it.visibility = View.GONE
             }
             builder.show()
