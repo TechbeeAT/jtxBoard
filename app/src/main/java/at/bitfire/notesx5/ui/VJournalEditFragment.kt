@@ -201,6 +201,9 @@ class VJournalEditFragment : Fragment(),
 
         vJournalEditViewModel.relatedTodos.observe(viewLifecycleOwner) {
 
+            if (vJournalEditViewModel.savingClicked.value == true)    // don't do anything if saving was clicked, saving could interfere here!
+                return@observe
+
             it.forEach {singleSubtask ->
                 addSubtasksView(singleSubtask, container)
             }
@@ -630,6 +633,20 @@ class VJournalEditFragment : Fragment(),
         val subtaskView = inflater.inflate(R.layout.fragment_vjournal_edit_subtask, container, false);
         subtaskView.subtask_textview.text = subtask.summary
         subtaskView.subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
+
+        subtaskView.subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->
+            //Update the progress in the updated list: try to find the matching uid (the only unique element for now) and then assign the percent
+            //Attention, the new subtask must have been inserted before in the list!
+            if (vJournalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid } == null) {
+                val changedItem = subtask.copy()
+                changedItem.percent = value.toInt()
+                vJournalEditViewModel.subtaskUpdated.add(changedItem)
+            } else {
+                vJournalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid }?.percent = value.toInt()
+            }
+        }
+
+
         binding.subtasksLinearlayout.addView(subtaskView)
 
         // set on Click Listener to open a dialog to update the comment
@@ -651,10 +668,14 @@ class VJournalEditFragment : Fragment(),
 
             builder.setPositiveButton("Save") { _, _ ->
 
-                val updatedSubtask = subtask.copy()
-                updatedSubtask.summary = updatedSummary.text.toString()
-                vJournalEditViewModel.subtaskUpdated.add(updatedSubtask)
-                it.subtask_textview.text = updatedSubtask.summary
+                if (vJournalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid } == null) {
+                    val changedItem = subtask.copy()
+                    changedItem.summary = updatedSummary.text.toString()
+                    vJournalEditViewModel.subtaskUpdated.add(changedItem)
+                } else {
+                    vJournalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid }?.summary = updatedSummary.text.toString()
+                }
+                it.subtask_textview.text = updatedSummary.text.toString()
 
             }
             builder.setNegativeButton("Cancel") { _, _ ->

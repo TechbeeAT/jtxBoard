@@ -241,9 +241,13 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
         subtaskUpdated.forEach { subtask ->
             // attention, linkedICalObjectId is actually set in DAO!
             subtask.id = database.upsertSubtask(subtask)
-            database.upsertRelatedto(Relatedto(icalObjectId = insertedOrUpdatedItemId, linkedICalObjectId = subtask.id, reltypeparam = "CHILD", text = subtask.uid))
-
             Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
+
+
+            // Only insert if the relation doesn't exist already, otherwise there's nothing to do
+            if(iCalEntity.relatedto?.find { it.icalObjectId == insertedOrUpdatedItemId && it.linkedICalObjectId == subtask.id} == null )
+                database.upsertRelatedto(Relatedto(icalObjectId = insertedOrUpdatedItemId, linkedICalObjectId = subtask.id, reltypeparam = "CHILD", text = subtask.uid))
+
         }
     }
 

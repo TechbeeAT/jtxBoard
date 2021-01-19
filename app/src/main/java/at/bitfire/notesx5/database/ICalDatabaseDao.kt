@@ -43,12 +43,15 @@ interface ICalDatabaseDao {
 
      */
 
+    @Transaction
     @Query("SELECT DISTINCT text FROM category ORDER BY text ASC")
     fun getAllCategories(): LiveData<List<String>>
 
+    @Transaction
     @Query("SELECT DISTINCT caladdress FROM organizer ORDER BY caladdress ASC")
     fun getAllOrganizers(): LiveData<List<String>>
 
+    @Transaction
     @Query("SELECT DISTINCT collection FROM icalobject ORDER BY collection ASC")
     fun getAllCollections(): LiveData<List<String>>
 
