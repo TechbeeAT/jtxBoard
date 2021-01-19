@@ -186,6 +186,9 @@ class VJournalListViewModel(
             queryString += ") "
         }
 
+        // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
+        queryString += "AND icalobject.id NOT IN (SELECT linkedICalObjectId FROM relatedto) "
+
         queryString += "ORDER BY dtstart DESC, created DESC "
 
         Log.println(Log.INFO, "queryString", queryString)
