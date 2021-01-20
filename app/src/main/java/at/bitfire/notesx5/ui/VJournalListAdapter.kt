@@ -75,6 +75,8 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.classificationIcon.visibility = View.VISIBLE
                 holder.progressLabel.visibility = View.GONE
                 holder.progressSlider.visibility = View.GONE
+                holder.priorityIcon.visibility = View.GONE
+                holder.priority.visibility = View.GONE
 
                 if (vJournalItem.vJournal.dtstartTimezone == "ALLDAY") {
                     holder.dtstartTime.visibility = View.GONE
@@ -94,6 +96,8 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.classificationIcon.visibility = View.GONE
                 holder.progressLabel.visibility = View.GONE
                 holder.progressSlider.visibility = View.GONE
+                holder.priorityIcon.visibility = View.GONE
+                holder.priority.visibility = View.GONE
 
             } else if(vJournalItem.vJournal.component == "TODO") {
                 holder.dtstartDay.visibility = View.GONE
@@ -107,6 +111,8 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.progressLabel.visibility = View.VISIBLE
                 holder.progressSlider.value = vJournalItem.vJournal.percent?.toFloat()?:0F
                 holder.progressSlider.visibility = View.VISIBLE
+                holder.priorityIcon.visibility = View.VISIBLE
+                holder.priority.visibility = View.VISIBLE
             } else {
                 holder.dtstartDay.visibility = View.GONE
                 holder.dtstartMonth.visibility = View.GONE
@@ -118,6 +124,8 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.classificationIcon.visibility = View.GONE
                 holder.progressLabel.visibility = View.GONE
                 holder.progressSlider.visibility = View.GONE
+                holder.priorityIcon.visibility = View.GONE
+                holder.priority.visibility = View.GONE
             }
 
             val statusArray = if (vJournalItem.vJournal.component == "TODO")
@@ -125,10 +133,16 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
             else
                 context.resources.getStringArray(R.array.vjournal_status)
 
-            holder.status.text = statusArray[vJournalItem.vJournal.status]
+            if (vJournalItem.vJournal.status in 0..3 || (vJournalItem.vJournal.component == "TODO" && vJournalItem.vJournal.status in 0..3))
+                holder.status.text = statusArray[vJournalItem.vJournal.status]
 
             val classificationArray = context.resources.getStringArray(R.array.ical_classification)
-            holder.classification.text = classificationArray[vJournalItem.vJournal.classification]
+            if(vJournalItem.vJournal.classification in 0..2)
+                holder.classification.text = classificationArray[vJournalItem.vJournal.classification]
+
+            val priorityArray = context.resources.getStringArray(R.array.priority)
+            if(vJournalItem.vJournal.priority != null && vJournalItem.vJournal.priority in 0..9)
+                holder.priority.text = priorityArray[vJournalItem.vJournal.priority!!]
 
 
             // turn to item view when the card is clicked
@@ -154,9 +168,11 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
         var categories: TextView = itemView.findViewById<TextView>(R.id.categories)
         //var categoriesIcon = itemView.findViewById<ImageView>(R.id.categories_icon)
         var status: TextView = itemView.findViewById<TextView>(R.id.status)
-        var classification: TextView = itemView.findViewById<TextView>(R.id.classification)
         var statusIcon: ImageView = itemView.findViewById<ImageView>(R.id.status_icon)
+        var classification: TextView = itemView.findViewById<TextView>(R.id.classification)
         var classificationIcon: ImageView = itemView.findViewById<ImageView>(R.id.classification_icon)
+        var priority: TextView = itemView.findViewById<TextView>(R.id.priority)
+        var priorityIcon: ImageView = itemView.findViewById<ImageView>(R.id.priority_icon)
 
         var progressLabel: TextView = itemView.findViewById<TextView>(R.id.progress_label)
         var progressSlider: Slider = itemView.findViewById<Slider>(R.id.progress_slider)

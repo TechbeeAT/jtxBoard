@@ -95,6 +95,10 @@ class VJournalItemFragment : Fragment() {
                 val classificationArray = resources.getStringArray(R.array.ical_classification)
                 binding.classificationChip.text = classificationArray[vJournalItemViewModel.vJournal.value!!.vJournal.classification]
 
+                val priorityArray = resources.getStringArray(R.array.priority)
+                if (vJournalItemViewModel.vJournal.value?.vJournal?.priority != null && vJournalItemViewModel.vJournal.value!!.vJournal.priority in 0..9)
+                    binding.priorityChip.text = priorityArray[vJournalItemViewModel.vJournal.value!!.vJournal.priority!!]
+
 
                 binding.commentsLinearlayout.removeAllViews()
                 vJournalItemViewModel.vJournal.value!!.comment?.forEach { comment ->

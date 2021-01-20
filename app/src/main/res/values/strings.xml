@@ -39,6 +39,19 @@
         <!-- <item>Unsupported</item> -->
     </string-array>
 
+    <string-array name="priority">
+        <item>0 - No priority</item>
+        <item>1 - Lowest</item>
+        <item>2 - Lower</item>
+        <item>3 - Low</item>
+        <item>4 - Medium low</item>
+        <item>5 - Medium</item>
+        <item>6 - Medium high</item>
+        <item>7 - High</item>
+        <item>8 - Higher</item>
+        <item>9 - Highest</item>
+    </string-array>
+
 
 
     <string-array name="ical_classification">

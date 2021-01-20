@@ -322,8 +322,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-
-
         <com.google.android.material.chip.Chip
             android:id="@+id/status_chip"
             style="@style/Widget.MaterialComponents.Chip.Entry"
@@ -338,6 +336,21 @@
             app:closeIconVisible="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/subtasks_add"
+            tools:text="Medium" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/priority_chip"
+            style="@style/Widget.MaterialComponents.Chip.Entry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:checkable="false"
+            android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
+            app:chipIcon="@drawable/ic_priority"
+            app:chipIconVisible="true"
+            app:closeIconVisible="false"
+            app:layout_constraintStart_toEndOf="@+id/status_chip"
+            app:layout_constraintTop_toTopOf="@+id/status_chip"
             tools:text="Final" />
 
         <com.google.android.material.chip.Chip
@@ -352,7 +365,7 @@
             app:chipIcon="@drawable/ic_classification"
             app:chipIconVisible="true"
             app:closeIconVisible="false"
-            app:layout_constraintStart_toEndOf="@+id/status_chip"
+            app:layout_constraintStart_toEndOf="@+id/priority_chip"
             app:layout_constraintTop_toTopOf="@+id/status_chip"
             tools:text="Public" />
 
@@ -364,39 +377,10 @@
             android:layout_marginEnd="8dp"
             android:checked="@={model.showAll}"
             android:text="Show all"
-            app:layout_constraintBottom_toBottomOf="@+id/status_chip"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/status_chip"
+            app:layout_constraintTop_toBottomOf="@+id/status_chip"
             app:switchPadding="8dp"
             tools:checked="false" />
-
-        <TextView
-            android:id="@+id/priority_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Priority"
-            android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/priority_slider"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/priority_slider" />
-
-        <com.google.android.material.slider.Slider
-            android:id="@+id/priority_slider"
-            style="@style/Widget.AppCompat.SeekBar.Discrete"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:stepSize="1.0"
-            android:valueFrom="0.0"
-            android:valueTo="9.0"
-            android:value="@{model.iCalObjectUpdated.priority}"
-            android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/priority_label"
-            app:layout_constraintTop_toBottomOf="@+id/show_all_switch" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/url_edit"
@@ -414,7 +398,7 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/priority_slider"
+            app:layout_constraintTop_toBottomOf="@+id/show_all_switch"
             app:startIconDrawable="@drawable/ic_link">
 
 

@@ -97,6 +97,7 @@ class VJournalEditFragment : Fragment(),
         binding.lifecycleOwner = this
 
 
+        val priorityItems = resources.getStringArray(R.array.priority)
         val classificationItems = resources.getStringArray(R.array.ical_classification)
         val statusItems = if (vJournalEditViewModel.iCalEntity.vJournal.component == "TODO") {
             resources.getStringArray(R.array.vtodo_status)
@@ -110,7 +111,6 @@ class VJournalEditFragment : Fragment(),
                 vJournalEditViewModel.iCalObjectUpdated.value!!.collection = binding.collection.selectedItem.toString()
 
                 vJournalEditViewModel.iCalObjectUpdated.value!!.percent = binding.progressSlider.value.toInt()
-                vJournalEditViewModel.iCalObjectUpdated.value!!.priority = binding.prioritySlider.value.toInt()
                 vJournalEditViewModel.update()
             }
         })
@@ -225,6 +225,13 @@ class VJournalEditFragment : Fragment(),
         vJournalEditViewModel.iCalEntity.attendee?.forEach { singleAttendee ->
             addAttendeeChip(singleAttendee)
         }
+
+
+        // Set the default value of the priority Chip  (TODO only!)
+        if (vJournalEditViewModel.iCalEntity.vJournal.priority != null && vJournalEditViewModel.iCalEntity.vJournal.priority in 0..9)   // if unsupported don't show the classification
+            binding.priorityChip.text = priorityItems[vJournalEditViewModel.iCalEntity.vJournal.priority!!]  // if supported show the priority according to the String Array
+        else
+            binding.priorityChip.text = vJournalEditViewModel.iCalEntity.vJournal.priorityX
 
         // Set the default value of the Status Chip
         if (vJournalEditViewModel.iCalEntity.vJournal.status == -1)      // if unsupported don't show the status
@@ -430,6 +437,20 @@ class VJournalEditFragment : Fragment(),
                         binding.classificationChip.text = classificationItems[which]     // don't forget to update the UI
                     }
                     .setIcon(R.drawable.ic_classification)
+                    .show()
+        }
+
+
+        binding.priorityChip.setOnClickListener {
+
+            MaterialAlertDialogBuilder(context!!)
+                    .setTitle("Set priority")
+                    .setItems(priorityItems) { dialog, which ->
+                        // Respond to item chosen
+                        vJournalEditViewModel.iCalObjectUpdated.value!!.priority = which
+                        binding.priorityChip.text = priorityItems[which]     // don't forget to update the UI
+                    }
+                    .setIcon(R.drawable.ic_priority)
                     .show()
         }
 

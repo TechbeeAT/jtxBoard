@@ -36,7 +36,7 @@ import at.bitfire.notesx5.database.properties.*
     ICalObject::class,
     Organizer::class,
     Relatedto::class,
-    Resource::class], version = 34, exportSchema = false)
+    Resource::class], version = 35, exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {
 

@@ -37,7 +37,6 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
     var attendeeUpdated: MutableList<Attendee> = mutableListOf(Attendee())
     var subtaskUpdated: MutableList<ICalObject> = mutableListOf()
-    var subtaskRelationsUpdated: MutableList<Relatedto> = mutableListOf()
 
 
     var categoryDeleted: MutableList<Category> = mutableListOf(Category())
@@ -105,7 +104,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
         attendeesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
         commentsVisible.postValue((iCalEntity.vJournal.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
         progressVisible.postValue(iCalEntity.vJournal.component == "TODO")
-        priorityVisible.postValue(iCalEntity.vJournal.component == "TODO" && showAll.value == true)
+        priorityVisible.postValue(iCalEntity.vJournal.component == "TODO")
         subtasksVisible.postValue(iCalEntity.vJournal.component == "TODO")
 
     }
