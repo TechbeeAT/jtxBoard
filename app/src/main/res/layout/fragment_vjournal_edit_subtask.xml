@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/subtask_textview"
-            android:layout_width="200dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/subtask_progress_slider"
@@ -32,10 +32,38 @@
             android:stepSize="1.0"
             android:valueFrom="0.0"
             android:valueTo="100.0"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/subtask_textview"
+            app:layout_constraintEnd_toStartOf="@id/subtask_progress_percent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+        <TextView
+            android:id="@+id/subtask_progress_percent"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="100 %"
+            android:textAlignment="viewEnd"
+            app:layout_constraintBottom_toBottomOf="@+id/subtask_progress_slider"
+            app:layout_constraintEnd_toStartOf="@+id/subtask_progress_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/subtask_progress_slider" />
+
+        <CheckBox
+            android:id="@+id/subtask_progress_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/subtask_progress_slider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/subtask_progress_slider" />
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
 
 </com.google.android.material.card.MaterialCardView>

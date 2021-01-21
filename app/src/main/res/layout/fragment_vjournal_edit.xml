@@ -210,7 +210,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Progress (%)"
+            android:text="Progress"
             android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/progress_slider"
             app:layout_constraintStart_toStartOf="parent"
@@ -229,9 +229,33 @@
             android:valueTo="100.0"
             android:value="@{model.iCalObjectUpdated.percent}"
             android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/progress_percent"
             app:layout_constraintStart_toEndOf="@+id/progress_label"
             app:layout_constraintTop_toBottomOf="@+id/description_edit" />
+
+
+        <TextView
+            android:id="@+id/progress_percent"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/number_percent"
+            android:textAlignment="viewEnd"
+            android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_slider"
+            app:layout_constraintEnd_toStartOf="@+id/progress_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/progress_slider"
+            tools:text="100 %" />
+
+        <CheckBox
+            android:id="@+id/progress_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+            android:checked="@{model.iCalObjectUpdated.percent == 100}"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_slider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/progress_slider" />
 
 
 

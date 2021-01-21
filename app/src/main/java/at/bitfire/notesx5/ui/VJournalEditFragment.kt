@@ -654,6 +654,10 @@ class VJournalEditFragment : Fragment(),
         val subtaskView = inflater.inflate(R.layout.fragment_vjournal_edit_subtask, container, false);
         subtaskView.subtask_textview.text = subtask.summary
         subtaskView.subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
+        subtaskView.subtask_progress_percent.text = if(subtask.percent?.toFloat() != null) "${subtask.percent} %" else "0 %"
+        subtaskView.subtask_progress_checkbox.isChecked = subtask.percent == 100
+
+        var restoreProgress = subtask.percent
 
         subtaskView.subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->
             //Update the progress in the updated list: try to find the matching uid (the only unique element for now) and then assign the percent
@@ -665,6 +669,21 @@ class VJournalEditFragment : Fragment(),
             } else {
                 vJournalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid }?.percent = value.toInt()
             }
+
+            subtaskView.subtask_progress_checkbox.isChecked = value == 100F
+            subtaskView.subtask_progress_percent.text = "$value %"
+            if (value != 100F)
+                restoreProgress = value.toInt()
+        }
+
+        subtaskView.subtask_progress_checkbox.setOnCheckedChangeListener { button, checked ->
+            val newProgress: Int = if (checked)  100
+             else restoreProgress ?: 0
+
+            subtaskView.subtask_progress_slider.value = newProgress.toFloat()    // This will also trigger saving through the listener!
+
+
+
         }
 
 
