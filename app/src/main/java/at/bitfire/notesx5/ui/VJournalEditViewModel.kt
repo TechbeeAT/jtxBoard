@@ -25,7 +25,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allCollections: LiveData<List<String>>
 
-    lateinit var relatedTodos: LiveData<List<ICalObject?>>
+    lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
 
     var returnVJournalItemId: MutableLiveData<Long> = MutableLiveData<Long>().apply { postValue(0L) }
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
@@ -80,7 +80,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
 
         viewModelScope.launch() {
 
-            relatedTodos =  database.getRelatedTodos(iCalEntity.vJournal.id)
+            relatedSubtasks =  database.getRelatedTodos(iCalEntity.vJournal.id)
 
             allCategories = database.getAllCategories()
             allCollections = database.getAllCollections()

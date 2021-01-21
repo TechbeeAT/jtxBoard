@@ -199,7 +199,7 @@ class VJournalEditFragment : Fragment(),
             vJournalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
         }
 
-        vJournalEditViewModel.relatedTodos.observe(viewLifecycleOwner) {
+        vJournalEditViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
             if (vJournalEditViewModel.savingClicked.value == true)    // don't do anything if saving was clicked, saving could interfere here!
                 return@observe

@@ -19,8 +19,11 @@ import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.databinding.FragmentVjournalItemBinding
 import com.google.android.material.chip.Chip
+import com.google.android.material.slider.RangeSlider
+import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_vjournal_edit_comment.view.*
+import kotlinx.android.synthetic.main.fragment_vjournal_edit_subtask.view.*
 import kotlinx.android.synthetic.main.fragment_vjournal_item_relatedto.view.*
 
 
@@ -124,6 +127,14 @@ class VJournalItemFragment : Fragment() {
             }
         })
 
+        vJournalItemViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
+
+            binding.subtasksLinearlayout.removeAllViews()
+            it.forEach {singleSubtask ->
+                addSubtasksView(singleSubtask, container)
+            }
+        }
+
 
             /*
 
@@ -205,6 +216,15 @@ class VJournalItemFragment : Fragment() {
             builder.show()
 
         }
+
+        binding.progressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+
+            override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
+
+            override fun onStopTrackingTouch(slider: Slider) {
+                vJournalItemViewModel.updateProgress(vJournalItemViewModel.vJournal.value!!.vJournal, binding.progressSlider.value.toInt())
+            }
+        })
 
 
 
@@ -379,6 +399,31 @@ class VJournalItemFragment : Fragment() {
             // Responds to chip checked/unchecked
         }
     }
+
+
+    private fun addSubtasksView(subtask: ICalObject?, container: ViewGroup?) {
+
+        if (subtask == null)
+            return
+
+        val subtaskView = inflater.inflate(R.layout.fragment_vjournal_edit_subtask, container, false);
+        subtaskView.subtask_textview.text = subtask.summary
+        subtaskView.subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
+
+        // Instead of implementing here
+        //        subtaskView.subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->  vJournalItemViewModel.updateProgress(subtask, value.toInt())    }
+        //   the approach here is to update only onStopTrackingTouch. The OnCangeListener would update on several times on sliding causing lags and unnecessary updates  */
+        subtaskView.subtask_progress_slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+
+            override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
+
+            override fun onStopTrackingTouch(slider: Slider) {
+                vJournalItemViewModel.updateProgress(subtask, subtaskView.subtask_progress_slider.value.toInt())
+            }
+        })
+        binding.subtasksLinearlayout.addView(subtaskView)
+    }
+
 
 
 

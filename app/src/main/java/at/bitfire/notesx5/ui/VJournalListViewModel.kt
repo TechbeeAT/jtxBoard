@@ -210,4 +210,5 @@ class VJournalListViewModel(
        searchCollection.clear()
        updateSearch()
     }
+
 }

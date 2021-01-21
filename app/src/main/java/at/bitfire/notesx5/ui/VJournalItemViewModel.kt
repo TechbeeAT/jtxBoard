@@ -21,6 +21,8 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
     lateinit var categories: LiveData<List<Category>>
     lateinit var attendees: LiveData<List<Attendee>>
     lateinit var relatedNotes: LiveData<List<ICalObject?>>
+    lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
+
 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
@@ -36,6 +38,8 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
     lateinit var relatedtoVisible: LiveData<Boolean>
     lateinit var progressVisible: LiveData<Boolean>
     lateinit var priorityVisible: LiveData<Boolean>
+    lateinit var subtasksVisible: LiveData<Boolean>
+
 
     var editingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
@@ -47,9 +51,11 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
             // insert a new value to initialize the vJournalItem or load the existing one from the DB
             vJournal = if (vJournalItemId == 0L)
                 MutableLiveData<ICalEntity?>().apply {
-                    postValue(ICalEntity(ICalObject(), null, null, null, null, null)) }
+                    postValue(ICalEntity(ICalObject(), null, null, null, null, null))
+                }
             else
                 database.get(vJournalItemId)
+
 
             categories = Transformations.map(vJournal) {
                 it?.category
@@ -62,6 +68,10 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
 
             relatedNotes = Transformations.switchMap(vJournal) {
                 it?.vJournal?.id?.let { parentId -> database.getRelatedNotes(parentId) }
+            }
+
+            relatedSubtasks = Transformations.switchMap(vJournal) {
+                it?.vJournal?.id?.let { parentId -> database.getRelatedTodos(it.vJournal.id) }
             }
 
 
@@ -110,6 +120,9 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
             relatedtoVisible = Transformations.map(vJournal) { item ->
                 return@map !item?.relatedto.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
+            subtasksVisible = Transformations.map(relatedSubtasks) { subtasks ->
+                return@map subtasks?.isNotEmpty()      // true if relatedto is NOT null or empty
+            }
             commentsVisible = Transformations.map(vJournal) { item ->
                 return@map !item?.comment.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
@@ -119,14 +132,13 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
             priorityVisible = Transformations.map(vJournal) { item ->
                 return@map item?.vJournal?.priority != null      // true if priority is NOT null
             }
+
         }
     }
 
     fun editingClicked() {
         editingClicked.value = true
     }
-
-
 
 
     fun insertRelatedNote(note: ICalObject) {
@@ -144,19 +156,15 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
         }
     }
 
-    fun updateUrl (url: String) {
-        val updatedVJournal = vJournal.value!!.vJournal.copy()
-        updatedVJournal.url = url
-        viewModelScope.launch(Dispatchers.IO) {
-            database.update(updatedVJournal)
-        }
-    }
 
-    fun updateContact (contact: String) {
-        val updatedVJournal = vJournal.value!!.vJournal.copy()
-        updatedVJournal.contact = contact
-        viewModelScope.launch(Dispatchers.IO) {
-            database.update(updatedVJournal)
+    fun updateProgress(item: ICalObject, newPercent: Int) {
+
+        val item2update = item
+        item2update.percent = newPercent
+        item2update.lastModified = System.currentTimeMillis()
+
+        viewModelScope.launch() {
+            database.upsertSubtask(item2update)
         }
     }
 }

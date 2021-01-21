@@ -4,20 +4,28 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
+import at.bitfire.notesx5.database.ICalDatabase
+import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
+import kotlinx.android.synthetic.main.fragment_vjournal_edit_subtask.view.*
+import kotlinx.coroutines.*
+import org.w3c.dom.Text
 import java.util.*
 
 class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<ICalEntityWithCategory>>):
         RecyclerView.Adapter<VJournalListAdapter.VJournalItemHolder>() {
 
+    var dataSource = ICalDatabase.getInstance(context.applicationContext).iCalDatabaseDao
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VJournalItemHolder {
 
@@ -75,6 +83,8 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.classificationIcon.visibility = View.VISIBLE
                 holder.progressLabel.visibility = View.GONE
                 holder.progressSlider.visibility = View.GONE
+                holder.progressPercent.visibility = View.GONE
+                holder.progressCheckbox.visibility = View.GONE
                 holder.priorityIcon.visibility = View.GONE
                 holder.priority.visibility = View.GONE
 
@@ -96,6 +106,8 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.classificationIcon.visibility = View.GONE
                 holder.progressLabel.visibility = View.GONE
                 holder.progressSlider.visibility = View.GONE
+                holder.progressPercent.visibility = View.GONE
+                holder.progressCheckbox.visibility = View.GONE
                 holder.priorityIcon.visibility = View.GONE
                 holder.priority.visibility = View.GONE
 
@@ -111,8 +123,15 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.progressLabel.visibility = View.VISIBLE
                 holder.progressSlider.value = vJournalItem.vJournal.percent?.toFloat()?:0F
                 holder.progressSlider.visibility = View.VISIBLE
+                holder.progressCheckbox.visibility = View.VISIBLE
+                holder.progressCheckbox.isChecked = vJournalItem.vJournal.percent == 100
+                holder.progressPercent.visibility = View.VISIBLE
+                holder.progressPercent.text = vJournalItem.vJournal.percent.toString() + " %"
                 holder.priorityIcon.visibility = View.VISIBLE
                 holder.priority.visibility = View.VISIBLE
+                if(vJournalItem.vJournal.percent == 100)
+                    holder.progressCheckbox.isActivated = true
+                    
             } else {
                 holder.dtstartDay.visibility = View.GONE
                 holder.dtstartMonth.visibility = View.GONE
@@ -124,6 +143,8 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.classificationIcon.visibility = View.GONE
                 holder.progressLabel.visibility = View.GONE
                 holder.progressSlider.visibility = View.GONE
+                holder.progressPercent.visibility = View.GONE
+                holder.progressCheckbox.visibility = View.GONE
                 holder.priorityIcon.visibility = View.GONE
                 holder.priority.visibility = View.GONE
             }
@@ -151,6 +172,38 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                         VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment().setItem2show(vJournalItem.vJournal.id))
             }
 
+            var resetProgress = vJournalItem.vJournal.percent ?: 0
+
+            // take care to update the progress in the DB when the progress is changed
+            if(vJournalItem.vJournal.component == "TODO") {
+                holder.progressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+
+                    override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
+
+                    override fun onStopTrackingTouch(slider: Slider) {
+
+                        updateProgress(holder, vJournalItem.vJournal, holder.progressSlider.value.toInt())
+
+                        if (holder.progressSlider.value.toInt() != 100)
+                            resetProgress = holder.progressSlider.value.toInt()
+                    }
+                })
+
+
+                holder.progressCheckbox.setOnCheckedChangeListener { button, checked ->
+                    if (checked) {
+                        updateProgress(holder, vJournalItem.vJournal, 100)
+                        holder.progressSlider.value = 100F
+                    } else {
+                        updateProgress(holder, vJournalItem.vJournal, resetProgress)
+                    holder.progressSlider.value = resetProgress.toFloat()
+                     }
+
+
+                }
+            }
+
+
         }
     }
 
@@ -176,15 +229,44 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
 
         var progressLabel: TextView = itemView.findViewById<TextView>(R.id.progress_label)
         var progressSlider: Slider = itemView.findViewById<Slider>(R.id.progress_slider)
-
-
-
+        var progressPercent: TextView = itemView.findViewById<TextView>(R.id.progress_percent)
+        var progressCheckbox: CheckBox = itemView.findViewById<CheckBox>(R.id.progress_checkbox)
 
 
         var dtstartDay: TextView = itemView.findViewById<TextView>(R.id.dtstart_day)
         var dtstartMonth: TextView = itemView.findViewById<TextView>(R.id.dtstart_month)
         var dtstartYear: TextView = itemView.findViewById<TextView>(R.id.dtstart_year)
         var dtstartTime: TextView = itemView.findViewById<TextView>(R.id.dtstart_time)
+
+    }
+
+    private fun updateProgress(holder: VJournalItemHolder, item: ICalObject, progress: Int) {
+
+
+        val item2update = item
+        item2update.percent = progress
+        item2update.lastModified = System.currentTimeMillis()
+        item2update.sequence++
+
+        when (item2update.percent) {
+            100 -> item2update.status = 2
+            in 1..99 -> item2update.status = 1
+            0 -> item2update.status = 0
+        }
+
+        GlobalScope.launch {
+            dataSource.upsertSubtask(item2update)
+        }
+
+
+        //update UI
+        holder.progressPercent.text = progress.toString() + " %"
+
+        val statusArray = context.resources.getStringArray(R.array.vtodo_status)
+        holder.status.text = statusArray[item2update.status]
+
+        holder.progressCheckbox.isChecked = progress == 100    // isChecked when Progress = 100
+
 
 
     }

@@ -96,10 +96,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Progress (%)"
+            android:text="Progress"
             app:layout_constraintBottom_toBottomOf="@+id/progress_slider"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description" />
+            app:layout_constraintTop_toTopOf="@+id/progress_slider" />
 
         <com.google.android.material.slider.Slider
             android:id="@+id/progress_slider"
@@ -108,15 +108,33 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:stepSize="1.0"
             android:valueFrom="0.0"
             android:valueTo="100.0"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/progress_percent"
             app:layout_constraintStart_toEndOf="@+id/progress_label"
             app:layout_constraintTop_toBottomOf="@+id/description" />
 
 
+        <TextView
+            android:id="@+id/progress_percent"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="100 %"
+            android:textAlignment="viewEnd"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_slider"
+            app:layout_constraintEnd_toStartOf="@+id/progress_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/progress_slider" />
+
+        <CheckBox
+            android:id="@+id/progress_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_slider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/progress_slider" />
 
         <ImageView
             android:id="@+id/priority_icon"
