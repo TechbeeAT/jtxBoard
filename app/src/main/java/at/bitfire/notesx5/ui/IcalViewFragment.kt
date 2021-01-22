@@ -102,7 +102,7 @@ class IcalViewFragment : Fragment() {
 
                 binding.viewCommentsLinearlayout.removeAllViews()
                 icalViewViewModel.vJournal.value!!.comment?.forEach { comment ->
-                    val commentView = inflater.inflate(R.layout.fragment_ical_edit_comment, container, false);
+                    val commentView = inflater.inflate(R.layout.fragment_ical_view_comment, container, false);
                     commentView.view_comment_textview.text = comment.text
                     binding.viewCommentsLinearlayout.addView(commentView)
                 }
