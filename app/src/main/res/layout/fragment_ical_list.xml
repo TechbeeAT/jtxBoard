@@ -8,7 +8,7 @@
 
         <variable
             name="vJournalListViewModel"
-            type="at.bitfire.notesx5.ui.VJournalListViewModel" />
+            type="at.bitfire.notesx5.ui.IcalListViewModel" />
     </data>
 
 

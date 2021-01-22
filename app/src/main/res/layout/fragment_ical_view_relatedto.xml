@@ -11,7 +11,7 @@
     android:checkable="true">
 
     <TextView
-        android:id="@+id/comment_textview"
+        android:id="@+id/view_related_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -20,6 +20,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Comment ..." />
+        tools:text="Note ..." />
 
 </com.google.android.material.card.MaterialCardView>

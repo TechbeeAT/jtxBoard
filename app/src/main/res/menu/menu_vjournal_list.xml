@@ -34,7 +34,7 @@
             android:title="Add Journal"
             app:showAsAction="never" />
         <item
-            android:id="@+id/add_note"
+            android:id="@+id/view_add_note"
             android:title="Add Note"
             app:showAsAction="never" />
         <item

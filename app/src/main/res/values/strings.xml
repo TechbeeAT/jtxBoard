@@ -23,7 +23,7 @@
     <!-- Global Dialog Strings -->
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
-    <string name="number_percent">%d %</string>
+    <string name="number_percent">%1$s \%</string>
 
 
     <string-array name="vjournal_status">

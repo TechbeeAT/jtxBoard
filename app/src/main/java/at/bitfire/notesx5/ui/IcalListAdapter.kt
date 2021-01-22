@@ -8,7 +8,6 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
@@ -17,19 +16,16 @@ import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
-import kotlinx.android.synthetic.main.fragment_vjournal_edit_subtask.view.*
 import kotlinx.coroutines.*
-import org.w3c.dom.Text
-import java.util.*
 
-class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<ICalEntityWithCategory>>):
-        RecyclerView.Adapter<VJournalListAdapter.VJournalItemHolder>() {
+class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICalEntityWithCategory>>):
+        RecyclerView.Adapter<IcalListAdapter.VJournalItemHolder>() {
 
     var dataSource = ICalDatabase.getInstance(context.applicationContext).iCalDatabaseDao
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VJournalItemHolder {
 
-        val itemHolder = LayoutInflater.from(parent.context).inflate(R.layout.fragment_vjournal_list_item, parent, false)
+        val itemHolder = LayoutInflater.from(parent.context).inflate(R.layout.fragment_ical_list_item, parent, false)
         return VJournalItemHolder(itemHolder)
 
     }
@@ -55,11 +51,11 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
 
         if (vJournalItem != null ) {
 
-            holder.summary.text = vJournalItem.vJournal.summary
-            if(vJournalItem.vJournal.description.isNullOrEmpty())
+            holder.summary.text = vJournalItem.property.summary
+            if(vJournalItem.property.description.isNullOrEmpty())
                 holder.description.visibility = View.GONE
             else
-               holder.description.text = vJournalItem.vJournal.description
+               holder.description.text = vJournalItem.property.description
 
             if (vJournalItem.category?.isNotEmpty() == true) {
                 val categoriesList = mutableListOf<String>()
@@ -70,10 +66,10 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 //holder.categoriesIcon.visibility = View.GONE
             }
 
-            if(vJournalItem.vJournal.component == "JOURNAL") {
-                holder.dtstartDay.text = convertLongToDayString(vJournalItem.vJournal.dtstart)
-                holder.dtstartMonth.text = convertLongToMonthString(vJournalItem.vJournal.dtstart)
-                holder.dtstartYear.text = convertLongToYearString(vJournalItem.vJournal.dtstart)
+            if(vJournalItem.property.component == "JOURNAL") {
+                holder.dtstartDay.text = convertLongToDayString(vJournalItem.property.dtstart)
+                holder.dtstartMonth.text = convertLongToMonthString(vJournalItem.property.dtstart)
+                holder.dtstartYear.text = convertLongToYearString(vJournalItem.property.dtstart)
                 holder.dtstartDay.visibility = View.VISIBLE
                 holder.dtstartMonth.visibility = View.VISIBLE
                 holder.dtstartYear.visibility = View.VISIBLE
@@ -88,14 +84,14 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.priorityIcon.visibility = View.GONE
                 holder.priority.visibility = View.GONE
 
-                if (vJournalItem.vJournal.dtstartTimezone == "ALLDAY") {
+                if (vJournalItem.property.dtstartTimezone == "ALLDAY") {
                     holder.dtstartTime.visibility = View.GONE
                 } else {
-                    holder.dtstartTime.text = convertLongToTimeString(vJournalItem.vJournal.dtstart)
+                    holder.dtstartTime.text = convertLongToTimeString(vJournalItem.property.dtstart)
                     holder.dtstartTime.visibility = View.VISIBLE
                 }
 
-            } else if(vJournalItem.vJournal.component == "NOTE") {
+            } else if(vJournalItem.property.component == "NOTE") {
                 holder.dtstartDay.visibility = View.GONE
                 holder.dtstartMonth.visibility = View.GONE
                 holder.dtstartYear.visibility = View.GONE
@@ -111,7 +107,7 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.priorityIcon.visibility = View.GONE
                 holder.priority.visibility = View.GONE
 
-            } else if(vJournalItem.vJournal.component == "TODO") {
+            } else if(vJournalItem.property.component == "TODO") {
                 holder.dtstartDay.visibility = View.GONE
                 holder.dtstartMonth.visibility = View.GONE
                 holder.dtstartYear.visibility = View.GONE
@@ -121,15 +117,15 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.classification.visibility = View.GONE
                 holder.classificationIcon.visibility = View.GONE
                 holder.progressLabel.visibility = View.VISIBLE
-                holder.progressSlider.value = vJournalItem.vJournal.percent?.toFloat()?:0F
+                holder.progressSlider.value = vJournalItem.property.percent?.toFloat()?:0F
                 holder.progressSlider.visibility = View.VISIBLE
                 holder.progressCheckbox.visibility = View.VISIBLE
-                holder.progressCheckbox.isChecked = vJournalItem.vJournal.percent == 100
+                holder.progressCheckbox.isChecked = vJournalItem.property.percent == 100
                 holder.progressPercent.visibility = View.VISIBLE
-                holder.progressPercent.text = vJournalItem.vJournal.percent.toString() + " %"
+                holder.progressPercent.text = vJournalItem.property.percent.toString() + " %"
                 holder.priorityIcon.visibility = View.VISIBLE
                 holder.priority.visibility = View.VISIBLE
-                if(vJournalItem.vJournal.percent == 100)
+                if(vJournalItem.property.percent == 100)
                     holder.progressCheckbox.isActivated = true
                     
             } else {
@@ -149,40 +145,40 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
                 holder.priority.visibility = View.GONE
             }
 
-            val statusArray = if (vJournalItem.vJournal.component == "TODO")
+            val statusArray = if (vJournalItem.property.component == "TODO")
                 context.resources.getStringArray(R.array.vtodo_status)
             else
                 context.resources.getStringArray(R.array.vjournal_status)
 
-            if (vJournalItem.vJournal.status in 0..3 || (vJournalItem.vJournal.component == "TODO" && vJournalItem.vJournal.status in 0..3))
-                holder.status.text = statusArray[vJournalItem.vJournal.status]
+            if (vJournalItem.property.status in 0..3 || (vJournalItem.property.component == "TODO" && vJournalItem.property.status in 0..3))
+                holder.status.text = statusArray[vJournalItem.property.status]
 
             val classificationArray = context.resources.getStringArray(R.array.ical_classification)
-            if(vJournalItem.vJournal.classification in 0..2)
-                holder.classification.text = classificationArray[vJournalItem.vJournal.classification]
+            if(vJournalItem.property.classification in 0..2)
+                holder.classification.text = classificationArray[vJournalItem.property.classification]
 
             val priorityArray = context.resources.getStringArray(R.array.priority)
-            if(vJournalItem.vJournal.priority != null && vJournalItem.vJournal.priority in 0..9)
-                holder.priority.text = priorityArray[vJournalItem.vJournal.priority!!]
+            if(vJournalItem.property.priority != null && vJournalItem.property.priority in 0..9)
+                holder.priority.text = priorityArray[vJournalItem.property.priority!!]
 
 
             // turn to item view when the card is clicked
             holder.listItemCardView.setOnClickListener {
                 it.findNavController().navigate(
-                        VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemFragment().setItem2show(vJournalItem.vJournal.id))
+                        IcalListFragmentDirections.actionIcalListFragmentToIcalViewFragment().setItem2show(vJournalItem.property.id))
             }
 
-            var resetProgress = vJournalItem.vJournal.percent ?: 0
+            var resetProgress = vJournalItem.property.percent ?: 0
 
             // take care to update the progress in the DB when the progress is changed
-            if(vJournalItem.vJournal.component == "TODO") {
+            if(vJournalItem.property.component == "TODO") {
                 holder.progressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
                     override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
 
                     override fun onStopTrackingTouch(slider: Slider) {
 
-                        updateProgress(holder, vJournalItem.vJournal, holder.progressSlider.value.toInt())
+                        updateProgress(holder, vJournalItem.property, holder.progressSlider.value.toInt())
 
                         if (holder.progressSlider.value.toInt() != 100)
                             resetProgress = holder.progressSlider.value.toInt()
@@ -192,10 +188,10 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
 
                 holder.progressCheckbox.setOnCheckedChangeListener { button, checked ->
                     if (checked) {
-                        updateProgress(holder, vJournalItem.vJournal, 100)
+                        updateProgress(holder, vJournalItem.property, 100)
                         holder.progressSlider.value = 100F
                     } else {
-                        updateProgress(holder, vJournalItem.vJournal, resetProgress)
+                        updateProgress(holder, vJournalItem.property, resetProgress)
                     holder.progressSlider.value = resetProgress.toFloat()
                      }
 
@@ -214,8 +210,8 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
 
         var listItemCardView = itemView.findViewById<MaterialCardView>(R.id.list_item_card_view)
 
-        var summary = itemView.findViewById<TextView>(R.id.summary)
-        var description = itemView.findViewById<TextView>(R.id.description)
+        var summary = itemView.findViewById<TextView>(R.id.view_summary)
+        var description = itemView.findViewById<TextView>(R.id.view_description)
 
 
         var categories: TextView = itemView.findViewById<TextView>(R.id.categories)
@@ -227,16 +223,16 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
         var priority: TextView = itemView.findViewById<TextView>(R.id.priority)
         var priorityIcon: ImageView = itemView.findViewById<ImageView>(R.id.priority_icon)
 
-        var progressLabel: TextView = itemView.findViewById<TextView>(R.id.progress_label)
-        var progressSlider: Slider = itemView.findViewById<Slider>(R.id.progress_slider)
-        var progressPercent: TextView = itemView.findViewById<TextView>(R.id.progress_percent)
-        var progressCheckbox: CheckBox = itemView.findViewById<CheckBox>(R.id.progress_checkbox)
+        var progressLabel: TextView = itemView.findViewById<TextView>(R.id.edit_progress_label)
+        var progressSlider: Slider = itemView.findViewById<Slider>(R.id.edit_progress_slider)
+        var progressPercent: TextView = itemView.findViewById<TextView>(R.id.edit_progress_percent)
+        var progressCheckbox: CheckBox = itemView.findViewById<CheckBox>(R.id.edit_progress_checkbox)
 
 
-        var dtstartDay: TextView = itemView.findViewById<TextView>(R.id.dtstart_day)
-        var dtstartMonth: TextView = itemView.findViewById<TextView>(R.id.dtstart_month)
-        var dtstartYear: TextView = itemView.findViewById<TextView>(R.id.dtstart_year)
-        var dtstartTime: TextView = itemView.findViewById<TextView>(R.id.dtstart_time)
+        var dtstartDay: TextView = itemView.findViewById<TextView>(R.id.view_dtstart_day)
+        var dtstartMonth: TextView = itemView.findViewById<TextView>(R.id.view_dtstart_month)
+        var dtstartYear: TextView = itemView.findViewById<TextView>(R.id.view_dtstart_year)
+        var dtstartTime: TextView = itemView.findViewById<TextView>(R.id.view_dtstart_time)
 
     }
 
@@ -255,7 +251,7 @@ class VJournalListAdapter(var context: Context, var vJournalList: LiveData<List<
         }
 
         GlobalScope.launch {
-            dataSource.upsertSubtask(item2update)
+            dataSource.update(item2update)
         }
 
 

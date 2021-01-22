@@ -16,9 +16,9 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
-                            val database: ICalDatabaseDao,
-                            application: Application) : AndroidViewModel(application) {
+class IcalEditViewModel(private val iCalEntity2edit: ICalEntity,
+                        val database: ICalDatabaseDao,
+                        application: Application) : AndroidViewModel(application) {
 
     val iCalEntity = iCalEntity2edit
 
@@ -31,7 +31,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
     var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
-    var iCalObjectUpdated: MutableLiveData<ICalObject> = MutableLiveData<ICalObject>().apply { postValue(iCalEntity.vJournal)}
+    var iCalObjectUpdated: MutableLiveData<ICalObject> = MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property)}
 
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
@@ -64,7 +64,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
 
 
     var showAll: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
-    var allDay: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.vJournal.dtstartTimezone == "ALLDAY")
+    var allDay: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.dtstartTimezone == "ALLDAY")
 
 
 
@@ -80,7 +80,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
 
         viewModelScope.launch() {
 
-            relatedSubtasks =  database.getRelatedTodos(iCalEntity.vJournal.id)
+            relatedSubtasks =  database.getRelatedTodos(iCalEntity.property.id)
 
             allCategories = database.getAllCategories()
             allCollections = database.getAllCollections()
@@ -92,20 +92,20 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
 
     fun updateVisibility() {
 
-        dateVisible.postValue(iCalEntity.vJournal.component == "JOURNAL")
-        timeVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
-        alldayVisible.postValue(iCalEntity.vJournal.component == "JOURNAL")
-        timezoneVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
-        statusVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || iCalEntity.vJournal.component == "TODO" || showAll.value == true)
-        classificationVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
-        urlVisible.postValue((iCalEntity.vJournal.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
-        contactVisible.postValue((iCalEntity.vJournal.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
-        categoriesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
-        attendeesVisible.postValue(iCalEntity.vJournal.component == "JOURNAL" || showAll.value == true)
-        commentsVisible.postValue((iCalEntity.vJournal.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
-        progressVisible.postValue(iCalEntity.vJournal.component == "TODO")
-        priorityVisible.postValue(iCalEntity.vJournal.component == "TODO")
-        subtasksVisible.postValue(iCalEntity.vJournal.component == "TODO")
+        dateVisible.postValue(iCalEntity.property.component == "JOURNAL")
+        timeVisible.postValue(iCalEntity.property.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
+        alldayVisible.postValue(iCalEntity.property.component == "JOURNAL")
+        timezoneVisible.postValue(iCalEntity.property.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
+        statusVisible.postValue(iCalEntity.property.component == "JOURNAL" || iCalEntity.property.component == "TODO" || showAll.value == true)
+        classificationVisible.postValue(iCalEntity.property.component == "JOURNAL" || showAll.value == true)
+        urlVisible.postValue((iCalEntity.property.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
+        contactVisible.postValue((iCalEntity.property.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
+        categoriesVisible.postValue(iCalEntity.property.component == "JOURNAL" || showAll.value == true)
+        attendeesVisible.postValue(iCalEntity.property.component == "JOURNAL" || showAll.value == true)
+        commentsVisible.postValue((iCalEntity.property.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
+        progressVisible.postValue(iCalEntity.property.component == "TODO")
+        priorityVisible.postValue(iCalEntity.property.component == "TODO")
+        subtasksVisible.postValue(iCalEntity.property.component == "TODO")
 
     }
 
@@ -239,7 +239,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
 
         subtaskUpdated.forEach { subtask ->
             // attention, linkedICalObjectId is actually set in DAO!
-            subtask.id = database.upsertSubtask(subtask)
+            subtask.id = database.insertSubtask(subtask)
             Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
 
 
@@ -271,7 +271,7 @@ class VJournalEditViewModel(private val iCalEntity2edit: ICalEntity,
 
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
-            database.delete(iCalEntity.vJournal)
+            database.delete(iCalEntity.property)
         }
     }
 

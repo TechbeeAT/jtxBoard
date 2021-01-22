@@ -27,26 +27,24 @@ import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Comment
-import at.bitfire.notesx5.databinding.FragmentVjournalEditBinding
+import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.fragment_vjournal_edit_comment.view.*
-import kotlinx.android.synthetic.main.fragment_vjournal_edit_subtask.view.*
-import kotlinx.android.synthetic.main.fragment_vjournal_item.*
-import kotlinx.android.synthetic.main.fragment_vjournal_item_categories_chip.view.*
+import kotlinx.android.synthetic.main.fragment_ical_edit_comment.view.*
+import kotlinx.android.synthetic.main.fragment_ical_edit_subtask.view.*
 import java.util.*
 
 
-class VJournalEditFragment : Fragment(),
+class IcalEditFragment : Fragment(),
         TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
 
-    lateinit var binding: FragmentVjournalEditBinding
+    lateinit var binding: FragmentIcalEditBinding
     lateinit var application: Application
     lateinit var dataSource: ICalDatabaseDao
-    lateinit var viewModelFactory: VJournalEditViewModelFactory
-    lateinit var vJournalEditViewModel: VJournalEditViewModel
+    lateinit var viewModelFactory: IcalEditViewModelFactory
+    lateinit var icalEditViewModel: IcalEditViewModel
     lateinit var inflater: LayoutInflater
 
     val allContactsMail: MutableList<String> = mutableListOf()
@@ -61,12 +59,12 @@ class VJournalEditFragment : Fragment(),
         // Get a reference to the binding object and inflate the fragment views.
 
         this.inflater = inflater
-        this.binding = FragmentVjournalEditBinding.inflate(inflater, container, false)
+        this.binding = FragmentIcalEditBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-        val arguments = VJournalEditFragmentArgs.fromBundle((arguments!!))
+        val arguments = IcalEditFragmentArgs.fromBundle((arguments!!))
 
 
         // add menu
@@ -88,46 +86,46 @@ class VJournalEditFragment : Fragment(),
         }
 
 
-        this.viewModelFactory = VJournalEditViewModelFactory(arguments.icalentity, dataSource, application)
-        vJournalEditViewModel =
+        this.viewModelFactory = IcalEditViewModelFactory(arguments.icalentity, dataSource, application)
+        icalEditViewModel =
                 ViewModelProvider(
-                        this, viewModelFactory).get(VJournalEditViewModel::class.java)
+                        this, viewModelFactory).get(IcalEditViewModel::class.java)
 
-        binding.model = vJournalEditViewModel
+        binding.model = icalEditViewModel
         binding.lifecycleOwner = this
 
 
         val priorityItems = resources.getStringArray(R.array.priority)
         val classificationItems = resources.getStringArray(R.array.ical_classification)
-        val statusItems = if (vJournalEditViewModel.iCalEntity.vJournal.component == "TODO") {
+        val statusItems = if (icalEditViewModel.iCalEntity.property.component == "TODO") {
             resources.getStringArray(R.array.vtodo_status)
         } else {
             resources.getStringArray(R.array.vjournal_status)
         }
 
 
-        vJournalEditViewModel.savingClicked.observe(viewLifecycleOwner, Observer {
+        icalEditViewModel.savingClicked.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                vJournalEditViewModel.iCalObjectUpdated.value!!.collection = binding.collection.selectedItem.toString()
+                icalEditViewModel.iCalObjectUpdated.value!!.collection = binding.editCollection.selectedItem.toString()
 
-                vJournalEditViewModel.iCalObjectUpdated.value!!.percent = binding.progressSlider.value.toInt()
-                vJournalEditViewModel.update()
+                icalEditViewModel.iCalObjectUpdated.value!!.percent = binding.editProgressSlider.value.toInt()
+                icalEditViewModel.update()
             }
         })
 
-        vJournalEditViewModel.deleteClicked.observe(viewLifecycleOwner, Observer {
+        icalEditViewModel.deleteClicked.observe(viewLifecycleOwner, Observer {
             if (it == true) {
 
                 // show Alert Dialog before the item gets really deleted
                 val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Delete \"${vJournalEditViewModel.iCalObjectUpdated.value?.summary}\"")
-                builder.setMessage("Are you sure you want to delete \"${vJournalEditViewModel.iCalObjectUpdated.value?.summary}\"?")
+                builder.setTitle("Delete \"${icalEditViewModel.iCalObjectUpdated.value?.summary}\"")
+                builder.setMessage("Are you sure you want to delete \"${icalEditViewModel.iCalObjectUpdated.value?.summary}\"?")
                 builder.setPositiveButton("Delete") { _, _ ->
-                    val direction = VJournalEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
-                    direction.component2show = vJournalEditViewModel.iCalObjectUpdated.value!!.component
+                    val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
+                    direction.component2show = icalEditViewModel.iCalObjectUpdated.value!!.component
 
-                    val summary = vJournalEditViewModel.iCalObjectUpdated.value?.summary
-                    vJournalEditViewModel.delete()
+                    val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
+                    icalEditViewModel.delete()
                     Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG).show()
 
                     this.findNavController().navigate(direction)
@@ -140,10 +138,10 @@ class VJournalEditFragment : Fragment(),
                  */
 
                 builder.setNeutralButton("Mark as cancelled") { _, _ ->
-                    vJournalEditViewModel.iCalObjectUpdated.value!!.status = 2    // 2 = CANCELLED
-                    vJournalEditViewModel.savingClicked()
+                    icalEditViewModel.iCalObjectUpdated.value!!.status = 2    // 2 = CANCELLED
+                    icalEditViewModel.savingClicked()
 
-                    val summary = vJournalEditViewModel.iCalObjectUpdated.value?.summary
+                    val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
                     Toast.makeText(context, "\"$summary\" marked as Cancelled.", Toast.LENGTH_LONG).show()
 
                 }
@@ -152,56 +150,75 @@ class VJournalEditFragment : Fragment(),
             }
         })
 
-        vJournalEditViewModel.returnVJournalItemId.observe(viewLifecycleOwner, Observer {
+        icalEditViewModel.returnVJournalItemId.observe(viewLifecycleOwner, Observer {
             if (it != 0L) {
-                val direction = VJournalEditFragmentDirections.actionVJournalItemEditFragmentToVjournalListFragmentList()
-                direction.component2show = vJournalEditViewModel.iCalObjectUpdated.value!!.component
+                val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
+                direction.component2show = icalEditViewModel.iCalObjectUpdated.value!!.component
                 direction.item2focus = it
                 this.findNavController().navigate(direction)
             }
-            vJournalEditViewModel.savingClicked.value = false
+            icalEditViewModel.savingClicked.value = false
         })
 
 
-
-        vJournalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {
+        icalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {
             //TODO: Check if this can be done without observer (with livedata directly)
-            binding.dtstartDay.text = convertLongToDayString(it.dtstart)
-            binding.dtstartMonth.text = convertLongToMonthString(it.dtstart)
-            binding.dtstartYear.text = convertLongToYearString(it.dtstart)
-            binding.dtstartTime.text = convertLongToTimeString(it.dtstart)
+            binding.editDtstartDay.text = convertLongToDayString(it.dtstart)
+            binding.editDtstartMonth.text = convertLongToMonthString(it.dtstart)
+            binding.editDtstartYear.text = convertLongToYearString(it.dtstart)
+            binding.editDtstartTime.text = convertLongToTimeString(it.dtstart)
+
+
+            // Set the default value of the priority Chip
+            if (it.priority != null && it.priority in 0..9)   // if unsupported don't show the classification
+                binding.editPriorityChip.text = priorityItems[it.priority!!]  // if supported show the priority according to the String Array
+            else
+                binding.editPriorityChip.text = it.priorityX
+
+            // Set the default value of the Status Chip
+            if (it.status == -1)      // if unsupported don't show the status
+                binding.editStatusChip.text = it.statusX
+            else
+                binding.editStatusChip.text = statusItems[it.status]   // if supported show the status according to the String Array
+
+            // Set the default value of the Classification Chip
+            if (it.classification == -1)      // if unsupported don't show the classification
+                binding.editClassificationChip.text = it.classificationX
+            else
+                binding.editClassificationChip.text = classificationItems[it.classification]  // if supported show the classification according to the String Array
+
         }
 
-        vJournalEditViewModel.showAll.observe(viewLifecycleOwner) {
-            vJournalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
+        icalEditViewModel.showAll.observe(viewLifecycleOwner) {
+            icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
         }
 
 
-        vJournalEditViewModel.allDay.observe(viewLifecycleOwner) {
+        icalEditViewModel.allDay.observe(viewLifecycleOwner) {
 
-            if (vJournalEditViewModel.iCalObjectUpdated.value == null)     // don't do anything if the object was not initialized yet
+            if (icalEditViewModel.iCalObjectUpdated.value == null)     // don't do anything if the object was not initialized yet
                 return@observe
 
             if (it) {
-                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = "ALLDAY"
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = "ALLDAY"
 
                 // make sure that the time gets reset to 0
                 val c = Calendar.getInstance()
-                c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
                 c.set(Calendar.HOUR_OF_DAY, 0)
                 c.set(Calendar.MINUTE, 0)
-                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
             } else {
-                vJournalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ""
-                binding.timezoneSpinner.setSelection(0)
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ""
+                binding.editTimezoneSpinner.setSelection(0)
             }
 
-            vJournalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
+            icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
         }
 
-        vJournalEditViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
+        icalEditViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
-            if (vJournalEditViewModel.savingClicked.value == true)    // don't do anything if saving was clicked, saving could interfere here!
+            if (icalEditViewModel.savingClicked.value == true)    // don't do anything if saving was clicked, saving could interfere here!
                 return@observe
 
             it.forEach {singleSubtask ->
@@ -214,66 +231,48 @@ class VJournalEditFragment : Fragment(),
         //TODO: Check if the Sequence was updated in the meantime and notify user!
 
 
-        vJournalEditViewModel.iCalEntity.comment?.forEach { singleComment ->
+        icalEditViewModel.iCalEntity.comment?.forEach { singleComment ->
             addCommentView(singleComment, container)
         }
 
-        vJournalEditViewModel.iCalEntity.category?.forEach { singleCategory ->
+        icalEditViewModel.iCalEntity.category?.forEach { singleCategory ->
             addCategoryChip(singleCategory)
         }
 
-        vJournalEditViewModel.iCalEntity.attendee?.forEach { singleAttendee ->
+        icalEditViewModel.iCalEntity.attendee?.forEach { singleAttendee ->
             addAttendeeChip(singleAttendee)
         }
 
 
-        // Set the default value of the priority Chip  (TODO only!)
-        if (vJournalEditViewModel.iCalEntity.vJournal.priority != null && vJournalEditViewModel.iCalEntity.vJournal.priority in 0..9)   // if unsupported don't show the classification
-            binding.priorityChip.text = priorityItems[vJournalEditViewModel.iCalEntity.vJournal.priority!!]  // if supported show the priority according to the String Array
-        else
-            binding.priorityChip.text = vJournalEditViewModel.iCalEntity.vJournal.priorityX
-
-        // Set the default value of the Status Chip
-        if (vJournalEditViewModel.iCalEntity.vJournal.status == -1)      // if unsupported don't show the status
-            binding.statusChip.text = vJournalEditViewModel.iCalEntity.vJournal.statusX
-        else
-            binding.statusChip.text = statusItems[vJournalEditViewModel.iCalEntity.vJournal.status]   // if supported show the status according to the String Array
-
-        // Set the default value of the Classification Chip
-        if (vJournalEditViewModel.iCalEntity.vJournal.classification == -1)      // if unsupported don't show the classification
-            binding.classificationChip.text = vJournalEditViewModel.iCalEntity.vJournal.classificationX
-        else
-            binding.classificationChip.text = classificationItems[vJournalEditViewModel.iCalEntity.vJournal.classification]  // if supported show the classification according to the String Array
-
 
         // set the default selection for the spinner. The same snippet exists for the allOrganizers observer
-        if (vJournalEditViewModel.allCollections.value != null) {
-            val selectedCollectionPos = vJournalEditViewModel.allCollections.value?.indexOf(vJournalEditViewModel.iCalEntity.vJournal.collection)
+        if (icalEditViewModel.allCollections.value != null) {
+            val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.property.collection)
             if (selectedCollectionPos != null)
-                binding.collection.setSelection(selectedCollectionPos)
+                binding.editCollection.setSelection(selectedCollectionPos)
         }
 
 
         // Set up items to suggest for categories
-        vJournalEditViewModel.allCategories.observe(viewLifecycleOwner, {
+        icalEditViewModel.allCategories.observe(viewLifecycleOwner, {
             // Create the adapter and set it to the AutoCompleteTextView
-            if (vJournalEditViewModel.allCategories.value != null) {
-                val arrayAdapter = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, vJournalEditViewModel.allCategories.value!!)
-                binding.categoriesAddAutocomplete.setAdapter(arrayAdapter)
+            if (icalEditViewModel.allCategories.value != null) {
+                val arrayAdapter = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, icalEditViewModel.allCategories.value!!)
+                binding.editCategoriesAddAutocomplete.setAdapter(arrayAdapter)
             }
         })
 
-        vJournalEditViewModel.allCollections.observe(viewLifecycleOwner, {
+        icalEditViewModel.allCollections.observe(viewLifecycleOwner, {
 
             // set up the adapter for the organizer spinner
-            val spinner: Spinner = binding.collection
-            val adapter = ArrayAdapter<Any?>(context!!, android.R.layout.simple_spinner_item, vJournalEditViewModel.allCollections.value!!)
+            val spinner: Spinner = binding.editCollection
+            val adapter = ArrayAdapter<Any?>(context!!, android.R.layout.simple_spinner_item, icalEditViewModel.allCollections.value!!)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.setAdapter(adapter)
 
             // set the default selection for the spinner. The same snippet exists for the vJournalItem observer
-            if (vJournalEditViewModel.allCollections.value != null) {
-                val selectedCollectionPos = vJournalEditViewModel.allCollections.value?.indexOf(vJournalEditViewModel.iCalEntity.vJournal.collection)
+            if (icalEditViewModel.allCollections.value != null) {
+                val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.property.collection)
                 if (selectedCollectionPos != null)
                     spinner.setSelection(selectedCollectionPos)
             }
@@ -281,41 +280,75 @@ class VJournalEditFragment : Fragment(),
         })
 
 
-        binding.dtstartTime.setOnClickListener {
+        binding.editDtstartTime.setOnClickListener {
             showDatepicker()
         }
 
-        binding.dtstartYear.setOnClickListener {
+        binding.editDtstartYear.setOnClickListener {
             showDatepicker()
         }
 
-        binding.dtstartMonth.setOnClickListener {
+        binding.editDtstartMonth.setOnClickListener {
             showDatepicker()
         }
 
-        binding.dtstartDay.setOnClickListener {
+        binding.editDtstartDay.setOnClickListener {
             showDatepicker()
         }
 
-        // Transform the category input into a chip when the Add-Button is clicked
+
+
+        var restoreProgress = icalEditViewModel.iCalObjectUpdated.value?.percent ?: 0
+
+        binding.editProgressSlider.addOnChangeListener { slider, value, fromUser ->
+            icalEditViewModel.iCalObjectUpdated.value?.percent = value.toInt()
+            binding.editProgressCheckbox.isChecked = value == 100F
+            binding.editProgressPercent.text = value.toInt().toString()
+            if (value != 100F)
+                restoreProgress = value.toInt()
+
+            val statusBefore = icalEditViewModel.iCalObjectUpdated.value!!.status
+
+            when (value.toInt()) {
+                100 -> icalEditViewModel.iCalObjectUpdated.value!!.status = 2
+                in 1..99 -> icalEditViewModel.iCalObjectUpdated.value!!.status = 1
+                0 -> icalEditViewModel.iCalObjectUpdated.value!!.status = 0
+            }
+
+            // update the status only if it was actually changed, otherwise the performance sucks
+            if (icalEditViewModel.iCalObjectUpdated.value!!.status != statusBefore)
+                binding.editStatusChip.text = statusItems[icalEditViewModel.iCalObjectUpdated.value!!.status]
+        }
+
+        binding.editProgressCheckbox.setOnCheckedChangeListener { button, checked ->
+            val newProgress: Int = if (checked)  100
+            else restoreProgress
+
+            binding.editProgressSlider.value = newProgress.toFloat()    // This will also trigger saving through the listener!
+        }
+
+
+
+
+            // Transform the category input into a chip when the Add-Button is clicked
         // If the user entered multiple categories separated by comma, the values will be split in multiple categories
 
-        binding.categoriesAdd.setEndIconOnClickListener {
+        binding.editCategoriesAdd.setEndIconOnClickListener {
             // Respond to end icon presses
-            vJournalEditViewModel.categoryUpdated.add(Category(text = binding.categoriesAdd.editText?.text.toString()))
-            addCategoryChip(Category(text = binding.categoriesAdd.editText?.text.toString()))
-            binding.categoriesAdd.editText?.text?.clear()
+            icalEditViewModel.categoryUpdated.add(Category(text = binding.editCategoriesAdd.editText?.text.toString()))
+            addCategoryChip(Category(text = binding.editCategoriesAdd.editText?.text.toString()))
+            binding.editCategoriesAdd.editText?.text?.clear()
 
         }
 
 
         // Transform the category input into a chip when the Done button in the keyboard is clicked
-        binding.categoriesAdd.editText?.setOnEditorActionListener { v, actionId, event ->
+        binding.editCategoriesAdd.editText?.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    vJournalEditViewModel.categoryUpdated.add(Category(text = binding.categoriesAdd.editText?.text.toString()))
-                    addCategoryChip(Category(text = binding.categoriesAdd.editText?.text.toString()))
-                    binding.categoriesAdd.editText?.text?.clear()
+                    icalEditViewModel.categoryUpdated.add(Category(text = binding.editCategoriesAdd.editText?.text.toString()))
+                    addCategoryChip(Category(text = binding.editCategoriesAdd.editText?.text.toString()))
+                    binding.editCategoriesAdd.editText?.text?.clear()
 
                     true
                 }
@@ -323,37 +356,37 @@ class VJournalEditFragment : Fragment(),
             }
         }
 
-        binding.attendeesAddAutocomplete.setOnItemClickListener { adapterView, view, i, l ->
+        binding.editAttendeesAddAutocomplete.setOnItemClickListener { adapterView, view, i, l ->
             //TODO
-            val newAttendee = binding.attendeesAddAutocomplete.adapter.getItem(i).toString()
+            val newAttendee = binding.editAttendeesAddAutocomplete.adapter.getItem(i).toString()
             addAttendeeChip(Attendee(caladdress = newAttendee))
-            vJournalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
-            binding.attendeesAddAutocomplete.text.clear()
+            icalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
+            binding.editAttendeesAddAutocomplete.text.clear()
         }
 
-        binding.attendeesAdd.setEndIconOnClickListener {
+        binding.editAttendeesAdd.setEndIconOnClickListener {
 
-            if ((!binding.attendeesAdd.editText?.text.isNullOrEmpty() && !isValidEmail(binding.attendeesAdd.editText?.text.toString())))
-                vJournalEditViewModel.attendeesError.value = "Please enter a valid email-address"
+            if ((!binding.editAttendeesAdd.editText?.text.isNullOrEmpty() && !isValidEmail(binding.editAttendeesAdd.editText?.text.toString())))
+                icalEditViewModel.attendeesError.value = "Please enter a valid email-address"
             else {
-                val newAttendee = binding.attendeesAdd.editText?.text.toString()
+                val newAttendee = binding.editAttendeesAdd.editText?.text.toString()
                 addAttendeeChip(Attendee(caladdress = newAttendee))
-                vJournalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
-                binding.attendeesAddAutocomplete.text.clear()
+                icalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
+                binding.editAttendeesAddAutocomplete.text.clear()
             }
         }
 
         // Transform the category input into a chip when the Done button in the keyboard is clicked
-        binding.attendeesAdd.editText?.setOnEditorActionListener { v, actionId, event ->
+        binding.editAttendeesAdd.editText?.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    if ((!binding.attendeesAdd.editText?.text.isNullOrEmpty() && !isValidEmail(binding.attendeesAdd.editText?.text.toString())))
-                        vJournalEditViewModel.attendeesError.value = "Please enter a valid email-address"
+                    if ((!binding.editAttendeesAdd.editText?.text.isNullOrEmpty() && !isValidEmail(binding.editAttendeesAdd.editText?.text.toString())))
+                        icalEditViewModel.attendeesError.value = "Please enter a valid email-address"
                     else {
-                        val newAttendee = binding.attendeesAdd.editText?.text.toString()
+                        val newAttendee = binding.editAttendeesAdd.editText?.text.toString()
                         addAttendeeChip(Attendee(caladdress = newAttendee))
-                        vJournalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
-                        binding.attendeesAddAutocomplete.text.clear()
+                        icalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
+                        binding.editAttendeesAddAutocomplete.text.clear()
                     }
 
                     true
@@ -364,48 +397,48 @@ class VJournalEditFragment : Fragment(),
 
 
 
-        binding.commentAdd.setEndIconOnClickListener {
+        binding.editCommentAdd.setEndIconOnClickListener {
             // Respond to end icon presses
-            val newComment = Comment(text = binding.commentAdd.editText?.text.toString())
-            vJournalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
+            val newComment = Comment(text = binding.editCommentAdd.editText?.text.toString())
+            icalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
             addCommentView(newComment, container)      // add the new comment
-            binding.commentAdd.editText?.text?.clear()  // clear the field
+            binding.editCommentAdd.editText?.text?.clear()  // clear the field
 
         }
 
 
         // Transform the comment input into a view when the Done button in the keyboard is clicked
-        binding.commentAdd.editText?.setOnEditorActionListener { v, actionId, event ->
+        binding.editCommentAdd.editText?.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    val newComment = Comment(text = binding.commentAdd.editText?.text.toString())
-                    vJournalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
+                    val newComment = Comment(text = binding.editCommentAdd.editText?.text.toString())
+                    icalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
                     addCommentView(newComment, container)      // add the new comment
-                    binding.commentAdd.editText?.text?.clear()  // clear the field
+                    binding.editCommentAdd.editText?.text?.clear()  // clear the field
                     true
                 }
                 else -> false
             }
         }
 
-        binding.subtasksAdd.setEndIconOnClickListener {
+        binding.editSubtasksAdd.setEndIconOnClickListener {
             // Respond to end icon presses
-            val newSubtask = ICalObject.createSubtask(summary = binding.subtasksAdd.editText?.text.toString())
-            vJournalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
+            val newSubtask = ICalObject.createSubtask(summary = binding.editSubtasksAdd.editText?.text.toString())
+            icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
             addSubtasksView(newSubtask, container)      // add the new comment
-            binding.subtasksAdd.editText?.text?.clear()  // clear the field
+            binding.editSubtasksAdd.editText?.text?.clear()  // clear the field
 
         }
 
 
         // Transform the comment input into a view when the Done button in the keyboard is clicked
-        binding.subtasksAdd.editText?.setOnEditorActionListener { v, actionId, event ->
+        binding.editSubtasksAdd.editText?.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    val newSubtask = ICalObject.createSubtask(summary = binding.subtasksAdd.editText?.text.toString())
-                    vJournalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
+                    val newSubtask = ICalObject.createSubtask(summary = binding.editSubtasksAdd.editText?.text.toString())
+                    icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
                     addSubtasksView(newSubtask, container)      // add the new comment
-                    binding.subtasksAdd.editText?.text?.clear()  // clear the field
+                    binding.editSubtasksAdd.editText?.text?.clear()  // clear the field
                     true
                 }
                 else -> false
@@ -413,51 +446,51 @@ class VJournalEditFragment : Fragment(),
         }
 
 
-        binding.statusChip.setOnClickListener {
+        binding.editStatusChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(context!!)
                     .setTitle("Set status")
                     .setItems(statusItems) { dialog, which ->
                         // Respond to item chosen
-                        vJournalEditViewModel.iCalObjectUpdated.value!!.status = which
-                        binding.statusChip.text = statusItems[which]     // don't forget to update the UI
+                        icalEditViewModel.iCalObjectUpdated.value!!.status = which
+                        binding.editStatusChip.text = statusItems[which]     // don't forget to update the UI
                     }
                     .setIcon(R.drawable.ic_status)
                     .show()
         }
 
 
-        binding.classificationChip.setOnClickListener {
+        binding.editClassificationChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(context!!)
                     .setTitle("Set classification")
                     .setItems(classificationItems) { dialog, which ->
                         // Respond to item chosen
-                        vJournalEditViewModel.iCalObjectUpdated.value!!.classification = which
-                        binding.classificationChip.text = classificationItems[which]     // don't forget to update the UI
+                        icalEditViewModel.iCalObjectUpdated.value!!.classification = which
+                        binding.editClassificationChip.text = classificationItems[which]     // don't forget to update the UI
                     }
                     .setIcon(R.drawable.ic_classification)
                     .show()
         }
 
 
-        binding.priorityChip.setOnClickListener {
+        binding.editPriorityChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(context!!)
                     .setTitle("Set priority")
                     .setItems(priorityItems) { dialog, which ->
                         // Respond to item chosen
-                        vJournalEditViewModel.iCalObjectUpdated.value!!.priority = which
-                        binding.priorityChip.text = priorityItems[which]     // don't forget to update the UI
+                        icalEditViewModel.iCalObjectUpdated.value!!.priority = which
+                        binding.editPriorityChip.text = priorityItems[which]     // don't forget to update the UI
                     }
                     .setIcon(R.drawable.ic_priority)
                     .show()
         }
 
 
-        binding.urlEdit.editText?.setOnFocusChangeListener { view, hasFocus ->
-            if ((!binding.urlEdit.editText?.text.isNullOrEmpty() && !isValidURL(binding.urlEdit.editText?.text.toString())))
-                vJournalEditViewModel.urlError.value = "Please enter a valid URL"
+        binding.editUrlEdit.editText?.setOnFocusChangeListener { view, hasFocus ->
+            if ((!binding.editUrlEdit.editText?.text.isNullOrEmpty() && !isValidURL(binding.editUrlEdit.editText?.text.toString())))
+                icalEditViewModel.urlError.value = "Please enter a valid URL"
         }
 
 
@@ -468,7 +501,7 @@ class VJournalEditFragment : Fragment(),
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
 
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+        c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
 
         c.set(Calendar.YEAR, year)
         c.set(Calendar.MONTH, month)
@@ -476,13 +509,13 @@ class VJournalEditFragment : Fragment(),
         //var formattedDate = convertLongToDateString(c.timeInMillis)
         //Log.println(Log.INFO, "OnTimeSet", "Here are the values: $formattedDate")    }
 
-        binding.dtstartYear.text = convertLongToYearString(c.timeInMillis)
-        binding.dtstartMonth.text = convertLongToMonthString(c.timeInMillis)
-        binding.dtstartDay.text = convertLongToDayString(c.timeInMillis)
+        binding.editDtstartYear.text = convertLongToYearString(c.timeInMillis)
+        binding.editDtstartMonth.text = convertLongToMonthString(c.timeInMillis)
+        binding.editDtstartDay.text = convertLongToDayString(c.timeInMillis)
 
-        vJournalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+        icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
 
-        if (!vJournalEditViewModel.allDay.value!!)     // let the user set the time only if the allDaySwitch is not set!
+        if (!icalEditViewModel.allDay.value!!)     // let the user set the time only if the allDaySwitch is not set!
             showTimepicker()
 
     }
@@ -490,23 +523,23 @@ class VJournalEditFragment : Fragment(),
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+        c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
         c.set(Calendar.HOUR_OF_DAY, hourOfDay)
         c.set(Calendar.MINUTE, minute)
 
         //var formattedTime = convertLongToTimeString(c.timeInMillis)
         //Log.println(Log.INFO, "OnTimeSet", "Here are the values: $formattedTime")
 
-        binding.dtstartTime.text = convertLongToTimeString(c.timeInMillis)
+        binding.editDtstartTime.text = convertLongToTimeString(c.timeInMillis)
 
-        vJournalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+        icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
 
     }
 
 
     fun showDatepicker() {
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+        c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
 
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
@@ -516,7 +549,7 @@ class VJournalEditFragment : Fragment(),
 
     fun showTimepicker() {
         val c = Calendar.getInstance()
-        c.timeInMillis = vJournalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+        c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
 
         val hourOfDay = c.get(Calendar.HOUR_OF_DAY)
         val minute = c.get(Calendar.MINUTE)
@@ -529,9 +562,9 @@ class VJournalEditFragment : Fragment(),
         if (category.text.isBlank())
             return
 
-        val categoryChip = inflater.inflate(R.layout.fragment_vjournal_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
+        val categoryChip = inflater.inflate(R.layout.fragment_ical_edit_categories_chip, binding.editCategoriesChipgroup, false) as Chip
         categoryChip.text = category.text
-        binding.categoriesChipgroup.addView(categoryChip)
+        binding.editCategoriesChipgroup.addView(categoryChip)
         displayedCategoryChips.add(category)
 
         categoryChip.setOnClickListener {
@@ -539,7 +572,7 @@ class VJournalEditFragment : Fragment(),
         }
 
         categoryChip.setOnCloseIconClickListener { chip ->
-            vJournalEditViewModel.categoryDeleted.add(category)  // add the category to the list for categories to be deleted
+            icalEditViewModel.categoryDeleted.add(category)  // add the category to the list for categories to be deleted
             chip.visibility = View.GONE
         }
 
@@ -556,7 +589,7 @@ class VJournalEditFragment : Fragment(),
 
         val attendeeRoles = resources.getStringArray(R.array.ical_attendee_roles)
 
-        val attendeeChip = inflater.inflate(R.layout.fragment_vjournal_edit_attendees_chip, binding.attendeesChipgroup, false) as Chip
+        val attendeeChip = inflater.inflate(R.layout.fragment_ical_edit_attendees_chip, binding.editAttendeesChipgroup, false) as Chip
         attendeeChip.text = attendee.caladdress
         when (attendee.roleparam) {
             0 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_chair, null)
@@ -566,7 +599,7 @@ class VJournalEditFragment : Fragment(),
             else -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
         }
         attendeeChip.chipIcon
-        binding.attendeesChipgroup.addView(attendeeChip)
+        binding.editAttendeesChipgroup.addView(attendeeChip)
 
 
         attendeeChip.setOnClickListener {
@@ -575,11 +608,11 @@ class VJournalEditFragment : Fragment(),
                     .setTitle("Set attendee role")
                     .setItems(attendeeRoles) { dialog, which ->
                         // Respond to item chosen
-                        val curIndex = vJournalEditViewModel.attendeeUpdated.indexOf(attendee)    // find the attendee in the original list
+                        val curIndex = icalEditViewModel.attendeeUpdated.indexOf(attendee)    // find the attendee in the original list
                         if (curIndex == -1)
-                            vJournalEditViewModel.attendeeUpdated.add(attendee)                   // add the attendee to the list of updated items if it was not there yet
+                            icalEditViewModel.attendeeUpdated.add(attendee)                   // add the attendee to the list of updated items if it was not there yet
                         else
-                            vJournalEditViewModel.attendeeUpdated[curIndex].roleparam = which      // update the roleparam
+                            icalEditViewModel.attendeeUpdated[curIndex].roleparam = which      // update the roleparam
                         attendee.roleparam = which
 
                         when (which) {
@@ -596,7 +629,7 @@ class VJournalEditFragment : Fragment(),
         }
 
         attendeeChip.setOnCloseIconClickListener { chip ->
-            vJournalEditViewModel.attendeeDeleted.add(attendee)  // add the category to the list for categories to be deleted
+            icalEditViewModel.attendeeDeleted.add(attendee)  // add the category to the list for categories to be deleted
             chip.visibility = View.GONE
         }
     }
@@ -604,9 +637,9 @@ class VJournalEditFragment : Fragment(),
 
     private fun addCommentView(comment: Comment, container: ViewGroup?) {
 
-        val commentView = inflater.inflate(R.layout.fragment_vjournal_edit_comment, container, false);
-        commentView.comment_textview.text = comment.text
-        binding.commentsLinearlayout.addView(commentView)
+        val commentView = inflater.inflate(R.layout.fragment_ical_edit_comment, container, false);
+        commentView.edit_comment_textview.text = comment.text
+        binding.editCommentsLinearlayout.addView(commentView)
 
         // set on Click Listener to open a dialog to update the comment
         commentView.setOnClickListener {
@@ -629,15 +662,15 @@ class VJournalEditFragment : Fragment(),
                 // update the comment
                 val updatedComment = comment.copy()
                 updatedComment.text = updatedText.text.toString()
-                vJournalEditViewModel.commentUpdated.add(updatedComment)
-                it.comment_textview.text = updatedComment.text
+                icalEditViewModel.commentUpdated.add(updatedComment)
+                it.edit_comment_textview.text = updatedComment.text
             }
             builder.setNegativeButton("Cancel") { _, _ ->
                 // Do nothing, just close the message
             }
 
             builder.setNeutralButton("Delete") { _, _ ->
-                vJournalEditViewModel.commentDeleted.add(comment)
+                icalEditViewModel.commentDeleted.add(comment)
                 it.visibility = View.GONE
             }
             builder.show()
@@ -651,43 +684,43 @@ class VJournalEditFragment : Fragment(),
         if (subtask == null)
             return
 
-        val subtaskView = inflater.inflate(R.layout.fragment_vjournal_edit_subtask, container, false);
-        subtaskView.subtask_textview.text = subtask.summary
-        subtaskView.subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
-        subtaskView.subtask_progress_percent.text = if(subtask.percent?.toFloat() != null) "${subtask.percent} %" else "0 %"
-        subtaskView.subtask_progress_checkbox.isChecked = subtask.percent == 100
+        val subtaskView = inflater.inflate(R.layout.fragment_ical_edit_subtask, container, false);
+        subtaskView.edit_subtask_textview.text = subtask.summary
+        subtaskView.edit_subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
+        subtaskView.edit_subtask_progress_percent.text = if(subtask.percent?.toFloat() != null)
+            subtask.percent?.toString()
+        else "0"
+
+        subtaskView.edit_subtask_progress_checkbox.isChecked = subtask.percent == 100
 
         var restoreProgress = subtask.percent
 
-        subtaskView.subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->
+        subtaskView.edit_subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->
             //Update the progress in the updated list: try to find the matching uid (the only unique element for now) and then assign the percent
             //Attention, the new subtask must have been inserted before in the list!
-            if (vJournalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid } == null) {
+            if (icalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid } == null) {
                 val changedItem = subtask.copy()
                 changedItem.percent = value.toInt()
-                vJournalEditViewModel.subtaskUpdated.add(changedItem)
+                icalEditViewModel.subtaskUpdated.add(changedItem)
             } else {
-                vJournalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid }?.percent = value.toInt()
+                icalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid }?.percent = value.toInt()
             }
 
-            subtaskView.subtask_progress_checkbox.isChecked = value == 100F
-            subtaskView.subtask_progress_percent.text = "$value %"
+            subtaskView.edit_subtask_progress_checkbox.isChecked = value == 100F
+            subtaskView.edit_subtask_progress_percent.text = value.toInt().toString()
             if (value != 100F)
                 restoreProgress = value.toInt()
         }
 
-        subtaskView.subtask_progress_checkbox.setOnCheckedChangeListener { button, checked ->
+        subtaskView.edit_subtask_progress_checkbox.setOnCheckedChangeListener { button, checked ->
             val newProgress: Int = if (checked)  100
              else restoreProgress ?: 0
 
-            subtaskView.subtask_progress_slider.value = newProgress.toFloat()    // This will also trigger saving through the listener!
-
-
-
+            subtaskView.edit_subtask_progress_slider.value = newProgress.toFloat()    // This will also trigger saving through the listener!
         }
 
 
-        binding.subtasksLinearlayout.addView(subtaskView)
+        binding.editSubtasksLinearlayout.addView(subtaskView)
 
         // set on Click Listener to open a dialog to update the comment
         subtaskView.setOnClickListener {
@@ -708,14 +741,14 @@ class VJournalEditFragment : Fragment(),
 
             builder.setPositiveButton("Save") { _, _ ->
 
-                if (vJournalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid } == null) {
+                if (icalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid } == null) {
                     val changedItem = subtask.copy()
                     changedItem.summary = updatedSummary.text.toString()
-                    vJournalEditViewModel.subtaskUpdated.add(changedItem)
+                    icalEditViewModel.subtaskUpdated.add(changedItem)
                 } else {
-                    vJournalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid }?.summary = updatedSummary.text.toString()
+                    icalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid }?.summary = updatedSummary.text.toString()
                 }
-                it.subtask_textview.text = updatedSummary.text.toString()
+                it.edit_subtask_textview.text = updatedSummary.text.toString()
 
             }
             builder.setNegativeButton("Cancel") { _, _ ->
@@ -723,7 +756,7 @@ class VJournalEditFragment : Fragment(),
             }
 
             builder.setNeutralButton("Delete") { _, _ ->
-                vJournalEditViewModel.subtaskDeleted.add(subtask)
+                icalEditViewModel.subtaskDeleted.add(subtask)
                 it.visibility = View.GONE
             }
             builder.show()
@@ -737,7 +770,7 @@ class VJournalEditFragment : Fragment(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.vjournal_item_delete) {
-            vJournalEditViewModel.deleteClicked()
+            icalEditViewModel.deleteClicked()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -774,8 +807,8 @@ class VJournalEditFragment : Fragment(),
 
         val arrayAdapterNameAndMail = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsNameAndMail)
 
-        binding.contactAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
-        binding.attendeesAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
+        binding.editContactAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
+        binding.editAttendeesAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
 
 
     }

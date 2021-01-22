@@ -9,7 +9,7 @@
 <data>
     <variable
         name="model"
-        type="at.bitfire.notesx5.ui.VJournalFilterViewModel" />
+        type="at.bitfire.notesx5.ui.IcalFilterViewModel" />
 </data>
 
 

@@ -142,7 +142,7 @@
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             app:layout_scrollFlags="scroll"
             app:navGraph="@navigation/navigation"
-            tools:layout="@layout/fragment_vjournal_list" />
+            tools:layout="@layout/fragment_ical_list" />
 
 
         <com.google.android.material.navigation.NavigationView

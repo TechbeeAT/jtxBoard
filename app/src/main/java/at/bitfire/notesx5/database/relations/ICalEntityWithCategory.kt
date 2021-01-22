@@ -11,7 +11,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ICalEntityWithCategory (
         @Embedded
-        var vJournal: ICalObject = ICalObject(),
+        var property: ICalObject = ICalObject(),
 
         @Relation(parentColumn = "id", entityColumn = "icalObjectId", entity = Category::class)
         var category: List<Category>? = null

@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 
 
-class VJournalListViewModel(
+class IcalListViewModel(
         val database: ICalDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
@@ -106,7 +106,7 @@ class VJournalListViewModel(
     fun getFocusItemPosition(): Int {
 
         val focusItem = vJournalList.value?.find {
-            focusItemId.value == it.vJournal.id
+            focusItemId.value == it.property.id
         }
 
         return if (vJournalList.value != null && focusItem != null)

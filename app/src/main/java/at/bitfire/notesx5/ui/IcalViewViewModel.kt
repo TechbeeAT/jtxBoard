@@ -13,9 +13,9 @@ import java.text.DateFormat
 import java.util.*
 
 
-class VJournalItemViewModel(private val vJournalItemId: Long,
-                            val database: ICalDatabaseDao,
-                            application: Application) : AndroidViewModel(application) {
+class IcalViewViewModel(private val vJournalItemId: Long,
+                        val database: ICalDatabaseDao,
+                        application: Application) : AndroidViewModel(application) {
 
     lateinit var vJournal: LiveData<ICalEntity?>
     lateinit var categories: LiveData<List<Category>>
@@ -67,27 +67,27 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
 
 
             relatedNotes = Transformations.switchMap(vJournal) {
-                it?.vJournal?.id?.let { parentId -> database.getRelatedNotes(parentId) }
+                it?.property?.id?.let { parentId -> database.getRelatedNotes(parentId) }
             }
 
             relatedSubtasks = Transformations.switchMap(vJournal) {
-                it?.vJournal?.id?.let { parentId -> database.getRelatedTodos(it.vJournal.id) }
+                it?.property?.id?.let { parentId -> database.getRelatedTodos(it.property.id) }
             }
 
 
             dateVisible = Transformations.map(vJournal) { item ->
-                return@map item?.vJournal?.component == "JOURNAL"           // true if component == JOURNAL
+                return@map item?.property?.component == "JOURNAL"           // true if component == JOURNAL
             }
 
             timeVisible = Transformations.map(vJournal) { item ->
-                return@map item?.vJournal?.component == "JOURNAL" && item?.vJournal.dtstartTimezone != "ALLDAY"           // true if component == JOURNAL and it is not an All Day Event
+                return@map item?.property?.component == "JOURNAL" && item?.property.dtstartTimezone != "ALLDAY"           // true if component == JOURNAL and it is not an All Day Event
 
             }
 
             dtstartFormatted = Transformations.map(vJournal) { item ->
-                if (item!!.vJournal.dtstart != null) {
-                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.vJournal.dtstart!!))
-                    val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.vJournal.dtstart!!))
+                if (item!!.property.dtstart != null) {
+                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.property.dtstart!!))
+                    val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.dtstart!!))
                     return@map "$formattedDate $formattedTime"
                 } else
                     return@map ""
@@ -95,18 +95,18 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
             }
 
             createdFormatted = Transformations.map(vJournal) { item ->
-                item!!.vJournal.let { Date(it.created).toString() }
+                item!!.property.let { Date(it.created).toString() }
             }
 
             lastModifiedFormatted = Transformations.map(vJournal) { item ->
-                item!!.vJournal.let { Date(it.lastModified).toString() }
+                item!!.property.let { Date(it.lastModified).toString() }
             }
 
 
 
 
             urlVisible = Transformations.map(vJournal) { item ->
-                return@map !item?.vJournal?.url.isNullOrBlank()      // true if url is NOT null or empty
+                return@map !item?.property?.url.isNullOrBlank()      // true if url is NOT null or empty
             }
             attendeesVisible = Transformations.map(vJournal) { item ->
                 return@map !item?.attendee.isNullOrEmpty()      // true if attendees is NOT null or empty
@@ -115,7 +115,7 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
                 return@map !(item?.organizer == null)      // true if organizer is NOT null or empty
             }
             contactVisible = Transformations.map(vJournal) { item ->
-                return@map !item?.vJournal?.contact.isNullOrBlank()      // true if contact is NOT null or empty
+                return@map !item?.property?.contact.isNullOrBlank()      // true if contact is NOT null or empty
             }
             relatedtoVisible = Transformations.map(vJournal) { item ->
                 return@map !item?.relatedto.isNullOrEmpty()      // true if relatedto is NOT null or empty
@@ -127,10 +127,10 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
                 return@map !item?.comment.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
             progressVisible = Transformations.map(vJournal) { item ->
-                return@map item?.vJournal?.percent != null      // true if percent (progress) is NOT null
+                return@map item?.property?.percent != null && item?.property.component == "TODO"     // true if percent (progress) is NOT null
             }
             priorityVisible = Transformations.map(vJournal) { item ->
-                return@map item?.vJournal?.priority != null      // true if priority is NOT null
+                return@map item?.property?.priority != null      // true if priority is NOT null
             }
 
         }
@@ -144,7 +144,7 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
     fun insertRelatedNote(note: ICalObject) {
         viewModelScope.launch() {
             val newNoteId = database.insertJournal(note)
-            database.upsertRelatedto(Relatedto(icalObjectId = vJournal.value!!.vJournal.id, linkedICalObjectId = newNoteId, reltypeparam = "CHILD", text = note.uid))
+            database.upsertRelatedto(Relatedto(icalObjectId = vJournal.value!!.property.id, linkedICalObjectId = newNoteId, reltypeparam = "CHILD", text = note.uid))
 
         }
     }
@@ -164,7 +164,7 @@ class VJournalItemViewModel(private val vJournalItemId: Long,
         item2update.lastModified = System.currentTimeMillis()
 
         viewModelScope.launch() {
-            database.upsertSubtask(item2update)
+            database.update(item2update)
         }
     }
 }

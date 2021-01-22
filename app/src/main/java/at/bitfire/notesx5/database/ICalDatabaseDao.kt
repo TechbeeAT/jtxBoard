@@ -78,7 +78,9 @@ INSERTs
     suspend fun upsertRelatedto(relatedto: Relatedto): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertSubtask(subtask: ICalObject): Long
+    suspend fun insertSubtask(subtask: ICalObject): Long
+
+
 
 
 /*
@@ -103,13 +105,13 @@ DELETEs
 
 
     @Update
-    suspend fun update(vJournal: ICalObject)
+    suspend fun update(icalObject: ICalObject)
 
 
 
         // TODO Take care to delete also child elements!
     @Delete
-    fun delete(vJournal: ICalObject)
+    fun delete(icalObject: ICalObject)
 
 
     /*

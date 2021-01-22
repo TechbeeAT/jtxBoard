@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import at.bitfire.notesx5.database.ICalDatabaseDao
 
-class VJournalFilterViewModelFactory (
+class IcalFilterViewModelFactory (
         private val dataSource: ICalDatabaseDao,
         private val application: Application) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(VJournalFilterViewModel::class.java)) {
-            return VJournalFilterViewModel(dataSource, application) as T
+        if (modelClass.isAssignableFrom(IcalFilterViewModel::class.java)) {
+            return IcalFilterViewModel(dataSource, application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

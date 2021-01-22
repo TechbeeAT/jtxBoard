@@ -13,7 +13,7 @@
 
         <variable
             name="model"
-            type="at.bitfire.notesx5.ui.VJournalItemViewModel" />
+            type="at.bitfire.notesx5.ui.IcalViewViewModel" />
     </data>
 
 
@@ -26,17 +26,17 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/vjournal_item_view"
+            android:id="@+id/view_item_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".ui.VJournalItemFragment">
+            tools:context=".ui.IcalViewFragment">
 
 
             <TextView
-                android:id="@+id/dtstart_day"
+                android:id="@+id/view_dtstart_day"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="@{UtilKt.convertLongToDayString(model.vJournal.VJournal.dtstart)}"
+                android:text="@{UtilKt.convertLongToDayString(model.vJournal.property.dtstart)}"
                 android:textAlignment="center"
                 android:textSize="36sp"
                 android:textStyle="bold"
@@ -46,65 +46,65 @@
                 tools:text="31" />
 
             <TextView
-                android:id="@+id/dtstart_month"
+                android:id="@+id/view_dtstart_month"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="@{UtilKt.convertLongToMonthString(model.vJournal.VJournal.dtstart)}"
+                android:text="@{UtilKt.convertLongToMonthString(model.vJournal.property.dtstart)}"
                 android:textAlignment="center"
                 android:textSize="10sp"
                 android:textStyle="bold"
                 android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
+                app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dtstart_day"
+                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_day"
                 tools:text="December" />
 
             <TextView
-                android:id="@+id/dtstart_year"
+                android:id="@+id/view_dtstart_year"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="@{UtilKt.convertLongToYearString(model.vJournal.VJournal.dtstart)}"
+                android:text="@{UtilKt.convertLongToYearString(model.vJournal.property.dtstart)}"
                 android:textAlignment="center"
                 android:textSize="10sp"
                 android:textStyle="bold"
                 android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
+                app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dtstart_month"
+                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_month"
                 tools:text="2020" />
 
             <TextView
-                android:id="@+id/dtstart_time"
+                android:id="@+id/view_dtstart_time"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="@{UtilKt.convertLongToTimeString(model.vJournal.VJournal.dtstart)}"
+                android:text="@{UtilKt.convertLongToTimeString(model.vJournal.property.dtstart)}"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@id/top_barrier"
-                app:layout_constraintStart_toStartOf="@+id/dtstart_day"
-                app:layout_constraintTop_toBottomOf="@+id/dtstart_year"
+                app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
+                app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
+                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_year"
                 app:layout_constraintVertical_bias="0.0"
                 tools:text="13:30" />
 
 
             <TextView
-                android:id="@+id/collection"
+                android:id="@+id/view_collection"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:drawableStart="@drawable/ic_collection"
                 android:drawablePadding="4dp"
-                android:text="@{model.vJournal.VJournal.collection}"
+                android:text="@{model.vJournal.property.collection}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/dtstart_day"
+                app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Collection" />
 
             <com.google.android.material.chip.ChipGroup
-                android:id="@+id/categories_chipgroup"
+                android:id="@+id/view_categories_chipgroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -112,37 +112,37 @@
                 android:layout_marginEnd="8dp"
                 app:chipSpacingHorizontal="8dp"
                 app:chipSpacingVertical="0dp"
-                app:layout_constraintBottom_toTopOf="@id/top_barrier"
+                app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-                app:layout_constraintTop_toBottomOf="@+id/collection" />
+                app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
+                app:layout_constraintTop_toBottomOf="@+id/view_collection" />
 
 
             <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/top_barrier"
+                android:id="@+id/view_top_barrier"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:barrierDirection="top" />
 
 
             <TextView
-                android:id="@+id/summary"
+                android:id="@+id/view_summary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="@{model.vJournal.VJournal.summary}"
+                android:text="@{model.vJournal.property.summary}"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/top_barrier"
+                app:layout_constraintTop_toBottomOf="@id/view_top_barrier"
                 tools:text="Summary ... Lorem ipsum dolor sit amet" />
 
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/view_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -150,63 +150,97 @@
                 android:ems="10"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="@{model.vJournal.VJournal.description}"
+                android:text="@{model.vJournal.property.description}"
                 app:layout_constraintEnd_toEndOf="parent"
 
-                app:layout_constraintStart_toStartOf="@+id/summary"
-                app:layout_constraintTop_toBottomOf="@id/summary"
+                app:layout_constraintStart_toStartOf="@+id/view_summary"
+                app:layout_constraintTop_toBottomOf="@id/view_summary"
                 tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
 
 
-
-
             <TextView
-                android:id="@+id/progress_label"
+                android:id="@+id/view_progress_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Progress (%)"
+                android:text="Progress"
                 android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@+id/progress_slider"
+                app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/description" />
+                app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
 
             <com.google.android.material.slider.Slider
-                android:id="@+id/progress_slider"
+                android:id="@+id/view_progress_slider"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
                 android:enabled="true"
                 android:stepSize="1.0"
-                android:value="@{model.vJournal.VJournal.percent}"
+                android:value="@{model.vJournal.property.percent}"
                 android:valueFrom="0.0"
                 android:valueTo="100.0"
                 android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
                 app:labelBehavior="gone"
+                app:layout_constraintEnd_toStartOf="@+id/view_progress_percent"
+                app:layout_constraintStart_toEndOf="@+id/view_progress_label"
+                app:layout_constraintTop_toBottomOf="@+id/view_description" />
+
+
+            <TextView
+                android:id="@+id/view_progress_percent"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="@{model.vJournal.property.percent.toString()}"
+                android:textAlignment="viewEnd"
+                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
+                app:layout_constraintEnd_toStartOf="@+id/view_progress_percent_sign"
+                app:layout_constraintTop_toTopOf="@+id/view_progress_slider"
+                tools:text="100" />
+
+            <TextView
+                android:id="@+id/view_progress_percent_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="%"
+                android:textAlignment="viewEnd"
+                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
+                app:layout_constraintEnd_toStartOf="@+id/view_progress_checkbox"
+                app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
+
+
+
+            <CheckBox
+                android:id="@+id/view_progress_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                android:checked="@{model.vJournal.property.percent == 100}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/progress_label"
-                app:layout_constraintTop_toBottomOf="@+id/description" />
+                app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
 
 
 
 
             <ImageView
-                android:id="@+id/subtasks_icon"
+                android:id="@+id/view_subtasks_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/subtasks_header"
+                app:layout_constraintTop_toTopOf="@+id/view_subtasks_header"
                 app:srcCompat="@drawable/ic_comments"
                 tools:ignore="ContentDescription"
                 android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
                 />
 
             <TextView
-                android:id="@+id/subtasks_header"
+                android:id="@+id/view_subtasks_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -214,14 +248,14 @@
                 android:text="Subtasks"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/subtasks_icon"
-                app:layout_constraintTop_toBottomOf="@id/progress_slider"
+                app:layout_constraintStart_toEndOf="@+id/view_subtasks_icon"
+                app:layout_constraintTop_toBottomOf="@id/view_progress_slider"
                 android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
                 />
 
 
             <LinearLayout
-                android:id="@+id/subtasks_linearlayout"
+                android:id="@+id/view_subtasks_linearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -232,7 +266,7 @@
                 android:showDividers="middle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/subtasks_header"
+                app:layout_constraintTop_toBottomOf="@+id/view_subtasks_header"
                 android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
                 >
 
@@ -251,9 +285,16 @@
 
 
 
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/view_spc_chipgroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_subtasks_linearlayout">
+
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/status_chip"
+                android:id="@+id/view_status_chip"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -263,13 +304,11 @@
                 app:chipIcon="@drawable/ic_status"
                 app:chipIconVisible="true"
                 app:closeIconVisible="false"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/subtasks_linearlayout"
                 tools:text="Final" />
 
             <com.google.android.material.chip.Chip
 
-                android:id="@+id/priority_chip"
+                android:id="@+id/view_priority_chip"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -278,13 +317,11 @@
                 app:chipIcon="@drawable/ic_priority"
                 app:chipIconVisible="true"
                 app:closeIconVisible="false"
-                app:layout_constraintStart_toEndOf="@+id/status_chip"
-                app:layout_constraintTop_toTopOf="@+id/status_chip"
                 tools:text="Public" />
 
             <com.google.android.material.chip.Chip
 
-                android:id="@+id/classification_chip"
+                android:id="@+id/view_classification_chip"
                 style="@style/Widget.MaterialComponents.Chip.Entry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -293,24 +330,25 @@
                 app:chipIcon="@drawable/ic_classification"
                 app:chipIconVisible="true"
                 app:closeIconVisible="false"
-                app:layout_constraintStart_toEndOf="@+id/priority_chip"
-                app:layout_constraintTop_toTopOf="@+id/status_chip"
                 tools:text="Public" />
 
 
+            </com.google.android.material.chip.ChipGroup>
+
+
             <ImageView
-                android:id="@+id/url_icon"
+                android:id="@+id/view_url_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/url_header"
+                app:layout_constraintTop_toTopOf="@+id/view_url_header"
                 app:srcCompat="@drawable/ic_link"
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/url_header"
+                android:id="@+id/view_url_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -319,36 +357,36 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@+id/url_icon"
-                app:layout_constraintTop_toBottomOf="@+id/status_chip" />
+                app:layout_constraintStart_toEndOf="@+id/view_url_icon"
+                app:layout_constraintTop_toBottomOf="@+id/view_spc_chipgroup" />
 
             <TextView
-                android:id="@+id/url"
+                android:id="@+id/view_url"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:autoLink="all"
-                android:text="@{model.vJournal.VJournal.url}"
+                android:text="@{model.vJournal.property.url}"
                 android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/url_icon"
-                app:layout_constraintTop_toBottomOf="@+id/url_header"
+                app:layout_constraintStart_toEndOf="@+id/view_url_icon"
+                app:layout_constraintTop_toBottomOf="@+id/view_url_header"
                 tools:text="https://www.bitfire.at/" />
 
 
             <ImageView
-                android:id="@+id/attendee_icon"
+                android:id="@+id/view_attendee_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/attendee_header"
+                app:layout_constraintTop_toTopOf="@+id/view_attendee_header"
                 app:srcCompat="@drawable/ic_attendee"
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/attendee_header"
+                android:id="@+id/view_attendee_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -357,13 +395,13 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@+id/attendee_icon"
-                app:layout_constraintTop_toBottomOf="@+id/url" />
+                app:layout_constraintStart_toEndOf="@+id/view_attendee_icon"
+                app:layout_constraintTop_toBottomOf="@+id/view_url" />
 
 
 
             <com.google.android.material.chip.ChipGroup
-                android:id="@+id/attendee_chipgroup"
+                android:id="@+id/view_attendee_chipgroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -374,24 +412,24 @@
                 android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/attendee_header" />
+                app:layout_constraintTop_toBottomOf="@+id/view_attendee_header" />
 
 
 
 
             <ImageView
-                android:id="@+id/organizer_icon"
+                android:id="@+id/view_organizer_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/organizer_header"
+                app:layout_constraintTop_toTopOf="@+id/view_organizer_header"
                 app:srcCompat="@drawable/ic_organizer"
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/organizer_header"
+                android:id="@+id/view_organizer_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -400,11 +438,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@+id/organizer_icon"
-                app:layout_constraintTop_toBottomOf="@+id/attendee_chipgroup" />
+                app:layout_constraintStart_toEndOf="@+id/view_organizer_icon"
+                app:layout_constraintTop_toBottomOf="@+id/view_attendee_chipgroup" />
 
             <TextView
-                android:id="@+id/organizer"
+                android:id="@+id/view_organizer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -412,24 +450,24 @@
                 android:text="@{model.vJournal.organizer.caladdress}"
                 android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/attendee_icon"
-                app:layout_constraintTop_toBottomOf="@+id/organizer_header"
+                app:layout_constraintStart_toEndOf="@+id/view_attendee_icon"
+                app:layout_constraintTop_toBottomOf="@+id/view_organizer_header"
                 tools:text="patrick.doe@example.com" />
 
 
             <ImageView
-                android:id="@+id/contact_icon"
+                android:id="@+id/view_contact_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/contact_header"
+                app:layout_constraintTop_toTopOf="@+id/view_contact_header"
                 app:srcCompat="@drawable/ic_contact"
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/contact_header"
+                android:id="@+id/view_contact_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -438,36 +476,36 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@+id/contact_icon"
-                app:layout_constraintTop_toBottomOf="@+id/organizer" />
+                app:layout_constraintStart_toEndOf="@+id/view_contact_icon"
+                app:layout_constraintTop_toBottomOf="@+id/view_organizer" />
 
             <TextView
-                android:id="@+id/contact"
+                android:id="@+id/view_contact"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:autoLink="all"
-                android:text="@{model.vJournal.VJournal.contact}"
+                android:text="@{model.vJournal.property.contact}"
                 android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/contact_icon"
-                app:layout_constraintTop_toBottomOf="@+id/contact_header"
+                app:layout_constraintStart_toEndOf="@+id/view_contact_icon"
+                app:layout_constraintTop_toBottomOf="@+id/view_contact_header"
                 tools:text="John Doe (john.doe@example.com)" />
 
 
             <ImageView
-                android:id="@+id/relatedto_icon"
+                android:id="@+id/view_relatedto_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/relatedto_header"
+                app:layout_constraintTop_toTopOf="@+id/view_relatedto_header"
                 app:srcCompat="@drawable/ic_link"
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/relatedto_header"
+                android:id="@+id/view_relatedto_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -476,11 +514,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@+id/relatedto_icon"
-                app:layout_constraintTop_toBottomOf="@+id/contact" />
+                app:layout_constraintStart_toEndOf="@+id/view_relatedto_icon"
+                app:layout_constraintTop_toBottomOf="@+id/view_contact" />
 
             <TextView
-                android:id="@+id/relatedto"
+                android:id="@+id/view_relatedto"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -488,23 +526,23 @@
                 android:text="to be done"
                 android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/relatedto_icon"
-                app:layout_constraintTop_toBottomOf="@+id/relatedto_header"
+                app:layout_constraintStart_toEndOf="@+id/view_relatedto_icon"
+                app:layout_constraintTop_toBottomOf="@+id/view_relatedto_header"
                 tools:text="https://example.com/remote.php/dav/calendars/johndoe/personal/097E4865-D073-4279-806C-3E2B3250C947.ics" />
 
             <ImageView
-                android:id="@+id/comments_icon"
+                android:id="@+id/view_comments_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/comments_header"
+                app:layout_constraintTop_toTopOf="@+id/view_comments_header"
                 app:srcCompat="@drawable/ic_comments"
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/comments_header"
+                android:id="@+id/view_comments_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -513,12 +551,12 @@
                 android:text="@string/item_view_comments_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/comments_icon"
-                app:layout_constraintTop_toBottomOf="@id/relatedto"/>
+                app:layout_constraintStart_toEndOf="@+id/view_comments_icon"
+                app:layout_constraintTop_toBottomOf="@id/view_relatedto"/>
 
 
             <LinearLayout
-                android:id="@+id/comments_linearlayout"
+                android:id="@+id/view_comments_linearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -529,24 +567,24 @@
                 android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/comments_header" >
+                app:layout_constraintTop_toBottomOf="@+id/view_comments_header" >
 
             </LinearLayout>
 
 
 
             <ImageView
-                android:id="@+id/feedback_icon"
+                android:id="@+id/view_feedback_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/feedback_header"
+                app:layout_constraintTop_toTopOf="@+id/view_feedback_header"
                 app:srcCompat="@drawable/ic_feedback"
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/feedback_header"
+                android:id="@+id/view_feedback_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -554,12 +592,12 @@
                 android:text="Feedback / Linked Notes"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/feedback_icon"
-                app:layout_constraintTop_toBottomOf="@id/comments_linearlayout"/>
+                app:layout_constraintStart_toEndOf="@+id/view_feedback_icon"
+                app:layout_constraintTop_toBottomOf="@id/view_comments_linearlayout"/>
 
 
             <LinearLayout
-                android:id="@+id/feedback_linearlayout"
+                android:id="@+id/view_feedback_linearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -569,12 +607,12 @@
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/feedback_header" >
+                app:layout_constraintTop_toBottomOf="@+id/view_feedback_header" >
 
             </LinearLayout>
 
             <Button
-                android:id="@+id/add_note"
+                android:id="@+id/view_add_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -582,11 +620,11 @@
                 app:icon="@drawable/ic_comment_add"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/feedback_linearlayout" />
+                app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout" />
 
 
             <TextView
-                android:id="@+id/created"
+                android:id="@+id/view_created"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -596,12 +634,12 @@
                 android:textSize="10sp"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_note"
+                app:layout_constraintTop_toBottomOf="@+id/view_add_note"
                 tools:text="Created: Sun Dec 20 20:38:30 GMT+01:00 2020" />
 
 
             <TextView
-                android:id="@+id/lastModified"
+                android:id="@+id/view_lastModified"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -610,7 +648,7 @@
                 android:textSize="10sp"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/created"
+                app:layout_constraintTop_toBottomOf="@+id/view_created"
                 tools:text="Last modified: Sun Dec 20 20:38:30 GMT+01:00 2020" />
 
 
@@ -622,7 +660,7 @@
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_edit"
+            android:id="@+id/view_fab_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

@@ -12,23 +12,20 @@ import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.ICalDatabase
 import at.bitfire.notesx5.database.ICalDatabaseDao
-import at.bitfire.notesx5.databinding.FragmentVjournalFilterBinding
+import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
+import at.bitfire.notesx5.databinding.FragmentIcalFilterBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import kotlinx.android.synthetic.main.fragment_vjournal_filter.*
-import kotlinx.android.synthetic.main.fragment_vjournal_item.*
-import kotlinx.android.synthetic.main.fragment_vjournal_item_categories_chip.view.*
-import kotlinx.android.synthetic.main.fragment_vjournal_list_item.*
 import java.util.*
 
 
-class VJournalFilterFragment : Fragment()  {
+class IcalFilterFragment : Fragment()  {
 
-    lateinit var binding: FragmentVjournalFilterBinding
+    lateinit var binding: FragmentIcalFilterBinding
     lateinit var application: Application
     lateinit var dataSource: ICalDatabaseDao
-    lateinit var viewModelFactory:  VJournalFilterViewModelFactory
-    lateinit var vJournalFilterViewModel: VJournalFilterViewModel
+    lateinit var viewModelFactory:  IcalFilterViewModelFactory
+    lateinit var icalFilterViewModel: IcalFilterViewModel
     lateinit var inflater: LayoutInflater
 
     private var displayedCategoryChips: MutableList<String> = mutableListOf()
@@ -54,7 +51,7 @@ class VJournalFilterFragment : Fragment()  {
         // Get a reference to the binding object and inflate the fragment views.
 
         this.inflater = inflater
-        this.binding = FragmentVjournalFilterBinding.inflate(inflater, container, false)
+        this.binding = FragmentIcalFilterBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
@@ -66,18 +63,18 @@ class VJournalFilterFragment : Fragment()  {
 
 
 
-        this.viewModelFactory = VJournalFilterViewModelFactory(dataSource, application)
-        vJournalFilterViewModel =
+        this.viewModelFactory = IcalFilterViewModelFactory(dataSource, application)
+        icalFilterViewModel =
                 ViewModelProvider(
-                        this, viewModelFactory).get(VJournalFilterViewModel::class.java)
+                        this, viewModelFactory).get(IcalFilterViewModel::class.java)
 
-        binding.model = vJournalFilterViewModel
+        binding.model = icalFilterViewModel
         binding.lifecycleOwner = this
 
 
 
         // get previously selected items from arguments
-        val arguments = VJournalFilterFragmentArgs.fromBundle((arguments!!))
+        val arguments = IcalFilterFragmentArgs.fromBundle((arguments!!))
 
         if (arguments.category2preselect?.isNotEmpty() == true)
             categoriesPreselected = arguments.category2preselect!!.toMutableList()
@@ -108,20 +105,20 @@ class VJournalFilterFragment : Fragment()  {
 
 
         // observe and set chips for categories
-        vJournalFilterViewModel.allCategories.observe(viewLifecycleOwner, {
+        icalFilterViewModel.allCategories.observe(viewLifecycleOwner, {
 
             // Add the chips for categories
-            if (vJournalFilterViewModel.allCategories.value != null)
-                addChips(binding.categoryFilterChipgroup, vJournalFilterViewModel.allCategories.value!!, displayedCategoryChips, categoriesSelected, categoriesPreselected)
+            if (icalFilterViewModel.allCategories.value != null)
+                addChips(binding.categoryFilterChipgroup, icalFilterViewModel.allCategories.value!!, displayedCategoryChips, categoriesSelected, categoriesPreselected)
 
         })
 
         //observe and set list for organizers
-        vJournalFilterViewModel.allCollections.observe(viewLifecycleOwner, {
+        icalFilterViewModel.allCollections.observe(viewLifecycleOwner, {
 
             // Add the chips for collections
-            if (vJournalFilterViewModel.allCollections.value != null)
-                addChips(binding.collectionFilterChipgroup, vJournalFilterViewModel.allCollections.value!!, displayedCollectionChips, collectionSelected, collectionPreselected)
+            if (icalFilterViewModel.allCollections.value != null)
+                addChips(binding.collectionFilterChipgroup, icalFilterViewModel.allCollections.value!!, displayedCollectionChips, collectionSelected, collectionPreselected)
         })
 
 
@@ -143,7 +140,7 @@ class VJournalFilterFragment : Fragment()  {
             if (listItem == "" || displayed.contains(listItem))   // don't show empty items and only show items that are not there yet
                 return@forEach
 
-            val chip = inflater.inflate(R.layout.fragment_vjournal_filter_chip, chipGroup, false) as Chip
+            val chip = inflater.inflate(R.layout.fragment_ical_filter_chip, chipGroup, false) as Chip
             chip.text = listItem
             chipGroup.addView(chip)
             if(preselected.contains(listItem)) {   // if the current item is in the list of preselected items, then check it
@@ -178,7 +175,7 @@ class VJournalFilterFragment : Fragment()  {
             if (listItem == "" || displayed.contains(listItem))   // don't show empty items and only show items that are not there yet
                 return@forEach
 
-            val chip = inflater.inflate(R.layout.fragment_vjournal_filter_chip, chipGroup, false) as Chip
+            val chip = inflater.inflate(R.layout.fragment_ical_filter_chip, chipGroup, false) as Chip
             chip.text = listItem
             chipGroup.addView(chip)
             if(preselected.contains(listItem)) {   // if the current item is in the list of preselected items, then check it
@@ -283,7 +280,7 @@ class VJournalFilterFragment : Fragment()  {
                 // Responds to chip click
 
 
-                val direction = VJournalFilterFragmentDirections.actionVJournalFilterFragmentToVjournalListFragmentList().apply {
+                val direction = IcalFilterFragmentDirections.actionIcalFilterFragmentToIcalListFragment().apply {
                     this.status2filter = statusSelected.toIntArray()
                     this.classification2filter = classificationSelected.toIntArray()
                     this.collection2filter = collectionSelected.toTypedArray()

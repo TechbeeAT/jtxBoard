@@ -11,30 +11,27 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import at.bitfire.notesx5.R
-import at.bitfire.notesx5.convertLongToDateString
-import at.bitfire.notesx5.convertLongToTimeString
+import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
-import at.bitfire.notesx5.databinding.FragmentVjournalItemBinding
+import at.bitfire.notesx5.databinding.FragmentIcalViewBinding
 import com.google.android.material.chip.Chip
-import com.google.android.material.slider.RangeSlider
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.fragment_vjournal_edit_comment.view.*
-import kotlinx.android.synthetic.main.fragment_vjournal_edit_subtask.view.*
-import kotlinx.android.synthetic.main.fragment_vjournal_item_relatedto.view.*
+import kotlinx.android.synthetic.main.fragment_ical_view_comment.view.*
+import kotlinx.android.synthetic.main.fragment_ical_view_relatedto.view.*
+import kotlinx.android.synthetic.main.fragment_ical_view_subtask.view.*
 
 
-class VJournalItemFragment : Fragment() {
+class IcalViewFragment : Fragment() {
 
-    lateinit var binding: FragmentVjournalItemBinding
+    lateinit var binding: FragmentIcalViewBinding
     lateinit var application: Application
     lateinit var inflater: LayoutInflater
     lateinit var dataSource: ICalDatabaseDao
-    lateinit var viewModelFactory: VJournalItemViewModelFactory
-    lateinit var vJournalItemViewModel: VJournalItemViewModel
+    lateinit var viewModelFactory: IcalViewViewModelFactory
+    lateinit var icalViewViewModel: IcalViewViewModel
 
 
     val allContactsWithName: MutableList<String> = mutableListOf()
@@ -49,12 +46,12 @@ class VJournalItemFragment : Fragment() {
 
         // Get a reference to the binding object and inflate the fragment views.
         this.inflater = inflater
-        this.binding = FragmentVjournalItemBinding.inflate(inflater, container, false)
+        this.binding = FragmentIcalViewBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-        val arguments = VJournalItemFragmentArgs.fromBundle((arguments!!))
+        val arguments = IcalViewFragmentArgs.fromBundle((arguments!!))
 
         // add menu
         setHasOptionsMenu(true)
@@ -63,73 +60,73 @@ class VJournalItemFragment : Fragment() {
 
 
         // set up view model
-        viewModelFactory = VJournalItemViewModelFactory(arguments.item2show, dataSource, application)
-        vJournalItemViewModel =
+        viewModelFactory = IcalViewViewModelFactory(arguments.item2show, dataSource, application)
+        icalViewViewModel =
                 ViewModelProvider(
-                        this, viewModelFactory).get(VJournalItemViewModel::class.java)
+                        this, viewModelFactory).get(IcalViewViewModel::class.java)
 
-        binding.model = vJournalItemViewModel
+        binding.model = icalViewViewModel
         binding.lifecycleOwner = this
 
 
 
 
         // set up observers
-        vJournalItemViewModel.editingClicked.observe(viewLifecycleOwner, Observer {
+        icalViewViewModel.editingClicked.observe(viewLifecycleOwner, Observer {
             if (it) {
-                vJournalItemViewModel.editingClicked.value = false
+                icalViewViewModel.editingClicked.value = false
                 this.findNavController().navigate(
-                        VJournalItemFragmentDirections.actionVjournalItemFragmentToVJournalItemEditFragment(vJournalItemViewModel.vJournal.value!!)
+                        IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.vJournal.value!!)
                 )
             }
         })
 
-        vJournalItemViewModel.vJournal.observe(viewLifecycleOwner, {
+        icalViewViewModel.vJournal.observe(viewLifecycleOwner, {
 
-            if (it?.vJournal != null) {
+            if (it?.property != null) {
 
-                val statusArray = if (vJournalItemViewModel.vJournal.value!!.vJournal.component == "TODO")
+                val statusArray = if (icalViewViewModel.vJournal.value!!.property.component == "TODO")
                     resources.getStringArray(R.array.vtodo_status)
                 else
                     resources.getStringArray(R.array.vjournal_status)
 
-                binding.statusChip.text = statusArray[vJournalItemViewModel.vJournal.value!!.vJournal.status]
+                binding.viewStatusChip.text = statusArray[icalViewViewModel.vJournal.value!!.property.status]
 
                 val classificationArray = resources.getStringArray(R.array.ical_classification)
-                binding.classificationChip.text = classificationArray[vJournalItemViewModel.vJournal.value!!.vJournal.classification]
+                binding.viewClassificationChip.text = classificationArray[icalViewViewModel.vJournal.value!!.property.classification]
 
                 val priorityArray = resources.getStringArray(R.array.priority)
-                if (vJournalItemViewModel.vJournal.value?.vJournal?.priority != null && vJournalItemViewModel.vJournal.value!!.vJournal.priority in 0..9)
-                    binding.priorityChip.text = priorityArray[vJournalItemViewModel.vJournal.value!!.vJournal.priority!!]
+                if (icalViewViewModel.vJournal.value?.property?.priority != null && icalViewViewModel.vJournal.value!!.property.priority in 0..9)
+                    binding.viewPriorityChip.text = priorityArray[icalViewViewModel.vJournal.value!!.property.priority!!]
 
 
-                binding.commentsLinearlayout.removeAllViews()
-                vJournalItemViewModel.vJournal.value!!.comment?.forEach { comment ->
-                    val commentView = inflater.inflate(R.layout.fragment_vjournal_edit_comment, container, false);
-                    commentView.comment_textview.text = comment.text
-                    binding.commentsLinearlayout.addView(commentView)
+                binding.viewCommentsLinearlayout.removeAllViews()
+                icalViewViewModel.vJournal.value!!.comment?.forEach { comment ->
+                    val commentView = inflater.inflate(R.layout.fragment_ical_edit_comment, container, false);
+                    commentView.view_comment_textview.text = comment.text
+                    binding.viewCommentsLinearlayout.addView(commentView)
                 }
             }
         })
 
 
 
-        vJournalItemViewModel.relatedNotes.observe(viewLifecycleOwner, {
+        icalViewViewModel.relatedNotes.observe(viewLifecycleOwner, {
 
             if (it?.size != 0)
             {
-                binding.feedbackLinearlayout.removeAllViews()
+                binding.viewFeedbackLinearlayout.removeAllViews()
                 it.forEach { relatedICalObject ->
-                    val relatedView = inflater.inflate(R.layout.fragment_vjournal_item_relatedto, container, false);
-                    relatedView.related_textview.text = relatedICalObject?.summary
-                    binding.feedbackLinearlayout.addView(relatedView)
+                    val relatedView = inflater.inflate(R.layout.fragment_ical_view_relatedto, container, false);
+                    relatedView.view_related_textview.text = relatedICalObject?.summary
+                    binding.viewFeedbackLinearlayout.addView(relatedView)
                 }
             }
         })
 
-        vJournalItemViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
+        icalViewViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
-            binding.subtasksLinearlayout.removeAllViews()
+            binding.viewSubtasksLinearlayout.removeAllViews()
             it.forEach {singleSubtask ->
                 addSubtasksView(singleSubtask, container)
             }
@@ -178,22 +175,22 @@ class VJournalItemFragment : Fragment() {
 
              */
 
-        vJournalItemViewModel.categories.observe(viewLifecycleOwner, {
-            binding.categoriesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
+        icalViewViewModel.categories.observe(viewLifecycleOwner, {
+            binding.viewCategoriesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
             it.forEach { category ->
                 addCategoryChip(category)
             }
         })
 
-        vJournalItemViewModel.attendees.observe(viewLifecycleOwner, {
-            binding.attendeeChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
+        icalViewViewModel.attendees.observe(viewLifecycleOwner, {
+            binding.viewAttendeeChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
             it.forEach { attendee ->
                 addAttendeeChip(attendee)
             }
         })
 
 
-        binding.addNote.setOnClickListener {
+        binding.viewAddNote.setOnClickListener {
 
             val newNote = TextInputEditText(context!!)
             newNote.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
@@ -206,7 +203,7 @@ class VJournalItemFragment : Fragment() {
             builder.setView(newNote)
 
             builder.setPositiveButton("Save") { _, _ ->
-                vJournalItemViewModel.insertRelatedNote(ICalObject.createNote(summary = newNote.text.toString()))
+                icalViewViewModel.insertRelatedNote(ICalObject.createNote(summary = newNote.text.toString()))
             }
 
             builder.setNegativeButton("Cancel") { _, _ ->
@@ -217,12 +214,12 @@ class VJournalItemFragment : Fragment() {
 
         }
 
-        binding.progressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+        binding.viewProgressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
             override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                vJournalItemViewModel.updateProgress(vJournalItemViewModel.vJournal.value!!.vJournal, binding.progressSlider.value.toInt())
+                icalViewViewModel.updateProgress(icalViewViewModel.vJournal.value!!.property, binding.viewProgressSlider.value.toInt())
             }
         })
 
@@ -357,15 +354,15 @@ class VJournalItemFragment : Fragment() {
         if (category.text.isBlank())     // don't add empty categories
             return
 
-        val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_categories_chip, binding.categoriesChipgroup, false) as Chip
+        val categoryChip = inflater.inflate(R.layout.fragment_ical_view_categories_chip, binding.viewCategoriesChipgroup, false) as Chip
         categoryChip.text = category.text
-        binding.categoriesChipgroup.addView(categoryChip)
+        binding.viewCategoriesChipgroup.addView(categoryChip)
 
         categoryChip.setOnClickListener {
             val selectedCategoryArray = arrayOf(category.text)     // convert to array
             // Responds to chip click
             this.findNavController().navigate(
-                    VJournalItemFragmentDirections.actionVjournalItemFragmentToVjournalListFragmentList().setCategory2filter(selectedCategoryArray)
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment().setCategory2filter(selectedCategoryArray)
             )
         }
 
@@ -376,7 +373,7 @@ class VJournalItemFragment : Fragment() {
 
     private fun addAttendeeChip(attendee: Attendee) {
 
-        val attendeeChip = inflater.inflate(R.layout.fragment_vjournal_item_attendees_chip, binding.attendeeChipgroup, false) as Chip
+        val attendeeChip = inflater.inflate(R.layout.fragment_ical_view_attendees_chip, binding.viewAttendeeChipgroup, false) as Chip
         attendeeChip.text = attendee.caladdress
         when (attendee.roleparam) {
             0 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_chair, null)
@@ -385,7 +382,7 @@ class VJournalItemFragment : Fragment() {
             3 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_nonparticipant, null)
             else -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
         }
-        binding.attendeeChipgroup.addView(attendeeChip)
+        binding.viewAttendeeChipgroup.addView(attendeeChip)
 
         attendeeChip.setOnClickListener {
             // Responds to chip click
@@ -406,22 +403,45 @@ class VJournalItemFragment : Fragment() {
         if (subtask == null)
             return
 
-        val subtaskView = inflater.inflate(R.layout.fragment_vjournal_edit_subtask, container, false);
-        subtaskView.subtask_textview.text = subtask.summary
-        subtaskView.subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
+        var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
+
+        val subtaskView = inflater.inflate(R.layout.fragment_ical_view_subtask, container, false);
+        subtaskView.view_subtask_textview.text = subtask.summary
+        subtaskView.view_subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
+        subtaskView.view_subtask_progress_percent.text = if(subtask.percent?.toFloat() != null) subtask.percent!!.toString() else "0"
+        subtaskView.view_subtask_progress_checkbox.isChecked = subtask.percent == 100
 
         // Instead of implementing here
         //        subtaskView.subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->  vJournalItemViewModel.updateProgress(subtask, value.toInt())    }
         //   the approach here is to update only onStopTrackingTouch. The OnCangeListener would update on several times on sliding causing lags and unnecessary updates  */
-        subtaskView.subtask_progress_slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+        subtaskView.view_subtask_progress_slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
             override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                vJournalItemViewModel.updateProgress(subtask, subtaskView.subtask_progress_slider.value.toInt())
+                subtaskView.view_subtask_progress_percent.text = subtaskView.view_subtask_progress_slider.value.toInt().toString()
+                subtaskView.view_subtask_progress_checkbox.isChecked = subtask.percent == 100
+                if (subtaskView.view_subtask_progress_slider.value < 100)
+                    resetProgress = subtaskView.view_subtask_progress_slider.value.toInt()
+                icalViewViewModel.updateProgress(subtask, subtaskView.view_subtask_progress_slider.value.toInt())
+
+
             }
         })
-        binding.subtasksLinearlayout.addView(subtaskView)
+
+        subtaskView.view_subtask_progress_checkbox.setOnCheckedChangeListener { button, checked ->
+            if (checked) {
+                subtaskView.view_subtask_progress_percent.text = "100"
+                subtaskView.view_subtask_progress_slider.value = 100F
+                icalViewViewModel.updateProgress(subtask, 100)
+            } else {
+                subtaskView.view_subtask_progress_percent.text = resetProgress.toString()
+                subtaskView.view_subtask_progress_slider.value = resetProgress.toFloat()
+                icalViewViewModel.updateProgress(subtask, resetProgress)
+            }
+
+        }
+            binding.viewSubtasksLinearlayout.addView(subtaskView)
     }
 
 
@@ -434,16 +454,16 @@ class VJournalItemFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.vjournal_item_share) {
 
-            var shareText: String = "${convertLongToDateString(vJournalItemViewModel.vJournal.value!!.vJournal.dtstart)} ${convertLongToTimeString(vJournalItemViewModel.vJournal.value!!.vJournal.dtstart)}\n"
-            shareText += "${vJournalItemViewModel.vJournal.value!!.vJournal.summary}\n\n"
-            shareText += "${vJournalItemViewModel.vJournal.value!!.vJournal.description}\n\n"
+            var shareText: String = "${convertLongToDateString(icalViewViewModel.vJournal.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.vJournal.value!!.property.dtstart)}\n"
+            shareText += "${icalViewViewModel.vJournal.value!!.property.summary}\n\n"
+            shareText += "${icalViewViewModel.vJournal.value!!.property.description}\n\n"
             //todo add category again
             //shareText += "Categories/Labels: ${vJournalItemViewModel.vJournal.value!!.vCategory}"
 
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.type = "text/plain"
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, vJournalItemViewModel.vJournal.value!!.vJournal.summary)
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.vJournal.value!!.property.summary)
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
             startActivity(Intent(shareIntent))
 

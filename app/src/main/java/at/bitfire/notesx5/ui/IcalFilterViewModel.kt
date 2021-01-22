@@ -7,8 +7,8 @@ import at.bitfire.notesx5.database.ICalDatabaseDao
 import kotlinx.coroutines.launch
 
 
-class VJournalFilterViewModel(val database: ICalDatabaseDao,
-                              application: Application) : AndroidViewModel(application) {
+class IcalFilterViewModel(val database: ICalDatabaseDao,
+                          application: Application) : AndroidViewModel(application) {
 
     val allCollections = database.getAllCollections()
     val allCategories = database.getAllCategories()

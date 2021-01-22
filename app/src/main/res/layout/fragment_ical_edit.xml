@@ -12,7 +12,7 @@
 
         <variable
             name="model"
-            type="at.bitfire.notesx5.ui.VJournalEditViewModel" />
+            type="at.bitfire.notesx5.ui.IcalEditViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -25,14 +25,14 @@
         android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/vjournal_item_edit_view"
+        android:id="@+id/ical_edit_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.VJournalEditFragment">
+        tools:context=".ui.IcalEditFragment">
 
 
         <TextView
-            android:id="@+id/dtstart_day"
+            android:id="@+id/edit_dtstart_day"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="@{UtilKt.convertLongToDayString(model.iCalObjectUpdated.dtstart)}"
@@ -45,46 +45,46 @@
             tools:text="31" />
 
         <TextView
-            android:id="@+id/dtstart_month"
+            android:id="@+id/edit_dtstart_month"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="10sp"
             android:textStyle="bold"
             android:text="@{UtilKt.convertLongToMonthString(model.iCalObjectUpdated.dtstart)}"
-            app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
+            app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dtstart_day"
+            app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_day"
             tools:text="December"
             android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
             />
 
         <TextView
-            android:id="@+id/dtstart_year"
+            android:id="@+id/edit_dtstart_year"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="10sp"
             android:textStyle="bold"
             android:text="@{UtilKt.convertLongToYearString(model.iCalObjectUpdated.dtstart)}"
-            app:layout_constraintEnd_toEndOf="@+id/dtstart_day"
+            app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dtstart_month"
+            app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_month"
             tools:text="2020"
             android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
             />
 
         <TextView
-            android:id="@+id/dtstart_time"
+            android:id="@+id/edit_dtstart_time"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="@{UtilKt.convertLongToTimeString(model.iCalObjectUpdated.dtstart)}"
             android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/top_barrier"
-            app:layout_constraintStart_toStartOf="@+id/dtstart_day"
-            app:layout_constraintTop_toBottomOf="@+id/dtstart_year"
+            app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
+            app:layout_constraintStart_toStartOf="@+id/edit_dtstart_day"
+            app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_year"
             app:layout_constraintVertical_bias="0.0"
             tools:text="13:30"
             android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
@@ -92,18 +92,18 @@
 
 
         <ImageView
-            android:id="@+id/collection_icon"
+            android:id="@+id/edit_collection_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/collection"
-            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-            app:layout_constraintTop_toTopOf="@+id/collection"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_collection"
+            app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
+            app:layout_constraintTop_toTopOf="@+id/edit_collection"
             app:srcCompat="@drawable/ic_collection"
             tools:ignore="ContentDescription" />
 
         <Spinner
-            android:id="@+id/collection"
+            android:id="@+id/edit_collection"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -112,37 +112,37 @@
             android:drawableStart="@drawable/ic_collection"
             android:drawablePadding="4dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/collection_icon"
+            app:layout_constraintStart_toEndOf="@+id/edit_collection_icon"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Collection" />
 
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/all_day_switch"
+            android:id="@+id/edit_all_day_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="All day"
             android:checked="@={model.allDay}"
-            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-            app:layout_constraintTop_toBottomOf="@+id/collection"
+            app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
+            app:layout_constraintTop_toBottomOf="@+id/edit_collection"
             app:switchPadding="8dp"
             android:visibility="@{model.alldayVisible ? View.VISIBLE : View.GONE}"
             />
 
         <ImageView
-            android:id="@+id/timezone_icon"
+            android:id="@+id/edit_timezone_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintStart_toEndOf="@+id/all_day_switch"
-            app:layout_constraintTop_toTopOf="@+id/timezone_spinner"
+            app:layout_constraintStart_toEndOf="@+id/edit_all_day_switch"
+            app:layout_constraintTop_toTopOf="@+id/edit_timezone_spinner"
             app:srcCompat="@drawable/ic_timezone" />
 
         <Spinner
-            android:id="@+id/timezone_spinner"
+            android:id="@+id/edit_timezone_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -150,27 +150,27 @@
             android:entries="@{model.possibleTimezones}"
             android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
             android:spinnerMode="dialog"
-            app:layout_constraintBottom_toBottomOf="@+id/all_day_switch"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_all_day_switch"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/timezone_icon"
-            app:layout_constraintTop_toTopOf="@+id/all_day_switch" />
+            app:layout_constraintStart_toEndOf="@+id/edit_timezone_icon"
+            app:layout_constraintTop_toTopOf="@+id/edit_all_day_switch" />
 
         <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/top_barrier"
+            android:id="@+id/edit_top_barrier"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:barrierDirection="top" />
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/summary_edit"
+            android:id="@+id/edit_summary_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/item_edit_summary_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/top_barrier">
+            app:layout_constraintTop_toBottomOf="@id/edit_top_barrier">
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -184,15 +184,15 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/description_edit"
+            android:id="@+id/edit_description_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/item_edit_description_hint"
-            app:layout_constraintEnd_toEndOf="@+id/summary_edit"
-            app:layout_constraintStart_toEndOf="@+id/dtstart_day"
-            app:layout_constraintStart_toStartOf="@+id/summary_edit"
-            app:layout_constraintTop_toBottomOf="@+id/summary_edit">
+            app:layout_constraintEnd_toEndOf="@+id/edit_summary_edit"
+            app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
+            app:layout_constraintStart_toStartOf="@+id/edit_summary_edit"
+            app:layout_constraintTop_toBottomOf="@+id/edit_summary_edit">
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -206,74 +206,86 @@
 
 
         <TextView
-            android:id="@+id/progress_label"
+            android:id="@+id/edit_progress_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="Progress"
             android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/progress_slider"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description_edit" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_description_edit" />
 
         <com.google.android.material.slider.Slider
-            android:id="@+id/progress_slider"
+            android:id="@+id/edit_progress_slider"
             style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:stepSize="1.0"
+            android:value="@{model.iCalObjectUpdated.percent}"
             android:valueFrom="0.0"
             android:valueTo="100.0"
-            android:value="@{model.iCalObjectUpdated.percent}"
             android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toStartOf="@id/progress_percent"
-            app:layout_constraintStart_toEndOf="@+id/progress_label"
-            app:layout_constraintTop_toBottomOf="@+id/description_edit" />
+            app:layout_constraintEnd_toStartOf="@id/edit_progress_percent"
+            app:layout_constraintStart_toEndOf="@+id/edit_progress_label"
+            app:layout_constraintTop_toBottomOf="@+id/edit_description_edit" />
 
 
         <TextView
-            android:id="@+id/progress_percent"
-            android:layout_width="40dp"
+            android:id="@+id/edit_progress_percent"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="@string/number_percent"
+            android:layout_marginEnd="4dp"
+            android:text="@{model.iCalObjectUpdated.percent.toString()}"
             android:textAlignment="viewEnd"
             android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/progress_slider"
-            app:layout_constraintEnd_toStartOf="@+id/progress_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/progress_slider"
-            tools:text="100 %" />
+            app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
+            app:layout_constraintEnd_toStartOf="@+id/edit_progress_percent_sign"
+            app:layout_constraintTop_toTopOf="@+id/edit_progress_slider"
+            tools:text="100" />
+
+        <TextView
+            android:id="@+id/edit_progress_percent_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="%"
+            android:textAlignment="viewEnd"
+            android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
+            app:layout_constraintEnd_toStartOf="@+id/edit_progress_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
 
         <CheckBox
-            android:id="@+id/progress_checkbox"
+            android:id="@+id/edit_progress_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
             android:checked="@{model.iCalObjectUpdated.percent == 100}"
-            app:layout_constraintBottom_toBottomOf="@+id/progress_slider"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/progress_slider" />
+            app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
 
 
 
 
         <ImageView
-            android:id="@+id/subtasks_icon"
+            android:id="@+id/edit_subtasks_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/subtasks_header"
+            app:layout_constraintTop_toTopOf="@+id/edit_subtasks_header"
             app:srcCompat="@drawable/ic_comments"
             tools:ignore="ContentDescription"
             android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
             />
 
         <TextView
-            android:id="@+id/subtasks_header"
+            android:id="@+id/edit_subtasks_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -281,14 +293,14 @@
             android:text="Subtasks"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/subtasks_icon"
-            app:layout_constraintTop_toBottomOf="@id/progress_slider"
+            app:layout_constraintStart_toEndOf="@+id/edit_subtasks_icon"
+            app:layout_constraintTop_toBottomOf="@id/edit_progress_slider"
             android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
             />
 
 
         <LinearLayout
-            android:id="@+id/subtasks_linearlayout"
+            android:id="@+id/edit_subtasks_linearlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -299,7 +311,7 @@
             android:showDividers="middle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subtasks_header"
+            app:layout_constraintTop_toBottomOf="@+id/edit_subtasks_header"
             android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
             >
 
@@ -318,7 +330,7 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/subtasks_add"
+            android:id="@+id/edit_subtasks_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -333,21 +345,28 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/subtasks_linearlayout"
+            app:layout_constraintTop_toBottomOf="@id/edit_subtasks_linearlayout"
             android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
             >
 
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/subtasks_add_edittext"
+                android:id="@+id/edit_subtasks_add_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/edit_spc_chipgroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_subtasks_add">
+
         <com.google.android.material.chip.Chip
-            android:id="@+id/status_chip"
+            android:id="@+id/edit_status_chip"
             style="@style/Widget.MaterialComponents.Chip.Entry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -358,12 +377,10 @@
             app:chipIcon="@drawable/ic_status"
             app:chipIconVisible="true"
             app:closeIconVisible="false"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subtasks_add"
             tools:text="Medium" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/priority_chip"
+            android:id="@+id/edit_priority_chip"
             style="@style/Widget.MaterialComponents.Chip.Entry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -373,13 +390,11 @@
             app:chipIcon="@drawable/ic_priority"
             app:chipIconVisible="true"
             app:closeIconVisible="false"
-            app:layout_constraintStart_toEndOf="@+id/status_chip"
-            app:layout_constraintTop_toTopOf="@+id/status_chip"
             tools:text="Final" />
 
         <com.google.android.material.chip.Chip
 
-            android:id="@+id/classification_chip"
+            android:id="@+id/edit_classification_chip"
             style="@style/Widget.MaterialComponents.Chip.Entry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -389,25 +404,26 @@
             app:chipIcon="@drawable/ic_classification"
             app:chipIconVisible="true"
             app:closeIconVisible="false"
-            app:layout_constraintStart_toEndOf="@+id/priority_chip"
-            app:layout_constraintTop_toTopOf="@+id/status_chip"
             tools:text="Public" />
 
 
+        </com.google.android.material.chip.ChipGroup>
+
+
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/show_all_switch"
+            android:id="@+id/edit_show_all_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:checked="@={model.showAll}"
             android:text="Show all"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/status_chip"
+            app:layout_constraintTop_toBottomOf="@+id/edit_spc_chipgroup"
             app:switchPadding="8dp"
             tools:checked="false" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/url_edit"
+            android:id="@+id/edit_url_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -422,7 +438,7 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/show_all_switch"
+            app:layout_constraintTop_toBottomOf="@+id/edit_show_all_switch"
             app:startIconDrawable="@drawable/ic_link">
 
 
@@ -437,7 +453,7 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/contact_edit"
+            android:id="@+id/edit_contact_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -449,14 +465,14 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/url_edit"
+            app:layout_constraintTop_toBottomOf="@+id/edit_url_edit"
             app:startIconDrawable="@drawable/ic_contact"
             android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
             >
 
 
             <AutoCompleteTextView
-                android:id="@+id/contact_add_autocomplete"
+                android:id="@+id/edit_contact_add_autocomplete"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:ems="10"
@@ -471,19 +487,19 @@
 
 
         <ImageView
-            android:id="@+id/categories_icon"
+            android:id="@+id/edit_categories_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/categories_header"
+            app:layout_constraintTop_toTopOf="@+id/edit_categories_header"
             app:srcCompat="@drawable/ic_category"
             tools:ignore="ContentDescription"
             android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
             />
 
         <TextView
-            android:id="@+id/categories_header"
+            android:id="@+id/edit_categories_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -491,14 +507,14 @@
             android:text="Categories"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/categories_icon"
-            app:layout_constraintTop_toBottomOf="@id/contact_edit"
+            app:layout_constraintStart_toEndOf="@+id/edit_categories_icon"
+            app:layout_constraintTop_toBottomOf="@id/edit_contact_edit"
             android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
             />
 
 
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/categories_chipgroup"
+            android:id="@+id/edit_categories_chipgroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -508,7 +524,7 @@
             app:chipSpacingVertical="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/categories_header"
+            app:layout_constraintTop_toBottomOf="@+id/edit_categories_header"
             android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
             >
 
@@ -517,7 +533,7 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/categories_add"
+            android:id="@+id/edit_categories_add"
             android:layout_width="0dp"
             android:layout_height="70dp"
             android:layout_marginStart="8dp"
@@ -529,14 +545,14 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/categories_chipgroup"
+            app:layout_constraintTop_toBottomOf="@+id/edit_categories_chipgroup"
             android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
 
             >
 
 
             <AutoCompleteTextView
-                android:id="@+id/categories_add_autocomplete"
+                android:id="@+id/edit_categories_add_autocomplete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -552,19 +568,19 @@
 
 
         <ImageView
-            android:id="@+id/attendees_icon"
+            android:id="@+id/edit_attendees_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/attendees_header"
+            app:layout_constraintTop_toTopOf="@+id/edit_attendees_header"
             app:srcCompat="@drawable/ic_attendee"
             tools:ignore="ContentDescription"
             android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
             />
 
         <TextView
-            android:id="@+id/attendees_header"
+            android:id="@+id/edit_attendees_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -572,15 +588,15 @@
             android:text="Attendees"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/attendees_icon"
-            app:layout_constraintTop_toBottomOf="@id/categories_add"
+            app:layout_constraintStart_toEndOf="@+id/edit_attendees_icon"
+            app:layout_constraintTop_toBottomOf="@id/edit_categories_add"
             android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
 
             />
 
 
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/attendees_chipgroup"
+            android:id="@+id/edit_attendees_chipgroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -590,14 +606,14 @@
             app:chipSpacingVertical="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/attendees_header"
+            app:layout_constraintTop_toBottomOf="@+id/edit_attendees_header"
             android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
             />
 
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/attendees_add"
+            android:id="@+id/edit_attendees_add"
             android:layout_width="0dp"
             android:layout_height="70dp"
             android:layout_marginStart="8dp"
@@ -611,13 +627,13 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/attendees_chipgroup"
+            app:layout_constraintTop_toBottomOf="@+id/edit_attendees_chipgroup"
             android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
             >
 
 
             <AutoCompleteTextView
-                android:id="@+id/attendees_add_autocomplete"
+                android:id="@+id/edit_attendees_add_autocomplete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -632,19 +648,19 @@
 
 
         <ImageView
-            android:id="@+id/comments_icon"
+            android:id="@+id/edit_comments_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/comments_header"
+            app:layout_constraintTop_toTopOf="@+id/edit_comments_header"
             app:srcCompat="@drawable/ic_comments"
             tools:ignore="ContentDescription"
             android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
             />
 
         <TextView
-            android:id="@+id/comments_header"
+            android:id="@+id/edit_comments_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -652,14 +668,14 @@
             android:text="@string/item_view_comments_header"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/comments_icon"
-            app:layout_constraintTop_toBottomOf="@id/attendees_add"
+            app:layout_constraintStart_toEndOf="@+id/edit_comments_icon"
+            app:layout_constraintTop_toBottomOf="@id/edit_attendees_add"
             android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
             />
 
 
         <LinearLayout
-            android:id="@+id/comments_linearlayout"
+            android:id="@+id/edit_comments_linearlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -670,7 +686,7 @@
             android:showDividers="middle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/comments_header"
+            app:layout_constraintTop_toBottomOf="@+id/edit_comments_header"
             android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
             >
 
@@ -689,7 +705,7 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/comment_add"
+            android:id="@+id/edit_comment_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -705,13 +721,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/comments_linearlayout"
+            app:layout_constraintTop_toBottomOf="@id/edit_comments_linearlayout"
             android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
             >
 
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/comment_add_edittext"
+                android:id="@+id/edit_comment_add_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textWebEmailAddress|textEmailAddress" />
@@ -725,7 +741,7 @@
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_save"
+            android:id="@+id/edit_fab_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

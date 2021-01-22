@@ -7,13 +7,13 @@ import at.bitfire.notesx5.database.ICalDatabaseDao
 
 
 
-class VJournalListViewModelFactory (
+class IcalListViewModelFactory (
         private val dataSource: ICalDatabaseDao,
         private val application: Application) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(VJournalListViewModel::class.java)) {
-            return VJournalListViewModel(dataSource, application) as T
+        if (modelClass.isAssignableFrom(IcalListViewModel::class.java)) {
+            return IcalListViewModel(dataSource, application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -19,22 +19,22 @@ import at.bitfire.notesx5.R
 import at.bitfire.notesx5.database.ICalDatabase
 import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.relations.ICalEntity
-import at.bitfire.notesx5.databinding.FragmentVjournalListBinding
+import at.bitfire.notesx5.databinding.FragmentIcalListBinding
 import com.google.android.material.tabs.TabLayout
 import java.util.*
 
 
-class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
+class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     private var recyclerView: RecyclerView? = null
     //private var linearLayoutManager: LinearLayoutManager? = null
     private var staggeredGridLayoutManager: StaggeredGridLayoutManager? = null
 
-    private var vJournalListAdapter: VJournalListAdapter? = null
+    private var icalListAdapter: IcalListAdapter? = null
 
-    private lateinit var vJournalListViewModel: VJournalListViewModel
+    private lateinit var icalListViewModel: IcalListViewModel
 
-    private lateinit var binding: FragmentVjournalListBinding
+    private lateinit var binding: FragmentIcalListBinding
     private lateinit var application: Application
 
     private lateinit var gotodateMenuItem: MenuItem
@@ -45,7 +45,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 
         // Get a reference to the binding object and inflate the fragment views.
-        binding = FragmentVjournalListBinding.inflate(inflater, container, false)
+        binding = FragmentIcalListBinding.inflate(inflater, container, false)
 
         // set up DB DAO
         application = requireNotNull(this.activity).application
@@ -53,12 +53,12 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 
         // create the view model through the view model factory
-        val viewModelFactory = VJournalListViewModelFactory(dataSource, application)
-        vJournalListViewModel =
+        val viewModelFactory = IcalListViewModelFactory(dataSource, application)
+        icalListViewModel =
                 ViewModelProvider(
-                        this, viewModelFactory).get(VJournalListViewModel::class.java)
+                        this, viewModelFactory).get(IcalListViewModel::class.java)
 
-        binding.vJournalListViewModel = vJournalListViewModel
+        binding.vJournalListViewModel = icalListViewModel
         binding.lifecycleOwner = this
 
         // add menu
@@ -75,47 +75,47 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // create adapter and provide data
         //vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vjournalList, vJournalListViewModel.vjournaListCount)
-        vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vJournalList)
+        icalListAdapter = IcalListAdapter(application.applicationContext, icalListViewModel.vJournalList)
 
-        recyclerView?.adapter = vJournalListAdapter
+        recyclerView?.adapter = icalListAdapter
 
 
         // pass filter arguments to view model
-        val arguments = VJournalListFragmentArgs.fromBundle((arguments!!))
+        val arguments = IcalListFragmentArgs.fromBundle((arguments!!))
 
         if (arguments.category2filter?.isNotEmpty() == true)
-            vJournalListViewModel.searchCategories = arguments.category2filter!!.toMutableList()
+            icalListViewModel.searchCategories = arguments.category2filter!!.toMutableList()
 
         if (arguments.classification2filter?.isNotEmpty() == true)
-            vJournalListViewModel.searchClassification = arguments.classification2filter!!.toMutableList()
+            icalListViewModel.searchClassification = arguments.classification2filter!!.toMutableList()
 
         if (arguments.status2filter?.isNotEmpty() == true)
-            vJournalListViewModel.searchStatus = arguments.status2filter!!.toMutableList()
+            icalListViewModel.searchStatus = arguments.status2filter!!.toMutableList()
 
         if (arguments.collection2filter?.isNotEmpty() == true)
-            vJournalListViewModel.searchCollection = arguments.collection2filter!!.toMutableList()
+            icalListViewModel.searchCollection = arguments.collection2filter!!.toMutableList()
 
         if(arguments.category2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.status2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
-            vJournalListViewModel.updateSearch()   // updateSearch() only if there was at least one filter criteria
+            icalListViewModel.updateSearch()   // updateSearch() only if there was at least one filter criteria
 
 
 
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
-        vJournalListViewModel.vJournalList.observe(viewLifecycleOwner, Observer {
-            vJournalListAdapter!!.notifyDataSetChanged()
+        icalListViewModel.vJournalList.observe(viewLifecycleOwner, Observer {
+            icalListAdapter!!.notifyDataSetChanged()
 
-            if (arguments.item2focus != 0L && vJournalListViewModel.vJournalList.value?.size!! > 0) {
+            if (arguments.item2focus != 0L && icalListViewModel.vJournalList.value?.size!! > 0) {
                 //Log.println(Log.INFO, "vJournalListFragment", arguments.vJournalItemId.toString())
-                vJournalListViewModel.setFocusItem(arguments.item2focus)
+                icalListViewModel.setFocusItem(arguments.item2focus)
             }
         })
 
 
 
         // Observe the focus item to scroll automatically to the right position (newly updated or inserted item)
-        vJournalListViewModel.focusItemId.observe(viewLifecycleOwner, Observer {
+        icalListViewModel.focusItemId.observe(viewLifecycleOwner, Observer {
 
-            val pos = vJournalListViewModel.getFocusItemPosition()
+            val pos = icalListViewModel.getFocusItemPosition()
             Log.println(Log.INFO, "vJournalListViewModel", "Item Position: ${pos.toString()}")
 
             recyclerView?.scrollToPosition(pos)
@@ -127,32 +127,32 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         binding.tabLayoutJournalNotes.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                vJournalListViewModel.resetFocusItem()
+                icalListViewModel.resetFocusItem()
 
 
                 when (tab?.position) {
                     0 -> {
-                        vJournalListViewModel.searchComponent = "JOURNAL"
+                        icalListViewModel.searchComponent = "JOURNAL"
                         gotodateMenuItem.isVisible = true
                         staggeredGridLayoutManager!!.spanCount = 1
                     }
                     1 -> {
-                        vJournalListViewModel.searchComponent = "NOTE"
+                        icalListViewModel.searchComponent = "NOTE"
                         gotodateMenuItem.isVisible = false     // no date search for notes
                         staggeredGridLayoutManager!!.spanCount = 2
                     }
                     2 -> {
-                        vJournalListViewModel.searchComponent = "TODO"
+                        icalListViewModel.searchComponent = "TODO"
                         gotodateMenuItem.isVisible = false     // no date search for notes
                         staggeredGridLayoutManager!!.spanCount = 1
                     }
                     else -> {
-                        vJournalListViewModel.searchComponent = "JOURNAL"
+                        icalListViewModel.searchComponent = "JOURNAL"
                         gotodateMenuItem.isVisible = true
                         staggeredGridLayoutManager!!.spanCount = 1
                     }
                 }
-                vJournalListViewModel.updateSearch()
+                icalListViewModel.updateSearch()
 
             }
 
@@ -186,7 +186,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                         else -> ICalEntity(ICalObject.createJournal())
                     }
             this.findNavController().navigate(
-                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
+                    IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
         }
 
         super.onStart()
@@ -216,11 +216,11 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             override fun onQueryTextChange(query: String): Boolean {
 
                 if (query.isEmpty())
-                    vJournalListViewModel.searchText = "%"
+                    icalListViewModel.searchText = "%"
                 else
-                    vJournalListViewModel.searchText = "%$query%"
+                    icalListViewModel.searchText = "%$query%"
 
-                vJournalListViewModel.updateSearch()
+                icalListViewModel.updateSearch()
                 return false
             }
         })
@@ -242,13 +242,13 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 val dpd = DatePickerDialog(activity!!, this, year, month, day)
 
 
-                val startItem = vJournalListViewModel.vJournalList.value?.lastOrNull()
-                val endItem = vJournalListViewModel.vJournalList.value?.firstOrNull()
+                val startItem = icalListViewModel.vJournalList.value?.lastOrNull()
+                val endItem = icalListViewModel.vJournalList.value?.firstOrNull()
 
 
-                if (startItem?.vJournal?.dtstart != null && endItem?.vJournal?.dtend != null) {
-                    dpd.datePicker.minDate = startItem.vJournal.dtstart!!
-                    dpd.datePicker.maxDate = endItem.vJournal.dtstart!!
+                if (startItem?.property?.dtstart != null && endItem?.property?.dtend != null) {
+                    dpd.datePicker.minDate = startItem.property.dtstart!!
+                    dpd.datePicker.maxDate = endItem.property.dtstart!!
                 }
 
                 dpd.show()
@@ -257,37 +257,37 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (item.itemId == R.id.vjournal_filter) {
 
             this.findNavController().navigate(
-                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalFilterFragment().apply {
-                        this.category2preselect = vJournalListViewModel.searchCategories.toTypedArray()
-                        this.classification2preselect = vJournalListViewModel.searchClassification.toIntArray()
-                        this.status2preselect = vJournalListViewModel.searchStatus.toIntArray()
-                        this.collection2preselect = vJournalListViewModel.searchCollection.toTypedArray()
-                        this.component2preselect = vJournalListViewModel.searchComponent
+                    IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
+                        this.category2preselect = icalListViewModel.searchCategories.toTypedArray()
+                        this.classification2preselect = icalListViewModel.searchClassification.toIntArray()
+                        this.status2preselect = icalListViewModel.searchStatus.toIntArray()
+                        this.collection2preselect = icalListViewModel.searchCollection.toTypedArray()
+                        this.component2preselect = icalListViewModel.searchComponent
                     })
         }
 
         if (item.itemId == R.id.vjournal_clear_filter) {
-            vJournalListViewModel.clearFilter()
+            icalListViewModel.clearFilter()
         }
 
         if (item.itemId == R.id.add_journal) {
             val newICalObject = ICalEntity(ICalObject.createJournal())
             this.findNavController().navigate(
-                VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
+                IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
         }
 
-        if (item.itemId == R.id.add_note) {
+        if (item.itemId == R.id.view_add_note) {
             val newICalObject = ICalEntity(ICalObject.createNote())
 
             this.findNavController().navigate(
-                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
+                    IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
         }
 
         if (item.itemId == R.id.add_todo) {
             val newICalObject = ICalEntity(ICalObject.createTodo())
 
             this.findNavController().navigate(
-                    VJournalListFragmentDirections.actionVjournalListFragmentListToVJournalItemEditFragment(newICalObject))
+                    IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
         }
 
 
@@ -309,9 +309,9 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         selectedDate.set(Calendar.DAY_OF_MONTH, day)
 
         // find the item with the same date
-        var foundItem = vJournalListViewModel.vJournalList.value?.find { item ->
+        var foundItem = icalListViewModel.vJournalList.value?.find { item ->
             val cItem = Calendar.getInstance()
-            cItem.timeInMillis = item.vJournal.dtstart?: 0L
+            cItem.timeInMillis = item.property.dtstart?: 0L
 
             // if this condition is true, the item is considered as found
             cItem.get(Calendar.YEAR) == year && cItem.get(Calendar.MONTH) == month && cItem.get(Calendar.DAY_OF_MONTH) == day
@@ -320,9 +320,9 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         // if no exact match was found, find the closest match
         if (foundItem == null) {
             var datediff = 0L
-            vJournalListViewModel.vJournalList.value?.forEach { item ->
+            icalListViewModel.vJournalList.value?.forEach { item ->
                 val cItem = Calendar.getInstance()
-                cItem.timeInMillis = item.vJournal.dtstart?: 0L
+                cItem.timeInMillis = item.property.dtstart?: 0L
 
                 if (datediff == 0L || kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis) < datediff) {
                     datediff = kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis)
@@ -333,7 +333,7 @@ class VJournalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         }
 
         if (foundItem != null)
-            vJournalListViewModel.setFocusItem(foundItem!!.vJournal.id)
+            icalListViewModel.setFocusItem(foundItem!!.property.id)
 
     }
 }

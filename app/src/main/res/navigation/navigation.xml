@@ -21,121 +21,121 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/vjournalListFragmentList">
+    app:startDestination="@id/icalListFragment">
 
     <fragment
-        android:id="@+id/vjournalListFragmentList"
-        android:name="at.bitfire.notesx5.ui.VJournalListFragment"
-        android:label="VJournalListFragment"
-        tools:layout="@layout/fragment_vjournal_list">
+        android:id="@+id/icalListFragment"
+        android:name="at.bitfire.notesx5.ui.IcalListFragment"
+        android:label="icalListFragment"
+        tools:layout="@layout/fragment_ical_list">
 
-    <action
-            android:id="@+id/action_vjournalListFragmentList_to_VJournalItemFragment"
-            app:destination="@id/vjournalItemFragment"
+        <action
+            android:id="@+id/action_icalListFragment_to_icalViewFragment"
+            app:destination="@id/icalViewFragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
         <action
-            android:id="@+id/action_vjournalListFragmentList_to_VJournalItemEditFragment"
-            app:destination="@id/VJournalItemEditFragment"
+            android:id="@+id/action_icalListFragment_to_icalEditFragment"
+            app:destination="@id/icalEditFragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
         <action
-            android:id="@+id/action_vjournalListFragmentList_to_VJournalFilterFragment"
-            app:destination="@id/VJournalFilterFragment" />
+            android:id="@+id/action_icalListFragment_to_icalFilterFragment"
+            app:destination="@id/icalFilterFragment" />
         <argument
             android:name="item2focus"
-            app:argType="long"
-            android:defaultValue="0L" />
+            android:defaultValue="0L"
+            app:argType="long" />
         <argument
             android:name="category2filter"
+            android:defaultValue="@null"
             app:argType="string[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="status2filter"
+            android:defaultValue="@null"
             app:argType="integer[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="classification2filter"
+            android:defaultValue="@null"
             app:argType="integer[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="collection2filter"
+            android:defaultValue="@null"
             app:argType="string[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="component2show"
-            app:argType="string"
-            android:defaultValue="JOURNAL" />
+            android:defaultValue="JOURNAL"
+            app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/vjournalItemFragment"
-        android:name="at.bitfire.notesx5.ui.VJournalItemFragment"
-        android:label="VJournalItemFragment"
-        tools:layout="@layout/fragment_vjournal_item">
+        android:id="@+id/icalViewFragment"
+        android:name="at.bitfire.notesx5.ui.IcalViewFragment"
+        android:label="icalViewFragment"
+        tools:layout="@layout/fragment_ical_view">
         <argument
             android:name="item2show"
-            app:argType="long"
-            android:defaultValue="0L" />
+            android:defaultValue="0L"
+            app:argType="long" />
         <action
-            android:id="@+id/action_vjournalItemFragment_to_VJournalItemEditFragment"
-            app:destination="@id/VJournalItemEditFragment"
+            android:id="@+id/action_icalViewFragment_to_icalEditFragment"
+            app:destination="@id/icalEditFragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
         <action
-            android:id="@+id/action_vjournalItemFragment_to_vjournalListFragmentList"
-            app:destination="@id/vjournalListFragmentList"
-            app:popUpTo="@id/vjournalListFragmentList" />
+            android:id="@+id/action_icalViewFragment_to_icalListFragment"
+            app:destination="@id/icalListFragment"
+            app:popUpTo="@id/icalListFragment" />
     </fragment>
     <fragment
-        android:id="@+id/VJournalItemEditFragment"
-        android:name="at.bitfire.notesx5.ui.VJournalEditFragment"
-        android:label="VJournalItemEditFragment"
-        tools:layout="@layout/fragment_vjournal_edit">
+        android:id="@+id/icalEditFragment"
+        android:name="at.bitfire.notesx5.ui.IcalEditFragment"
+        android:label="icalEditFragment"
+        tools:layout="@layout/fragment_ical_edit">
         <action
-            android:id="@+id/action_VJournalItemEditFragment_to_vjournalListFragmentList"
-            app:destination="@id/vjournalListFragmentList"
-            app:popUpTo="@id/vjournalListFragmentList" />
+            android:id="@+id/action_icalEditFragment_to_icalListFragment"
+            app:destination="@id/icalListFragment"
+            app:popUpTo="@id/icalListFragment" />
         <argument
             android:name="icalentity"
             app:argType="at.bitfire.notesx5.database.relations.ICalEntity" />
     </fragment>
     <fragment
-        android:id="@+id/VJournalFilterFragment"
-        android:name="at.bitfire.notesx5.ui.VJournalFilterFragment"
-        android:label="VJournalFilterFragment"
-        tools:layout="@layout/fragment_vjournal_filter">
+        android:id="@+id/icalFilterFragment"
+        android:name="at.bitfire.notesx5.ui.IcalFilterFragment"
+        android:label="icalFilterFragment"
+        tools:layout="@layout/fragment_ical_filter">
         <action
-            android:id="@+id/action_VJournalFilterFragment_to_vjournalListFragmentList"
-            app:destination="@id/vjournalListFragmentList"
-            app:popUpTo="@id/vjournalListFragmentList" />
+            android:id="@+id/action_icalFilterFragment_to_icalListFragment"
+            app:destination="@id/icalListFragment"
+            app:popUpTo="@id/icalListFragment" />
         <argument
             android:name="category2preselect"
+            android:defaultValue="@null"
             app:argType="string[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="status2preselect"
+            android:defaultValue="@null"
             app:argType="integer[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="classification2preselect"
+            android:defaultValue="@null"
             app:argType="integer[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="collection2preselect"
+            android:defaultValue="@null"
             app:argType="string[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="component2preselect"
-            app:argType="string"
-            android:defaultValue="JOURNAL" />
+            android:defaultValue="JOURNAL"
+            app:argType="string" />
 
     </fragment>
 
