@@ -371,19 +371,16 @@
             app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
 
 
-
-
         <ImageView
             android:id="@+id/edit_subtasks_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/edit_subtasks_header"
-            app:srcCompat="@drawable/ic_comments"
-            tools:ignore="ContentDescription"
-            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-            />
+            app:srcCompat="@drawable/ic_todo"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/edit_subtasks_header"
@@ -437,8 +434,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="64dp"
-            android:hint="Subtask hint"
+            android:hint="Subtask"
+            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
             app:endIconContentDescription="Add subtask"
             app:endIconDrawable="@drawable/ic_comment_add"
             app:endIconMode="custom"
@@ -446,9 +443,7 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_subtasks_linearlayout"
-            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-            >
+            app:layout_constraintTop_toBottomOf="@id/edit_subtasks_linearlayout">
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -712,36 +707,36 @@
             />
 
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_attendees_add"
-            android:layout_width="0dp"
-            android:layout_height="70dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_attendees_hint"
-            app:errorEnabled="true"
-            app:error="@{model.urlError}"
+            android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
             app:endIconContentDescription="Add attendee"
             app:endIconDrawable="@drawable/ic_attendee_add"
             app:endIconMode="custom"
+            app:error="@{model.urlError}"
+            app:errorEnabled="true"
             app:helperTextEnabled="true"
+            app:helperText="Add an attendee"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_attendees_chipgroup"
-            android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/edit_attendees_chipgroup">
 
 
             <AutoCompleteTextView
                 android:id="@+id/edit_attendees_add_autocomplete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:afterTextChanged="@{model::clearUrlError}"
-                android:singleLine="false"
+                android:ems="10"
                 android:imeOptions="actionDone"
-                android:inputType="textShortMessage|textCapSentences" />
+                android:inputType="textShortMessage|textCapSentences"
+                android:singleLine="false" />
 
 
         </com.google.android.material.textfield.TextInputLayout>

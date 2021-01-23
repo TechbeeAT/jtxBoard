@@ -41,6 +41,7 @@ class IcalViewViewModel(private val vJournalItemId: Long,
     lateinit var subtasksVisible: LiveData<Boolean>
 
 
+
     var editingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
 

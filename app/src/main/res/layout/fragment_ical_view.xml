@@ -95,13 +95,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:drawableStart="@drawable/ic_collection"
                 android:drawablePadding="4dp"
                 android:text="@{model.vJournal.property.collection}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/view_item_dtstart_day"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Collection" />
+                tools:text="Collection"
+                app:drawableStartCompat="@drawable/ic_collection" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/view_categories_chipgroup"
@@ -152,7 +152,6 @@
                 android:paddingEnd="8dp"
                 android:text="@{model.vJournal.property.description}"
                 app:layout_constraintEnd_toEndOf="parent"
-
                 app:layout_constraintStart_toStartOf="@+id/view_item_summary"
                 app:layout_constraintTop_toBottomOf="@id/view_item_summary"
                 tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
@@ -163,7 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Progress"
+                android:text="@string/view_progress_label"
                 android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
                 app:layout_constraintStart_toStartOf="parent"
@@ -213,14 +212,13 @@
                 app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
 
 
-
             <CheckBox
                 android:id="@+id/view_progress_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
                 android:checked="@{model.vJournal.property.percent == 100}"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
+                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
 
@@ -245,7 +243,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:text="Subtasks"
+                android:text="@string/view_subtasks_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/view_subtasks_icon"
@@ -314,6 +312,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:checkable="false"
+                android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
                 app:chipIcon="@drawable/ic_priority"
                 app:chipIconVisible="true"
                 app:closeIconVisible="false"
@@ -523,7 +522,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:autoLink="all"
-                android:text="to be done"
                 android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/view_relatedto_icon"
@@ -589,7 +587,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:text="Feedback / Linked Notes"
+                android:text="@string/view_feedback_linked_notes"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/view_feedback_icon"
@@ -616,7 +614,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Add note"
+                android:text="@string/view_add_note"
                 app:icon="@drawable/ic_comment_add"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -668,7 +666,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:onClick="@{() -> model.editingClicked()}"
-            app:srcCompat="@drawable/ic_vjournal_edit" />
+            app:srcCompat="@drawable/ic_vjournal_edit"
+            android:contentDescription="@string/view_fab_edit_entry_contentDesc" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

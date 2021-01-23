@@ -137,7 +137,11 @@
     <string name="filter_status">Status</string>
     <string name="filter_classification">Classification</string>
     <string name="filter_category">Category</string>
-
+    <string name="view_feedback_linked_notes">Feedback / Linked Notes</string>
+    <string name="view_add_note">Add note</string>
+    <string name="view_fab_edit_entry_contentDesc">Edit entry</string>
+    <string name="view_subtasks_header">Subtasks</string>
+    <string name="view_progress_label">Progress</string>
 
 
 </resources>
