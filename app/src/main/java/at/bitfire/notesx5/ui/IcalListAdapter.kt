@@ -17,6 +17,7 @@ import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
 import kotlinx.coroutines.*
+import java.util.concurrent.TimeUnit
 
 class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICalEntityWithCategory>>):
         RecyclerView.Adapter<IcalListAdapter.VJournalItemHolder>() {
@@ -83,6 +84,7 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.progressCheckbox.visibility = View.GONE
                 holder.priorityIcon.visibility = View.GONE
                 holder.priority.visibility = View.GONE
+                holder.due.visibility = View.GONE
 
                 if (vJournalItem.property.dtstartTimezone == "ALLDAY") {
                     holder.dtstartTime.visibility = View.GONE
@@ -106,6 +108,8 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.progressCheckbox.visibility = View.GONE
                 holder.priorityIcon.visibility = View.GONE
                 holder.priority.visibility = View.GONE
+                holder.due.visibility = View.GONE
+
 
             } else if(vJournalItem.property.component == "TODO") {
                 holder.dtstartDay.visibility = View.GONE
@@ -125,6 +129,26 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.progressPercent.text = vJournalItem.property.percent.toString() + " %"
                 holder.priorityIcon.visibility = View.VISIBLE
                 holder.priority.visibility = View.VISIBLE
+
+                if (vJournalItem.property.due == null)
+                    holder.due.visibility = View.GONE
+                else {
+                    holder.due.visibility = View.VISIBLE
+                    val millisLeft = vJournalItem.property.due!! - System.currentTimeMillis()
+                    val daysLeft = TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
+                    when {
+                        millisLeft < 0L -> holder.due.text = "Overdue"
+                        millisLeft >= 0L && daysLeft == 0L -> holder.due.text = "Due today in x hours"
+                        millisLeft >= 0L && daysLeft >= 0L -> holder.due.text = "Due in $daysLeft days"
+                        else -> holder.due.visibility = View.GONE      //should not be possible happen
+                    }
+                    
+                }
+
+
+
+
+
                 if(vJournalItem.property.percent == 100)
                     holder.progressCheckbox.isActivated = true
                     
@@ -143,6 +167,7 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.progressCheckbox.visibility = View.GONE
                 holder.priorityIcon.visibility = View.GONE
                 holder.priority.visibility = View.GONE
+                holder.due.visibility = View.GONE
             }
 
             val statusArray = if (vJournalItem.property.component == "TODO")
@@ -210,31 +235,35 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
 
         var listItemCardView = itemView.findViewById<MaterialCardView>(R.id.list_item_card_view)
 
-        var summary = itemView.findViewById<TextView>(R.id.view_summary)
-        var description = itemView.findViewById<TextView>(R.id.view_description)
+        var summary = itemView.findViewById<TextView>(R.id.view_item_summary)
+        var description = itemView.findViewById<TextView>(R.id.view_item_description)
 
 
         var categories: TextView = itemView.findViewById<TextView>(R.id.categories)
         //var categoriesIcon = itemView.findViewById<ImageView>(R.id.categories_icon)
-        var status: TextView = itemView.findViewById<TextView>(R.id.status)
-        var statusIcon: ImageView = itemView.findViewById<ImageView>(R.id.status_icon)
+        var status: TextView = itemView.findViewById<TextView>(R.id.view_item_status)
+        var statusIcon: ImageView = itemView.findViewById<ImageView>(R.id.view_item_status_icon)
         var classification: TextView = itemView.findViewById<TextView>(R.id.classification)
         var classificationIcon: ImageView = itemView.findViewById<ImageView>(R.id.classification_icon)
-        var priority: TextView = itemView.findViewById<TextView>(R.id.priority)
-        var priorityIcon: ImageView = itemView.findViewById<ImageView>(R.id.priority_icon)
+        var priority: TextView = itemView.findViewById<TextView>(R.id.view_item_priority)
+        var priorityIcon: ImageView = itemView.findViewById<ImageView>(R.id.view_item_priority_icon)
 
-        var progressLabel: TextView = itemView.findViewById<TextView>(R.id.edit_progress_label)
-        var progressSlider: Slider = itemView.findViewById<Slider>(R.id.edit_progress_slider)
-        var progressPercent: TextView = itemView.findViewById<TextView>(R.id.edit_progress_percent)
-        var progressCheckbox: CheckBox = itemView.findViewById<CheckBox>(R.id.edit_progress_checkbox)
+        var progressLabel: TextView = itemView.findViewById<TextView>(R.id.item_view_progress_label)
+        var progressSlider: Slider = itemView.findViewById<Slider>(R.id.item_view_progress_slider)
+        var progressPercent: TextView = itemView.findViewById<TextView>(R.id.item_view_progress_percent)
+        var progressCheckbox: CheckBox = itemView.findViewById<CheckBox>(R.id.item_view_progress_checkbox)
+
+        var due: TextView = itemView.findViewById<TextView>(R.id.view_item_due)
 
 
-        var dtstartDay: TextView = itemView.findViewById<TextView>(R.id.view_dtstart_day)
-        var dtstartMonth: TextView = itemView.findViewById<TextView>(R.id.view_dtstart_month)
-        var dtstartYear: TextView = itemView.findViewById<TextView>(R.id.view_dtstart_year)
-        var dtstartTime: TextView = itemView.findViewById<TextView>(R.id.view_dtstart_time)
+        var dtstartDay: TextView = itemView.findViewById<TextView>(R.id.view_item_dtstart_day)
+        var dtstartMonth: TextView = itemView.findViewById<TextView>(R.id.view_item_dtstart_month)
+        var dtstartYear: TextView = itemView.findViewById<TextView>(R.id.view_item_dtstart_year)
+        var dtstartTime: TextView = itemView.findViewById<TextView>(R.id.view_item_dtstart_time)
 
     }
+
+
 
     private fun updateProgress(holder: VJournalItemHolder, item: ICalObject, progress: Int) {
 

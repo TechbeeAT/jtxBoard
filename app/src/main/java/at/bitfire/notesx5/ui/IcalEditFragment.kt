@@ -231,7 +231,7 @@ class IcalEditFragment : Fragment(),
 
                 // make sure that the time gets reset to 0
                 val c = Calendar.getInstance()
-                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis()
                 c.set(Calendar.HOUR_OF_DAY, 0)
                 c.set(Calendar.MINUTE, 0)
                 icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis

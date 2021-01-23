@@ -33,7 +33,7 @@
 
 
             <TextView
-                android:id="@+id/view_dtstart_day"
+                android:id="@+id/view_item_dtstart_day"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="@{UtilKt.convertLongToDayString(model.vJournal.property.dtstart)}"
@@ -46,7 +46,7 @@
                 tools:text="31" />
 
             <TextView
-                android:id="@+id/view_dtstart_month"
+                android:id="@+id/view_item_dtstart_month"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="@{UtilKt.convertLongToMonthString(model.vJournal.property.dtstart)}"
@@ -54,13 +54,13 @@
                 android:textSize="10sp"
                 android:textStyle="bold"
                 android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
+                app:layout_constraintEnd_toEndOf="@+id/view_item_dtstart_day"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_day"
+                app:layout_constraintTop_toBottomOf="@+id/view_item_dtstart_day"
                 tools:text="December" />
 
             <TextView
-                android:id="@+id/view_dtstart_year"
+                android:id="@+id/view_item_dtstart_year"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="@{UtilKt.convertLongToYearString(model.vJournal.property.dtstart)}"
@@ -68,13 +68,13 @@
                 android:textSize="10sp"
                 android:textStyle="bold"
                 android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
+                app:layout_constraintEnd_toEndOf="@+id/view_item_dtstart_day"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_month"
+                app:layout_constraintTop_toBottomOf="@+id/view_item_dtstart_month"
                 tools:text="2020" />
 
             <TextView
-                android:id="@+id/view_dtstart_time"
+                android:id="@+id/view_item_dtstart_time"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="@{UtilKt.convertLongToTimeString(model.vJournal.property.dtstart)}"
@@ -83,8 +83,8 @@
                 android:textStyle="bold"
                 android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
-                app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
-                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_year"
+                app:layout_constraintStart_toStartOf="@+id/view_item_dtstart_day"
+                app:layout_constraintTop_toBottomOf="@+id/view_item_dtstart_year"
                 app:layout_constraintVertical_bias="0.0"
                 tools:text="13:30" />
 
@@ -99,7 +99,7 @@
                 android:drawablePadding="4dp"
                 android:text="@{model.vJournal.property.collection}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
+                app:layout_constraintStart_toEndOf="@+id/view_item_dtstart_day"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Collection" />
 
@@ -114,7 +114,7 @@
                 app:chipSpacingVertical="0dp"
                 app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
+                app:layout_constraintStart_toEndOf="@+id/view_item_dtstart_day"
                 app:layout_constraintTop_toBottomOf="@+id/view_collection" />
 
 
@@ -126,7 +126,7 @@
 
 
             <TextView
-                android:id="@+id/view_summary"
+                android:id="@+id/view_item_summary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -142,7 +142,7 @@
 
 
             <TextView
-                android:id="@+id/view_description"
+                android:id="@+id/view_item_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -153,8 +153,8 @@
                 android:text="@{model.vJournal.property.description}"
                 app:layout_constraintEnd_toEndOf="parent"
 
-                app:layout_constraintStart_toStartOf="@+id/view_summary"
-                app:layout_constraintTop_toBottomOf="@id/view_summary"
+                app:layout_constraintStart_toStartOf="@+id/view_item_summary"
+                app:layout_constraintTop_toBottomOf="@id/view_item_summary"
                 tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
 
 
@@ -184,7 +184,7 @@
                 app:labelBehavior="gone"
                 app:layout_constraintEnd_toStartOf="@+id/view_progress_percent"
                 app:layout_constraintStart_toEndOf="@+id/view_progress_label"
-                app:layout_constraintTop_toBottomOf="@+id/view_description" />
+                app:layout_constraintTop_toBottomOf="@+id/view_item_description" />
 
 
             <TextView
