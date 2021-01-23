@@ -33,6 +33,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_ical_edit_comment.view.*
 import kotlinx.android.synthetic.main.fragment_ical_edit_subtask.view.*
+import java.text.DateFormat
 import java.util.*
 
 
@@ -138,7 +139,11 @@ class IcalEditFragment : Fragment(),
                  */
 
                 builder.setNeutralButton("Mark as cancelled") { _, _ ->
-                    icalEditViewModel.iCalObjectUpdated.value!!.status = 2    // 2 = CANCELLED
+                    if (icalEditViewModel.iCalObjectUpdated.value!!.component == "TODO")
+                        icalEditViewModel.iCalObjectUpdated.value!!.status = ICalObject.STATUS_TODO_CANCELLED
+                    else
+                        icalEditViewModel.iCalObjectUpdated.value!!.status = ICalObject.STATUS_JOURNAL_CANCELLED
+
                     icalEditViewModel.savingClicked()
 
                     val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
@@ -194,7 +199,7 @@ class IcalEditFragment : Fragment(),
         }
 
 
-        icalEditViewModel.allDay.observe(viewLifecycleOwner) {
+        icalEditViewModel.allDayChecked.observe(viewLifecycleOwner) {
 
             if (icalEditViewModel.iCalObjectUpdated.value == null)     // don't do anything if the object was not initialized yet
                 return@observe
@@ -215,6 +220,31 @@ class IcalEditFragment : Fragment(),
 
             icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
         }
+
+        icalEditViewModel.addTimeChecked.observe(viewLifecycleOwner) {
+
+            if (icalEditViewModel.iCalObjectUpdated.value == null)     // don't do anything if the object was not initialized yet
+                return@observe
+
+            if (!it) {
+                icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = "ALLDAY"
+
+                // make sure that the time gets reset to 0
+                val c = Calendar.getInstance()
+                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+                c.set(Calendar.HOUR_OF_DAY, 0)
+                c.set(Calendar.MINUTE, 0)
+                icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
+                binding.editDueTimeEdittext.text?.clear()
+                binding.editDuetimezoneSpinner.setSelection(0)
+
+            } else {
+                icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = ""
+            }
+
+            icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
+        }
+
 
         icalEditViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
@@ -281,20 +311,30 @@ class IcalEditFragment : Fragment(),
 
 
         binding.editDtstartTime.setOnClickListener {
-            showDatepicker()
+            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
         }
 
         binding.editDtstartYear.setOnClickListener {
-            showDatepicker()
+            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
         }
 
         binding.editDtstartMonth.setOnClickListener {
-            showDatepicker()
+            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
         }
 
         binding.editDtstartDay.setOnClickListener {
-            showDatepicker()
+            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
         }
+
+        binding.editDueDate.setEndIconOnClickListener {
+            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.due)
+        }
+
+        binding.editDueTime.setEndIconOnClickListener {
+            showTimepicker(icalEditViewModel.iCalObjectUpdated.value?.due)
+
+        }
+
 
 
 
@@ -310,9 +350,9 @@ class IcalEditFragment : Fragment(),
             val statusBefore = icalEditViewModel.iCalObjectUpdated.value!!.status
 
             when (value.toInt()) {
-                100 -> icalEditViewModel.iCalObjectUpdated.value!!.status = 2
-                in 1..99 -> icalEditViewModel.iCalObjectUpdated.value!!.status = 1
-                0 -> icalEditViewModel.iCalObjectUpdated.value!!.status = 0
+                100 -> icalEditViewModel.iCalObjectUpdated.value!!.status = ICalObject.STATUS_TODO_COMPLETED
+                in 1..99 -> icalEditViewModel.iCalObjectUpdated.value!!.status = ICalObject.STATUS_TODO_INPROCESS
+                0 -> icalEditViewModel.iCalObjectUpdated.value!!.status = ICalObject.STATUS_TODO_NEEDSACTION
             }
 
             // update the status only if it was actually changed, otherwise the performance sucks
@@ -500,46 +540,77 @@ class IcalEditFragment : Fragment(),
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
 
-        val c = Calendar.getInstance()
-        c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+        // depending on the component the date/time is processed for the dtstart-field (Journal) or for the due-field (Todos)
+        if(icalEditViewModel.iCalEntity.property.component == "JOURNAL") {
 
-        c.set(Calendar.YEAR, year)
-        c.set(Calendar.MONTH, month)
-        c.set(Calendar.DAY_OF_MONTH, day)
-        //var formattedDate = convertLongToDateString(c.timeInMillis)
-        //Log.println(Log.INFO, "OnTimeSet", "Here are the values: $formattedDate")    }
+            val c = Calendar.getInstance()
+            c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
 
-        binding.editDtstartYear.text = convertLongToYearString(c.timeInMillis)
-        binding.editDtstartMonth.text = convertLongToMonthString(c.timeInMillis)
-        binding.editDtstartDay.text = convertLongToDayString(c.timeInMillis)
+            c.set(Calendar.YEAR, year)
+            c.set(Calendar.MONTH, month)
+            c.set(Calendar.DAY_OF_MONTH, day)
 
-        icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+            binding.editDtstartYear.text = convertLongToYearString(c.timeInMillis)
+            binding.editDtstartMonth.text = convertLongToMonthString(c.timeInMillis)
+            binding.editDtstartDay.text = convertLongToDayString(c.timeInMillis)
 
-        if (!icalEditViewModel.allDay.value!!)     // let the user set the time only if the allDaySwitch is not set!
-            showTimepicker()
+            icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+
+            if (!icalEditViewModel.allDayChecked.value!!)     // let the user set the time only if the allDaySwitch is not set!
+                showTimepicker(icalEditViewModel.iCalObjectUpdated.value!!.dtstart)
+
+        }
+        else if (icalEditViewModel.iCalEntity.property.component == "TODO") {
+
+            val c = Calendar.getInstance()
+            c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis()
+
+            c.set(Calendar.YEAR, year)
+            c.set(Calendar.MONTH, month)
+            c.set(Calendar.DAY_OF_MONTH, day)
+
+            val dateString = DateFormat.getDateInstance().format(c.time)
+            binding.editDueDateEdittext.setText(dateString)
+            icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
+
+        }
 
     }
 
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
-        val c = Calendar.getInstance()
-        c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
-        c.set(Calendar.HOUR_OF_DAY, hourOfDay)
-        c.set(Calendar.MINUTE, minute)
 
-        //var formattedTime = convertLongToTimeString(c.timeInMillis)
-        //Log.println(Log.INFO, "OnTimeSet", "Here are the values: $formattedTime")
+        // depending on the component the date/time is processed for the dtstart-field (Journal) or for the due-field (Todos)
+        if(icalEditViewModel.iCalEntity.property.component == "JOURNAL") {
 
-        binding.editDtstartTime.text = convertLongToTimeString(c.timeInMillis)
+            val c = Calendar.getInstance()
+            c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+            c.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            c.set(Calendar.MINUTE, minute)
 
-        icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+            binding.editDtstartTime.text = convertLongToTimeString(c.timeInMillis)
+
+            icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+        }
+        else if (icalEditViewModel.iCalEntity.property.component == "TODO") {
+
+            val c = Calendar.getInstance()
+            c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis()
+            c.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            c.set(Calendar.MINUTE, minute)
+
+            val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.time)
+            binding.editDueTimeEdittext.setText(timeString)
+            icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
+        }
 
     }
 
 
-    fun showDatepicker() {
+    fun showDatepicker(selectedDate: Long?) {
         val c = Calendar.getInstance()
-        c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+        c.timeInMillis = selectedDate ?: System.currentTimeMillis()
+        //c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
 
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
@@ -547,14 +618,17 @@ class IcalEditFragment : Fragment(),
         DatePickerDialog(activity!!, this, year, month, day).show()
     }
 
-    fun showTimepicker() {
+    fun showTimepicker(selectedTime: Long?) {
         val c = Calendar.getInstance()
-        c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+        c.timeInMillis = selectedTime ?: System.currentTimeMillis()
+        //c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
 
         val hourOfDay = c.get(Calendar.HOUR_OF_DAY)
         val minute = c.get(Calendar.MINUTE)
         TimePickerDialog(activity, this, hourOfDay, minute, is24HourFormat(activity)).show()
     }
+
+
 
 
     private fun addCategoryChip(category: Category) {

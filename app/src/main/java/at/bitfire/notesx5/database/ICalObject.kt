@@ -7,8 +7,11 @@ import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
+
+
+
 @Parcelize
-@Entity(tableName = "icalobject", indices = [Index(value = ["id", "summary", "description"])])
+@Entity(tableName = "icalobject", indices = [Index(value = ["id", "summary", "description"]), Index(value = ["id"])])
 data class ICalObject(
 
         @PrimaryKey(autoGenerate = true)
@@ -26,9 +29,9 @@ data class ICalObject(
 
         //var organizer: String = "",
         //var categories: String = "",
-        var status: Int = 1,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
+        var status: Int = 0,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
         var statusX: String? = null,
-        var classification: Int = 0,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
+        var classification: Int = CLASSIFICATION_PUBLIC,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
         var classificationX: String? = null,
 
         //var attach: String,
@@ -80,11 +83,29 @@ data class ICalObject(
 
 {
         companion object Factory {
-                fun createJournal(): ICalObject = ICalObject(component = "JOURNAL", dtstart = System.currentTimeMillis(), status = 1)
-                fun createNote(): ICalObject = ICalObject(component = "NOTE", status = 1)
-                fun createNote(summary: String) = ICalObject(component = "NOTE", status = 1, summary = summary)
-                fun createTodo() = ICalObject(component = "TODO", status = 0, percent = 0, priority = 0)
-                fun createSubtask(summary: String) = ICalObject(component = "TODO", summary = summary, status = 0, percent = 0)
+
+                val STATUS_TODO_OPEN = 1
+
+                val STATUS_JOURNAL_DRAFT = 0
+                val STATUS_JOURNAL_FINAL = 1
+                val STATUS_JOURNAL_CANCELLED = 2
+
+                val STATUS_TODO_NEEDSACTION = 0
+                val STATUS_TODO_COMPLETED = 2
+                val STATUS_TODO_INPROCESS = 1
+                val STATUS_TODO_CANCELLED = 3
+
+                val CLASSIFICATION_PUBLIC = 0
+                val CLASSIFICATION_PRIVATE = 1
+                val CLASSIFICATION_CONFIDENTIAL = 2
+
+
+
+                fun createJournal(): ICalObject = ICalObject(component = "JOURNAL", dtstart = System.currentTimeMillis(), status = STATUS_JOURNAL_FINAL)
+                fun createNote(): ICalObject = ICalObject(component = "NOTE", status = STATUS_JOURNAL_FINAL)
+                fun createNote(summary: String) = ICalObject(component = "NOTE", status = STATUS_JOURNAL_FINAL, summary = summary)
+                fun createTodo() = ICalObject(component = "TODO", status = STATUS_TODO_NEEDSACTION, percent = 0, priority = 0, dueTimezone = "ALLDAY")
+                fun createSubtask(summary: String) = ICalObject(component = "TODO", summary = summary, status = 0, percent = 0, dueTimezone = "ALLDAY")
 
         }
 }

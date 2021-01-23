@@ -127,7 +127,7 @@ class IcalViewViewModel(private val vJournalItemId: Long,
                 return@map !item?.comment.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
             progressVisible = Transformations.map(vJournal) { item ->
-                return@map item?.property?.percent != null && item?.property.component == "TODO"     // true if percent (progress) is NOT null
+                return@map item?.property?.percent != null && item.property.component == "TODO"     // true if percent (progress) is NOT null
             }
             priorityVisible = Transformations.map(vJournal) { item ->
                 return@map item?.property?.priority != null      // true if priority is NOT null

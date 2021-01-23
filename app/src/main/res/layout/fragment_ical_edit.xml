@@ -124,7 +124,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="All day"
-            android:checked="@={model.allDay}"
+            android:checked="@={model.allDayChecked}"
             app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/edit_collection"
             app:switchPadding="8dp"
@@ -205,6 +205,104 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_due_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="Due date"
+            android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
+            app:endIconContentDescription="Set due date"
+            app:endIconDrawable="@drawable/ic_vjournal_date"
+            app:endIconMode="custom"
+            app:helperText="Set due date"
+            app:helperTextEnabled="true"
+            app:layout_constraintEnd_toStartOf="@id/edit_due_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_description_edit">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_due_date_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="date" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_due_time"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="Due time"
+            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
+            app:endIconContentDescription="Set due time"
+            app:endIconDrawable="@drawable/ic_vjournal_time"
+            app:endIconMode="custom"
+            app:helperText="Set due time"
+            app:helperTextEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/edit_due_date"
+            app:layout_constraintTop_toTopOf="@+id/edit_due_date">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_due_time_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="time" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <ImageView
+            android:id="@+id/edit_duetimezone_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_duetimezone_spinner"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_duetimezone_spinner"
+            app:srcCompat="@drawable/ic_timezone" />
+
+
+        <Spinner
+            android:id="@+id/edit_duetimezone_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:entries="@{model.possibleTimezones}"
+            android:spinnerMode="dialog"
+            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toStartOf="@id/edit_dueallday_switch"
+            app:layout_constraintStart_toEndOf="@id/edit_duetimezone_icon"
+            app:layout_constraintTop_toBottomOf="@+id/edit_due_date" />
+
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/edit_dueallday_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:checked="@={model.addTimeChecked}"
+            android:text="Add time"
+            android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_duetimezone_spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_duetimezone_spinner"
+            app:switchPadding="8dp" />
+
+
         <TextView
             android:id="@+id/edit_progress_label"
             android:layout_width="wrap_content"
@@ -214,7 +312,7 @@
             android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_description_edit" />
+            app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
 
         <com.google.android.material.slider.Slider
             android:id="@+id/edit_progress_slider"
@@ -231,7 +329,7 @@
             android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toStartOf="@id/edit_progress_percent"
             app:layout_constraintStart_toEndOf="@+id/edit_progress_label"
-            app:layout_constraintTop_toBottomOf="@+id/edit_description_edit" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_duetimezone_spinner" />
 
 
         <TextView
@@ -414,10 +512,10 @@
             android:id="@+id/edit_show_all_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:checked="@={model.showAll}"
             android:text="Show all"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_spc_chipgroup"
             app:switchPadding="8dp"
             tools:checked="false" />

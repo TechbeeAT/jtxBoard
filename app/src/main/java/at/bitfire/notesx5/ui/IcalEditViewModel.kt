@@ -61,10 +61,14 @@ class IcalEditViewModel(private val iCalEntity2edit: ICalEntity,
     var progressVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var priorityVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var subtasksVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var duedateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var duetimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+
 
 
     var showAll: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
-    var allDay: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.dtstartTimezone == "ALLDAY")
+    var allDayChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.dtstartTimezone == "ALLDAY")
+    var addTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == "TODO" && iCalEntity.property.dueTimezone != "ALLDAY")
 
 
 
@@ -106,6 +110,8 @@ class IcalEditViewModel(private val iCalEntity2edit: ICalEntity,
         progressVisible.postValue(iCalEntity.property.component == "TODO")
         priorityVisible.postValue(iCalEntity.property.component == "TODO")
         subtasksVisible.postValue(iCalEntity.property.component == "TODO")
+        duedateVisible.postValue(iCalEntity.property.component == "TODO")
+        duetimeVisible.postValue(iCalEntity.property.component == "TODO" && iCalEntity.property.dueTimezone != "ALLDAY")
 
     }
 
