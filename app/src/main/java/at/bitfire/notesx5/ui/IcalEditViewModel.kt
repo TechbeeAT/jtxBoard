@@ -13,6 +13,7 @@ import at.bitfire.notesx5.database.properties.Relatedto
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.DateFormat
 import java.util.*
 
 
@@ -63,6 +64,20 @@ class IcalEditViewModel(private val iCalEntity2edit: ICalEntity,
     var subtasksVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var duedateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var duetimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+
+    var duedateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
+        if(it.due != null)
+            return@map DateFormat.getDateInstance().format(it.due)
+        else
+            return@map null
+    }
+
+    var duetimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
+        if(it.due != null)
+            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(it.due)
+        else
+            return@map null
+    }
 
 
 

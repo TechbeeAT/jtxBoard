@@ -229,7 +229,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
-                android:inputType="date" />
+                android:inputType="date"
+                android:text="@{model.duedateFormated}"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -256,7 +257,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
-                android:inputType="time" />
+                android:inputType="time"
+                android:text="@{model.duetimeFormated}"/>
+
         </com.google.android.material.textfield.TextInputLayout>
 
 
