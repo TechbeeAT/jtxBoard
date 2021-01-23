@@ -5,85 +5,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/attendees_roledialog_view">
+    android:id="@+id/edit_attendees_roledialog_view">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/edit_attendees_roledialog_chair_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_attendee_reqparticipant" />
+        app:srcCompat="@drawable/ic_attendee_reqparticipant"
+        tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/edit_attendees_roledialog_chair_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Chair"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        android:text="@string/edit_attendees_roledialog_chair"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_attendees_roledialog_chair_icon"
+        app:layout_constraintStart_toEndOf="@+id/edit_attendees_roledialog_chair_icon"
+        app:layout_constraintTop_toTopOf="@+id/edit_attendees_roledialog_chair_icon" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/edit_attendees_roledialog_required_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:srcCompat="@drawable/ic_attendee_reqparticipant" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_attendees_roledialog_chair_icon"
+        app:srcCompat="@drawable/ic_attendee_reqparticipant"
+        tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/edit_attendees_roledialog_required_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Required"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        android:text="@string/edit_attendees_roledialog_required"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_attendees_roledialog_required_icon"
+        app:layout_constraintStart_toEndOf="@+id/edit_attendees_roledialog_required_icon"
+        app:layout_constraintTop_toTopOf="@+id/edit_attendees_roledialog_required_icon" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/edit_attendees_roledialog_optional_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:srcCompat="@drawable/ic_attendee_optparticipant" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_attendees_roledialog_required_icon"
+        app:srcCompat="@drawable/ic_attendee_optparticipant"
+        tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/edit_attendees_roledialog_optional_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Optional"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toTopOf="@+id/imageView3" />
+        android:text="@string/edit_attendees_roledialog_optional"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_attendees_roledialog_optional_icon"
+        app:layout_constraintStart_toEndOf="@+id/edit_attendees_roledialog_optional_icon"
+        app:layout_constraintTop_toTopOf="@+id/edit_attendees_roledialog_optional_icon" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/edit_attendees_roledialog_nonparticipant_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"
-        app:srcCompat="@drawable/ic_attendee_nonparticipant" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_attendees_roledialog_optional_icon"
+        app:srcCompat="@drawable/ic_attendee_nonparticipant"
+        tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/edit_attendees_roledialog_nonparticipant_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Info / Non-participant"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toTopOf="@+id/imageView4" />
+        android:text="@string/edit_attendees_roledialog_nonparticipant"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_attendees_roledialog_nonparticipant_icon"
+        app:layout_constraintStart_toEndOf="@+id/edit_attendees_roledialog_nonparticipant_icon"
+        app:layout_constraintTop_toTopOf="@+id/edit_attendees_roledialog_nonparticipant_icon" />
 </androidx.constraintlayout.widget.ConstraintLayout>

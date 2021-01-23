@@ -448,7 +448,7 @@ class IcalViewFragment : Fragment() {
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_vjournal_item, menu)
+        inflater.inflate(R.menu.menu_ical_view, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -194,7 +194,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_vjournal_list, menu)
+        inflater.inflate(R.menu.menu_ical_list, menu)
         MenuCompat.setGroupDividerEnabled(menu, true);
 
 

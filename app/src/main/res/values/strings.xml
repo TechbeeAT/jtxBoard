@@ -76,6 +76,8 @@
     <string name="cleared_message">All your data is gone forever.</string>
 
     <!-- Navigation Drawer  -->
+    <string name="drawer_main_header_app_icon">NotesX5 App Icon</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_about">About / License</string>
@@ -92,32 +94,50 @@
     <string name="navigation_drawer_privacy_policy">Privacy policy</string>
 
 
-    <!-- fragment_vjournal_item_edit -->
+    <!-- fragment_ical_list -->
     <string name="list_due_overdue">Overdue</string>
     <string name="list_due_today">Due today</string>
     <string name="list_due_tomorrow">Due tomorrow</string>
     <string name="list_due_inXdays">Due in %d days</string>
     <string name="list_due_inXhours">Due in %d hours</string>
     <string name="list_progress_percent">%s %%</string>
+    <string name="list_tabitem_journals">Journals</string>
+    <string name="list_tabitem_notes">Notes</string>
+    <string name="list_tabitem_todos">Todos</string>
+    <string name="list_fab_add_contentdesc">Add new item</string>
+    <string name="list_progress">Progress</string>
 
 
 
-    <!-- fragment_vjournal_item_edit -->
-    <string name="item_edit_summary_hint">Summary</string>
-    <string name="item_edit_add_category_hint">Add category</string>
-    <string name="item_edit_description_hint">Description</string>
-    <string name="item_edit_attendees_hint">Attendees</string>
-    <string name="item_edit_organizer_hint">Organizer</string>
-    <string name="item_edit_contact_hint">Contact information</string>
-    <string name="item_edit_comment_hint">Add comment</string>
-    <string name="item_edit_relatedto_hint">Related to ...</string>
-    <string name="item_edit_url_hint">URL</string>
-    <string name="item_edit_fab_save_contentDescription">Save</string>
-    <string name="item_view_url_header">URL</string>
-    <string name="item_view_attendees_header">Attendees</string>
-    <string name="item_view_organizer_header">Organizer</string>
-    <string name="item_view_contact_header">Contact</string>
-    <string name="item_view_relatedto_header">Related to</string>
-    <string name="item_view_comments_header">Comments</string>
+    <!-- fragment_ical_edit -->
+    <string name="edit_summary_hint">Summary</string>
+    <string name="edit_add_category_hint">Add category</string>
+    <string name="edit_description_hint">Description</string>
+    <string name="edit_attendees_hint">Attendees</string>
+    <string name="edit_organizer_hint">Organizer</string>
+    <string name="edit_contact_hint">Contact information</string>
+    <string name="edit_comment_hint">Add comment</string>
+    <string name="edit_relatedto_hint">Related to …</string>
+    <string name="edit_url_hint">URL</string>
+    <string name="edit_fab_save_contentDescription">Save</string>
+    <string name="view_url_header">URL</string>
+    <string name="view_attendees_header">Attendees</string>
+    <string name="view_organizer_header">Organizer</string>
+    <string name="view_contact_header">Contact</string>
+    <string name="view_relatedto_header">Related to</string>
+    <string name="view_comments_header">Comments</string>
+    <string name="edit_attendees_roledialog_chair">Chair</string>
+    <string name="edit_attendees_roledialog_required">Required</string>
+    <string name="edit_attendees_roledialog_optional">Optional</string>
+    <string name="edit_attendees_roledialog_nonparticipant">Info / Non-participant</string>
+
+
+    <!-- fragment_ical_filter -->
+    <string name="filter_collection">Collection</string>
+    <string name="filter_status">Status</string>
+    <string name="filter_classification">Classification</string>
+    <string name="filter_category">Category</string>
+
+
 
 </resources>

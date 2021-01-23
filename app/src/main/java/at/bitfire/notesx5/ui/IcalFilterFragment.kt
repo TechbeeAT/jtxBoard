@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.ICalDatabase
 import at.bitfire.notesx5.database.ICalDatabaseDao
-import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
 import at.bitfire.notesx5.databinding.FragmentIcalFilterBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -262,7 +261,7 @@ class IcalFilterFragment : Fragment()  {
 
  */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_vjournal_filter, menu)
+        inflater.inflate(R.menu.menu_ical_filter, menu)
     }
 
 

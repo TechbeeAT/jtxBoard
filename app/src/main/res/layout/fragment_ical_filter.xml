@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Collection"
+            android:text="@string/filter_collection"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/collection_filter_icon"
@@ -43,7 +43,8 @@
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/collection_filter_label"
-            app:srcCompat="@drawable/ic_collection" />
+            app:srcCompat="@drawable/ic_collection"
+            tools:ignore="ContentDescription" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/collection_filter_chipgroup"
@@ -64,7 +65,8 @@
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/status_filter_label"
-            app:srcCompat="@drawable/ic_status" />
+            app:srcCompat="@drawable/ic_status"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/status_filter_label"
@@ -72,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Status"
+            android:text="@string/filter_status"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/status_filter_icon"
@@ -98,7 +100,8 @@
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/classification_filter_label"
-            app:srcCompat="@drawable/ic_classification" />
+            app:srcCompat="@drawable/ic_classification"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/classification_filter_label"
@@ -106,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Classification"
+            android:text="@string/filter_classification"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/classification_filter_icon"
@@ -132,7 +135,8 @@
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/category_filter_label"
-            app:srcCompat="@drawable/ic_category" />
+            app:srcCompat="@drawable/ic_category"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/category_filter_label"
@@ -140,7 +144,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Category"
+            android:text="@string/filter_category"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/category_filter_icon"

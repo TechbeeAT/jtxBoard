@@ -11,7 +11,6 @@
             type="at.bitfire.notesx5.ui.IcalListViewModel" />
     </data>
 
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -33,21 +32,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:icon="@drawable/ic_vjournal_date"
-                    android:text="Journals" />
+                    android:text="@string/list_tabitem_journals" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/notes_tab"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:icon="@drawable/ic_vjournal_note"
-                    android:text="Notes" />
+                    android:text="@string/list_tabitem_notes" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/todos_tab"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:icon="@drawable/ic_todo"
-                    android:text="Todos" />
+                    android:text="@string/list_tabitem_todos" />
 
             </com.google.android.material.tabs.TabLayout>
 
@@ -75,7 +74,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:contentDescription="add"
+            android:contentDescription="@string/list_fab_add_contentdesc"
             app:srcCompat="@drawable/ic_vjournal_add"
             />
 

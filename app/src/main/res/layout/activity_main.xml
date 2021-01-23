@@ -118,7 +118,7 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/menu_vjournal_list"
+            app:menu="@menu/menu_ical_list"
             app:navigationIcon="@drawable/ic_baseline_menu_24"
             app:title="@string/app_name" />
 

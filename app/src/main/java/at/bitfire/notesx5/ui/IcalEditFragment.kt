@@ -839,7 +839,7 @@ class IcalEditFragment : Fragment(),
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_vjournal_item_edit, menu)
+        inflater.inflate(R.menu.menu_ical_edit, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

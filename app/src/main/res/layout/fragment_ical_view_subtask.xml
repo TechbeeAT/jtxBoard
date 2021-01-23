@@ -46,7 +46,6 @@
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:text="100 %"
             android:textAlignment="viewEnd"
             app:layout_constraintBottom_toBottomOf="@+id/view_subtask_progress_slider"
             app:layout_constraintEnd_toStartOf="@+id/view_subtask_progress_percent_sign"
