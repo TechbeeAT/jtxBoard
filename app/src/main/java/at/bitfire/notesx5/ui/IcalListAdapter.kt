@@ -126,7 +126,7 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.progressCheckbox.visibility = View.VISIBLE
                 holder.progressCheckbox.isChecked = vJournalItem.property.percent == 100
                 holder.progressPercent.visibility = View.VISIBLE
-                holder.progressPercent.text = vJournalItem.property.percent.toString() + " %"
+                holder.progressPercent.text = context.getString(R.string.list_progress_percent, vJournalItem.property.percent?.toString() ?: "0")
                 holder.priorityIcon.visibility = View.VISIBLE
                 holder.priority.visibility = View.VISIBLE
 
@@ -134,18 +134,21 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                     holder.due.visibility = View.GONE
                 else {
                     holder.due.visibility = View.VISIBLE
-                    val millisLeft = vJournalItem.property.due!! - System.currentTimeMillis()
+                    var millisLeft = vJournalItem.property.due!! - System.currentTimeMillis()
+                    if(vJournalItem.property.dueTimezone == "ALLDAY")
+                        millisLeft = millisLeft + TimeUnit.DAYS.toMillis(1) - 1        // if it's due on the same day, then add 1 day minus 1 millisecond to consider the end of the day
                     val daysLeft = TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
+                    val hoursLeft = TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
+
                     when {
-                        millisLeft < 0L -> holder.due.text = "Overdue"
-                        millisLeft >= 0L && daysLeft == 0L -> holder.due.text = "Due today in x hours"
-                        millisLeft >= 0L && daysLeft >= 0L -> holder.due.text = "Due in $daysLeft days"
+                        millisLeft < 0L -> holder.due.text = context.getString(R.string.list_due_overdue)
+                        millisLeft >= 0L && daysLeft == 0L && vJournalItem.property.dueTimezone == "ALLDAY" -> holder.due.text = context.getString(R.string.list_due_today)
+                        millisLeft >= 0L && daysLeft == 1L && vJournalItem.property.dueTimezone == "ALLDAY" -> holder.due.text = context.getString(R.string.list_due_tomorrow)
+                        millisLeft >= 0L && daysLeft <= 1L && vJournalItem.property.dueTimezone != "ALLDAY" -> holder.due.text = context.getString(R.string.list_due_inXhours, hoursLeft)
+                        millisLeft >= 0L && daysLeft >= 2L -> holder.due.text = context.getString(R.string.list_due_inXdays, daysLeft)
                         else -> holder.due.visibility = View.GONE      //should not be possible happen
                     }
-                    
                 }
-
-
 
 
 
@@ -285,14 +288,12 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
 
 
         //update UI
-        holder.progressPercent.text = progress.toString() + " %"
+        holder.progressPercent.text = context.getString(R.string.list_progress_percent, progress.toString())
 
         val statusArray = context.resources.getStringArray(R.array.vtodo_status)
         holder.status.text = statusArray[item2update.status]
 
         holder.progressCheckbox.isChecked = progress == 100    // isChecked when Progress = 100
-
-
 
     }
 

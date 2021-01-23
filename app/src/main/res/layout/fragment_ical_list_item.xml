@@ -73,7 +73,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/view_item_due"
             app:layout_constraintStart_toEndOf="@+id/view_item_dtstart_day"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Summary ... Lorem ipsum dolor sit amet" />
@@ -85,7 +85,7 @@
             android:layout_marginStart="8dp"
             android:ellipsize="end"
             android:maxLines="5"
-            app:layout_constraintEnd_toEndOf="@+id/view_item_summary"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/view_item_dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/view_item_summary"
             tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
@@ -224,13 +224,12 @@
             android:id="@+id/view_item_due"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="Due in 365 days"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/categories" />
+            app:layout_constraintTop_toTopOf="@+id/view_item_summary" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -93,6 +93,16 @@
 
 
     <!-- fragment_vjournal_item_edit -->
+    <string name="list_due_overdue">Overdue</string>
+    <string name="list_due_today">Due today</string>
+    <string name="list_due_tomorrow">Due tomorrow</string>
+    <string name="list_due_inXdays">Due in %d days</string>
+    <string name="list_due_inXhours">Due in %d hours</string>
+    <string name="list_progress_percent">%s %%</string>
+
+
+
+    <!-- fragment_vjournal_item_edit -->
     <string name="item_edit_summary_hint">Summary</string>
     <string name="item_edit_add_category_hint">Add category</string>
     <string name="item_edit_description_hint">Description</string>
