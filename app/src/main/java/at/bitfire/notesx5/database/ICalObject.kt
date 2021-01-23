@@ -84,20 +84,20 @@ data class ICalObject(
 {
         companion object Factory {
 
-                val STATUS_TODO_OPEN = 1
+                const val STATUS_TODO_OPEN = 1
 
-                val STATUS_JOURNAL_DRAFT = 0
-                val STATUS_JOURNAL_FINAL = 1
-                val STATUS_JOURNAL_CANCELLED = 2
+                const val STATUS_JOURNAL_DRAFT = 0
+                const val STATUS_JOURNAL_FINAL = 1
+                const val STATUS_JOURNAL_CANCELLED = 2
 
-                val STATUS_TODO_NEEDSACTION = 0
-                val STATUS_TODO_COMPLETED = 2
-                val STATUS_TODO_INPROCESS = 1
-                val STATUS_TODO_CANCELLED = 3
+                const val STATUS_TODO_NEEDSACTION = 0
+                const val STATUS_TODO_COMPLETED = 2
+                const val STATUS_TODO_INPROCESS = 1
+                const val STATUS_TODO_CANCELLED = 3
 
-                val CLASSIFICATION_PUBLIC = 0
-                val CLASSIFICATION_PRIVATE = 1
-                val CLASSIFICATION_CONFIDENTIAL = 2
+                const val CLASSIFICATION_PUBLIC = 0
+                const val CLASSIFICATION_PRIVATE = 1
+                const val CLASSIFICATION_CONFIDENTIAL = 2
 
 
 
