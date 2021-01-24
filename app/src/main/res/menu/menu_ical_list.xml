@@ -3,43 +3,43 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/vjournal_list_search"
+        android:id="@+id/menu_list_search"
         android:icon="@drawable/ic_vjournal_search"
         android:iconTint="#000000"
         android:queryHint="Search for keyword or #categories"
-        android:title="Search"
+        android:title="@string/menu_list_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
-        android:id="@+id/vjournal_list_gotodate"
+        android:id="@+id/menu_list_gotodate"
         android:icon="@drawable/ic_vjournal_date"
         android:iconTint="#000000"
-        android:title="Go to date"
+        android:title="@string/menu_list_gotodate"
         app:showAsAction="ifRoom" />
     <group android:id="@+id/menugroup_filter" >
         <item
-            android:id="@+id/vjournal_filter"
+            android:id="@+id/menu_list_filter"
             android:icon="@drawable/ic_filter"
-            android:title="Filter"
+            android:title="@string/menu_list_filter"
             app:showAsAction="never" />
         <item
-            android:id="@+id/vjournal_clear_filter"
-            android:title="Clear filter"
+            android:id="@+id/menu_list_clearfilter"
+            android:title="@string/menu_list_clearfilter"
             app:showAsAction="never" />
     </group>
-    <group android:id="@+id/menugroup_add_item" >
+    <group android:id="@+id/menu_list_menugroup_add_item" >
         <item
-            android:id="@+id/add_journal"
-            android:title="Add Journal"
+            android:id="@+id/menu_list_add_journal"
+            android:title="@string/menu_list_add_journal"
             app:showAsAction="never" />
         <item
-            android:id="@+id/view_add_note"
-            android:title="Add Note"
+            android:id="@+id/menu_list_add_note"
+            android:title="@string/menu_list_add_note"
             app:showAsAction="never" />
         <item
-            android:id="@+id/add_todo"
-            android:title="Add Todo"
+            android:id="@+id/menu_list_add_todo"
+            android:title="@string/menu_list_add_todo"
             app:showAsAction="never" />
     </group>
 

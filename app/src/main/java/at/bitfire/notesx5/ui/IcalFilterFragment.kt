@@ -268,13 +268,13 @@ class IcalFilterFragment : Fragment()  {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
-            R.id.vjournal_filter_reset -> {
+            R.id.menu_filter_reset -> {
                 binding.collectionFilterChipgroup.clearCheck()
                 binding.statusFilterChipgroup.clearCheck()
                 binding.classificationFilterChipgroup.clearCheck()
                 binding.categoryFilterChipgroup.clearCheck()
             }
-            R.id.vjournal_filter_apply -> {
+            R.id.menu_filter_apply -> {
                 //val selectedCategoryArray = arrayOf(category)     // convert to array
                 // Responds to chip click
 

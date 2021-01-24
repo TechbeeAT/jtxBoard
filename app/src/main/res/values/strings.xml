@@ -144,4 +144,20 @@
     <string name="view_progress_label">Progress</string>
 
 
+
+    <!-- menus -->
+
+    <string name="menu_edit_delete">delete</string>
+    <string name="menu_filter_reset">Reset</string>
+    <string name="menu_filter_apply">Apply</string>
+    <string name="menu_list_search">Search</string>
+    <string name="menu_list_gotodate">Go to date</string>
+    <string name="menu_list_filter">Filter</string>
+    <string name="menu_list_clearfilter">Clear filter</string>
+    <string name="menu_list_add_journal">Add Journal</string>
+    <string name="menu_list_add_note">Add Note</string>
+    <string name="menu_list_add_todo">Add Todo</string>
+    <string name="menu_view_share">Share</string>
+
+
 </resources>

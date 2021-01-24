@@ -3,16 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/vjournal_filter_reset"
+        android:id="@+id/menu_filter_reset"
         android:iconTint="#000000"
-        android:title="Reset"
+        android:title="@string/menu_filter_reset"
         app:showAsAction="ifRoom" />
 
 
     <item
-        android:id="@+id/vjournal_filter_apply"
+        android:id="@+id/menu_filter_apply"
         android:iconTint="#000000"
-        android:title="Apply"
+        android:title="@string/menu_filter_apply"
         app:showAsAction="ifRoom" />
 
 </menu>

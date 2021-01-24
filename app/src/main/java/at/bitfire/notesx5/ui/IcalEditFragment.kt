@@ -105,7 +105,7 @@ class IcalEditFragment : Fragment(),
         }
 
 
-        icalEditViewModel.savingClicked.observe(viewLifecycleOwner, Observer {
+        icalEditViewModel.savingClicked.observe(viewLifecycleOwner, {
             if (it == true) {
                 icalEditViewModel.iCalObjectUpdated.value!!.collection = binding.editCollection.selectedItem.toString()
 
@@ -114,7 +114,7 @@ class IcalEditFragment : Fragment(),
             }
         })
 
-        icalEditViewModel.deleteClicked.observe(viewLifecycleOwner, Observer {
+        icalEditViewModel.deleteClicked.observe(viewLifecycleOwner, {
             if (it == true) {
 
                 // show Alert Dialog before the item gets really deleted
@@ -155,7 +155,7 @@ class IcalEditFragment : Fragment(),
             }
         })
 
-        icalEditViewModel.returnVJournalItemId.observe(viewLifecycleOwner, Observer {
+        icalEditViewModel.returnVJournalItemId.observe(viewLifecycleOwner, {
             if (it != 0L) {
                 val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
                 direction.component2show = icalEditViewModel.iCalObjectUpdated.value!!.component
@@ -711,7 +711,7 @@ class IcalEditFragment : Fragment(),
 
     private fun addCommentView(comment: Comment, container: ViewGroup?) {
 
-        val commentView = inflater.inflate(R.layout.fragment_ical_edit_comment, container, false);
+        val commentView = inflater.inflate(R.layout.fragment_ical_edit_comment, container, false)
         commentView.edit_comment_textview.text = comment.text
         binding.editCommentsLinearlayout.addView(commentView)
 
@@ -719,10 +719,10 @@ class IcalEditFragment : Fragment(),
         commentView.setOnClickListener {
 
             // set up the values for the TextInputEditText
-            val updatedText: TextInputEditText = TextInputEditText(context!!)
+            val updatedText = TextInputEditText(context!!)
             updatedText.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             updatedText.setText(comment.text)
-            updatedText.isSingleLine = false;
+            updatedText.isSingleLine = false
             updatedText.maxLines = 8
 
             // set up the builder for the AlertDialog
@@ -758,7 +758,7 @@ class IcalEditFragment : Fragment(),
         if (subtask == null)
             return
 
-        val subtaskView = inflater.inflate(R.layout.fragment_ical_edit_subtask, container, false);
+        val subtaskView = inflater.inflate(R.layout.fragment_ical_edit_subtask, container, false)
         subtaskView.edit_subtask_textview.text = subtask.summary
         subtaskView.edit_subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
         subtaskView.edit_subtask_progress_percent.text = if(subtask.percent?.toFloat() != null)
@@ -800,10 +800,10 @@ class IcalEditFragment : Fragment(),
         subtaskView.setOnClickListener {
 
             // set up the values for the TextInputEditText
-            val updatedSummary: TextInputEditText = TextInputEditText(context!!)
+            val updatedSummary = TextInputEditText(context!!)
             updatedSummary.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             updatedSummary.setText(subtask.summary)
-            updatedSummary.isSingleLine = false;
+            updatedSummary.isSingleLine = false
             updatedSummary.maxLines = 2
 
             // set up the builder for the AlertDialog
@@ -843,7 +843,7 @@ class IcalEditFragment : Fragment(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.vjournal_item_delete) {
+        if (item.itemId == R.id.menu_edit_delete) {
             icalEditViewModel.deleteClicked()
         }
         return super.onOptionsItemSelected(item)

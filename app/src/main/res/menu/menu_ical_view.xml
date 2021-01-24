@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/vjournal_item_share"
+        android:id="@+id/menu_view_share"
         android:icon="@drawable/ic_vjournal_share"
         android:iconTint="#000000"
-        android:title="share"
+        android:title="@string/menu_view_share"
         app:showAsAction="ifRoom" />
 
 </menu>

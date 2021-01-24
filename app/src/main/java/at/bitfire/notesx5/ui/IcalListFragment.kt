@@ -101,7 +101,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
-        icalListViewModel.vJournalList.observe(viewLifecycleOwner, Observer {
+        icalListViewModel.vJournalList.observe(viewLifecycleOwner, {
             icalListAdapter!!.notifyDataSetChanged()
 
             if (arguments.item2focus != 0L && icalListViewModel.vJournalList.value?.size!! > 0) {
@@ -113,7 +113,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 
         // Observe the focus item to scroll automatically to the right position (newly updated or inserted item)
-        icalListViewModel.focusItemId.observe(viewLifecycleOwner, Observer {
+        icalListViewModel.focusItemId.observe(viewLifecycleOwner, {
 
             val pos = icalListViewModel.getFocusItemPosition()
             Log.println(Log.INFO, "vJournalListViewModel", "Item Position: ${pos.toString()}")
@@ -195,15 +195,15 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_ical_list, menu)
-        MenuCompat.setGroupDividerEnabled(menu, true);
+        MenuCompat.setGroupDividerEnabled(menu, true)
 
 
 
         // Tell the variable the menu item to later make it visible or invisible
-        gotodateMenuItem = menu.findItem(R.id.vjournal_list_gotodate)
+        gotodateMenuItem = menu.findItem(R.id.menu_list_gotodate)
 
         // add listener for search!
-        val searchMenuItem = menu.findItem(R.id.vjournal_list_search)
+        val searchMenuItem = menu.findItem(R.id.menu_list_search)
         val searchView = searchMenuItem.actionView as SearchView
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -230,7 +230,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        if (item.itemId == R.id.vjournal_list_gotodate) {
+        if (item.itemId == R.id.menu_list_gotodate) {
 
 // START Set up Datepicker
             val c = Calendar.getInstance()
@@ -254,7 +254,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 dpd.show()
             }
 
-        if (item.itemId == R.id.vjournal_filter) {
+        if (item.itemId == R.id.menu_list_filter) {
 
             this.findNavController().navigate(
                     IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
@@ -266,24 +266,24 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                     })
         }
 
-        if (item.itemId == R.id.vjournal_clear_filter) {
+        if (item.itemId == R.id.menu_list_clearfilter) {
             icalListViewModel.clearFilter()
         }
 
-        if (item.itemId == R.id.add_journal) {
+        if (item.itemId == R.id.menu_list_add_journal) {
             val newICalObject = ICalEntity(ICalObject.createJournal())
             this.findNavController().navigate(
                 IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
         }
 
-        if (item.itemId == R.id.view_add_note) {
+        if (item.itemId == R.id.menu_list_add_note) {
             val newICalObject = ICalEntity(ICalObject.createNote())
 
             this.findNavController().navigate(
                     IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
         }
 
-        if (item.itemId == R.id.add_todo) {
+        if (item.itemId == R.id.menu_list_add_todo) {
             val newICalObject = ICalEntity(ICalObject.createTodo())
 
             this.findNavController().navigate(

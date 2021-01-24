@@ -102,7 +102,7 @@ class IcalViewFragment : Fragment() {
 
                 binding.viewCommentsLinearlayout.removeAllViews()
                 icalViewViewModel.vJournal.value!!.comment?.forEach { comment ->
-                    val commentView = inflater.inflate(R.layout.fragment_ical_view_comment, container, false);
+                    val commentView = inflater.inflate(R.layout.fragment_ical_view_comment, container, false)
                     commentView.view_comment_textview.text = comment.text
                     binding.viewCommentsLinearlayout.addView(commentView)
                 }
@@ -117,7 +117,7 @@ class IcalViewFragment : Fragment() {
             {
                 binding.viewFeedbackLinearlayout.removeAllViews()
                 it.forEach { relatedICalObject ->
-                    val relatedView = inflater.inflate(R.layout.fragment_ical_view_relatedto, container, false);
+                    val relatedView = inflater.inflate(R.layout.fragment_ical_view_relatedto, container, false)
                     relatedView.view_related_textview.text = relatedICalObject?.summary
                     binding.viewFeedbackLinearlayout.addView(relatedView)
                 }
@@ -194,7 +194,7 @@ class IcalViewFragment : Fragment() {
 
             val newNote = TextInputEditText(context!!)
             newNote.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-            newNote.isSingleLine = false;
+            newNote.isSingleLine = false
             newNote.maxLines = 8
 
             val builder = AlertDialog.Builder(requireContext())
@@ -405,7 +405,7 @@ class IcalViewFragment : Fragment() {
 
         var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
 
-        val subtaskView = inflater.inflate(R.layout.fragment_ical_view_subtask, container, false);
+        val subtaskView = inflater.inflate(R.layout.fragment_ical_view_subtask, container, false)
         subtaskView.view_subtask_textview.text = subtask.summary
         subtaskView.view_subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
         subtaskView.view_subtask_progress_percent.text = if(subtask.percent?.toFloat() != null) subtask.percent!!.toString() else "0"
@@ -452,9 +452,9 @@ class IcalViewFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.vjournal_item_share) {
+        if (item.itemId == R.id.menu_view_share) {
 
-            var shareText: String = "${convertLongToDateString(icalViewViewModel.vJournal.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.vJournal.value!!.property.dtstart)}\n"
+            var shareText = "${convertLongToDateString(icalViewViewModel.vJournal.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.vJournal.value!!.property.dtstart)}\n"
             shareText += "${icalViewViewModel.vJournal.value!!.property.summary}\n\n"
             shareText += "${icalViewViewModel.vJournal.value!!.property.description}\n\n"
             //todo add category again
