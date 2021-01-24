@@ -138,7 +138,10 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.progressCheckbox.visibility = View.VISIBLE
                 holder.progressCheckbox.isChecked = vJournalItem.property.percent == 100
                 holder.progressPercent.visibility = View.VISIBLE
-                holder.expandSubtasks.visibility = View.VISIBLE
+                if(vJournalItem.relatedto.isNullOrEmpty() )     // TODO: also tasks with a subnote would be shown here, they should also be excluded!
+                            holder.expandSubtasks.visibility = View.INVISIBLE
+                else
+                    holder.expandSubtasks.visibility = View.VISIBLE
                 holder.subtasksLinearLayout.visibility = View.VISIBLE
 
                 holder.progressPercent.text = context.getString(R.string.list_progress_percent, vJournalItem.property.percent?.toString()
