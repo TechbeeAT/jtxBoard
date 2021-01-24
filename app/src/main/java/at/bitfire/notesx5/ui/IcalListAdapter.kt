@@ -9,6 +9,7 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -249,23 +250,44 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 }
 
 
+                var toggleSubtasksExpanded = false
+
                 holder.expandSubtasks.setOnClickListener {
 
-                    val itemSubtasks = allSubtasks.value?.filter { sub -> vJournalItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id  } != null }
-
-                    itemSubtasks?.forEach {
-                        addSubtasksView(it, holder)
+                    if(!toggleSubtasksExpanded) {
+                        val itemSubtasks = allSubtasks.value?.filter { sub -> vJournalItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id  } != null }
+                        itemSubtasks?.forEach {
+                            addSubtasksView(it, holder)
+                        }
+                        toggleSubtasksExpanded = true
+                        holder.expandSubtasks.setImageResource(R.drawable.ic_collapse)
                     }
+                    else {
+                        holder.subtasksLinearLayout.removeAllViews()
+                        toggleSubtasksExpanded = false
+                        holder.expandSubtasks.setImageResource(R.drawable.ic_expand)
+                    }
+                }
 
-                    Log.println(Log.INFO, "subtasks", itemSubtasks?.size.toString())
 
+                holder.progressLabel.setOnClickListener {
+
+                    if(!toggleSubtasksExpanded) {
+                        val itemSubtasks = allSubtasks.value?.filter { sub -> vJournalItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id  } != null }
+                        itemSubtasks?.forEach {
+                            addSubtasksView(it, holder)
+                        }
+                        toggleSubtasksExpanded = true
+                        holder.expandSubtasks.setImageResource(R.drawable.ic_collapse)
+                    }
+                    else {
+                        holder.subtasksLinearLayout.removeAllViews()
+                        toggleSubtasksExpanded = false
+                        holder.expandSubtasks.setImageResource(R.drawable.ic_expand)
+                    }
                 }
 
             }
-
-
-
-
         }
     }
 
