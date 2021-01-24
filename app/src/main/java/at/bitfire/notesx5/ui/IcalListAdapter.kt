@@ -116,8 +116,8 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.dtstartMonth.visibility = View.GONE
                 holder.dtstartYear.visibility = View.GONE
                 holder.dtstartTime.visibility = View.GONE
-                holder.status.visibility = View.VISIBLE
-                holder.statusIcon.visibility = View.VISIBLE
+                holder.status.visibility = View.GONE
+                holder.statusIcon.visibility = View.GONE
                 holder.classification.visibility = View.GONE
                 holder.classificationIcon.visibility = View.GONE
                 holder.progressLabel.visibility = View.VISIBLE
@@ -127,8 +127,13 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.progressCheckbox.isChecked = vJournalItem.property.percent == 100
                 holder.progressPercent.visibility = View.VISIBLE
                 holder.progressPercent.text = context.getString(R.string.list_progress_percent, vJournalItem.property.percent?.toString() ?: "0")
-                holder.priorityIcon.visibility = View.VISIBLE
-                holder.priority.visibility = View.VISIBLE
+                if(vJournalItem.property.priority in 1..9) {           // show priority only if it was set and != 0 (no priority)
+                    holder.priorityIcon.visibility = View.VISIBLE
+                    holder.priority.visibility = View.VISIBLE
+                } else  {
+                    holder.priorityIcon.visibility = View.GONE
+                    holder.priority.visibility = View.GONE
+                }
 
                 if (vJournalItem.property.due == null)
                     holder.due.visibility = View.GONE
@@ -146,7 +151,7 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                         millisLeft >= 0L && daysLeft == 1L && vJournalItem.property.dueTimezone == "ALLDAY" -> holder.due.text = context.getString(R.string.list_due_tomorrow)
                         millisLeft >= 0L && daysLeft <= 1L && vJournalItem.property.dueTimezone != "ALLDAY" -> holder.due.text = context.getString(R.string.list_due_inXhours, hoursLeft)
                         millisLeft >= 0L && daysLeft >= 2L -> holder.due.text = context.getString(R.string.list_due_inXdays, daysLeft)
-                        else -> holder.due.visibility = View.GONE      //should not be possible happen
+                        else -> holder.due.visibility = View.GONE      //should not be possible
                     }
                 }
 

@@ -140,10 +140,10 @@
             android:id="@+id/view_item_priority_icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/view_item_priority"
             app:layout_constraintEnd_toStartOf="@+id/view_item_priority"
-            app:layout_constraintTop_toBottomOf="@+id/item_view_progress_slider"
+            app:layout_constraintTop_toTopOf="@+id/view_item_priority"
             app:srcCompat="@drawable/ic_priority"
             app:tint="@android:color/darker_gray"
             tools:ignore="ContentDescription" />
@@ -154,20 +154,20 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:textColor="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/classification"
             app:layout_constraintEnd_toStartOf="@+id/view_item_status_icon"
-            app:layout_constraintTop_toTopOf="@+id/view_item_status_icon"
+            app:layout_constraintTop_toTopOf="@+id/classification"
             tools:text="5 - Medium" />
-
 
 
         <ImageView
             android:id="@+id/view_item_status_icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/view_item_status"
             app:layout_constraintEnd_toStartOf="@+id/view_item_status"
-            app:layout_constraintTop_toBottomOf="@+id/item_view_progress_slider"
+            app:layout_constraintTop_toTopOf="@+id/view_item_status"
             app:srcCompat="@drawable/ic_status"
             app:tint="@android:color/darker_gray"
             tools:ignore="ContentDescription" />
@@ -178,8 +178,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:textColor="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/classification"
             app:layout_constraintEnd_toStartOf="@+id/classification_icon"
-            app:layout_constraintTop_toTopOf="@+id/view_item_status_icon"
+            app:layout_constraintTop_toTopOf="@+id/classification"
             tools:text="Final" />
 
 
@@ -188,8 +189,9 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/classification"
             app:layout_constraintEnd_toStartOf="@+id/classification"
-            app:layout_constraintTop_toTopOf="@+id/view_item_status_icon"
+            app:layout_constraintTop_toTopOf="@+id/classification"
             app:srcCompat="@drawable/ic_classification"
             app:tint="@android:color/darker_gray"
             tools:ignore="ContentDescription" />
@@ -198,10 +200,11 @@
             android:id="@+id/classification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:textColor="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/view_item_status_icon"
+            app:layout_constraintTop_toBottomOf="@+id/item_view_progress_checkbox"
             tools:text="Public" />
 
         <TextView
