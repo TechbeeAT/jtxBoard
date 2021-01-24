@@ -17,7 +17,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
@@ -41,17 +40,17 @@ class IcalEditFragment : Fragment(),
         TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
 
-    lateinit var binding: FragmentIcalEditBinding
-    lateinit var application: Application
-    lateinit var dataSource: ICalDatabaseDao
-    lateinit var viewModelFactory: IcalEditViewModelFactory
-    lateinit var icalEditViewModel: IcalEditViewModel
-    lateinit var inflater: LayoutInflater
+    private lateinit var binding: FragmentIcalEditBinding
+    private lateinit var application: Application
+    private lateinit var dataSource: ICalDatabaseDao
+    private lateinit var viewModelFactory: IcalEditViewModelFactory
+    private lateinit var icalEditViewModel: IcalEditViewModel
+    private lateinit var inflater: LayoutInflater
 
-    val allContactsMail: MutableList<String> = mutableListOf()
-    val allContactsNameAndMail: MutableList<String> = mutableListOf()
+    //private val allContactsMail: MutableList<String> = mutableListOf()
+    private val allContactsNameAndMail: MutableList<String> = mutableListOf()
 
-    var displayedCategoryChips = mutableListOf<Category>()
+    private var displayedCategoryChips = mutableListOf<Category>()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -876,7 +875,6 @@ class IcalEditFragment : Fragment(),
 
             }
             cur.close()
-
         }
 
         val arrayAdapterNameAndMail = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsNameAndMail)
