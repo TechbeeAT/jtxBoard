@@ -19,7 +19,7 @@
         android:paddingBottom="8dp">
 
         <TextView
-            android:id="@+id/view_item_dtstart_day"
+            android:id="@+id/list_item_dtstart_day"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
@@ -30,42 +30,42 @@
             tools:text="31" />
 
         <TextView
-            android:id="@+id/view_item_dtstart_month"
+            android:id="@+id/list_item_dtstart_month"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/view_item_dtstart_day"
+            app:layout_constraintEnd_toEndOf="@+id/list_item_dtstart_day"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_item_dtstart_day"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_dtstart_day"
             tools:text="December" />
 
         <TextView
-            android:id="@+id/view_item_dtstart_year"
+            android:id="@+id/list_item_dtstart_year"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/view_item_dtstart_day"
+            app:layout_constraintEnd_toEndOf="@+id/list_item_dtstart_day"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_item_dtstart_month"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_dtstart_month"
             tools:text="2020" />
 
         <TextView
-            android:id="@+id/view_item_dtstart_time"
+            android:id="@+id/list_item_dtstart_time"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="12sp"
             android:textStyle="italic"
-            app:layout_constraintStart_toStartOf="@+id/view_item_dtstart_day"
-            app:layout_constraintTop_toBottomOf="@+id/view_item_dtstart_year"
+            app:layout_constraintStart_toStartOf="@+id/list_item_dtstart_day"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_dtstart_year"
             app:layout_constraintVertical_bias="0.0"
             tools:text="13:30" />
 
 
         <TextView
-            android:id="@+id/view_item_summary"
+            android:id="@+id/list_item_summary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -73,142 +73,171 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/view_item_due"
-            app:layout_constraintStart_toEndOf="@+id/view_item_dtstart_day"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_due"
+            app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Summary ... Lorem ipsum dolor sit amet" />
 
         <TextView
-            android:id="@+id/view_item_description"
+            android:id="@+id/list_item_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:ellipsize="end"
             android:maxLines="5"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/view_item_dtstart_day"
-            app:layout_constraintTop_toBottomOf="@+id/view_item_summary"
+            app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_summary"
             tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
 
 
         <TextView
-            android:id="@+id/item_view_progress_label"
+            android:id="@+id/list_item_progress_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/list_progress"
-            app:layout_constraintBottom_toBottomOf="@+id/item_view_progress_slider"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_slider"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/item_view_progress_slider" />
+            app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider" />
 
         <com.google.android.material.slider.Slider
-            android:id="@+id/item_view_progress_slider"
+            android:id="@+id/list_item_progress_slider"
             style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:stepSize="1.0"
             android:valueFrom="0.0"
             android:valueTo="100.0"
-            app:layout_constraintEnd_toStartOf="@+id/item_view_progress_percent"
-            app:layout_constraintStart_toEndOf="@+id/item_view_progress_label"
-            app:layout_constraintTop_toBottomOf="@+id/view_item_description" />
+            app:layout_constraintEnd_toStartOf="@+id/list_item_progress_percent"
+            app:layout_constraintStart_toEndOf="@+id/list_item_expand"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_description" />
 
 
         <TextView
-            android:id="@+id/item_view_progress_percent"
+            android:id="@+id/list_item_progress_percent"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             tools:text="100 %"
             android:textAlignment="viewEnd"
-            app:layout_constraintBottom_toBottomOf="@+id/item_view_progress_slider"
-            app:layout_constraintEnd_toStartOf="@+id/item_view_progress_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/item_view_progress_slider" />
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_slider"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_progress_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider" />
 
         <CheckBox
-            android:id="@+id/item_view_progress_checkbox"
+            android:id="@+id/list_item_progress_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/item_view_progress_slider"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_slider"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/item_view_progress_slider" />
+            app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider" />
+
+
+
+        <LinearLayout
+            android:id="@+id/list_item_subtasks_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:divider="?android:dividerHorizontal"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_progress_slider"
+            >
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true">
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+        </LinearLayout>
+
 
         <ImageView
-            android:id="@+id/view_item_priority_icon"
+            android:id="@+id/list_item_priority_icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/view_item_priority"
-            app:layout_constraintEnd_toStartOf="@+id/view_item_priority"
-            app:layout_constraintTop_toTopOf="@+id/view_item_priority"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_priority"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_priority"
+            app:layout_constraintTop_toTopOf="@+id/list_item_priority"
             app:srcCompat="@drawable/ic_priority"
             app:tint="@android:color/darker_gray"
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/view_item_priority"
+            android:id="@+id/list_item_priority"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:textColor="@android:color/darker_gray"
-            app:layout_constraintBottom_toBottomOf="@+id/classification"
-            app:layout_constraintEnd_toStartOf="@+id/view_item_status_icon"
-            app:layout_constraintTop_toTopOf="@+id/classification"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_classification"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_status_icon"
+            app:layout_constraintTop_toTopOf="@+id/list_item_classification"
             tools:text="5 - Medium" />
 
 
         <ImageView
-            android:id="@+id/view_item_status_icon"
+            android:id="@+id/list_item_status_icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/view_item_status"
-            app:layout_constraintEnd_toStartOf="@+id/view_item_status"
-            app:layout_constraintTop_toTopOf="@+id/view_item_status"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_status"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_status"
+            app:layout_constraintTop_toTopOf="@+id/list_item_status"
             app:srcCompat="@drawable/ic_status"
             app:tint="@android:color/darker_gray"
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/view_item_status"
+            android:id="@+id/list_item_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:textColor="@android:color/darker_gray"
-            app:layout_constraintBottom_toBottomOf="@+id/classification"
-            app:layout_constraintEnd_toStartOf="@+id/classification_icon"
-            app:layout_constraintTop_toTopOf="@+id/classification"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_classification"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_classification_icon"
+            app:layout_constraintTop_toTopOf="@+id/list_item_classification"
             tools:text="Final" />
 
 
         <ImageView
-            android:id="@+id/classification_icon"
+            android:id="@+id/list_item_classification_icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/classification"
-            app:layout_constraintEnd_toStartOf="@+id/classification"
-            app:layout_constraintTop_toTopOf="@+id/classification"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_classification"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_classification"
+            app:layout_constraintTop_toTopOf="@+id/list_item_classification"
             app:srcCompat="@drawable/ic_classification"
             app:tint="@android:color/darker_gray"
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/classification"
+            android:id="@+id/list_item_classification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:textColor="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_view_progress_checkbox"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_subtasks_linearlayout"
             tools:text="Public" />
 
         <TextView
-            android:id="@+id/categories"
+            android:id="@+id/list_item_categories"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -218,13 +247,13 @@
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="@+id/view_item_description"
-            app:layout_constraintStart_toStartOf="@+id/view_item_description"
-            app:layout_constraintTop_toBottomOf="@+id/view_item_status_icon"
+            app:layout_constraintEnd_toEndOf="@+id/list_item_description"
+            app:layout_constraintStart_toStartOf="@+id/list_item_description"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_status_icon"
             tools:text="Category1, Category2" />
 
         <TextView
-            android:id="@+id/view_item_due"
+            android:id="@+id/list_item_due"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -232,7 +261,16 @@
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/view_item_summary" />
+            app:layout_constraintTop_toTopOf="@+id/list_item_summary" />
+
+        <ImageView
+            android:id="@+id/list_item_expand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_label"
+            app:layout_constraintStart_toEndOf="@+id/list_item_progress_label"
+            app:layout_constraintTop_toTopOf="@+id/list_item_progress_label"
+            app:srcCompat="@drawable/ic_expand" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

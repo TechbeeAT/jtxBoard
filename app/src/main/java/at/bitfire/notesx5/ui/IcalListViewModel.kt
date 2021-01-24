@@ -31,6 +31,10 @@ class IcalListViewModel(
         database.getVJournalWithCategory(it)
         }
 
+
+    // TODO maybe retrieve all subtasks only when subtasks are needed!
+    val allSubtasks: LiveData<List<ICalObject?>> = database.getAllSubtasks()
+
     //var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
     var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
 
@@ -39,6 +43,9 @@ class IcalListViewModel(
     init {
 
         viewModelScope.launch {
+
+            allSubtasks.apply { database.getAllSubtasks() }
+
             insertTestData()
 
         }

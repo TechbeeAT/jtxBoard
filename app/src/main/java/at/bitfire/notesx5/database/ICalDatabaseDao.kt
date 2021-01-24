@@ -149,6 +149,10 @@ DELETEs
     @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey and icalobject.component = 'TODO'")
     fun getRelatedTodos(parentKey: Long): LiveData<List<ICalObject?>>
 
+    @Transaction
+    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId WHERE icalobject.component = 'TODO'")
+    fun getAllSubtasks(): LiveData<List<ICalObject?>>
+
 
 
 }

@@ -1,11 +1,13 @@
 package at.bitfire.notesx5.ui
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
@@ -16,16 +18,20 @@ import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
+import kotlinx.android.synthetic.main.fragment_ical_list_item_subtask.view.*
+import kotlinx.android.synthetic.main.fragment_ical_view_subtask.view.*
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 
-class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICalEntityWithCategory>>):
+class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICalEntityWithCategory>>, var allSubtasks: LiveData<List<ICalObject?>>):
         RecyclerView.Adapter<IcalListAdapter.VJournalItemHolder>() {
 
     var dataSource = ICalDatabase.getInstance(context.applicationContext).iCalDatabaseDao
+    lateinit var parent: ViewGroup
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VJournalItemHolder {
 
+        this.parent = parent
         val itemHolder = LayoutInflater.from(parent.context).inflate(R.layout.fragment_ical_list_item, parent, false)
         return VJournalItemHolder(itemHolder)
 
@@ -61,7 +67,7 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
             if (vJournalItem.category?.isNotEmpty() == true) {
                 val categoriesList = mutableListOf<String>()
                 vJournalItem.category!!.forEach { categoriesList.add(it.text)  }
-                holder.categories.text = categoriesList.joinToString(separator=", ")
+                holder.categories.text = categoriesList.joinToString(separator = ", ")
             } else {
                 holder.categories.visibility = View.GONE
                 //holder.categoriesIcon.visibility = View.GONE
@@ -85,6 +91,9 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.priorityIcon.visibility = View.GONE
                 holder.priority.visibility = View.GONE
                 holder.due.visibility = View.GONE
+                holder.expandSubtasks.visibility = View.GONE
+                holder.subtasksLinearLayout.visibility = View.GONE
+
 
                 if (vJournalItem.property.dtstartTimezone == "ALLDAY") {
                     holder.dtstartTime.visibility = View.GONE
@@ -109,6 +118,8 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.priorityIcon.visibility = View.GONE
                 holder.priority.visibility = View.GONE
                 holder.due.visibility = View.GONE
+                holder.expandSubtasks.visibility = View.GONE
+                holder.subtasksLinearLayout.visibility = View.GONE
 
 
             } else if(vJournalItem.property.component == "TODO") {
@@ -126,7 +137,11 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.progressCheckbox.visibility = View.VISIBLE
                 holder.progressCheckbox.isChecked = vJournalItem.property.percent == 100
                 holder.progressPercent.visibility = View.VISIBLE
-                holder.progressPercent.text = context.getString(R.string.list_progress_percent, vJournalItem.property.percent?.toString() ?: "0")
+                holder.expandSubtasks.visibility = View.VISIBLE
+                holder.subtasksLinearLayout.visibility = View.VISIBLE
+
+                holder.progressPercent.text = context.getString(R.string.list_progress_percent, vJournalItem.property.percent?.toString()
+                        ?: "0")
                 if(vJournalItem.property.priority in 1..9) {           // show priority only if it was set and != 0 (no priority)
                     holder.priorityIcon.visibility = View.VISIBLE
                     holder.priority.visibility = View.VISIBLE
@@ -176,6 +191,8 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 holder.priorityIcon.visibility = View.GONE
                 holder.priority.visibility = View.GONE
                 holder.due.visibility = View.GONE
+                holder.expandSubtasks.visibility = View.GONE
+                holder.subtasksLinearLayout.visibility = View.GONE
             }
 
             val statusArray = if (vJournalItem.property.component == "TODO")
@@ -207,11 +224,12 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
             if(vJournalItem.property.component == "TODO") {
                 holder.progressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
-                    override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
+                    override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
+                    }
 
                     override fun onStopTrackingTouch(slider: Slider) {
 
-                        updateProgress(holder, vJournalItem.property, holder.progressSlider.value.toInt())
+                        updateProgress(vJournalItem.property, holder.progressSlider.value.toInt(), holder.progressPercent, holder.progressCheckbox )
 
                         if (holder.progressSlider.value.toInt() != 100)
                             resetProgress = holder.progressSlider.value.toInt()
@@ -219,18 +237,33 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
                 })
 
 
-                holder.progressCheckbox.setOnCheckedChangeListener { button, checked ->
-                    if (checked) {
-                        updateProgress(holder, vJournalItem.property, 100)
-                        holder.progressSlider.value = 100F
-                    } else {
-                        updateProgress(holder, vJournalItem.property, resetProgress)
-                    holder.progressSlider.value = resetProgress.toFloat()
-                     }
 
+                holder.progressCheckbox.setOnCheckedChangeListener { button, checked ->
+                    if (checked)
+                        holder.progressSlider.value = 100F
+                     else
+                        holder.progressSlider.value = resetProgress.toFloat()
+
+                    updateProgress(vJournalItem.property, holder.progressSlider.value.toInt(), holder.progressPercent, holder.progressCheckbox )
 
                 }
+
+
+                holder.expandSubtasks.setOnClickListener {
+
+                    val itemSubtasks = allSubtasks.value?.filter { sub -> vJournalItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id  } != null }
+
+                    itemSubtasks?.forEach {
+                        addSubtasksView(it, holder)
+                    }
+
+                    Log.println(Log.INFO, "subtasks", itemSubtasks?.size.toString())
+
+                }
+
             }
+
+
 
 
         }
@@ -243,37 +276,37 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
 
         var listItemCardView = itemView.findViewById<MaterialCardView>(R.id.list_item_card_view)
 
-        var summary = itemView.findViewById<TextView>(R.id.view_item_summary)
-        var description = itemView.findViewById<TextView>(R.id.view_item_description)
+        var summary = itemView.findViewById<TextView>(R.id.list_item_summary)
+        var description = itemView.findViewById<TextView>(R.id.list_item_description)
 
+        var categories: TextView = itemView.findViewById<TextView>(R.id.list_item_categories)
+        var status: TextView = itemView.findViewById<TextView>(R.id.list_item_status)
+        var statusIcon: ImageView = itemView.findViewById<ImageView>(R.id.list_item_status_icon)
+        var classification: TextView = itemView.findViewById<TextView>(R.id.list_item_classification)
+        var classificationIcon: ImageView = itemView.findViewById<ImageView>(R.id.list_item_classification_icon)
+        var priority: TextView = itemView.findViewById<TextView>(R.id.list_item_priority)
+        var priorityIcon: ImageView = itemView.findViewById<ImageView>(R.id.list_item_priority_icon)
 
-        var categories: TextView = itemView.findViewById<TextView>(R.id.categories)
-        //var categoriesIcon = itemView.findViewById<ImageView>(R.id.categories_icon)
-        var status: TextView = itemView.findViewById<TextView>(R.id.view_item_status)
-        var statusIcon: ImageView = itemView.findViewById<ImageView>(R.id.view_item_status_icon)
-        var classification: TextView = itemView.findViewById<TextView>(R.id.classification)
-        var classificationIcon: ImageView = itemView.findViewById<ImageView>(R.id.classification_icon)
-        var priority: TextView = itemView.findViewById<TextView>(R.id.view_item_priority)
-        var priorityIcon: ImageView = itemView.findViewById<ImageView>(R.id.view_item_priority_icon)
+        var progressLabel: TextView = itemView.findViewById<TextView>(R.id.list_item_progress_label)
+        var progressSlider: Slider = itemView.findViewById<Slider>(R.id.list_item_progress_slider)
+        var progressPercent: TextView = itemView.findViewById<TextView>(R.id.list_item_progress_percent)
+        var progressCheckbox: CheckBox = itemView.findViewById<CheckBox>(R.id.list_item_progress_checkbox)
 
-        var progressLabel: TextView = itemView.findViewById<TextView>(R.id.item_view_progress_label)
-        var progressSlider: Slider = itemView.findViewById<Slider>(R.id.item_view_progress_slider)
-        var progressPercent: TextView = itemView.findViewById<TextView>(R.id.item_view_progress_percent)
-        var progressCheckbox: CheckBox = itemView.findViewById<CheckBox>(R.id.item_view_progress_checkbox)
+        var due: TextView = itemView.findViewById<TextView>(R.id.list_item_due)
 
-        var due: TextView = itemView.findViewById<TextView>(R.id.view_item_due)
+        var dtstartDay: TextView = itemView.findViewById<TextView>(R.id.list_item_dtstart_day)
+        var dtstartMonth: TextView = itemView.findViewById<TextView>(R.id.list_item_dtstart_month)
+        var dtstartYear: TextView = itemView.findViewById<TextView>(R.id.list_item_dtstart_year)
+        var dtstartTime: TextView = itemView.findViewById<TextView>(R.id.list_item_dtstart_time)
 
-
-        var dtstartDay: TextView = itemView.findViewById<TextView>(R.id.view_item_dtstart_day)
-        var dtstartMonth: TextView = itemView.findViewById<TextView>(R.id.view_item_dtstart_month)
-        var dtstartYear: TextView = itemView.findViewById<TextView>(R.id.view_item_dtstart_year)
-        var dtstartTime: TextView = itemView.findViewById<TextView>(R.id.view_item_dtstart_time)
+        var expandSubtasks: ImageView = itemView.findViewById<ImageView>(R.id.list_item_expand)
+        var subtasksLinearLayout: LinearLayout = itemView.findViewById<LinearLayout>(R.id.list_item_subtasks_linearlayout)
 
     }
 
 
 
-    private fun updateProgress(holder: VJournalItemHolder, item: ICalObject, progress: Int) {
+    private fun updateProgress(item: ICalObject, progress: Int, progressPercent: TextView, progressCheckbox: CheckBox ) {
 
 
         val item2update = item
@@ -291,15 +324,66 @@ class IcalListAdapter(var context: Context, var vJournalList: LiveData<List<ICal
             dataSource.update(item2update)
         }
 
-
-        //update UI
-        holder.progressPercent.text = context.getString(R.string.list_progress_percent, progress.toString())
+        //update UI (passed through method to be also compatible for subtasks)
+        progressPercent.text = context.getString(R.string.list_progress_percent, progress.toString())
 
         val statusArray = context.resources.getStringArray(R.array.vtodo_status)
-        holder.status.text = statusArray[item2update.status]
+        //status.text = statusArray[item2update.status]
 
-        holder.progressCheckbox.isChecked = progress == 100    // isChecked when Progress = 100
+        progressCheckbox.isChecked = progress == 100    // isChecked when Progress = 100
 
     }
+
+
+
+    private fun addSubtasksView(subtask: ICalObject?, holder: VJournalItemHolder) {
+
+        if (subtask == null)
+            return
+
+        var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
+
+        val subtaskView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_ical_list_item_subtask, parent, false)
+        subtaskView.list_item_subtask_textview.text = subtask.summary
+        subtaskView.list_item_subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
+        subtaskView.list_item_subtask_progress_percent.text = if(subtask.percent?.toFloat() != null) subtask.percent!!.toString() else "0"
+        subtaskView.list_item_subtask_progress_checkbox.isChecked = subtask.percent == 100
+
+        // Instead of implementing here
+        //        subtaskView.subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->  vJournalItemViewModel.updateProgress(subtask, value.toInt())    }
+        //   the approach here is to update only onStopTrackingTouch. The OnCangeListener would update on several times on sliding causing lags and unnecessary updates  */
+
+
+        subtaskView.list_item_subtask_progress_slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+
+            override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
+            }
+
+            override fun onStopTrackingTouch(slider: Slider) {
+                if (subtaskView.list_item_subtask_progress_slider.value < 100)
+                    resetProgress = subtaskView.list_item_subtask_progress_slider.value.toInt()
+                updateProgress(subtask, subtaskView.list_item_subtask_progress_slider.value.toInt(), subtaskView.list_item_subtask_progress_percent, subtaskView.list_item_subtask_progress_checkbox )
+            }
+        })
+
+        subtaskView.list_item_subtask_progress_checkbox.setOnCheckedChangeListener { _, checked ->
+            if (checked) {
+                subtaskView.list_item_subtask_progress_percent.text = "100"
+                subtaskView.list_item_subtask_progress_slider.value = 100F
+            } else {
+                subtaskView.list_item_subtask_progress_percent.text = resetProgress.toString()
+                subtaskView.list_item_subtask_progress_slider.value = resetProgress.toFloat()
+            }
+            updateProgress(subtask, subtaskView.list_item_subtask_progress_slider.value.toInt(), subtaskView.list_item_subtask_progress_percent, subtaskView.list_item_subtask_progress_checkbox )
+
+
+        }
+
+
+        holder.subtasksLinearLayout.addView(subtaskView)
+    }
+
+
+
 
 }

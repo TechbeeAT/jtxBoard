@@ -74,7 +74,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // create adapter and provide data
         //vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vjournalList, vJournalListViewModel.vjournaListCount)
-        icalListAdapter = IcalListAdapter(application.applicationContext, icalListViewModel.vJournalList)
+        icalListAdapter = IcalListAdapter(application.applicationContext, icalListViewModel.vJournalList, icalListViewModel.allSubtasks)
 
         recyclerView?.adapter = icalListAdapter
 
@@ -125,6 +125,8 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             binding.listProgressIndicator.visibility = View.GONE
         })
 
+        // This observer is needed in order to make sure that the Subtasks are retrieved!
+        icalListViewModel.allSubtasks.observe(viewLifecycleOwner, {})
 
 
         // Observe the focus item to scroll automatically to the right position (newly updated or inserted item)
