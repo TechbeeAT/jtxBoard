@@ -294,7 +294,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         }
     }
 
-    fun clearUrlError() {
+    fun clearUrlError(s: Editable) {
         urlError.value = null
     }
 
