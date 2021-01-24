@@ -50,12 +50,19 @@
 
             </com.google.android.material.tabs.TabLayout>
 
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/list_progress_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tabLayoutJournalNotes"
+                android:indeterminate="true"
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/vjournal_list_items_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tabLayoutJournalNotes"
+                android:layout_below="@+id/list_progress_indicator"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="4dp"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager">

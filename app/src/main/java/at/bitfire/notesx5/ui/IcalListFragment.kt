@@ -108,6 +108,22 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 //Log.println(Log.INFO, "vJournalListFragment", arguments.vJournalItemId.toString())
                 icalListViewModel.setFocusItem(arguments.item2focus)
             }
+
+            when (icalListViewModel.searchComponent) {
+                "NOTE" -> {
+                    gotodateMenuItem.isVisible = false
+                    staggeredGridLayoutManager!!.spanCount = 2
+                }
+                "JOURNAL" -> {
+                    gotodateMenuItem.isVisible = true
+                    staggeredGridLayoutManager!!.spanCount = 1
+                }
+                "TODO" -> {
+                    gotodateMenuItem.isVisible = false
+                    staggeredGridLayoutManager!!.spanCount = 1
+                }
+            }
+            binding.listProgressIndicator.visibility = View.GONE
         })
 
 
@@ -127,30 +143,14 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         binding.tabLayoutJournalNotes.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
+                binding.listProgressIndicator.visibility = View.VISIBLE
                 icalListViewModel.resetFocusItem()
 
-
                 when (tab?.position) {
-                    0 -> {
-                        icalListViewModel.searchComponent = "JOURNAL"
-                        gotodateMenuItem.isVisible = true
-                        staggeredGridLayoutManager!!.spanCount = 1
-                    }
-                    1 -> {
-                        icalListViewModel.searchComponent = "NOTE"
-                        gotodateMenuItem.isVisible = false     // no date search for notes
-                        staggeredGridLayoutManager!!.spanCount = 2
-                    }
-                    2 -> {
-                        icalListViewModel.searchComponent = "TODO"
-                        gotodateMenuItem.isVisible = false     // no date search for notes
-                        staggeredGridLayoutManager!!.spanCount = 1
-                    }
-                    else -> {
-                        icalListViewModel.searchComponent = "JOURNAL"
-                        gotodateMenuItem.isVisible = true
-                        staggeredGridLayoutManager!!.spanCount = 1
-                    }
+                    0 -> icalListViewModel.searchComponent = "JOURNAL"
+                    1 -> icalListViewModel.searchComponent = "NOTE"
+                    2 -> icalListViewModel.searchComponent = "TODO"
+                    else -> icalListViewModel.searchComponent = "JOURNAL"
                 }
                 icalListViewModel.updateSearch()
 
@@ -177,6 +177,8 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         // initialize the floating action button only onStart, otherwise the fragment might not be created yet
         val fab: View = requireNotNull(activity).findViewById(R.id.fab)
         fab.setOnClickListener { _ ->
+
+            icalListViewModel.resetFocusItem()
 
             val newICalObject =
                     when(binding.tabLayoutJournalNotes.selectedTabPosition) {
@@ -255,6 +257,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             }
 
         if (item.itemId == R.id.menu_list_filter) {
+            icalListViewModel.resetFocusItem()
 
             this.findNavController().navigate(
                     IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
@@ -267,16 +270,19 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         }
 
         if (item.itemId == R.id.menu_list_clearfilter) {
+            icalListViewModel.resetFocusItem()
             icalListViewModel.clearFilter()
         }
 
         if (item.itemId == R.id.menu_list_add_journal) {
+            icalListViewModel.resetFocusItem()
             val newICalObject = ICalEntity(ICalObject.createJournal())
             this.findNavController().navigate(
                 IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
         }
 
         if (item.itemId == R.id.menu_list_add_note) {
+            icalListViewModel.resetFocusItem()
             val newICalObject = ICalEntity(ICalObject.createNote())
 
             this.findNavController().navigate(
@@ -284,6 +290,8 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         }
 
         if (item.itemId == R.id.menu_list_add_todo) {
+            icalListViewModel.resetFocusItem()
+
             val newICalObject = ICalEntity(ICalObject.createTodo())
 
             this.findNavController().navigate(
