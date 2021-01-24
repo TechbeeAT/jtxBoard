@@ -34,10 +34,13 @@ class IcalViewFragment : Fragment() {
     lateinit var icalViewViewModel: IcalViewViewModel
 
 
+    /*
     val allContactsWithName: MutableList<String> = mutableListOf()
     val allContactsWithNameAndMail: MutableList<String> = mutableListOf()
     val allContactsAsAttendee: MutableList<Attendee> = mutableListOf()
 
+
+     */
 
 
 
@@ -72,7 +75,7 @@ class IcalViewFragment : Fragment() {
 
 
         // set up observers
-        icalViewViewModel.editingClicked.observe(viewLifecycleOwner, Observer {
+        icalViewViewModel.editingClicked.observe(viewLifecycleOwner,  {
             if (it) {
                 icalViewViewModel.editingClicked.value = false
                 this.findNavController().navigate(

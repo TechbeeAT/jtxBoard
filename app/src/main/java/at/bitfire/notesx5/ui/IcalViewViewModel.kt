@@ -23,13 +23,12 @@ class IcalViewViewModel(private val vJournalItemId: Long,
     lateinit var relatedNotes: LiveData<List<ICalObject?>>
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
 
-
-    lateinit var dateVisible: LiveData<Boolean>
-    lateinit var timeVisible: LiveData<Boolean>
     lateinit var dtstartFormatted: LiveData<String>
     lateinit var createdFormatted: LiveData<String>
     lateinit var lastModifiedFormatted: LiveData<String>
 
+    lateinit var dateVisible: LiveData<Boolean>
+    lateinit var timeVisible: LiveData<Boolean>
     lateinit var urlVisible: LiveData<Boolean>
     lateinit var attendeesVisible: LiveData<Boolean>
     lateinit var organizerVisible: LiveData<Boolean>
@@ -81,7 +80,7 @@ class IcalViewViewModel(private val vJournalItemId: Long,
             }
 
             timeVisible = Transformations.map(vJournal) { item ->
-                return@map item?.property?.component == "JOURNAL" && item?.property.dtstartTimezone != "ALLDAY"           // true if component == JOURNAL and it is not an All Day Event
+                return@map item?.property?.component == "JOURNAL" && item.property.dtstartTimezone != "ALLDAY"           // true if component == JOURNAL and it is not an All Day Event
 
             }
 

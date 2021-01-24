@@ -17,11 +17,9 @@ import java.text.DateFormat
 import java.util.*
 
 
-class IcalEditViewModel(private val iCalEntity2edit: ICalEntity,
+class IcalEditViewModel(val iCalEntity: ICalEntity,
                         val database: ICalDatabaseDao,
                         application: Application) : AndroidViewModel(application) {
-
-    val iCalEntity = iCalEntity2edit
 
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allCollections: LiveData<List<String>>
@@ -296,7 +294,7 @@ class IcalEditViewModel(private val iCalEntity2edit: ICalEntity,
         }
     }
 
-    fun clearUrlError(s: Editable) {
+    fun clearUrlError() {
         urlError.value = null
     }
 
