@@ -158,6 +158,15 @@
     <string name="menu_list_add_note">Add Note</string>
     <string name="menu_list_add_todo">Add Todo</string>
     <string name="menu_view_share">Share</string>
+    <string name="edit_due_date_hint">Due date</string>
+    <string name="edit_due_time_hint">Due time</string>
+    <string name="edit_add_time_switch">Add time</string>
+    <string name="edit_progress">Progress</string>
+    <string name="edit_subtasks_header">Subtasks</string>
+    <string name="edit_subtasks_add_hint">Subtask</string>
+    <string name="edit_show_all_switch">Show all</string>
+    <string name="edit_categories_header">Categories</string>
+    <string name="edit_attendees_header">Attendees</string>
 
 
 </resources>
