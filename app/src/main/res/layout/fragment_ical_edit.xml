@@ -82,10 +82,8 @@
             android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
             app:layout_constraintStart_toStartOf="@+id/edit_dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_year"
-            app:layout_constraintVertical_bias="0.0"
             tools:text="13:30"
             android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
             />
@@ -156,11 +154,6 @@
             app:layout_constraintStart_toEndOf="@+id/edit_timezone_icon"
             app:layout_constraintTop_toTopOf="@+id/edit_all_day_switch" />
 
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/edit_top_barrier"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:barrierDirection="top" />
 
 
         <com.google.android.material.textfield.TextInputLayout
