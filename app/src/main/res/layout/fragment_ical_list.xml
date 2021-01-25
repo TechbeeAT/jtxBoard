@@ -21,7 +21,7 @@
 
 
             <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayoutJournalNotes"
+                android:id="@+id/tablayout_journalnotestodos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:tabMode="fixed">
@@ -53,7 +53,7 @@
                 android:id="@+id/list_progress_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tabLayoutJournalNotes"
+                android:layout_below="@+id/tablayout_journalnotestodos"
                 android:indeterminate="true"
                 />
 

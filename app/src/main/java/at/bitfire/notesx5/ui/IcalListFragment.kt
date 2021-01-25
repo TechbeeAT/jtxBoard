@@ -94,8 +94,18 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (arguments.collection2filter?.isNotEmpty() == true)
             icalListViewModel.searchCollection = arguments.collection2filter!!.toMutableList()
 
-        if(arguments.category2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.status2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
+        if (arguments.component2show.isNotEmpty())
+            icalListViewModel.searchComponent = arguments.component2show
+
+        if(arguments.component2show.isNotEmpty() || arguments.category2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.status2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
             icalListViewModel.updateSearch()   // updateSearch() only if there was at least one filter criteria
+
+        // activate the right tab according to the searchComponent
+        when (icalListViewModel.searchComponent) {
+            "NOTE" -> binding.tablayoutJournalnotestodos.getTabAt(1)?.select()
+            "JOURNAL" -> binding.tablayoutJournalnotestodos.getTabAt(0)?.select()
+            "TODO" -> binding.tablayoutJournalnotestodos.getTabAt(2)?.select()
+        }
 
 
 
@@ -141,7 +151,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         })
 
-        binding.tabLayoutJournalNotes.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tablayoutJournalnotestodos.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 binding.listProgressIndicator.visibility = View.VISIBLE
@@ -183,7 +193,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             icalListViewModel.resetFocusItem()
 
             val newICalObject =
-                    when(binding.tabLayoutJournalNotes.selectedTabPosition) {
+                    when(binding.tablayoutJournalnotestodos.selectedTabPosition) {
                         0 -> ICalEntity(ICalObject.createJournal())
                         1 -> ICalEntity(ICalObject.createNote())
                         2 -> ICalEntity(ICalObject.createTodo())
