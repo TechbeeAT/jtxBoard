@@ -33,15 +33,20 @@
             android:id="@+id/action_icalListFragment_to_icalViewFragment"
             app:destination="@id/icalViewFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:popEnterAnim="@anim/slide_in_right" />
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popUpTo="@id/icalListFragment" />
         <action
             android:id="@+id/action_icalListFragment_to_icalEditFragment"
             app:destination="@id/icalEditFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:popEnterAnim="@anim/slide_in_right" />
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popUpTo="@id/icalListFragment" />
         <action
             android:id="@+id/action_icalListFragment_to_icalFilterFragment"
-            app:destination="@id/icalFilterFragment" />
+            app:destination="@id/icalFilterFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/icalListFragment" />
         <argument
             android:name="item2focus"
             android:defaultValue="0L"
@@ -84,10 +89,13 @@
             android:id="@+id/action_icalViewFragment_to_icalEditFragment"
             app:destination="@id/icalEditFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:popEnterAnim="@anim/slide_in_right" />
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popUpTo="@id/icalViewFragment" />
         <action
             android:id="@+id/action_icalViewFragment_to_icalListFragment"
             app:destination="@id/icalListFragment"
+            app:launchSingleTop="true"
             app:popUpTo="@id/icalListFragment" />
     </fragment>
     <fragment
@@ -98,6 +106,7 @@
         <action
             android:id="@+id/action_icalEditFragment_to_icalListFragment"
             app:destination="@id/icalListFragment"
+            app:launchSingleTop="true"
             app:popUpTo="@id/icalListFragment" />
         <argument
             android:name="icalentity"
@@ -111,6 +120,7 @@
         <action
             android:id="@+id/action_icalFilterFragment_to_icalListFragment"
             app:destination="@id/icalListFragment"
+            app:launchSingleTop="true"
             app:popUpTo="@id/icalListFragment" />
         <argument
             android:name="category2preselect"

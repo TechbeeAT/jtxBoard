@@ -145,6 +145,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 binding.listProgressIndicator.visibility = View.VISIBLE
+                icalListViewModel.clearFilter()
                 icalListViewModel.resetFocusItem()
 
                 when (tab?.position) {

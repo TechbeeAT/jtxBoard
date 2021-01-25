@@ -151,7 +151,7 @@ class IcalListViewModel(
 
         // Query for the passed filter criteria from VJournalFilterFragment
         if (searchCategories.size > 0) {
-            queryString += "AND vcategories.text IN ("
+            queryString += "AND category.text IN ("
             searchCategories.forEach {
                 queryString += "?,"
                 args.add(it)
