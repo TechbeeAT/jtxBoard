@@ -161,7 +161,14 @@ class IcalViewViewModel(private val vJournalItemId: Long,
 
         val item2update = item
         item2update.percent = newPercent
+        item2update.sequence++
         item2update.lastModified = System.currentTimeMillis()
+
+        when (item2update.percent) {
+            100 -> item2update.status = 2
+            in 1..99 -> item2update.status = 1
+            0 -> item2update.status = 0
+        }
 
         viewModelScope.launch() {
             database.update(item2update)

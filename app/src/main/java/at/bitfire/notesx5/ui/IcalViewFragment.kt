@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
+import android.widget.CheckBox
+import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -22,6 +24,8 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_ical_view_comment.view.*
 import kotlinx.android.synthetic.main.fragment_ical_view_relatedto.view.*
 import kotlinx.android.synthetic.main.fragment_ical_view_subtask.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class IcalViewFragment : Fragment() {
@@ -217,14 +221,27 @@ class IcalViewFragment : Fragment() {
 
         }
 
+
+        var resetProgress = icalViewViewModel.vJournal.value?.property?.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
+
         binding.viewProgressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
             override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
 
             override fun onStopTrackingTouch(slider: Slider) {
+                if (binding.viewProgressSlider.value.toInt() < 100)
+                    resetProgress = binding.viewProgressSlider.value.toInt()
                 icalViewViewModel.updateProgress(icalViewViewModel.vJournal.value!!.property, binding.viewProgressSlider.value.toInt())
             }
         })
+
+        binding.viewProgressCheckbox.setOnCheckedChangeListener { button, checked ->
+            if (checked) {
+                icalViewViewModel.updateProgress(icalViewViewModel.vJournal.value!!.property, 100)
+            } else {
+                icalViewViewModel.updateProgress(icalViewViewModel.vJournal.value!!.property, resetProgress)
+            }
+        }
 
 
 
@@ -422,8 +439,6 @@ class IcalViewFragment : Fragment() {
             override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                subtaskView.view_subtask_progress_percent.text = subtaskView.view_subtask_progress_slider.value.toInt().toString()
-                subtaskView.view_subtask_progress_checkbox.isChecked = subtask.percent == 100
                 if (subtaskView.view_subtask_progress_slider.value < 100)
                     resetProgress = subtaskView.view_subtask_progress_slider.value.toInt()
                 icalViewViewModel.updateProgress(subtask, subtaskView.view_subtask_progress_slider.value.toInt())
@@ -434,18 +449,15 @@ class IcalViewFragment : Fragment() {
 
         subtaskView.view_subtask_progress_checkbox.setOnCheckedChangeListener { button, checked ->
             if (checked) {
-                subtaskView.view_subtask_progress_percent.text = "100"
-                subtaskView.view_subtask_progress_slider.value = 100F
                 icalViewViewModel.updateProgress(subtask, 100)
             } else {
-                subtaskView.view_subtask_progress_percent.text = resetProgress.toString()
-                subtaskView.view_subtask_progress_slider.value = resetProgress.toFloat()
                 icalViewViewModel.updateProgress(subtask, resetProgress)
             }
 
         }
             binding.viewSubtasksLinearlayout.addView(subtaskView)
     }
+
 
 
 
