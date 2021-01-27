@@ -74,7 +74,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // create adapter and provide data
         //vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vjournalList, vJournalListViewModel.vjournaListCount)
-        icalListAdapter = IcalListAdapter(application.applicationContext, icalListViewModel.vJournalList, icalListViewModel.allSubtasks)
+        icalListAdapter = IcalListAdapter(application.applicationContext, icalListViewModel)
 
         recyclerView?.adapter = icalListAdapter
 
@@ -97,8 +97,11 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (arguments.component2show.isNotEmpty())
             icalListViewModel.searchComponent = arguments.component2show
 
+
         if(arguments.component2show.isNotEmpty() || arguments.category2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.status2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
             icalListViewModel.updateSearch()   // updateSearch() only if there was at least one filter criteria
+
+
 
         // activate the right tab according to the searchComponent
         when (icalListViewModel.searchComponent) {
@@ -168,7 +171,6 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
             }
 
-
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 // nothing to do
             }
@@ -180,9 +182,8 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 
         return binding.root
-
-
     }
+
 
     override fun onStart() {
 

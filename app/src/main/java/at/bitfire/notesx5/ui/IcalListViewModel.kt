@@ -2,8 +2,10 @@ package at.bitfire.notesx5.ui
 
 import android.app.Application
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
+import at.bitfire.notesx5.convertLongToTimeString
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
@@ -17,7 +19,7 @@ class IcalListViewModel(
         application: Application) : AndroidViewModel(application) {
 
 
-    var searchComponent = "JOURNAL"
+    var searchComponent: String = "JOURNAL"
     var searchText: String = ""
     var searchCategories: MutableList<String> = mutableListOf()
     var searchOrganizer: MutableList<String> = mutableListOf()
@@ -30,6 +32,8 @@ class IcalListViewModel(
     var vJournalList: LiveData<List<ICalEntityWithCategory>> = Transformations.switchMap(listQuery) {
         database.getVJournalWithCategory(it)
         }
+
+
 
 
     // TODO maybe retrieve all subtasks only when subtasks are needed!
@@ -217,5 +221,27 @@ class IcalListViewModel(
        searchCollection.clear()
        updateSearch()
     }
+
+
+
+
+    fun updateProgress(item: ICalObject, newPercent: Int) {
+
+        val item2update = item
+        item2update.percent = newPercent
+        item2update.sequence++
+        item2update.lastModified = System.currentTimeMillis()
+
+        when (item2update.percent) {
+            100 -> item2update.status = 2
+            in 1..99 -> item2update.status = 1
+            0 -> item2update.status = 0
+        }
+
+        viewModelScope.launch() {
+            database.update(item2update)
+        }
+    }
+
 
 }

@@ -23,7 +23,7 @@ apply plugin: 'androidx.navigation.safeargs'
 android {
     compileSdkVersion 30
     defaultConfig {
-        applicationId "at.bitfire.android.vjournalcalendar"
+        applicationId "at.bitfire.notesx5"
         minSdkVersion 27
         targetSdkVersion 30
         versionCode 1
