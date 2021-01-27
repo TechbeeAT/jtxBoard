@@ -89,8 +89,10 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
             holder.summary.text = iCalItem.property.summary
             if(iCalItem.property.description.isNullOrEmpty())
                 holder.description.visibility = View.GONE
-            else
-               holder.description.text = iCalItem.property.description
+            else {
+                holder.description.text = iCalItem.property.description
+                holder.description.visibility = View.VISIBLE
+            }
 
             if (iCalItem.category?.isNotEmpty() == true) {
                 val categoriesList = mutableListOf<String>()

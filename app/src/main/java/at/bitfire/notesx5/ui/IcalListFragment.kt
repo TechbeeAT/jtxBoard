@@ -102,7 +102,6 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             icalListViewModel.updateSearch()   // updateSearch() only if there was at least one filter criteria
 
 
-
         // activate the right tab according to the searchComponent
         when (icalListViewModel.searchComponent) {
             "NOTE" -> binding.tablayoutJournalnotestodos.getTabAt(1)?.select()
@@ -167,6 +166,10 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                     2 -> icalListViewModel.searchComponent = "TODO"
                     else -> icalListViewModel.searchComponent = "JOURNAL"
                 }
+
+                // ATTENTION: As the View is recreated on Resume, the arguments are read again, therefore the searchComponent MUST be updated, otherwise the application will crash!
+                getArguments()?.putString("component2show", icalListViewModel.searchComponent)
+
                 icalListViewModel.updateSearch()
 
             }

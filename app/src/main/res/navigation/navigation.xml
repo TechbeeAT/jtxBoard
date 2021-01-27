@@ -33,18 +33,15 @@
             android:id="@+id/action_icalListFragment_to_icalViewFragment"
             app:destination="@id/icalViewFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popUpTo="@id/icalListFragment" />
+            app:popEnterAnim="@anim/slide_in_right" />
         <action
             android:id="@+id/action_icalListFragment_to_icalEditFragment"
             app:destination="@id/icalEditFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popUpTo="@id/icalListFragment" />
+            app:popEnterAnim="@anim/slide_in_right" />
         <action
             android:id="@+id/action_icalListFragment_to_icalFilterFragment"
-            app:destination="@id/icalFilterFragment"
-            app:popUpTo="@id/icalListFragment" />
+            app:destination="@id/icalFilterFragment" />
         <argument
             android:name="item2focus"
             android:defaultValue="0L"
@@ -87,14 +84,10 @@
             android:id="@+id/action_icalViewFragment_to_icalEditFragment"
             app:destination="@id/icalEditFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:launchSingleTop="true"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popUpTo="@id/icalViewFragment" />
+            app:popEnterAnim="@anim/slide_in_right" />
         <action
             android:id="@+id/action_icalViewFragment_to_icalListFragment"
-            app:destination="@id/icalListFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/icalListFragment" />
+            app:destination="@id/icalListFragment" />
     </fragment>
     <fragment
         android:id="@+id/icalEditFragment"
