@@ -76,8 +76,8 @@ class IcalEditFragment : Fragment(),
         } else {
             //request for permission to load contacts
             MaterialAlertDialogBuilder(context!!)
-                    .setTitle("App Permission")
-                    .setMessage("NOTESx5 can propose Attendee, Contact and Organizer data as input values for your entries. Read Permissions on your contacts is needed to enable this feature.")
+                    .setTitle(getString(R.string.edit_fragment_app_permission))
+                    .setMessage(getString(R.string.edit_fragment_app_permission_message))
                     .setPositiveButton("Ok") { dialog, which ->
                         ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_READ_PERMISSION_CODE)
                     }

@@ -154,7 +154,6 @@ DELETEs
     fun getAllSubtasks(): LiveData<List<ICalObject?>>
 
 
-
 }
 
 

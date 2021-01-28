@@ -13,7 +13,6 @@ import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 import kotlinx.coroutines.launch
 
 
-
 class IcalListViewModel(
         val database: ICalDatabaseDao,
         application: Application) : AndroidViewModel(application) {
@@ -28,12 +27,10 @@ class IcalListViewModel(
     var searchCollection: MutableList<String> = mutableListOf()
 
 
-    private var listQuery:  MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
+    private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
     var vJournalList: LiveData<List<ICalEntityWithCategory>> = Transformations.switchMap(listQuery) {
         database.getVJournalWithCategory(it)
-        }
-
-
+    }
 
 
     // TODO maybe retrieve all subtasks only when subtasks are needed!
@@ -43,14 +40,16 @@ class IcalListViewModel(
     var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
 
 
-
     init {
 
         viewModelScope.launch {
 
             allSubtasks.apply { database.getAllSubtasks() }
 
-            insertTestData()
+            for (i in 1..2) {
+                insertTestData()
+
+            }
 
         }
 
@@ -105,7 +104,7 @@ class IcalListViewModel(
 
         database.insertComment(Comment(text = "comment", icalObjectId = newEntry2))
         database.insertOrganizer(Organizer(caladdress = "organizer", icalObjectId = newEntry2))
-       // database.insertRelatedto(Relatedto(text = "related to", icalObjectId = newEntry2))
+        // database.insertRelatedto(Relatedto(text = "related to", icalObjectId = newEntry2))
 
     }
 
@@ -130,13 +129,13 @@ class IcalListViewModel(
         focusItemId.value = 0L
     }
 
-    fun constructQuery(): SimpleSQLiteQuery  {
+    fun constructQuery(): SimpleSQLiteQuery {
 
         val args = arrayListOf<String>()
 
 // Beginning of query string
         var queryString = "SELECT DISTINCT icalobject.* FROM icalobject " +
-        "LEFT JOIN category ON icalobject.id = category.icalObjectId "  // +
+                "LEFT JOIN category ON icalobject.id = category.icalObjectId "  // +
         //     "LEFT JOIN vattendees ON icalobject.id = vattendees.icalObjectId " +
         //     "LEFT JOIN vcomments ON icalobject.id = vcomments.icalObjectId " +
         //     "LEFT JOIN vorganizer ON icalobject.id = vorganizer.icalObjectId " +
@@ -203,7 +202,7 @@ class IcalListViewModel(
         queryString += "ORDER BY dtstart DESC, created DESC "
 
         Log.println(Log.INFO, "queryString", queryString)
-        Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator=", "))
+        Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
 
 
         return SimpleSQLiteQuery(queryString, args.toArray())
@@ -214,15 +213,13 @@ class IcalListViewModel(
     }
 
     fun clearFilter() {
-       searchCategories.clear()
-       searchOrganizer.clear()
-       searchStatus.clear()
-       searchClassification.clear()
-       searchCollection.clear()
-       updateSearch()
+        searchCategories.clear()
+        searchOrganizer.clear()
+        searchStatus.clear()
+        searchClassification.clear()
+        searchCollection.clear()
+        updateSearch()
     }
-
-
 
 
     fun updateProgress(item: ICalObject, newPercent: Int) {

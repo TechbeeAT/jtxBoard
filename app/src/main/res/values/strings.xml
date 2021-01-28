@@ -131,6 +131,21 @@
     <string name="edit_attendees_roledialog_optional">Optional</string>
     <string name="edit_attendees_roledialog_nonparticipant">Info / Non-participant</string>
 
+    <string name="edit_due_date_hint">Due date</string>
+    <string name="edit_due_time_hint">Due time</string>
+    <string name="edit_add_time_switch">Add time</string>
+    <string name="edit_progress">Progress</string>
+    <string name="edit_subtasks_header">Subtasks</string>
+    <string name="edit_subtasks_add_hint">Subtask</string>
+    <string name="edit_show_all_switch">Show all</string>
+    <string name="edit_categories_header">Categories</string>
+    <string name="edit_attendees_header">Attendees</string>
+
+
+    <string name="edit_fragment_app_permission">App Permission</string>
+    <string name="edit_fragment_app_permission_message">NOTESx5 can propose Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
+
+
 
     <!-- fragment_ical_filter -->
     <string name="filter_collection">Collection</string>
@@ -158,15 +173,5 @@
     <string name="menu_list_add_note">Add Note</string>
     <string name="menu_list_add_todo">Add Todo</string>
     <string name="menu_view_share">Share</string>
-    <string name="edit_due_date_hint">Due date</string>
-    <string name="edit_due_time_hint">Due time</string>
-    <string name="edit_add_time_switch">Add time</string>
-    <string name="edit_progress">Progress</string>
-    <string name="edit_subtasks_header">Subtasks</string>
-    <string name="edit_subtasks_add_hint">Subtask</string>
-    <string name="edit_show_all_switch">Show all</string>
-    <string name="edit_categories_header">Categories</string>
-    <string name="edit_attendees_header">Attendees</string>
-
 
 </resources>

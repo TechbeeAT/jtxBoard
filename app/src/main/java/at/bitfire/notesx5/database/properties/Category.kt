@@ -16,6 +16,7 @@ import kotlinx.android.parcel.Parcelize
                 onDelete = ForeignKey.CASCADE)],
         indices = [Index(value = ["categoryId", "icalObjectId"]),
                 Index(value = ["categoryId"]),
+                Index(value = ["icalObjectId"]),
                 Index(value = ["text"])])
 
 data class Category (
