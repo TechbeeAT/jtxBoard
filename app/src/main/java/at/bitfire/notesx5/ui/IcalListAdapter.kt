@@ -81,7 +81,6 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
         holder.subtasksLinearLayout.visibility = subtasksVisibility
 
 
-
         val iCalItem = vJournalList.value?.get(position)
 
         if (iCalItem != null ) {
@@ -98,6 +97,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                 val categoriesList = mutableListOf<String>()
                 iCalItem.category!!.forEach { categoriesList.add(it.text)  }
                 holder.categories.text = categoriesList.joinToString(separator = ", ")
+                holder.categories.visibility = View.VISIBLE
             } else {
                 holder.categories.visibility = View.GONE
                 //holder.categoriesIcon.visibility = View.GONE
@@ -357,10 +357,6 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
         holder.subtasksLinearLayout.addView(subtaskView)
     }
-
-
-
-
 }
 
 
