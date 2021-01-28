@@ -88,6 +88,9 @@
         <action
             android:id="@+id/action_icalViewFragment_to_icalListFragment"
             app:destination="@id/icalListFragment" />
+        <action
+            android:id="@+id/action_icalViewFragment_self"
+            app:destination="@id/icalViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/icalEditFragment"

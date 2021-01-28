@@ -334,9 +334,6 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
         })
 
 
-
-
-
         subtaskView.list_item_subtask_progress_checkbox.setOnCheckedChangeListener { _, checked ->
             if (checked) {
                 subtaskView.list_item_subtask_progress_percent.text = "100"
@@ -351,6 +348,11 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
 
 
+        }
+
+        subtaskView.setOnClickListener { view ->
+            holder.listItemCardView.findNavController().navigate(
+                    IcalListFragmentDirections.actionIcalListFragmentToIcalViewFragment().setItem2show(subtask.id))
         }
 
         holder.subtasksLinearLayout.addView(subtaskView)

@@ -8,7 +8,8 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:checkable="true">
+    android:checkable="true"
+    android:id="@+id/view_subtask_cardview">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

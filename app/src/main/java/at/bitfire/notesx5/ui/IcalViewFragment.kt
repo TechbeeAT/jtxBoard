@@ -12,6 +12,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
@@ -126,6 +127,10 @@ class IcalViewFragment : Fragment() {
                 it.forEach { relatedICalObject ->
                     val relatedView = inflater.inflate(R.layout.fragment_ical_view_relatedto, container, false)
                     relatedView.view_related_textview.text = relatedICalObject?.summary
+                    relatedView.setOnClickListener { view ->
+                        view.findNavController().navigate(
+                                IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(relatedICalObject!!.id))
+                    }
                     binding.viewFeedbackLinearlayout.addView(relatedView)
                 }
             }
@@ -455,6 +460,12 @@ class IcalViewFragment : Fragment() {
             }
 
         }
+
+        subtaskView.view_subtask_cardview.setOnClickListener {
+            it.findNavController().navigate(
+                    IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(subtask.id))
+        }
+
             binding.viewSubtasksLinearlayout.addView(subtaskView)
     }
 
