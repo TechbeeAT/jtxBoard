@@ -47,8 +47,8 @@ class IcalEditFragment : Fragment(),
     private lateinit var icalEditViewModel: IcalEditViewModel
     private lateinit var inflater: LayoutInflater
 
-    //private val allContactsMail: MutableList<String> = mutableListOf()
-    private val allContactsNameAndMail: MutableList<String> = mutableListOf()
+    private val allContactsMail: MutableList<String> = mutableListOf()
+    //private val allContactsNameAndMail: MutableList<String> = mutableListOf()
 
     private var displayedCategoryChips = mutableListOf<Category>()
 
@@ -870,14 +870,17 @@ class IcalEditFragment : Fragment(),
                 val name = cur.getString(1)    // according to projection 0 = DISPLAY_NAME, 1 = Email.DATA
                 val emlAddr = cur.getString(2)
                 //Log.println(Log.INFO, "cursor: ", "$name: $emlAddr")
-                allContactsNameAndMail.add("$name ($emlAddr)")
+                allContactsMail.add(emlAddr)
+                //allContactsNameAndMail.add("$name ($emlAddr)")
                 //allContactsAsAttendee.add(VAttendee(cnparam = name, attendee = emlAddr))
 
             }
             cur.close()
         }
 
-        val arrayAdapterNameAndMail = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsNameAndMail)
+        // TODO: Here it can be considered that also the cuname in the attendee is filled out based on the contacts entry.
+        //val arrayAdapterNameAndMail = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsNameAndMail)
+        val arrayAdapterNameAndMail = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsMail)
 
         binding.editContactAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
         binding.editAttendeesAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
