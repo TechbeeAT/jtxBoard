@@ -7,17 +7,19 @@ import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Relatedto
 import at.bitfire.notesx5.database.relations.ICalEntity
+import kotlinx.android.synthetic.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 
-class IcalViewViewModel(private val vJournalItemId: Long,
+class IcalViewViewModel(private val icalItemId: Long,
                         val database: ICalDatabaseDao,
                         application: Application) : AndroidViewModel(application) {
 
-    lateinit var vJournal: LiveData<ICalEntity?>
+    lateinit var icalEntity: LiveData<ICalEntity?>
     lateinit var categories: LiveData<List<Category>>
     lateinit var attendees: LiveData<List<Attendee>>
     lateinit var relatedNotes: LiveData<List<ICalObject?>>
@@ -39,6 +41,7 @@ class IcalViewViewModel(private val vJournalItemId: Long,
     lateinit var priorityVisible: LiveData<Boolean>
     lateinit var subtasksVisible: LiveData<Boolean>
 
+    lateinit var subtasksCountList: LiveData<List<SubtaskCount>>
 
 
     var editingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
@@ -49,42 +52,44 @@ class IcalViewViewModel(private val vJournalItemId: Long,
         viewModelScope.launch {
 
             // insert a new value to initialize the vJournalItem or load the existing one from the DB
-            vJournal = if (vJournalItemId == 0L)
+            icalEntity = if (icalItemId == 0L)
                 MutableLiveData<ICalEntity?>().apply {
                     postValue(ICalEntity(ICalObject(), null, null, null, null, null))
                 }
             else
-                database.get(vJournalItemId)
+                database.get(icalItemId)
+
+            subtasksCountList = database.getSubtasksCount()
 
 
-            categories = Transformations.map(vJournal) {
+            categories = Transformations.map(icalEntity) {
                 it?.category
             }
 
-            attendees = Transformations.map(vJournal) {
+            attendees = Transformations.map(icalEntity) {
                 it?.attendee
             }
 
 
-            relatedNotes = Transformations.switchMap(vJournal) {
+            relatedNotes = Transformations.switchMap(icalEntity) {
                 it?.property?.id?.let { parentId -> database.getRelatedNotes(parentId) }
             }
 
-            relatedSubtasks = Transformations.switchMap(vJournal) {
+            relatedSubtasks = Transformations.switchMap(icalEntity) {
                 it?.property?.id?.let { parentId -> database.getRelatedTodos(it.property.id) }
             }
 
 
-            dateVisible = Transformations.map(vJournal) { item ->
+            dateVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.component == "JOURNAL"           // true if component == JOURNAL
             }
 
-            timeVisible = Transformations.map(vJournal) { item ->
+            timeVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.component == "JOURNAL" && item.property.dtstartTimezone != "ALLDAY"           // true if component == JOURNAL and it is not an All Day Event
 
             }
 
-            dtstartFormatted = Transformations.map(vJournal) { item ->
+            dtstartFormatted = Transformations.map(icalEntity) { item ->
                 if (item!!.property.dtstart != null) {
                     val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.property.dtstart!!))
                     val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.dtstart!!))
@@ -94,46 +99,51 @@ class IcalViewViewModel(private val vJournalItemId: Long,
 
             }
 
-            createdFormatted = Transformations.map(vJournal) { item ->
+            createdFormatted = Transformations.map(icalEntity) { item ->
                 item!!.property.let { Date(it.created).toString() }
             }
 
-            lastModifiedFormatted = Transformations.map(vJournal) { item ->
+            lastModifiedFormatted = Transformations.map(icalEntity) { item ->
                 item!!.property.let { Date(it.lastModified).toString() }
             }
 
 
 
 
-            urlVisible = Transformations.map(vJournal) { item ->
+            urlVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.property?.url.isNullOrBlank()      // true if url is NOT null or empty
             }
-            attendeesVisible = Transformations.map(vJournal) { item ->
+            attendeesVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.attendee.isNullOrEmpty()      // true if attendees is NOT null or empty
             }
-            organizerVisible = Transformations.map(vJournal) { item ->
+            organizerVisible = Transformations.map(icalEntity) { item ->
                 return@map !(item?.organizer == null)      // true if organizer is NOT null or empty
             }
-            contactVisible = Transformations.map(vJournal) { item ->
+            contactVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.property?.contact.isNullOrBlank()      // true if contact is NOT null or empty
             }
-            relatedtoVisible = Transformations.map(vJournal) { item ->
+            relatedtoVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.relatedto.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
             subtasksVisible = Transformations.map(relatedSubtasks) { subtasks ->
                 return@map subtasks?.isNotEmpty()      // true if relatedto is NOT null or empty
             }
-            commentsVisible = Transformations.map(vJournal) { item ->
+            commentsVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.comment.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
-            progressVisible = Transformations.map(vJournal) { item ->
+            progressVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.percent != null && item.property.component == "TODO"     // true if percent (progress) is NOT null
             }
-            priorityVisible = Transformations.map(vJournal) { item ->
+            priorityVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.priority != null      // true if priority is NOT null
             }
 
         }
+
+        viewModelScope.launch {
+            subtasksCountList = database.getSubtasksCount()
+        }
+
     }
 
     fun editingClicked() {
@@ -144,7 +154,7 @@ class IcalViewViewModel(private val vJournalItemId: Long,
     fun insertRelatedNote(note: ICalObject) {
         viewModelScope.launch() {
             val newNoteId = database.insertJournal(note)
-            database.upsertRelatedto(Relatedto(icalObjectId = vJournal.value!!.property.id, linkedICalObjectId = newNoteId, reltypeparam = "CHILD", text = note.uid))
+            database.upsertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltypeparam = "CHILD", text = note.uid))
 
         }
     }
@@ -152,6 +162,7 @@ class IcalViewViewModel(private val vJournalItemId: Long,
     fun deleteNote(note: ICalObject) {
         viewModelScope.launch(Dispatchers.IO) {
             //todo delete also link in relatedto!
+            database.deleteRelatedChildren(note.id)
             database.delete(note)
         }
     }

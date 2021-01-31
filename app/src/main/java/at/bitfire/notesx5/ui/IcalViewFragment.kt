@@ -6,11 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
-import android.widget.CheckBox
-import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -25,8 +22,6 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_ical_view_comment.view.*
 import kotlinx.android.synthetic.main.fragment_ical_view_relatedto.view.*
 import kotlinx.android.synthetic.main.fragment_ical_view_subtask.view.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 class IcalViewFragment : Fragment() {
@@ -84,38 +79,40 @@ class IcalViewFragment : Fragment() {
             if (it) {
                 icalViewViewModel.editingClicked.value = false
                 this.findNavController().navigate(
-                        IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.vJournal.value!!)
+                        IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value!!)
                 )
             }
         })
 
-        icalViewViewModel.vJournal.observe(viewLifecycleOwner, {
+        icalViewViewModel.icalEntity.observe(viewLifecycleOwner, {
 
             if (it?.property != null) {
 
-                val statusArray = if (icalViewViewModel.vJournal.value!!.property.component == "TODO")
+                val statusArray = if (icalViewViewModel.icalEntity.value!!.property.component == "TODO")
                     resources.getStringArray(R.array.vtodo_status)
                 else
                     resources.getStringArray(R.array.vjournal_status)
 
-                binding.viewStatusChip.text = statusArray[icalViewViewModel.vJournal.value!!.property.status]
+                binding.viewStatusChip.text = statusArray[icalViewViewModel.icalEntity.value!!.property.status]
 
                 val classificationArray = resources.getStringArray(R.array.ical_classification)
-                binding.viewClassificationChip.text = classificationArray[icalViewViewModel.vJournal.value!!.property.classification]
+                binding.viewClassificationChip.text = classificationArray[icalViewViewModel.icalEntity.value!!.property.classification]
 
                 val priorityArray = resources.getStringArray(R.array.priority)
-                if (icalViewViewModel.vJournal.value?.property?.priority != null && icalViewViewModel.vJournal.value!!.property.priority in 0..9)
-                    binding.viewPriorityChip.text = priorityArray[icalViewViewModel.vJournal.value!!.property.priority!!]
+                if (icalViewViewModel.icalEntity.value?.property?.priority != null && icalViewViewModel.icalEntity.value!!.property.priority in 0..9)
+                    binding.viewPriorityChip.text = priorityArray[icalViewViewModel.icalEntity.value!!.property.priority!!]
 
 
                 binding.viewCommentsLinearlayout.removeAllViews()
-                icalViewViewModel.vJournal.value!!.comment?.forEach { comment ->
+                icalViewViewModel.icalEntity.value!!.comment?.forEach { comment ->
                     val commentView = inflater.inflate(R.layout.fragment_ical_view_comment, container, false)
                     commentView.view_comment_textview.text = comment.text
                     binding.viewCommentsLinearlayout.addView(commentView)
                 }
             }
         })
+
+        icalViewViewModel.subtasksCountList.observe(viewLifecycleOwner, { })
 
 
 
@@ -143,6 +140,8 @@ class IcalViewFragment : Fragment() {
                 addSubtasksView(singleSubtask, container)
             }
         }
+
+       // icalViewViewModel.subtasksCountHashmap.observe(viewLifecycleOwner) { }
 
 
             /*
@@ -227,7 +226,7 @@ class IcalViewFragment : Fragment() {
         }
 
 
-        var resetProgress = icalViewViewModel.vJournal.value?.property?.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
+        var resetProgress = icalViewViewModel.icalEntity.value?.property?.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
 
         binding.viewProgressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
@@ -236,15 +235,15 @@ class IcalViewFragment : Fragment() {
             override fun onStopTrackingTouch(slider: Slider) {
                 if (binding.viewProgressSlider.value.toInt() < 100)
                     resetProgress = binding.viewProgressSlider.value.toInt()
-                icalViewViewModel.updateProgress(icalViewViewModel.vJournal.value!!.property, binding.viewProgressSlider.value.toInt())
+                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, binding.viewProgressSlider.value.toInt())
             }
         })
 
         binding.viewProgressCheckbox.setOnCheckedChangeListener { button, checked ->
             if (checked) {
-                icalViewViewModel.updateProgress(icalViewViewModel.vJournal.value!!.property, 100)
+                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, 100)
             } else {
-                icalViewViewModel.updateProgress(icalViewViewModel.vJournal.value!!.property, resetProgress)
+                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, resetProgress)
             }
         }
 
@@ -431,7 +430,12 @@ class IcalViewFragment : Fragment() {
         var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
 
         val subtaskView = inflater.inflate(R.layout.fragment_ical_view_subtask, container, false)
-        subtaskView.view_subtask_textview.text = subtask.summary
+
+        var subtaskSummary =subtask.summary
+        val subtaskCount = icalViewViewModel.subtasksCountList.value?.find { subtask.id == it.icalobjectId}?.count
+        if (subtaskCount != null)
+            subtaskSummary += " (+${subtaskCount})"
+        subtaskView.view_subtask_textview.text = subtaskSummary
         subtaskView.view_subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
         subtaskView.view_subtask_progress_percent.text = if(subtask.percent?.toFloat() != null) subtask.percent!!.toString() else "0"
         subtaskView.view_subtask_progress_checkbox.isChecked = subtask.percent == 100
@@ -480,16 +484,16 @@ class IcalViewFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_view_share) {
 
-            var shareText = "${convertLongToDateString(icalViewViewModel.vJournal.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.vJournal.value!!.property.dtstart)}\n"
-            shareText += "${icalViewViewModel.vJournal.value!!.property.summary}\n\n"
-            shareText += "${icalViewViewModel.vJournal.value!!.property.description}\n\n"
+            var shareText = "${convertLongToDateString(icalViewViewModel.icalEntity.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart)}\n"
+            shareText += "${icalViewViewModel.icalEntity.value!!.property.summary}\n\n"
+            shareText += "${icalViewViewModel.icalEntity.value!!.property.description}\n\n"
             //todo add category again
             //shareText += "Categories/Labels: ${vJournalItemViewModel.vJournal.value!!.vCategory}"
 
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.type = "text/plain"
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.vJournal.value!!.property.summary)
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.icalEntity.value!!.property.summary)
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
             startActivity(Intent(shareIntent))
 

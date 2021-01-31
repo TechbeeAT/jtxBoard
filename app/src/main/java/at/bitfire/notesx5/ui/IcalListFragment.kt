@@ -140,6 +140,9 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         // This observer is needed in order to make sure that the Subtasks are retrieved!
         icalListViewModel.allSubtasks.observe(viewLifecycleOwner, {})
 
+        icalListViewModel.subtasksCountList.observe(viewLifecycleOwner, { })
+
+
 
         // Observe the focus item to scroll automatically to the right position (newly updated or inserted item)
         icalListViewModel.focusItemId.observe(viewLifecycleOwner, {

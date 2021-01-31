@@ -280,6 +280,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
         subtaskDeleted.forEach { subtask2del ->
             viewModelScope.launch(Dispatchers.IO) {
+                database.deleteRelatedChildren(subtask2del.id)       // Also Child-Elements of Child-Elements need to be deleted!
                 database.delete(subtask2del)
                 database.deleteRelatedto(iCalObjectUpdated.value!!.id, subtask2del.id)
             }
@@ -290,6 +291,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
+            database.deleteRelatedChildren(iCalEntity.property.id)
             database.delete(iCalEntity.property)
         }
     }

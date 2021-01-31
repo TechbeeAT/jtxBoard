@@ -16,6 +16,7 @@
 
 package at.bitfire.notesx5.database
 
+import android.database.Cursor
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
@@ -102,6 +103,11 @@ DELETEs
     @Query("DELETE FROM relatedto WHERE relatedto.icalObjectId = :parentId and relatedto.linkedICalObjectId = :childId")
     fun deleteRelatedto(parentId: Long, childId: Long)
 
+    @Transaction
+    @Query("DELETE FROM icalobject WHERE icalobject.id in (SELECT linkedICalObjectId FROM relatedto WHERE relatedto.icalObjectId = :parentKey)")
+    fun deleteRelatedChildren(parentKey: Long)
+
+
 
 
     @Update
@@ -109,29 +115,18 @@ DELETEs
 
 
 
-        // TODO Take care to delete also child elements!
+    // TODO Take care to delete also child elements!
     @Delete
     fun delete(icalObject: ICalObject)
 
 
-    /*
     @Transaction
-    @Query("SELECT * FROM vjournals")
-    fun getVJournalEntity(): LiveData<List<VJournalEntity>>
-
-    @Transaction
-    @Query("SELECT * FROM vjournals WHERE component IN (:component) AND (summary LIKE :searchGlobal OR description LIKE :searchGlobal) ORDER BY dtstart DESC, created DESC")
-    fun getVJournalEntity(component: List<String>, searchGlobal: String): LiveData<List<VJournalEntity>>
-
-*/
+    @RawQuery
+    fun getIcalEntity(query: SupportSQLiteQuery): LiveData<List<ICalEntity>>
 
     @Transaction
     @RawQuery
-    fun getVJournalEntity(query: SupportSQLiteQuery): LiveData<List<ICalEntity>>
-
-    @Transaction
-    @RawQuery
-    fun getVJournalWithCategory(query: SupportSQLiteQuery): LiveData<List<ICalEntityWithCategory>>
+    fun getIcalObjectWithCategory(query: SupportSQLiteQuery): LiveData<List<ICalEntityWithCategory>>
 
 
     @Transaction
@@ -153,8 +148,20 @@ DELETEs
     @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId WHERE icalobject.component = 'TODO'")
     fun getAllSubtasks(): LiveData<List<ICalObject?>>
 
+    @Transaction
+    @Query("SELECT icalobject.id as icalobjectId, count(*) as count from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.icalObjectId WHERE icalobject.component = 'TODO' GROUP BY icalobjectId")
+    fun getSubtasksCount(): LiveData<List<SubtaskCount>>
+
+
+    @Query("SELECT * from icalobject")
+    fun getCursorAllIcalObjects(): Cursor?
 
 }
 
+
+class SubtaskCount {
+    var icalobjectId: Long = 0L
+    var count: Int = 0
+}
 
 

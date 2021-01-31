@@ -19,6 +19,7 @@ import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
 import kotlinx.android.synthetic.main.fragment_ical_list_item_subtask.view.*
+import kotlinx.android.synthetic.main.fragment_ical_view_subtask.view.*
 import java.util.concurrent.TimeUnit
 
 class IcalListAdapter(var context: Context, var model: IcalListViewModel):
@@ -308,7 +309,12 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
         var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
 
         val subtaskView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_ical_list_item_subtask, parent, false)
-        subtaskView.list_item_subtask_textview.text = subtask.summary
+
+        var subtaskSummary = subtask.summary
+        val subtaskCount = model.subtasksCountList.value?.find { subtask.id == it.icalobjectId}?.count
+        if (subtaskCount != null)
+            subtaskSummary += " (+${subtaskCount})"
+        subtaskView.list_item_subtask_textview.text = subtaskSummary
         subtaskView.list_item_subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
         subtaskView.list_item_subtask_progress_percent.text = if(subtask.percent?.toFloat() != null) subtask.percent!!.toString() else "0"
         subtaskView.list_item_subtask_progress_checkbox.isChecked = subtask.percent == 100

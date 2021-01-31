@@ -2,10 +2,8 @@ package at.bitfire.notesx5.ui
 
 import android.app.Application
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
-import at.bitfire.notesx5.convertLongToTimeString
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
@@ -29,12 +27,15 @@ class IcalListViewModel(
 
     private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
     var vJournalList: LiveData<List<ICalEntityWithCategory>> = Transformations.switchMap(listQuery) {
-        database.getVJournalWithCategory(it)
+        database.getIcalObjectWithCategory(it)
     }
 
 
     // TODO maybe retrieve all subtasks only when subtasks are needed!
     val allSubtasks: LiveData<List<ICalObject?>> = database.getAllSubtasks()
+
+    lateinit var subtasksCountList: LiveData<List<SubtaskCount>>
+
 
     //var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
     var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
@@ -51,6 +52,10 @@ class IcalListViewModel(
 
             }
 
+        }
+
+        viewModelScope.launch {
+            subtasksCountList = database.getSubtasksCount()
         }
 
     }
