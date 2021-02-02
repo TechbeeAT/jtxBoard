@@ -31,18 +31,6 @@ import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 @Dao
 interface ICalDatabaseDao {
 
-    /*
-    @Query("SELECT * from vjournalitems WHERE id = :key")
-    fun get(key: Long): LiveData<VJournalItem?>
-
-    @Query("SELECT * FROM vjournals ORDER BY dtstart DESC, created DESC")
-    fun getVJournalItems(): LiveData<List<VJournal>>
-
-
-    @Query("SELECT * FROM vjournals WHERE component LIKE :component AND (categories LIKE :search_global OR summary LIKE :search_global OR description LIKE :search_global OR organizer LIKE :search_global OR status LIKE :search_global)  AND categories LIKE :search_category AND organizer LIKE :search_organizer AND status LIKE :search_status AND classification LIKE :search_classification ORDER BY dtstart DESC, created DESC")
-    fun getVJournalItems(component: Array<String>, search_global: String, search_category: Array<String>, search_organizer: Array<String>, search_status: Array<String>, search_classification: Array<String>): LiveData<List<VJournal>>
-
-     */
 
     @Transaction
     @Query("SELECT DISTINCT text FROM category ORDER BY text ASC")
@@ -76,7 +64,7 @@ INSERTs
     suspend fun insertOrganizer(organizer: Organizer): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertRelatedto(relatedto: Relatedto): Long
+    suspend fun insertRelatedto(relatedto: Relatedto): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSubtask(subtask: ICalObject): Long
@@ -148,13 +136,41 @@ DELETEs
     @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId WHERE icalobject.component = 'TODO'")
     fun getAllSubtasks(): LiveData<List<ICalObject?>>
 
+    // Determines the number of Subtasks. This is especially used for Sub-Sub-Tasks to show the number of Sub-Sub-Tasks on a Sub-Task
     @Transaction
     @Query("SELECT icalobject.id as icalobjectId, count(*) as count from relatedto INNER JOIN icalobject ON icalobject.id = relatedto.icalObjectId WHERE icalobject.component = 'TODO' GROUP BY icalobjectId")
     fun getSubtasksCount(): LiveData<List<SubtaskCount>>
 
 
+    /*
+    Queries for the content provider returning a Cursor
+     */
+
     @Query("SELECT * from icalobject")
-    fun getCursorAllIcalObjects(): Cursor?
+    fun getAllIcalObjects(): Cursor?
+
+    @Query("SELECT * from attendee WHERE attendee.icalObjectId = :icalobjectId")
+    fun getAttendeesByIcalentity(icalobjectId: Long): Cursor?
+
+    @Query("SELECT * from category WHERE category.icalObjectId = :icalobjectId")
+    fun getCategoriesByIcalentity(icalobjectId: Long): Cursor?
+
+    @Query("SELECT * from comment WHERE comment.icalObjectId = :icalobjectId")
+    fun getCommentsByIcalentity(icalobjectId: Long): Cursor?
+
+    @Query("SELECT * from contact WHERE contact.icalObjectId = :icalobjectId")
+    fun getContactByIcalentity(icalobjectId: Long): Cursor?
+
+    @Query("SELECT * from organizer WHERE organizer.icalObjectId = :icalobjectId")
+    fun getOrganizersByIcalentity(icalobjectId: Long): Cursor?
+
+    @Query("SELECT * from relatedto WHERE relatedto.icalObjectId = :icalobjectId")
+    fun getRelatedtoByIcalentity(icalobjectId: Long): Cursor?
+
+    @Query("SELECT * from resource WHERE resource.icalObjectId = :icalobjectId")
+    fun getResourceByIcalentity(icalobjectId: Long): Cursor?
+
+
 
 }
 

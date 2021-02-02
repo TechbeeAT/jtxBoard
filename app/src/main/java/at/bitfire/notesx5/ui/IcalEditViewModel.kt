@@ -264,7 +264,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
             // Only insert if the relation doesn't exist already, otherwise there's nothing to do
             if(iCalEntity.relatedto?.find { it.icalObjectId == insertedOrUpdatedItemId && it.linkedICalObjectId == subtask.id} == null )
-                database.upsertRelatedto(Relatedto(icalObjectId = insertedOrUpdatedItemId, linkedICalObjectId = subtask.id, reltypeparam = "CHILD", text = subtask.uid))
+                database.insertRelatedto(Relatedto(icalObjectId = insertedOrUpdatedItemId, linkedICalObjectId = subtask.id, reltypeparam = "CHILD", text = subtask.uid))
 
         }
     }

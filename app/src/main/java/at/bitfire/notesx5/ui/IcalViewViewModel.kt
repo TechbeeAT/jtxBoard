@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 
 class IcalViewViewModel(private val icalItemId: Long,
@@ -154,7 +153,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     fun insertRelatedNote(note: ICalObject) {
         viewModelScope.launch() {
             val newNoteId = database.insertJournal(note)
-            database.upsertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltypeparam = "CHILD", text = note.uid))
+            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltypeparam = "CHILD", text = note.uid))
 
         }
     }
