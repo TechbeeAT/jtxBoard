@@ -149,7 +149,7 @@ DELETEs
     fun getAllSubtasks(): LiveData<List<ICalObject?>>
 
     @Transaction
-    @Query("SELECT icalobject.id as icalobjectId, count(*) as count from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.icalObjectId WHERE icalobject.component = 'TODO' GROUP BY icalobjectId")
+    @Query("SELECT icalobject.id as icalobjectId, count(*) as count from relatedto INNER JOIN icalobject ON icalobject.id = relatedto.icalObjectId WHERE icalobject.component = 'TODO' GROUP BY icalobjectId")
     fun getSubtasksCount(): LiveData<List<SubtaskCount>>
 
 

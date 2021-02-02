@@ -15,7 +15,8 @@ import kotlinx.android.parcel.Parcelize
                 childColumns = arrayOf("icalObjectId"),
                 onDelete = ForeignKey.CASCADE)],
         indices = [Index(value = ["relatedtoId"]),
-                Index(value = ["icalObjectId"])])
+                Index(value = ["icalObjectId"]),
+                Index(value = ["linkedICalObjectId"])])
 data class Relatedto (
 
         @PrimaryKey(autoGenerate = true)
