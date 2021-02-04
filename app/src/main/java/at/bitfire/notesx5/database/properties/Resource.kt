@@ -2,30 +2,45 @@ package at.bitfire.notesx5.database.properties
 
 
 import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import android.provider.BaseColumns
+import androidx.room.*
+import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize
 
 
+/** The name of the the table.  */
+const val TABLE_NAME_RESOURCE = "resource"
+
+/** The name of the ID column.  */
+const val COLUMN_RESOURCE_ID = BaseColumns._ID
+
+/** The name of the Foreign Key Column for IcalObjects. */
+const val COLUMN_RESOURCE_ICALOBJECT_ID = "icalObjectId"
+
+
+/** The names of all the other columns  */
+const val COLUMN_RESOURCE_TEXT = "text"
+const val COLUMN_RESOURCE_RELTYPEPARAM = "reltypeparam"
+const val COLUMN_RESOURCE_OTHERPARAM = "otherparam"
+
+
 @Parcelize
-@Entity(tableName = "resource",
+@Entity(tableName = TABLE_NAME_RESOURCE,
         foreignKeys = [ForeignKey(entity = ICalObject::class,
-                parentColumns = arrayOf("id"),
-                childColumns = arrayOf("icalObjectId"),
-                onDelete = ForeignKey.CASCADE)],
-        indices = [Index(value = ["resourceId"]),
-                Index(value = ["icalObjectId"])])
+                parentColumns = arrayOf(COLUMN_ID),
+                childColumns = arrayOf(COLUMN_RESOURCE_ICALOBJECT_ID),
+                onDelete = ForeignKey.CASCADE)])
 data class Resource (
 
         @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(index = true, name = COLUMN_RESOURCE_ID)
         var resourceId: Long = 0L,
-        var icalObjectId: Long = 0L,
-        var text: String = "",
-        var reltypeparam: String? = null,
-        var otherparam: String? = null
+
+        @ColumnInfo(index = true, name = COLUMN_RESOURCE_ICALOBJECT_ID)var icalObjectId: Long = 0L,
+        @ColumnInfo(name = COLUMN_RESOURCE_TEXT)            var text: String = "",
+        @ColumnInfo(name = COLUMN_RESOURCE_RELTYPEPARAM)    var reltypeparam: String? = null,
+        @ColumnInfo(name = COLUMN_RESOURCE_OTHERPARAM)      var otherparam: String? = null
 ): Parcelable
 
 

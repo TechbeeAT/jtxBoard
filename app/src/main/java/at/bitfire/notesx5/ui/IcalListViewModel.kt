@@ -134,17 +134,17 @@ class IcalListViewModel(
         focusItemId.value = 0L
     }
 
-    fun constructQuery(): SimpleSQLiteQuery {
+    private fun constructQuery(): SimpleSQLiteQuery {
 
         val args = arrayListOf<String>()
 
 // Beginning of query string
-        var queryString = "SELECT DISTINCT icalobject.* FROM icalobject " +
-                "LEFT JOIN category ON icalobject.id = category.icalObjectId "  // +
-        //     "LEFT JOIN vattendees ON icalobject.id = vattendees.icalObjectId " +
-        //     "LEFT JOIN vcomments ON icalobject.id = vcomments.icalObjectId " +
-        //     "LEFT JOIN vorganizer ON icalobject.id = vorganizer.icalObjectId " +
-        //     "LEFT JOIN vRelatedto ON icalobject.id = vRelatedto.icalObjectId "
+        var queryString = "SELECT DISTINCT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT " +
+                "LEFT JOIN $TABLE_NAME_CATEGORY ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_CATEGORY.${COLUMN_CATEGORY_ICALOBJECT_ID} "  // +
+        //     "LEFT JOIN vattendees ON icalobject._id = vattendees.icalObjectId " +
+        //     "LEFT JOIN vcomments ON icalobject._id = vcomments.icalObjectId " +
+        //     "LEFT JOIN vorganizer ON icalobject._id = vorganizer.icalObjectId " +
+        //     "LEFT JOIN vRelatedto ON icalobject._id = vRelatedto.icalObjectId "
 
         // First query parameter Component must always be present!
         queryString += "WHERE component = ? "
@@ -152,7 +152,7 @@ class IcalListViewModel(
 
         // Query for the given text search from the action bar
         if (searchText.isNotEmpty() && searchText.length >= 2) {
-            queryString += "AND (summary LIKE ? OR description LIKE ?) "
+            queryString += "AND ($COLUMN_SUMMARY LIKE ? OR $COLUMN_DESCRIPTION LIKE ?) "
             args.add(searchText)
             args.add(searchText)
         }
@@ -170,7 +170,7 @@ class IcalListViewModel(
 
         // Query for the passed filter criteria from VJournalFilterFragment
         if (searchStatus.size > 0) {
-            queryString += "AND status IN ("
+            queryString += "AND $COLUMN_STATUS IN ("
             searchStatus.forEach {
                 queryString += "?,"
                 args.add(it.toString())
@@ -181,7 +181,7 @@ class IcalListViewModel(
 
         // Query for the passed filter criteria from VJournalFilterFragment
         if (searchClassification.size > 0) {
-            queryString += "AND classification IN ("
+            queryString += "AND $COLUMN_CLASSIFICATION IN ("
             searchClassification.forEach {
                 queryString += "?,"
                 args.add(it.toString())
@@ -202,9 +202,9 @@ class IcalListViewModel(
         }
 
         // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
-        queryString += "AND icalobject.id NOT IN (SELECT linkedICalObjectId FROM relatedto) "
+        queryString += "AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
 
-        queryString += "ORDER BY dtstart DESC, created DESC "
+        queryString += "ORDER BY $COLUMN_DTSTART DESC, $COLUMN_CREATED DESC "
 
         Log.println(Log.INFO, "queryString", queryString)
         Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))

@@ -11,7 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <provider
+            android:name=".ContentProvider"
+            android:authorities="at.bitfire.notesx5.provider"
+            android:enabled="true"
+            android:exported="true"></provider>
 
         <activity android:name=".MainActivity">
             <intent-filter>

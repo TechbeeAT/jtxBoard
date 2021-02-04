@@ -1,6 +1,7 @@
 package at.bitfire.notesx5.database.relations
 
 import android.os.Parcelable
+import android.provider.BaseColumns
 import androidx.room.Embedded
 import androidx.room.Relation
 import at.bitfire.notesx5.database.*
@@ -13,19 +14,19 @@ data class ICalEntity (
         var property: ICalObject = ICalObject(),
 
 
-        @Relation(parentColumn = "id", entityColumn = "icalObjectId", entity = Comment::class)
+        @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Comment::class)
         var comment: List<Comment>? = null,
 
-        @Relation(parentColumn = "id", entityColumn = "icalObjectId", entity = Category::class)
+        @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Category::class)
         var category: List<Category>? = null,
 
-        @Relation(parentColumn = "id", entityColumn = "icalObjectId", entity = Attendee::class)
+        @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Attendee::class)
         var attendee: List<Attendee>? = null,
 
-        @Relation(parentColumn = "id", entityColumn = "icalObjectId", entity = Organizer::class)
+        @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Organizer::class)
         var organizer: Organizer? = null,
 
-        @Relation(parentColumn = "id", entityColumn = "icalObjectId", entity = Relatedto::class)
+        @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Relatedto::class)
         var relatedto: List<Relatedto>? = null
 
 

@@ -92,7 +92,7 @@ DELETEs
     fun deleteRelatedto(parentId: Long, childId: Long)
 
     @Transaction
-    @Query("DELETE FROM icalobject WHERE icalobject.id in (SELECT linkedICalObjectId FROM relatedto WHERE relatedto.icalObjectId = :parentKey)")
+    @Query("DELETE FROM icalobject WHERE icalobject._id in (SELECT linkedICalObjectId FROM relatedto WHERE relatedto.icalObjectId = :parentKey)")
     fun deleteRelatedChildren(parentKey: Long)
 
 
@@ -118,34 +118,40 @@ DELETEs
 
 
     @Transaction
-    @Query("SELECT * from icalobject WHERE id = :key")
+    @Query("SELECT * from icalobject WHERE _id = :key")
     fun get(key: Long): LiveData<ICalEntity?>
 
 
     // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
     @Transaction
-    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey and icalobject.component = 'NOTE'")
+    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey and icalobject.component = 'NOTE'")
     fun getRelatedNotes(parentKey: Long): LiveData<List<ICalObject?>>
 
     // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
     @Transaction
-    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey and icalobject.component = 'TODO'")
+    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey and icalobject.component = 'TODO'")
     fun getRelatedTodos(parentKey: Long): LiveData<List<ICalObject?>>
 
     @Transaction
-    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId WHERE icalobject.component = 'TODO'")
+    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE icalobject.component = 'TODO'")
     fun getAllSubtasks(): LiveData<List<ICalObject?>>
 
     // Determines the number of Subtasks. This is especially used for Sub-Sub-Tasks to show the number of Sub-Sub-Tasks on a Sub-Task
     @Transaction
-    @Query("SELECT icalobject.id as icalobjectId, count(*) as count from relatedto INNER JOIN icalobject ON icalobject.id = relatedto.icalObjectId WHERE icalobject.component = 'TODO' GROUP BY icalobjectId")
+    @Query("SELECT icalobject._id as icalobjectId, count(*) as count from relatedto INNER JOIN icalobject ON icalobject._id = relatedto.icalObjectId WHERE icalobject.component = 'TODO' GROUP BY icalobjectId")
     fun getSubtasksCount(): LiveData<List<SubtaskCount>>
 
 
     /*
     Queries for the content provider returning a Cursor
      */
+    @Transaction
+    @RawQuery
+    fun getCursor(query: SupportSQLiteQuery): Cursor?
 
+
+
+    /*
     @Query("SELECT * from icalobject")
     fun getAllIcalObjects(): Cursor?
 
@@ -170,6 +176,8 @@ DELETEs
     @Query("SELECT * from resource WHERE resource.icalObjectId = :icalobjectId")
     fun getResourceByIcalentity(icalobjectId: Long): Cursor?
 
+
+     */
 
 
 }

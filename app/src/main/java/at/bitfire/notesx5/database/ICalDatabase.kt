@@ -17,6 +17,7 @@
 package at.bitfire.notesx5.database
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -36,7 +37,7 @@ import at.bitfire.notesx5.database.properties.*
     ICalObject::class,
     Organizer::class,
     Relatedto::class,
-    Resource::class], version = 38, exportSchema = false)
+    Resource::class], version = 40, exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {
 
@@ -105,6 +106,36 @@ abstract class ICalDatabase : RoomDatabase() {
                 // Return instance; smart cast to be non-null.
                 return instance
             }
+        }
+
+        /**
+         * Switches the internal implementation with an empty in-memory database.
+         *
+         * @param context The context.
+         */
+        @VisibleForTesting
+        fun switchToInMemory(context: Context) {
+            INSTANCE = Room.inMemoryDatabaseBuilder(context.applicationContext,
+                    ICalDatabase::class.java).build()
+        }
+
+        /**
+         * Inserts the dummy data into the database if it is currently empty.
+         */
+        private fun populateInitialData() {
+
+            /*
+            if (cheese().count() === 0) {
+                runInTransaction(Runnable {
+                    val cheese = Cheese()
+                    for (i in 0 until Cheese.CHEESES.length) {
+                        cheese.name = Cheese.CHEESES.get(i)
+                        cheese().insert(cheese)
+                    }
+                })
+            }
+
+             */
         }
     }
 }
