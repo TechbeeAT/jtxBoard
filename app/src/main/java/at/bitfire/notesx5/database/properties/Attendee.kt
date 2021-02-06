@@ -71,7 +71,6 @@ data class Attendee (
 ): Parcelable
 
 
-
 {
         companion object Factory {
 
@@ -89,51 +88,65 @@ data class Attendee (
                         if (values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID) == null || values.getAsString(COLUMN_ATTENDEE_CALADDRESS) == null)     // at least a icalObjectId and text must be given for an Attendee!
                                 return null
 
-                        val attendee = Attendee(icalObjectId = values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID), caladdress = values.getAsString(COLUMN_ATTENDEE_CALADDRESS))
-
-
-                        if (values.containsKey(COLUMN_ATTENDEE_CUTYPEPARAM)) {
-                                attendee.cutypeparam = values.getAsString(COLUMN_ATTENDEE_CUTYPEPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_MEMBERPARAM)) {
-                                attendee.memberparam = values.getAsString(COLUMN_ATTENDEE_MEMBERPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_ROLEPARAM)) {
-                                attendee.roleparam = values.getAsInteger(COLUMN_ATTENDEE_ROLEPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_ROLEPARAMX)) {
-                                attendee.roleparamX = values.getAsString(COLUMN_ATTENDEE_ROLEPARAMX)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_PARTSTATPARAM)) {
-                                attendee.partstatparam = values.getAsString(COLUMN_ATTENDEE_PARTSTATPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_RSVPPARAM)) {
-                                attendee.rsvpparam = values.getAsString(COLUMN_ATTENDEE_RSVPPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_DELTOPARAM)) {
-                                attendee.deltoparam = values.getAsString(COLUMN_ATTENDEE_DELTOPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_DELFROMPARAM)) {
-                                attendee.delfromparam = values.getAsString(COLUMN_ATTENDEE_DELFROMPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_SENTBYPARAM)) {
-                                attendee.sentbyparam = values.getAsString(COLUMN_ATTENDEE_SENTBYPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_CNPARAM)) {
-                                attendee.cnparam = values.getAsString(COLUMN_ATTENDEE_CNPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_DIRPARAM)) {
-                                attendee.dirparam = values.getAsString(COLUMN_ATTENDEE_DIRPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_LANGUAGEPARAM)) {
-                                attendee.languageparam = values.getAsString(COLUMN_ATTENDEE_LANGUAGEPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ATTENDEE_OTHERPARAM)) {
-                                attendee.otherparam = values.getAsString(COLUMN_ATTENDEE_OTHERPARAM)
-                        }
+                        val attendee = Attendee()
+                        attendee.applyContentValues(values)
 
                         return attendee
                 }
         }
+
+
+        fun applyContentValues(values: ContentValues?) {
+
+                if(values?.containsKey(COLUMN_ATTENDEE_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID) == null)
+                        this.icalObjectId = values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID)
+
+                if(values?.containsKey(COLUMN_ATTENDEE_CALADDRESS) == true && values.getAsString(COLUMN_ATTENDEE_CALADDRESS).isNotBlank())
+                        this.caladdress = values.getAsString(COLUMN_ATTENDEE_CALADDRESS)
+
+
+                if (values?.containsKey(COLUMN_ATTENDEE_CUTYPEPARAM) == true && values.getAsString(COLUMN_ATTENDEE_CUTYPEPARAM).isNotBlank()) {
+                        this.cutypeparam = values.getAsString(COLUMN_ATTENDEE_CUTYPEPARAM)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_MEMBERPARAM) == true && values.getAsString(COLUMN_ATTENDEE_MEMBERPARAM).isNotBlank()) {
+                        this.memberparam = values.getAsString(COLUMN_ATTENDEE_MEMBERPARAM)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_ROLEPARAM) == true && values.getAsInteger(COLUMN_ATTENDEE_ROLEPARAM) != null) {
+                        this.roleparam = values.getAsInteger(COLUMN_ATTENDEE_ROLEPARAM)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_ROLEPARAMX) == true && values.getAsString(COLUMN_ATTENDEE_ROLEPARAMX).isNotBlank()) {
+                        this.roleparamX = values.getAsString(COLUMN_ATTENDEE_ROLEPARAMX)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_PARTSTATPARAM) == true && values.getAsString(COLUMN_ATTENDEE_PARTSTATPARAM).isNotBlank()) {
+                        this.partstatparam = values.getAsString(COLUMN_ATTENDEE_PARTSTATPARAM)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_RSVPPARAM) == true && values.getAsString(COLUMN_ATTENDEE_RSVPPARAM).isNotBlank()) {
+                        this.rsvpparam = values.getAsString(COLUMN_ATTENDEE_RSVPPARAM)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_DELTOPARAM) == true && values.getAsString(COLUMN_ATTENDEE_DELTOPARAM).isNotBlank()) {
+                        this.deltoparam = values.getAsString(COLUMN_ATTENDEE_DELTOPARAM)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_DELFROMPARAM) == true && values.getAsString(COLUMN_ATTENDEE_DELFROMPARAM).isNotBlank()) {
+                        this.delfromparam = values.getAsString(COLUMN_ATTENDEE_DELFROMPARAM)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_SENTBYPARAM) == true && values.getAsString(COLUMN_ATTENDEE_SENTBYPARAM).isNotBlank()) {
+                        this.sentbyparam = values.getAsString(COLUMN_ATTENDEE_SENTBYPARAM)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_CNPARAM) == true && values.getAsString(COLUMN_ATTENDEE_CNPARAM).isNotBlank()) {
+                        this.cnparam = values.getAsString(COLUMN_ATTENDEE_CNPARAM)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_DIRPARAM) == true && values.getAsString(COLUMN_ATTENDEE_DIRPARAM).isNotBlank()) {
+                        this.dirparam = values.getAsString(COLUMN_ATTENDEE_DIRPARAM)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_LANGUAGEPARAM) == true && values.getAsString(COLUMN_ATTENDEE_LANGUAGEPARAM).isNotBlank()) {
+                        this.languageparam = values.getAsString(COLUMN_ATTENDEE_LANGUAGEPARAM)
+                }
+                if (values?.containsKey(COLUMN_ATTENDEE_OTHERPARAM) == true && values.getAsString(COLUMN_ATTENDEE_OTHERPARAM).isNotBlank()) {
+                        this.otherparam = values.getAsString(COLUMN_ATTENDEE_OTHERPARAM)
+                }
+
+
+        }
+
 }
 

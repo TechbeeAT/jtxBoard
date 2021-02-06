@@ -64,18 +64,31 @@ data class Category (
             if (values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID) == null || values.getAsString(COLUMN_CATEGORY_TEXT) == null)     // at least a icalObjectId and text must be given for a Comment!
                 return null
 
-            val category = Category(icalObjectId = values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID), text = values.getAsString(COLUMN_CATEGORY_TEXT))
-
-            if (values.containsKey(COLUMN_CATEGORY_LANGUAGEPARAM)) {
-                category.languageparam = values.getAsString(COLUMN_CATEGORY_LANGUAGEPARAM)
-            }
-            if (values.containsKey(COLUMN_CATEGORY_OTHERPARAM)) {
-                category.otherparam = values.getAsString(COLUMN_CATEGORY_OTHERPARAM)
-            }
+            val category = Category()
+            category.applyContentValues(values)
 
             return category
         }
     }
+
+
+    fun applyContentValues(values: ContentValues?) {
+
+        if(values?.containsKey(COLUMN_CATEGORY_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID) == null)
+            this.icalObjectId = values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID)
+
+        if(values?.containsKey(COLUMN_CATEGORY_TEXT) == true && values.getAsString(COLUMN_CATEGORY_TEXT).isNotBlank())
+            this.text = values.getAsString(COLUMN_CATEGORY_TEXT)
+
+        if (values?.containsKey(COLUMN_CATEGORY_LANGUAGEPARAM) == true && values.getAsString(COLUMN_CATEGORY_LANGUAGEPARAM) != null) {
+            this.languageparam = values.getAsString(COLUMN_CATEGORY_LANGUAGEPARAM)
+        }
+        if (values?.containsKey(COLUMN_CATEGORY_OTHERPARAM) == true && values.getAsString(COLUMN_CATEGORY_OTHERPARAM).isNotBlank()) {
+            this.otherparam = values.getAsString(COLUMN_CATEGORY_OTHERPARAM)
+        }
+
+    }
+
 
 }
 

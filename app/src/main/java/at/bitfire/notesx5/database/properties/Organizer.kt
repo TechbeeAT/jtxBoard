@@ -63,7 +63,7 @@ data class Organizer (
                  * @param values A [Organizer] that at least contain [COLUMN_ORGANIZER_CALADDRESS] and [COLUMN_ORGANIZER_ICALOBJECT_ID]
                  * @return A newly created [Organizer] instance.
                  */
-                fun fromContentValues(@Nullable values: ContentValues?): Organizer? {
+                fun fromContentValues(values: ContentValues?): Organizer? {
 
                         if (values == null)
                                 return null
@@ -71,27 +71,41 @@ data class Organizer (
                         if (values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID) == null || values.getAsString(COLUMN_ORGANIZER_CALADDRESS) == null)     // at least a icalObjectId and caladdress must be given for an Organizer!
                                 return null
 
-                        val organizer = Organizer(icalObjectId = values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID), caladdress = values.getAsString(COLUMN_ORGANIZER_CALADDRESS))
-
-                        if (values.containsKey(COLUMN_ORGANIZER_CNPARAM)) {
-                                organizer.cnparam = values.getAsString(COLUMN_ORGANIZER_CNPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ORGANIZER_DIRPARAM)) {
-                                organizer.dirparam = values.getAsString(COLUMN_ORGANIZER_DIRPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ORGANIZER_SENTBYPARAM)) {
-                                organizer.sentbyparam = values.getAsString(COLUMN_ORGANIZER_SENTBYPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ORGANIZER_LANGUAGEPARAM)) {
-                                organizer.languageparam = values.getAsString(COLUMN_ORGANIZER_LANGUAGEPARAM)
-                        }
-                        if (values.containsKey(COLUMN_ORGANIZER_OTHERPARAM)) {
-                                organizer.otherparam = values.getAsString(COLUMN_ORGANIZER_OTHERPARAM)
-                        }
+                        val organizer = Organizer()
+                        organizer.applyContentValues(values)
 
                         return organizer
                 }
         }
+
+        fun applyContentValues(values: ContentValues?) {
+
+                if(values?.containsKey(COLUMN_ORGANIZER_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID) == null)
+                        this.icalObjectId = values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID)
+
+                if(values?.containsKey(COLUMN_ORGANIZER_CALADDRESS) == true && values.getAsString(COLUMN_ORGANIZER_CALADDRESS).isNotBlank())
+                        this.caladdress = values.getAsString(COLUMN_ORGANIZER_CALADDRESS)
+
+
+
+                if (values?.containsKey(COLUMN_ORGANIZER_CNPARAM) == true && values.getAsString(COLUMN_ORGANIZER_CNPARAM).isNotBlank()) {
+                        this.cnparam = values.getAsString(COLUMN_ORGANIZER_CNPARAM)
+                }
+                if (values?.containsKey(COLUMN_ORGANIZER_DIRPARAM) == true && values.getAsString(COLUMN_ORGANIZER_DIRPARAM).isNotBlank()) {
+                        this.dirparam = values.getAsString(COLUMN_ORGANIZER_DIRPARAM)
+                }
+                if (values?.containsKey(COLUMN_ORGANIZER_SENTBYPARAM) == true && values.getAsString(COLUMN_ORGANIZER_SENTBYPARAM).isNotBlank()) {
+                        this.sentbyparam = values.getAsString(COLUMN_ORGANIZER_SENTBYPARAM)
+                }
+                if (values?.containsKey(COLUMN_ORGANIZER_LANGUAGEPARAM) == true && values.getAsString(COLUMN_ORGANIZER_LANGUAGEPARAM).isNotBlank()) {
+                        this.languageparam = values.getAsString(COLUMN_ORGANIZER_LANGUAGEPARAM)
+                }
+                if (values?.containsKey(COLUMN_ORGANIZER_OTHERPARAM) == true && values.getAsString(COLUMN_ORGANIZER_OTHERPARAM).isNotBlank()) {
+                        this.otherparam = values.getAsString(COLUMN_ORGANIZER_OTHERPARAM)
+                }
+
+        }
+
 
 }
 

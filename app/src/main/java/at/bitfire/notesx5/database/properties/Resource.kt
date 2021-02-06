@@ -54,7 +54,7 @@ data class Resource (
                  * @param values A [Resource] that at least contain [COLUMN_RESOURCE_TEXT] and [COLUMN_RESOURCE_ICALOBJECT_ID].
                  * @return A newly created [Resource] instance.
                  */
-                fun fromContentValues(@Nullable values: ContentValues?): Resource? {
+                fun fromContentValues(values: ContentValues?): Resource? {
 
                         if (values == null)
                                 return null
@@ -62,19 +62,31 @@ data class Resource (
                         if(values.getAsString(COLUMN_RESOURCE_TEXT) == null || values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID) == null)
                                 return null
 
-                        val resource = Resource(icalObjectId = values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID), text = values.getAsString(COLUMN_RESOURCE_TEXT))
-
-
-                        if (values.containsKey(COLUMN_RESOURCE_RELTYPEPARAM)) {
-                                resource.reltypeparam = values.getAsString(COLUMN_RESOURCE_RELTYPEPARAM)
-                        }
-                        if (values.containsKey(COLUMN_RESOURCE_OTHERPARAM)) {
-                                resource.otherparam = values.getAsString(COLUMN_RESOURCE_OTHERPARAM)
-                        }
+                        val resource = Resource()
+                        resource.applyContentValues(values)
 
                         return resource
                 }
         }
+
+        fun applyContentValues(values: ContentValues?) {
+
+
+                if(values?.containsKey(COLUMN_RESOURCE_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID) == null)
+                        this.icalObjectId = values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID)
+
+                if(values?.containsKey(COLUMN_RESOURCE_TEXT) == true && values.getAsString(COLUMN_RESOURCE_TEXT).isNotBlank())
+                        this.text = values.getAsString(COLUMN_RESOURCE_TEXT)
+
+
+                if (values?.containsKey(COLUMN_RESOURCE_RELTYPEPARAM) == true && values.getAsString(COLUMN_RESOURCE_RELTYPEPARAM).isNotBlank() ) {
+                        this.reltypeparam = values.getAsString(COLUMN_RESOURCE_RELTYPEPARAM)
+                }
+                if (values?.containsKey(COLUMN_RESOURCE_OTHERPARAM) == true && values.getAsString(COLUMN_RESOURCE_OTHERPARAM).isNotBlank()) {
+                        this.otherparam = values.getAsString(COLUMN_RESOURCE_OTHERPARAM)
+                }
+        }
+
 }
 
 

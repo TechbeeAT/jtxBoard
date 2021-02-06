@@ -58,7 +58,7 @@ data class Contact (
                  * @param values A [Contact] that at least contain [COLUMN_CONTACT_TEXT] and [COLUMN_CONTACT_ICALOBJECT_ID]
                  * @return A newly created [Contact] instance.
                  */
-                fun fromContentValues(@Nullable values: ContentValues?): Contact? {
+                fun fromContentValues(values: ContentValues?): Contact? {
 
                         if (values == null)
                                 return null
@@ -66,18 +66,31 @@ data class Contact (
                         if (values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID) == null || values.getAsString(COLUMN_CONTACT_TEXT) == null)     // at least a icalObjectId and text must be given for a Contact!
                                 return null
 
-                        val contact = Contact(icalObjectId = values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID), text = values.getAsString(COLUMN_CONTACT_TEXT))
-
-                        if (values.containsKey(COLUMN_CONTACT_LANGUAGEPARAM)) {
-                                contact.languageparam = values.getAsString(COLUMN_CONTACT_LANGUAGEPARAM)
-                        }
-                        if (values.containsKey(COLUMN_CONTACT_OTHERPARAM)) {
-                                contact.otherparam = values.getAsString(COLUMN_CONTACT_OTHERPARAM)
-                        }
+                        val contact = Contact()
+                        contact.applyContentValues(values)
 
                         return contact
                 }
         }
+
+        fun applyContentValues(values: ContentValues?) {
+
+
+                if(values?.containsKey(COLUMN_CONTACT_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID) == null)
+                        this.icalObjectId = values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID)
+
+                if(values?.containsKey(COLUMN_CONTACT_TEXT) == true && values.getAsString(COLUMN_CONTACT_TEXT).isNotBlank())
+                        this.text = values.getAsString(COLUMN_CONTACT_TEXT)
+
+
+                if (values?.containsKey(COLUMN_CONTACT_LANGUAGEPARAM) == true && values.getAsString(COLUMN_CONTACT_LANGUAGEPARAM).isNotBlank()) {
+                        this.languageparam = values.getAsString(COLUMN_CONTACT_LANGUAGEPARAM)
+                }
+                if (values?.containsKey(COLUMN_CONTACT_OTHERPARAM) == true && values.getAsString(COLUMN_CONTACT_OTHERPARAM).isNotBlank()) {
+                        this.otherparam = values.getAsString(COLUMN_CONTACT_OTHERPARAM)
+                }
+        }
+
 
 }
 
