@@ -1,11 +1,12 @@
 package at.bitfire.notesx5.database.properties
 
 
+import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
+import androidx.annotation.Nullable
 import androidx.room.*
-import at.bitfire.notesx5.database.COLUMN_ID
-import at.bitfire.notesx5.database.ICalObject
+import at.bitfire.notesx5.database.*
 import kotlinx.android.parcel.Parcelize
 
 
@@ -38,10 +39,44 @@ data class Resource (
         var resourceId: Long = 0L,
 
         @ColumnInfo(index = true, name = COLUMN_RESOURCE_ICALOBJECT_ID)var icalObjectId: Long = 0L,
-        @ColumnInfo(name = COLUMN_RESOURCE_TEXT)            var text: String = "",
+        @ColumnInfo(name = COLUMN_RESOURCE_TEXT)            var text: String? = "",
         @ColumnInfo(name = COLUMN_RESOURCE_RELTYPEPARAM)    var reltypeparam: String? = null,
         @ColumnInfo(name = COLUMN_RESOURCE_OTHERPARAM)      var otherparam: String? = null
 ): Parcelable
+
+
+{
+        companion object Factory {
+
+                /**
+                 * Create a new [Resource] from the specified [ContentValues].
+                 *
+                 * @param values A [Resource] that at least contain [COLUMN_RESOURCE_TEXT] and [COLUMN_RESOURCE_ICALOBJECT_ID].
+                 * @return A newly created [Resource] instance.
+                 */
+                fun fromContentValues(@Nullable values: ContentValues?): Resource? {
+
+                        if (values == null)
+                                return null
+
+                        if(values.getAsString(COLUMN_RESOURCE_TEXT) == null || values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID) == null)
+                                return null
+
+                        val resource = Resource(icalObjectId = values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID), text = values.getAsString(COLUMN_RESOURCE_TEXT))
+
+
+                        if (values.containsKey(COLUMN_RESOURCE_RELTYPEPARAM)) {
+                                resource.reltypeparam = values.getAsString(COLUMN_RESOURCE_RELTYPEPARAM)
+                        }
+                        if (values.containsKey(COLUMN_RESOURCE_OTHERPARAM)) {
+                                resource.otherparam = values.getAsString(COLUMN_RESOURCE_OTHERPARAM)
+                        }
+
+                        return resource
+                }
+        }
+}
+
 
 
 

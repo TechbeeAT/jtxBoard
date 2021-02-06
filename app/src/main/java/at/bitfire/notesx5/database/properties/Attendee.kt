@@ -1,7 +1,9 @@
 package at.bitfire.notesx5.database.properties
 
+import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
+import androidx.annotation.Nullable
 import androidx.room.*
 import at.bitfire.notesx5.database.COLUMN_COMPONENT
 import at.bitfire.notesx5.database.COLUMN_ID
@@ -67,3 +69,71 @@ data class Attendee (
         @ColumnInfo(name = COLUMN_ATTENDEE_OTHERPARAM)          var otherparam: String? = null
 
 ): Parcelable
+
+
+
+{
+        companion object Factory {
+
+                /**
+                 * Create a new [Attendee] from the specified [ContentValues].
+                 *
+                 * @param values A [Attendee] that at least contain [COLUMN_ATTENDEE_CALADDRESS] and [COLUMN_ATTENDEE_ICALOBJECT_ID]
+                 * @return A newly created [Attendee] instance.
+                 */
+                fun fromContentValues(@Nullable values: ContentValues?): Attendee? {
+
+                        if (values == null)
+                                return null
+
+                        if (values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID) == null || values.getAsString(COLUMN_ATTENDEE_CALADDRESS) == null)     // at least a icalObjectId and text must be given for an Attendee!
+                                return null
+
+                        val attendee = Attendee(icalObjectId = values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID), caladdress = values.getAsString(COLUMN_ATTENDEE_CALADDRESS))
+
+
+                        if (values.containsKey(COLUMN_ATTENDEE_CUTYPEPARAM)) {
+                                attendee.cutypeparam = values.getAsString(COLUMN_ATTENDEE_CUTYPEPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_MEMBERPARAM)) {
+                                attendee.memberparam = values.getAsString(COLUMN_ATTENDEE_MEMBERPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_ROLEPARAM)) {
+                                attendee.roleparam = values.getAsInteger(COLUMN_ATTENDEE_ROLEPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_ROLEPARAMX)) {
+                                attendee.roleparamX = values.getAsString(COLUMN_ATTENDEE_ROLEPARAMX)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_PARTSTATPARAM)) {
+                                attendee.partstatparam = values.getAsString(COLUMN_ATTENDEE_PARTSTATPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_RSVPPARAM)) {
+                                attendee.rsvpparam = values.getAsString(COLUMN_ATTENDEE_RSVPPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_DELTOPARAM)) {
+                                attendee.deltoparam = values.getAsString(COLUMN_ATTENDEE_DELTOPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_DELFROMPARAM)) {
+                                attendee.delfromparam = values.getAsString(COLUMN_ATTENDEE_DELFROMPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_SENTBYPARAM)) {
+                                attendee.sentbyparam = values.getAsString(COLUMN_ATTENDEE_SENTBYPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_CNPARAM)) {
+                                attendee.cnparam = values.getAsString(COLUMN_ATTENDEE_CNPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_DIRPARAM)) {
+                                attendee.dirparam = values.getAsString(COLUMN_ATTENDEE_DIRPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_LANGUAGEPARAM)) {
+                                attendee.languageparam = values.getAsString(COLUMN_ATTENDEE_LANGUAGEPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ATTENDEE_OTHERPARAM)) {
+                                attendee.otherparam = values.getAsString(COLUMN_ATTENDEE_OTHERPARAM)
+                        }
+
+                        return attendee
+                }
+        }
+}
+

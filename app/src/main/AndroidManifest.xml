@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <provider
-            android:name=".ContentProvider"
+            android:name=".SyncContentProvider"
             android:authorities="at.bitfire.notesx5.provider"
             android:enabled="true"
             android:exported="true"></provider>

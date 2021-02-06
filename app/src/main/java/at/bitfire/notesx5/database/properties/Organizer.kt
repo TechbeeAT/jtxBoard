@@ -1,8 +1,10 @@
 package at.bitfire.notesx5.database.properties
 
 
+import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
+import androidx.annotation.Nullable
 import androidx.room.*
 import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.ICalObject
@@ -29,7 +31,6 @@ const val COLUMN_ORGANIZER_OTHERPARAM = "otherparam"
 
 
 
-
 @Parcelize
 @Entity(tableName = TABLE_NAME_ORGANIZER,
         foreignKeys = [ForeignKey(entity = ICalObject::class,
@@ -50,3 +51,48 @@ data class Organizer (
         @ColumnInfo(name = COLUMN_ORGANIZER_LANGUAGEPARAM)     var languageparam: String? = null,
         @ColumnInfo(name = COLUMN_ORGANIZER_OTHERPARAM)     var otherparam: String? = null
 ): Parcelable
+
+
+
+{
+        companion object Factory {
+
+                /**
+                 * Create a new [Organizer] from the specified [ContentValues].
+                 *
+                 * @param values A [Organizer] that at least contain [COLUMN_ORGANIZER_CALADDRESS] and [COLUMN_ORGANIZER_ICALOBJECT_ID]
+                 * @return A newly created [Organizer] instance.
+                 */
+                fun fromContentValues(@Nullable values: ContentValues?): Organizer? {
+
+                        if (values == null)
+                                return null
+
+                        if (values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID) == null || values.getAsString(COLUMN_ORGANIZER_CALADDRESS) == null)     // at least a icalObjectId and caladdress must be given for an Organizer!
+                                return null
+
+                        val organizer = Organizer(icalObjectId = values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID), caladdress = values.getAsString(COLUMN_ORGANIZER_CALADDRESS))
+
+                        if (values.containsKey(COLUMN_ORGANIZER_CNPARAM)) {
+                                organizer.cnparam = values.getAsString(COLUMN_ORGANIZER_CNPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ORGANIZER_DIRPARAM)) {
+                                organizer.dirparam = values.getAsString(COLUMN_ORGANIZER_DIRPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ORGANIZER_SENTBYPARAM)) {
+                                organizer.sentbyparam = values.getAsString(COLUMN_ORGANIZER_SENTBYPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ORGANIZER_LANGUAGEPARAM)) {
+                                organizer.languageparam = values.getAsString(COLUMN_ORGANIZER_LANGUAGEPARAM)
+                        }
+                        if (values.containsKey(COLUMN_ORGANIZER_OTHERPARAM)) {
+                                organizer.otherparam = values.getAsString(COLUMN_ORGANIZER_OTHERPARAM)
+                        }
+
+                        return organizer
+                }
+        }
+
+}
+
+

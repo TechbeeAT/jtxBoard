@@ -45,11 +45,11 @@ interface ICalDatabaseDao {
     fun getAllCollections(): LiveData<List<String>>
 
 /*
-INSERTs
+INSERTs (Async)
  */
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertJournal(vJournalItem: ICalObject): Long
+    suspend fun insertICalObject(iCalObject: ICalObject): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAttendee(attendee: Attendee): Long
@@ -70,27 +70,178 @@ INSERTs
     suspend fun insertSubtask(subtask: ICalObject): Long
 
 
+/*
+INSERTs (Synchronously)
+ */
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertICalObjectSync(iCalObject: ICalObject): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAttendeeSync(attendee: Attendee): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCategorySync(category: Category): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCommentSync(comment: Comment): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertOrganizerSync(organizer: Organizer): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertRelatedtoSync(relatedto: Relatedto): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertContactSync(contact: Contact): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertResourceSync(resource: Resource): Long
+
 
 
 /*
-DELETEs
+DELETEs by Object
  */
 
+
+    // TODO Take care to delete also child elements!
+    /**
+     * Delete an iCalObject by the object.
+     *
+     * @param icalObject The object of the icalObject that should be deleted.
+     */
+    @Delete
+    fun delete(icalObject: ICalObject)
+
+
+
+    /**
+     * Delete a category by the object.
+     *
+     * @param category The object of the category that should be deleted.
+     */
     @Delete
     fun deleteCategory(category: Category)
 
+    /**
+     * Delete a comment by the object.
+     *
+     * @param comment The object of the comment that should be deleted.
+     */
     @Delete
     fun deleteComment(comment: Comment)
 
+    /**
+     * Delete a relatedto by the object.
+     *
+     * @param Relatedto The object of the relatedto that should be deleted.
+     */
     @Delete
     fun deleteRelatedto(rel: Relatedto)
 
+    /**
+     * Delete an attendee by the object.
+     *
+     * @param attendee The object of the attendee that should be deleted.
+     */
     @Delete
     fun deleteAttendee(attendee: Attendee)
 
+    /**
+     * Delete a relatedto by parentId and childId.
+     *
+     * @param parentId The Id of the parent IcalObject.
+     * @param childId The Id of the child IcalObject.
+     */
     @Query("DELETE FROM relatedto WHERE relatedto.icalObjectId = :parentId and relatedto.linkedICalObjectId = :childId")
     fun deleteRelatedto(parentId: Long, childId: Long)
 
+
+    /*
+    DELETE by Id
+     */
+
+    /**
+     * Delete an IcalObject by the ID.
+     *
+     * @param id The row ID.
+     * @return A number of ICalObjects deleted. This should always be `1`.
+     */
+    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
+    fun deleteICalObjectById(id: Long): Int
+
+    /**
+     * Delete an Attendee by the ID.
+     *
+     * @param id The row ID.
+     * @return A number of Attendees deleted. This should always be `1`.
+     */
+    @Query("DELETE FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ID = :id")
+    fun deleteAttendeeById(id: Long): Int
+
+
+    /**
+     * Delete an Category by the ID.
+     *
+     * @param id The row ID.
+     * @return A number of Categories deleted. This should always be `1`.
+     */
+    @Query("DELETE FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ID = :id")
+    fun deleteCategoryById(id: Long): Int
+
+
+    /**
+     * Delete an Comment by the ID.
+     *
+     * @param id The row ID.
+     * @return A number of Comments deleted. This should always be `1`.
+     */
+    @Query("DELETE FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ID = :id")
+    fun deleteCommentById(id: Long): Int
+
+    /**
+     * Delete an Contact by the ID.
+     *
+     * @param id The row ID.
+     * @return A number of Contacts deleted. This should always be `1`.
+     */
+    @Query("DELETE FROM $TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ID = :id")
+    fun deleteContactById(id: Long): Int
+
+    /**
+     * Delete an Organizer by the ID.
+     *
+     * @param id The row ID.
+     * @return A number of Organizers deleted. This should always be `1`.
+     */
+    @Query("DELETE FROM $TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ID = :id")
+    fun deleteOrganizerById(id: Long): Int
+
+    /**
+     * Delete a Related-to by the ID.
+     *
+     * @param id The row ID.
+     * @return A number of Related-to deleted. This should always be `1`.
+     */
+    @Query("DELETE FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ID = :id")
+    fun deleteRelatedtoById(id: Long): Int
+
+    /**
+     * Delete an Resource by the ID.
+     *
+     * @param id The row ID.
+     * @return A number of Resource deleted. This should always be `1`.
+     */
+    @Query("DELETE FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ID = :id")
+    fun deleteResourceById(id: Long): Int
+
+
+    /**
+     * Delete all children of a parent ICalObject by the parent ID.
+     *
+     * @param parentKey The row ID of the parent.
+     */
     @Transaction
     @Query("DELETE FROM icalobject WHERE icalobject._id in (SELECT linkedICalObjectId FROM relatedto WHERE relatedto.icalObjectId = :parentKey)")
     fun deleteRelatedChildren(parentKey: Long)
@@ -101,11 +252,6 @@ DELETEs
     @Update
     suspend fun update(icalObject: ICalObject)
 
-
-
-    // TODO Take care to delete also child elements!
-    @Delete
-    fun delete(icalObject: ICalObject)
 
 
     @Transaction
@@ -140,6 +286,10 @@ DELETEs
     @Transaction
     @Query("SELECT icalobject._id as icalobjectId, count(*) as count from relatedto INNER JOIN icalobject ON icalobject._id = relatedto.icalObjectId WHERE icalobject.component = 'TODO' GROUP BY icalobjectId")
     fun getSubtasksCount(): LiveData<List<SubtaskCount>>
+
+
+    @Query("SELECT count(*) FROM $TABLE_NAME_ICALOBJECT")
+    fun getCount(): Int
 
 
     /*

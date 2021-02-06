@@ -152,7 +152,7 @@ class IcalViewViewModel(private val icalItemId: Long,
 
     fun insertRelatedNote(note: ICalObject) {
         viewModelScope.launch() {
-            val newNoteId = database.insertJournal(note)
+            val newNoteId = database.insertICalObject(note)
             database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltypeparam = "CHILD", text = note.uid))
 
         }

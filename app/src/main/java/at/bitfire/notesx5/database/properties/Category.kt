@@ -1,7 +1,9 @@
 package at.bitfire.notesx5.database.properties
 
+import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
+import androidx.annotation.Nullable
 import androidx.room.*
 import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.ICalObject
@@ -43,4 +45,37 @@ data class Category (
         @ColumnInfo(name = COLUMN_CATEGORY_LANGUAGEPARAM)                   var languageparam: String? = null,
         @ColumnInfo(name = COLUMN_CATEGORY_OTHERPARAM)                      var otherparam: String? = null
 ): Parcelable
+
+
+{
+    companion object Factory {
+
+        /**
+         * Create a new [Category] from the specified [ContentValues].
+         *
+         * @param values A [Category] that at least contain [COLUMN_CATEGORY_TEXT] and [COLUMN_CATEGORY_ICALOBJECT_ID]
+         * @return A newly created [Category] instance.
+         */
+        fun fromContentValues(@Nullable values: ContentValues?): Category? {
+
+            if (values == null)
+                return null
+
+            if (values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID) == null || values.getAsString(COLUMN_CATEGORY_TEXT) == null)     // at least a icalObjectId and text must be given for a Comment!
+                return null
+
+            val category = Category(icalObjectId = values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID), text = values.getAsString(COLUMN_CATEGORY_TEXT))
+
+            if (values.containsKey(COLUMN_CATEGORY_LANGUAGEPARAM)) {
+                category.languageparam = values.getAsString(COLUMN_CATEGORY_LANGUAGEPARAM)
+            }
+            if (values.containsKey(COLUMN_CATEGORY_OTHERPARAM)) {
+                category.otherparam = values.getAsString(COLUMN_CATEGORY_OTHERPARAM)
+            }
+
+            return category
+        }
+    }
+
+}
 

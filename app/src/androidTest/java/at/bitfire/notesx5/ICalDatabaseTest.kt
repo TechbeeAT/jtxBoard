@@ -2,19 +2,23 @@ package at.bitfire.notesx5
 
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import at.bitfire.notesx5.database.*
+import kotlinx.coroutines.runBlocking
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.`is`
 import org.junit.After
 import org.junit.Before
-
+import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
+@SmallTest
 class ICalDatabaseTest {
 
 
-    private lateinit var ICalDao: ICalDatabaseDao
+    private lateinit var database: ICalDatabaseDao
     private lateinit var db: ICalDatabase
 
     @Before
@@ -26,39 +30,33 @@ class ICalDatabaseTest {
                 // Allowing main thread queries, just for testing.
                 .allowMainThreadQueries()
                 .build()
-        ICalDao = db.iCalDatabaseDao
+        database = db.iCalDatabaseDao
     }
-    /*
+
+
 
     @Test
-    @Throws(Exception::class)
-    suspend fun insert() {
-        /*
-        var vJournalItem = vJournalItem()
-        vJournalItem.description = "asdf"
-        //vJournalItem.comment = "asfd"
-        vJournalItem.dtstamp = System.currentTimeMillis()
-        vJournalItem.dtstamp = System.currentTimeMillis()
-        vJournalItem.uid = "uid" */
+    fun insertAndCount() = runBlocking {
+        assertThat(database.getCount(), `is`(0))
+        database.insertICalObject(ICalObject.createJournal())
+        assertThat(database.getCount(), `is`(1))
 
-        //var item = vJournalItem(component="JOURNAL", summary=rfcSummary, description=rfcDesc), listOf(VAttendee(attendee="test@test.de")), listOf(vCategory(categories="cat")), listOf(vComment(comment="comm1"), vComment(comment="comm2")), vOrganizer(organizer = "organizer"), listOf(vRelatedto(relatedto = "related")))
-
-        var id = VJournalDao.insert(vJournalItem(component="JOURNAL", summary="rfcSummary", description="rfcDesc"), listOf(VAttendee(attendee="test@test.de")), listOf(vCategory(categories="cat")), listOf(vComment(comment="comm1"), vComment(comment="comm2")), vOrganizer(organizer = "organizer"), listOf(vRelatedto(relatedto = "related")))
-        //val retrievedItem = VJournalDao.get(vJournalItem.id)
         //assertEquals(vJournalItem, retrievedItem)
-
     }
 
-*/
+    @Test
+    fun insert_and_retrieve_ICalObject() = runBlocking {
+        val newEntry = database.insertICalObject(ICalObject.createNote("myTestJournal"))
+        val retrievedEntry = database.get(newEntry)
+        assertThat(retrievedEntry?.value?.property?.summary, `is`("myTestJournal"))
+
+    }
 
 
     @After
-    @Throws(IOException::class)
     fun closeDb() {
         db.close()
     }
-
-
 
 
 }

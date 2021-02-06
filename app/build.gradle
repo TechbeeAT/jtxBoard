@@ -58,8 +58,8 @@ dependencies {
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$version_room"
     implementation "androidx.appcompat:appcompat:$version_appcompat"
-    implementation "com.android.support:appcompat-v7:$version_appcompat-v7"
-    implementation 'androidx.drawerlayout:drawerlayout:1.0.0'
+    implementation "com.android.support:appcompat-v7:28.0.0"
+    implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
 
     kapt "androidx.room:room-compiler:$version_room"
     implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
@@ -90,5 +90,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     testImplementation "androidx.room:room-testing:$version_room"
+    testImplementation 'android.arch.core:core-testing:1.1.1'
 
 }

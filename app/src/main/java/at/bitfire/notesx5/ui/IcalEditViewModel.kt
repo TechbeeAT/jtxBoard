@@ -175,7 +175,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         if (iCalObjectUpdated.value!!.id == 0L) {
 
             //Log.println(Log.INFO, "VJournalItemViewModel", "creating a new one")
-            return database.insertJournal(iCalObjectUpdated.value!!)
+            return database.insertICalObject(iCalObjectUpdated.value!!)
             //Log.println(Log.INFO, "vJournalItemViewModel", vJournalItemUpdate.id.toString())
         } else {
             iCalObjectUpdated.value!!.sequence++

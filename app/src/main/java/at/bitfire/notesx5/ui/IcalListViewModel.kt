@@ -87,7 +87,7 @@ class IcalListViewModel(
         //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer",  "#category1, #category2", "FINAL","PUBLIC", "", "uid", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
         //database.insert(vJournalItem(summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
 
-        val newEntry = database.insertJournal(ICalObject(component = "JOURNAL", summary = rfcSummary, description = rfcDesc, dtstart = System.currentTimeMillis()))
+        val newEntry = database.insertICalObject(ICalObject(component = "JOURNAL", summary = rfcSummary, description = rfcDesc, dtstart = System.currentTimeMillis()))
         database.insertAttendee(Attendee(caladdress = "test@test.de", icalObjectId = newEntry))
         database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
         database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
@@ -102,7 +102,7 @@ class IcalListViewModel(
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary, description=noteDesc, organizer="LOCAL", categories="JourFixe, BestProject"))
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary2, description=noteDesc2, organizer="LOCAL", categories="Shopping"))
 
-        val newEntry2 = database.insertJournal(ICalObject(component = "NOTE", summary = noteSummary, description = noteDesc))
+        val newEntry2 = database.insertICalObject(ICalObject(component = "NOTE", summary = noteSummary, description = noteDesc))
         database.insertAttendee(Attendee(caladdress = "test@test.de", icalObjectId = newEntry2))
         database.insertCategory(Category(text = "cat", icalObjectId = newEntry2))
         database.insertCategory(Category(text = "cat", icalObjectId = newEntry2))

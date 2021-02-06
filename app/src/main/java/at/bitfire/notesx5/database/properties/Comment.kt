@@ -1,7 +1,9 @@
 package at.bitfire.notesx5.database.properties
 
+import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
+import androidx.annotation.Nullable
 import androidx.room.*
 import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.ICalObject
@@ -42,5 +44,37 @@ data class Comment (
     @ColumnInfo(name = COLUMN_COMMENT_LANGUAGEPARAM)               var languageparam: String? = null
 ): Parcelable
 
+
+{
+    companion object Factory {
+
+        /**
+         * Create a new [Comment] from the specified [ContentValues].
+         *
+         * @param values A [Comment] that at least contain [COLUMN_COMMENT_TEXT] and [COLUMN_COMMENT_ICALOBJECT_ID]
+         * @return A newly created [Comment] instance.
+         */
+        fun fromContentValues(@Nullable values: ContentValues?): Comment? {
+
+            if (values == null)
+                return null
+
+            if (values.getAsLong(COLUMN_COMMENT_ICALOBJECT_ID) == null || values.getAsString(COLUMN_COMMENT_TEXT) == null)     // at least a icalObjectId and text must be given for a Comment!
+                return null
+
+            val comment = Comment(icalObjectId = values.getAsLong(COLUMN_COMMENT_ICALOBJECT_ID), text = values.getAsString(COLUMN_COMMENT_TEXT))
+
+            if (values.containsKey(COLUMN_COMMENT_ALTREPPARAM)) {
+                comment.altrepparam = values.getAsString(COLUMN_COMMENT_ALTREPPARAM)
+            }
+            if (values.containsKey(COLUMN_COMMENT_LANGUAGEPARAM)) {
+                comment.languageparam = values.getAsString(COLUMN_COMMENT_LANGUAGEPARAM)
+            }
+
+            return comment
+        }
+    }
+
+}
 
 
