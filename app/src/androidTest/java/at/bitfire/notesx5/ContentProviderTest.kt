@@ -10,8 +10,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import at.bitfire.notesx5.database.*
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.notNullValue
+import org.hamcrest.Matchers.*
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -117,6 +116,54 @@ class ContentProviderTest {
         mContentResolver?.query(uriWrong, arrayOf<String>(COLUMN_ID), null, null, null)
     }
 
+
+    @Test
+    fun check_for_SQL_injection_through_contentValues()  {
+
+        // INSERT a new value, this one must remain
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_SUMMARY, "note2update")
+        val newUri = mContentResolver?.insert(URI_ICALOBJECT, contentValues)
+
+
+        val contentValuesCurrupted = ContentValues()
+        contentValuesCurrupted.put(COLUMN_SUMMARY, "note2corrupted\"; delete * from $TABLE_NAME_ICALOBJECT")
+        val newUri2 = mContentResolver?.insert(URI_ICALOBJECT, contentValuesCurrupted)
+
+
+        val cursor: Cursor? = mContentResolver?.query(newUri2!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY), null, null, null)
+        assertThat(cursor, notNullValue())
+        assertThat(cursor?.count, `is`(1))
+//        Log.println(Log.INFO, "icalObject_insert_find_delete", "Assert successful, DB has ${cursor?.count} entries, the new id is ${cursor?.getString(0)}")
+
+        cursor?.close()
+    }
+
+
+    @Test
+    fun check_for_SQL_injection_through_query()  {
+
+        // INSERT a new value, this one must remain
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_SUMMARY, "note2check")
+        val newUri = mContentResolver?.insert(URI_ICALOBJECT, contentValues)
+
+        val cursor: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY), "$COLUMN_SUMMARY = ?); DELETE * FROM $TABLE_NAME_ICALOBJECT", arrayOf("note2check"), null)
+        assertThat(cursor, notNullValue())
+        assertThat(cursor?.count, `is`(1))
+//        Log.println(Log.INFO, "icalObject_insert_find_delete", "Assert successful, DB has ${cursor?.count} entries, the new id is ${cursor?.getString(0)}")
+        cursor?.close()
+
+        val cursor2: Cursor? = mContentResolver?.query(URI_ICALOBJECT, arrayOf<String>(COLUMN_ID), null, null, null)
+        assertThat(cursor2, notNullValue())
+        assertThat(cursor2?.count, not(0))     // there must be entries! Delete must not be executed!
+        Log.println(Log.INFO, "icalObject_initiallyEmpty", "Assert successful, DB is empty (Cursor count: ${cursor?.count})")
+        cursor?.close()
+    }
+
+
+
+    /*
     @Test
     fun delete() {
     }
@@ -141,4 +188,6 @@ class ContentProviderTest {
     @Test
     fun update() {
     }
+
+     */
 }
