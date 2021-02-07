@@ -5,7 +5,6 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.annotation.Nullable
 import androidx.room.*
-import at.bitfire.notesx5.database.COLUMN_COMPONENT
 import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize

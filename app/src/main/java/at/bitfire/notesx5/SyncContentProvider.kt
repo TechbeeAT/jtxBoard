@@ -97,8 +97,8 @@ class SyncContentProvider : ContentProvider() {
         if (context == null)
             return 0
 
-        context!!.contentResolver.notifyChange(uri, null);
-        return count;
+        context!!.contentResolver.notifyChange(uri, null)
+        return count
 
     }
 
@@ -139,7 +139,7 @@ class SyncContentProvider : ContentProvider() {
         if(id == null)
             return null
 
-        context!!.contentResolver.notifyChange(uri, null);
+        context!!.contentResolver.notifyChange(uri, null)
         return ContentUris.withAppendedId(uri, id)
 
     }
@@ -275,7 +275,7 @@ class SyncContentProvider : ContentProvider() {
         if (context == null)
             return 0
 
-        context!!.contentResolver.notifyChange(uri, null);
+        context!!.contentResolver.notifyChange(uri, null)
         return count
 
     }

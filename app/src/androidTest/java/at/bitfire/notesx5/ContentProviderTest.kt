@@ -14,9 +14,7 @@ import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 
 
@@ -109,14 +107,14 @@ class ContentProviderTest {
 
     @Test(expected = IllegalArgumentException::class)                    // needed to assert exceptions, see e.g. https://www.baeldung.com/junit-assert-exception
     fun query_invalid_url()  {
-        val uri_invalid = Uri.parse("content://$AUTHORITY/invalid")
-        val cursor: Cursor? = mContentResolver?.query(uri_invalid, arrayOf<String>(COLUMN_ID), null, null, null)
+        val uriInvalid = Uri.parse("content://$AUTHORITY/invalid")
+        mContentResolver?.query(uriInvalid, arrayOf<String>(COLUMN_ID), null, null, null)
     }
 
     @Test(expected = IllegalArgumentException::class)                    // needed to assert exceptions, see e.g. https://www.baeldung.com/junit-assert-exception
     fun query_valid_url_with_wrong_parameter()  {
-        val uri_wrong = Uri.parse("content://$AUTHORITY/$TABLE_NAME_ICALOBJECT/asdf")
-        val cursor: Cursor? = mContentResolver?.query(uri_wrong, arrayOf<String>(COLUMN_ID), null, null, null)
+        val uriWrong = Uri.parse("content://$AUTHORITY/$TABLE_NAME_ICALOBJECT/asdf")
+        mContentResolver?.query(uriWrong, arrayOf<String>(COLUMN_ID), null, null, null)
     }
 
     @Test

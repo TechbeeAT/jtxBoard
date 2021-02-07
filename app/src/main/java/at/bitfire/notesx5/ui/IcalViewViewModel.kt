@@ -158,6 +158,7 @@ class IcalViewViewModel(private val icalItemId: Long,
         }
     }
 
+    /*
     fun deleteNote(note: ICalObject) {
         viewModelScope.launch(Dispatchers.IO) {
             //todo delete also link in relatedto!
@@ -165,6 +166,8 @@ class IcalViewViewModel(private val icalItemId: Long,
             database.delete(note)
         }
     }
+
+     */
 
 
     fun updateProgress(item: ICalObject, newPercent: Int) {

@@ -245,7 +245,7 @@ DELETEs by Object
     /**
      * Delete a relatedto by the object.
      *
-     * @param Relatedto The object of the relatedto that should be deleted.
+     * @param rel The object of the relatedto that should be deleted.
      */
     @Delete
     fun deleteRelatedto(rel: Relatedto)

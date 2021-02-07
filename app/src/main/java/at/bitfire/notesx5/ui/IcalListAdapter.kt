@@ -9,17 +9,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.ICalDatabase
 import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
 import kotlinx.android.synthetic.main.fragment_ical_list_item_subtask.view.*
-import kotlinx.android.synthetic.main.fragment_ical_view_subtask.view.*
 import java.util.concurrent.TimeUnit
 
 class IcalListAdapter(var context: Context, var model: IcalListViewModel):

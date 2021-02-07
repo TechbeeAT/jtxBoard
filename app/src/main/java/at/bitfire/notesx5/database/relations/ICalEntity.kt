@@ -1,7 +1,6 @@
 package at.bitfire.notesx5.database.relations
 
 import android.os.Parcelable
-import android.provider.BaseColumns
 import androidx.room.Embedded
 import androidx.room.Relation
 import at.bitfire.notesx5.database.*
