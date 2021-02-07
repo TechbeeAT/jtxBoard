@@ -3,7 +3,6 @@ package at.bitfire.notesx5.database
 import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
-import androidx.annotation.Nullable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
@@ -154,13 +153,11 @@ data class ICalObject(
 
                         // TODO initialize specific component based on values!
                         // TODO validate some inputs, especially Int Inputs!
-                        val iCalObject = ICalObject()
+
                         if (values == null)
                                 return null
 
-                        iCalObject.applyContentValues(values)
-
-                        return ICalObject()
+                        return ICalObject().applyContentValues(values)
 
                 }
 
@@ -168,7 +165,7 @@ data class ICalObject(
 
 
 
-        fun applyContentValues(values: ContentValues?) {
+        fun applyContentValues(values: ContentValues?):ICalObject {
                 if (values?.containsKey(COLUMN_COMPONENT) == true && values.getAsString(COLUMN_COMPONENT).isNotBlank()) {
                         this.component = values.getAsString(COLUMN_COMPONENT)
                 }
@@ -259,6 +256,8 @@ data class ICalObject(
                 if (values?.containsKey(COLUMN_COLOR) == true && values.getAsString(COLUMN_COLOR).isNotBlank()) {
                         this.color = values.getAsString(COLUMN_COLOR)
                 }
+
+                return this
         }
 }
 

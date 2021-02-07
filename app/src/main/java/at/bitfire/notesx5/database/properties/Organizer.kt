@@ -71,14 +71,11 @@ data class Organizer (
                         if (values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID) == null || values.getAsString(COLUMN_ORGANIZER_CALADDRESS) == null)     // at least a icalObjectId and caladdress must be given for an Organizer!
                                 return null
 
-                        val organizer = Organizer()
-                        organizer.applyContentValues(values)
-
-                        return organizer
+                        return Organizer().applyContentValues(values)
                 }
         }
 
-        fun applyContentValues(values: ContentValues?) {
+        fun applyContentValues(values: ContentValues?): Organizer {
 
                 if(values?.containsKey(COLUMN_ORGANIZER_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID) == null)
                         this.icalObjectId = values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID)
@@ -104,9 +101,8 @@ data class Organizer (
                         this.otherparam = values.getAsString(COLUMN_ORGANIZER_OTHERPARAM)
                 }
 
+                return this
         }
-
-
 }
 
 

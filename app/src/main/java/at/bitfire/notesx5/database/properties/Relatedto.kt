@@ -62,14 +62,11 @@ data class Relatedto (
                         if (values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID) == null || values.getAsLong(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) == null)     // at least the the two linking entries must be set!
                                 return null
 
-                        val relatedto = Relatedto()
-                        relatedto.applyContentValues(values)
-
-                        return relatedto
+                        return Relatedto().applyContentValues(values)
                 }
         }
 
-        fun applyContentValues(values: ContentValues?) {
+        fun applyContentValues(values: ContentValues?): Relatedto {
 
                 if(values?.containsKey(COLUMN_RELATEDTO_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID) == null)
                         this.icalObjectId = values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID)
@@ -87,6 +84,8 @@ data class Relatedto (
                 if (values?.containsKey(COLUMN_RELATEDTO_OTHERPARAM) == true && values.getAsString(COLUMN_RESOURCE_OTHERPARAM).isNotBlank()) {
                         this.otherparam = values.getAsString(COLUMN_RESOURCE_OTHERPARAM)
                 }
+
+                return this
         }
 
 }

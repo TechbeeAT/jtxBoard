@@ -66,14 +66,11 @@ data class Contact (
                         if (values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID) == null || values.getAsString(COLUMN_CONTACT_TEXT) == null)     // at least a icalObjectId and text must be given for a Contact!
                                 return null
 
-                        val contact = Contact()
-                        contact.applyContentValues(values)
-
-                        return contact
+                        return Contact().applyContentValues(values)
                 }
         }
 
-        fun applyContentValues(values: ContentValues?) {
+        fun applyContentValues(values: ContentValues?): Contact {
 
 
                 if(values?.containsKey(COLUMN_CONTACT_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID) == null)
@@ -89,9 +86,9 @@ data class Contact (
                 if (values?.containsKey(COLUMN_CONTACT_OTHERPARAM) == true && values.getAsString(COLUMN_CONTACT_OTHERPARAM).isNotBlank()) {
                         this.otherparam = values.getAsString(COLUMN_CONTACT_OTHERPARAM)
                 }
+
+                return this
         }
-
-
 }
 
 

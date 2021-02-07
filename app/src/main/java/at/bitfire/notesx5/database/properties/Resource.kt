@@ -62,14 +62,11 @@ data class Resource (
                         if(values.getAsString(COLUMN_RESOURCE_TEXT) == null || values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID) == null)
                                 return null
 
-                        val resource = Resource()
-                        resource.applyContentValues(values)
-
-                        return resource
+                        return Resource().applyContentValues(values)
                 }
         }
 
-        fun applyContentValues(values: ContentValues?) {
+        fun applyContentValues(values: ContentValues?): Resource {
 
 
                 if(values?.containsKey(COLUMN_RESOURCE_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID) == null)
@@ -85,8 +82,9 @@ data class Resource (
                 if (values?.containsKey(COLUMN_RESOURCE_OTHERPARAM) == true && values.getAsString(COLUMN_RESOURCE_OTHERPARAM).isNotBlank()) {
                         this.otherparam = values.getAsString(COLUMN_RESOURCE_OTHERPARAM)
                 }
-        }
 
+                return this
+        }
 }
 
 

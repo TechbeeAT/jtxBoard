@@ -31,6 +31,9 @@ import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 @Dao
 interface ICalDatabaseDao {
 
+/*
+SELECTs (global selects without parameter)
+ */
 
     @Transaction
     @Query("SELECT DISTINCT text FROM category ORDER BY text ASC")
@@ -44,8 +47,87 @@ interface ICalDatabaseDao {
     @Query("SELECT DISTINCT collection FROM icalobject ORDER BY collection ASC")
     fun getAllCollections(): LiveData<List<String>>
 
+
 /*
-INSERTs (Async)
+SELECTs (SELECTs by Id, snychronous for Content Povider)
+ */
+    /**
+     * Retrieve an [ICalObject] by Id synchronously (non-suspend)
+     *
+     * @param id The id of the [ICalObject] in the DB
+     * @return the [ICalObject] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
+    fun getICalObjectByIdSync(id: Long): ICalObject?
+
+    /**
+     * Retrieve an [Attendee] by Id synchronously (non-suspend)
+     *
+     * @param id The id of the [Attendee] in the DB
+     * @return the [Attendee] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ID = :id")
+    fun getAttendeeByIdSync(id: Long): Attendee?
+
+    /**
+     * Retrieve an [Category] by Id synchronously (non-suspend)
+     *
+     * @param id The id of the [Category] in the DB
+     * @return the [Category] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ID = :id")
+    fun getCategoryByIdSync(id: Long): Category?
+
+    /**
+     * Retrieve an [Comment] by Id synchronously (non-suspend)
+     *
+     * @param id The id of the [Comment] in the DB
+     * @return the [Comment] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ID = :id")
+    fun getCommentByIdSync(id: Long): Comment?
+
+    /**
+     * Retrieve an [Contact] by Id synchronously (non-suspend)
+     *
+     * @param id The id of the [Contact] in the DB
+     * @return the [Contact] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ID = :id")
+    fun getContactByIdSync(id: Long): Contact?
+
+    /**
+     * Retrieve an [Organizer] by Id synchronously (non-suspend)
+     *
+     * @param id The id of the [Organizer] in the DB
+     * @return the [Organizer] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ID = :id")
+    fun getOrganizerByIdSync(id: Long): Organizer?
+
+    /**
+     * Retrieve an [Relatedto] by Id synchronously (non-suspend)
+     *
+     * @param id The id of the [Relatedto] in the DB
+     * @return the [Relatedto] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ID = :id")
+    fun getRelatedtoByIdSync(id: Long): Relatedto?
+
+    /**
+     * Retrieve an [Resource] by Id synchronously (non-suspend)
+     *
+     * @param id The id of the [Resource] in the DB
+     * @return the [Resource] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ID = :id")
+    fun getResourceByIdSync(id: Long): Resource?
+
+
+
+
+/*
+INSERTs (Asyncronously / Suspend)
  */
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -98,6 +180,34 @@ INSERTs (Synchronously)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertResourceSync(resource: Resource): Long
 
+
+    /*
+UPDATEs (Synchronously)
+ */
+
+    @Update
+    fun updateICalObjectSync(iCalObject: ICalObject): Int
+
+    @Update
+    fun updateAttendeeSync(attendee: Attendee): Int
+
+    @Update
+    fun updateCategorySync(category: Category): Int
+
+    @Update
+    fun updateCommentSync(comment: Comment): Int
+
+    @Update
+    fun updateOrganizerSync(organizer: Organizer): Int
+
+    @Update
+    fun updateRelatedtoSync(relatedto: Relatedto): Int
+
+    @Update
+    fun updateContactSync(contact: Contact): Int
+
+    @Update
+    fun updateResourceSync(resource: Resource): Int
 
 
 /*
@@ -249,6 +359,10 @@ DELETEs by Object
 
 
 
+
+
+
+
     @Update
     suspend fun update(icalObject: ICalObject)
 
@@ -302,8 +416,6 @@ DELETEs by Object
 
 
     /*
-    @Query("SELECT * from icalobject")
-    fun getAllIcalObjects(): Cursor?
 
     @Query("SELECT * from attendee WHERE attendee.icalObjectId = :icalobjectId")
     fun getAttendeesByIcalentity(icalobjectId: Long): Cursor?

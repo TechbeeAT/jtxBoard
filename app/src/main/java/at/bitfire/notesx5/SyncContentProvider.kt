@@ -3,6 +3,7 @@ package at.bitfire.notesx5
 import android.content.*
 import android.database.Cursor
 import android.net.Uri
+import android.util.Log
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
@@ -190,7 +191,7 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ?"
             CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ?"
 
-            else -> throw IllegalArgumentException("Unknown URI: " + uri)
+            else -> throw IllegalArgumentException("Unknown URI: $uri")
         }
 
         if (selection != null && sUriMatcher.match(uri) < 99)      // < 99 are DIRs and have no parameter!
@@ -205,6 +206,9 @@ class SyncContentProvider : ContentProvider() {
 
         val query = SimpleSQLiteQuery(queryString, args.toArray())
 
+        Log.println(Log.INFO, "SyncContentProvider", "Query prepared: $queryString")
+        Log.println(Log.INFO, "SyncContentProvider", "Query args prepared: ${args.joinToString(separator = ", ")}")
+
         return database.getCursor(query)
 
     }
@@ -212,8 +216,68 @@ class SyncContentProvider : ContentProvider() {
     override fun update(uri: Uri, values: ContentValues?, selection: String?,
                         selectionArgs: Array<String>?): Int {
 
+        val count: Int
 
-        TODO("Implement this to handle requests to update one or more rows.")
+        when (sUriMatcher.match(uri)) {
+            CODE_ICALOBJECTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+            CODE_ATTENDEES_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+            CODE_CATEGORIES_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+            CODE_COMMENTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+            CODE_CONTACTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+            CODE_ORGANIZER_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+            CODE_RELATEDTO_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+            CODE_RESOURCE_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+
+            CODE_ICALOBJECT_ITEM -> database.getICalObjectByIdSync(ContentUris.parseId(uri)).also {
+                if (it != null)
+                    count = database.updateICalObjectSync(it.applyContentValues(values))
+                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
+            }
+            CODE_ATTENDEE_ITEM -> database.getAttendeeByIdSync(ContentUris.parseId(uri)).also {
+                if (it != null)
+                    count = database.updateAttendeeSync(it.applyContentValues(values))
+                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
+            }
+            CODE_CATEGORY_ITEM -> database.getCategoryByIdSync(ContentUris.parseId(uri)).also {
+                if (it != null)
+                    count = database.updateCategorySync(it.applyContentValues(values))
+                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
+            }
+            CODE_COMMENT_ITEM -> database.getCommentByIdSync(ContentUris.parseId(uri)).also {
+                if (it != null)
+                    count = database.updateCommentSync(it.applyContentValues(values))
+                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
+            }
+            CODE_CONTACT_ITEM -> database.getContactByIdSync(ContentUris.parseId(uri)).also {
+                if (it != null)
+                    count = database.updateContactSync(it.applyContentValues(values))
+                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
+            }
+            CODE_ORGANIZER_ITEM -> database.getOrganizerByIdSync(ContentUris.parseId(uri)).also {
+                if (it != null)
+                    count = database.updateOrganizerSync(it.applyContentValues(values))
+                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
+            }
+            CODE_RELATEDTO_ITEM -> database.getRelatedtoByIdSync(ContentUris.parseId(uri)).also {
+                if (it != null)
+                    count = database.updateRelatedtoSync(it.applyContentValues(values))
+                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
+            }
+            CODE_RESOURCE_ITEM -> database.getResourceByIdSync(ContentUris.parseId(uri)).also {
+                if (it != null)
+                    count = database.updateResourceSync(it.applyContentValues(values))
+                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
+            }
+
+            else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
+        }
+
+        if (context == null)
+            return 0
+
+        context!!.contentResolver.notifyChange(uri, null);
+        return count
+
     }
 
 }

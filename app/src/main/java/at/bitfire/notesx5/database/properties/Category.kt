@@ -64,15 +64,12 @@ data class Category (
             if (values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID) == null || values.getAsString(COLUMN_CATEGORY_TEXT) == null)     // at least a icalObjectId and text must be given for a Comment!
                 return null
 
-            val category = Category()
-            category.applyContentValues(values)
-
-            return category
+            return Category().applyContentValues(values)
         }
     }
 
 
-    fun applyContentValues(values: ContentValues?) {
+    fun applyContentValues(values: ContentValues?): Category {
 
         if(values?.containsKey(COLUMN_CATEGORY_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID) == null)
             this.icalObjectId = values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID)
@@ -86,6 +83,8 @@ data class Category (
         if (values?.containsKey(COLUMN_CATEGORY_OTHERPARAM) == true && values.getAsString(COLUMN_CATEGORY_OTHERPARAM).isNotBlank()) {
             this.otherparam = values.getAsString(COLUMN_CATEGORY_OTHERPARAM)
         }
+
+        return this
 
     }
 

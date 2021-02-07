@@ -62,14 +62,11 @@ data class Comment (
             if (values.getAsLong(COLUMN_COMMENT_ICALOBJECT_ID) == null || values.getAsString(COLUMN_COMMENT_TEXT) == null)     // at least a icalObjectId and text must be given for a Comment!
                 return null
 
-            val comment = Comment()
-            comment.applyContentValues(values)
-
-            return comment
+            return Comment().applyContentValues(values)
         }
     }
 
-    fun applyContentValues(values: ContentValues?) {
+    fun applyContentValues(values: ContentValues?): Comment {
 
         if(values?.containsKey(COLUMN_COMMENT_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_COMMENT_ICALOBJECT_ID) == null)
             this.icalObjectId = values.getAsLong(COLUMN_COMMENT_ICALOBJECT_ID)
@@ -84,6 +81,7 @@ data class Comment (
             this.languageparam = values.getAsString(COLUMN_COMMENT_LANGUAGEPARAM)
         }
 
+        return this
     }
 
 
