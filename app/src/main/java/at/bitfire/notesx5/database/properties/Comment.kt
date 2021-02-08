@@ -68,7 +68,7 @@ data class Comment (
 
     fun applyContentValues(values: ContentValues?): Comment {
 
-        if(values?.containsKey(COLUMN_COMMENT_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_COMMENT_ICALOBJECT_ID) == null)
+        if(values?.containsKey(COLUMN_COMMENT_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_COMMENT_ICALOBJECT_ID) != null)
             this.icalObjectId = values.getAsLong(COLUMN_COMMENT_ICALOBJECT_ID)
 
         if(values?.containsKey(COLUMN_COMMENT_TEXT) == true && values.getAsString(COLUMN_COMMENT_TEXT).isNotBlank())

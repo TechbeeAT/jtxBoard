@@ -29,7 +29,7 @@ private const val CODE_RELATEDTO_ITEM = 107
 private const val CODE_RESOURCE_ITEM = 108
 
 
-const val AUTHORITY = "at.bitfire.notesx5.provider"
+const val SYNC_PROVIDER_AUTHORITY = "at.bitfire.notesx5.provider"
 
 /** The URI for the Icalobject table.  */
 
@@ -46,24 +46,23 @@ class SyncContentProvider : ContentProvider() {
         /* see https://github.com/android/architecture-components-samples/blob/4c606ccd83fded22a52d0d994b0cb043dafc6dd7/PersistenceContentProviderSample/app/src/main/java/com/example/android/contentprovidersample/provider/SampleContentProvider.java
          * for a good sample and some explanations
          */
-        addURI(AUTHORITY, "icalobject", CODE_ICALOBJECTS_DIR)
-        addURI(AUTHORITY, "attendee", CODE_ATTENDEES_DIR)
-        addURI(AUTHORITY, "category", CODE_CATEGORIES_DIR)
-        addURI(AUTHORITY, "comment", CODE_COMMENTS_DIR)
-        addURI(AUTHORITY, "contact", CODE_CONTACTS_DIR)
-        addURI(AUTHORITY, "organizer", CODE_ORGANIZER_DIR)
-        addURI(AUTHORITY, "relatedto", CODE_RELATEDTO_DIR)
-        addURI(AUTHORITY, "resource", CODE_RESOURCE_DIR)
+        addURI(SYNC_PROVIDER_AUTHORITY, "icalobject", CODE_ICALOBJECTS_DIR)
+        addURI(SYNC_PROVIDER_AUTHORITY, "attendee", CODE_ATTENDEES_DIR)
+        addURI(SYNC_PROVIDER_AUTHORITY, "category", CODE_CATEGORIES_DIR)
+        addURI(SYNC_PROVIDER_AUTHORITY, "comment", CODE_COMMENTS_DIR)
+        addURI(SYNC_PROVIDER_AUTHORITY, "contact", CODE_CONTACTS_DIR)
+        addURI(SYNC_PROVIDER_AUTHORITY, "organizer", CODE_ORGANIZER_DIR)
+        addURI(SYNC_PROVIDER_AUTHORITY, "relatedto", CODE_RELATEDTO_DIR)
+        addURI(SYNC_PROVIDER_AUTHORITY, "resource", CODE_RESOURCE_DIR)
 
-        addURI(AUTHORITY, "icalobject/#", CODE_ICALOBJECT_ITEM)
-        addURI(AUTHORITY, "attendee/#", CODE_ATTENDEE_ITEM)
-        addURI(AUTHORITY, "category/#", CODE_CATEGORY_ITEM)
-        addURI(AUTHORITY, "comment/#", CODE_COMMENT_ITEM)
-        addURI(AUTHORITY, "contact/#", CODE_CONTACT_ITEM)
-        addURI(AUTHORITY, "organizer/#", CODE_ORGANIZER_ITEM)
-        addURI(AUTHORITY, "relatedto/#", CODE_RELATEDTO_ITEM)
-        addURI(AUTHORITY, "resource/#", CODE_RESOURCE_ITEM)
-
+        addURI(SYNC_PROVIDER_AUTHORITY, "icalobject/#", CODE_ICALOBJECT_ITEM)
+        addURI(SYNC_PROVIDER_AUTHORITY, "attendee/#", CODE_ATTENDEE_ITEM)
+        addURI(SYNC_PROVIDER_AUTHORITY, "category/#", CODE_CATEGORY_ITEM)
+        addURI(SYNC_PROVIDER_AUTHORITY, "comment/#", CODE_COMMENT_ITEM)
+        addURI(SYNC_PROVIDER_AUTHORITY, "contact/#", CODE_CONTACT_ITEM)
+        addURI(SYNC_PROVIDER_AUTHORITY, "organizer/#", CODE_ORGANIZER_ITEM)
+        addURI(SYNC_PROVIDER_AUTHORITY, "relatedto/#", CODE_RELATEDTO_ITEM)
+        addURI(SYNC_PROVIDER_AUTHORITY, "resource/#", CODE_RESOURCE_ITEM)
     }
 
 

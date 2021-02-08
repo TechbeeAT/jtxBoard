@@ -72,7 +72,7 @@ data class Contact (
         fun applyContentValues(values: ContentValues?): Contact {
 
 
-                if(values?.containsKey(COLUMN_CONTACT_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID) == null)
+                if(values?.containsKey(COLUMN_CONTACT_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID) != null)
                         this.icalObjectId = values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID)
 
                 if(values?.containsKey(COLUMN_CONTACT_TEXT) == true && values.getAsString(COLUMN_CONTACT_TEXT).isNotBlank())

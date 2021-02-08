@@ -67,10 +67,10 @@ data class Relatedto (
 
         fun applyContentValues(values: ContentValues?): Relatedto {
 
-                if(values?.containsKey(COLUMN_RELATEDTO_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID) == null)
+                if(values?.containsKey(COLUMN_RELATEDTO_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID) != null)
                         this.icalObjectId = values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID)
 
-                if(values?.containsKey(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) == true && values.getAsLong(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) == null)
+                if(values?.containsKey(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) == true && values.getAsLong(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) != null)
                         this.linkedICalObjectId = values.getAsLong(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID)
 
 

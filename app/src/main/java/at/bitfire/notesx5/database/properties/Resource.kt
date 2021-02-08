@@ -68,7 +68,7 @@ data class Resource (
         fun applyContentValues(values: ContentValues?): Resource {
 
 
-                if(values?.containsKey(COLUMN_RESOURCE_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID) == null)
+                if(values?.containsKey(COLUMN_RESOURCE_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID) != null)
                         this.icalObjectId = values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID)
 
                 if(values?.containsKey(COLUMN_RESOURCE_TEXT) == true && values.getAsString(COLUMN_RESOURCE_TEXT).isNotBlank())

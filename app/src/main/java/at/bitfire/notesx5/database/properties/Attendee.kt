@@ -97,7 +97,7 @@ data class Attendee (
 
         fun applyContentValues(values: ContentValues?):Attendee {
 
-                if(values?.containsKey(COLUMN_ATTENDEE_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID) == null)
+                if(values?.containsKey(COLUMN_ATTENDEE_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID) != null)
                         this.icalObjectId = values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID)
 
                 if(values?.containsKey(COLUMN_ATTENDEE_CALADDRESS) == true && values.getAsString(COLUMN_ATTENDEE_CALADDRESS).isNotBlank())

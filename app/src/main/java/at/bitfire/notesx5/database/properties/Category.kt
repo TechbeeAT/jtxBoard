@@ -71,7 +71,7 @@ data class Category (
 
     fun applyContentValues(values: ContentValues?): Category {
 
-        if(values?.containsKey(COLUMN_CATEGORY_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID) == null)
+        if(values?.containsKey(COLUMN_CATEGORY_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID) != null)
             this.icalObjectId = values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID)
 
         if(values?.containsKey(COLUMN_CATEGORY_TEXT) == true && values.getAsString(COLUMN_CATEGORY_TEXT).isNotBlank())

@@ -76,7 +76,7 @@ data class Organizer (
 
         fun applyContentValues(values: ContentValues?): Organizer {
 
-                if(values?.containsKey(COLUMN_ORGANIZER_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID) == null)
+                if(values?.containsKey(COLUMN_ORGANIZER_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID) != null)
                         this.icalObjectId = values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID)
 
                 if(values?.containsKey(COLUMN_ORGANIZER_CALADDRESS) == true && values.getAsString(COLUMN_ORGANIZER_CALADDRESS).isNotBlank())
