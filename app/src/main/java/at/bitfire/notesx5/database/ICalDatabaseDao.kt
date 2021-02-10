@@ -35,17 +35,62 @@ interface ICalDatabaseDao {
 SELECTs (global selects without parameter)
  */
 
+    /**
+     * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
+     *
+     * @return a list of [Category.text] as LiveData<List<String>>
+     */
     @Transaction
     @Query("SELECT DISTINCT text FROM category ORDER BY text ASC")
     fun getAllCategories(): LiveData<List<String>>
 
+    /**
+     * Retrieve an list of all DISTINCT Organizer caladdresses ([Organizer.caladdress]) as a LiveData-List
+     *
+     * @return a list of [Organizer.caladdress] as LiveData<List<String>>
+     */
     @Transaction
     @Query("SELECT DISTINCT caladdress FROM organizer ORDER BY caladdress ASC")
     fun getAllOrganizers(): LiveData<List<String>>
 
+    /**
+     * Retrieve an list of all DISTINCT Collections ([ICalObject.collection]) as a LiveData-List
+     *
+     * @return a list of [ICalObject.collection] as LiveData<List<String>>
+     */
     @Transaction
     @Query("SELECT DISTINCT collection FROM icalobject ORDER BY collection ASC")
     fun getAllCollections(): LiveData<List<String>>
+
+    /**
+     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
+     * by checking if the [ICalObject.id] is listed as a [Relatedto.linkedICalObjectId].
+     *
+     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
+     */
+    @Transaction
+    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE icalobject.component = 'TODO'")
+    fun getAllSubtasks(): LiveData<List<ICalObject?>>
+
+    /**
+     * Retrieve an list the number of Subtasks of an [ICalObject] as a [SubtaskCount].
+     * This is especially used for Sub-Sub-Tasks to show the number of Sub-Sub-Tasks on a Sub-Task.
+     *
+     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
+     */
+    @Transaction
+    @Query("SELECT icalobject._id as icalobjectId, count(*) as count from relatedto INNER JOIN icalobject ON icalobject._id = relatedto.icalObjectId WHERE icalobject.component = 'TODO' GROUP BY icalobjectId")
+    fun getSubtasksCount(): LiveData<List<SubtaskCount>>
+
+    /**
+     * Retrieve the number of items in the table of [ICalObject] as Int.
+     * Currently only used for Tests.
+     *
+     * @return Int with the total number of [ICalObject] in the table.
+     */
+    @Query("SELECT count(*) FROM $TABLE_NAME_ICALOBJECT")
+    fun getCount(): Int
+
 
 
 /*
@@ -392,18 +437,6 @@ DELETEs by Object
     @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey and icalobject.component = 'TODO'")
     fun getRelatedTodos(parentKey: Long): LiveData<List<ICalObject?>>
 
-    @Transaction
-    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE icalobject.component = 'TODO'")
-    fun getAllSubtasks(): LiveData<List<ICalObject?>>
-
-    // Determines the number of Subtasks. This is especially used for Sub-Sub-Tasks to show the number of Sub-Sub-Tasks on a Sub-Task
-    @Transaction
-    @Query("SELECT icalobject._id as icalobjectId, count(*) as count from relatedto INNER JOIN icalobject ON icalobject._id = relatedto.icalObjectId WHERE icalobject.component = 'TODO' GROUP BY icalobjectId")
-    fun getSubtasksCount(): LiveData<List<SubtaskCount>>
-
-
-    @Query("SELECT count(*) FROM $TABLE_NAME_ICALOBJECT")
-    fun getCount(): Int
 
 
     /*
