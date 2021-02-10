@@ -26,7 +26,15 @@ data class ICalEntity (
         var organizer: Organizer? = null,
 
         @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Relatedto::class)
-        var relatedto: List<Relatedto>? = null
+        var relatedto: List<Relatedto>? = null,
 
+        /*
+        @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Contact::class)
+        var contact: Contact? = null,
+
+        @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Resource::class)
+        var resource: List<Resource>? = null
+
+         */
 
 ): Parcelable

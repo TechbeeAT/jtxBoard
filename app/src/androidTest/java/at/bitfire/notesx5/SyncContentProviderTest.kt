@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
+import androidx.test.platform.app.InstrumentationRegistry
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
 import org.junit.Assert.*
@@ -19,7 +20,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
-class ContentProviderTest {
+class SyncContentProviderTest {
 
     private var mContentResolver: ContentResolver? = null
 
@@ -36,7 +37,9 @@ class ContentProviderTest {
 
     @Before
     fun setUp() {
-        val context: Context = ApplicationProvider.getApplicationContext()
+        //val context: Context = ApplicationProvider.getApplicationContext()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+
         ICalDatabase.switchToInMemory(context)
         mContentResolver = context.contentResolver
     }
@@ -217,10 +220,65 @@ class ContentProviderTest {
         val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4category"), null)
         assertEquals(cursorDeletedIcalobject?.count,0)             // inserted object was found
         cursorDeletedIcalobject?.close()
-        val cursorDeletedCategory: Cursor? = mContentResolver?.query(newCategoryUri!!, arrayOf<String>(COLUMN_CATEGORY_ID, COLUMN_CATEGORY_TEXT), "$COLUMN_CATEGORY_TEXT = ?", arrayOf("journal4category"), null)
+        val cursorDeletedCategory: Cursor? = mContentResolver?.query(newCategoryUri!!, arrayOf<String>(COLUMN_CATEGORY_ID, COLUMN_CATEGORY_TEXT), "$COLUMN_CATEGORY_TEXT = ?", arrayOf("category2"), null)
         assertEquals(cursorDeletedCategory?.count,0)             // inserted object was found
         cursorUpdatedCategory?.close()
 
+
+    }
+
+
+
+
+    @Test
+    fun comment_insert_find_update_delete()  {
+
+        // INSERT a new ICalObject
+        val icalobjectValues = ContentValues()
+        icalobjectValues.put(COLUMN_SUMMARY, "journal4comment")
+        icalobjectValues.put(COLUMN_DTSTART, System.currentTimeMillis())
+        icalobjectValues.put(COLUMN_COMPONENT, "JOURNAL")
+        val newIcalUri = mContentResolver?.insert(URI_ICALOBJECT, icalobjectValues)
+        val newICalObjectId = newIcalUri?.lastPathSegment?.toLongOrNull()
+        Log.println(Log.INFO, "newICalObjectId", newICalObjectId.toString())
+        assertNotNull(newICalObjectId)
+
+        // QUERY the new value is skipped, instead we insert a new category
+        // INSERT a new Category
+        val commentValues = ContentValues()
+        commentValues.put(COLUMN_COMMENT_ICALOBJECT_ID, newICalObjectId)
+        commentValues.put(COLUMN_COMMENT_TEXT, "comment1")
+        val newCommentUri = mContentResolver?.insert(URI_CATEGORIES, commentValues)
+        assertNotNull(newCommentUri)
+
+        //QUERY the Category
+        val cursorNewComment: Cursor? = mContentResolver?.query(newCommentUri!!, arrayOf<String>(COLUMN_COMMENT_ID), null, null, null)
+        assertEquals(cursorNewComment?.count, 1)             // inserted object was found
+
+        // UPDATE the new value
+        val updatedCommentValues = ContentValues()
+        updatedCommentValues.put(COLUMN_COMMENT_TEXT, "comment2")
+        val countUpdated = mContentResolver?.update(newCommentUri!!, updatedCommentValues, null, null)
+        assertEquals(countUpdated, 1)
+        //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
+
+        // QUERY the updated value
+        val cursorUpdatedComment: Cursor? = mContentResolver?.query(newCommentUri!!, arrayOf<String>(COLUMN_COMMENT_ID, COLUMN_COMMENT_TEXT), "$COLUMN_COMMENT_TEXT = ?", arrayOf("comment2"), null)
+        assertEquals(cursorUpdatedComment?.count,1)             // inserted object was found
+        cursorUpdatedComment?.close()
+
+        // DELETE the ICalObject, through the foreign key also the attendee is deleted
+        val countDeleted = mContentResolver?.delete(newIcalUri!!, null, null)
+        assertEquals(countDeleted, 1)
+
+        // QUERY the delete value, make sure it's really deleted
+        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4comment"), null)
+        assertEquals(cursorDeletedIcalobject?.count,0)             // inserted object was found
+        cursorDeletedIcalobject?.close()
+        val cursorDeletedComment: Cursor? = mContentResolver?.query(newCommentUri!!, arrayOf<String>(COLUMN_COMMENT_ID, COLUMN_COMMENT_TEXT), "$COLUMN_COMMENT_TEXT = ?", arrayOf("comment2"), null)
+        assertEquals(cursorDeletedComment?.count,0)             // inserted object was found
+        cursorUpdatedComment?.close()
 
     }
 

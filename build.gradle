@@ -23,7 +23,7 @@ buildscript {
         version_coroutine = "1.4.1"
         version_constraint_layout = "2.0.0-rc1"
         version_gradle = '4.1.2'
-        version_kotlin = "1.4.10"
+        version_kotlin = "1.4.21"
         version_lifecycle_extensions = "2.2.0"
         version_lifecycle = "2.2.0"
         version_navigation = '1.0.0'
