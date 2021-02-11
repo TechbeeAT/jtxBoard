@@ -386,6 +386,112 @@ class SyncContentProviderTest {
 
 
 
+    @Test
+    fun relatedto_insert_find_update_delete()  {
+
+        // INSERT a new ICalObject
+        val icalobjectValues = ContentValues()
+        icalobjectValues.put(COLUMN_SUMMARY, "journal4relatedto")
+        icalobjectValues.put(COLUMN_DTSTART, System.currentTimeMillis())
+        icalobjectValues.put(COLUMN_COMPONENT, "JOURNAL")
+        val newIcalUri = mContentResolver?.insert(URI_ICALOBJECT, icalobjectValues)
+        val newICalObjectId = newIcalUri?.lastPathSegment?.toLongOrNull()
+        Log.println(Log.INFO, "newICalObjectId", newICalObjectId.toString())
+        assertNotNull(newICalObjectId)
+
+        // QUERY the new value is skipped, instead we insert a new contact
+        // INSERT a new Contact
+        val relatedtoValues = ContentValues()
+        relatedtoValues.put(COLUMN_RELATEDTO_ICALOBJECT_ID, newICalObjectId)
+        relatedtoValues.put(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, newICalObjectId)
+        relatedtoValues.put(COLUMN_RELATEDTO_RELTYPEPARAM, "Child")
+        val newRelatedtoUri = mContentResolver?.insert(URI_RELATEDTO, relatedtoValues)
+        assertNotNull(newRelatedtoUri)
+
+        //QUERY the Relatedto
+        val cursorNewRelatedto: Cursor? = mContentResolver?.query(newRelatedtoUri!!, arrayOf<String>(COLUMN_RELATEDTO_ID), null, null, null)
+        assertEquals(cursorNewRelatedto?.count, 1)             // inserted object was found
+
+        // UPDATE the new value
+        val updatedRelatedtoValues = ContentValues()
+        updatedRelatedtoValues.put(COLUMN_RELATEDTO_RELTYPEPARAM, "Parent")
+        val countUpdated = mContentResolver?.update(newRelatedtoUri!!, updatedRelatedtoValues, null, null)
+        assertEquals(countUpdated, 1)
+        //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
+
+        // QUERY the updated value
+        val cursorUpdatedRelatedto: Cursor? = mContentResolver?.query(newRelatedtoUri!!, arrayOf<String>(COLUMN_RELATEDTO_ID, COLUMN_RELATEDTO_ICALOBJECT_ID), "$COLUMN_RELATEDTO_ICALOBJECT_ID = ?", arrayOf(newICalObjectId.toString()), null)
+        assertEquals(cursorUpdatedRelatedto?.count,1)             // inserted object was found
+        cursorUpdatedRelatedto?.close()
+
+        // DELETE the ICalObject, through the foreign key also the attendee is deleted
+        val countDeleted = mContentResolver?.delete(newIcalUri!!, null, null)
+        assertEquals(countDeleted, 1)
+
+        // QUERY the delete value, make sure it's really deleted
+        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4relatedto"), null)
+        assertEquals(cursorDeletedIcalobject?.count,0)             // inserted object was found
+        cursorDeletedIcalobject?.close()
+        val cursorDeletedRelatedto: Cursor? = mContentResolver?.query(newRelatedtoUri!!, arrayOf<String>(COLUMN_RELATEDTO_ID, COLUMN_RELATEDTO_ICALOBJECT_ID), "$COLUMN_RELATEDTO_ICALOBJECT_ID = ?", arrayOf(newICalObjectId.toString()), null)
+        assertEquals(cursorDeletedRelatedto?.count,0)             // inserted object was found
+        cursorUpdatedRelatedto?.close()
+    }
+
+
+
+    @Test
+    fun resource_insert_find_update_delete()  {
+
+        // INSERT a new ICalObject
+        val icalobjectValues = ContentValues()
+        icalobjectValues.put(COLUMN_SUMMARY, "journal4resource")
+        icalobjectValues.put(COLUMN_DTSTART, System.currentTimeMillis())
+        icalobjectValues.put(COLUMN_COMPONENT, "JOURNAL")
+        val newIcalUri = mContentResolver?.insert(URI_ICALOBJECT, icalobjectValues)
+        val newICalObjectId = newIcalUri?.lastPathSegment?.toLongOrNull()
+        Log.println(Log.INFO, "newICalObjectId", newICalObjectId.toString())
+        assertNotNull(newICalObjectId)
+
+        // QUERY the new value is skipped, instead we insert a new contact
+        // INSERT a new Contact
+        val resourceValues = ContentValues()
+        resourceValues.put(COLUMN_RESOURCE_ICALOBJECT_ID, newICalObjectId)
+        resourceValues.put(COLUMN_RESOURCE_TEXT, "projector")
+        val newResourceUri = mContentResolver?.insert(URI_RESOURCE, resourceValues)
+        assertNotNull(newResourceUri)
+
+        //QUERY the Resource
+        val cursorNewResource: Cursor? = mContentResolver?.query(newResourceUri!!, arrayOf<String>(COLUMN_RESOURCE_ID), null, null, null)
+        assertEquals(cursorNewResource?.count, 1)             // inserted object was found
+
+        // UPDATE the new value
+        val updatedResourceValues = ContentValues()
+        updatedResourceValues.put(COLUMN_RESOURCE_TEXT, "microphone")
+        val countUpdated = mContentResolver?.update(newResourceUri!!, updatedResourceValues, null, null)
+        assertEquals(countUpdated, 1)
+        //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
+
+        // QUERY the updated value
+        val cursorUpdatedResource: Cursor? = mContentResolver?.query(newResourceUri!!, arrayOf<String>(COLUMN_RESOURCE_ID, COLUMN_RESOURCE_TEXT), "$COLUMN_RESOURCE_TEXT = ?", arrayOf("microphone"), null)
+        assertEquals(cursorUpdatedResource?.count,1)             // inserted object was found
+        cursorUpdatedResource?.close()
+
+        // DELETE the ICalObject, through the foreign key also the attendee is deleted
+        val countDeleted = mContentResolver?.delete(newIcalUri!!, null, null)
+        assertEquals(countDeleted, 1)
+
+        // QUERY the delete value, make sure it's really deleted
+        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4comment"), null)
+        assertEquals(cursorDeletedIcalobject?.count,0)             // inserted object was found
+        cursorDeletedIcalobject?.close()
+        val cursorDeletedResource: Cursor? = mContentResolver?.query(newResourceUri!!, arrayOf<String>(COLUMN_RESOURCE_ID, COLUMN_RESOURCE_TEXT), "$COLUMN_RESOURCE_TEXT = ?", arrayOf("microphone"), null)
+        assertEquals(cursorDeletedResource?.count,0)             // inserted object was found
+        cursorUpdatedResource?.close()
+    }
+
+
 
 
 
@@ -409,7 +515,7 @@ class SyncContentProviderTest {
         // INSERT a new value, this one must remain
         val contentValues = ContentValues()
         contentValues.put(COLUMN_SUMMARY, "note2update")
-        val newUri = mContentResolver?.insert(URI_ICALOBJECT, contentValues)
+        mContentResolver?.insert(URI_ICALOBJECT, contentValues)
 
 
         val contentValuesCurrupted = ContentValues()
