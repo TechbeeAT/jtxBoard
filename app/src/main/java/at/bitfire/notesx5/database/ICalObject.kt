@@ -3,10 +3,7 @@ package at.bitfire.notesx5.database
 import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import at.bitfire.notesx5.R
 import kotlinx.android.parcel.Parcelize
 import java.util.*
@@ -48,7 +45,8 @@ const val COLUMN_COLOR = "color"
 
 
 @Parcelize
-@Entity(tableName = TABLE_NAME_ICALOBJECT, indices = [Index(value = ["_id", "summary", "description"])])
+@Entity(tableName = TABLE_NAME_ICALOBJECT,
+        indices = [Index(value = ["_id", "summary", "description"])])
 data class ICalObject(
 
         @PrimaryKey(autoGenerate = true)

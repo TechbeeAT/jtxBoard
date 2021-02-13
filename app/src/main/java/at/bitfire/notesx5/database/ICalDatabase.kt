@@ -37,7 +37,7 @@ import at.bitfire.notesx5.database.properties.*
     ICalObject::class,
     Organizer::class,
     Relatedto::class,
-    Resource::class], version = 44, exportSchema = false)
+    Resource::class], version = 47, exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {
 
@@ -122,20 +122,23 @@ abstract class ICalDatabase : RoomDatabase() {
         /**
          * Inserts the dummy data into the database if it is currently empty.
          */
-        private fun populateInitialData() {
+        /*
+private fun populateInitialData() {
 
-            /*
-            if (cheese().count() === 0) {
-                runInTransaction(Runnable {
-                    val cheese = Cheese()
-                    for (i in 0 until Cheese.CHEESES.length) {
-                        cheese.name = Cheese.CHEESES.get(i)
-                        cheese().insert(cheese)
-                    }
-                })
-            }
 
-             */
+if (cheese().count() === 0) {
+    runInTransaction(Runnable {
+        val cheese = Cheese()
+        for (i in 0 until Cheese.CHEESES.length) {
+            cheese.name = Cheese.CHEESES.get(i)
+            cheese().insert(cheese)
         }
+    })
+}
+
+
+        }
+
+         */
     }
 }

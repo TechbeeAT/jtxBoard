@@ -32,7 +32,8 @@ const val COLUMN_RELATEDTO_OTHERPARAM = "otherparam"
         foreignKeys = [ForeignKey(entity = ICalObject::class,
                 parentColumns = arrayOf(COLUMN_ID),
                 childColumns = arrayOf(COLUMN_RELATEDTO_ICALOBJECT_ID),
-                onDelete = ForeignKey.CASCADE)])
+                onDelete = ForeignKey.CASCADE)],
+                indices = [Index(value = [COLUMN_RELATEDTO_ICALOBJECT_ID, COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, COLUMN_RELATEDTO_RELTYPEPARAM], unique = true)])
 data class Relatedto (
 
         @PrimaryKey(autoGenerate = true)
@@ -41,7 +42,7 @@ data class Relatedto (
 
         @ColumnInfo(index = true, name = COLUMN_RELATEDTO_ICALOBJECT_ID)    var icalObjectId: Long = 0L,
         @ColumnInfo(index = true, name = COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) var linkedICalObjectId: Long = 0L,
-        @ColumnInfo(name = COLUMN_RELATEDTO_TEXT)                var text: String = "",
+        @ColumnInfo(name = COLUMN_RELATEDTO_TEXT)                var text: String? = null,
         @ColumnInfo(name = COLUMN_RELATEDTO_RELTYPEPARAM)        var reltypeparam: String? = null,
         @ColumnInfo(name = COLUMN_RELATEDTO_OTHERPARAM)          var otherparam: String? = null
 ): Parcelable {
@@ -88,4 +89,12 @@ data class Relatedto (
         }
 
 }
+
+
+
+enum class Reltypeparam {
+        PARENT, CHILD, SIBLING
+}
+
+
 
