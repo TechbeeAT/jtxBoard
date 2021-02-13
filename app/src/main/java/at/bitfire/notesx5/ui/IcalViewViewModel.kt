@@ -75,7 +75,7 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
 
             relatedSubtasks = Transformations.switchMap(icalEntity) {
-                it?.property?.id?.let { parentId -> database.getRelatedTodos(it.property.id) }
+                it?.property?.id?.let { parentId -> database.getRelatedTodos(parentId) }
             }
 
 
