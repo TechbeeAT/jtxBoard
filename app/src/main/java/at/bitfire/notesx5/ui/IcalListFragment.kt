@@ -281,8 +281,8 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             this.findNavController().navigate(
                     IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
                         this.category2preselect = icalListViewModel.searchCategories.toTypedArray()
-                        this.classification2preselect = icalListViewModel.searchClassification.toIntArray()
-                        this.status2preselect = icalListViewModel.searchStatus.toIntArray()
+                        this.classification2preselect = icalListViewModel.searchClassification.toTypedArray()
+                        this.status2preselect = icalListViewModel.searchStatus.toTypedArray()
                         this.collection2preselect = icalListViewModel.searchCollection.toTypedArray()
                         this.component2preselect = icalListViewModel.searchComponent
                     })

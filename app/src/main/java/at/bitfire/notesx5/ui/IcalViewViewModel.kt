@@ -178,9 +178,9 @@ class IcalViewViewModel(private val icalItemId: Long,
         item2update.lastModified = System.currentTimeMillis()
 
         when (item2update.percent) {
-            100 -> item2update.status = 2
-            in 1..99 -> item2update.status = 1
-            0 -> item2update.status = 0
+            100 -> item2update.status = StatusTodo.COMPLETED.param
+            in 1..99 -> item2update.status = StatusTodo.INPROCESS.param
+            0 -> item2update.status = StatusTodo.NEEDSACTION.param
         }
 
         viewModelScope.launch() {

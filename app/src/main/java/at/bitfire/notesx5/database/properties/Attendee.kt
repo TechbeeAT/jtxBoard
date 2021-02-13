@@ -5,7 +5,9 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.annotation.Nullable
 import androidx.room.*
+import at.bitfire.notesx5.R
 import at.bitfire.notesx5.database.COLUMN_ID
+import at.bitfire.notesx5.database.Classification
 import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize
 
@@ -25,7 +27,6 @@ const val COLUMN_ATTENDEE_CALADDRESS = "caladdress"
 const val COLUMN_ATTENDEE_CUTYPEPARAM = "cutypeparam"
 const val COLUMN_ATTENDEE_MEMBERPARAM = "memberparam"
 const val COLUMN_ATTENDEE_ROLEPARAM = "roleparam"
-const val COLUMN_ATTENDEE_ROLEPARAMX = "roleparamX"
 const val COLUMN_ATTENDEE_PARTSTATPARAM = "partstatparam"
 const val COLUMN_ATTENDEE_RSVPPARAM = "rsvpparam"
 const val COLUMN_ATTENDEE_DELTOPARAM = "deltoparam"
@@ -53,10 +54,9 @@ data class Attendee (
 
         @ColumnInfo(index = true, name = COLUMN_ATTENDEE_ICALOBJECT_ID)       var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_ATTENDEE_CALADDRESS)          var caladdress: String = "",
-        @ColumnInfo(name = COLUMN_ATTENDEE_CUTYPEPARAM)         var cutypeparam: String = "INDIVIDUAL",
+        @ColumnInfo(name = COLUMN_ATTENDEE_CUTYPEPARAM)         var cutypeparam: String? = Cutypeparam.INDIVIDUAL.param,
         @ColumnInfo(name = COLUMN_ATTENDEE_MEMBERPARAM)         var memberparam: String? = null,
-        @ColumnInfo(name = COLUMN_ATTENDEE_ROLEPARAM)           var roleparam: Int? = 1,
-        @ColumnInfo(name = COLUMN_ATTENDEE_ROLEPARAMX)          var roleparamX: String? = null,
+        @ColumnInfo(name = COLUMN_ATTENDEE_ROLEPARAM)           var roleparam: String? = Roleparam.REQ_PARTICIPANT.param,
         @ColumnInfo(name = COLUMN_ATTENDEE_PARTSTATPARAM)       var partstatparam: String? = null,
         @ColumnInfo(name = COLUMN_ATTENDEE_RSVPPARAM)           var rsvpparam: String? = null,
         @ColumnInfo(name = COLUMN_ATTENDEE_DELTOPARAM)          var deltoparam: String? = null,
@@ -104,17 +104,16 @@ data class Attendee (
                         this.caladdress = values.getAsString(COLUMN_ATTENDEE_CALADDRESS)
 
 
+
                 if (values?.containsKey(COLUMN_ATTENDEE_CUTYPEPARAM) == true && values.getAsString(COLUMN_ATTENDEE_CUTYPEPARAM).isNotBlank()) {
                         this.cutypeparam = values.getAsString(COLUMN_ATTENDEE_CUTYPEPARAM)
                 }
                 if (values?.containsKey(COLUMN_ATTENDEE_MEMBERPARAM) == true && values.getAsString(COLUMN_ATTENDEE_MEMBERPARAM).isNotBlank()) {
                         this.memberparam = values.getAsString(COLUMN_ATTENDEE_MEMBERPARAM)
                 }
-                if (values?.containsKey(COLUMN_ATTENDEE_ROLEPARAM) == true && values.getAsInteger(COLUMN_ATTENDEE_ROLEPARAM) != null) {
-                        this.roleparam = values.getAsInteger(COLUMN_ATTENDEE_ROLEPARAM)
-                }
-                if (values?.containsKey(COLUMN_ATTENDEE_ROLEPARAMX) == true && values.getAsString(COLUMN_ATTENDEE_ROLEPARAMX).isNotBlank()) {
-                        this.roleparamX = values.getAsString(COLUMN_ATTENDEE_ROLEPARAMX)
+
+                if (values?.containsKey(COLUMN_ATTENDEE_ROLEPARAM) == true && values.getAsString(COLUMN_ATTENDEE_ROLEPARAM).isNotBlank()) {
+                        this.roleparam = values.getAsString(COLUMN_ATTENDEE_ROLEPARAM)
                 }
                 if (values?.containsKey(COLUMN_ATTENDEE_PARTSTATPARAM) == true && values.getAsString(COLUMN_ATTENDEE_PARTSTATPARAM).isNotBlank()) {
                         this.partstatparam = values.getAsString(COLUMN_ATTENDEE_PARTSTATPARAM)
@@ -149,4 +148,49 @@ data class Attendee (
         }
 
 }
+
+enum class Cutypeparam (val id: Int, val param: String?) {
+
+        INDIVIDUAL(0,"INDIVIDUAL"),
+        GROUP(1,"GROUP"),
+        RESOURCE(2,"RESOURCE"),
+        ROOM(3,"ROOM"),
+        UNKNOWN(4,"UNKNOWN")
+}
+
+enum class Roleparam (val id: Int, val param: String?, val stringResource: Int, val icon: Int) {
+        CHAIR (0,"CHAIR", R.string.attendee_role_chair, R.drawable.ic_attendee_chair),            //Indicates chair of the calendar entity
+        REQ_PARTICIPANT(1,"REQ-PARTICIPANT", R.string.attendee_role_required_participant, R.drawable.ic_attendee_reqparticipant),  //Indicates a participant whose participation is required
+        OPT_PARTICIPANT(2,"OPT-PARTICIPANT", R.string.attendee_role_optional_participant, R.drawable.ic_attendee_optparticipant),  //Indicates a participant whose participation is optional
+        NON_PARTICIPANT(3,"NON-PARTICIPANT", R.string.attendee_role_non_participant, R.drawable.ic_attendee_nonparticipant);  //Indicates a participant who is copied for information
+
+
+        companion object {
+                fun getRoleparamById(id: Int): String? {
+                        values().forEach {
+                                if (it.id == id)
+                                        return it.param
+                        }
+                        return null
+                }
+
+                fun getDrawableResourceByParam(param: String?): Int {
+                        values().forEach {
+                                if (it.param == param)
+                                        return it.icon
+                        }
+                        return R.drawable.ic_attendee_reqparticipant  // default icon
+                }
+
+                fun getStringResourceByParam(param: String): Int? {
+                        Classification.values().forEach {
+                                if (it.param == param)
+                                        return it.stringResource
+                        }
+                        return null
+                }
+        }
+
+}
+
 

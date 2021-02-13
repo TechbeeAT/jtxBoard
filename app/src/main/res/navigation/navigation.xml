@@ -54,12 +54,12 @@
         <argument
             android:name="status2filter"
             android:defaultValue="@null"
-            app:argType="integer[]"
+            app:argType="string[]"
             app:nullable="true" />
         <argument
             android:name="classification2filter"
             android:defaultValue="@null"
-            app:argType="integer[]"
+            app:argType="string[]"
             app:nullable="true" />
         <argument
             android:name="collection2filter"
@@ -121,13 +121,13 @@
             app:nullable="true" />
         <argument
             android:name="status2preselect"
-            android:defaultValue="@null"
-            app:argType="integer[]"
-            app:nullable="true" />
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="classification2preselect"
             android:defaultValue="@null"
-            app:argType="integer[]"
+            app:argType="string[]"
             app:nullable="true" />
         <argument
             android:name="collection2preselect"

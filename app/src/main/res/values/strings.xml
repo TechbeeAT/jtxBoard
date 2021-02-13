@@ -25,21 +25,15 @@
     <string name="ok">OK</string>
     <string name="number_percent">%1$s \%</string>
 
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">Draft</string>
+    <string name="journal_status_final">Final</string>
+    <string name="journal_status_cancelled">Cancelled</string>
 
-    <string-array name="vjournal_status">
-        <item>Draft</item>
-        <item>Final</item>
-        <item>Cancelled</item>
-       <!-- <item>Unsupported</item> -->
-    </string-array>
-
-    <string-array name="vtodo_status">
-        <item>Todo</item>
-        <item>In progress</item>
-        <item>Done</item>
-        <item>Cancelled</item>
-        <!-- <item>Unsupported</item> -->
-    </string-array>
+    <string name="todo_status_needsaction">Needs action</string>
+    <string name="todo_status_completed">Completed</string>
+    <string name="todo_status_inprocess">In process</string>
+    <string name="todo_status_cancelled">Cancelled</string>
 
     <string-array name="priority">
         <item>0 - No priority</item>
@@ -54,22 +48,15 @@
         <item>9 - Highest</item>
     </string-array>
 
+    <string name="classification_public">Public</string>
+    <string name="classification_private">Private</string>
+    <string name="classification_confidential">Confidential</string>
 
+    <string name="attendee_role_chair">Chair</string>
+    <string name="attendee_role_required_participant">Required participant</string>
+    <string name="attendee_role_optional_participant">Optional participant</string>
+    <string name="attendee_role_non_participant">Non-participant / Info</string>
 
-    <string-array name="ical_classification">
-        <item>Public</item>
-        <item>Private</item>
-        <item>Confidential</item>
-       <!-- <item>Unsupported</item> -->
-    </string-array>
-
-    <string-array name="ical_attendee_roles">
-        <item>Chair</item>
-        <item>Required participant</item>
-        <item>Optional participant</item>
-        <item>Non-participant / Info</item>
-        <!-- <item>Unsupported</item> -->
-    </string-array>
 
 
     <!-- Toast to play after Clear button has been pressed -->

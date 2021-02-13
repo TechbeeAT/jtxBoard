@@ -15,6 +15,7 @@ import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
+import at.bitfire.notesx5.database.properties.Roleparam
 import at.bitfire.notesx5.databinding.FragmentIcalViewBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.slider.Slider
@@ -88,20 +89,22 @@ class IcalViewFragment : Fragment() {
 
             if (it?.property != null) {
 
-                val statusArray = if (icalViewViewModel.icalEntity.value!!.property.component == "TODO")
-                    resources.getStringArray(R.array.vtodo_status)
+                if (it.property.component == Component.TODO.name && it.property.status in StatusTodo.paramValues()) {
+                    binding.viewStatusChip.text =  getString(StatusTodo.getStringResourceByParam(it.property.status)!!)
+                } else if (((it.property.component == Component.TODO.name) || it.property.component == Component.NOTE.name) && it.property.status in StatusJournal.paramValues()) {
+                    binding.viewStatusChip.text =  getString(StatusJournal.getStringResourceByParam(it.property.status)!!)
+                } else {
+                    binding.viewStatusChip.text = it.property.status
+                }
+
+                if (it.property.classification in Classification.paramValues())
+                    binding.viewClassificationChip.text = getString(Classification.getStringResourceByParam(it.property.classification)!!)
                 else
-                    resources.getStringArray(R.array.vjournal_status)
-
-                binding.viewStatusChip.text = statusArray[icalViewViewModel.icalEntity.value!!.property.status]
-
-                val classificationArray = resources.getStringArray(R.array.ical_classification)
-                binding.viewClassificationChip.text = classificationArray[icalViewViewModel.icalEntity.value!!.property.classification]
+                    binding.viewClassificationChip.text = it.property.classification
 
                 val priorityArray = resources.getStringArray(R.array.priority)
                 if (icalViewViewModel.icalEntity.value?.property?.priority != null && icalViewViewModel.icalEntity.value!!.property.priority in 0..9)
                     binding.viewPriorityChip.text = priorityArray[icalViewViewModel.icalEntity.value!!.property.priority!!]
-
 
                 binding.viewCommentsLinearlayout.removeAllViews()
                 icalViewViewModel.icalEntity.value!!.comment?.forEach { comment ->
@@ -399,17 +402,13 @@ class IcalViewFragment : Fragment() {
 
         val attendeeChip = inflater.inflate(R.layout.fragment_ical_view_attendees_chip, binding.viewAttendeeChipgroup, false) as Chip
         attendeeChip.text = attendee.caladdress
-        when (attendee.roleparam) {
-            0 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_chair, null)
-            1 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
-            2 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_optparticipant, null)
-            3 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_nonparticipant, null)
-            else -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
-        }
+        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Roleparam.getDrawableResourceByParam(attendee.roleparam), null)
+
         binding.viewAttendeeChipgroup.addView(attendeeChip)
 
         attendeeChip.setOnClickListener {
             // Responds to chip click
+            // TODO: maybe go back to list view and filter all items with this attendee
         }
 
         attendeeChip.setOnCloseIconClickListener { chip ->

@@ -10,8 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.ICalDatabase
-import at.bitfire.notesx5.database.ICalDatabaseDao
+import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.databinding.FragmentIcalFilterBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -34,8 +33,8 @@ class IcalFilterFragment : Fragment()  {
 
 
     private val categoriesSelected: MutableList<String> = mutableListOf()
-    private val statusSelected: MutableList<Int> = mutableListOf()
-    private val classificationSelected: MutableList<Int> = mutableListOf()
+    private val statusSelected: MutableList<String> = mutableListOf()
+    private val classificationSelected: MutableList<String> = mutableListOf()
     private val collectionSelected: MutableList<String> = mutableListOf()
 
     private var categoriesPreselected: MutableList<String> = mutableListOf()
@@ -80,24 +79,33 @@ class IcalFilterFragment : Fragment()  {
 
         if (arguments.classification2preselect?.isNotEmpty() == true) {
             arguments.classification2preselect!!.forEach {
-                classificationPreselected.add(resources.getStringArray(R.array.ical_classification)[it])
+                classificationPreselected.add(getString(Classification.getStringResourceByParam(it)!!))
             }
         }
 
         if (arguments.status2preselect?.isNotEmpty() == true) {
             arguments.status2preselect!!.forEach {
-                statusPreselected.add(resources.getStringArray(R.array.vjournal_status)[it])
+                if (arguments.component2preselect == Component.TODO.name && it in StatusTodo.paramValues())
+                    statusPreselected.add(getString(StatusTodo.getStringResourceByParam(it)!!))
+                if (arguments.component2preselect == Component.JOURNAL.name && it in StatusTodo.paramValues())
+                    statusPreselected.add(getString(StatusJournal.getStringResourceByParam(it)!!))
             }
         }
 
         if (arguments.collection2preselect?.isNotEmpty() == true)
             collectionPreselected = arguments.collection2preselect!!.toMutableList()
 
+//        val priorityItems = resources.getStringArray(R.array.priority)
 
+        val classificationItems: MutableList<String> = mutableListOf()
+        Classification.values().forEach { classificationItems.add(getString(it.stringResource))       }
 
-        // Set Chips for Status and Classification
-        val statusItems = resources.getStringArray(R.array.vjournal_status).toList()
-        val classificationItems = resources.getStringArray(R.array.ical_classification).toList()
+        val statusItems: MutableList<String> = mutableListOf()
+        if (arguments.component2preselect == Component.TODO.name) {
+            StatusTodo.values().forEach { statusItems.add(getString(it.stringResource))       }
+        } else {
+            StatusJournal.values().forEach { statusItems.add(getString(it.stringResource))       }
+        }
 
         addChipsInt(binding.statusFilterChipgroup, statusItems, displayedStatusChips, statusSelected, statusPreselected)
         addChipsInt(binding.classificationFilterChipgroup, classificationItems, displayedClassificationChips, classificationSelected, classificationPreselected)
@@ -167,7 +175,7 @@ class IcalFilterFragment : Fragment()  {
      * [selected] takes a MutableList to save the selected items
      * [preselected] items can be passed through arguments
      */
-    private fun addChipsInt(chipGroup: ChipGroup, list: List<String>, displayed: MutableList<String>, selected: MutableList<Int>, preselected: MutableList<String>)  {
+    private fun addChipsInt(chipGroup: ChipGroup, list: List<String>, displayed: MutableList<String>, selected: MutableList<String>, preselected: MutableList<String>)  {
 
         list.forEach() { listItem ->
 
@@ -179,16 +187,16 @@ class IcalFilterFragment : Fragment()  {
             chipGroup.addView(chip)
             if(preselected.contains(listItem)) {   // if the current item is in the list of preselected items, then check it
                 chip.isChecked = true
-                selected.add(list.indexOf(listItem))
+                selected.add(listItem)
             }
             displayed.add(listItem)
 
             chip.setOnCheckedChangeListener { _, isChecked ->
                 // Responds to chip checked/unchecked
                 if(isChecked)
-                    selected.add(list.indexOf(listItem))      // add the index of the selected value
+                    selected.add(listItem)      // add the index of the selected value
                 if(!isChecked)
-                        selected.remove(list.indexOf(listItem))  // remove the index of the selected value
+                        selected.remove(listItem)  // remove the index of the selected value
             }
         }
     }
@@ -280,8 +288,8 @@ class IcalFilterFragment : Fragment()  {
 
 
                 val direction = IcalFilterFragmentDirections.actionIcalFilterFragmentToIcalListFragment().apply {
-                    this.status2filter = statusSelected.toIntArray()
-                    this.classification2filter = classificationSelected.toIntArray()
+                    this.status2filter = statusSelected.toTypedArray()
+                    this.classification2filter = classificationSelected.toTypedArray()
                     this.collection2filter = collectionSelected.toTypedArray()
                     this.category2filter = categoriesSelected.toTypedArray()
                 }

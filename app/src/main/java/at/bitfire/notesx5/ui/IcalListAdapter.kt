@@ -12,7 +12,7 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.ICalObject
+import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
@@ -158,17 +158,17 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
             }
 
 
-            val statusArray = if (iCalItem.property.component == "TODO")
-                context.resources.getStringArray(R.array.vtodo_status)
+            if (iCalItem.property.component == Component.TODO.name && iCalItem.property.status in StatusTodo.paramValues())
+                holder.status.text  = context.getString(StatusTodo.getStringResourceByParam(iCalItem.property.status)!!)
+            else if ((iCalItem.property.component == Component.JOURNAL.name || iCalItem.property.component == Component.NOTE.name) && iCalItem.property.status in StatusJournal.paramValues())
+                holder.status.text  = context.getString(StatusJournal.getStringResourceByParam(iCalItem.property.status)!!)
             else
-                context.resources.getStringArray(R.array.vjournal_status)
+                holder.status.text = iCalItem.property.status       // if unsupported just show whatever is there
 
-            if (iCalItem.property.status in 0..3 || (iCalItem.property.component == "TODO" && iCalItem.property.status in 0..3))
-                holder.status.text = statusArray[iCalItem.property.status]
-
-            val classificationArray = context.resources.getStringArray(R.array.ical_classification)
-            if(iCalItem.property.classification in 0..2)
-                holder.classification.text = classificationArray[iCalItem.property.classification]
+            if (iCalItem.property.classification in Classification.paramValues())
+                holder.classification.text = context.getString(Classification.getStringResourceByParam(iCalItem.property.classification)!!)
+            else
+                holder.classification.text = iCalItem.property.classification      // if unsupported just show whatever is there
 
             val priorityArray = context.resources.getStringArray(R.array.priority)
             if(iCalItem.property.priority != null && iCalItem.property.priority in 0..9)
@@ -339,7 +339,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
         subtaskView.list_item_subtask_progress_checkbox.setOnCheckedChangeListener { _, checked ->
             if (checked) {
-                subtaskView.list_item_subtask_progress_percent.text = "100"
+                subtaskView.list_item_subtask_progress_percent.text = 100.toString()
                 subtaskView.list_item_subtask_progress_slider.value = 100F
                 subtaskView.list_item_subtask_progress_checkbox.isChecked = true
             } else {

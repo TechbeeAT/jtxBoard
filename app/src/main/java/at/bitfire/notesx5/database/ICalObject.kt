@@ -7,6 +7,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import at.bitfire.notesx5.R
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -27,9 +28,7 @@ const val COLUMN_DTSTART_TIMEZONE = "dtstarttimezone"
 const val COLUMN_DTEND = "dtend"
 const val COLUMN_DTEND_TIMEZONE = "dtendtimezone"
 const val COLUMN_STATUS = "status"
-const val COLUMN_STATUS_X = "statusx"
 const val COLUMN_CLASSIFICATION = "classification"
-const val COLUMN_CLASSIFICATION_X = "classificationx"
 const val COLUMN_URL = "url"
 const val COLUMN_CONTACT = "contact"
 const val COLUMN_GEO_LAT = "geolat"
@@ -37,7 +36,6 @@ const val COLUMN_GEO_LONG = "geolong"
 const val COLUMN_LOCATION = "location"
 const val COLUMN_PERCENT = "percent"
 const val COLUMN_PRIORITY = "priority"
-const val COLUMN_PRIORITY_X = "priorityx"
 const val COLUMN_DUE = "due"
 const val COLUMN_DUE_TIMEZONE = "duetimezone"
 const val COLUMN_COMPLETED = "completed"
@@ -57,7 +55,7 @@ data class ICalObject(
         @ColumnInfo(index = true, name = COLUMN_ID)
         var id: Long = 0L,
 
-        @ColumnInfo(name = COLUMN_COMPONENT) var component: String = "NOTE",          // JOURNAL or NOTE
+        @ColumnInfo(name = COLUMN_COMPONENT) var component: String = Component.NOTE.name,          // JOURNAL or NOTE
         @ColumnInfo(name = COLUMN_COLLECTION) var collection: String = "LOCAL",
         @ColumnInfo(name = COLUMN_SUMMARY) var summary: String? = null,
         @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String? = null,
@@ -67,10 +65,8 @@ data class ICalObject(
         @ColumnInfo(name = COLUMN_DTEND) var dtend: Long? = null,
         @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String? = null,
 
-        @ColumnInfo(name = COLUMN_STATUS) var status: Int = 0,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
-        @ColumnInfo(name = COLUMN_STATUS_X) var statusX: String? = null,
-        @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: Int = CLASSIFICATION_PUBLIC,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
-        @ColumnInfo(name = COLUMN_CLASSIFICATION_X) var classificationX: String? = null,
+        @ColumnInfo(name = COLUMN_STATUS) var status: String = StatusJournal.FINAL.param,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
+        @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String = Classification.PUBLIC.param,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
 
         @ColumnInfo(name = COLUMN_URL) var url: String? = null,
         @ColumnInfo(name = COLUMN_CONTACT) var contact: String? = null,
@@ -80,7 +76,6 @@ data class ICalObject(
 
         @ColumnInfo(name = COLUMN_PERCENT) var percent: Int? = null,    // VTODO only!
         @ColumnInfo(name = COLUMN_PRIORITY) var priority: Int? = null,   // VTODO and VEVENT
-        @ColumnInfo(name = COLUMN_PRIORITY_X) var priorityX: String? = null,
 
         @ColumnInfo(name = COLUMN_DUE) var due: Long? = null,      // VTODO only!
         @ColumnInfo(name = COLUMN_DUE_TIMEZONE) var dueTimezone: String? = null, //VTODO only!
@@ -119,28 +114,12 @@ data class ICalObject(
 {
         companion object Factory {
 
-                const val STATUS_TODO_OPEN = 1
 
-                const val STATUS_JOURNAL_DRAFT = 0
-                const val STATUS_JOURNAL_FINAL = 1
-                const val STATUS_JOURNAL_CANCELLED = 2
-
-                const val STATUS_TODO_NEEDSACTION = 0
-                const val STATUS_TODO_COMPLETED = 2
-                const val STATUS_TODO_INPROCESS = 1
-                const val STATUS_TODO_CANCELLED = 3
-
-                const val CLASSIFICATION_PUBLIC = 0
-                const val CLASSIFICATION_PRIVATE = 1
-                const val CLASSIFICATION_CONFIDENTIAL = 2
-
-
-
-                fun createJournal(): ICalObject = ICalObject(component = "JOURNAL", dtstart = System.currentTimeMillis(), status = STATUS_JOURNAL_FINAL)
-                fun createNote(): ICalObject = ICalObject(component = "NOTE", status = STATUS_JOURNAL_FINAL)
-                fun createNote(summary: String) = ICalObject(component = "NOTE", status = STATUS_JOURNAL_FINAL, summary = summary)
-                fun createTodo() = ICalObject(component = "TODO", status = STATUS_TODO_NEEDSACTION, percent = 0, priority = 0, dueTimezone = "ALLDAY")
-                fun createSubtask(summary: String) = ICalObject(component = "TODO", summary = summary, status = 0, percent = 0, dueTimezone = "ALLDAY")
+                fun createJournal(): ICalObject = ICalObject(component = "JOURNAL", dtstart = System.currentTimeMillis(), status = StatusJournal.FINAL.param)
+                fun createNote(): ICalObject = ICalObject(component = "NOTE", status = StatusJournal.FINAL.param)
+                fun createNote(summary: String) = ICalObject(component = "NOTE", status = StatusJournal.FINAL.param, summary = summary)
+                fun createTodo() = ICalObject(component = "TODO", status = StatusTodo.NEEDSACTION.param, percent = 0, priority = 0, dueTimezone = "ALLDAY")
+                fun createSubtask(summary: String) = ICalObject(component = "TODO", summary = summary, status = StatusTodo.NEEDSACTION.param, percent = 0, dueTimezone = "ALLDAY")
 
 
                 /**
@@ -193,24 +172,22 @@ data class ICalObject(
                         this.dtendTimezone = values.getAsString(COLUMN_DTEND_TIMEZONE)
                 }
 
-                if (values?.containsKey(COLUMN_STATUS) == true && values?.getAsInteger(COLUMN_STATUS) != null) {
-                        this.status = values.getAsInteger(COLUMN_STATUS)
+                if (values?.containsKey(COLUMN_STATUS) == true && values.getAsString(COLUMN_STATUS).isNotBlank()) {
+                        this.status = values.getAsString(COLUMN_STATUS)
                 }
-                if (values?.containsKey(COLUMN_STATUS_X) == true && values.getAsString(COLUMN_STATUS_X).isNotBlank()) {
-                        this.statusX = values.getAsString(COLUMN_STATUS_X)
-                }
-                if (values?.containsKey(COLUMN_CLASSIFICATION) == true && values.getAsInteger(COLUMN_CLASSIFICATION) != null) {
-                        this.classification = values.getAsInteger(COLUMN_CLASSIFICATION)
-                }
-                if (values?.containsKey(COLUMN_CLASSIFICATION_X) == true && values.getAsString(COLUMN_CLASSIFICATION_X).isNotBlank()) {
-                        this.classificationX = values.getAsString(COLUMN_CLASSIFICATION_X)
+
+                if (values?.containsKey(COLUMN_CLASSIFICATION) == true && values.getAsString(COLUMN_CLASSIFICATION).isNotBlank()) {
+                        this.classification = values.getAsString(COLUMN_CLASSIFICATION)
                 }
                 if (values?.containsKey(COLUMN_URL) == true && values.getAsString(COLUMN_URL).isNotBlank()) {
                         this.url = values.getAsString(COLUMN_URL)
                 }
+                /*
                 if (values?.containsKey(COLUMN_CONTACT) == true && values.getAsString(COLUMN_CONTACT).isNotBlank()) {
                         this.contact = values.getAsString(COLUMN_CONTACT)
                 }
+
+                 */
                 if (values?.containsKey(COLUMN_GEO_LAT) == true && values.getAsFloat(COLUMN_GEO_LAT) != null) {
                         this.geoLat = values.getAsFloat(COLUMN_GEO_LAT)
                 }
@@ -225,9 +202,6 @@ data class ICalObject(
                 }
                 if (values?.containsKey(COLUMN_PRIORITY) == true && values.getAsInteger(COLUMN_PRIORITY) != null) {
                         this.priority = values.getAsInteger(COLUMN_PRIORITY)
-                }
-                if (values?.containsKey(COLUMN_PRIORITY_X) == true && values.getAsString(COLUMN_PRIORITY_X).isNotBlank()) {
-                        this.priorityX = values.getAsString(COLUMN_PRIORITY_X)
                 }
                 if (values?.containsKey(COLUMN_DUE) == true && values.getAsLong(COLUMN_DUE) != null) {
                         this.due = values.getAsLong(COLUMN_DUE)
@@ -260,4 +234,109 @@ data class ICalObject(
                 return this
         }
 }
+
+
+
+enum class StatusJournal (val id: Int, val param: String, val stringResource: Int) {
+
+        DRAFT(0,"DRAFT", R.string.journal_status_draft),
+        FINAL(1,"FINAL", R.string.journal_status_final),
+        CANCELLED(2,"CANCELLED", R.string.journal_status_cancelled);
+
+        companion object {
+                fun getParamById(id: Int): String? {
+                        values().forEach {
+                                if (it.id == id)
+                                        return it.param
+                        }
+                        return null
+                }
+
+                fun getStringResourceByParam(param: String): Int? {
+                        values().forEach {
+                                if (it.param == param)
+                                        return it.stringResource
+                        }
+                        return null
+                }
+
+                fun paramValues(): List<String> {
+                        val paramValues: MutableList<String> = mutableListOf()
+                        values().forEach { paramValues.add(it.param) }
+                        return paramValues
+                }
+        }
+}
+
+enum class StatusTodo (val id: Int, val param: String, val stringResource: Int) {
+
+        NEEDSACTION(0,"NEEDS-ACTION", R.string.todo_status_needsaction),
+        COMPLETED(1,"COMPLETED", R.string.todo_status_completed),
+        INPROCESS(2,"IN-PROCESS", R.string.todo_status_inprocess),
+        CANCELLED(3,"CANCELLED", R.string.todo_status_cancelled);
+
+        companion object {
+                fun getParamById(id: Int): String? {
+                        values().forEach {
+                                if (it.id == id)
+                                        return it.param
+                        }
+                        return null
+                }
+
+                fun getStringResourceByParam(param: String): Int? {
+                        values().forEach {
+                                if (it.param == param)
+                                        return it.stringResource
+                        }
+                        return null
+                }
+
+                fun paramValues(): List<String> {
+                        val paramValues: MutableList<String> = mutableListOf()
+                        values().forEach { paramValues.add(it.param) }
+                        return paramValues
+                }
+        }
+}
+
+enum class Classification (val id: Int, val param: String, val stringResource: Int) {
+
+        PUBLIC(0,"PUBLIC", R.string.classification_public),
+        PRIVATE(1,"PRIVATE", R.string.classification_private),
+        CONFIDENTIAL(2,"CONFIDENTIAL", R.string.classification_confidential);
+
+
+        companion object {
+                fun getParamById(id: Int): String? {
+                        values().forEach {
+                                if (it.id == id)
+                                        return it.param
+                        }
+                        return null
+                }
+
+                fun getStringResourceByParam(param: String): Int? {
+                        values().forEach {
+                                if (it.param == param)
+                                        return it.stringResource
+                        }
+                        return null
+                }
+
+                fun paramValues(): List<String> {
+                        val paramValues: MutableList<String> = mutableListOf()
+                        values().forEach { paramValues.add(it.param) }
+                        return paramValues
+                }
+        }
+
+}
+
+enum class Component {
+        JOURNAL, NOTE, TODO
+}
+
+
+
 

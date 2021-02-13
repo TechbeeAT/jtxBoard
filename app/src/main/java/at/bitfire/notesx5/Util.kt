@@ -70,7 +70,7 @@ fun convertLongToHourString(time: Long?): String {
 
 @SuppressLint("SimpleDateFormat")
 fun convertLongToMinuteString(time: Long): String {
-    if (time == null || time == 0L)
+    if (time == 0L)
         return ""
     val minute_formatter = SimpleDateFormat("mm")
     return minute_formatter.format(Date(time)).toString()

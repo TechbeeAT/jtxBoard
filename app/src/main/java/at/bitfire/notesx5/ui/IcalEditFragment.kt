@@ -20,12 +20,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
-import at.bitfire.notesx5.database.ICalDatabase
-import at.bitfire.notesx5.database.ICalDatabaseDao
-import at.bitfire.notesx5.database.ICalObject
+import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Comment
+import at.bitfire.notesx5.database.properties.Roleparam
 import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -96,11 +95,15 @@ class IcalEditFragment : Fragment(),
 
 
         val priorityItems = resources.getStringArray(R.array.priority)
-        val classificationItems = resources.getStringArray(R.array.ical_classification)
-        val statusItems = if (icalEditViewModel.iCalEntity.property.component == "TODO") {
-            resources.getStringArray(R.array.vtodo_status)
+
+        var classificationItems: Array<String> = arrayOf()
+        Classification.values().forEach { classificationItems = classificationItems.plus(getString(it.stringResource))       }
+
+        var statusItems: Array<String> = arrayOf()
+        if (icalEditViewModel.iCalEntity.property.component == Component.TODO.name) {
+            StatusTodo.values().forEach { statusItems = statusItems.plus(getString(it.stringResource))       }
         } else {
-            resources.getStringArray(R.array.vjournal_status)
+            StatusJournal.values().forEach { statusItems = statusItems.plus(getString(it.stringResource))       }
         }
 
 
@@ -139,9 +142,9 @@ class IcalEditFragment : Fragment(),
 
                 builder.setNeutralButton("Mark as cancelled") { _, _ ->
                     if (icalEditViewModel.iCalObjectUpdated.value!!.component == "TODO")
-                        icalEditViewModel.iCalObjectUpdated.value!!.status = ICalObject.STATUS_TODO_CANCELLED
+                        icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.CANCELLED.param
                     else
-                        icalEditViewModel.iCalObjectUpdated.value!!.status = ICalObject.STATUS_JOURNAL_CANCELLED
+                        icalEditViewModel.iCalObjectUpdated.value!!.status = StatusJournal.CANCELLED.param
 
                     icalEditViewModel.savingClicked()
 
@@ -177,19 +180,22 @@ class IcalEditFragment : Fragment(),
             if (it.priority != null && it.priority in 0..9)   // if unsupported don't show the classification
                 binding.editPriorityChip.text = priorityItems[it.priority!!]  // if supported show the priority according to the String Array
             else
-                binding.editPriorityChip.text = it.priorityX
+                binding.editPriorityChip.text = it.priority.toString()
 
             // Set the default value of the Status Chip
-            if (it.status == -1)      // if unsupported don't show the status
-                binding.editStatusChip.text = it.statusX
+            if (it.component == Component.TODO.name && it.status in StatusTodo.paramValues())
+                binding.editStatusChip.text = getString(StatusTodo.getStringResourceByParam(it.status)!!)
+            else if ((it.component == Component.JOURNAL.name || it.component == Component.NOTE.name) && it.status in StatusJournal.paramValues())
+                binding.editStatusChip.text = getString(StatusJournal.getStringResourceByParam(it.status)!!)
             else
-                binding.editStatusChip.text = statusItems[it.status]   // if supported show the status according to the String Array
+                binding.editStatusChip.text = it.status       // if unsupported just show whatever is there
+
 
             // Set the default value of the Classification Chip
-            if (it.classification == -1)      // if unsupported don't show the classification
-                binding.editClassificationChip.text = it.classificationX
+            if (it.classification in Classification.paramValues())
+                binding.editClassificationChip.text = getString(Classification.getStringResourceByParam(it.classification)!!)
             else
-                binding.editClassificationChip.text = classificationItems[it.classification]  // if supported show the classification according to the String Array
+                binding.editClassificationChip.text = it.classification       // if unsupported just show whatever is there
 
         }
 
@@ -349,14 +355,20 @@ class IcalEditFragment : Fragment(),
             val statusBefore = icalEditViewModel.iCalObjectUpdated.value!!.status
 
             when (value.toInt()) {
-                100 -> icalEditViewModel.iCalObjectUpdated.value!!.status = ICalObject.STATUS_TODO_COMPLETED
-                in 1..99 -> icalEditViewModel.iCalObjectUpdated.value!!.status = ICalObject.STATUS_TODO_INPROCESS
-                0 -> icalEditViewModel.iCalObjectUpdated.value!!.status = ICalObject.STATUS_TODO_NEEDSACTION
+                100 -> icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.COMPLETED.param
+                in 1..99 -> icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.INPROCESS.param
+                0 -> icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.NEEDSACTION.param
             }
 
             // update the status only if it was actually changed, otherwise the performance sucks
-            if (icalEditViewModel.iCalObjectUpdated.value!!.status != statusBefore)
-                binding.editStatusChip.text = statusItems[icalEditViewModel.iCalObjectUpdated.value!!.status]
+            if (icalEditViewModel.iCalObjectUpdated.value!!.status != statusBefore) {
+                if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.TODO.name && icalEditViewModel.iCalObjectUpdated.value!!.status in StatusTodo.paramValues())
+                    binding.editStatusChip.text = getString(StatusTodo.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
+                if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.JOURNAL.name && icalEditViewModel.iCalObjectUpdated.value!!.status in StatusJournal.paramValues())
+                    binding.editStatusChip.text = getString(StatusJournal.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
+                else
+                    binding.editStatusChip.text = icalEditViewModel.iCalObjectUpdated.value!!.status       // if unsupported just show whatever is there
+            }
         }
 
         binding.editProgressCheckbox.setOnCheckedChangeListener { button, checked ->
@@ -491,8 +503,16 @@ class IcalEditFragment : Fragment(),
                     .setTitle("Set status")
                     .setItems(statusItems) { dialog, which ->
                         // Respond to item chosen
-                        icalEditViewModel.iCalObjectUpdated.value!!.status = which
-                        binding.editStatusChip.text = statusItems[which]     // don't forget to update the UI
+                        if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.TODO.name) {
+                            icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.getParamById(which)!!
+                            binding.editStatusChip.text = getString(StatusTodo.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
+                        }
+
+                        if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.JOURNAL.name || icalEditViewModel.iCalObjectUpdated.value!!.component == Component.NOTE.name) {
+                            icalEditViewModel.iCalObjectUpdated.value!!.status = StatusJournal.getParamById(which)!!
+                            binding.editStatusChip.text = getString(StatusJournal.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
+                        }
+
                     }
                     .setIcon(R.drawable.ic_status)
                     .show()
@@ -505,8 +525,8 @@ class IcalEditFragment : Fragment(),
                     .setTitle("Set classification")
                     .setItems(classificationItems) { dialog, which ->
                         // Respond to item chosen
-                        icalEditViewModel.iCalObjectUpdated.value!!.classification = which
-                        binding.editClassificationChip.text = classificationItems[which]     // don't forget to update the UI
+                        icalEditViewModel.iCalObjectUpdated.value!!.classification = Classification.getParamById(which)!!
+                        binding.editClassificationChip.text = getString(Classification.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.classification)!!)    // don't forget to update the UI
                     }
                     .setIcon(R.drawable.ic_classification)
                     .show()
@@ -660,18 +680,13 @@ class IcalEditFragment : Fragment(),
         if (attendee.caladdress.isBlank())
             return
 
-        val attendeeRoles = resources.getStringArray(R.array.ical_attendee_roles)
+        var attendeeRoles: Array<String> = arrayOf()
+        Roleparam.values().forEach { attendeeRoles = attendeeRoles.plus(getString(it.stringResource))       }
 
         val attendeeChip = inflater.inflate(R.layout.fragment_ical_edit_attendees_chip, binding.editAttendeesChipgroup, false) as Chip
         attendeeChip.text = attendee.caladdress
-        when (attendee.roleparam) {
-            0 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_chair, null)
-            1 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
-            2 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_optparticipant, null)
-            3 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_nonparticipant, null)
-            else -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
-        }
-        attendeeChip.chipIcon
+        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Roleparam.getDrawableResourceByParam(attendee.roleparam), null)
+
         binding.editAttendeesChipgroup.addView(attendeeChip)
 
 
@@ -685,8 +700,8 @@ class IcalEditFragment : Fragment(),
                         if (curIndex == -1)
                             icalEditViewModel.attendeeUpdated.add(attendee)                   // add the attendee to the list of updated items if it was not there yet
                         else
-                            icalEditViewModel.attendeeUpdated[curIndex].roleparam = which      // update the roleparam
-                        attendee.roleparam = which
+                            icalEditViewModel.attendeeUpdated[curIndex].roleparam = Roleparam.getRoleparamById(which)      // update the roleparam
+                        attendee.roleparam = Roleparam.getRoleparamById(which)
 
                         when (which) {
                             0 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_chair, null)
