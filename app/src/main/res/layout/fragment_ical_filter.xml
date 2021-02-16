@@ -82,7 +82,7 @@
 
 
     <com.google.android.material.chip.ChipGroup
-        android:id="@+id/status_filter_chipgroup"
+        android:id="@+id/status_todo_filter_chipgroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -91,6 +91,18 @@
         app:layout_constraintTop_toBottomOf="@+id/status_filter_label">
 
     </com.google.android.material.chip.ChipGroup>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/status_journal_filter_chipgroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/status_filter_label"
+            app:layout_constraintTop_toBottomOf="@+id/status_todo_filter_chipgroup">
+
+        </com.google.android.material.chip.ChipGroup>
+
 
 
         <ImageView
@@ -113,7 +125,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/classification_filter_icon"
-            app:layout_constraintTop_toBottomOf="@id/status_filter_chipgroup" />
+            app:layout_constraintTop_toBottomOf="@id/status_journal_filter_chipgroup" />
 
 
     <com.google.android.material.chip.ChipGroup

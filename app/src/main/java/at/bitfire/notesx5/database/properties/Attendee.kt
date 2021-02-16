@@ -181,7 +181,7 @@ enum class Roleparam (val id: Int, val param: String?, val stringResource: Int, 
                         }
                         return R.drawable.ic_attendee_reqparticipant  // default icon
                 }
-
+/*
                 fun getStringResourceByParam(param: String): Int? {
                         Classification.values().forEach {
                                 if (it.param == param)
@@ -189,6 +189,8 @@ enum class Roleparam (val id: Int, val param: String?, val stringResource: Int, 
                         }
                         return null
                 }
+
+ */
         }
 
 }

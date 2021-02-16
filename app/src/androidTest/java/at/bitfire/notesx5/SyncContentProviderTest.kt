@@ -31,6 +31,7 @@ class SyncContentProviderTest {
     private val URI_ORGANIZER = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_ORGANIZER")
     private val URI_RELATEDTO = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_RELATEDTO")
     private val URI_RESOURCE = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_RESOURCE")
+    private val URI_COLLECTION = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_COLLECTION")
 
 
     @Before
@@ -490,6 +491,45 @@ class SyncContentProviderTest {
         assertEquals(cursorDeletedResource?.count,0)             // inserted object was found
         cursorUpdatedResource?.close()
     }
+
+
+
+    @Test
+    fun collection_insert_find_update_delete()  {
+
+        // INSERT a new Collection
+        val collectionValues = ContentValues()
+        collectionValues.put(COLUMN_COLLECTION_DISPLAYNAME, "testcollection")
+        collectionValues.put(COLUMN_COLLECTION_URL, "https://testcollection")
+
+        val newCollection = mContentResolver?.insert(URI_COLLECTION, collectionValues)
+        val newCollectionId = newCollection?.lastPathSegment?.toLongOrNull()
+        Log.println(Log.INFO, "newCollectionId", newCollectionId.toString())
+        assertNotNull(newCollectionId)
+
+        //QUERY the Collection
+        val cursorNewCollection: Cursor? = mContentResolver?.query(newCollection!!, arrayOf<String>(COLUMN_COLLECTION_ID), null, null, null)
+        assertEquals(cursorNewCollection?.count, 1)             // inserted object was found
+
+        // UPDATE the new value
+        val updatedCollectionValues = ContentValues()
+        updatedCollectionValues.put(COLUMN_COLLECTION_DISPLAYNAME, "testcollection updated")
+        val countUpdated = mContentResolver?.update(newCollection!!, updatedCollectionValues, null, null)
+        assertEquals(countUpdated, 1)
+        //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
+
+        // QUERY the updated value
+        val cursorUpdatedCollection: Cursor? = mContentResolver?.query(newCollection!!, arrayOf<String>(COLUMN_COLLECTION_ID, COLUMN_COLLECTION_DISPLAYNAME), "$COLUMN_COLLECTION_DISPLAYNAME = ?", arrayOf("testcollection updated"), null)
+        assertEquals(cursorUpdatedCollection?.count,1)             // inserted object was found
+        cursorUpdatedCollection?.close()
+
+        // DELETE the ICalObject, through the foreign key also the attendee is deleted
+        val countDeleted = mContentResolver?.delete(newCollection!!, null, null)
+        assertEquals(countDeleted, 1)
+    }
+
+
+
 
 
 

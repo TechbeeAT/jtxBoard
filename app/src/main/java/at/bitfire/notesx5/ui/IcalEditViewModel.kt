@@ -4,12 +4,10 @@ import android.app.Application
 import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
-import at.bitfire.notesx5.database.properties.Category
+import at.bitfire.notesx5.database.ICalCollection
 import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.ICalDatabaseDao
-import at.bitfire.notesx5.database.properties.Attendee
-import at.bitfire.notesx5.database.properties.Comment
-import at.bitfire.notesx5.database.properties.Relatedto
+import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +20,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
                         application: Application) : AndroidViewModel(application) {
 
     lateinit var allCategories: LiveData<List<String>>
-    lateinit var allCollections: LiveData<List<String>>
+    lateinit var allCollections: LiveData<List<ICalCollection>>
 
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
 
@@ -35,12 +33,14 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
     var attendeeUpdated: MutableList<Attendee> = mutableListOf(Attendee())
+    var resourceUpdated: MutableList<Resource> = mutableListOf(Resource())
     var subtaskUpdated: MutableList<ICalObject> = mutableListOf()
 
 
     var categoryDeleted: MutableList<Category> = mutableListOf(Category())
     var commentDeleted: MutableList<Comment> = mutableListOf(Comment())
     var attendeeDeleted: MutableList<Attendee> = mutableListOf(Attendee())
+    var resourceDeleted: MutableList<Resource> = mutableListOf(Resource())
     var subtaskDeleted: MutableList<ICalObject> = mutableListOf()
 
 
@@ -150,12 +150,14 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         categoryUpdated.removeAll(categoryDeleted)  // make sure to not accidentially upsert a category that was deleted
         attendeeUpdated.removeAll(attendeeDeleted)  // make sure to not accidentially upsert a attendee that was deleted
         subtaskUpdated.removeAll(subtaskDeleted)
+        resourceUpdated.removeAll(resourceDeleted)
 
 
         deleteOldCategories()
         deleteOldComments()
         deleteOldAttendees()
         deleteOldSubtasks()
+        //deleteOldResources()
 
 
         viewModelScope.launch() {
@@ -239,8 +241,6 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
             Log.println(Log.INFO, "Attendee", "${newAttendee.caladdress} added")
         }
     }
-
-
 
 
     private fun deleteOldAttendees() {

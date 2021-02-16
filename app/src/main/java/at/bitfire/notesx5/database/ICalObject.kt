@@ -17,7 +17,7 @@ const val COLUMN_ID = BaseColumns._ID
 
 /** The names of all the other columns  */
 const val COLUMN_COMPONENT = "component"
-const val COLUMN_COLLECTION = "collection"
+//const val COLUMN_COLLECTION = "collection"
 const val COLUMN_SUMMARY = "summary"
 const val COLUMN_DESCRIPTION = "description"
 const val COLUMN_DTSTART = "dtstart"
@@ -42,11 +42,17 @@ const val COLUMN_DTSTAMP = "dtstamp"
 const val COLUMN_LAST_MODIFIED = "lastmodified"
 const val COLUMN_SEQUENCE = "sequence"
 const val COLUMN_COLOR = "color"
+const val COLUMN_ICALOBJECT_COLLECTIONID = "collectionId"
 
 
 @Parcelize
 @Entity(tableName = TABLE_NAME_ICALOBJECT,
-        indices = [Index(value = ["_id", "summary", "description"])])
+        indices = [Index(value = ["_id", "summary", "description"])],
+        foreignKeys = [ForeignKey(entity = ICalCollection::class,
+                parentColumns = arrayOf(COLUMN_COLLECTION_ID),
+                childColumns = arrayOf(COLUMN_ICALOBJECT_COLLECTIONID),
+                onDelete = ForeignKey.CASCADE)]
+)
 data class ICalObject(
 
         @PrimaryKey(autoGenerate = true)
@@ -54,7 +60,7 @@ data class ICalObject(
         var id: Long = 0L,
 
         @ColumnInfo(name = COLUMN_COMPONENT) var component: String = Component.NOTE.name,          // JOURNAL or NOTE
-        @ColumnInfo(name = COLUMN_COLLECTION) var collection: String = "LOCAL",
+        //@ColumnInfo(name = COLUMN_COLLECTION) var collection: String = "LOCAL",
         @ColumnInfo(name = COLUMN_SUMMARY) var summary: String? = null,
         @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String? = null,
         @ColumnInfo(name = COLUMN_DTSTART) var dtstart: Long? = null,
@@ -105,7 +111,9 @@ data class ICalObject(
         //var ianaComponent: String?,
         //var xComponent: String?
 
-        @ColumnInfo(name = COLUMN_COLOR) var color: String? = null
+        @ColumnInfo(name = COLUMN_COLOR) var color: String? = null,
+
+        @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID)    var collectionId: Long? = 1L
 
 ): Parcelable
 
@@ -146,9 +154,12 @@ data class ICalObject(
                 if (values?.containsKey(COLUMN_COMPONENT) == true && values.getAsString(COLUMN_COMPONENT).isNotBlank()) {
                         this.component = values.getAsString(COLUMN_COMPONENT)
                 }
+                /*
                 if (values?.containsKey(COLUMN_COLLECTION) == true && values.getAsString(COLUMN_COLLECTION).isNotBlank()) {
                         this.collection = values.getAsString(COLUMN_COLLECTION)
                 }
+
+                 */
                 if (values?.containsKey(COLUMN_SUMMARY) == true && values.getAsString(COLUMN_SUMMARY).isNotBlank()) {
                         this.summary = values.getAsString(COLUMN_SUMMARY)
                 }
@@ -234,8 +245,8 @@ data class ICalObject(
 }
 
 
-
-enum class StatusJournal (val id: Int, val param: String, val stringResource: Int) {
+@Parcelize
+enum class StatusJournal (val id: Int, val param: String, val stringResource: Int): Parcelable {
 
         DRAFT(0,"DRAFT", R.string.journal_status_draft),
         FINAL(1,"FINAL", R.string.journal_status_final),
@@ -263,10 +274,12 @@ enum class StatusJournal (val id: Int, val param: String, val stringResource: In
                         values().forEach { paramValues.add(it.param) }
                         return paramValues
                 }
+
         }
 }
 
-enum class StatusTodo (val id: Int, val param: String, val stringResource: Int) {
+@Parcelize
+enum class StatusTodo (val id: Int, val param: String, val stringResource: Int): Parcelable {
 
         NEEDSACTION(0,"NEEDS-ACTION", R.string.todo_status_needsaction),
         COMPLETED(1,"COMPLETED", R.string.todo_status_completed),
@@ -298,7 +311,8 @@ enum class StatusTodo (val id: Int, val param: String, val stringResource: Int) 
         }
 }
 
-enum class Classification (val id: Int, val param: String, val stringResource: Int) {
+@Parcelize
+enum class Classification (val id: Int, val param: String, val stringResource: Int): Parcelable {
 
         PUBLIC(0,"PUBLIC", R.string.classification_public),
         PRIVATE(1,"PRIVATE", R.string.classification_private),

@@ -17,6 +17,8 @@ private const val CODE_CONTACTS_DIR = 5
 private const val CODE_ORGANIZER_DIR = 6
 private const val CODE_RELATEDTO_DIR = 7
 private const val CODE_RESOURCE_DIR = 8
+private const val CODE_COLLECTION_DIR = 9
+
 
 
 private const val CODE_ICALOBJECT_ITEM = 101
@@ -27,6 +29,8 @@ private const val CODE_CONTACT_ITEM = 105
 private const val CODE_ORGANIZER_ITEM = 106
 private const val CODE_RELATEDTO_ITEM = 107
 private const val CODE_RESOURCE_ITEM = 108
+private const val CODE_COLLECTION_ITEM = 109
+
 
 
 const val SYNC_PROVIDER_AUTHORITY = "at.bitfire.notesx5.provider"
@@ -54,6 +58,8 @@ class SyncContentProvider : ContentProvider() {
         addURI(SYNC_PROVIDER_AUTHORITY, "organizer", CODE_ORGANIZER_DIR)
         addURI(SYNC_PROVIDER_AUTHORITY, "relatedto", CODE_RELATEDTO_DIR)
         addURI(SYNC_PROVIDER_AUTHORITY, "resource", CODE_RESOURCE_DIR)
+        addURI(SYNC_PROVIDER_AUTHORITY, "collection", CODE_COLLECTION_DIR)
+
 
         addURI(SYNC_PROVIDER_AUTHORITY, "icalobject/#", CODE_ICALOBJECT_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "attendee/#", CODE_ATTENDEE_ITEM)
@@ -63,6 +69,8 @@ class SyncContentProvider : ContentProvider() {
         addURI(SYNC_PROVIDER_AUTHORITY, "organizer/#", CODE_ORGANIZER_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "relatedto/#", CODE_RELATEDTO_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "resource/#", CODE_RESOURCE_ITEM)
+        addURI(SYNC_PROVIDER_AUTHORITY, "collection/#", CODE_COLLECTION_ITEM)
+
     }
 
 
@@ -80,6 +88,8 @@ class SyncContentProvider : ContentProvider() {
             CODE_ORGANIZER_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
             CODE_RELATEDTO_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
             CODE_RESOURCE_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+            CODE_COLLECTION_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+
 
             CODE_ICALOBJECT_ITEM -> count = database.deleteICalObjectById(ContentUris.parseId(uri))
             CODE_ATTENDEE_ITEM -> count = database.deleteAttendeeById(ContentUris.parseId(uri))
@@ -89,6 +99,7 @@ class SyncContentProvider : ContentProvider() {
             CODE_ORGANIZER_ITEM -> count = database.deleteOrganizerById(ContentUris.parseId(uri))
             CODE_RELATEDTO_ITEM -> count = database.deleteRelatedtoById(ContentUris.parseId(uri))
             CODE_RESOURCE_ITEM -> count = database.deleteResourceById(ContentUris.parseId(uri))
+            CODE_COLLECTION_ITEM -> count = database.deleteCollectionById(ContentUris.parseId(uri))
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
@@ -119,6 +130,8 @@ class SyncContentProvider : ContentProvider() {
             CODE_ORGANIZER_DIR -> id = Organizer.fromContentValues(values)?.let { database.insertOrganizerSync(it) }
             CODE_RELATEDTO_DIR -> id = Relatedto.fromContentValues(values)?.let { database.insertRelatedtoSync(it) }
             CODE_RESOURCE_DIR -> id = Resource.fromContentValues(values)?.let { database.insertResourceSync(it) }
+            CODE_COLLECTION_DIR -> id = ICalCollection.fromContentValues(values)?.let { database.insertCollectionSync(it) }
+
 
             CODE_ICALOBJECT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
             CODE_ATTENDEE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
@@ -128,6 +141,8 @@ class SyncContentProvider : ContentProvider() {
             CODE_ORGANIZER_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
             CODE_RELATEDTO_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
             CODE_RESOURCE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+            CODE_COLLECTION_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
@@ -181,6 +196,8 @@ class SyncContentProvider : ContentProvider() {
             CODE_ORGANIZER_DIR -> queryString += TABLE_NAME_ORGANIZER
             CODE_RELATEDTO_DIR -> queryString += TABLE_NAME_RELATEDTO
             CODE_RESOURCE_DIR -> queryString += TABLE_NAME_RESOURCE
+            CODE_COLLECTION_DIR -> queryString += TABLE_NAME_COLLECTION
+
 
             CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ?"
             CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE WHERE $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ?"
@@ -190,6 +207,8 @@ class SyncContentProvider : ContentProvider() {
             CODE_ORGANIZER_ITEM -> queryString += "$TABLE_NAME_ORGANIZER WHERE $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ID = ?"
             CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ?"
             CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ?"
+            CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = ?"
+
 
             else -> throw IllegalArgumentException("Unknown URI: $uri")
         }
@@ -227,6 +246,8 @@ class SyncContentProvider : ContentProvider() {
             CODE_ORGANIZER_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
             CODE_RELATEDTO_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
             CODE_RESOURCE_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+            CODE_COLLECTION_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+
 
             CODE_ICALOBJECT_ITEM -> database.getICalObjectByIdSync(ContentUris.parseId(uri)).also {
                 if (it != null)
@@ -267,6 +288,13 @@ class SyncContentProvider : ContentProvider() {
                 if (it != null)
                     count = database.updateResourceSync(it.applyContentValues(values))
                 else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
+            }
+            CODE_COLLECTION_ITEM -> database.getCollectionByIdSync(ContentUris.parseId(uri)).also {
+                when {
+                    it == null -> throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
+                    it.collectionId == 1L -> throw java.lang.IllegalArgumentException("Local Collection cannot be updated. ($uri)")
+                    else -> count = database.updateCollectionSync(it.applyContentValues(values))
+                }
             }
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")

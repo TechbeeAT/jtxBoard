@@ -59,8 +59,8 @@ SELECTs (global selects without parameter)
      * @return a list of [ICalObject.collection] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT DISTINCT collection FROM icalobject ORDER BY collection ASC")
-    fun getAllCollections(): LiveData<List<String>>
+    @Query("SELECT * FROM collection ORDER BY displayname ASC")
+    fun getAllCollections(): LiveData<List<ICalCollection>>
 
     /**
      * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
@@ -168,6 +168,15 @@ SELECTs (SELECTs by Id, snychronous for Content Povider)
     @Query("SELECT * FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ID = :id")
     fun getResourceByIdSync(id: Long): Resource?
 
+    /**
+     * Retrieve an [ICalCollection] by Id synchronously (non-suspend)
+     *
+     * @param id The id of the [ICalCollection] in the DB
+     * @return the [ICalCollection] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ID = :id")
+    fun getCollectionByIdSync(id: Long): ICalCollection?
+
 
 
 
@@ -192,6 +201,9 @@ INSERTs (Asyncronously / Suspend)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRelatedto(relatedto: Relatedto): Long
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun upsertCollection(ICalCollection: ICalCollection): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSubtask(subtask: ICalObject): Long
@@ -225,6 +237,9 @@ INSERTs (Synchronously)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertResourceSync(resource: Resource): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCollectionSync(ICalCollection: ICalCollection): Long
+
 
     /*
 UPDATEs (Synchronously)
@@ -250,6 +265,10 @@ UPDATEs (Synchronously)
 
     @Update
     fun updateContactSync(contact: Contact): Int
+
+
+    @Update
+    fun updateCollectionSync(collection: ICalCollection): Int
 
     @Update
     fun updateResourceSync(resource: Resource): Int
@@ -390,6 +409,18 @@ DELETEs by Object
      */
     @Query("DELETE FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ID = :id")
     fun deleteResourceById(id: Long): Int
+
+
+    /**
+     * Delete an Collection by the ID. Due to the foreign constraint
+     * this would also delete all ICalObjects (and its' related entities)
+     * within the Collection
+     *
+     * @param id The row ID.
+     * @return A number of Collections deleted. This should always be `1`.
+     */
+    @Query("DELETE FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ID = :id")
+    fun deleteCollectionById(id: Long): Int
 
 
     /**

@@ -20,8 +20,9 @@ class IcalListViewModel(
     var searchText: String = ""
     var searchCategories: MutableList<String> = mutableListOf()
     var searchOrganizer: MutableList<String> = mutableListOf()
-    var searchStatus: MutableList<String> = mutableListOf()
-    var searchClassification: MutableList<String> = mutableListOf()
+    var searchStatusJournal: MutableList<StatusJournal> = mutableListOf()
+    var searchStatusTodo: MutableList<StatusTodo> = mutableListOf()
+    var searchClassification: MutableList<Classification> = mutableListOf()
     var searchCollection: MutableList<String> = mutableListOf()
 
 
@@ -63,6 +64,7 @@ class IcalListViewModel(
 
     private suspend fun insertTestData() {
 
+
         val lipsumSummary = "Lorem ipsum dolor sit amet"
         val lipsumDescription = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
 
@@ -87,7 +89,10 @@ class IcalListViewModel(
         //database.insert(vJournalItem(0L, lipsumSummary, lipsumDescription, System.currentTimeMillis(), "Organizer",  "#category1, #category2", "FINAL","PUBLIC", "", "uid", System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis(), 0))
         //database.insert(vJournalItem(summary=lipsumSummary, description=lipsumDescription, organizer="Organizer", categories="JourFixe, BestProject"))
 
-        val newEntry = database.insertICalObject(ICalObject(component = Component.JOURNAL.name, summary = rfcSummary, description = rfcDesc, dtstart = System.currentTimeMillis()))
+        //onConflict strategy = IGNORE!
+        database.upsertCollection(ICalCollection(collectionId = 1L, url = "https://localhost", displayName = "Local Collection"))
+
+        val newEntry = database.insertICalObject(ICalObject(collectionId = 1L, component = Component.JOURNAL.name, summary = rfcSummary, description = rfcDesc, dtstart = System.currentTimeMillis()))
         database.insertAttendee(Attendee(caladdress = "test@test.de", icalObjectId = newEntry))
         database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
         database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
@@ -102,7 +107,7 @@ class IcalListViewModel(
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary, description=noteDesc, organizer="LOCAL", categories="JourFixe, BestProject"))
         //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary2, description=noteDesc2, organizer="LOCAL", categories="Shopping"))
 
-        val newEntry2 = database.insertICalObject(ICalObject(component = Component.NOTE.name, summary = noteSummary, description = noteDesc))
+        val newEntry2 = database.insertICalObject(ICalObject(collectionId = 1L, component = Component.NOTE.name, summary = noteSummary, description = noteDesc))
         database.insertAttendee(Attendee(caladdress = "test@test.de", icalObjectId = newEntry2))
         database.insertCategory(Category(text = "cat", icalObjectId = newEntry2))
         database.insertCategory(Category(text = "cat", icalObjectId = newEntry2))
@@ -140,7 +145,8 @@ class IcalListViewModel(
 
 // Beginning of query string
         var queryString = "SELECT DISTINCT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT " +
-                "LEFT JOIN $TABLE_NAME_CATEGORY ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_CATEGORY.${COLUMN_CATEGORY_ICALOBJECT_ID} "  // +
+                "LEFT JOIN $TABLE_NAME_CATEGORY ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_CATEGORY.${COLUMN_CATEGORY_ICALOBJECT_ID} " +
+                "LEFT JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
         //     "LEFT JOIN vattendees ON icalobject._id = vattendees.icalObjectId " +
         //     "LEFT JOIN vcomments ON icalobject._id = vcomments.icalObjectId " +
         //     "LEFT JOIN vorganizer ON icalobject._id = vorganizer.icalObjectId " +
@@ -168,10 +174,10 @@ class IcalListViewModel(
             queryString += ") "
         }
 
-        // Query for the passed filter criteria from VJournalFilterFragment
-        if (searchStatus.size > 0) {
+        // Query for the passed filter criteria from FilterFragment
+        if (searchStatusJournal.size > 0 && (searchComponent == Component.JOURNAL.name || searchComponent == Component.JOURNAL.name)) {
             queryString += "AND $COLUMN_STATUS IN ("
-            searchStatus.forEach {
+            searchStatusJournal.forEach {
                 queryString += "?,"
                 args.add(it.toString())
             }
@@ -179,7 +185,18 @@ class IcalListViewModel(
             queryString += ") "
         }
 
-        // Query for the passed filter criteria from VJournalFilterFragment
+        // Query for the passed filter criteria from FilterFragment
+        if (searchStatusTodo.size > 0 && searchComponent == Component.TODO.name) {
+            queryString += "AND $COLUMN_STATUS IN ("
+            searchStatusTodo.forEach {
+                queryString += "?,"
+                args.add(it.toString())
+            }
+            queryString = queryString.removeSuffix(",")      // remove the last comma
+            queryString += ") "
+        }
+
+        // Query for the passed filter criteria from FilterFragment
         if (searchClassification.size > 0) {
             queryString += "AND $COLUMN_CLASSIFICATION IN ("
             searchClassification.forEach {
@@ -190,9 +207,10 @@ class IcalListViewModel(
             queryString += ") "
         }
 
-        // Query for the passed filter criteria from VJournalFilterFragment
+
+        // Query for the passed filter criteria from FilterFragment
         if (searchCollection.size > 0) {
-            queryString += "AND collection IN ("
+            queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_DISPLAYNAME IN ("
             searchCollection.forEach {
                 queryString += "?,"
                 args.add(it)
@@ -220,7 +238,8 @@ class IcalListViewModel(
     fun clearFilter() {
         searchCategories.clear()
         searchOrganizer.clear()
-        searchStatus.clear()
+        searchStatusJournal.clear()
+        searchStatusTodo.clear()
         searchClassification.clear()
         searchCollection.clear()
         updateSearch()

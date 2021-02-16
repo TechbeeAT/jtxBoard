@@ -109,7 +109,7 @@ class IcalEditFragment : Fragment(),
 
         icalEditViewModel.savingClicked.observe(viewLifecycleOwner, {
             if (it == true) {
-                icalEditViewModel.iCalObjectUpdated.value!!.collection = binding.editCollection.selectedItem.toString()
+                icalEditViewModel.iCalObjectUpdated.value?.collectionId = icalEditViewModel.allCollections.value?.find { it.displayName == binding.editCollection.selectedItem.toString() }!!.collectionId
 
                 icalEditViewModel.iCalObjectUpdated.value!!.percent = binding.editProgressSlider.value.toInt()
                 icalEditViewModel.update()
@@ -282,7 +282,7 @@ class IcalEditFragment : Fragment(),
 
         // set the default selection for the spinner. The same snippet exists for the allOrganizers observer
         if (icalEditViewModel.allCollections.value != null) {
-            val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.property.collection)
+            val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection?.displayName)
             if (selectedCollectionPos != null)
                 binding.editCollection.setSelection(selectedCollectionPos)
         }
@@ -301,13 +301,15 @@ class IcalEditFragment : Fragment(),
 
             // set up the adapter for the organizer spinner
             val spinner: Spinner = binding.editCollection
-            val adapter = ArrayAdapter<Any?>(context!!, android.R.layout.simple_spinner_item, icalEditViewModel.allCollections.value!!)
+            val allCollectionNames: MutableList<String> = mutableListOf()
+            icalEditViewModel.allCollections.value?.forEach { it.displayName?.let { name -> allCollectionNames.add(name) } }
+            val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, allCollectionNames)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.setAdapter(adapter)
 
             // set the default selection for the spinner. The same snippet exists for the vJournalItem observer
             if (icalEditViewModel.allCollections.value != null) {
-                val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.property.collection)
+                val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection?.displayName)
                 if (selectedCollectionPos != null)
                     spinner.setSelection(selectedCollectionPos)
             }

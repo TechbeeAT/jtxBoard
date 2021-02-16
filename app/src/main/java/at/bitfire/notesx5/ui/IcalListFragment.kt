@@ -88,8 +88,12 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (arguments.classification2filter?.isNotEmpty() == true)
             icalListViewModel.searchClassification = arguments.classification2filter!!.toMutableList()
 
-        if (arguments.status2filter?.isNotEmpty() == true)
-            icalListViewModel.searchStatus = arguments.status2filter!!.toMutableList()
+        if (arguments.statusTodo2filter?.isNotEmpty() == true)
+            icalListViewModel.searchStatusTodo = arguments.statusTodo2filter!!.toMutableList()
+
+        if (arguments.statusJournal2filter?.isNotEmpty() == true)
+            icalListViewModel.searchStatusJournal = arguments.statusJournal2filter!!.toMutableList()
+
 
         if (arguments.collection2filter?.isNotEmpty() == true)
             icalListViewModel.searchCollection = arguments.collection2filter!!.toMutableList()
@@ -98,7 +102,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             icalListViewModel.searchComponent = arguments.component2show
 
 
-        if(arguments.component2show.isNotEmpty() || arguments.category2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.status2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
+        if(arguments.component2show.isNotEmpty() || arguments.category2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.statusJournal2filter?.isNotEmpty() == true || arguments.statusTodo2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
             icalListViewModel.updateSearch()   // updateSearch() only if there was at least one filter criteria
 
 
@@ -281,8 +285,9 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             this.findNavController().navigate(
                     IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
                         this.category2preselect = icalListViewModel.searchCategories.toTypedArray()
+                        this.statusJournal2preselect = icalListViewModel.searchStatusJournal.toTypedArray()
+                        this.statusTodo2preselect = icalListViewModel.searchStatusTodo.toTypedArray()
                         this.classification2preselect = icalListViewModel.searchClassification.toTypedArray()
-                        this.status2preselect = icalListViewModel.searchStatus.toTypedArray()
                         this.collection2preselect = icalListViewModel.searchCollection.toTypedArray()
                         this.component2preselect = icalListViewModel.searchComponent
                     })

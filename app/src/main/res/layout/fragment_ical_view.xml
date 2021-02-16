@@ -96,7 +96,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:drawablePadding="4dp"
-                android:text="@{model.icalEntity.property.collection}"
+                android:text="@{model.icalEntity.ICalCollection.displayName}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
                 app:layout_constraintTop_toTopOf="parent"

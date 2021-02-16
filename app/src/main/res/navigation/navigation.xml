@@ -52,14 +52,19 @@
             app:argType="string[]"
             app:nullable="true" />
         <argument
-            android:name="status2filter"
+            android:name="statusTodo2filter"
             android:defaultValue="@null"
-            app:argType="string[]"
+            app:argType="at.bitfire.notesx5.database.StatusTodo[]"
+            app:nullable="true" />
+        <argument
+            android:name="statusJournal2filter"
+            android:defaultValue="@null"
+            app:argType="at.bitfire.notesx5.database.StatusJournal[]"
             app:nullable="true" />
         <argument
             android:name="classification2filter"
             android:defaultValue="@null"
-            app:argType="string[]"
+            app:argType="at.bitfire.notesx5.database.Classification[]"
             app:nullable="true" />
         <argument
             android:name="collection2filter"
@@ -120,15 +125,20 @@
             app:argType="string[]"
             app:nullable="true" />
         <argument
-            android:name="status2preselect"
-            app:argType="string[]"
+            android:name="statusTodo2preselect"
+            app:argType="at.bitfire.notesx5.database.StatusTodo[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="statusJournal2preselect"
+            app:argType="at.bitfire.notesx5.database.StatusJournal[]"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
             android:name="classification2preselect"
-            android:defaultValue="@null"
-            app:argType="string[]"
-            app:nullable="true" />
+            app:argType="at.bitfire.notesx5.database.Classification[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="collection2preselect"
             android:defaultValue="@null"

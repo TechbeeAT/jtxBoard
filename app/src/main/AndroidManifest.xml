@@ -15,7 +15,7 @@
             android:name=".SyncContentProvider"
             android:authorities="at.bitfire.notesx5.provider"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

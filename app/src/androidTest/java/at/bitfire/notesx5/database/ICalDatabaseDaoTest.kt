@@ -40,6 +40,8 @@ class ICalDatabaseDaoTest {
                 .allowMainThreadQueries()
                 .build()
         database = db.iCalDatabaseDao
+
+        database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests"))
     }
 
 
@@ -88,6 +90,7 @@ class ICalDatabaseDaoTest {
         preparedRelatedto.relatedtoId = database.insertRelatedto(preparedRelatedto)
 
         val preparedIcalEntity = ICalEntity(preparedICalObject, listOf(preparedComment), listOf(preparedCategory), listOf(preparedAttendee), preparedOrganizer, listOf(preparedRelatedto))
+        preparedIcalEntity.ICalCollection = database.getCollectionByIdSync(1L)
 
         val retrievedEntry = database.get(preparedICalObject.id).getOrAwaitValue()
         assertEquals(retrievedEntry, preparedIcalEntity)
