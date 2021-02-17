@@ -366,7 +366,7 @@ class IcalEditFragment : Fragment(),
             if (icalEditViewModel.iCalObjectUpdated.value!!.status != statusBefore) {
                 if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.TODO.name && icalEditViewModel.iCalObjectUpdated.value!!.status in StatusTodo.paramValues())
                     binding.editStatusChip.text = getString(StatusTodo.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
-                if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.JOURNAL.name && icalEditViewModel.iCalObjectUpdated.value!!.status in StatusJournal.paramValues())
+                else if ((icalEditViewModel.iCalObjectUpdated.value!!.component == Component.JOURNAL.name || icalEditViewModel.iCalObjectUpdated.value!!.component == Component.TODO.name) && icalEditViewModel.iCalObjectUpdated.value!!.status in StatusJournal.paramValues())
                     binding.editStatusChip.text = getString(StatusJournal.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
                 else
                     binding.editStatusChip.text = icalEditViewModel.iCalObjectUpdated.value!!.status       // if unsupported just show whatever is there
