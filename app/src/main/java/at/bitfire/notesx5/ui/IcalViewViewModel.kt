@@ -6,6 +6,7 @@ import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Relatedto
+import at.bitfire.notesx5.database.properties.Reltypeparam
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.android.synthetic.*
 import kotlinx.coroutines.launch
@@ -84,7 +85,6 @@ class IcalViewViewModel(private val icalItemId: Long,
 
             timeVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.component == "JOURNAL" && item.property.dtstartTimezone != "ALLDAY"           // true if component == JOURNAL and it is not an All Day Event
-
             }
 
             dtstartFormatted = Transformations.map(icalEntity) { item ->
@@ -152,21 +152,11 @@ class IcalViewViewModel(private val icalItemId: Long,
     fun insertRelatedNote(note: ICalObject) {
         viewModelScope.launch {
             val newNoteId = database.insertICalObject(note)
-            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltypeparam = "CHILD", text = note.uid))
+            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltypeparam = Reltypeparam.CHILD.name, text = note.uid))
 
         }
     }
 
-    /*
-    fun deleteNote(note: ICalObject) {
-        viewModelScope.launch(Dispatchers.IO) {
-            //todo delete also link in relatedto!
-            database.deleteRelatedChildren(note.id)
-            database.delete(note)
-        }
-    }
-
-     */
 
 
     fun updateProgress(item: ICalObject, newPercent: Int) {
