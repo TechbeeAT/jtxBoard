@@ -121,7 +121,6 @@ class IcalFilterFragment : Fragment()  {
 
         // observe and set chips for categories
         icalFilterViewModel.allCategories.observe(viewLifecycleOwner, {
-
             // Add the chips for categories
             if (icalFilterViewModel.allCategories.value != null)
                 addChips(binding.categoryFilterChipgroup, icalFilterViewModel.allCategories.value!!, displayedCategoryChips, categoriesPreselected)
@@ -133,12 +132,8 @@ class IcalFilterFragment : Fragment()  {
 
             val collectionDisplayNames = mutableListOf<String>()
             icalFilterViewModel.allCollections.value?.forEach {
-                collectionDisplayNames.add(it.displayName?: it.url)
-            }
-
-            // Add the chips for collections
-            if (icalFilterViewModel.allCollections.value != null)
-                addChips(binding.collectionFilterChipgroup, collectionDisplayNames, displayedCollectionChips, collectionPreselected)
+                collectionDisplayNames.add(it.displayName?: it.url)}
+            addChips(binding.collectionFilterChipgroup, collectionDisplayNames, displayedCollectionChips, collectionPreselected)
 
         })
 
