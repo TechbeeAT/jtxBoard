@@ -64,7 +64,7 @@ class SyncContentProviderTest {
         val newUri = mContentResolver?.insert(URI_ICALOBJECT, contentValues)
 
 
-        val cursor: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY), null, null, null)
+        val cursor: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY), null, null, null)
         assertNotNull(cursor)
         assertEquals(cursor?.count, 1)
 //        Log.println(Log.INFO, "icalObject_insert_find_delete", "Assert successful, DB has ${cursor?.count} entries, the new id is ${cursor?.getString(0)}")
@@ -86,7 +86,7 @@ class SyncContentProviderTest {
         val newUri = mContentResolver?.insert(URI_ICALOBJECT, contentValues)
 
         // QUERY the new value
-        val cursor: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY), null, null, null)
+        val cursor: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY), null, null, null)
         assertNotNull(cursor)
         assertEquals(cursor?.count, 1)             // inserted object was found
 
@@ -102,7 +102,7 @@ class SyncContentProviderTest {
 
         // QUERY the updated value
         //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
-        val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
         assertEquals(cursor2?.count,1)             // inserted object was found
         cursor2?.close()
 
@@ -111,8 +111,8 @@ class SyncContentProviderTest {
         assertEquals(countDeleted, 1)
 
         // QUERY the delete value, make sure it's really deleted
-        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
-        val cursor3: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursor3: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
         assertEquals(cursor3?.count,0)             // inserted object was found
         cursor3?.close()
 
@@ -142,7 +142,7 @@ class SyncContentProviderTest {
         assertNotNull(newAttendeeUri)
 
         //QUERY the Attendee
-        val cursorIcalobject: Cursor? = mContentResolver?.query(newAttendeeUri!!, arrayOf<String>(COLUMN_ATTENDEE_ID), null, null, null)
+        val cursorIcalobject: Cursor? = mContentResolver?.query(newAttendeeUri!!, arrayOf(COLUMN_ATTENDEE_ID), null, null, null)
         assertEquals(cursorIcalobject?.count, 1)             // inserted object was found
 
         // UPDATE the new value
@@ -153,7 +153,7 @@ class SyncContentProviderTest {
         //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
 
         // QUERY the updated value
-        val cursorAttendee: Cursor? = mContentResolver?.query(newAttendeeUri!!, arrayOf<String>(COLUMN_ATTENDEE_ID, COLUMN_ATTENDEE_CALADDRESS), "$COLUMN_ATTENDEE_CALADDRESS = ?", arrayOf("mailto:test@test.net"), null)
+        val cursorAttendee: Cursor? = mContentResolver?.query(newAttendeeUri!!, arrayOf(COLUMN_ATTENDEE_ID, COLUMN_ATTENDEE_CALADDRESS), "$COLUMN_ATTENDEE_CALADDRESS = ?", arrayOf("mailto:test@test.net"), null)
         assertEquals(cursorAttendee?.count,1)             // inserted object was found
         cursorAttendee?.close()
 
@@ -162,11 +162,11 @@ class SyncContentProviderTest {
         assertEquals(countDeleted, 1)
 
         // QUERY the delete value, make sure it's really deleted
-        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
-        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
         assertEquals(cursorDeletedIcalobject?.count,0)             // inserted object was found
         cursorDeletedIcalobject?.close()
-        val cursorDeletedAttendee: Cursor? = mContentResolver?.query(newAttendeeUri!!, arrayOf<String>(COLUMN_ATTENDEE_ID, COLUMN_ATTENDEE_CALADDRESS), "$COLUMN_ATTENDEE_CALADDRESS = ?", arrayOf("mailto:test@test.net"), null)
+        val cursorDeletedAttendee: Cursor? = mContentResolver?.query(newAttendeeUri!!, arrayOf(COLUMN_ATTENDEE_ID, COLUMN_ATTENDEE_CALADDRESS), "$COLUMN_ATTENDEE_CALADDRESS = ?", arrayOf("mailto:test@test.net"), null)
         assertEquals(cursorDeletedAttendee?.count,0)             // inserted object was found
         cursorAttendee?.close()
     }
@@ -195,7 +195,7 @@ class SyncContentProviderTest {
         assertNotNull(newCategoryUri)
 
         //QUERY the Category
-        val cursorNewCategory: Cursor? = mContentResolver?.query(newCategoryUri!!, arrayOf<String>(COLUMN_CATEGORY_ID), null, null, null)
+        val cursorNewCategory: Cursor? = mContentResolver?.query(newCategoryUri!!, arrayOf(COLUMN_CATEGORY_ID), null, null, null)
         assertEquals(cursorNewCategory?.count, 1)             // inserted object was found
 
         // UPDATE the new value
@@ -206,7 +206,7 @@ class SyncContentProviderTest {
         //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
 
         // QUERY the updated value
-        val cursorUpdatedCategory: Cursor? = mContentResolver?.query(newCategoryUri!!, arrayOf<String>(COLUMN_CATEGORY_ID, COLUMN_CATEGORY_TEXT), "$COLUMN_CATEGORY_TEXT = ?", arrayOf("category2"), null)
+        val cursorUpdatedCategory: Cursor? = mContentResolver?.query(newCategoryUri!!, arrayOf(COLUMN_CATEGORY_ID, COLUMN_CATEGORY_TEXT), "$COLUMN_CATEGORY_TEXT = ?", arrayOf("category2"), null)
         assertEquals(cursorUpdatedCategory?.count,1)             // inserted object was found
         cursorUpdatedCategory?.close()
 
@@ -215,11 +215,11 @@ class SyncContentProviderTest {
         assertEquals(countDeleted, 1)
 
         // QUERY the delete value, make sure it's really deleted
-        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
-        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4category"), null)
+        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4category"), null)
         assertEquals(cursorDeletedIcalobject?.count,0)             // inserted object was found
         cursorDeletedIcalobject?.close()
-        val cursorDeletedCategory: Cursor? = mContentResolver?.query(newCategoryUri!!, arrayOf<String>(COLUMN_CATEGORY_ID, COLUMN_CATEGORY_TEXT), "$COLUMN_CATEGORY_TEXT = ?", arrayOf("category2"), null)
+        val cursorDeletedCategory: Cursor? = mContentResolver?.query(newCategoryUri!!, arrayOf(COLUMN_CATEGORY_ID, COLUMN_CATEGORY_TEXT), "$COLUMN_CATEGORY_TEXT = ?", arrayOf("category2"), null)
         assertEquals(cursorDeletedCategory?.count,0)             // inserted object was found
         cursorUpdatedCategory?.close()
     }
@@ -249,7 +249,7 @@ class SyncContentProviderTest {
         assertNotNull(newCommentUri)
 
         //QUERY the Category
-        val cursorNewComment: Cursor? = mContentResolver?.query(newCommentUri!!, arrayOf<String>(COLUMN_COMMENT_ID), null, null, null)
+        val cursorNewComment: Cursor? = mContentResolver?.query(newCommentUri!!, arrayOf(COLUMN_COMMENT_ID), null, null, null)
         assertEquals(cursorNewComment?.count, 1)             // inserted object was found
 
         // UPDATE the new value
@@ -260,7 +260,7 @@ class SyncContentProviderTest {
         //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
 
         // QUERY the updated value
-        val cursorUpdatedComment: Cursor? = mContentResolver?.query(newCommentUri!!, arrayOf<String>(COLUMN_COMMENT_ID, COLUMN_COMMENT_TEXT), "$COLUMN_COMMENT_TEXT = ?", arrayOf("comment2"), null)
+        val cursorUpdatedComment: Cursor? = mContentResolver?.query(newCommentUri!!, arrayOf(COLUMN_COMMENT_ID, COLUMN_COMMENT_TEXT), "$COLUMN_COMMENT_TEXT = ?", arrayOf("comment2"), null)
         assertEquals(cursorUpdatedComment?.count,1)             // inserted object was found
         cursorUpdatedComment?.close()
 
@@ -269,11 +269,11 @@ class SyncContentProviderTest {
         assertEquals(countDeleted, 1)
 
         // QUERY the delete value, make sure it's really deleted
-        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
-        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4comment"), null)
+        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4comment"), null)
         assertEquals(cursorDeletedIcalobject?.count,0)             // inserted object was found
         cursorDeletedIcalobject?.close()
-        val cursorDeletedComment: Cursor? = mContentResolver?.query(newCommentUri!!, arrayOf<String>(COLUMN_COMMENT_ID, COLUMN_COMMENT_TEXT), "$COLUMN_COMMENT_TEXT = ?", arrayOf("comment2"), null)
+        val cursorDeletedComment: Cursor? = mContentResolver?.query(newCommentUri!!, arrayOf(COLUMN_COMMENT_ID, COLUMN_COMMENT_TEXT), "$COLUMN_COMMENT_TEXT = ?", arrayOf("comment2"), null)
         assertEquals(cursorDeletedComment?.count,0)             // inserted object was found
         cursorUpdatedComment?.close()
 
@@ -304,7 +304,7 @@ class SyncContentProviderTest {
         assertNotNull(newContactUri)
 
         //QUERY the Contact
-        val cursorNewContact: Cursor? = mContentResolver?.query(newContactUri!!, arrayOf<String>(COLUMN_CONTACT_ID), null, null, null)
+        val cursorNewContact: Cursor? = mContentResolver?.query(newContactUri!!, arrayOf(COLUMN_CONTACT_ID), null, null, null)
         assertEquals(cursorNewContact?.count, 1)             // inserted object was found
 
         // UPDATE the new value
@@ -315,7 +315,7 @@ class SyncContentProviderTest {
         //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
 
         // QUERY the updated value
-        val cursorUpdatedContact: Cursor? = mContentResolver?.query(newContactUri!!, arrayOf<String>(COLUMN_CONTACT_ID, COLUMN_CONTACT_TEXT), "$COLUMN_CONTACT_TEXT = ?", arrayOf("contact2"), null)
+        val cursorUpdatedContact: Cursor? = mContentResolver?.query(newContactUri!!, arrayOf(COLUMN_CONTACT_ID, COLUMN_CONTACT_TEXT), "$COLUMN_CONTACT_TEXT = ?", arrayOf("contact2"), null)
         assertEquals(cursorUpdatedContact?.count,1)             // inserted object was found
         cursorUpdatedContact?.close()
 
@@ -324,11 +324,11 @@ class SyncContentProviderTest {
         assertEquals(countDeleted, 1)
 
         // QUERY the delete value, make sure it's really deleted
-        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
-        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4comment"), null)
+        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4comment"), null)
         assertEquals(cursorDeletedIcalobject?.count,0)             // inserted object was found
         cursorDeletedIcalobject?.close()
-        val cursorDeletedContact: Cursor? = mContentResolver?.query(newContactUri!!, arrayOf<String>(COLUMN_CONTACT_ID, COLUMN_CONTACT_TEXT), "$COLUMN_CONTACT_TEXT = ?", arrayOf("contact2"), null)
+        val cursorDeletedContact: Cursor? = mContentResolver?.query(newContactUri!!, arrayOf(COLUMN_CONTACT_ID, COLUMN_CONTACT_TEXT), "$COLUMN_CONTACT_TEXT = ?", arrayOf("contact2"), null)
         assertEquals(cursorDeletedContact?.count,0)             // inserted object was found
         cursorUpdatedContact?.close()
     }
@@ -356,7 +356,7 @@ class SyncContentProviderTest {
         assertNotNull(newOrganizerUri)
 
         //QUERY the Contact
-        val cursorNewOrganizer: Cursor? = mContentResolver?.query(newOrganizerUri!!, arrayOf<String>(COLUMN_ORGANIZER_ID), null, null, null)
+        val cursorNewOrganizer: Cursor? = mContentResolver?.query(newOrganizerUri!!, arrayOf(COLUMN_ORGANIZER_ID), null, null, null)
         assertEquals(cursorNewOrganizer?.count, 1)             // inserted object was found
 
         // UPDATE the new value
@@ -367,7 +367,7 @@ class SyncContentProviderTest {
         //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
 
         // QUERY the updated value
-        val cursorUpdatedOrganizer: Cursor? = mContentResolver?.query(newOrganizerUri!!, arrayOf<String>(COLUMN_ORGANIZER_ID, COLUMN_ORGANIZER_CALADDRESS), "$COLUMN_ORGANIZER_CALADDRESS = ?", arrayOf("mailto:test@test.net"), null)
+        val cursorUpdatedOrganizer: Cursor? = mContentResolver?.query(newOrganizerUri!!, arrayOf(COLUMN_ORGANIZER_ID, COLUMN_ORGANIZER_CALADDRESS), "$COLUMN_ORGANIZER_CALADDRESS = ?", arrayOf("mailto:test@test.net"), null)
         assertEquals(cursorUpdatedOrganizer?.count,1)             // inserted object was found
         cursorUpdatedOrganizer?.close()
 
@@ -376,11 +376,11 @@ class SyncContentProviderTest {
         assertEquals(countDeleted, 1)
 
         // QUERY the delete value, make sure it's really deleted
-        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
-        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4comment"), null)
+        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4comment"), null)
         assertEquals(cursorDeletedIcalobject?.count,0)             // inserted object was found
         cursorDeletedIcalobject?.close()
-        val cursorDeletedOrganizer: Cursor? = mContentResolver?.query(newOrganizerUri!!, arrayOf<String>(COLUMN_ORGANIZER_ID, COLUMN_ORGANIZER_CALADDRESS), "$COLUMN_ORGANIZER_CALADDRESS = ?", arrayOf("mailto:test@test.net"), null)
+        val cursorDeletedOrganizer: Cursor? = mContentResolver?.query(newOrganizerUri!!, arrayOf(COLUMN_ORGANIZER_ID, COLUMN_ORGANIZER_CALADDRESS), "$COLUMN_ORGANIZER_CALADDRESS = ?", arrayOf("mailto:test@test.net"), null)
         assertEquals(cursorDeletedOrganizer?.count,0)             // inserted object was found
         cursorUpdatedOrganizer?.close()
     }
@@ -410,7 +410,7 @@ class SyncContentProviderTest {
         assertNotNull(newRelatedtoUri)
 
         //QUERY the Relatedto
-        val cursorNewRelatedto: Cursor? = mContentResolver?.query(newRelatedtoUri!!, arrayOf<String>(COLUMN_RELATEDTO_ID), null, null, null)
+        val cursorNewRelatedto: Cursor? = mContentResolver?.query(newRelatedtoUri!!, arrayOf(COLUMN_RELATEDTO_ID), null, null, null)
         assertEquals(cursorNewRelatedto?.count, 1)             // inserted object was found
 
         // UPDATE the new value
@@ -421,7 +421,7 @@ class SyncContentProviderTest {
         //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
 
         // QUERY the updated value
-        val cursorUpdatedRelatedto: Cursor? = mContentResolver?.query(newRelatedtoUri!!, arrayOf<String>(COLUMN_RELATEDTO_ID, COLUMN_RELATEDTO_ICALOBJECT_ID), "$COLUMN_RELATEDTO_ICALOBJECT_ID = ?", arrayOf(newICalObjectId.toString()), null)
+        val cursorUpdatedRelatedto: Cursor? = mContentResolver?.query(newRelatedtoUri!!, arrayOf(COLUMN_RELATEDTO_ID, COLUMN_RELATEDTO_ICALOBJECT_ID), "$COLUMN_RELATEDTO_ICALOBJECT_ID = ?", arrayOf(newICalObjectId.toString()), null)
         assertEquals(cursorUpdatedRelatedto?.count,1)             // inserted object was found
         cursorUpdatedRelatedto?.close()
 
@@ -430,11 +430,11 @@ class SyncContentProviderTest {
         assertEquals(countDeleted, 1)
 
         // QUERY the delete value, make sure it's really deleted
-        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
-        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4relatedto"), null)
+        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4relatedto"), null)
         assertEquals(cursorDeletedIcalobject?.count,0)             // inserted object was found
         cursorDeletedIcalobject?.close()
-        val cursorDeletedRelatedto: Cursor? = mContentResolver?.query(newRelatedtoUri!!, arrayOf<String>(COLUMN_RELATEDTO_ID, COLUMN_RELATEDTO_ICALOBJECT_ID), "$COLUMN_RELATEDTO_ICALOBJECT_ID = ?", arrayOf(newICalObjectId.toString()), null)
+        val cursorDeletedRelatedto: Cursor? = mContentResolver?.query(newRelatedtoUri!!, arrayOf(COLUMN_RELATEDTO_ID, COLUMN_RELATEDTO_ICALOBJECT_ID), "$COLUMN_RELATEDTO_ICALOBJECT_ID = ?", arrayOf(newICalObjectId.toString()), null)
         assertEquals(cursorDeletedRelatedto?.count,0)             // inserted object was found
         cursorUpdatedRelatedto?.close()
     }
@@ -463,7 +463,7 @@ class SyncContentProviderTest {
         assertNotNull(newResourceUri)
 
         //QUERY the Resource
-        val cursorNewResource: Cursor? = mContentResolver?.query(newResourceUri!!, arrayOf<String>(COLUMN_RESOURCE_ID), null, null, null)
+        val cursorNewResource: Cursor? = mContentResolver?.query(newResourceUri!!, arrayOf(COLUMN_RESOURCE_ID), null, null, null)
         assertEquals(cursorNewResource?.count, 1)             // inserted object was found
 
         // UPDATE the new value
@@ -474,7 +474,7 @@ class SyncContentProviderTest {
         //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
 
         // QUERY the updated value
-        val cursorUpdatedResource: Cursor? = mContentResolver?.query(newResourceUri!!, arrayOf<String>(COLUMN_RESOURCE_ID, COLUMN_RESOURCE_TEXT), "$COLUMN_RESOURCE_TEXT = ?", arrayOf("microphone"), null)
+        val cursorUpdatedResource: Cursor? = mContentResolver?.query(newResourceUri!!, arrayOf(COLUMN_RESOURCE_ID, COLUMN_RESOURCE_TEXT), "$COLUMN_RESOURCE_TEXT = ?", arrayOf("microphone"), null)
         assertEquals(cursorUpdatedResource?.count,1)             // inserted object was found
         cursorUpdatedResource?.close()
 
@@ -483,11 +483,11 @@ class SyncContentProviderTest {
         assertEquals(countDeleted, 1)
 
         // QUERY the delete value, make sure it's really deleted
-        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
-        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4comment"), null)
+        //val cursor2: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("note2update"), null)
+        val cursorDeletedIcalobject: Cursor? = mContentResolver?.query(newIcalUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY, COLUMN_DESCRIPTION), "$COLUMN_SUMMARY = ?", arrayOf("journal4comment"), null)
         assertEquals(cursorDeletedIcalobject?.count,0)             // inserted object was found
         cursorDeletedIcalobject?.close()
-        val cursorDeletedResource: Cursor? = mContentResolver?.query(newResourceUri!!, arrayOf<String>(COLUMN_RESOURCE_ID, COLUMN_RESOURCE_TEXT), "$COLUMN_RESOURCE_TEXT = ?", arrayOf("microphone"), null)
+        val cursorDeletedResource: Cursor? = mContentResolver?.query(newResourceUri!!, arrayOf(COLUMN_RESOURCE_ID, COLUMN_RESOURCE_TEXT), "$COLUMN_RESOURCE_TEXT = ?", arrayOf("microphone"), null)
         assertEquals(cursorDeletedResource?.count,0)             // inserted object was found
         cursorUpdatedResource?.close()
     }
@@ -508,7 +508,7 @@ class SyncContentProviderTest {
         assertNotNull(newCollectionId)
 
         //QUERY the Collection
-        val cursorNewCollection: Cursor? = mContentResolver?.query(newCollection!!, arrayOf<String>(COLUMN_COLLECTION_ID), null, null, null)
+        val cursorNewCollection: Cursor? = mContentResolver?.query(newCollection!!, arrayOf(COLUMN_COLLECTION_ID), null, null, null)
         assertEquals(cursorNewCollection?.count, 1)             // inserted object was found
 
         // UPDATE the new value
@@ -519,7 +519,7 @@ class SyncContentProviderTest {
         //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
 
         // QUERY the updated value
-        val cursorUpdatedCollection: Cursor? = mContentResolver?.query(newCollection!!, arrayOf<String>(COLUMN_COLLECTION_ID, COLUMN_COLLECTION_DISPLAYNAME), "$COLUMN_COLLECTION_DISPLAYNAME = ?", arrayOf("testcollection updated"), null)
+        val cursorUpdatedCollection: Cursor? = mContentResolver?.query(newCollection!!, arrayOf(COLUMN_COLLECTION_ID, COLUMN_COLLECTION_DISPLAYNAME), "$COLUMN_COLLECTION_DISPLAYNAME = ?", arrayOf("testcollection updated"), null)
         assertEquals(cursorUpdatedCollection?.count,1)             // inserted object was found
         cursorUpdatedCollection?.close()
 
@@ -539,13 +539,13 @@ class SyncContentProviderTest {
     @Test(expected = IllegalArgumentException::class)                    // needed to assert exceptions, see e.g. https://www.baeldung.com/junit-assert-exception
     fun query_invalid_url()  {
         val uriInvalid = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/invalid")
-        mContentResolver?.query(uriInvalid, arrayOf<String>(COLUMN_ID), null, null, null)
+        mContentResolver?.query(uriInvalid, arrayOf(COLUMN_ID), null, null, null)
     }
 
     @Test(expected = IllegalArgumentException::class)                    // needed to assert exceptions, see e.g. https://www.baeldung.com/junit-assert-exception
     fun query_valid_url_with_wrong_parameter()  {
         val uriWrong = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_ICALOBJECT/asdf")
-        mContentResolver?.query(uriWrong, arrayOf<String>(COLUMN_ID), null, null, null)
+        mContentResolver?.query(uriWrong, arrayOf(COLUMN_ID), null, null, null)
     }
 
 
@@ -563,7 +563,7 @@ class SyncContentProviderTest {
         val newUri2 = mContentResolver?.insert(URI_ICALOBJECT, contentValuesCurrupted)
 
 
-        val cursor: Cursor? = mContentResolver?.query(newUri2!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY), null, null, null)
+        val cursor: Cursor? = mContentResolver?.query(newUri2!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY), null, null, null)
         assertEquals(cursor?.count, 1)
 //        Log.println(Log.INFO, "icalObject_insert_find_delete", "Assert successful, DB has ${cursor?.count} entries, the new id is ${cursor?.getString(0)}")
 
@@ -579,12 +579,12 @@ class SyncContentProviderTest {
         contentValues.put(COLUMN_SUMMARY, "note2check")
         val newUri = mContentResolver?.insert(URI_ICALOBJECT, contentValues)
 
-        val cursor: Cursor? = mContentResolver?.query(newUri!!, arrayOf<String>(COLUMN_ID, COLUMN_SUMMARY), "$COLUMN_SUMMARY = ?); DELETE * FROM $TABLE_NAME_ICALOBJECT", arrayOf("note2check"), null)
+        val cursor: Cursor? = mContentResolver?.query(newUri!!, arrayOf(COLUMN_ID, COLUMN_SUMMARY), "$COLUMN_SUMMARY = ?); DELETE * FROM $TABLE_NAME_ICALOBJECT", arrayOf("note2check"), null)
         assertEquals(cursor?.count,1)
 //        Log.println(Log.INFO, "icalObject_insert_find_delete", "Assert successful, DB has ${cursor?.count} entries, the new id is ${cursor?.getString(0)}")
         cursor?.close()
 
-        val cursor2: Cursor? = mContentResolver?.query(URI_ICALOBJECT, arrayOf<String>(COLUMN_ID), null, null, null)
+        val cursor2: Cursor? = mContentResolver?.query(URI_ICALOBJECT, arrayOf(COLUMN_ID), null, null, null)
         assertTrue(cursor2?.count!! > 0)     // there must be entries! Delete must not be executed!
         Log.println(Log.INFO, "icalObject_initiallyEmpty", "Assert successful, DB is empty (Cursor count: ${cursor?.count})")
         cursor?.close()

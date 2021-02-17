@@ -58,7 +58,7 @@ fun convertLongToTimeString(time: Long?): String {
     return DateFormat.getTimeInstance(DateFormat.SHORT).format(time)
 }
 
-
+/*
 @SuppressLint("SimpleDateFormat")
 fun convertLongToHourString(time: Long?): String {
     if (time == null || time == 0L)
@@ -76,12 +76,14 @@ fun convertLongToMinuteString(time: Long): String {
     return minute_formatter.format(Date(time)).toString()
 }
 
+ */
+
 @SuppressLint("SimpleDateFormat")
 fun convertLongToDayString(date: Long?): String {
     if (date == null || date == 0L)
         return ""
-    val day_formatter = SimpleDateFormat("dd")
-    return day_formatter.format(Date(date)).toString()
+    val dayFormatter = SimpleDateFormat("dd")
+    return dayFormatter.format(Date(date)).toString()
 }
 
 
@@ -89,8 +91,8 @@ fun convertLongToDayString(date: Long?): String {
 fun convertLongToMonthString(date: Long?): String {
     if (date == null || date == 0L)
         return ""
-    val month_formatter = SimpleDateFormat("MMMM")
-    return month_formatter.format(Date(date)).toString()
+    val monthFormatter = SimpleDateFormat("MMMM")
+    return monthFormatter.format(Date(date)).toString()
 }
 
 
@@ -98,8 +100,8 @@ fun convertLongToMonthString(date: Long?): String {
 fun convertLongToYearString(date: Long?): String {
     if (date == null || date == 0L)
         return ""
-    val year_formatter = SimpleDateFormat("yyyy")
-    return year_formatter.format(Date(date)).toString()
+    val yearFormatter = SimpleDateFormat("yyyy")
+    return yearFormatter.format(Date(date)).toString()
 }
 
 /*

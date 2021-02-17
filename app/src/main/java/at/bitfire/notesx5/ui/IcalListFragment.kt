@@ -152,11 +152,11 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         icalListViewModel.focusItemId.observe(viewLifecycleOwner, {
 
             val pos = icalListViewModel.getFocusItemPosition()
-            Log.println(Log.INFO, "vJournalListViewModel", "Item Position: ${pos.toString()}")
+            Log.println(Log.INFO, "vJournalListViewModel", "Item Position: $pos")
 
             recyclerView?.scrollToPosition(pos)
             //vJournalListViewModel.resetFocusItem()
-            Log.println(Log.INFO, "vJournalListViewModel", "Scrolling now to: ${pos.toString()}")
+            Log.println(Log.INFO, "vJournalListViewModel", "Scrolling now to: $pos")
 
         })
 
@@ -199,7 +199,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // initialize the floating action button only onStart, otherwise the fragment might not be created yet
         val fab: View = requireNotNull(activity).findViewById(R.id.fab)
-        fab.setOnClickListener { _ ->
+        fab.setOnClickListener {
 
             icalListViewModel.resetFocusItem()
 

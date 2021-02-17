@@ -8,7 +8,6 @@ import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Relatedto
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.android.synthetic.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.*
@@ -116,7 +115,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map !item?.attendee.isNullOrEmpty()      // true if attendees is NOT null or empty
             }
             organizerVisible = Transformations.map(icalEntity) { item ->
-                return@map !(item?.organizer == null)      // true if organizer is NOT null or empty
+                return@map item?.organizer != null      // true if organizer is NOT null or empty
             }
             contactVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.property?.contact.isNullOrBlank()      // true if contact is NOT null or empty
@@ -151,7 +150,7 @@ class IcalViewViewModel(private val icalItemId: Long,
 
 
     fun insertRelatedNote(note: ICalObject) {
-        viewModelScope.launch() {
+        viewModelScope.launch {
             val newNoteId = database.insertICalObject(note)
             database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltypeparam = "CHILD", text = note.uid))
 
@@ -172,19 +171,18 @@ class IcalViewViewModel(private val icalItemId: Long,
 
     fun updateProgress(item: ICalObject, newPercent: Int) {
 
-        val item2update = item
-        item2update.percent = newPercent
-        item2update.sequence++
-        item2update.lastModified = System.currentTimeMillis()
+        item.percent = newPercent
+        item.sequence++
+        item.lastModified = System.currentTimeMillis()
 
-        when (item2update.percent) {
-            100 -> item2update.status = StatusTodo.COMPLETED.param
-            in 1..99 -> item2update.status = StatusTodo.INPROCESS.param
-            0 -> item2update.status = StatusTodo.NEEDSACTION.param
+        when (item.percent) {
+            100 -> item.status = StatusTodo.COMPLETED.param
+            in 1..99 -> item.status = StatusTodo.INPROCESS.param
+            0 -> item.status = StatusTodo.NEEDSACTION.param
         }
 
-        viewModelScope.launch() {
-            database.update(item2update)
+        viewModelScope.launch {
+            database.update(item)
         }
     }
 }

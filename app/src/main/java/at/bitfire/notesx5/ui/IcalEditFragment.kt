@@ -282,7 +282,7 @@ class IcalEditFragment : Fragment(),
 
         // set the default selection for the spinner. The same snippet exists for the allOrganizers observer
         if (icalEditViewModel.allCollections.value != null) {
-            val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection?.displayName)
+            val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection)
             if (selectedCollectionPos != null)
                 binding.editCollection.setSelection(selectedCollectionPos)
         }
@@ -309,7 +309,7 @@ class IcalEditFragment : Fragment(),
 
             // set the default selection for the spinner. The same snippet exists for the vJournalItem observer
             if (icalEditViewModel.allCollections.value != null) {
-                val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection?.displayName)
+                val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection)
                 if (selectedCollectionPos != null)
                     spinner.setSelection(selectedCollectionPos)
             }
@@ -866,7 +866,7 @@ class IcalEditFragment : Fragment(),
     }
 
 
-    fun loadContacts() {
+    private fun loadContacts() {
 
         /*
         Template: https://stackoverflow.com/questions/10117049/get-only-email-address-from-contact-list-android
@@ -874,17 +874,17 @@ class IcalEditFragment : Fragment(),
 
         val context = activity
         val cr = context!!.contentResolver
-        val PROJECTION = arrayOf(ContactsContract.RawContacts._ID,
+        val projection = arrayOf(ContactsContract.RawContacts._ID,
                 ContactsContract.Contacts.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Email.DATA)
         val order = ContactsContract.Contacts.DISPLAY_NAME
         val filter = ContactsContract.CommonDataKinds.Email.DATA + " NOT LIKE ''"
-        val cur = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, PROJECTION, filter, null, order)
+        val cur = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, projection, filter, null, order)
 
         if (cur!!.count > 0) {
             while (cur.moveToNext()) {
 
-                val name = cur.getString(1)    // according to projection 0 = DISPLAY_NAME, 1 = Email.DATA
+                //val name = cur.getString(1)    // according to projection 0 = DISPLAY_NAME, 1 = Email.DATA
                 val emlAddr = cur.getString(2)
                 //Log.println(Log.INFO, "cursor: ", "$name: $emlAddr")
                 allContactsMail.add(emlAddr)

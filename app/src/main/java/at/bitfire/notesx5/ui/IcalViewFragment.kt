@@ -242,7 +242,7 @@ class IcalViewFragment : Fragment() {
             }
         })
 
-        binding.viewProgressCheckbox.setOnCheckedChangeListener { button, checked ->
+        binding.viewProgressCheckbox.setOnCheckedChangeListener { _, checked ->
             if (checked) {
                 icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, 100)
             } else {
