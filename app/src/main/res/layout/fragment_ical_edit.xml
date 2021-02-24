@@ -168,6 +168,7 @@
 
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_summary_edit_textinputfield"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textShortMessage|textCapSentences"
@@ -292,7 +293,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:checked="@={model.addTimeChecked}"
+            android:checked="@={model.addDueTimeChecked}"
             android:text="@string/edit_add_time_switch"
             android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_duetimezone_spinner"
@@ -514,6 +515,111 @@
             app:switchPadding="8dp"
             tools:checked="false" />
 
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_completed_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="@string/edit_completed_date_hint"
+            android:visibility="@{model.completeddateVisible ? View.VISIBLE : View.GONE}"
+            app:endIconContentDescription="Set completed date"
+            app:endIconDrawable="@drawable/ic_vjournal_date"
+            app:endIconMode="custom"
+            app:helperText="Set completed date"
+            app:helperTextEnabled="true"
+            app:layout_constraintEnd_toStartOf="@id/edit_completed_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_show_all_switch">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_completed_date_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="date"
+                android:text="@{model.completeddateFormated}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_completed_time"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="@string/edit_completed_time_hint"
+            android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
+            app:endIconContentDescription="Set completed time"
+            app:endIconDrawable="@drawable/ic_vjournal_time"
+            app:endIconMode="custom"
+            app:helperText="Set completed time"
+            app:helperTextEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/edit_completed_date"
+            app:layout_constraintTop_toTopOf="@+id/edit_completed_date">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_completed_time_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="time"
+                android:text="@{model.completedtimeFormated}"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <ImageView
+            android:id="@+id/edit_completedtimezone_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_completedtimezone_spinner"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_completedtimezone_spinner"
+            app:srcCompat="@drawable/ic_timezone"
+            tools:ignore="ContentDescription" />
+
+
+        <Spinner
+            android:id="@+id/edit_completedtimezone_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:entries="@{model.possibleTimezones}"
+            android:spinnerMode="dialog"
+            android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toStartOf="@id/edit_completed_addtime_switch"
+            app:layout_constraintStart_toEndOf="@id/edit_completedtimezone_icon"
+            app:layout_constraintTop_toBottomOf="@+id/edit_completed_date" />
+
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/edit_completed_addtime_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:checked="@={model.addCompletedTimeChecked}"
+            android:text="@string/edit_add_time_switch"
+            android:visibility="@{model.completeddateVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_completedtimezone_spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_completedtimezone_spinner"
+            app:switchPadding="8dp" />
+
+
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_url_edit"
             android:layout_width="match_parent"
@@ -530,7 +636,7 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_show_all_switch"
+            app:layout_constraintTop_toBottomOf="@+id/edit_completed_addtime_switch"
             app:startIconDrawable="@drawable/ic_link">
 
 

@@ -62,6 +62,9 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var subtasksVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var duedateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var duetimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var completeddateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var completedtimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+
 
     var duedateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
         if(it.due != null)
@@ -77,11 +80,26 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
             return@map null
     }
 
+    var completeddateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
+        if(it.completed != null)
+            return@map DateFormat.getDateInstance().format(it.completed)
+        else
+            return@map null
+    }
+
+    var completedtimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
+        if(it.completed != null)
+            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(it.completed)
+        else
+            return@map null
+    }
+
 
 
     var showAll: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
     var allDayChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.dtstartTimezone == "ALLDAY")
-    var addTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == "TODO" && iCalEntity.property.dueTimezone != "ALLDAY")
+    var addDueTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == "TODO" && iCalEntity.property.dueTimezone != "ALLDAY")
+    var addCompletedTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == "TODO" && iCalEntity.property.completedTimezone != "ALLDAY")
 
 
 
@@ -125,6 +143,9 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         subtasksVisible.postValue(iCalEntity.property.component == "TODO")
         duedateVisible.postValue(iCalEntity.property.component == "TODO")
         duetimeVisible.postValue(iCalEntity.property.component == "TODO" && iCalEntity.property.dueTimezone != "ALLDAY")
+        completeddateVisible.postValue(iCalEntity.property.component == "TODO" && showAll.value == true)
+        completedtimeVisible.postValue(iCalEntity.property.component == "TODO" && showAll.value == true && iCalEntity.property.completedTimezone != "ALLDAY")
+
 
     }
 
@@ -145,6 +166,9 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
         iCalObjectUpdated.value!!.lastModified = System.currentTimeMillis()
         iCalObjectUpdated.value!!.dtstamp = System.currentTimeMillis()
+
+        if(iCalObjectUpdated.value!!.collectionId != 1L)
+            iCalObjectUpdated.value!!.dirty = true
 
         commentUpdated.removeAll(commentDeleted)    // make sure to not accidentially upsert a comment that was deleted
         categoryUpdated.removeAll(categoryDeleted)  // make sure to not accidentially upsert a category that was deleted
@@ -290,9 +314,15 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
 
     fun delete() {
-        viewModelScope.launch(Dispatchers.IO) {
-            database.deleteRelatedChildren(iCalEntity.property.id)
-            database.delete(iCalEntity.property)
+
+        if(iCalObjectUpdated.value!!.collectionId == 1L) {
+            viewModelScope.launch(Dispatchers.IO) {
+                database.deleteRelatedChildren(iCalEntity.property.id)
+                database.delete(iCalEntity.property)
+            }
+        } else {
+            iCalObjectUpdated.value!!.deleted = true
+            this.update()
         }
     }
 

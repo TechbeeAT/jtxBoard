@@ -348,9 +348,6 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                 subtaskView.list_item_subtask_progress_checkbox.isChecked = false
             }
             model.updateProgress(subtask, subtaskView.list_item_subtask_progress_slider.value.toInt())
-
-
-
         }
 
         subtaskView.setOnClickListener { view ->

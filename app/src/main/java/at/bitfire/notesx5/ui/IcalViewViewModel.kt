@@ -105,9 +105,6 @@ class IcalViewViewModel(private val icalItemId: Long,
                 item!!.property.let { Date(it.lastModified).toString() }
             }
 
-
-
-
             urlVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.property?.url.isNullOrBlank()      // true if url is NOT null or empty
             }
@@ -135,7 +132,6 @@ class IcalViewViewModel(private val icalItemId: Long,
             priorityVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.priority != null      // true if priority is NOT null
             }
-
         }
 
         viewModelScope.launch {

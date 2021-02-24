@@ -36,6 +36,7 @@ const val COLUMN_PRIORITY = "priority"
 const val COLUMN_DUE = "due"
 const val COLUMN_DUE_TIMEZONE = "duetimezone"
 const val COLUMN_COMPLETED = "completed"
+const val COLUMN_COMPLETED_TIMEZONE = "completedtimezone"
 const val COLUMN_UID = "uid"
 const val COLUMN_CREATED = "created"
 const val COLUMN_DTSTAMP = "dtstamp"
@@ -43,6 +44,8 @@ const val COLUMN_LAST_MODIFIED = "lastmodified"
 const val COLUMN_SEQUENCE = "sequence"
 const val COLUMN_COLOR = "color"
 const val COLUMN_ICALOBJECT_COLLECTIONID = "collectionId"
+const val COLUMN_DIRTY = "dirty"
+const val COLUMN_DELETED = "deleted"
 
 
 @Parcelize
@@ -84,6 +87,7 @@ data class ICalObject(
         @ColumnInfo(name = COLUMN_DUE) var due: Long? = null,      // VTODO only!
         @ColumnInfo(name = COLUMN_DUE_TIMEZONE) var dueTimezone: String? = null, //VTODO only!
         @ColumnInfo(name = COLUMN_COMPLETED) var completed: Long? = null, // VTODO only!
+        @ColumnInfo(name = COLUMN_COMPLETED_TIMEZONE) var completedTimezone: String? = null, //VTODO only!
 
 
         @ColumnInfo(name = COLUMN_UID) var uid: String = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.notesx5",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
@@ -113,9 +117,13 @@ data class ICalObject(
 
         @ColumnInfo(name = COLUMN_COLOR) var color: String? = null,
 
-        @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID)    var collectionId: Long? = 1L
+        @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID)    var collectionId: Long? = 1L,
 
-): Parcelable
+        @ColumnInfo(name = COLUMN_DIRTY) var dirty: Boolean = false,
+        @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean = false
+
+
+        ): Parcelable
 
 {
         companion object Factory {
@@ -221,6 +229,9 @@ data class ICalObject(
                 if (values?.containsKey(COLUMN_COMPLETED) == true && values.getAsLong(COLUMN_COMPLETED) != null) {
                         this.completed = values.getAsLong(COLUMN_COMPLETED)
                 }
+                if (values?.containsKey(COLUMN_COMPLETED_TIMEZONE) == true && values.getAsString(COLUMN_COMPLETED_TIMEZONE) != null) {
+                        this.completedTimezone = values.getAsString(COLUMN_COMPLETED_TIMEZONE)
+                }
                 if (values?.containsKey(COLUMN_UID) == true && values.getAsString(COLUMN_UID).isNotBlank()) {
                         this.uid = values.getAsString(COLUMN_UID)
                 }
@@ -238,6 +249,12 @@ data class ICalObject(
                 }
                 if (values?.containsKey(COLUMN_COLOR) == true && values.getAsString(COLUMN_COLOR).isNotBlank()) {
                         this.color = values.getAsString(COLUMN_COLOR)
+                }
+                if (values?.containsKey(COLUMN_DIRTY) == true && values.getAsBoolean(COLUMN_DIRTY) != null) {
+                        this.dirty = values.getAsBoolean(COLUMN_DIRTY)
+                }
+                if (values?.containsKey(COLUMN_DELETED) == true && values.getAsBoolean(COLUMN_DELETED) != null) {
+                        this.deleted = values.getAsBoolean(COLUMN_DELETED)
                 }
 
                 return this
