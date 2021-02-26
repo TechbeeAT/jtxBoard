@@ -54,9 +54,9 @@ SELECTs (global selects without parameter)
     fun getAllOrganizers(): LiveData<List<String>>
 
     /**
-     * Retrieve an list of all DISTINCT Collections ([ICalObject.collection]) as a LiveData-List
+     * Retrieve an list of all DISTINCT Collections ([Collection]) as a LiveData-List
      *
-     * @return a list of [ICalObject.collection] as LiveData<List<String>>
+     * @return a list of [Collection] as LiveData<List<String>>
      */
     @Transaction
     @Query("SELECT * FROM collection ORDER BY displayname ASC")
