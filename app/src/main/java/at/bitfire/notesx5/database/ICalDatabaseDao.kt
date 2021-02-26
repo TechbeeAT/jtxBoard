@@ -432,6 +432,17 @@ DELETEs by Object
     @Query("DELETE FROM icalobject WHERE icalobject._id in (SELECT linkedICalObjectId FROM relatedto WHERE relatedto.icalObjectId = :parentKey)")
     fun deleteRelatedChildren(parentKey: Long)
 
+    /**
+     * Delete entities through a RawQuery.
+     * This is especially used for the Content Provider
+     *
+     * @param query The DELETE statement.
+     * @return A number of Entities deleted.
+     */
+    @Transaction
+    @RawQuery
+    fun deleteRAW(query: SupportSQLiteQuery): Int
+
 
 
 
@@ -476,6 +487,11 @@ DELETEs by Object
     @Transaction
     @RawQuery
     fun getCursor(query: SupportSQLiteQuery): Cursor?
+
+    @Transaction
+    @RawQuery
+    fun getICalObjectRaw(query: SupportSQLiteQuery): List<ICalObject>
+
 
 
 

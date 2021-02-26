@@ -1,8 +1,12 @@
 package at.bitfire.notesx5
 
-import android.content.*
+import android.content.ContentProvider
+import android.content.ContentUris
+import android.content.ContentValues
+import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
+import android.provider.CalendarContract
 import android.util.Log
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*
@@ -19,8 +23,6 @@ private const val CODE_RELATEDTO_DIR = 7
 private const val CODE_RESOURCE_DIR = 8
 private const val CODE_COLLECTION_DIR = 9
 
-
-
 private const val CODE_ICALOBJECT_ITEM = 101
 private const val CODE_ATTENDEE_ITEM = 102
 private const val CODE_CATEGORY_ITEM = 103
@@ -34,6 +36,10 @@ private const val CODE_COLLECTION_ITEM = 109
 
 
 const val SYNC_PROVIDER_AUTHORITY = "at.bitfire.notesx5.provider"
+
+const val CALLER_IS_SYNCADAPTER = "caller_is_syncadapter"
+const val ACCOUNT_NAME = "account_name"
+const val ACCOUNT_TYPE = "account_type"
 
 /** The URI for the Icalobject table.  */
 
@@ -77,36 +83,66 @@ class SyncContentProvider : ContentProvider() {
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
 
+        isSyncAdapter(uri)
+        // TODO: Make sure that only the items within the collection of the given account are considered
+        val accountName = getAccountNameQueryParameter(uri)
+        val accountType = getAccountTypeQueryParameter(uri)
+
+
         val count: Int
+        val args = arrayListOf<String>()
+        if (uri.pathSegments.size >= 2)
+            args.add(uri.pathSegments[1].toLong().toString())      // add first argument (must be Long! String is expected, toLong would make other values null
+
+        var queryString = "DELETE FROM "
 
         when (sUriMatcher.match(uri)) {
-            CODE_ICALOBJECTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_ATTENDEES_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_CATEGORIES_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_COMMENTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_CONTACTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_ORGANIZER_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_RELATEDTO_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_RESOURCE_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_COLLECTION_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+            CODE_ICALOBJECTS_DIR -> queryString += "$TABLE_NAME_ICALOBJECT "  //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+            CODE_ATTENDEES_DIR -> queryString += "$TABLE_NAME_ATTENDEE " // throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+            CODE_CATEGORIES_DIR -> queryString += "$TABLE_NAME_CATEGORY " // throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+            CODE_COMMENTS_DIR -> queryString += "$TABLE_NAME_COMMENT " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+            CODE_CONTACTS_DIR -> queryString += "$TABLE_NAME_CONTACT " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+            CODE_ORGANIZER_DIR -> queryString += "$TABLE_NAME_ORGANIZER " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+            CODE_RELATEDTO_DIR -> queryString += "$TABLE_NAME_RELATEDTO " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+            CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+            CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
 
 
-            CODE_ICALOBJECT_ITEM -> count = database.deleteICalObjectById(ContentUris.parseId(uri))
-            CODE_ATTENDEE_ITEM -> count = database.deleteAttendeeById(ContentUris.parseId(uri))
-            CODE_CATEGORY_ITEM -> count = database.deleteCategoryById(ContentUris.parseId(uri))
-            CODE_COMMENT_ITEM -> count = database.deleteCommentById(ContentUris.parseId(uri))
-            CODE_CONTACT_ITEM -> count = database.deleteContactById(ContentUris.parseId(uri))
-            CODE_ORGANIZER_ITEM -> count = database.deleteOrganizerById(ContentUris.parseId(uri))
-            CODE_RELATEDTO_ITEM -> count = database.deleteRelatedtoById(ContentUris.parseId(uri))
-            CODE_RESOURCE_ITEM -> count = database.deleteResourceById(ContentUris.parseId(uri))
-            CODE_COLLECTION_ITEM -> count = database.deleteCollectionById(ContentUris.parseId(uri))
+            CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ?"
+            CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE WHERE $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ?"
+            CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY WHERE $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ?"
+            CODE_COMMENT_ITEM -> queryString += "$TABLE_NAME_COMMENT WHERE $TABLE_NAME_COMMENT.$COLUMN_COMMENT_ID = ?"
+            CODE_CONTACT_ITEM -> queryString += "$TABLE_NAME_CONTACT WHERE $TABLE_NAME_CONTACT.$COLUMN_CONTACT_ID = ?"
+            CODE_ORGANIZER_ITEM -> queryString += "$TABLE_NAME_ORGANIZER WHERE $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ID = ?"
+            CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ?"
+            CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ?"
+            CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = ?"
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
 
+        if (selection != null && sUriMatcher.match(uri) < 99)      // < 99 are DIRs and have no parameter!
+            queryString += " WHERE $selection"
+        if (selection != null && sUriMatcher.match(uri) > 99)
+            queryString += " AND ($selection)"
+
+        selectionArgs?.forEach { args.add(it) }          // add all selection args to the args array, no further validation needed here
+
         if (context == null)
             return 0
 
+        // this block updates the count variable. The raw query doesn't return the count of the deleted rows, so we determine it before
+        val countQueryString = queryString.replace("DELETE FROM ", "SELECT count(*) FROM ")
+        val countQuery = SimpleSQLiteQuery(countQueryString, args.toArray())
+        count = database.deleteRAW(countQuery)
+
+
+        val deleteQuery = SimpleSQLiteQuery(queryString, args.toArray())
+
+        Log.println(Log.INFO, "SyncContentProvider", "Delete Query prepared: $queryString")
+        Log.println(Log.INFO, "SyncContentProvider", "Delete Query args prepared: ${args.joinToString(separator = ", ")}")
+
+        database.deleteRAW(deleteQuery)
         context!!.contentResolver.notifyChange(uri, null)
         return count
 
@@ -118,6 +154,12 @@ class SyncContentProvider : ContentProvider() {
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
+
+        isSyncAdapter(uri)
+        // TODO: Make sure that only the items within the collection of the given account are considered
+        val accountName = getAccountNameQueryParameter(uri)
+        val accountType = getAccountTypeQueryParameter(uri)
+
 
         val id: Long?
 
@@ -132,7 +174,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_RESOURCE_DIR -> id = Resource.fromContentValues(values)?.let { database.insertResourceSync(it) }
             CODE_COLLECTION_DIR -> id = ICalCollection.fromContentValues(values)?.let { database.insertCollectionSync(it) }
 
-
             CODE_ICALOBJECT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
             CODE_ATTENDEE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
             CODE_CATEGORY_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
@@ -142,7 +183,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
             CODE_RESOURCE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
             CODE_COLLECTION_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
@@ -172,6 +212,12 @@ class SyncContentProvider : ContentProvider() {
                        selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
 
         // TODO: validate uri and throw IllegalArgumentException if wrong
+
+        isSyncAdapter(uri)
+        // TODO: Make sure that only the items within the collection of the given account are considered
+        val accountName = getAccountNameQueryParameter(uri)
+        val accountType = getAccountTypeQueryParameter(uri)
+
 
         val args = arrayListOf<String>()
 
@@ -235,10 +281,29 @@ class SyncContentProvider : ContentProvider() {
     override fun update(uri: Uri, values: ContentValues?, selection: String?,
                         selectionArgs: Array<String>?): Int {
 
-        val count: Int
+        isSyncAdapter(uri)
+        // TODO: Make sure that only the items within the collection of the given account are considered
+        val accountName = getAccountNameQueryParameter(uri)
+        val accountType = getAccountTypeQueryParameter(uri)
+
+
+        var count = 0
 
         when (sUriMatcher.match(uri)) {
-            CODE_ICALOBJECTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+            //CODE_ICALOBJECTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+            CODE_ICALOBJECTS_DIR -> {
+                var queryString = "SELECT * FROM $TABLE_NAME_ICALOBJECT "
+                if (selection != null)
+                    queryString += "WHERE $selection"
+                val query = SimpleSQLiteQuery(queryString, selectionArgs)
+                val resultList = database.getICalObjectRaw(query)
+                if (resultList.isNullOrEmpty())
+                    throw java.lang.IllegalArgumentException("No results found for the given selection.")
+                resultList.forEach {
+                    database.updateICalObjectSync(it.applyContentValues(values))
+                    count++
+                }
+            }
             CODE_ATTENDEES_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
             CODE_CATEGORIES_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
             CODE_COMMENTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
@@ -297,16 +362,42 @@ class SyncContentProvider : ContentProvider() {
                 }
             }
 
+
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
 
         if (context == null)
-            return 0
+            return count    // would be 0 here
 
         context!!.contentResolver.notifyChange(uri, null)
         return count
 
     }
 
+
+
+    private fun isSyncAdapter(uri: Uri): Boolean {
+
+        val isSyncAdapter = uri.getBooleanQueryParameter(CALLER_IS_SYNCADAPTER, false)
+        if(isSyncAdapter)
+            return true
+        else
+            throw java.lang.IllegalArgumentException("Currently only Syncadapters are supported. Uri: ($uri)")
+    }
+
+    private fun getAccountNameQueryParameter(uri: Uri): String {
+        val accountName = uri.getQueryParameter(ACCOUNT_NAME)
+        if (accountName == null)
+            throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_NAME missing. Uri: ($uri)")
+        else return accountName
+    }
+
+
+    private fun getAccountTypeQueryParameter(uri: Uri): String {
+        val accountType = uri.getQueryParameter(ACCOUNT_TYPE)
+        if (accountType == null)
+            throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_TYPE missing. Uri: ($uri)")
+        else return accountType
+    }
 }
 

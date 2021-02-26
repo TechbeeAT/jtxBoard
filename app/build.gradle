@@ -31,6 +31,10 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // see https://developer.android.com/studio/write/java8-support
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
     buildTypes {
         release {
@@ -82,7 +86,7 @@ dependencies {
     implementation "com.google.code.gson:gson:$version_gson"
 
     // Material.io
-    implementation "com.google.android.material:material:${version_material}"
+    implementation "com.google.android.material:material:$version_material"
 
 
     // Testing
@@ -91,9 +95,17 @@ dependencies {
     testImplementation 'android.arch.core:core-testing:1.1.1'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1"
+    androidTestImplementation 'androidx.test:runner:1.4.0-alpha04'
+
+    // Testing-only dependencies
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.21"
+    androidTestImplementation 'androidx.test:core:1.4.0-alpha04'
+    androidTestImplementation 'androidx.test:core-ktx:1.4.0-alpha04'
+
 
 
 

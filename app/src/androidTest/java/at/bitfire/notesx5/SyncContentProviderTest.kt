@@ -22,16 +22,18 @@ class SyncContentProviderTest {
 
     private var mContentResolver: ContentResolver? = null
 
+    //private val queryParams = "$CALLER_IS_SYNCADAPTER=true&$ACCOUNT_NAME=test&$ACCOUNT_TYPE=test"
+    private val queryParams = "$CALLER_IS_SYNCADAPTER=true&$ACCOUNT_NAME=test&$ACCOUNT_TYPE=test"
 
-    private val URI_ICALOBJECT = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_ICALOBJECT")
-    private val URI_ATTENDEES = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_ATTENDEE")
-    private val URI_CATEGORIES = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_CATEGORY")
-    private val URI_COMMENTS = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_COMMENT")
-    private val URI_CONTACTS = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_CONTACT")
-    private val URI_ORGANIZER = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_ORGANIZER")
-    private val URI_RELATEDTO = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_RELATEDTO")
-    private val URI_RESOURCE = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_RESOURCE")
-    private val URI_COLLECTION = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_COLLECTION")
+    private val URI_ICALOBJECT = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_ICALOBJECT?$queryParams")
+    private val URI_ATTENDEES = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_ATTENDEE?$queryParams")
+    private val URI_CATEGORIES = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_CATEGORY?$queryParams")
+    private val URI_COMMENTS = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_COMMENT?$queryParams")
+    private val URI_CONTACTS = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_CONTACT?$queryParams")
+    private val URI_ORGANIZER = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_ORGANIZER?$queryParams")
+    private val URI_RELATEDTO = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_RELATEDTO?$queryParams")
+    private val URI_RESOURCE = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_RESOURCE?$queryParams")
+    private val URI_COLLECTION = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_COLLECTION?$queryParams")
 
 
     @Before
@@ -589,6 +591,41 @@ class SyncContentProviderTest {
         Log.println(Log.INFO, "icalObject_initiallyEmpty", "Assert successful, DB is empty (Cursor count: ${cursor?.count})")
         cursor?.close()
     }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun check_for_invalid_URI_without_IS_SYNC_ADAPTER()  {
+
+        val queryParamsInavalid = "$ACCOUNT_NAME=test&$ACCOUNT_TYPE=test"
+        val uri = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_ICALOBJECT?$queryParamsInavalid")
+
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_SUMMARY, "note2check")
+        val newUri = mContentResolver?.insert(uri, contentValues)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun check_for_invalid_URI_without_ACCOUNT_NAME()  {
+
+        val queryParamsInavalid = "$CALLER_IS_SYNCADAPTER=false&$ACCOUNT_TYPE=test"
+        val uri = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_ICALOBJECT?$queryParamsInavalid")
+
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_SUMMARY, "note2check")
+        val newUri = mContentResolver?.insert(uri, contentValues)
+    }
+
+
+    @Test(expected = IllegalArgumentException::class)
+    fun check_for_invalid_URI_without_ACCOUNT_TYPE()  {
+
+        val queryParamsInavalid = "$CALLER_IS_SYNCADAPTER=false&$ACCOUNT_NAME=test&"
+        val uri = Uri.parse("content://$SYNC_PROVIDER_AUTHORITY/$TABLE_NAME_ICALOBJECT?$queryParamsInavalid")
+
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_SUMMARY, "note2check")
+        val newUri = mContentResolver?.insert(uri, contentValues)
+    }
+
 
 
 

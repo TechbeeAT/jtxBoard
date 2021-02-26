@@ -658,7 +658,6 @@ class IcalEditFragment : Fragment(),
                 icalEditViewModel.iCalObjectUpdated.value!!.completed = c.timeInMillis
             }
         }
-
     }
 
 

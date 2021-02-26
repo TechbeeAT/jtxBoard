@@ -4,8 +4,6 @@ import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.room.*
-import at.bitfire.notesx5.database.COLUMN_ID
-import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize
 
 
@@ -26,6 +24,8 @@ const val COLUMN_COLLECTION_SOURCE = "source"
 const val COLUMN_COLLECTION_SUPPORTSVEVENT = "supportsVEVENT"
 const val COLUMN_COLLECTION_SUPPORTSVTODO = "supportsVTODO"
 const val COLUMN_COLLECTION_SUPPORTSVJOURNAL = "supportsVJOURNAL"
+const val COLUMN_COLLECTION_ACCOUNT_NAME = "accountname"
+const val COLUMN_COLLECTION_ACCOUNT_TYPE = "accounttype"
 
 
 @Parcelize
@@ -59,7 +59,14 @@ data class ICalCollection(
         @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVJOURNAL)    var supportsVJOURNAL: Boolean? = null,
 
         /** Webcal subscription source URL */
-        @ColumnInfo(name = COLUMN_COLLECTION_SOURCE)            var source: String? = null
+        @ColumnInfo(name = COLUMN_COLLECTION_SOURCE)            var source: String? = null,
+
+        /** Account name */
+        @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME)            var accountName: String? = null,
+
+
+        /** Webcal subscription source URL */
+        @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_TYPE)            var accountType: String? = null
 
         /** whether this collection has been selected for synchronization */
         //var sync: Boolean = false
