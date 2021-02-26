@@ -62,7 +62,6 @@ dependencies {
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$version_room"
     implementation "androidx.appcompat:appcompat:$version_appcompat"
-    implementation "com.android.support:appcompat-v7:28.0.0"
     implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
 
     kapt "androidx.room:room-compiler:$version_room"
@@ -83,7 +82,7 @@ dependencies {
     implementation "androidx.room:room-ktx:$version_room"
 
     // Gson Serializer for Converters
-    implementation "com.google.code.gson:gson:$version_gson"
+    //implementation "com.google.code.gson:gson:$version_gson"
 
     // Material.io
     implementation "com.google.android.material:material:$version_material"
@@ -102,11 +101,8 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.4.0-alpha04'
 
     // Testing-only dependencies
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.21"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.30"
     androidTestImplementation 'androidx.test:core:1.4.0-alpha04'
     androidTestImplementation 'androidx.test:core-ktx:1.4.0-alpha04'
-
-
-
 
 }
