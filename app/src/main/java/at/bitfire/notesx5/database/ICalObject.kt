@@ -9,42 +9,216 @@ import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 
-/** The name of the the table.  */
+/** The name of the the table for IcalObjects.
+ * This is a general purpose table containing general columns
+ * for Journals, Notes and Todos */
 const val TABLE_NAME_ICALOBJECT = "icalobject"
 
-/** The name of the ID column.  */
+/** The name of the ID column.
+ * This is the unique identifier of an ICalObject
+ * Type: [Long]*/
 const val COLUMN_ID = BaseColumns._ID
 
-/** The names of all the other columns  */
+/* The names of all the other columns  */
+/** The column for the component based on the values
+ * provided in the enum [Component]
+ * Type: [String]
+ */
 const val COLUMN_COMPONENT = "component"
-//const val COLUMN_COLLECTION = "collection"
+
+/**
+ * Purpose:  This column/property defines a short summary or subject for the calendar component.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.12]
+ * Type: [String]
+ */
 const val COLUMN_SUMMARY = "summary"
+/**
+ * Purpose:  This column/property provides a more complete description of the calendar component than that provided by the "SUMMARY" property.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.5]
+ * Type: [String]
+ */
 const val COLUMN_DESCRIPTION = "description"
+/**
+ * Purpose:  This column/property specifies when the calendar component begins.
+ * The corresponding timezone is stored in [COLUMN_DTSTART_TIMEZONE].
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.4]
+ * Type: [Long]
+ */
 const val COLUMN_DTSTART = "dtstart"
+/**
+ * Purpose:  This column/property specifies the timezone of when the calendar component begins.
+ * The corresponding datetime is stored in [COLUMN_DTSTART].
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.4]
+ * Type: [String]
+ */
 const val COLUMN_DTSTART_TIMEZONE = "dtstarttimezone"
+/**
+ * Purpose:  This column/property specifies when the calendar component ends.
+ * The corresponding timezone is stored in [COLUMN_DTEND_TIMEZONE].
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.4]
+ * Type: [Long]
+ */
 const val COLUMN_DTEND = "dtend"
+/**
+ * Purpose:  This column/property specifies the timezone of when the calendar component ends.
+ * The corresponding datetime is stored in [COLUMN_DTEND].
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.2]
+ * Type: [String]
+ */
 const val COLUMN_DTEND_TIMEZONE = "dtendtimezone"
+/**
+ * Purpose:  This property defines the overall status or confirmation for the calendar component.
+ * The possible values of a status are defined in [StatusTodo] for To-Dos and in [StatusJournal] for Notes and Journals
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.11]
+ * Type: [String]
+ */
 const val COLUMN_STATUS = "status"
+/**
+ * Purpose:  This property defines the access classification for a calendar component.
+ * The possible values of a status are defined in the enum [Classification].
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.11]
+ * Type: [String]
+ */
 const val COLUMN_CLASSIFICATION = "classification"
+/**
+ * Purpose:  This property defines a Uniform Resource Locator (URL) associated with the iCalendar object.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.4.6]
+ * Type: [String]
+ */
 const val COLUMN_URL = "url"
+/**
+ * Purpose:  This property is used to represent contact information or alternately a reference
+ * to contact information associated with the calendar component.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.4.2]
+ * Type: [String]
+ */
 const val COLUMN_CONTACT = "contact"
+/**
+ * Purpose:  This property specifies information related to the global position for the activity specified by a calendar component.
+ * This property is split in the fields [COLUMN_GEO_LAT] for the latitude
+ * and [COLUMN_GEO_LONG] for the longitude coordinates.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.6]
+ * Type: [Float]
+ */
 const val COLUMN_GEO_LAT = "geolat"
+/**
+ * Purpose:  This property specifies information related to the global position for the activity specified by a calendar component.
+ * This property is split in the fields [COLUMN_GEO_LAT] for the latitude
+ * and [COLUMN_GEO_LONG] for the longitude coordinates.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.6]
+ * Type: [Float]
+ */
 const val COLUMN_GEO_LONG = "geolong"
+/**
+ * Purpose:  This property defines the intended venue for the activity defined by a calendar component.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.7]
+ * Type: [String]
+ */
 const val COLUMN_LOCATION = "location"
+/**
+ * Purpose:  This property is used by an assignee or delegatee of a to-do to convey the percent completion of a to-do to the "Organizer".
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.8]
+ * Type: [Int]
+ */
 const val COLUMN_PERCENT = "percent"
+/**
+ * Purpose:  This property defines the relative priority for a calendar component.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.9]
+ * Type: [Int]
+ */
 const val COLUMN_PRIORITY = "priority"
+/**
+ * Purpose:  This property defines the date and time that a to-do is expected to be completed.
+ * The corresponding timezone is stored in [COLUMN_DUE_TIMEZONE].
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.3]
+ * Type: [Long]
+ */
 const val COLUMN_DUE = "due"
+/**
+ * Purpose:  This column/property specifies the timezone of when a to-do is expected to be completed.
+ * The corresponding datetime is stored in [COLUMN_DUE].
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.2]
+ * Type: [String]
+ */
 const val COLUMN_DUE_TIMEZONE = "duetimezone"
+/**
+ * Purpose:  This property defines the date and time that a to-do was actually completed.
+ * The corresponding timezone is stored in [COLUMN_COMPLETED_TIMEZONE].
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.1]
+ * Type: [Long]
+ */
 const val COLUMN_COMPLETED = "completed"
+/**
+ * Purpose:  This column/property specifies the timezone of when a to-do was actually completed.
+ * The corresponding datetime is stored in [COLUMN_DUE].
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.1]
+ * Type: [String]
+ */
 const val COLUMN_COMPLETED_TIMEZONE = "completedtimezone"
+/**
+ * Purpose:  This property specifies a positive duration of time.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.5]
+ * Type: [String]
+ */
+const val COLUMN_DURATION = "duration"
+/**
+ * Purpose:  This property defines the persistent, globally unique identifier for the calendar component.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.4.7]
+ * Type: [String]
+ */
 const val COLUMN_UID = "uid"
+/**
+ * Purpose:  This property specifies the date and time that the calendar information
+ * was created by the calendar user agent in the calendar store.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.1]
+ * Type: [Long]
+ */
 const val COLUMN_CREATED = "created"
+/**
+ * Purpose:  In the case of an iCalendar object that specifies a
+ * "METHOD" property, this property specifies the date and time that
+ * the instance of the iCalendar object was created.  In the case of
+ * an iCalendar object that doesn't specify a "METHOD" property, this
+ * property specifies the date and time that the information
+ * associated with the calendar component was last revised in the
+ * calendar store.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.2]
+ * Type: [Long]
+ */
 const val COLUMN_DTSTAMP = "dtstamp"
+/**
+ * Purpose:  This property specifies the date and time that the information associated
+ * with the calendar component was last revised in the calendar store.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.3]
+ * Type: [Long]
+ */
 const val COLUMN_LAST_MODIFIED = "lastmodified"
+/**
+ * Purpose:  This property defines the revision sequence number of the calendar component within a sequence of revisions.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.4]
+ * Type: [Int]
+ */
 const val COLUMN_SEQUENCE = "sequence"
+/**
+ * Purpose:  This property specifies a color used for displaying the calendar, event, todo, or journal data.
+ * See [https://tools.ietf.org/html/rfc7986#section-5.9]
+ * Type: [String]
+ */
 const val COLUMN_COLOR = "color"
+/**
+ * Purpose:  This column is the foreign key to the [TABLE_NAME_COLLECTION].
+ * Type: [Long]
+ */
 const val COLUMN_ICALOBJECT_COLLECTIONID = "collectionId"
+/**
+ * Purpose:  This column defines if a local collection was changed that is supposed to be synchronised.
+ * Type: [Boolean]
+ */
 const val COLUMN_DIRTY = "dirty"
+/**
+ * Purpose:  This column defines if a collection that is supposed to be synchonized was locally marked as deleted.
+ * Type: [Boolean]
+ */
 const val COLUMN_DELETED = "deleted"
 
 
@@ -88,6 +262,7 @@ data class ICalObject(
         @ColumnInfo(name = COLUMN_DUE_TIMEZONE) var dueTimezone: String? = null, //VTODO only!
         @ColumnInfo(name = COLUMN_COMPLETED) var completed: Long? = null, // VTODO only!
         @ColumnInfo(name = COLUMN_COMPLETED_TIMEZONE) var completedTimezone: String? = null, //VTODO only!
+        @ColumnInfo(name = COLUMN_DURATION) var duration: String? = null, //VTODO only!
 
 
         @ColumnInfo(name = COLUMN_UID) var uid: String = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.notesx5",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
@@ -231,6 +406,9 @@ data class ICalObject(
                 }
                 if (values?.containsKey(COLUMN_COMPLETED_TIMEZONE) == true && values.getAsString(COLUMN_COMPLETED_TIMEZONE) != null) {
                         this.completedTimezone = values.getAsString(COLUMN_COMPLETED_TIMEZONE)
+                }
+                if (values?.containsKey(COLUMN_DURATION) == true && values.getAsString(COLUMN_DURATION) != null) {
+                        this.duration = values.getAsString(COLUMN_DURATION)
                 }
                 if (values?.containsKey(COLUMN_UID) == true && values.getAsString(COLUMN_UID).isNotBlank()) {
                         this.uid = values.getAsString(COLUMN_UID)
