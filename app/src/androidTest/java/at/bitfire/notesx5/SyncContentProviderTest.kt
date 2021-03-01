@@ -407,7 +407,7 @@ class SyncContentProviderTest {
         val relatedtoValues = ContentValues()
         relatedtoValues.put(COLUMN_RELATEDTO_ICALOBJECT_ID, newICalObjectId)
         relatedtoValues.put(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, newICalObjectId)
-        relatedtoValues.put(COLUMN_RELATEDTO_RELTYPEPARAM, "Child")
+        relatedtoValues.put(COLUMN_RELATEDTO_RELTYPE, "Child")
         val newRelatedtoUri = mContentResolver?.insert(URI_RELATEDTO, relatedtoValues)
         assertNotNull(newRelatedtoUri)
 
@@ -417,7 +417,7 @@ class SyncContentProviderTest {
 
         // UPDATE the new value
         val updatedRelatedtoValues = ContentValues()
-        updatedRelatedtoValues.put(COLUMN_RELATEDTO_RELTYPEPARAM, "Parent")
+        updatedRelatedtoValues.put(COLUMN_RELATEDTO_RELTYPE, "Parent")
         val countUpdated = mContentResolver?.update(newRelatedtoUri!!, updatedRelatedtoValues, null, null)
         assertEquals(countUpdated, 1)
         //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")

@@ -10,23 +10,58 @@ import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize
 
 
-/** The name of the the table.  */
+/** The name of the the table for Organizer that are linked to an ICalObject.
+ * [https://tools.ietf.org/html/rfc5545#section-3.8.4.3]
+ */
 const val TABLE_NAME_ORGANIZER = "organizer"
 
-/** The name of the ID column.  */
+/** The name of the ID column for the organizer.
+ * This is the unique identifier of a Organizer
+ * Type: [Long]*/
 const val COLUMN_ORGANIZER_ID = BaseColumns._ID
 
-/** The name of the Foreign Key Column for IcalObjects. */
+/** The name of the Foreign Key Column for IcalObjects.
+ * Type: [Long] */
 const val COLUMN_ORGANIZER_ICALOBJECT_ID = "icalObjectId"
 
 
-/** The names of all the other columns  */
+/* The names of all the other columns  */
+/**
+ * Purpose:  This value type is used to identify properties that contain a calendar user address (in this case of the organizer).
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3] and [https://tools.ietf.org/html/rfc5545#section-3.3.3]
+ * Type: [String]
+ */
 const val COLUMN_ORGANIZER_CALADDRESS = "caladdress"
-const val COLUMN_ORGANIZER_CNPARAM = "cnparam"
-const val COLUMN_ORGANIZER_DIRPARAM = "dirparam"
-const val COLUMN_ORGANIZER_SENTBYPARAM = "sentbyparam"
-const val COLUMN_ORGANIZER_LANGUAGEPARAM = "languageparam"
-const val COLUMN_ORGANIZER_OTHERPARAM = "otherparam"
+/**
+ * Purpose:  To specify the common name to be associated with the calendar user specified by the property in this case for the organizer.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3] and [https://tools.ietf.org/html/rfc5545#section-3.2.18]
+ * Type: [String]
+ */
+const val COLUMN_ORGANIZER_CN = "cnparam"
+/**
+ * Purpose:  To specify reference to a directory entry associated with the calendar user specified by the property in this case for the organizer.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3] and [https://tools.ietf.org/html/rfc5545#section-3.2.2]
+ * Type: [String]
+ */
+const val COLUMN_ORGANIZER_DIR = "dirparam"
+/**
+ * Purpose:  To specify the calendar user that is acting on behalf of the calendar user specified by the property in this case for the organizer.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3] and [https://tools.ietf.org/html/rfc5545#section-3.2.18]
+ * Type: [String]
+ */
+const val COLUMN_ORGANIZER_SENTBY = "sentbyparam"
+/**
+ * Purpose:  To specify the language for text values in a property or property parameter, in this case of the organizer.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
+ * Type: [String]
+ */
+const val COLUMN_ORGANIZER_LANGUAGE = "language"
+/**
+ * Purpose:  To specify other properties for the organizer.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3]
+ * Type: [String]
+ */
+const val COLUMN_ORGANIZER_OTHER = "other"
 
 
 
@@ -44,13 +79,12 @@ data class Organizer (
 
         @ColumnInfo(index = true, name = COLUMN_ORGANIZER_ICALOBJECT_ID) var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_ORGANIZER_CALADDRESS)     var caladdress: String = "",
-        @ColumnInfo(name = COLUMN_ORGANIZER_CNPARAM)     var cnparam: String? = null,
-        @ColumnInfo(name = COLUMN_ORGANIZER_DIRPARAM)     var dirparam: String? = null,
-        @ColumnInfo(name = COLUMN_ORGANIZER_SENTBYPARAM)     var sentbyparam: String? = null,
-        @ColumnInfo(name = COLUMN_ORGANIZER_LANGUAGEPARAM)     var languageparam: String? = null,
-        @ColumnInfo(name = COLUMN_ORGANIZER_OTHERPARAM)     var otherparam: String? = null
+        @ColumnInfo(name = COLUMN_ORGANIZER_CN)     var cn: String? = null,
+        @ColumnInfo(name = COLUMN_ORGANIZER_DIR)     var dir: String? = null,
+        @ColumnInfo(name = COLUMN_ORGANIZER_SENTBY)     var sentby: String? = null,
+        @ColumnInfo(name = COLUMN_ORGANIZER_LANGUAGE)     var language: String? = null,
+        @ColumnInfo(name = COLUMN_ORGANIZER_OTHER)     var other: String? = null
 ): Parcelable
-
 
 
 {
@@ -84,20 +118,20 @@ data class Organizer (
 
 
 
-                if (values?.containsKey(COLUMN_ORGANIZER_CNPARAM) == true && values.getAsString(COLUMN_ORGANIZER_CNPARAM).isNotBlank()) {
-                        this.cnparam = values.getAsString(COLUMN_ORGANIZER_CNPARAM)
+                if (values?.containsKey(COLUMN_ORGANIZER_CN) == true && values.getAsString(COLUMN_ORGANIZER_CN).isNotBlank()) {
+                        this.cn = values.getAsString(COLUMN_ORGANIZER_CN)
                 }
-                if (values?.containsKey(COLUMN_ORGANIZER_DIRPARAM) == true && values.getAsString(COLUMN_ORGANIZER_DIRPARAM).isNotBlank()) {
-                        this.dirparam = values.getAsString(COLUMN_ORGANIZER_DIRPARAM)
+                if (values?.containsKey(COLUMN_ORGANIZER_DIR) == true && values.getAsString(COLUMN_ORGANIZER_DIR).isNotBlank()) {
+                        this.dir = values.getAsString(COLUMN_ORGANIZER_DIR)
                 }
-                if (values?.containsKey(COLUMN_ORGANIZER_SENTBYPARAM) == true && values.getAsString(COLUMN_ORGANIZER_SENTBYPARAM).isNotBlank()) {
-                        this.sentbyparam = values.getAsString(COLUMN_ORGANIZER_SENTBYPARAM)
+                if (values?.containsKey(COLUMN_ORGANIZER_SENTBY) == true && values.getAsString(COLUMN_ORGANIZER_SENTBY).isNotBlank()) {
+                        this.sentby = values.getAsString(COLUMN_ORGANIZER_SENTBY)
                 }
-                if (values?.containsKey(COLUMN_ORGANIZER_LANGUAGEPARAM) == true && values.getAsString(COLUMN_ORGANIZER_LANGUAGEPARAM).isNotBlank()) {
-                        this.languageparam = values.getAsString(COLUMN_ORGANIZER_LANGUAGEPARAM)
+                if (values?.containsKey(COLUMN_ORGANIZER_LANGUAGE) == true && values.getAsString(COLUMN_ORGANIZER_LANGUAGE).isNotBlank()) {
+                        this.language = values.getAsString(COLUMN_ORGANIZER_LANGUAGE)
                 }
-                if (values?.containsKey(COLUMN_ORGANIZER_OTHERPARAM) == true && values.getAsString(COLUMN_ORGANIZER_OTHERPARAM).isNotBlank()) {
-                        this.otherparam = values.getAsString(COLUMN_ORGANIZER_OTHERPARAM)
+                if (values?.containsKey(COLUMN_ORGANIZER_OTHER) == true && values.getAsString(COLUMN_ORGANIZER_OTHER).isNotBlank()) {
+                        this.other = values.getAsString(COLUMN_ORGANIZER_OTHER)
                 }
 
                 return this

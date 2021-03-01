@@ -9,21 +9,40 @@ import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize
 
-
-/** The name of the the table.  */
+/** The name of the the table for Contact that are linked to an ICalObject.
+ * [https://tools.ietf.org/html/rfc5545#section-3.8.4.2]
+ */
 const val TABLE_NAME_CONTACT = "contact"
 
-/** The name of the ID column.  */
+/** The name of the ID column for the contact.
+ * This is the unique identifier of a Contact
+ * Type: [Long]*/
 const val COLUMN_CONTACT_ID = BaseColumns._ID
 
-/** The name of the Foreign Key Column for IcalObjects. */
+/** The name of the Foreign Key Column for IcalObjects.
+ * Type: [Long] */
 const val COLUMN_CONTACT_ICALOBJECT_ID = "icalObjectId"
 
 
-/** The names of all the other columns  */
+/* The names of all the other columns  */
+/**
+ * Purpose:  This property defines the name of the contact for a calendar component.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.2]
+ * Type: [String]
+ */
 const val COLUMN_CONTACT_TEXT = "text"
-const val COLUMN_CONTACT_LANGUAGEPARAM = "languageparam"
-const val COLUMN_CONTACT_OTHERPARAM = "otherparam"
+/**
+ * Purpose:  To specify the language for text values in a property or property parameter, in this case of the contact.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.2] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
+ * Type: [String]
+ */
+const val COLUMN_CONTACT_LANGUAGE = "language"
+/**
+ * Purpose:  To specify other properties for the contact.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.2]
+ * Type: [String]
+ */
+const val COLUMN_CONTACT_OTHER = "other"
 
 
 
@@ -41,11 +60,10 @@ data class Contact (
 
         @ColumnInfo(index = true, name = COLUMN_CONTACT_ICALOBJECT_ID) var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_CONTACT_TEXT)                        var text: String = "",
-        @ColumnInfo(name = COLUMN_CONTACT_LANGUAGEPARAM)               var languageparam: String? = null,
-        @ColumnInfo(name = COLUMN_CONTACT_OTHERPARAM)                  var otherparam: String? = null
+        @ColumnInfo(name = COLUMN_CONTACT_LANGUAGE)                    var language: String? = null,
+        @ColumnInfo(name = COLUMN_CONTACT_OTHER)                       var other: String? = null
 
 ): Parcelable
-
 
 
 {
@@ -79,11 +97,11 @@ data class Contact (
                         this.text = values.getAsString(COLUMN_CONTACT_TEXT)
 
 
-                if (values?.containsKey(COLUMN_CONTACT_LANGUAGEPARAM) == true && values.getAsString(COLUMN_CONTACT_LANGUAGEPARAM).isNotBlank()) {
-                        this.languageparam = values.getAsString(COLUMN_CONTACT_LANGUAGEPARAM)
+                if (values?.containsKey(COLUMN_CONTACT_LANGUAGE) == true && values.getAsString(COLUMN_CONTACT_LANGUAGE).isNotBlank()) {
+                        this.language = values.getAsString(COLUMN_CONTACT_LANGUAGE)
                 }
-                if (values?.containsKey(COLUMN_CONTACT_OTHERPARAM) == true && values.getAsString(COLUMN_CONTACT_OTHERPARAM).isNotBlank()) {
-                        this.otherparam = values.getAsString(COLUMN_CONTACT_OTHERPARAM)
+                if (values?.containsKey(COLUMN_CONTACT_OTHER) == true && values.getAsString(COLUMN_CONTACT_OTHER).isNotBlank()) {
+                        this.other = values.getAsString(COLUMN_CONTACT_OTHER)
                 }
 
                 return this

@@ -9,20 +9,40 @@ import at.bitfire.notesx5.database.*
 import kotlinx.android.parcel.Parcelize
 
 
-/** The name of the the table.  */
+/** The name of the the table for Resources that are linked to an ICalObject.
+ * [https://tools.ietf.org/html/rfc5545#section-3.8.1.10]*/
 const val TABLE_NAME_RESOURCE = "resource"
 
-/** The name of the ID column.  */
+/** The name of the ID column for resources.
+ * This is the unique identifier of a Resource
+ * Type: [Long]*/
 const val COLUMN_RESOURCE_ID = BaseColumns._ID
 
-/** The name of the Foreign Key Column for IcalObjects. */
+/** The name of the Foreign Key Column for IcalObjects.
+ * Type: [Long] */
 const val COLUMN_RESOURCE_ICALOBJECT_ID = "icalObjectId"
 
 
-/** The names of all the other columns  */
+/* The names of all the other columns  */
+/**
+ * Purpose:  This property defines the name of the resource for a calendar component.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.10]
+ * Type: [String]
+ */
 const val COLUMN_RESOURCE_TEXT = "text"
-const val COLUMN_RESOURCE_RELTYPEPARAM = "reltypeparam"
-const val COLUMN_RESOURCE_OTHERPARAM = "otherparam"
+/**
+ * Purpose:  To specify the language for text values in a property or property parameter, in this case of the resource.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.10] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
+ * Type: [String]
+ */
+const val COLUMN_RESOURCE_RELTYPE = "reltype"
+/**
+ * Purpose:  To specify other properties for the resource.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.10]
+ * Type: [String]
+ */
+const val COLUMN_RESOURCE_OTHER = "other"
+
 
 
 @Parcelize
@@ -39,8 +59,8 @@ data class Resource (
 
         @ColumnInfo(index = true, name = COLUMN_RESOURCE_ICALOBJECT_ID)var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_RESOURCE_TEXT)            var text: String? = "",
-        @ColumnInfo(name = COLUMN_RESOURCE_RELTYPEPARAM)    var reltypeparam: String? = null,
-        @ColumnInfo(name = COLUMN_RESOURCE_OTHERPARAM)      var otherparam: String? = null
+        @ColumnInfo(name = COLUMN_RESOURCE_RELTYPE)    var reltypeparam: String? = null,
+        @ColumnInfo(name = COLUMN_RESOURCE_OTHER)      var otherparam: String? = null
 ): Parcelable
 
 
@@ -75,11 +95,11 @@ data class Resource (
                         this.text = values.getAsString(COLUMN_RESOURCE_TEXT)
 
 
-                if (values?.containsKey(COLUMN_RESOURCE_RELTYPEPARAM) == true && values.getAsString(COLUMN_RESOURCE_RELTYPEPARAM).isNotBlank() ) {
-                        this.reltypeparam = values.getAsString(COLUMN_RESOURCE_RELTYPEPARAM)
+                if (values?.containsKey(COLUMN_RESOURCE_RELTYPE) == true && values.getAsString(COLUMN_RESOURCE_RELTYPE).isNotBlank() ) {
+                        this.reltypeparam = values.getAsString(COLUMN_RESOURCE_RELTYPE)
                 }
-                if (values?.containsKey(COLUMN_RESOURCE_OTHERPARAM) == true && values.getAsString(COLUMN_RESOURCE_OTHERPARAM).isNotBlank()) {
-                        this.otherparam = values.getAsString(COLUMN_RESOURCE_OTHERPARAM)
+                if (values?.containsKey(COLUMN_RESOURCE_OTHER) == true && values.getAsString(COLUMN_RESOURCE_OTHER).isNotBlank()) {
+                        this.otherparam = values.getAsString(COLUMN_RESOURCE_OTHER)
                 }
 
                 return this

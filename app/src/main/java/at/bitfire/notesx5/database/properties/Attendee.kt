@@ -11,7 +11,8 @@ import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize
 
 
-/** The name of the the table for Attendees that are linked to an ICalObject. */
+/** The name of the the table for Attendees that are linked to an ICalObject.
+ *  [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] */
 const val TABLE_NAME_ATTENDEE = "attendee"
 
 /** The name of the ID column.

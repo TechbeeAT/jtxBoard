@@ -9,20 +9,46 @@ import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize
 
-/** The name of the the table.  */
+/** The name of the the table for Comments that are linked to an ICalObject.
+ * [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]*/
 const val TABLE_NAME_COMMENT = "comment"
 
-/** The name of the ID column.  */
+/** The name of the ID column for comments.
+ * This is the unique identifier of a Comment
+ * Type: [Long]*/
 const val COLUMN_COMMENT_ID = BaseColumns._ID
 
-/** The name of the Foreign Key Column for IcalObjects. */
+/** The name of the Foreign Key Column for IcalObjects.
+ * Type: [Long] */
 const val COLUMN_COMMENT_ICALOBJECT_ID = "icalObjectId"
 
 
 /** The names of all the other columns  */
+/**
+ * Purpose:  This property specifies non-processing information intended to provide a comment to the calendar user.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
+ * Type: [String]
+ */
 const val COLUMN_COMMENT_TEXT = "text"
-const val COLUMN_COMMENT_ALTREPPARAM = "altrepparam"
-const val COLUMN_COMMENT_LANGUAGEPARAM = "languageparam"
+/**
+ * Purpose:  To specify the language for text values in a property or property parameter, in this case of the comment.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
+ * Type: [String]
+ */
+const val COLUMN_COMMENT_ALTREP = "altrep"
+/**
+ * Purpose:  To specify an alternate text representation for the property value, in this case of the comment.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
+ * Type: [String]
+ */
+const val COLUMN_COMMENT_LANGUAGE = "language"
+/**
+ * Purpose:  To specify other properties for the comment.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
+ * Type: [String]
+ */
+const val COLUMN_COMMENT_OTHER = "other"
+
 
 
 
@@ -34,14 +60,15 @@ const val COLUMN_COMMENT_LANGUAGEPARAM = "languageparam"
                 onDelete = ForeignKey.CASCADE)])
 data class Comment (
 
-    @PrimaryKey(autoGenerate = true)
+        @PrimaryKey(autoGenerate = true)
     @ColumnInfo(index = true, name = COLUMN_COMMENT_ID)
     var commentId: Long = 0L,
 
-    @ColumnInfo(index = true, name = COLUMN_COMMENT_ICALOBJECT_ID) var icalObjectId: Long = 0L,
-    @ColumnInfo(name = COLUMN_COMMENT_TEXT)                        var text: String = "",
-    @ColumnInfo(name = COLUMN_COMMENT_ALTREPPARAM)                 var altrepparam: String? = null,
-    @ColumnInfo(name = COLUMN_COMMENT_LANGUAGEPARAM)               var languageparam: String? = null
+        @ColumnInfo(index = true, name = COLUMN_COMMENT_ICALOBJECT_ID) var icalObjectId: Long = 0L,
+        @ColumnInfo(name = COLUMN_COMMENT_TEXT)                        var text: String = "",
+        @ColumnInfo(name = COLUMN_COMMENT_ALTREP)                 var altrep: String? = null,
+        @ColumnInfo(name = COLUMN_COMMENT_LANGUAGE)               var language: String? = null,
+        @ColumnInfo(name = COLUMN_COMMENT_OTHER)                      var other: String? = null
 ): Parcelable
 
 
@@ -74,11 +101,14 @@ data class Comment (
         if(values?.containsKey(COLUMN_COMMENT_TEXT) == true && values.getAsString(COLUMN_COMMENT_TEXT).isNotBlank())
             this.text = values.getAsString(COLUMN_COMMENT_TEXT)
 
-        if (values?.containsKey(COLUMN_COMMENT_ALTREPPARAM) == true && values.getAsString(COLUMN_COMMENT_ALTREPPARAM).isNotBlank()) {
-            this.altrepparam = values.getAsString(COLUMN_COMMENT_ALTREPPARAM)
+        if (values?.containsKey(COLUMN_COMMENT_ALTREP) == true && values.getAsString(COLUMN_COMMENT_ALTREP).isNotBlank()) {
+            this.altrep = values.getAsString(COLUMN_COMMENT_ALTREP)
         }
-        if (values?.containsKey(COLUMN_COMMENT_LANGUAGEPARAM) == true && values.getAsString(COLUMN_COMMENT_LANGUAGEPARAM).isNotBlank()) {
-            this.languageparam = values.getAsString(COLUMN_COMMENT_LANGUAGEPARAM)
+        if (values?.containsKey(COLUMN_COMMENT_LANGUAGE) == true && values.getAsString(COLUMN_COMMENT_LANGUAGE).isNotBlank()) {
+            this.language = values.getAsString(COLUMN_COMMENT_LANGUAGE)
+        }
+        if (values?.containsKey(COLUMN_COMMENT_OTHER) == true && values.getAsString(COLUMN_COMMENT_OTHER).isNotBlank()) {
+            this.other = values.getAsString(COLUMN_COMMENT_OTHER)
         }
 
         return this

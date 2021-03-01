@@ -8,21 +8,48 @@ import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize
 
-/** The name of the the table.  */
-const val TABLE_NAME_RELATEDTO = "relatedto"
 
-/** The name of the ID column.  */
+/** The name of the the table for Relationships (related-to) that are linked to an ICalObject.
+ * [https://tools.ietf.org/html/rfc5545#section-3.8.4.5]
+ */const val TABLE_NAME_RELATEDTO = "relatedto"
+
+/** The name of the ID column for the related-to.
+ * This is the unique identifier of a Related-to
+ * Type: [Long]*/
 const val COLUMN_RELATEDTO_ID = BaseColumns._ID
 
-/** The name of the Foreign Key Column for IcalObjects. */
+/** The name of the Foreign Key Column for IcalObjects.
+ * Type: [Long] */
 const val COLUMN_RELATEDTO_ICALOBJECT_ID = "icalObjectId"
+
+/** The name of the second Foreign Key Column of the related IcalObject
+ * Type: [Long]
+ */
 const val COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = "linkedICalObjectId"
 
 
-/** The names of all the other columns  */
+/* The names of all the other columns  */
+/**
+ * Purpose:  This property is used to represent a relationship or reference between one calendar component and another.
+ * The text gives the UID of the related calendar entry.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.5]
+ * Type: [String]
+ */
 const val COLUMN_RELATEDTO_TEXT = "text"
-const val COLUMN_RELATEDTO_RELTYPEPARAM = "reltypeparam"
-const val COLUMN_RELATEDTO_OTHERPARAM = "otherparam"
+/**
+ * Purpose:  To specify the type of hierarchical relationship associated
+ * with the calendar component specified by the property.
+ * The possible relationship types are defined in the enum [Reltypeparam]
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.5] and [https://tools.ietf.org/html/rfc5545#section-3.2.15]
+ * Type: [String]
+ */
+const val COLUMN_RELATEDTO_RELTYPE = "reltype"
+/**
+ * Purpose:  To specify other properties for the related-to.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.5]
+ * Type: [String]
+ */
+const val COLUMN_RELATEDTO_OTHER = "other"
 
 
 
@@ -33,7 +60,7 @@ const val COLUMN_RELATEDTO_OTHERPARAM = "otherparam"
                 parentColumns = arrayOf(COLUMN_ID),
                 childColumns = arrayOf(COLUMN_RELATEDTO_ICALOBJECT_ID),
                 onDelete = ForeignKey.CASCADE)],
-                indices = [Index(value = [COLUMN_RELATEDTO_ICALOBJECT_ID, COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, COLUMN_RELATEDTO_RELTYPEPARAM], unique = true)])
+                indices = [Index(value = [COLUMN_RELATEDTO_ICALOBJECT_ID, COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, COLUMN_RELATEDTO_RELTYPE], unique = true)])
 data class Relatedto (
 
         @PrimaryKey(autoGenerate = true)
@@ -43,8 +70,8 @@ data class Relatedto (
         @ColumnInfo(index = true, name = COLUMN_RELATEDTO_ICALOBJECT_ID)    var icalObjectId: Long = 0L,
         @ColumnInfo(index = true, name = COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) var linkedICalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_RELATEDTO_TEXT)                var text: String? = null,
-        @ColumnInfo(name = COLUMN_RELATEDTO_RELTYPEPARAM)        var reltypeparam: String? = null,
-        @ColumnInfo(name = COLUMN_RELATEDTO_OTHERPARAM)          var otherparam: String? = null
+        @ColumnInfo(name = COLUMN_RELATEDTO_RELTYPE)        var reltypeparam: String? = null,
+        @ColumnInfo(name = COLUMN_RELATEDTO_OTHER)          var otherparam: String? = null
 ): Parcelable {
         companion object Factory {
 
@@ -78,18 +105,16 @@ data class Relatedto (
                 if (values?.containsKey(COLUMN_RELATEDTO_TEXT) == true && values.getAsString(COLUMN_RELATEDTO_TEXT).isNotBlank()) {
                         this.text = values.getAsString(COLUMN_RELATEDTO_TEXT)
                 }
-                if (values?.containsKey(COLUMN_RELATEDTO_RELTYPEPARAM) == true && values.getAsString(COLUMN_RESOURCE_RELTYPEPARAM).isNotBlank()) {
-                        this.reltypeparam = values.getAsString(COLUMN_RESOURCE_RELTYPEPARAM)
+                if (values?.containsKey(COLUMN_RELATEDTO_RELTYPE) == true && values.getAsString(COLUMN_RESOURCE_RELTYPE).isNotBlank()) {
+                        this.reltypeparam = values.getAsString(COLUMN_RESOURCE_RELTYPE)
                 }
-                if (values?.containsKey(COLUMN_RELATEDTO_OTHERPARAM) == true && values.getAsString(COLUMN_RESOURCE_OTHERPARAM).isNotBlank()) {
-                        this.otherparam = values.getAsString(COLUMN_RESOURCE_OTHERPARAM)
+                if (values?.containsKey(COLUMN_RELATEDTO_OTHER) == true && values.getAsString(COLUMN_RESOURCE_OTHER).isNotBlank()) {
+                        this.otherparam = values.getAsString(COLUMN_RESOURCE_OTHER)
                 }
 
                 return this
         }
-
 }
-
 
 
 enum class Reltypeparam {
