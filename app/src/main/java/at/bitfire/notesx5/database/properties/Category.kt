@@ -9,20 +9,38 @@ import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize
 
-/** The name of the the table.  */
+/** The name of the the table for Categories that are linked to an ICalObject. */
 const val TABLE_NAME_CATEGORY = "category"
 
-/** The name of the ID column.  */
+/** The name of the ID column for categories.
+ * This is the unique identifier of a Category
+ * Type: [Long]*/
 const val COLUMN_CATEGORY_ID = BaseColumns._ID
 
-/** The name of the Foreign Key Column for IcalObjects. */
+/** The name of the Foreign Key Column for IcalObjects.
+ * Type: [Long] */
 const val COLUMN_CATEGORY_ICALOBJECT_ID = "icalObjectId"
 
 
-/** The names of all the other columns  */
+/* The names of all the other columns  */
+/**
+ * Purpose:  This property defines the name of the category for a calendar component.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.2]
+ * Type: [String]
+ */
 const val COLUMN_CATEGORY_TEXT = "text"
-const val COLUMN_CATEGORY_LANGUAGEPARAM = "languageparam"
-const val COLUMN_CATEGORY_OTHERPARAM = "otherparam"
+/**
+ * Purpose:  To specify the language for text values in a property or property parameter, in this case of the category.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.2] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
+ * Type: [String]
+ */
+const val COLUMN_CATEGORY_LANGUAGE = "language"
+/**
+ * Purpose:  To specify other properties for the category.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.2]
+ * Type: [String]
+ */
+const val COLUMN_CATEGORY_OTHER = "other"
 
 
 @Parcelize
@@ -41,9 +59,9 @@ data class Category (
         var categoryId: Long = 0L,
 
         @ColumnInfo(index = true, name = COLUMN_CATEGORY_ICALOBJECT_ID)     var icalObjectId: Long = 0L,
-        @ColumnInfo(name = COLUMN_CATEGORY_TEXT)                            var text: String = "",
-        @ColumnInfo(name = COLUMN_CATEGORY_LANGUAGEPARAM)                   var languageparam: String? = null,
-        @ColumnInfo(name = COLUMN_CATEGORY_OTHERPARAM)                      var otherparam: String? = null
+        @ColumnInfo(name = COLUMN_CATEGORY_TEXT)                       var text: String = "",
+        @ColumnInfo(name = COLUMN_CATEGORY_LANGUAGE)                   var language: String? = null,
+        @ColumnInfo(name = COLUMN_CATEGORY_OTHER)                      var other: String? = null
 ): Parcelable
 
 
@@ -77,11 +95,11 @@ data class Category (
         if(values?.containsKey(COLUMN_CATEGORY_TEXT) == true && values.getAsString(COLUMN_CATEGORY_TEXT).isNotBlank())
             this.text = values.getAsString(COLUMN_CATEGORY_TEXT)
 
-        if (values?.containsKey(COLUMN_CATEGORY_LANGUAGEPARAM) == true && values.getAsString(COLUMN_CATEGORY_LANGUAGEPARAM) != null) {
-            this.languageparam = values.getAsString(COLUMN_CATEGORY_LANGUAGEPARAM)
+        if (values?.containsKey(COLUMN_CATEGORY_LANGUAGE) == true && values.getAsString(COLUMN_CATEGORY_LANGUAGE) != null) {
+            this.language = values.getAsString(COLUMN_CATEGORY_LANGUAGE)
         }
-        if (values?.containsKey(COLUMN_CATEGORY_OTHERPARAM) == true && values.getAsString(COLUMN_CATEGORY_OTHERPARAM).isNotBlank()) {
-            this.otherparam = values.getAsString(COLUMN_CATEGORY_OTHERPARAM)
+        if (values?.containsKey(COLUMN_CATEGORY_OTHER) == true && values.getAsString(COLUMN_CATEGORY_OTHER).isNotBlank()) {
+            this.other = values.getAsString(COLUMN_CATEGORY_OTHER)
         }
 
         return this
