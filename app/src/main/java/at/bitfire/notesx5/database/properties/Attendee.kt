@@ -7,39 +7,114 @@ import androidx.annotation.Nullable
 import androidx.room.*
 import at.bitfire.notesx5.R
 import at.bitfire.notesx5.database.COLUMN_ID
-import at.bitfire.notesx5.database.Classification
 import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize
 
 
-/** The name of the the table.  */
+/** The name of the the table for Attendees that are linked to an ICalObject. */
 const val TABLE_NAME_ATTENDEE = "attendee"
 
-/** The name of the ID column.  */
+/** The name of the ID column.
+ * This is the unique identifier of an Attendee
+ * Type: [Long] */
 const val COLUMN_ATTENDEE_ID = BaseColumns._ID
 
-/** The name of the Foreign Key Column for IcalObjects. */
+/** The name of the Foreign Key Column for IcalObjects.
+ * Type: [Long] */
 const val COLUMN_ATTENDEE_ICALOBJECT_ID = "icalObjectId"
 
 
-/** The names of all the other columns  */
+/* The names of all the other columns  */
+
+/**
+ * Purpose:  This value type is used to identify properties that contain a calendar user address (in this case of the attendee).
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.3.3]
+ * Type: [String]
+ */
 const val COLUMN_ATTENDEE_CALADDRESS = "caladdress"
-const val COLUMN_ATTENDEE_CUTYPEPARAM = "cutypeparam"
-const val COLUMN_ATTENDEE_MEMBERPARAM = "memberparam"
-const val COLUMN_ATTENDEE_ROLEPARAM = "roleparam"
-const val COLUMN_ATTENDEE_PARTSTATPARAM = "partstatparam"
-const val COLUMN_ATTENDEE_RSVPPARAM = "rsvpparam"
-const val COLUMN_ATTENDEE_DELTOPARAM = "deltoparam"
-const val COLUMN_ATTENDEE_DELFROMPARAM = "delfromparam"
-const val COLUMN_ATTENDEE_SENTBYPARAM = "sentbyparam"
-const val COLUMN_ATTENDEE_CNPARAM = "cnparam"
-const val COLUMN_ATTENDEE_DIRPARAM = "dirparam"
-const val COLUMN_ATTENDEE_LANGUAGEPARAM = "languageparam"
-const val COLUMN_ATTENDEE_OTHERPARAM = "otherparam"
+/**
+ * Purpose:  To identify the type of calendar user specified by the property in this case for the attendee.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.3]
+ * Type: [String]
+ */
+const val COLUMN_ATTENDEE_CUTYPE = "cutype"
+/**
+ * Purpose:  To specify the group or list membership of the calendar user specified by the property in this case for the attendee.
+ * The possible values are defined in the enum [Cutype]
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.11]
+ * Type: [String]
+ */
+const val COLUMN_ATTENDEE_MEMBER = "member"
+/**
+ * Purpose:  To specify the participation role for the calendar user specified by the property in this case for the attendee.
+ * The possible values are defined in the enum [Role]
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.16]
+ * Type: [String]
+ */
+const val COLUMN_ATTENDEE_ROLE = "role"
+/**
+ * Purpose:  To specify the participation status for the calendar user specified by the property in this case for the attendee.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.12]
+ * Type: [String]
+ */
+const val COLUMN_ATTENDEE_PARTSTAT = "partstat"
+/**
+ * Purpose:  To specify whether there is an expectation of a favor of a reply from the calendar user specified by the property value
+ * in this case for the attendee.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.17]
+ * Type: [Boolean]
+ */
+const val COLUMN_ATTENDEE_RSVP = "rsvp"
+/**
+ * Purpose:  To specify the calendar users to whom the calendar user specified by the property
+ * has delegated participation in this case for the attendee.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.5]
+ * Type: [String]
+ */
+const val COLUMN_ATTENDEE_DELEGATEDTO = "delegatedto"
+/**
+ * Purpose:  To specify the calendar users that have delegated their participation to the calendar user specified by the property
+ * in this case for the attendee.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.4]
+ * Type: [String]
+ */
+const val COLUMN_ATTENDEE_DELEGATEDFROM = "delegatedfrom"
+/**
+ * Purpose:  To specify the calendar user that is acting on behalf of the calendar user specified by the property in this case for the attendee.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.18]
+ * Type: [String]
+ */
+const val COLUMN_ATTENDEE_SENTBY = "sentby"
+/**
+ * Purpose:  To specify the common name to be associated with the calendar user specified by the property in this case for the attendee.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.18]
+ * Type: [String]
+ */
+const val COLUMN_ATTENDEE_CN = "cn"
+/**
+ * Purpose:  To specify reference to a directory entry associated with the calendar user specified by the property in this case for the attendee.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.2]
+ * Type: [String]
+ */
+const val COLUMN_ATTENDEE_DIR = "dir"
+/**
+ * Purpose:  To specify the language for text values in a property or property parameter, in this case of the attendee.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
+ * Type: [String]
+ */
+const val COLUMN_ATTENDEE_LANGUAGE = "language"
+/**
+ * Purpose:  To specify other properties for the attendee.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1]
+ * Type: [String]
+ */
+const val COLUMN_ATTENDEE_OTHER = "other"
 
 
-
-
+/**
+ * Purpose:  This property / data class defines an "Attendee" within a calendar component.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1]
+ */
 @Parcelize
 @Entity(tableName = TABLE_NAME_ATTENDEE,
         foreignKeys = [ForeignKey(entity = ICalObject::class,
@@ -54,18 +129,18 @@ data class Attendee (
 
         @ColumnInfo(index = true, name = COLUMN_ATTENDEE_ICALOBJECT_ID)       var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_ATTENDEE_CALADDRESS)          var caladdress: String = "",
-        @ColumnInfo(name = COLUMN_ATTENDEE_CUTYPEPARAM)         var cutypeparam: String? = Cutypeparam.INDIVIDUAL.param,
-        @ColumnInfo(name = COLUMN_ATTENDEE_MEMBERPARAM)         var memberparam: String? = null,
-        @ColumnInfo(name = COLUMN_ATTENDEE_ROLEPARAM)           var roleparam: String? = Roleparam.REQ_PARTICIPANT.param,
-        @ColumnInfo(name = COLUMN_ATTENDEE_PARTSTATPARAM)       var partstatparam: String? = null,
-        @ColumnInfo(name = COLUMN_ATTENDEE_RSVPPARAM)           var rsvpparam: String? = null,
-        @ColumnInfo(name = COLUMN_ATTENDEE_DELTOPARAM)          var deltoparam: String? = null,
-        @ColumnInfo(name = COLUMN_ATTENDEE_DELFROMPARAM)        var delfromparam: String? = null,
-        @ColumnInfo(name = COLUMN_ATTENDEE_SENTBYPARAM)         var sentbyparam: String? = null,
-        @ColumnInfo(name = COLUMN_ATTENDEE_CNPARAM)             var cnparam: String? = null,
-        @ColumnInfo(name = COLUMN_ATTENDEE_DIRPARAM)            var dirparam: String? = null,
-        @ColumnInfo(name = COLUMN_ATTENDEE_LANGUAGEPARAM)       var languageparam: String? = null,
-        @ColumnInfo(name = COLUMN_ATTENDEE_OTHERPARAM)          var otherparam: String? = null
+        @ColumnInfo(name = COLUMN_ATTENDEE_CUTYPE)         var cutype: String? = Cutype.INDIVIDUAL.param,
+        @ColumnInfo(name = COLUMN_ATTENDEE_MEMBER)         var member: String? = null,
+        @ColumnInfo(name = COLUMN_ATTENDEE_ROLE)           var role: String? = Role.REQ_PARTICIPANT.param,
+        @ColumnInfo(name = COLUMN_ATTENDEE_PARTSTAT)       var partstat: String? = null,
+        @ColumnInfo(name = COLUMN_ATTENDEE_RSVP)           var rsvp: Boolean? = null,
+        @ColumnInfo(name = COLUMN_ATTENDEE_DELEGATEDTO)    var delegatedto: String? = null,
+        @ColumnInfo(name = COLUMN_ATTENDEE_DELEGATEDFROM)  var delegatedfrom: String? = null,
+        @ColumnInfo(name = COLUMN_ATTENDEE_SENTBY)         var sentby: String? = null,
+        @ColumnInfo(name = COLUMN_ATTENDEE_CN)             var cn: String? = null,
+        @ColumnInfo(name = COLUMN_ATTENDEE_DIR)            var dir: String? = null,
+        @ColumnInfo(name = COLUMN_ATTENDEE_LANGUAGE)       var language: String? = null,
+        @ColumnInfo(name = COLUMN_ATTENDEE_OTHER)          var other: String? = null
 
 ): Parcelable
 
@@ -105,42 +180,42 @@ data class Attendee (
 
 
 
-                if (values?.containsKey(COLUMN_ATTENDEE_CUTYPEPARAM) == true && values.getAsString(COLUMN_ATTENDEE_CUTYPEPARAM).isNotBlank()) {
-                        this.cutypeparam = values.getAsString(COLUMN_ATTENDEE_CUTYPEPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_CUTYPE) == true && values.getAsString(COLUMN_ATTENDEE_CUTYPE).isNotBlank()) {
+                        this.cutype = values.getAsString(COLUMN_ATTENDEE_CUTYPE)
                 }
-                if (values?.containsKey(COLUMN_ATTENDEE_MEMBERPARAM) == true && values.getAsString(COLUMN_ATTENDEE_MEMBERPARAM).isNotBlank()) {
-                        this.memberparam = values.getAsString(COLUMN_ATTENDEE_MEMBERPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_MEMBER) == true && values.getAsString(COLUMN_ATTENDEE_MEMBER).isNotBlank()) {
+                        this.member = values.getAsString(COLUMN_ATTENDEE_MEMBER)
                 }
 
-                if (values?.containsKey(COLUMN_ATTENDEE_ROLEPARAM) == true && values.getAsString(COLUMN_ATTENDEE_ROLEPARAM).isNotBlank()) {
-                        this.roleparam = values.getAsString(COLUMN_ATTENDEE_ROLEPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_ROLE) == true && values.getAsString(COLUMN_ATTENDEE_ROLE).isNotBlank()) {
+                        this.role = values.getAsString(COLUMN_ATTENDEE_ROLE)
                 }
-                if (values?.containsKey(COLUMN_ATTENDEE_PARTSTATPARAM) == true && values.getAsString(COLUMN_ATTENDEE_PARTSTATPARAM).isNotBlank()) {
-                        this.partstatparam = values.getAsString(COLUMN_ATTENDEE_PARTSTATPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_PARTSTAT) == true && values.getAsString(COLUMN_ATTENDEE_PARTSTAT).isNotBlank()) {
+                        this.partstat = values.getAsString(COLUMN_ATTENDEE_PARTSTAT)
                 }
-                if (values?.containsKey(COLUMN_ATTENDEE_RSVPPARAM) == true && values.getAsString(COLUMN_ATTENDEE_RSVPPARAM).isNotBlank()) {
-                        this.rsvpparam = values.getAsString(COLUMN_ATTENDEE_RSVPPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_RSVP) == true && values.getAsBoolean(COLUMN_ATTENDEE_RSVP) != null) {
+                        this.rsvp = values.getAsBoolean(COLUMN_ATTENDEE_RSVP)
                 }
-                if (values?.containsKey(COLUMN_ATTENDEE_DELTOPARAM) == true && values.getAsString(COLUMN_ATTENDEE_DELTOPARAM).isNotBlank()) {
-                        this.deltoparam = values.getAsString(COLUMN_ATTENDEE_DELTOPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_DELEGATEDTO) == true && values.getAsString(COLUMN_ATTENDEE_DELEGATEDTO).isNotBlank()) {
+                        this.delegatedto = values.getAsString(COLUMN_ATTENDEE_DELEGATEDTO)
                 }
-                if (values?.containsKey(COLUMN_ATTENDEE_DELFROMPARAM) == true && values.getAsString(COLUMN_ATTENDEE_DELFROMPARAM).isNotBlank()) {
-                        this.delfromparam = values.getAsString(COLUMN_ATTENDEE_DELFROMPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_DELEGATEDFROM) == true && values.getAsString(COLUMN_ATTENDEE_DELEGATEDFROM).isNotBlank()) {
+                        this.delegatedfrom = values.getAsString(COLUMN_ATTENDEE_DELEGATEDFROM)
                 }
-                if (values?.containsKey(COLUMN_ATTENDEE_SENTBYPARAM) == true && values.getAsString(COLUMN_ATTENDEE_SENTBYPARAM).isNotBlank()) {
-                        this.sentbyparam = values.getAsString(COLUMN_ATTENDEE_SENTBYPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_SENTBY) == true && values.getAsString(COLUMN_ATTENDEE_SENTBY).isNotBlank()) {
+                        this.sentby = values.getAsString(COLUMN_ATTENDEE_SENTBY)
                 }
-                if (values?.containsKey(COLUMN_ATTENDEE_CNPARAM) == true && values.getAsString(COLUMN_ATTENDEE_CNPARAM).isNotBlank()) {
-                        this.cnparam = values.getAsString(COLUMN_ATTENDEE_CNPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_CN) == true && values.getAsString(COLUMN_ATTENDEE_CN).isNotBlank()) {
+                        this.cn = values.getAsString(COLUMN_ATTENDEE_CN)
                 }
-                if (values?.containsKey(COLUMN_ATTENDEE_DIRPARAM) == true && values.getAsString(COLUMN_ATTENDEE_DIRPARAM).isNotBlank()) {
-                        this.dirparam = values.getAsString(COLUMN_ATTENDEE_DIRPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_DIR) == true && values.getAsString(COLUMN_ATTENDEE_DIR).isNotBlank()) {
+                        this.dir = values.getAsString(COLUMN_ATTENDEE_DIR)
                 }
-                if (values?.containsKey(COLUMN_ATTENDEE_LANGUAGEPARAM) == true && values.getAsString(COLUMN_ATTENDEE_LANGUAGEPARAM).isNotBlank()) {
-                        this.languageparam = values.getAsString(COLUMN_ATTENDEE_LANGUAGEPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_LANGUAGE) == true && values.getAsString(COLUMN_ATTENDEE_LANGUAGE).isNotBlank()) {
+                        this.language = values.getAsString(COLUMN_ATTENDEE_LANGUAGE)
                 }
-                if (values?.containsKey(COLUMN_ATTENDEE_OTHERPARAM) == true && values.getAsString(COLUMN_ATTENDEE_OTHERPARAM).isNotBlank()) {
-                        this.otherparam = values.getAsString(COLUMN_ATTENDEE_OTHERPARAM)
+                if (values?.containsKey(COLUMN_ATTENDEE_OTHER) == true && values.getAsString(COLUMN_ATTENDEE_OTHER).isNotBlank()) {
+                        this.other = values.getAsString(COLUMN_ATTENDEE_OTHER)
                 }
 
                 return this
@@ -149,7 +224,7 @@ data class Attendee (
 
 }
 
-enum class Cutypeparam (val id: Int, val param: String?) {
+enum class Cutype (val id: Int, val param: String?) {
 
         INDIVIDUAL(0,"INDIVIDUAL"),
         GROUP(1,"GROUP"),
@@ -158,7 +233,7 @@ enum class Cutypeparam (val id: Int, val param: String?) {
         UNKNOWN(4,"UNKNOWN")
 }
 
-enum class Roleparam (val id: Int, val param: String?, val stringResource: Int, val icon: Int) {
+enum class Role (val id: Int, val param: String?, val stringResource: Int, val icon: Int) {
         CHAIR (0,"CHAIR", R.string.attendee_role_chair, R.drawable.ic_attendee_chair),            //Indicates chair of the calendar entity
         REQ_PARTICIPANT(1,"REQ-PARTICIPANT", R.string.attendee_role_required_participant, R.drawable.ic_attendee_reqparticipant),  //Indicates a participant whose participation is required
         OPT_PARTICIPANT(2,"OPT-PARTICIPANT", R.string.attendee_role_optional_participant, R.drawable.ic_attendee_optparticipant),  //Indicates a participant whose participation is optional

@@ -10,21 +10,21 @@ class AttendeeTest {
     @Test
     fun getRoleparamById() {
 
-        assertEquals(Roleparam.getRoleparamById(0), "CHAIR")
-        assertEquals(Roleparam.getRoleparamById(3), Roleparam.NON_PARTICIPANT.param)
-        assertEquals(Roleparam.getRoleparamById(Roleparam.REQ_PARTICIPANT.id), Roleparam.REQ_PARTICIPANT.param)
+        assertEquals(Role.getRoleparamById(0), "CHAIR")
+        assertEquals(Role.getRoleparamById(3), Role.NON_PARTICIPANT.param)
+        assertEquals(Role.getRoleparamById(Role.REQ_PARTICIPANT.id), Role.REQ_PARTICIPANT.param)
     }
 
     @Test
     fun getDrawableResourceByParam() {
-        assertEquals(R.string.attendee_role_chair, Roleparam.CHAIR.stringResource)
+        assertEquals(R.string.attendee_role_chair, Role.CHAIR.stringResource)
     }
 
     @Test
     fun checkCutypeparam() {
-        assertEquals(Cutypeparam.INDIVIDUAL.id, 0)
-        assertEquals(Cutypeparam.GROUP.name, "GROUP")
-        assertEquals(Cutypeparam.RESOURCE.name, "RESOURCE")
+        assertEquals(Cutype.INDIVIDUAL.id, 0)
+        assertEquals(Cutype.GROUP.name, "GROUP")
+        assertEquals(Cutype.RESOURCE.name, "RESOURCE")
     }
 
 }

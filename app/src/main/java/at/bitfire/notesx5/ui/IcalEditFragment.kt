@@ -24,7 +24,7 @@ import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Comment
-import at.bitfire.notesx5.database.properties.Roleparam
+import at.bitfire.notesx5.database.properties.Role
 import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -762,11 +762,11 @@ class IcalEditFragment : Fragment(),
             return
 
         var attendeeRoles: Array<String> = arrayOf()
-        Roleparam.values().forEach { attendeeRoles = attendeeRoles.plus(getString(it.stringResource))       }
+        Role.values().forEach { attendeeRoles = attendeeRoles.plus(getString(it.stringResource))       }
 
         val attendeeChip = inflater.inflate(R.layout.fragment_ical_edit_attendees_chip, binding.editAttendeesChipgroup, false) as Chip
         attendeeChip.text = attendee.caladdress
-        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Roleparam.getDrawableResourceByParam(attendee.roleparam), null)
+        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.getDrawableResourceByParam(attendee.role), null)
 
         binding.editAttendeesChipgroup.addView(attendeeChip)
 
@@ -781,8 +781,8 @@ class IcalEditFragment : Fragment(),
                         if (curIndex == -1)
                             icalEditViewModel.attendeeUpdated.add(attendee)                   // add the attendee to the list of updated items if it was not there yet
                         else
-                            icalEditViewModel.attendeeUpdated[curIndex].roleparam = Roleparam.getRoleparamById(which)      // update the roleparam
-                        attendee.roleparam = Roleparam.getRoleparamById(which)
+                            icalEditViewModel.attendeeUpdated[curIndex].role = Role.getRoleparamById(which)      // update the roleparam
+                        attendee.role = Role.getRoleparamById(which)
 
                         when (which) {
                             0 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_chair, null)

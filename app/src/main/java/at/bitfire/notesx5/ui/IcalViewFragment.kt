@@ -15,7 +15,7 @@ import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
-import at.bitfire.notesx5.database.properties.Roleparam
+import at.bitfire.notesx5.database.properties.Role
 import at.bitfire.notesx5.databinding.FragmentIcalViewBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.slider.Slider
@@ -402,7 +402,7 @@ class IcalViewFragment : Fragment() {
 
         val attendeeChip = inflater.inflate(R.layout.fragment_ical_view_attendees_chip, binding.viewAttendeeChipgroup, false) as Chip
         attendeeChip.text = attendee.caladdress
-        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Roleparam.getDrawableResourceByParam(attendee.roleparam), null)
+        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.getDrawableResourceByParam(attendee.role), null)
 
         binding.viewAttendeeChipgroup.addView(attendeeChip)
 

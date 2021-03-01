@@ -71,11 +71,11 @@ class AttendeeAndroidTest {
 
         val attendee = Attendee()
         val conval = ContentValues()
-        val newVal = Cutypeparam.INDIVIDUAL.param
+        val newVal = Cutype.INDIVIDUAL.param
 
-        conval.put(COLUMN_ATTENDEE_CUTYPEPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_CUTYPE, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.cutypeparam = newVal
+        attendee.cutype = newVal
 
         assertEquals(attendee, attendee2)
     }
@@ -88,9 +88,9 @@ class AttendeeAndroidTest {
         val conval = ContentValues()
         val newVal = "https://mycalmembership.com"
 
-        conval.put(COLUMN_ATTENDEE_MEMBERPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_MEMBER, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.memberparam = newVal
+        attendee.member = newVal
 
         assertEquals(attendee, attendee2)
     }
@@ -100,11 +100,11 @@ class AttendeeAndroidTest {
 
         val attendee = Attendee()
         val conval = ContentValues()
-        val newVal = Roleparam.NON_PARTICIPANT.param
+        val newVal = Role.NON_PARTICIPANT.param
 
-        conval.put(COLUMN_ATTENDEE_ROLEPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_ROLE, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.roleparam = newVal
+        attendee.role = newVal
 
         assertEquals(attendee, attendee2)
     }
@@ -117,9 +117,9 @@ class AttendeeAndroidTest {
         val conval = ContentValues()
         val newVal = "ACCEPTED"
 
-        conval.put(COLUMN_ATTENDEE_PARTSTATPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_PARTSTAT, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.partstatparam = newVal
+        attendee.partstat = newVal
 
         assertEquals(attendee, attendee2)
     }
@@ -130,11 +130,11 @@ class AttendeeAndroidTest {
 
         val attendee = Attendee()
         val conval = ContentValues()
-        val newVal = "TRUE"
+        val newVal = true
 
-        conval.put(COLUMN_ATTENDEE_RSVPPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_RSVP, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.rsvpparam = newVal
+        attendee.rsvp = newVal
 
         assertEquals(attendee, attendee2)
     }
@@ -146,9 +146,9 @@ class AttendeeAndroidTest {
         val conval = ContentValues()
         val newVal = "mailto:me@home.com"
 
-        conval.put(COLUMN_ATTENDEE_DELTOPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_DELEGATEDTO, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.deltoparam = newVal
+        attendee.delegatedto = newVal
 
         assertEquals(attendee, attendee2)
     }
@@ -160,9 +160,9 @@ class AttendeeAndroidTest {
         val conval = ContentValues()
         val newVal = "mailto:me@home.com"
 
-        conval.put(COLUMN_ATTENDEE_DELFROMPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_DELEGATEDFROM, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.delfromparam = newVal
+        attendee.delegatedfrom = newVal
 
         assertEquals(attendee, attendee2)
     }
@@ -174,9 +174,9 @@ class AttendeeAndroidTest {
         val conval = ContentValues()
         val newVal = "mailto:me@home.com"
 
-        conval.put(COLUMN_ATTENDEE_SENTBYPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_SENTBY, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.sentbyparam = newVal
+        attendee.sentby = newVal
 
         assertEquals(attendee, attendee2)
     }
@@ -189,9 +189,9 @@ class AttendeeAndroidTest {
         val conval = ContentValues()
         val newVal = "Patrick"
 
-        conval.put(COLUMN_ATTENDEE_CNPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_CN, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.cnparam = newVal
+        attendee.cn = newVal
 
         assertEquals(attendee, attendee2)
     }
@@ -203,9 +203,9 @@ class AttendeeAndroidTest {
         val conval = ContentValues()
         val newVal = "/a/b/c"
 
-        conval.put(COLUMN_ATTENDEE_DIRPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_DIR, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.dirparam = newVal
+        attendee.dir = newVal
 
         assertEquals(attendee, attendee2)
     }
@@ -217,9 +217,9 @@ class AttendeeAndroidTest {
         val conval = ContentValues()
         val newVal = "en"
 
-        conval.put(COLUMN_ATTENDEE_LANGUAGEPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_LANGUAGE, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.languageparam = newVal
+        attendee.language = newVal
 
         assertEquals(attendee, attendee2)
     }
@@ -231,9 +231,9 @@ class AttendeeAndroidTest {
         val conval = ContentValues()
         val newVal = "whatever"
 
-        conval.put(COLUMN_ATTENDEE_OTHERPARAM, newVal)
+        conval.put(COLUMN_ATTENDEE_OTHER, newVal)
         val attendee2 = attendee.applyContentValues(conval)
-        attendee.otherparam = newVal
+        attendee.other = newVal
 
         assertEquals(attendee, attendee2)
     }
