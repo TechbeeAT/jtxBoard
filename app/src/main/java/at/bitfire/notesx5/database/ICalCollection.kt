@@ -7,10 +7,13 @@ import androidx.room.*
 import kotlinx.android.parcel.Parcelize
 
 
-/** The name of the the table.  */
+/** The name of the the table for Collections.
+ * ICalObjects MUST be linked to a collection! */
 const val TABLE_NAME_COLLECTION = "collection"
 
-/** The name of the ID column.  */
+/** The name of the ID column for collections.
+ * This is the unique identifier of a Collection
+ * Type: [Long]*/
 const val COLUMN_COLLECTION_ID = BaseColumns._ID
 
 /** The names of all the other columns  */

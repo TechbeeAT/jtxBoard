@@ -11,7 +11,8 @@ import kotlinx.android.parcel.Parcelize
 
 /** The name of the the table for Relationships (related-to) that are linked to an ICalObject.
  * [https://tools.ietf.org/html/rfc5545#section-3.8.4.5]
- */const val TABLE_NAME_RELATEDTO = "relatedto"
+ */
+const val TABLE_NAME_RELATEDTO = "relatedto"
 
 /** The name of the ID column for the related-to.
  * This is the unique identifier of a Related-to

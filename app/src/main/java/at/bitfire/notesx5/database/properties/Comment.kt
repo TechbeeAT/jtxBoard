@@ -23,7 +23,7 @@ const val COLUMN_COMMENT_ID = BaseColumns._ID
 const val COLUMN_COMMENT_ICALOBJECT_ID = "icalObjectId"
 
 
-/** The names of all the other columns  */
+/* The names of all the other columns  */
 /**
  * Purpose:  This property specifies non-processing information intended to provide a comment to the calendar user.
  * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
