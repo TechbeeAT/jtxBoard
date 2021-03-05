@@ -206,6 +206,12 @@ const val COLUMN_SEQUENCE = "sequence"
  */
 const val COLUMN_COLOR = "color"
 /**
+ * Purpose:  To specify other properties for the ICalObject.
+ * This is especially used for additional attributes relevant for the synchronization
+ * Type: [String]
+ */
+const val COLUMN_OTHER = "other"
+/**
  * Purpose:  This column is the foreign key to the [TABLE_NAME_COLLECTION].
  * Type: [Long]
  */
@@ -282,15 +288,8 @@ data class ICalObject(
         //var rrule: String?,                               //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
 
 
-        //var ianaProperty: String,
-        //var xProperty: String,
-
-        //var vAlarm: String?,
-        //var vTimezone: Long?,
-        //var ianaComponent: String?,
-        //var xComponent: String?
-
         @ColumnInfo(name = COLUMN_COLOR) var color: String? = null,
+        @ColumnInfo(name = COLUMN_OTHER) var other: String? = null,
 
         @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID)    var collectionId: Long? = 1L,
 
@@ -330,6 +329,7 @@ data class ICalObject(
                 }
 
         }
+
 
 
 
@@ -374,12 +374,7 @@ data class ICalObject(
                 if (values?.containsKey(COLUMN_URL) == true && values.getAsString(COLUMN_URL).isNotBlank()) {
                         this.url = values.getAsString(COLUMN_URL)
                 }
-                /*
-                if (values?.containsKey(COLUMN_CONTACT) == true && values.getAsString(COLUMN_CONTACT).isNotBlank()) {
-                        this.contact = values.getAsString(COLUMN_CONTACT)
-                }
 
-                 */
                 if (values?.containsKey(COLUMN_GEO_LAT) == true && values.getAsFloat(COLUMN_GEO_LAT) != null) {
                         this.geoLat = values.getAsFloat(COLUMN_GEO_LAT)
                 }
@@ -428,6 +423,9 @@ data class ICalObject(
                 if (values?.containsKey(COLUMN_COLOR) == true && values.getAsString(COLUMN_COLOR).isNotBlank()) {
                         this.color = values.getAsString(COLUMN_COLOR)
                 }
+                if (values?.containsKey(COLUMN_OTHER) == true && values.getAsString(COLUMN_OTHER).isNotBlank()) {
+                        this.other = values.getAsString(COLUMN_OTHER)
+                }
                 if (values?.containsKey(COLUMN_DIRTY) == true && values.getAsBoolean(COLUMN_DIRTY) != null) {
                         this.dirty = values.getAsBoolean(COLUMN_DIRTY)
                 }
@@ -439,7 +437,12 @@ data class ICalObject(
         }
 }
 
-
+/** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals
+ * The possible values differ for Todos and Journals/Notes
+ * @param [id] is an ID of the entry
+ * @param [param] defines the [StatusTodo] how it is stored in the database, this also corresponds to the value that is used for the ICal format
+ * @param [stringResource] is a reference to the String Resource within NotesX5
+ */
 @Parcelize
 enum class StatusJournal (val id: Int, val param: String, val stringResource: Int): Parcelable {
 
@@ -473,6 +476,12 @@ enum class StatusJournal (val id: Int, val param: String, val stringResource: In
         }
 }
 
+/** This enum class defines the possible values for the attribute [ICalObject.status] for Todos
+ * The possible values differ for Todos and Journals/Notes
+ * @param [id] is an ID of the entry
+ * @param [param] defines the [StatusTodo] how it is stored in the database, this also corresponds to the value that is used for the ICal format
+ * @param [stringResource] is a reference to the String Resource within NotesX5
+ */
 @Parcelize
 enum class StatusTodo (val id: Int, val param: String, val stringResource: Int): Parcelable {
 
@@ -506,6 +515,11 @@ enum class StatusTodo (val id: Int, val param: String, val stringResource: Int):
         }
 }
 
+/** This enum class defines the possible values for the attribute [ICalObject.classification]
+ * @param [id] is an ID of the entry
+ * @param [param] defines the [Classification] how it is stored in the database, this also corresponds to the value that is used for the ICal format
+ * @param [stringResource] is a reference to the String Resource within NotesX5
+ */
 @Parcelize
 enum class Classification (val id: Int, val param: String, val stringResource: Int): Parcelable {
 
@@ -540,6 +554,7 @@ enum class Classification (val id: Int, val param: String, val stringResource: I
 
 }
 
+/** This enum class defines the possible values for the attribute [ICalObject.component]  */
 enum class Component {
         JOURNAL, NOTE, TODO
 }

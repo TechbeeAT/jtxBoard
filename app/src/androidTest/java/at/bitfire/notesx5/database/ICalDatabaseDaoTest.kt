@@ -79,7 +79,7 @@ class ICalDatabaseDaoTest {
 
         val preparedSubNote = ICalObject.createNote("Subnote")
         preparedSubNote.id = database.insertICalObject(preparedSubNote)
-        val preparedRelatedto = Relatedto(icalObjectId = preparedICalObject.id, linkedICalObjectId = preparedSubNote.id, reltypeparam = "Child")
+        val preparedRelatedto = Relatedto(icalObjectId = preparedICalObject.id, linkedICalObjectId = preparedSubNote.id, reltype = "Child")
 
         preparedAttendee.attendeeId = database.insertAttendee(preparedAttendee)
         preparedCategory.categoryId = database.insertCategory(preparedCategory)

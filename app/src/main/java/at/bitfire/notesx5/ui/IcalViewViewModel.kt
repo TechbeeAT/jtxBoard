@@ -6,7 +6,7 @@ import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Relatedto
-import at.bitfire.notesx5.database.properties.Reltypeparam
+import at.bitfire.notesx5.database.properties.Reltype
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.android.synthetic.*
 import kotlinx.coroutines.launch
@@ -148,7 +148,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     fun insertRelatedNote(note: ICalObject) {
         viewModelScope.launch {
             val newNoteId = database.insertICalObject(note)
-            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltypeparam = Reltypeparam.CHILD.name, text = note.uid))
+            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = note.uid))
 
         }
     }

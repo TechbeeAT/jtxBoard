@@ -7,6 +7,7 @@ import androidx.annotation.Nullable
 import androidx.room.*
 import at.bitfire.notesx5.R
 import at.bitfire.notesx5.database.COLUMN_ID
+import at.bitfire.notesx5.database.Classification
 import at.bitfire.notesx5.database.ICalObject
 import kotlinx.android.parcel.Parcelize
 
@@ -225,6 +226,7 @@ data class Attendee (
 
 }
 
+/** This enum class defines the possible values for the attribute [Attendee.cutype]  */
 enum class Cutype (val id: Int, val param: String?) {
 
         INDIVIDUAL(0,"INDIVIDUAL"),
@@ -234,6 +236,13 @@ enum class Cutype (val id: Int, val param: String?) {
         UNKNOWN(4,"UNKNOWN")
 }
 
+/** This enum class defines the possible values for the attribute [Attendee.role]
+ * @param [id] is an ID of the entry
+ * @param [param] defines the [Role] how it is stored in the database, this also corresponds to the value that is used for the ICal format
+ * @param [stringResource] is a reference to the String Resource within NotesX5
+ * @param [icon] is a reference to the Drawable Resource within NotesX5
+
+ */
 enum class Role (val id: Int, val param: String?, val stringResource: Int, val icon: Int) {
         CHAIR (0,"CHAIR", R.string.attendee_role_chair, R.drawable.ic_attendee_chair),            //Indicates chair of the calendar entity
         REQ_PARTICIPANT(1,"REQ-PARTICIPANT", R.string.attendee_role_required_participant, R.drawable.ic_attendee_reqparticipant),  //Indicates a participant whose participation is required
@@ -257,16 +266,6 @@ enum class Role (val id: Int, val param: String?, val stringResource: Int, val i
                         }
                         return R.drawable.ic_attendee_reqparticipant  // default icon
                 }
-/*
-                fun getStringResourceByParam(param: String): Int? {
-                        Classification.values().forEach {
-                                if (it.param == param)
-                                        return it.stringResource
-                        }
-                        return null
-                }
-
- */
         }
 
 }

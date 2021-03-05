@@ -40,7 +40,7 @@ const val COLUMN_RELATEDTO_TEXT = "text"
 /**
  * Purpose:  To specify the type of hierarchical relationship associated
  * with the calendar component specified by the property.
- * The possible relationship types are defined in the enum [Reltypeparam]
+ * The possible relationship types are defined in the enum [Reltype]
  * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.5] and [https://tools.ietf.org/html/rfc5545#section-3.2.15]
  * Type: [String]
  */
@@ -71,7 +71,7 @@ data class Relatedto (
         @ColumnInfo(index = true, name = COLUMN_RELATEDTO_ICALOBJECT_ID)    var icalObjectId: Long = 0L,
         @ColumnInfo(index = true, name = COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) var linkedICalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_RELATEDTO_TEXT)                var text: String? = null,
-        @ColumnInfo(name = COLUMN_RELATEDTO_RELTYPE)        var reltypeparam: String? = null,
+        @ColumnInfo(name = COLUMN_RELATEDTO_RELTYPE)        var reltype: String? = null,
         @ColumnInfo(name = COLUMN_RELATEDTO_OTHER)          var otherparam: String? = null
 ): Parcelable {
         companion object Factory {
@@ -107,7 +107,7 @@ data class Relatedto (
                         this.text = values.getAsString(COLUMN_RELATEDTO_TEXT)
                 }
                 if (values?.containsKey(COLUMN_RELATEDTO_RELTYPE) == true && values.getAsString(COLUMN_RESOURCE_RELTYPE).isNotBlank()) {
-                        this.reltypeparam = values.getAsString(COLUMN_RESOURCE_RELTYPE)
+                        this.reltype = values.getAsString(COLUMN_RESOURCE_RELTYPE)
                 }
                 if (values?.containsKey(COLUMN_RELATEDTO_OTHER) == true && values.getAsString(COLUMN_RESOURCE_OTHER).isNotBlank()) {
                         this.otherparam = values.getAsString(COLUMN_RESOURCE_OTHER)
@@ -117,8 +117,8 @@ data class Relatedto (
         }
 }
 
-
-enum class Reltypeparam {
+/** This enum class defines the possible values for the attribute [Relatedto.reltype]  */
+enum class Reltype {
         PARENT, CHILD, SIBLING
 }
 
