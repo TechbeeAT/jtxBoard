@@ -278,6 +278,30 @@ class SyncContentProviderContract {
          */
         const val COLUMN_DELETED = "deleted"
 
+
+
+
+        /** This enum class defines the possible values for the attribute status of an [X5ICalObject] for Journals/Notes */
+        enum class StatusJournal {
+            DRAFT, FINAL, CANCELLED
+        }
+
+        /** This enum class defines the possible values for the attribute status of an [X5ICalObject] for Todos */
+        enum class StatusTodo {
+            `NEEDS-ACTION`, COMPLETED, `IN-PROCESS`, CANCELLED
+        }
+
+        /** This enum class defines the possible values for the attribute classification of an [X5ICalObject]  */
+        enum class Classification {
+            PUBLIC, PRIVATE, CONFIDENTIAL
+        }
+
+        /** This enum class defines the possible values for the attribute component of an [X5ICalObject]  */
+        enum class Component {
+            JOURNAL, NOTE, TODO
+        }
+
+
     }
 
 
@@ -302,7 +326,7 @@ class SyncContentProviderContract {
         const val COLUMN_ATTENDEE_ICALOBJECT_ID = "icalObjectId"
 
 
-/* The names of all the other columns  */
+        /* The names of all the other columns  */
 
         /**
          * Purpose:  This value type is used to identify properties that contain a calendar user address (in this case of the attendee).
@@ -399,6 +423,19 @@ class SyncContentProviderContract {
          * Type: [String]
          */
         const val COLUMN_ATTENDEE_OTHER = "other"
+
+
+
+        /** This enum class defines the possible values for the attribute Cutype of an [X5Attendee]  */
+        enum class Cutype  {
+            INDIVIDUAL, GROUP, RESOURCE, ROOM, UNKNOWN
+        }
+
+        /** This enum class defines the possible values for the attribute Role of an [X5Attendee]  */
+        enum class Role {
+            CHAIR, `REQ-PARTICIPANT`, `OPT-PARTICIPANT`, `NON-PARTICIPANT`
+        }
+
 
     }
 
@@ -636,7 +673,7 @@ class SyncContentProviderContract {
         const val COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = "linkedICalObjectId"
 
 
-/* The names of all the other columns  */
+        /* The names of all the other columns  */
         /**
          * Purpose:  This property is used to represent a relationship or reference between one calendar component and another.
          * The text gives the UID of the related calendar entry.
@@ -661,6 +698,11 @@ class SyncContentProviderContract {
          */
         const val COLUMN_RELATEDTO_OTHER = "other"
 
+
+        /** This enum class defines the possible values for the attribute Reltype of an [X5Relatedto]  */
+        enum class Reltype {
+            PARENT, CHILD, SIBLING
+        }
 
     }
 
@@ -791,43 +833,6 @@ class SyncContentProviderContract {
          */
         const val COLUMN_COLLECTION_READONLY = "readonly"
 
-    }
-
-
-    /** This enum class defines the possible values for the attribute status of an [X5ICalObject] for Journals/Notes */
-    enum class StatusJournal {
-        DRAFT, FINAL, CANCELLED
-    }
-
-    /** This enum class defines the possible values for the attribute status of an [X5ICalObject] for Todos */
-    enum class StatusTodo {
-        `NEEDS-ACTION`, COMPLETED, `IN-PROCESS`, CANCELLED
-    }
-
-    /** This enum class defines the possible values for the attribute classification of an [X5ICalObject]  */
-    enum class Classification {
-        PUBLIC, PRIVATE, CONFIDENTIAL
-    }
-
-    /** This enum class defines the possible values for the attribute component of an [X5ICalObject]  */
-    enum class Component {
-        JOURNAL, NOTE, TODO
-    }
-
-
-    /** This enum class defines the possible values for the attribute Cutype of an [X5Attendee]  */
-    enum class Cutype  {
-        INDIVIDUAL, GROUP, RESOURCE, ROOM, UNKNOWN
-    }
-
-    /** This enum class defines the possible values for the attribute Role of an [X5Attendee]  */
-    enum class Role {
-        CHAIR, `REQ-PARTICIPANT`, `OPT-PARTICIPANT`, `NON-PARTICIPANT`
-    }
-
-    /** This enum class defines the possible values for the attribute Reltype of an [X5Relatedto]  */
-    enum class Reltype {
-        PARENT, CHILD, SIBLING
     }
 
 }
