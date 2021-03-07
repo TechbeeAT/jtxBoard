@@ -13,7 +13,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
-import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
+import at.bitfire.notesx5.database.relations.ICal4ListWithRelatedto
+import at.bitfire.notesx5.database.views.ICal4List
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
 import kotlinx.android.synthetic.main.fragment_ical_list_item_subtask.view.*
@@ -23,8 +24,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
         RecyclerView.Adapter<IcalListAdapter.VJournalItemHolder>() {
 
     lateinit var parent: ViewGroup
-    var vJournalList: LiveData<List<ICalEntityWithCategory>> = model.vJournalList
-    var allSubtasks: LiveData<List<ICalObject?>> = model.allSubtasks
+    private var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = model.iCal4List
+    private var allSubtasks: LiveData<List<ICal4List?>> = model.allSubtasks
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VJournalItemHolder {
 
@@ -39,16 +40,16 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
         //Log.println(Log.INFO, "getItemCount", vJournalListCount.value.toString())
         //Log.println(Log.INFO, "getItemCount", vJournalList.value?.size!!.toString())
 
-        return if (vJournalList.value == null || vJournalList.value?.size == null)
+        return if (iCal4List.value == null || iCal4List.value?.size == null)
             0
         else
-            vJournalList.value?.size!!
+            iCal4List.value?.size!!
     }
 
     override fun onBindViewHolder(holder: VJournalItemHolder, position: Int) {
 
 
-        if (vJournalList.value?.size == 0)    // only continue if there are items in the list
+        if (iCal4List.value?.size == 0)    // only continue if there are items in the list
             return
 
         val dtstartVisibility = if (model.searchComponent == "JOURNAL") View.VISIBLE else View.GONE
@@ -79,53 +80,51 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
         holder.subtasksLinearLayout.visibility = subtasksVisibility
 
 
-        val iCalItem = vJournalList.value?.get(position)
+        val iCal4ListItem = iCal4List.value?.get(position)
 
-        if (iCalItem != null ) {
+        if (iCal4ListItem != null ) {
 
-            holder.summary.text = iCalItem.property.summary
-            if(iCalItem.property.description.isNullOrEmpty())
+            holder.summary.text = iCal4ListItem.property.summary
+            if(iCal4ListItem.property.description.isNullOrEmpty())
                 holder.description.visibility = View.GONE
             else {
-                holder.description.text = iCalItem.property.description
+                holder.description.text = iCal4ListItem.property.description
                 holder.description.visibility = View.VISIBLE
             }
 
-            if (iCalItem.category?.isNotEmpty() == true) {
-                val categoriesList = mutableListOf<String>()
-                iCalItem.category!!.forEach { categoriesList.add(it.text)  }
-                holder.categories.text = categoriesList.joinToString(separator = ", ")
+            if (iCal4ListItem.property.categories?.isNotEmpty() == true) {
+                holder.categories.text = iCal4ListItem.property.categories
                 holder.categories.visibility = View.VISIBLE
             } else {
                 holder.categories.visibility = View.GONE
                 //holder.categoriesIcon.visibility = View.GONE
             }
 
-            if(iCalItem.property.component == "JOURNAL") {
-                holder.dtstartDay.text = convertLongToDayString(iCalItem.property.dtstart)
-                holder.dtstartMonth.text = convertLongToMonthString(iCalItem.property.dtstart)
-                holder.dtstartYear.text = convertLongToYearString(iCalItem.property.dtstart)
+            if(iCal4ListItem.property.component == "JOURNAL") {
+                holder.dtstartDay.text = convertLongToDayString(iCal4ListItem.property.dtstart)
+                holder.dtstartMonth.text = convertLongToMonthString(iCal4ListItem.property.dtstart)
+                holder.dtstartYear.text = convertLongToYearString(iCal4ListItem.property.dtstart)
 
-                if (iCalItem.property.dtstartTimezone == "ALLDAY") {
+                if (iCal4ListItem.property.dtstartTimezone == "ALLDAY") {
                     holder.dtstartTime.visibility = View.GONE
                 } else {
-                    holder.dtstartTime.text = convertLongToTimeString(iCalItem.property.dtstart)
+                    holder.dtstartTime.text = convertLongToTimeString(iCal4ListItem.property.dtstart)
                     holder.dtstartTime.visibility = View.VISIBLE
                 }
 
-            } else if(iCalItem.property.component == "TODO") {
+            } else if(iCal4ListItem.property.component == "TODO") {
 
-                holder.progressSlider.value = iCalItem.property.percent?.toFloat()?:0F
-                holder.progressCheckbox.isChecked = iCalItem.property.percent == 100
-                if(iCalItem.relatedto.isNullOrEmpty() )     // TODO: also tasks with a subnote would be shown here, they should also be excluded!
+                holder.progressSlider.value = iCal4ListItem.property.percent?.toFloat()?:0F
+                holder.progressCheckbox.isChecked = iCal4ListItem.property.percent == 100
+                if(iCal4ListItem.relatedto.isNullOrEmpty() )     // TODO: also tasks with a subnote would be shown here, they should also be excluded!
                     holder.expandSubtasks.visibility = View.INVISIBLE
                 else
                     holder.expandSubtasks.visibility = View.VISIBLE
                 holder.subtasksLinearLayout.visibility = View.VISIBLE
 
-                holder.progressPercent.text = context.getString(R.string.list_progress_percent, iCalItem.property.percent?.toString()
+                holder.progressPercent.text = context.getString(R.string.list_progress_percent, iCal4ListItem.property.percent?.toString()
                         ?: "0")
-                if(iCalItem.property.priority in 1..9) {           // show priority only if it was set and != 0 (no priority)
+                if(iCal4ListItem.property.priority in 1..9) {           // show priority only if it was set and != 0 (no priority)
                     holder.priorityIcon.visibility = View.VISIBLE
                     holder.priority.visibility = View.VISIBLE
                 } else  {
@@ -133,58 +132,58 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                     holder.priority.visibility = View.GONE
                 }
 
-                if (iCalItem.property.due == null)
+                if (iCal4ListItem.property.due == null)
                     holder.due.visibility = View.GONE
                 else {
                     holder.due.visibility = View.VISIBLE
-                    var millisLeft = iCalItem.property.due!! - System.currentTimeMillis()
-                    if(iCalItem.property.dueTimezone == "ALLDAY")
+                    var millisLeft = iCal4ListItem.property.due!! - System.currentTimeMillis()
+                    if(iCal4ListItem.property.dueTimezone == "ALLDAY")
                         millisLeft = millisLeft + TimeUnit.DAYS.toMillis(1) - 1        // if it's due on the same day, then add 1 day minus 1 millisecond to consider the end of the day
                     val daysLeft = TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
                     val hoursLeft = TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
 
                     when {
                         millisLeft < 0L -> holder.due.text = context.getString(R.string.list_due_overdue)
-                        millisLeft >= 0L && daysLeft == 0L && iCalItem.property.dueTimezone == "ALLDAY" -> holder.due.text = context.getString(R.string.list_due_today)
-                        millisLeft >= 0L && daysLeft == 1L && iCalItem.property.dueTimezone == "ALLDAY" -> holder.due.text = context.getString(R.string.list_due_tomorrow)
-                        millisLeft >= 0L && daysLeft <= 1L && iCalItem.property.dueTimezone != "ALLDAY" -> holder.due.text = context.getString(R.string.list_due_inXhours, hoursLeft)
+                        millisLeft >= 0L && daysLeft == 0L && iCal4ListItem.property.dueTimezone == "ALLDAY" -> holder.due.text = context.getString(R.string.list_due_today)
+                        millisLeft >= 0L && daysLeft == 1L && iCal4ListItem.property.dueTimezone == "ALLDAY" -> holder.due.text = context.getString(R.string.list_due_tomorrow)
+                        millisLeft >= 0L && daysLeft <= 1L && iCal4ListItem.property.dueTimezone != "ALLDAY" -> holder.due.text = context.getString(R.string.list_due_inXhours, hoursLeft)
                         millisLeft >= 0L && daysLeft >= 2L -> holder.due.text = context.getString(R.string.list_due_inXdays, daysLeft)
                         else -> holder.due.visibility = View.GONE      //should not be possible
                     }
                 }
 
-                if(iCalItem.property.percent == 100)
+                if(iCal4ListItem.property.percent == 100)
                     holder.progressCheckbox.isActivated = true
             }
 
 
-            if (iCalItem.property.component == Component.TODO.name && iCalItem.property.status in StatusTodo.paramValues())
-                holder.status.text  = context.getString(StatusTodo.getStringResourceByParam(iCalItem.property.status)!!)
-            else if ((iCalItem.property.component == Component.JOURNAL.name || iCalItem.property.component == Component.NOTE.name) && iCalItem.property.status in StatusJournal.paramValues())
-                holder.status.text  = context.getString(StatusJournal.getStringResourceByParam(iCalItem.property.status)!!)
+            if (iCal4ListItem.property.component == Component.TODO.name && iCal4ListItem.property.status in StatusTodo.paramValues())
+                holder.status.text  = context.getString(StatusTodo.getStringResourceByParam(iCal4ListItem.property.status)!!)
+            else if ((iCal4ListItem.property.component == Component.JOURNAL.name || iCal4ListItem.property.component == Component.NOTE.name) && iCal4ListItem.property.status in StatusJournal.paramValues())
+                holder.status.text  = context.getString(StatusJournal.getStringResourceByParam(iCal4ListItem.property.status)!!)
             else
-                holder.status.text = iCalItem.property.status       // if unsupported just show whatever is there
+                holder.status.text = iCal4ListItem.property.status       // if unsupported just show whatever is there
 
-            if (iCalItem.property.classification in Classification.paramValues())
-                holder.classification.text = context.getString(Classification.getStringResourceByParam(iCalItem.property.classification)!!)
+            if (iCal4ListItem.property.classification in Classification.paramValues())
+                holder.classification.text = context.getString(Classification.getStringResourceByParam(iCal4ListItem.property.classification)!!)
             else
-                holder.classification.text = iCalItem.property.classification      // if unsupported just show whatever is there
+                holder.classification.text = iCal4ListItem.property.classification      // if unsupported just show whatever is there
 
             val priorityArray = context.resources.getStringArray(R.array.priority)
-            if(iCalItem.property.priority != null && iCalItem.property.priority in 0..9)
-                holder.priority.text = priorityArray[iCalItem.property.priority!!]
+            if(iCal4ListItem.property.priority != null && iCal4ListItem.property.priority in 0..9)
+                holder.priority.text = priorityArray[iCal4ListItem.property.priority!!]
 
 
             // turn to item view when the card is clicked
             holder.listItemCardView.setOnClickListener {
                 it.findNavController().navigate(
-                        IcalListFragmentDirections.actionIcalListFragmentToIcalViewFragment().setItem2show(iCalItem.property.id))
+                        IcalListFragmentDirections.actionIcalListFragmentToIcalViewFragment().setItem2show(iCal4ListItem.property.id))
             }
 
-            var resetProgress = iCalItem.property.percent ?: 0
+            var resetProgress = iCal4ListItem.property.percent ?: 0
 
             // take care to update the progress in the DB when the progress is changed
-            if(iCalItem.property.component == "TODO") {
+            if(iCal4ListItem.property.component == "TODO") {
                 holder.progressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
                     override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
@@ -192,7 +191,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
                     override fun onStopTrackingTouch(slider: Slider) {
 
-                        model.updateProgress(iCalItem.property, holder.progressSlider.value.toInt())
+                        model.updateProgress(iCal4ListItem.property.id, holder.progressSlider.value.toInt())
 
                         if (holder.progressSlider.value.toInt() != 100)
                             resetProgress = holder.progressSlider.value.toInt()
@@ -201,13 +200,13 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
 
 
-                holder.progressCheckbox.setOnCheckedChangeListener { button, checked ->
+                holder.progressCheckbox.setOnCheckedChangeListener { _, checked ->
                     if (checked)
                         holder.progressSlider.value = 100F
                      else
                         holder.progressSlider.value = resetProgress.toFloat()
 
-                    model.updateProgress(iCalItem.property, holder.progressSlider.value.toInt())
+                    model.updateProgress(iCal4ListItem.property.id, holder.progressSlider.value.toInt())
 
                 }
 
@@ -217,7 +216,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                 holder.expandSubtasks.setOnClickListener {
 
                     if(!toggleSubtasksExpanded) {
-                        val itemSubtasks = allSubtasks.value?.filter { sub -> iCalItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id  } != null }
+                        val itemSubtasks = allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id  } != null }
                         itemSubtasks?.forEach {
                             addSubtasksView(it, holder)
                         }
@@ -235,7 +234,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                 holder.progressLabel.setOnClickListener {
 
                     if(!toggleSubtasksExpanded) {
-                        val itemSubtasks = allSubtasks.value?.filter { sub -> iCalItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id  } != null }
+                        val itemSubtasks = allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id  } != null }
                         itemSubtasks?.forEach {
                             addSubtasksView(it, holder)
                         }
@@ -264,41 +263,40 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
     class VJournalItemHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
-        var listItemCardView = itemView.findViewById<MaterialCardView>(R.id.list_item_card_view)
+        var listItemCardView: MaterialCardView = itemView.findViewById(R.id.list_item_card_view)
 
-        var summary = itemView.findViewById<TextView>(R.id.list_item_summary)
-        var description = itemView.findViewById<TextView>(R.id.list_item_description)
+        var summary: TextView = itemView.findViewById(R.id.list_item_summary)
+        var description: TextView = itemView.findViewById(R.id.list_item_description)
 
-        var categories: TextView = itemView.findViewById<TextView>(R.id.list_item_categories)
-        var status: TextView = itemView.findViewById<TextView>(R.id.list_item_status)
-        var statusIcon: ImageView = itemView.findViewById<ImageView>(R.id.list_item_status_icon)
-        var classification: TextView = itemView.findViewById<TextView>(R.id.list_item_classification)
-        var classificationIcon: ImageView = itemView.findViewById<ImageView>(R.id.list_item_classification_icon)
-        var priority: TextView = itemView.findViewById<TextView>(R.id.list_item_priority)
-        var priorityIcon: ImageView = itemView.findViewById<ImageView>(R.id.list_item_priority_icon)
+        var categories: TextView = itemView.findViewById(R.id.list_item_categories)
+        var status: TextView = itemView.findViewById(R.id.list_item_status)
+        var statusIcon: ImageView = itemView.findViewById(R.id.list_item_status_icon)
+        var classification: TextView = itemView.findViewById(R.id.list_item_classification)
+        var classificationIcon: ImageView = itemView.findViewById(R.id.list_item_classification_icon)
+        var priority: TextView = itemView.findViewById(R.id.list_item_priority)
+        var priorityIcon: ImageView = itemView.findViewById(R.id.list_item_priority_icon)
 
-        var progressLabel: TextView = itemView.findViewById<TextView>(R.id.list_item_progress_label)
-        var progressSlider: Slider = itemView.findViewById<Slider>(R.id.list_item_progress_slider)
-        var progressPercent: TextView = itemView.findViewById<TextView>(R.id.list_item_progress_percent)
-        var progressCheckbox: CheckBox = itemView.findViewById<CheckBox>(R.id.list_item_progress_checkbox)
+        var progressLabel: TextView = itemView.findViewById(R.id.list_item_progress_label)
+        var progressSlider: Slider = itemView.findViewById(R.id.list_item_progress_slider)
+        var progressPercent: TextView = itemView.findViewById(R.id.list_item_progress_percent)
+        var progressCheckbox: CheckBox = itemView.findViewById(R.id.list_item_progress_checkbox)
 
-        var due: TextView = itemView.findViewById<TextView>(R.id.list_item_due)
+        var due: TextView = itemView.findViewById(R.id.list_item_due)
 
-        var dtstartDay: TextView = itemView.findViewById<TextView>(R.id.list_item_dtstart_day)
-        var dtstartMonth: TextView = itemView.findViewById<TextView>(R.id.list_item_dtstart_month)
-        var dtstartYear: TextView = itemView.findViewById<TextView>(R.id.list_item_dtstart_year)
-        var dtstartTime: TextView = itemView.findViewById<TextView>(R.id.list_item_dtstart_time)
+        var dtstartDay: TextView = itemView.findViewById(R.id.list_item_dtstart_day)
+        var dtstartMonth: TextView = itemView.findViewById(R.id.list_item_dtstart_month)
+        var dtstartYear: TextView = itemView.findViewById(R.id.list_item_dtstart_year)
+        var dtstartTime: TextView = itemView.findViewById(R.id.list_item_dtstart_time)
 
-        var expandSubtasks: ImageView = itemView.findViewById<ImageView>(R.id.list_item_expand)
-        var subtasksLinearLayout: LinearLayout = itemView.findViewById<LinearLayout>(R.id.list_item_subtasks_linearlayout)
+        var expandSubtasks: ImageView = itemView.findViewById(R.id.list_item_expand)
+        var subtasksLinearLayout: LinearLayout = itemView.findViewById(R.id.list_item_subtasks_linearlayout)
 
     }
 
 
 
 
-
-    private fun addSubtasksView(subtask: ICalObject?, holder: VJournalItemHolder) {
+    private fun addSubtasksView(subtask: ICal4List?, holder: VJournalItemHolder) {
 
         if (subtask == null)
             return
@@ -308,9 +306,12 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
         val subtaskView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_ical_list_item_subtask, parent, false)
 
         var subtaskSummary = subtask.summary
-        val subtaskCount = model.subtasksCountList.value?.find { subtask.id == it.icalobjectId}?.count
-        if (subtaskCount != null)
-            subtaskSummary += " (+${subtaskCount})"
+        //val subtaskCount = model.subtasksCountList.value?.find { subtask.id == it.icalobjectId}?.count
+        /*if (subtaskCount != null)
+            subtaskSummary += " (+${subtaskCount})" */
+        if (subtask.subtasksCount > 0)
+            subtaskSummary += " (+${subtask.subtasksCount})"
+
         subtaskView.list_item_subtask_textview.text = subtaskSummary
         subtaskView.list_item_subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
         subtaskView.list_item_subtask_progress_percent.text = if(subtask.percent?.toFloat() != null) subtask.percent!!.toString() else "0"
@@ -332,7 +333,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                 else
                     subtaskView.list_item_subtask_progress_checkbox.isChecked = true
 
-                model.updateProgress(subtask, subtaskView.list_item_subtask_progress_slider.value.toInt())
+                model.updateProgress(subtask.id, subtaskView.list_item_subtask_progress_slider.value.toInt())
             }
         })
 
@@ -347,10 +348,10 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                 subtaskView.list_item_subtask_progress_slider.value = resetProgress.toFloat()
                 subtaskView.list_item_subtask_progress_checkbox.isChecked = false
             }
-            model.updateProgress(subtask, subtaskView.list_item_subtask_progress_slider.value.toInt())
+            model.updateProgress(subtask.id, subtaskView.list_item_subtask_progress_slider.value.toInt())
         }
 
-        subtaskView.setOnClickListener { view ->
+        subtaskView.setOnClickListener {
             holder.listItemCardView.findNavController().navigate(
                     IcalListFragmentDirections.actionIcalListFragmentToIcalViewFragment().setItem2show(subtask.id))
         }

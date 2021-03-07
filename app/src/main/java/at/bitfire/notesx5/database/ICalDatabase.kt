@@ -22,6 +22,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import at.bitfire.notesx5.database.properties.*
+import at.bitfire.notesx5.database.views.ICal4List
 
 
 /**
@@ -38,7 +39,10 @@ import at.bitfire.notesx5.database.properties.*
     ICalObject::class,
     Organizer::class,
     Relatedto::class,
-    Resource::class], version = 61, exportSchema = false)
+    Resource::class],
+        views = [ICal4List::class],
+        version = 65,
+        exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {
 

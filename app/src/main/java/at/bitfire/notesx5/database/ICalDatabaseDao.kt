@@ -22,7 +22,9 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.relations.ICalEntity
-import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
+import at.bitfire.notesx5.database.relations.ICal4ListWithRelatedto
+import at.bitfire.notesx5.database.views.ICal4List
+import at.bitfire.notesx5.database.views.VIEW_NAME_ICAL4LIST
 
 
 /**
@@ -69,8 +71,8 @@ SELECTs (global selects without parameter)
      * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
      */
     @Transaction
-    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE icalobject.component = 'TODO'")
-    fun getAllSubtasks(): LiveData<List<ICalObject?>>
+    @Query("SELECT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'TODO'")
+    fun getAllSubtasks(): LiveData<List<ICal4List?>>
 
     /**
      * Retrieve an list the number of Subtasks of an [ICalObject] as a [SubtaskCount].
@@ -453,15 +455,22 @@ DELETEs by Object
     @Update
     suspend fun update(icalObject: ICalObject)
 
+    @Transaction
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_PERCENT = :progress, $COLUMN_STATUS = :status, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
+    suspend fun updateProgress(id: Long, progress: Int, status: String, lastModified: Long)
 
 
+/*
     @Transaction
     @RawQuery
     fun getIcalEntity(query: SupportSQLiteQuery): LiveData<List<ICalEntity>>
 
+
+ */
+
     @Transaction
-    @RawQuery
-    fun getIcalObjectWithCategory(query: SupportSQLiteQuery): LiveData<List<ICalEntityWithCategory>>
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class])
+    fun getIcalObjectWithRelatedto(query: SupportSQLiteQuery): LiveData<List<ICal4ListWithRelatedto>>
 
 
     @Transaction

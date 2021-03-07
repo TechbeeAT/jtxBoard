@@ -34,6 +34,11 @@ import kotlinx.android.synthetic.main.fragment_ical_edit_subtask.view.*
 import java.text.DateFormat
 import java.util.*
 
+const val PICKER_ORIGIN_DTSTART = 0
+const val PICKER_ORIGIN_DUE = 1
+const val PICKER_ORIGIN_COMPLETED = 2
+
+
 
 class IcalEditFragment : Fragment(),
         TimePickerDialog.OnTimeSetListener,
@@ -51,9 +56,6 @@ class IcalEditFragment : Fragment(),
 
     private var displayedCategoryChips = mutableListOf<Category>()
 
-    private val originDtstart = 0
-    private val originDue = 1
-    private val originCompleted = 2
 
     private var datetimepickerOrigin: Int? = null
 
@@ -350,42 +352,42 @@ class IcalEditFragment : Fragment(),
 
 
         binding.editDtstartTime.setOnClickListener {
-            datetimepickerOrigin = originDtstart
+            datetimepickerOrigin = PICKER_ORIGIN_DTSTART
             showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
         }
 
         binding.editDtstartYear.setOnClickListener {
-            datetimepickerOrigin = originDtstart
+            datetimepickerOrigin = PICKER_ORIGIN_DTSTART
             showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
         }
 
         binding.editDtstartMonth.setOnClickListener {
-            datetimepickerOrigin = originDtstart
+            datetimepickerOrigin = PICKER_ORIGIN_DTSTART
             showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
         }
 
         binding.editDtstartDay.setOnClickListener {
-            datetimepickerOrigin = originDtstart
+            datetimepickerOrigin = PICKER_ORIGIN_DTSTART
             showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
         }
 
         binding.editDueDate.setEndIconOnClickListener {
-            datetimepickerOrigin = originDue
+            datetimepickerOrigin = PICKER_ORIGIN_DUE
             showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.due)
         }
 
         binding.editDueTime.setEndIconOnClickListener {
-            datetimepickerOrigin = originDue
+            datetimepickerOrigin = PICKER_ORIGIN_DUE
             showTimepicker(icalEditViewModel.iCalObjectUpdated.value?.due)
         }
 
         binding.editCompletedDate.setEndIconOnClickListener {
-            datetimepickerOrigin = originCompleted
+            datetimepickerOrigin = PICKER_ORIGIN_COMPLETED
             showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.completed)
         }
 
         binding.editCompletedTime.setEndIconOnClickListener {
-            datetimepickerOrigin = originCompleted
+            datetimepickerOrigin = PICKER_ORIGIN_COMPLETED
             showTimepicker(icalEditViewModel.iCalObjectUpdated.value?.completed)
         }
 
@@ -610,7 +612,7 @@ class IcalEditFragment : Fragment(),
 
         // depending on the origin of the click the date/time is processed for the dtstart-field (Journal) or for the due-field (Todos) or for the completed-field (Todos)
         when (datetimepickerOrigin) {
-            originDtstart -> {
+            PICKER_ORIGIN_DTSTART -> {
 
                 val c = Calendar.getInstance()
                 c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
@@ -629,7 +631,7 @@ class IcalEditFragment : Fragment(),
                     showTimepicker(icalEditViewModel.iCalObjectUpdated.value!!.dtstart)
 
             }
-            originDue -> {
+            PICKER_ORIGIN_DUE -> {
 
                 val c = Calendar.getInstance()
                 c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.due
@@ -643,7 +645,7 @@ class IcalEditFragment : Fragment(),
                 binding.editDueDateEdittext.setText(dateString)
                 icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
             }
-            originCompleted -> {
+            PICKER_ORIGIN_COMPLETED -> {
 
                 val c = Calendar.getInstance()
                 c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.completed
@@ -665,7 +667,7 @@ class IcalEditFragment : Fragment(),
 
         // depending on the component the date/time is processed for the dtstart-field (Journal) or for the due-field (Todos)
         when (datetimepickerOrigin) {
-            originDtstart -> {
+            PICKER_ORIGIN_DTSTART -> {
 
                 val c = Calendar.getInstance()
                 c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
@@ -676,7 +678,7 @@ class IcalEditFragment : Fragment(),
 
                 icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
             }
-            originDue -> {
+            PICKER_ORIGIN_DUE -> {
 
                 val c = Calendar.getInstance()
                 c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.due
@@ -689,7 +691,7 @@ class IcalEditFragment : Fragment(),
                 icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
             }
 
-            originCompleted -> {
+            PICKER_ORIGIN_COMPLETED -> {
 
                 val c = Calendar.getInstance()
                 c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.completed

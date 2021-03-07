@@ -116,10 +116,10 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
-        icalListViewModel.vJournalList.observe(viewLifecycleOwner, {
+        icalListViewModel.iCal4List.observe(viewLifecycleOwner, {
             icalListAdapter!!.notifyDataSetChanged()
 
-            if (arguments.item2focus != 0L && icalListViewModel.vJournalList.value?.size!! > 0) {
+            if (arguments.item2focus != 0L && icalListViewModel.iCal4List.value?.size!! > 0) {
                 //Log.println(Log.INFO, "vJournalListFragment", arguments.vJournalItemId.toString())
                 icalListViewModel.setFocusItem(arguments.item2focus)
             }
@@ -143,9 +143,6 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // This observer is needed in order to make sure that the Subtasks are retrieved!
         icalListViewModel.allSubtasks.observe(viewLifecycleOwner, {})
-
-        icalListViewModel.subtasksCountList.observe(viewLifecycleOwner, { })
-
 
 
         // Observe the focus item to scroll automatically to the right position (newly updated or inserted item)
@@ -267,8 +264,8 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 val dpd = DatePickerDialog(activity!!, this, year, month, day)
 
 
-                val startItem = icalListViewModel.vJournalList.value?.lastOrNull()
-                val endItem = icalListViewModel.vJournalList.value?.firstOrNull()
+                val startItem = icalListViewModel.iCal4List.value?.lastOrNull()
+                val endItem = icalListViewModel.iCal4List.value?.firstOrNull()
 
 
                 if (startItem?.property?.dtstart != null && endItem?.property?.dtend != null) {
@@ -341,7 +338,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         selectedDate.set(Calendar.DAY_OF_MONTH, day)
 
         // find the item with the same date
-        var foundItem = icalListViewModel.vJournalList.value?.find { item ->
+        var foundItem = icalListViewModel.iCal4List.value?.find { item ->
             val cItem = Calendar.getInstance()
             cItem.timeInMillis = item.property.dtstart?: 0L
 
@@ -352,7 +349,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         // if no exact match was found, find the closest match
         if (foundItem == null) {
             var datediff = 0L
-            icalListViewModel.vJournalList.value?.forEach { item ->
+            icalListViewModel.iCal4List.value?.forEach { item ->
                 val cItem = Calendar.getInstance()
                 cItem.timeInMillis = item.property.dtstart?: 0L
 

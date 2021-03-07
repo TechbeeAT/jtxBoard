@@ -6,7 +6,9 @@ import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
-import at.bitfire.notesx5.database.relations.ICalEntityWithCategory
+import at.bitfire.notesx5.database.relations.ICal4ListWithRelatedto
+import at.bitfire.notesx5.database.views.ICal4List
+import at.bitfire.notesx5.database.views.VIEW_NAME_ICAL4LIST
 
 import kotlinx.coroutines.launch
 
@@ -27,18 +29,14 @@ class IcalListViewModel(
 
 
     private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
-    var vJournalList: LiveData<List<ICalEntityWithCategory>> = Transformations.switchMap(listQuery) {
-        database.getIcalObjectWithCategory(it)
+    var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQuery) {
+        database.getIcalObjectWithRelatedto(it)
     }
 
 
     // TODO maybe retrieve all subtasks only when subtasks are needed!
-    val allSubtasks: LiveData<List<ICalObject?>> = database.getAllSubtasks()
+    val allSubtasks: LiveData<List<ICal4List?>> = database.getAllSubtasks()
 
-    lateinit var subtasksCountList: LiveData<List<SubtaskCount>>
-
-
-    //var vJournalFocusItem: MutableLiveData<vJournalItem> = MutableLiveData<vJournalItem>().apply { vJournalItem()  }
     var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
 
 
@@ -52,13 +50,7 @@ class IcalListViewModel(
                 insertTestData()
 
             }
-
         }
-
-        viewModelScope.launch {
-            subtasksCountList = database.getSubtasksCount()
-        }
-
     }
 
 
@@ -130,12 +122,12 @@ class IcalListViewModel(
 
     fun getFocusItemPosition(): Int {
 
-        val focusItem = vJournalList.value?.find {
+        val focusItem = iCal4List.value?.find {
             focusItemId.value == it.property.id
         }
 
-        return if (vJournalList.value != null && focusItem != null)
-            vJournalList.value!!.indexOf(focusItem)
+        return if (iCal4List.value != null && focusItem != null)
+            iCal4List.value!!.indexOf(focusItem)
         else
             -1
     }
@@ -149,16 +141,16 @@ class IcalListViewModel(
         val args = arrayListOf<String>()
 
 // Beginning of query string
-        var queryString = "SELECT DISTINCT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT " +
-                "LEFT JOIN $TABLE_NAME_CATEGORY ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_CATEGORY.${COLUMN_CATEGORY_ICALOBJECT_ID} " +
-                "LEFT JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
+        var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST " +
+                "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
+                "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
         //     "LEFT JOIN vattendees ON icalobject._id = vattendees.icalObjectId " +
         //     "LEFT JOIN vcomments ON icalobject._id = vcomments.icalObjectId " +
         //     "LEFT JOIN vorganizer ON icalobject._id = vorganizer.icalObjectId " +
         //     "LEFT JOIN vRelatedto ON icalobject._id = vRelatedto.icalObjectId "
 
         // First query parameter Component must always be present!
-        queryString += "WHERE component = ? "
+        queryString += "WHERE $COLUMN_COMPONENT = ? "
         args.add(searchComponent)
 
         // Query for the given text search from the action bar
@@ -170,7 +162,7 @@ class IcalListViewModel(
 
         // Query for the passed filter criteria from VJournalFilterFragment
         if (searchCategories.size > 0) {
-            queryString += "AND category.text IN ("
+            queryString += "AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT IN ("
             searchCategories.forEach {
                 queryString += "?,"
                 args.add(it)
@@ -225,7 +217,7 @@ class IcalListViewModel(
         }
 
         // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
-        queryString += "AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
+        queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
 
         queryString += "ORDER BY $COLUMN_DTSTART DESC, $COLUMN_CREATED DESC "
 
@@ -251,23 +243,17 @@ class IcalListViewModel(
     }
 
 
-    fun updateProgress(item: ICalObject, newPercent: Int) {
+    fun updateProgress(itemId: Long, newPercent: Int) {
 
-        val item2update = item
-        item2update.percent = newPercent
-        item2update.sequence++
-        item2update.lastModified = System.currentTimeMillis()
-
-        when (item2update.percent) {
-            100 -> item2update.status = StatusTodo.COMPLETED.param
-            in 1..99 -> item2update.status = StatusTodo.INPROCESS.param
-            0 -> item2update.status = StatusTodo.NEEDSACTION.param
+        val newStatus = when (newPercent) {
+            100 -> StatusTodo.COMPLETED.param
+            in 1..99 -> StatusTodo.INPROCESS.param
+            0 -> StatusTodo.NEEDSACTION.param
+            else -> StatusTodo.NEEDSACTION.param      // should never happen!
         }
 
         viewModelScope.launch() {
-            database.update(item2update)
+               database.updateProgress(itemId, newPercent, newStatus, System.currentTimeMillis())
         }
     }
-
-
 }
