@@ -28,18 +28,12 @@ class ICalDatabaseDaoTest {
 
 
     private lateinit var database: ICalDatabaseDao
-    private lateinit var db: ICalDatabase
+    //private lateinit var db: ICalDatabase
 
     @Before
     fun createDb() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        // Using an in-memory database because the information stored here disappears when the
-        // process is killed.
-        db = Room.inMemoryDatabaseBuilder(context, ICalDatabase::class.java)
-                // Allowing main thread queries, just for testing.
-                .allowMainThreadQueries()
-                .build()
-        database = db.iCalDatabaseDao
+        database = ICalDatabase.getInMemoryDB(context).iCalDatabaseDao
 
         database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests"))
     }
@@ -99,7 +93,7 @@ class ICalDatabaseDaoTest {
 
     @After
     fun closeDb() {
-        db.close()
+        //db.close()
     }
 
 
