@@ -82,7 +82,6 @@ class IcalListViewModel(
                 "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
                 "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
         //     "LEFT JOIN vattendees ON icalobject._id = vattendees.icalObjectId " +
-        //     "LEFT JOIN vcomments ON icalobject._id = vcomments.icalObjectId " +
         //     "LEFT JOIN vorganizer ON icalobject._id = vorganizer.icalObjectId " +
         //     "LEFT JOIN vRelatedto ON icalobject._id = vRelatedto.icalObjectId "
 
@@ -92,7 +91,7 @@ class IcalListViewModel(
 
         // Query for the given text search from the action bar
         if (searchText.isNotEmpty() && searchText.length >= 2) {
-            queryString += "AND ($COLUMN_SUMMARY LIKE ? OR $COLUMN_DESCRIPTION LIKE ?) "
+            queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) "
             args.add(searchText)
             args.add(searchText)
         }
