@@ -43,7 +43,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
         "(SELECT group_concat($TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT, \", \") FROM $TABLE_NAME_CATEGORY WHERE main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID GROUP BY $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
         "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = \'TODO\' AND sub_icalobject.$COLUMN_ID = main_icalobject.$COLUMN_ID ) as subtasksCount " +
         "FROM $TABLE_NAME_ICALOBJECT main_icalobject LEFT JOIN $TABLE_NAME_CATEGORY ON main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
-        "WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_DELETED = 0")           // locally deleted entries are already excluded in the view!
+        "WHERE main_icalobject.$COLUMN_DELETED = 0")           // locally deleted entries are already excluded in the view!
 data class ICal4List (
 
         @ColumnInfo(index = true, name = COLUMN_ID)  var id: Long,

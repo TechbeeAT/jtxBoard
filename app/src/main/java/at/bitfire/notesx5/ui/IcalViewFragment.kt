@@ -238,15 +238,15 @@ class IcalViewFragment : Fragment() {
             override fun onStopTrackingTouch(slider: Slider) {
                 if (binding.viewProgressSlider.value.toInt() < 100)
                     resetProgress = binding.viewProgressSlider.value.toInt()
-                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, binding.viewProgressSlider.value.toInt())
+                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, binding.viewProgressSlider.value.toInt())
             }
         })
 
         binding.viewProgressCheckbox.setOnCheckedChangeListener { _, checked ->
             if (checked) {
-                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, 100)
+                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, 100)
             } else {
-                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, resetProgress)
+                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, resetProgress)
             }
         }
 
@@ -449,7 +449,7 @@ class IcalViewFragment : Fragment() {
             override fun onStopTrackingTouch(slider: Slider) {
                 if (subtaskView.view_subtask_progress_slider.value < 100)
                     resetProgress = subtaskView.view_subtask_progress_slider.value.toInt()
-                icalViewViewModel.updateProgress(subtask, subtaskView.view_subtask_progress_slider.value.toInt())
+                icalViewViewModel.updateProgress(subtask.id, subtaskView.view_subtask_progress_slider.value.toInt())
 
 
             }
@@ -457,9 +457,9 @@ class IcalViewFragment : Fragment() {
 
         subtaskView.view_subtask_progress_checkbox.setOnCheckedChangeListener { button, checked ->
             if (checked) {
-                icalViewViewModel.updateProgress(subtask, 100)
+                icalViewViewModel.updateProgress(subtask.id, 100)
             } else {
-                icalViewViewModel.updateProgress(subtask, resetProgress)
+                icalViewViewModel.updateProgress(subtask.id, resetProgress)
             }
 
         }
