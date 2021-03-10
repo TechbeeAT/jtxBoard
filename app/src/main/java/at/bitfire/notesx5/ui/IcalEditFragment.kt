@@ -599,8 +599,13 @@ class IcalEditFragment : Fragment(),
 
 
         binding.editUrlEdit.editText?.setOnFocusChangeListener { view, hasFocus ->
-            if ((!binding.editUrlEdit.editText?.text.isNullOrEmpty() && !isValidURL(binding.editUrlEdit.editText?.text.toString())))
+            if ((binding.editUrlEdit.editText?.text?.isNotBlank() == true && !isValidURL(binding.editUrlEdit.editText?.text.toString())))
                 icalEditViewModel.urlError.value = "Please enter a valid URL"
+        }
+
+        binding.editAttendeesAdd.editText?.setOnFocusChangeListener { view, hasFocus ->
+            if ((binding.editAttendeesAdd.editText?.text?.isNotBlank() == true && !isValidEmail(binding.editAttendeesAdd.editText?.text.toString())))
+                icalEditViewModel.attendeesError.value = "Please enter a valid E-Mail address"
         }
 
 

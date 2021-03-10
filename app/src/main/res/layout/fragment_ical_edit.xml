@@ -821,7 +821,7 @@
             app:endIconContentDescription="Add attendee"
             app:endIconDrawable="@drawable/ic_attendee_add"
             app:endIconMode="custom"
-            app:error="@{model.urlError}"
+            app:error="@{model.attendeesError}"
             app:errorEnabled="true"
             app:helperTextEnabled="true"
             app:helperText="Add an attendee"

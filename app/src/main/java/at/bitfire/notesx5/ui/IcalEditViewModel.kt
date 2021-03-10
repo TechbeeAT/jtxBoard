@@ -330,6 +330,10 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         urlError.value = null
     }
 
+    fun clearAttendeeError(s: Editable) {
+        attendeesError.value = null
+    }
+
     /*
     fun clearAttendeesError(s: Editable) {
         attendeesError.value = null
