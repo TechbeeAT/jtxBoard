@@ -27,6 +27,8 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var dtstartFormatted: LiveData<String>
     lateinit var createdFormatted: LiveData<String>
     lateinit var lastModifiedFormatted: LiveData<String>
+    lateinit var completedFormatted: LiveData<String>
+    lateinit var startedFormatted: LiveData<String>
 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
@@ -39,6 +41,9 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var progressVisible: LiveData<Boolean>
     lateinit var priorityVisible: LiveData<Boolean>
     lateinit var subtasksVisible: LiveData<Boolean>
+    lateinit var completedVisible: LiveData<Boolean>
+    lateinit var startedVisible: LiveData<Boolean>
+
 
     lateinit var subtasksCountList: LiveData<List<SubtaskCount>>
 
@@ -105,6 +110,30 @@ class IcalViewViewModel(private val icalItemId: Long,
                 item!!.property.let { Date(it.lastModified).toString() }
             }
 
+            completedFormatted = Transformations.map(icalEntity) { item ->
+                if (item?.property?.completed != null) {
+                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.property.completed!!))
+                    val formattedTime = if (item.property.completedTimezone != "ALLDAY")
+                        DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.completed!!))
+                    else ""
+                    return@map "Completed: $formattedDate $formattedTime"
+                } else
+                    return@map ""
+            }
+
+            startedFormatted = Transformations.map(icalEntity) { item ->
+                if (item?.property?.dtstart != null) {
+                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.property.dtstart!!))
+                    val formattedTime = if (item.property.dtstartTimezone != "ALLDAY")
+                        DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.dtstart!!))
+                    else ""
+                    return@map "Started: $formattedDate $formattedTime"
+                } else
+                    return@map ""
+            }
+
+
+
             urlVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.property?.url.isNullOrBlank()      // true if url is NOT null or empty
             }
@@ -127,10 +156,16 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map !item?.comment.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
             progressVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.percent != null && item.property.component == "TODO"     // true if percent (progress) is NOT null
+                return@map item?.property?.percent != null && item.property.component == Component.TODO.name     // true if percent (progress) is NOT null
             }
             priorityVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.priority != null      // true if priority is NOT null
+            }
+            completedVisible = Transformations.map(icalEntity) { item ->
+                return@map item?.property?.completed != null
+            }
+            startedVisible = Transformations.map(icalEntity) { item ->
+                return@map (item?.property?.dtstart != null && item?.property?.component == Component.TODO.name)
             }
         }
 

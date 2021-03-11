@@ -222,8 +222,31 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
 
+            <TextView
+                android:id="@+id/view_started"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@{model.startedFormatted}"
+                android:textStyle="bold|italic"
+                android:visibility="@{model.startedVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_progress_slider"
+                tools:text="Started: February 5, 2021" />
 
 
+            <TextView
+                android:id="@+id/view_completed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@{model.completedFormatted}"
+                android:textStyle="bold|italic"
+                android:visibility="@{model.completedVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_started"
+                tools:text="Completed: March 1, 2021" />
 
             <ImageView
                 android:id="@+id/view_subtasks_icon"
@@ -246,10 +269,9 @@
                 android:text="@string/view_subtasks_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/view_subtasks_icon"
-                app:layout_constraintTop_toBottomOf="@id/view_progress_slider"
                 android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                />
+                app:layout_constraintStart_toEndOf="@+id/view_subtasks_icon"
+                app:layout_constraintTop_toBottomOf="@+id/view_completed" />
 
 
             <LinearLayout
