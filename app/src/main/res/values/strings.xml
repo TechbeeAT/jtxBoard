@@ -122,6 +122,8 @@
     <string name="edit_due_time_hint">Due time</string>
     <string name="edit_completed_date_hint">Completed date</string>
     <string name="edit_completed_time_hint">Completed time</string>
+    <string name="edit_started_date_hint">Started date</string>
+    <string name="edit_started_time_hint">Started time</string>
     <string name="edit_add_time_switch">Add time</string>
     <string name="edit_progress">Progress</string>
     <string name="edit_subtasks_header">Subtasks</string>

@@ -64,6 +64,9 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var duetimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var completeddateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var completedtimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var starteddateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var startedtimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+
 
 
     var duedateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
@@ -94,12 +97,27 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
             return@map null
     }
 
+    var starteddateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
+        if(it.dtstart != null)
+            return@map DateFormat.getDateInstance().format(it.dtstart)
+        else
+            return@map null
+    }
+
+    var startedtimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
+        if(it.dtstart != null)
+            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(it.dtstart)
+        else
+            return@map null
+    }
+
 
 
     var showAll: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
     var allDayChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.dtstartTimezone == "ALLDAY")
     var addDueTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == "TODO" && iCalEntity.property.dueTimezone != "ALLDAY")
     var addCompletedTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == "TODO" && iCalEntity.property.completedTimezone != "ALLDAY")
+    var addStartedTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == "TODO" && iCalEntity.property.dtstartTimezone != "ALLDAY")
 
 
 
@@ -145,6 +163,8 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         duetimeVisible.postValue(iCalEntity.property.component == "TODO" && iCalEntity.property.dueTimezone != "ALLDAY")
         completeddateVisible.postValue(iCalEntity.property.component == "TODO" && showAll.value == true)
         completedtimeVisible.postValue(iCalEntity.property.component == "TODO" && showAll.value == true && iCalEntity.property.completedTimezone != "ALLDAY")
+        starteddateVisible.postValue(iCalEntity.property.component == "TODO" && showAll.value == true)
+        startedtimeVisible.postValue(iCalEntity.property.component == "TODO" && showAll.value == true && iCalEntity.property.dtstartTimezone != "ALLDAY")
 
 
     }

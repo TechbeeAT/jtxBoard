@@ -37,6 +37,7 @@ import java.util.*
 const val PICKER_ORIGIN_DTSTART = 0
 const val PICKER_ORIGIN_DUE = 1
 const val PICKER_ORIGIN_COMPLETED = 2
+const val PICKER_ORIGIN_STARTED = 3
 
 
 
@@ -284,6 +285,30 @@ class IcalEditFragment : Fragment(),
             icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
         }
 
+        icalEditViewModel.addStartedTimeChecked.observe(viewLifecycleOwner) {
+
+            if (icalEditViewModel.iCalObjectUpdated.value == null)     // don't do anything if the object was not initialized yet
+                return@observe
+
+            if (!it) {
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = "ALLDAY"
+
+                // make sure that the time gets reset to 0
+                val c = Calendar.getInstance()
+                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis()
+                c.set(Calendar.HOUR_OF_DAY, 0)
+                c.set(Calendar.MINUTE, 0)
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+                binding.editStartedTimeEdittext.text?.clear()
+                binding.editStartedtimezoneSpinner.setSelection(0)
+
+            } else {
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ""
+            }
+
+            icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
+        }
+
 
         icalEditViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
@@ -389,6 +414,16 @@ class IcalEditFragment : Fragment(),
         binding.editCompletedTime.setEndIconOnClickListener {
             datetimepickerOrigin = PICKER_ORIGIN_COMPLETED
             showTimepicker(icalEditViewModel.iCalObjectUpdated.value?.completed)
+        }
+
+        binding.editStartedDate.setEndIconOnClickListener {
+            datetimepickerOrigin = PICKER_ORIGIN_STARTED
+            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
+        }
+
+        binding.editStartedTime.setEndIconOnClickListener {
+            datetimepickerOrigin = PICKER_ORIGIN_STARTED
+            showTimepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
         }
 
 
@@ -664,6 +699,20 @@ class IcalEditFragment : Fragment(),
                 binding.editCompletedDateEdittext.setText(dateString)
                 icalEditViewModel.iCalObjectUpdated.value!!.completed = c.timeInMillis
             }
+            PICKER_ORIGIN_STARTED -> {
+
+                val c = Calendar.getInstance()
+                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart
+                        ?: System.currentTimeMillis()
+
+                c.set(Calendar.YEAR, year)
+                c.set(Calendar.MONTH, month)
+                c.set(Calendar.DAY_OF_MONTH, day)
+
+                val dateString = DateFormat.getDateInstance().format(c.time)
+                binding.editStartedDateEdittext.setText(dateString)
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+            }
         }
     }
 
@@ -707,6 +756,19 @@ class IcalEditFragment : Fragment(),
                 val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.time)
                 binding.editCompletedTimeEdittext.setText(timeString)
                 icalEditViewModel.iCalObjectUpdated.value!!.completed = c.timeInMillis
+            }
+
+            PICKER_ORIGIN_STARTED -> {
+
+                val c = Calendar.getInstance()
+                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart
+                        ?: System.currentTimeMillis()
+                c.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                c.set(Calendar.MINUTE, minute)
+
+                val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.time)
+                binding.editStartedTimeEdittext.setText(timeString)
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
             }
 
         }

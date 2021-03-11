@@ -225,7 +225,7 @@
                 android:layout_height="wrap_content"
                 android:enabled="false"
                 android:inputType="date"
-                android:text="@{model.duedateFormated}"/>
+                android:text="@{model.duedateFormated}" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -518,11 +518,113 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_completed_date"
+            android:id="@+id/edit_started_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="@string/edit_started_date_hint"
+            android:visibility="@{model.starteddateVisible ? View.VISIBLE : View.GONE}"
+            app:endIconContentDescription="Set started date"
+            app:endIconDrawable="@drawable/ic_vjournal_date"
+            app:endIconMode="custom"
+            app:helperText="Set started date"
+            app:helperTextEnabled="true"
+            app:layout_constraintEnd_toStartOf="@id/edit_started_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_show_all_switch">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_started_date_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="date"
+                android:text="@{model.starteddateFormated}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_started_time"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="@string/edit_started_time_hint"
+            android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
+            app:endIconContentDescription="Set started time"
+            app:endIconDrawable="@drawable/ic_vjournal_time"
+            app:endIconMode="custom"
+            app:helperText="Set started time"
+            app:helperTextEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/edit_started_date"
+            app:layout_constraintTop_toTopOf="@+id/edit_started_date">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_started_time_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="time"
+                android:text="@{model.startedtimeFormated}"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <ImageView
+            android:id="@+id/edit_startedtimezone_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_startedtimezone_spinner"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_startedtimezone_spinner"
+            app:srcCompat="@drawable/ic_timezone"
+            tools:ignore="ContentDescription" />
+
+
+        <Spinner
+            android:id="@+id/edit_startedtimezone_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:entries="@{model.possibleTimezones}"
+            android:spinnerMode="dialog"
+            android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toStartOf="@id/edit_started_addtime_switch"
+            app:layout_constraintStart_toEndOf="@id/edit_startedtimezone_icon"
+            app:layout_constraintTop_toBottomOf="@+id/edit_started_date" />
+
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/edit_started_addtime_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:checked="@={model.addStartedTimeChecked}"
+            android:text="@string/edit_add_time_switch"
+            android:visibility="@{model.starteddateVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_startedtimezone_spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_startedtimezone_spinner"
+            app:switchPadding="8dp" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_completed_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_completed_date_hint"
             android:visibility="@{model.completeddateVisible ? View.VISIBLE : View.GONE}"
@@ -533,7 +635,7 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toStartOf="@id/edit_completed_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_show_all_switch">
+            app:layout_constraintTop_toBottomOf="@id/edit_startedtimezone_spinner">
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -542,7 +644,7 @@
                 android:layout_height="wrap_content"
                 android:enabled="false"
                 android:inputType="date"
-                android:text="@{model.completeddateFormated}"/>
+                android:text="@{model.completeddateFormated}" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
