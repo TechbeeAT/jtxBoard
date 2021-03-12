@@ -93,6 +93,15 @@ SELECTs (global selects without parameter)
     @Query("SELECT count(*) FROM $TABLE_NAME_ICALOBJECT")
     fun getCount(): Int
 
+    /**
+     * Retrieve an [ICalObject] by Id asynchronously (suspend)
+     *
+     * @param id The id of the [ICalObject] in the DB
+     * @return the [ICalObject] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
+    suspend fun getICalObjectById(id: Long): ICalObject?
+
 
 
 /*

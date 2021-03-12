@@ -190,17 +190,10 @@ class IcalViewViewModel(private val icalItemId: Long,
 
 
 
-    fun updateProgress(itemId: Long, newPercent: Int) {
-
-        val newStatus = when (newPercent) {
-            100 -> StatusTodo.COMPLETED.param
-            in 1..99 -> StatusTodo.INPROCESS.param
-            0 -> StatusTodo.NEEDSACTION.param
-            else -> StatusTodo.NEEDSACTION.param      // should never happen!
-        }
+    fun updateProgress(item: ICalObject, newPercent: Int) {
 
         viewModelScope.launch() {
-            database.updateProgress(itemId, newPercent, newStatus, System.currentTimeMillis())
+            database.update(item.setUpdatedProgress(newPercent))
         }
     }
 }

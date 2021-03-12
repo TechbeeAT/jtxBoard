@@ -2,6 +2,7 @@ package at.bitfire.notesx5.ui
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*
@@ -181,15 +182,12 @@ class IcalListViewModel(
 
     fun updateProgress(itemId: Long, newPercent: Int) {
 
-        val newStatus = when (newPercent) {
-            100 -> StatusTodo.COMPLETED.param
-            in 1..99 -> StatusTodo.INPROCESS.param
-            0 -> StatusTodo.NEEDSACTION.param
-            else -> StatusTodo.NEEDSACTION.param      // should never happen!
-        }
-
         viewModelScope.launch() {
-               database.updateProgress(itemId, newPercent, newStatus, System.currentTimeMillis())
+            val currentItem = database.getICalObjectById(itemId)?.setUpdatedProgress(newPercent)
+            if(currentItem != null) {
+                database.update(currentItem)
+                //Log.println(Log.INFO, "DB-Update current item", "Update currentItem done")
+            }
         }
     }
 }

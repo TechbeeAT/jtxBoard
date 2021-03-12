@@ -254,7 +254,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
         //TODO: Check the impact of this setting!
         // Trying out if this solves the weird behaviour that sometimes fields in the cardview are just missing
         // Scrolling is actually not so smooth, but it looks like the weird behaviour is not there anymore...
-        //holder.setIsRecyclable(false)
+        holder.setIsRecyclable(false)
 
     }
 

@@ -435,7 +435,35 @@ data class ICalObject(
 
                 return this
         }
-}
+
+
+        fun setUpdatedProgress(newPercent: Int):ICalObject {
+
+                if (percent == newPercent)
+                        return this
+
+                percent = newPercent
+                status = when (newPercent) {
+                        100 -> StatusTodo.COMPLETED.param
+                        in 1..99 -> StatusTodo.INPROCESS.param
+                        0 -> StatusTodo.NEEDSACTION.param
+                        else -> StatusTodo.NEEDSACTION.param      // should never happen!
+                }
+                lastModified = System.currentTimeMillis()
+                if(dtstart == null && percent != null && percent!! > 0)
+                        dtstart = System.currentTimeMillis()
+                if(dtend == null && percent != null && percent!! == 100)
+                        dtend = System.currentTimeMillis()
+                if(completed == null && percent != null && percent!! == 100)
+                        completed = System.currentTimeMillis()
+                sequence++
+                dirty = true
+
+                return this
+        }
+
+
+        }
 
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals
  * The possible values differ for Todos and Journals/Notes
