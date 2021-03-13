@@ -210,8 +210,15 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
                 }
 
+                if(iCal4ListItem.property.component == Component.TODO.name) {
+                    val itemSubtasks = allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id  } != null }
+                    itemSubtasks?.forEach {
+                        addSubtasksView(it, holder)
+                    }
+                }
 
-                var toggleSubtasksExpanded = false
+
+                var toggleSubtasksExpanded = true
 
                 holder.expandSubtasks.setOnClickListener {
 
@@ -329,9 +336,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
             override fun onStopTrackingTouch(slider: Slider) {
                 if (subtaskView.list_item_subtask_progress_slider.value < 100)
-                    resetProgress = subtaskView.list_item_subtask_progress_slider.value.toInt()
-                else
-                    subtaskView.list_item_subtask_progress_checkbox.isChecked = true
+                    resetProgress = subtask.percent?:0
 
                 model.updateProgress(subtask.id, subtaskView.list_item_subtask_progress_slider.value.toInt())
             }
@@ -339,15 +344,12 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
 
         subtaskView.list_item_subtask_progress_checkbox.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                subtaskView.list_item_subtask_progress_percent.text = 100.toString()
+
+            if (checked)
                 subtaskView.list_item_subtask_progress_slider.value = 100F
-                subtaskView.list_item_subtask_progress_checkbox.isChecked = true
-            } else {
-                subtaskView.list_item_subtask_progress_percent.text = resetProgress.toString()
+            else
                 subtaskView.list_item_subtask_progress_slider.value = resetProgress.toFloat()
-                subtaskView.list_item_subtask_progress_checkbox.isChecked = false
-            }
+
             model.updateProgress(subtask.id, subtaskView.list_item_subtask_progress_slider.value.toInt())
         }
 
