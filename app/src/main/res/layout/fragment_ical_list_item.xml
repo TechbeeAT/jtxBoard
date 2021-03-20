@@ -18,6 +18,19 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
+        <ImageView
+            android:id="@+id/list_item_colorbar"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/square_box"
+            tools:tint="#BC0D0D"        />
+
         <TextView
             android:id="@+id/list_item_dtstart_day"
             android:layout_width="80dp"
@@ -26,7 +39,7 @@
             android:textSize="36sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/list_item_summary"
             tools:text="31" />
 
         <TextView
@@ -69,13 +82,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/list_item_due"
             app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_colorbar"
             tools:text="Summary ... Lorem ipsum dolor sit amet" />
 
         <TextView
@@ -120,11 +134,11 @@
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            tools:text="100 %"
             android:textAlignment="viewEnd"
             app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_slider"
             app:layout_constraintEnd_toStartOf="@+id/list_item_progress_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider" />
+            app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider"
+            tools:text="100 %" />
 
         <CheckBox
             android:id="@+id/list_item_progress_checkbox"
@@ -133,7 +147,6 @@
             app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_slider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider" />
-
 
 
         <LinearLayout
@@ -148,8 +161,7 @@
             android:showDividers="middle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_progress_slider"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/list_item_progress_slider">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -258,11 +270,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            tools:text="Due in 365 days"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/list_item_summary" />
+            app:layout_constraintTop_toTopOf="@+id/list_item_summary"
+            tools:text="Due in 365 days" />
 
         <ImageView
             android:id="@+id/list_item_expand"

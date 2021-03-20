@@ -854,7 +854,7 @@
             <AutoCompleteTextView
                 android:id="@+id/edit_categories_add_autocomplete"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:ems="10"
                 android:singleLine="false"
                 android:imeOptions="actionDone"
@@ -935,7 +935,7 @@
             <AutoCompleteTextView
                 android:id="@+id/edit_attendees_add_autocomplete"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:afterTextChanged="@{model::clearUrlError}"
                 android:ems="10"
                 android:imeOptions="actionDone"

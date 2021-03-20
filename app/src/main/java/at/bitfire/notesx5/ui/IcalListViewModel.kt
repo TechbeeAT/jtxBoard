@@ -2,7 +2,6 @@ package at.bitfire.notesx5.ui
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*

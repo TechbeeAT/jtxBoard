@@ -1,6 +1,8 @@
 package at.bitfire.notesx5.ui
 
 import android.content.Context
+import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +20,7 @@ import at.bitfire.notesx5.database.views.ICal4List
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
 import kotlinx.android.synthetic.main.fragment_ical_list_item_subtask.view.*
+import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit
 
 class IcalListAdapter(var context: Context, var model: IcalListViewModel):
@@ -99,6 +102,17 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                 holder.categories.visibility = View.GONE
                 //holder.categoriesIcon.visibility = View.GONE
             }
+
+            if(iCal4ListItem.property.color?.isNotEmpty() == true) {
+                try {
+                    holder.colorBar.setColorFilter(Color.parseColor(iCal4ListItem.property.color));
+                } catch (e: IllegalArgumentException) {
+                    Log.println(Log.INFO, "Invalid color", "Invalid Color cannot be parsed: ${iCal4ListItem.property.color}")
+                    holder.colorBar.visibility = View.GONE
+                }
+            }
+            else
+                holder.colorBar.visibility = View.GONE
 
             if(iCal4ListItem.property.component == "JOURNAL") {
                 holder.dtstartDay.text = convertLongToDayString(iCal4ListItem.property.dtstart)
@@ -294,6 +308,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
         var dtstartMonth: TextView = itemView.findViewById(R.id.list_item_dtstart_month)
         var dtstartYear: TextView = itemView.findViewById(R.id.list_item_dtstart_year)
         var dtstartTime: TextView = itemView.findViewById(R.id.list_item_dtstart_time)
+
+        var colorBar: ImageView = itemView.findViewById(R.id.list_item_colorbar)
 
         var expandSubtasks: ImageView = itemView.findViewById(R.id.list_item_expand)
         var subtasksLinearLayout: LinearLayout = itemView.findViewById(R.id.list_item_subtasks_linearlayout)
