@@ -801,7 +801,7 @@ object NotesX5Contract {
         /**
          * Purpose:  This column/property defines the color of the collection items.
          * This color can also be overwritten by the color in an ICalObject.
-         * Type: [String]
+         * Type: [Int]
          */
         const val COLOR = "color"
         /**
