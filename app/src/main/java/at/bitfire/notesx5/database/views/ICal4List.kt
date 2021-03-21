@@ -74,7 +74,7 @@ data class ICal4List (
         @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long,
         @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long,
 
-        @ColumnInfo(name = COLUMN_COLOR) var color: String?,
+        @ColumnInfo(name = COLUMN_COLOR) var color: Int?,
 
         @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID)    var collectionId: Long?,
 

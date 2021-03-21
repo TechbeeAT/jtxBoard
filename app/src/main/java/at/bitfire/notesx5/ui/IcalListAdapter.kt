@@ -103,9 +103,9 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                 //holder.categoriesIcon.visibility = View.GONE
             }
 
-            if(iCal4ListItem.property.color?.isNotEmpty() == true) {
+            if(iCal4ListItem.property.color != null) {
                 try {
-                    holder.colorBar.setColorFilter(Color.parseColor(iCal4ListItem.property.color));
+                    holder.colorBar.setColorFilter(iCal4ListItem.property.color!!)
                 } catch (e: IllegalArgumentException) {
                     Log.println(Log.INFO, "Invalid color", "Invalid Color cannot be parsed: ${iCal4ListItem.property.color}")
                     holder.colorBar.visibility = View.GONE

@@ -285,6 +285,8 @@ class SyncContentProvider : ContentProvider() {
         val accountName = getAccountNameQueryParameter(uri)
         val accountType = getAccountTypeQueryParameter(uri)
 
+        if (values == null)
+            throw java.lang.IllegalArgumentException("Values (Content Values) must not be null.")
 
         var count = 0
 

@@ -40,7 +40,7 @@ const val COLUMN_COLLECTION_OWNER = "owner"
 /**
  * Purpose:  This column/property defines the color of the collection items.
  * This color can also be overwritten by the color in an ICalObject.
- * Type: [String]
+ * Type: [Int]
  */
 const val COLUMN_COLLECTION_COLOR = "color"
 /**
@@ -91,7 +91,7 @@ data class ICalCollection(
         @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME)       var displayName: String? = "LOCAL",
         @ColumnInfo(name = COLUMN_COLLECTION_DESCRIPTION)       var description: String? = null,
         @ColumnInfo(name = COLUMN_COLLECTION_OWNER)             var owner: String? = null,
-        @ColumnInfo(name = COLUMN_COLLECTION_COLOR)             var color: String? = null,
+        @ColumnInfo(name = COLUMN_COLLECTION_COLOR)             var color: Int? = null,
 
         /** whether the collection supports VEVENT; in case of calendars: null means true */
         @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVEVENT)          var supportsVEVENT: Boolean? = null,
@@ -160,9 +160,9 @@ data class ICalCollection(
                 if (values?.containsKey(COLUMN_COLLECTION_OWNER) == true && values.getAsString(COLUMN_COLLECTION_OWNER).isNotBlank()) {
                         this.owner = values.getAsString(COLUMN_COLLECTION_OWNER)
                 }
-                if (values?.containsKey(COLUMN_COLLECTION_COLOR) == true && values.getAsString(COLUMN_COLLECTION_COLOR).isNotBlank()) {
-                        this.color = values.getAsString(COLUMN_COLLECTION_COLOR)
-                }
+
+                values.getAsInteger(COLUMN_COLLECTION_COLOR).let { color -> this.color = color }
+
 
                 if (values?.containsKey(COLUMN_COLLECTION_SUPPORTSVEVENT) == true && values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVEVENT) != null) {
                         this.supportsVEVENT = values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVEVENT)
