@@ -37,7 +37,7 @@ object NotesX5Contract {
         private const val CONTENT_URI_PATH = "icalobject"
 
         /** The content uri of the ICalObject table */
-        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH")
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
 
         /** The name of the ID column.
@@ -310,7 +310,7 @@ object NotesX5Contract {
         private const val CONTENT_URI_PATH = "attendee"
 
         /** The content uri of the Attendee table */
-        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH")
+        val CONTENT_URI: Uri by lazy {  Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
 
         /** The name of the ID column.
@@ -444,7 +444,7 @@ object NotesX5Contract {
         private const val CONTENT_URI_PATH = "category"
 
         /** The content uri of the Category table */
-        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH")
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
 
         /** The name of the ID column for categories.
@@ -488,7 +488,7 @@ object NotesX5Contract {
         private const val CONTENT_URI_PATH = "comment"
 
         /** The content uri of the Comment table */
-        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH")
+        val CONTENT_URI: Uri by lazy {  Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
 
         /** The name of the ID column for comments.
@@ -540,7 +540,7 @@ object NotesX5Contract {
         private const val CONTENT_URI_PATH = "contact"
 
         /** The content uri of the Contacts table */
-        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH")
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
         /** The name of the ID column for the contact.
          * This is the unique identifier of a Contact
@@ -584,7 +584,7 @@ object NotesX5Contract {
         private const val CONTENT_URI_PATH = "organizer"
 
         /** The content uri of the Organizer table */
-        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH")
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
 
         /** The name of the ID column for the organizer.
@@ -652,7 +652,7 @@ object NotesX5Contract {
         private const val CONTENT_URI_PATH = "relatedto"
 
         /** The content uri of the relatedto table */
-        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH")
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
 
         /** The name of the ID column for the related-to.
@@ -710,7 +710,7 @@ object NotesX5Contract {
         private const val CONTENT_URI_PATH = "resource"
 
         /** The content uri of the resources table */
-        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH")
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
 
         /** The name of the ID column for resources.
@@ -755,7 +755,7 @@ object NotesX5Contract {
         private const val CONTENT_URI_PATH = "collection"
 
         /** The content uri of the collections table */
-        val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH")
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
 
         /** The name of the the table for Collections.
