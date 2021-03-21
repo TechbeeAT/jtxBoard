@@ -57,6 +57,7 @@ class SyncContentProviderTest {
 
      */
 
+    // TODO COLUMN_* ersetzen durch Contract!!!!
 
     @Test
     fun icalObject_insert_find_delete()  {

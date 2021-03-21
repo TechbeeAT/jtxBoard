@@ -141,10 +141,16 @@ data class ICalCollection(
 
 
 
-        fun applyContentValues(values: ContentValues?):ICalCollection {
+        fun applyContentValues(values: ContentValues):ICalCollection {
+
+                values.getAsString(COLUMN_COLLECTION_URL)?.let { url -> this.url = url }
+                /*
                 if (values?.containsKey(COLUMN_COLLECTION_URL) == true && values.getAsString(COLUMN_COLLECTION_URL).isNotBlank()) {
                         this.url = values.getAsString(COLUMN_COLLECTION_URL)
                 }
+
+                 */
+                // TODO: Für alle mit der gleichen Struktur übernehmen!
                 if (values?.containsKey(COLUMN_COLLECTION_DISPLAYNAME) == true && values.getAsString(COLUMN_COLLECTION_DISPLAYNAME).isNotBlank()) {
                         this.displayName = values.getAsString(COLUMN_COLLECTION_DISPLAYNAME)
                 }
