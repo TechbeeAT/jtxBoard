@@ -88,23 +88,14 @@ data class Category (
     }
 
 
-    fun applyContentValues(values: ContentValues?): Category {
+    fun applyContentValues(values: ContentValues): Category {
 
-        if(values?.containsKey(COLUMN_CATEGORY_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID) != null)
-            this.icalObjectId = values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID)
-
-        if(values?.containsKey(COLUMN_CATEGORY_TEXT) == true && values.getAsString(COLUMN_CATEGORY_TEXT).isNotBlank())
-            this.text = values.getAsString(COLUMN_CATEGORY_TEXT)
-
-        if (values?.containsKey(COLUMN_CATEGORY_LANGUAGE) == true && values.getAsString(COLUMN_CATEGORY_LANGUAGE) != null) {
-            this.language = values.getAsString(COLUMN_CATEGORY_LANGUAGE)
-        }
-        if (values?.containsKey(COLUMN_CATEGORY_OTHER) == true && values.getAsString(COLUMN_CATEGORY_OTHER).isNotBlank()) {
-            this.other = values.getAsString(COLUMN_CATEGORY_OTHER)
-        }
+        values.getAsLong(COLUMN_CATEGORY_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
+        values.getAsString(COLUMN_CATEGORY_TEXT)?.let { text -> this.text = text }
+        values.getAsString(COLUMN_CATEGORY_LANGUAGE)?.let { language -> this.language = language }
+        values.getAsString(COLUMN_CATEGORY_OTHER)?.let { other -> this.other = other }
 
         return this
-
     }
 
 

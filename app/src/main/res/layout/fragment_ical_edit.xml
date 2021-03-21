@@ -122,7 +122,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="All day"
+            android:text="@string/edit_all_day"
             android:checked="@={model.allDayChecked}"
             app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
             app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
@@ -140,7 +140,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/edit_timezone_spinner"
             app:layout_constraintStart_toEndOf="@+id/edit_all_day_switch"
             app:layout_constraintTop_toTopOf="@+id/edit_timezone_spinner"
-            app:srcCompat="@drawable/ic_timezone" />
+            app:srcCompat="@drawable/ic_timezone"
+             />
 
         <Spinner
             android:id="@+id/edit_timezone_spinner"

@@ -59,8 +59,8 @@ data class Resource (
 
         @ColumnInfo(index = true, name = COLUMN_RESOURCE_ICALOBJECT_ID)var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_RESOURCE_TEXT)            var text: String? = "",
-        @ColumnInfo(name = COLUMN_RESOURCE_RELTYPE)    var reltypeparam: String? = null,
-        @ColumnInfo(name = COLUMN_RESOURCE_OTHER)      var otherparam: String? = null
+        @ColumnInfo(name = COLUMN_RESOURCE_RELTYPE)    var reltype: String? = null,
+        @ColumnInfo(name = COLUMN_RESOURCE_OTHER)      var other: String? = null
 ): Parcelable
 
 
@@ -85,22 +85,12 @@ data class Resource (
                 }
         }
 
-        fun applyContentValues(values: ContentValues?): Resource {
+        fun applyContentValues(values: ContentValues): Resource {
 
-
-                if(values?.containsKey(COLUMN_RESOURCE_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID) != null)
-                        this.icalObjectId = values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID)
-
-                if(values?.containsKey(COLUMN_RESOURCE_TEXT) == true && values.getAsString(COLUMN_RESOURCE_TEXT).isNotBlank())
-                        this.text = values.getAsString(COLUMN_RESOURCE_TEXT)
-
-
-                if (values?.containsKey(COLUMN_RESOURCE_RELTYPE) == true && values.getAsString(COLUMN_RESOURCE_RELTYPE).isNotBlank() ) {
-                        this.reltypeparam = values.getAsString(COLUMN_RESOURCE_RELTYPE)
-                }
-                if (values?.containsKey(COLUMN_RESOURCE_OTHER) == true && values.getAsString(COLUMN_RESOURCE_OTHER).isNotBlank()) {
-                        this.otherparam = values.getAsString(COLUMN_RESOURCE_OTHER)
-                }
+                values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
+                values.getAsString(COLUMN_RESOURCE_TEXT)?.let { text -> this.text = text }
+                values.getAsString(COLUMN_RESOURCE_RELTYPE)?.let { reltype -> this.reltype = reltype }
+                values.getAsString(COLUMN_RESOURCE_OTHER)?.let { other -> this.other = other }
 
                 return this
         }

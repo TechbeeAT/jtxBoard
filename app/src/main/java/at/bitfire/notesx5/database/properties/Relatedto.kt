@@ -72,7 +72,7 @@ data class Relatedto (
         @ColumnInfo(index = true, name = COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) var linkedICalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_RELATEDTO_TEXT)                var text: String? = null,
         @ColumnInfo(name = COLUMN_RELATEDTO_RELTYPE)        var reltype: String? = null,
-        @ColumnInfo(name = COLUMN_RELATEDTO_OTHER)          var otherparam: String? = null
+        @ColumnInfo(name = COLUMN_RELATEDTO_OTHER)          var other: String? = null
 ): Parcelable {
         companion object Factory {
 
@@ -94,24 +94,13 @@ data class Relatedto (
                 }
         }
 
-        fun applyContentValues(values: ContentValues?): Relatedto {
+        fun applyContentValues(values: ContentValues): Relatedto {
 
-                if(values?.containsKey(COLUMN_RELATEDTO_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID) != null)
-                        this.icalObjectId = values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID)
-
-                if(values?.containsKey(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) == true && values.getAsLong(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) != null)
-                        this.linkedICalObjectId = values.getAsLong(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID)
-
-
-                if (values?.containsKey(COLUMN_RELATEDTO_TEXT) == true && values.getAsString(COLUMN_RELATEDTO_TEXT).isNotBlank()) {
-                        this.text = values.getAsString(COLUMN_RELATEDTO_TEXT)
-                }
-                if (values?.containsKey(COLUMN_RELATEDTO_RELTYPE) == true && values.getAsString(COLUMN_RESOURCE_RELTYPE).isNotBlank()) {
-                        this.reltype = values.getAsString(COLUMN_RESOURCE_RELTYPE)
-                }
-                if (values?.containsKey(COLUMN_RELATEDTO_OTHER) == true && values.getAsString(COLUMN_RESOURCE_OTHER).isNotBlank()) {
-                        this.otherparam = values.getAsString(COLUMN_RESOURCE_OTHER)
-                }
+                values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
+                values.getAsLong(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID)?.let { linkedICalObjectId -> this.linkedICalObjectId = linkedICalObjectId }
+                values.getAsString(COLUMN_RELATEDTO_TEXT)?.let { text -> this.text = text }
+                values.getAsString(COLUMN_RESOURCE_RELTYPE)?.let { reltype -> this.reltype = reltype }
+                values.getAsString(COLUMN_RESOURCE_OTHER)?.let { other -> this.other = other }
 
                 return this
         }

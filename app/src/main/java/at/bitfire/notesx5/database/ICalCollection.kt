@@ -139,46 +139,18 @@ data class ICalCollection(
 
         }
 
-
-
         fun applyContentValues(values: ContentValues):ICalCollection {
 
                 values.getAsString(COLUMN_COLLECTION_URL)?.let { url -> this.url = url }
-                /*
-                if (values?.containsKey(COLUMN_COLLECTION_URL) == true && values.getAsString(COLUMN_COLLECTION_URL).isNotBlank()) {
-                        this.url = values.getAsString(COLUMN_COLLECTION_URL)
-                }
-
-                 */
-                // TODO: Für alle mit der gleichen Struktur übernehmen!
-                if (values?.containsKey(COLUMN_COLLECTION_DISPLAYNAME) == true && values.getAsString(COLUMN_COLLECTION_DISPLAYNAME).isNotBlank()) {
-                        this.displayName = values.getAsString(COLUMN_COLLECTION_DISPLAYNAME)
-                }
-                if (values?.containsKey(COLUMN_COLLECTION_DESCRIPTION) == true && values.getAsString(COLUMN_COLLECTION_DESCRIPTION).isNotBlank()) {
-                        this.description = values.getAsString(COLUMN_COLLECTION_DESCRIPTION)
-                }
-                if (values?.containsKey(COLUMN_COLLECTION_OWNER) == true && values.getAsString(COLUMN_COLLECTION_OWNER).isNotBlank()) {
-                        this.owner = values.getAsString(COLUMN_COLLECTION_OWNER)
-                }
-
-                values.getAsInteger(COLUMN_COLLECTION_COLOR).let { color -> this.color = color }
-
-
-                if (values?.containsKey(COLUMN_COLLECTION_SUPPORTSVEVENT) == true && values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVEVENT) != null) {
-                        this.supportsVEVENT = values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVEVENT)
-                }
-                if (values?.containsKey(COLUMN_COLLECTION_SUPPORTSVTODO) == true && values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVTODO) != null) {
-                        this.supportsVTODO = values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVTODO)
-                }
-                if (values?.containsKey(COLUMN_COLLECTION_SUPPORTSVJOURNAL) == true && values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVJOURNAL) != null) {
-                        this.supportsVJOURNAL = values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVJOURNAL)
-                }
-                if (values?.containsKey(COLUMN_COLLECTION_SYNC_VERSION) == true && values.getAsString(COLUMN_COLLECTION_SYNC_VERSION).isNotBlank()) {
-                        this.syncversion = values.getAsString(COLUMN_COLLECTION_SYNC_VERSION)
-                }
-                if (values?.containsKey(COLUMN_COLLECTION_READONLY) == true && values.getAsBoolean(COLUMN_COLLECTION_READONLY) != null) {
-                        this.readonly = values.getAsBoolean(COLUMN_COLLECTION_READONLY)
-                }
+                values.getAsString(COLUMN_COLLECTION_DISPLAYNAME)?.let { displayName -> this.displayName = displayName }
+                values.getAsString(COLUMN_COLLECTION_DESCRIPTION)?.let { description -> this.description = description }
+                values.getAsString(COLUMN_COLLECTION_OWNER)?.let { owner -> this.owner = owner }
+                values.getAsInteger(COLUMN_COLLECTION_COLOR)?.let { color -> this.color = color }
+                values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVEVENT)?.let { supportsVEVENT -> this.supportsVEVENT = supportsVEVENT }
+                values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVTODO)?.let { supportsVTODO -> this.supportsVTODO = supportsVTODO }
+                values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVJOURNAL)?.let { supportsVJOURNAL -> this.supportsVJOURNAL = supportsVJOURNAL }
+                values.getAsString(COLUMN_COLLECTION_SYNC_VERSION)?.let { syncversion -> this.syncversion = syncversion }
+                values.getAsBoolean(COLUMN_COLLECTION_READONLY)?.let { readonly -> this.readonly = readonly }
 
                 return this
         }

@@ -93,23 +93,13 @@ data class Comment (
         }
     }
 
-    fun applyContentValues(values: ContentValues?): Comment {
+    fun applyContentValues(values: ContentValues): Comment {
 
-        if(values?.containsKey(COLUMN_COMMENT_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_COMMENT_ICALOBJECT_ID) != null)
-            this.icalObjectId = values.getAsLong(COLUMN_COMMENT_ICALOBJECT_ID)
-
-        if(values?.containsKey(COLUMN_COMMENT_TEXT) == true && values.getAsString(COLUMN_COMMENT_TEXT).isNotBlank())
-            this.text = values.getAsString(COLUMN_COMMENT_TEXT)
-
-        if (values?.containsKey(COLUMN_COMMENT_ALTREP) == true && values.getAsString(COLUMN_COMMENT_ALTREP).isNotBlank()) {
-            this.altrep = values.getAsString(COLUMN_COMMENT_ALTREP)
-        }
-        if (values?.containsKey(COLUMN_COMMENT_LANGUAGE) == true && values.getAsString(COLUMN_COMMENT_LANGUAGE).isNotBlank()) {
-            this.language = values.getAsString(COLUMN_COMMENT_LANGUAGE)
-        }
-        if (values?.containsKey(COLUMN_COMMENT_OTHER) == true && values.getAsString(COLUMN_COMMENT_OTHER).isNotBlank()) {
-            this.other = values.getAsString(COLUMN_COMMENT_OTHER)
-        }
+        values.getAsLong(COLUMN_COMMENT_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
+        values.getAsString(COLUMN_COMMENT_TEXT)?.let { text -> this.text = text }
+        values.getAsString(COLUMN_COMMENT_ALTREP)?.let { altrep -> this.altrep = altrep }
+        values.getAsString(COLUMN_COMMENT_LANGUAGE)?.let { language -> this.language = language }
+        values.getAsString(COLUMN_COMMENT_OTHER)?.let { other -> this.other = other }
 
         return this
     }

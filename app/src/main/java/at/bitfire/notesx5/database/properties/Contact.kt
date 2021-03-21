@@ -87,22 +87,12 @@ data class Contact (
                 }
         }
 
-        fun applyContentValues(values: ContentValues?): Contact {
+        fun applyContentValues(values: ContentValues): Contact {
 
-
-                if(values?.containsKey(COLUMN_CONTACT_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID) != null)
-                        this.icalObjectId = values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID)
-
-                if(values?.containsKey(COLUMN_CONTACT_TEXT) == true && values.getAsString(COLUMN_CONTACT_TEXT).isNotBlank())
-                        this.text = values.getAsString(COLUMN_CONTACT_TEXT)
-
-
-                if (values?.containsKey(COLUMN_CONTACT_LANGUAGE) == true && values.getAsString(COLUMN_CONTACT_LANGUAGE).isNotBlank()) {
-                        this.language = values.getAsString(COLUMN_CONTACT_LANGUAGE)
-                }
-                if (values?.containsKey(COLUMN_CONTACT_OTHER) == true && values.getAsString(COLUMN_CONTACT_OTHER).isNotBlank()) {
-                        this.other = values.getAsString(COLUMN_CONTACT_OTHER)
-                }
+                values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
+                values.getAsString(COLUMN_CONTACT_TEXT)?.let { text -> this.text = text }
+                values.getAsString(COLUMN_CONTACT_LANGUAGE)?.let { language -> this.language = language }
+                values.getAsString(COLUMN_CONTACT_OTHER)?.let { other -> this.other = other }
 
                 return this
         }

@@ -131,6 +131,7 @@
     <string name="edit_show_all_switch">Show all</string>
     <string name="edit_categories_header">Categories</string>
     <string name="edit_attendees_header">Attendees</string>
+    <string name="edit_all_day">All day</string>
 
 
     <string name="edit_fragment_app_permission">App Permission</string>

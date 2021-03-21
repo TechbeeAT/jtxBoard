@@ -108,31 +108,15 @@ data class Organizer (
                 }
         }
 
-        fun applyContentValues(values: ContentValues?): Organizer {
+        fun applyContentValues(values: ContentValues): Organizer {
 
-                if(values?.containsKey(COLUMN_ORGANIZER_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID) != null)
-                        this.icalObjectId = values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID)
-
-                if(values?.containsKey(COLUMN_ORGANIZER_CALADDRESS) == true && values.getAsString(COLUMN_ORGANIZER_CALADDRESS).isNotBlank())
-                        this.caladdress = values.getAsString(COLUMN_ORGANIZER_CALADDRESS)
-
-
-
-                if (values?.containsKey(COLUMN_ORGANIZER_CN) == true && values.getAsString(COLUMN_ORGANIZER_CN).isNotBlank()) {
-                        this.cn = values.getAsString(COLUMN_ORGANIZER_CN)
-                }
-                if (values?.containsKey(COLUMN_ORGANIZER_DIR) == true && values.getAsString(COLUMN_ORGANIZER_DIR).isNotBlank()) {
-                        this.dir = values.getAsString(COLUMN_ORGANIZER_DIR)
-                }
-                if (values?.containsKey(COLUMN_ORGANIZER_SENTBY) == true && values.getAsString(COLUMN_ORGANIZER_SENTBY).isNotBlank()) {
-                        this.sentby = values.getAsString(COLUMN_ORGANIZER_SENTBY)
-                }
-                if (values?.containsKey(COLUMN_ORGANIZER_LANGUAGE) == true && values.getAsString(COLUMN_ORGANIZER_LANGUAGE).isNotBlank()) {
-                        this.language = values.getAsString(COLUMN_ORGANIZER_LANGUAGE)
-                }
-                if (values?.containsKey(COLUMN_ORGANIZER_OTHER) == true && values.getAsString(COLUMN_ORGANIZER_OTHER).isNotBlank()) {
-                        this.other = values.getAsString(COLUMN_ORGANIZER_OTHER)
-                }
+                values.getAsLong(COLUMN_ORGANIZER_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
+                values.getAsString(COLUMN_ORGANIZER_CALADDRESS)?.let { caladdress -> this.caladdress = caladdress }
+                values.getAsString(COLUMN_ORGANIZER_CN)?.let { cn -> this.cn = cn }
+                values.getAsString(COLUMN_ORGANIZER_DIR)?.let { dir -> this.dir = dir }
+                values.getAsString(COLUMN_ORGANIZER_SENTBY)?.let { sentby -> this.sentby = sentby }
+                values.getAsString(COLUMN_ORGANIZER_LANGUAGE)?.let { language -> this.language = language }
+                values.getAsString(COLUMN_ORGANIZER_OTHER)?.let { other -> this.other = other }
 
                 return this
         }

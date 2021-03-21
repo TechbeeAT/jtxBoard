@@ -325,113 +325,42 @@ data class ICalObject(
                                 return null
 
                         return ICalObject().applyContentValues(values)
-
                 }
-
         }
 
 
 
 
-        fun applyContentValues(values: ContentValues?):ICalObject {
-                if (values?.containsKey(COLUMN_COMPONENT) == true && values.getAsString(COLUMN_COMPONENT).isNotBlank()) {
-                        this.component = values.getAsString(COLUMN_COMPONENT)
-                }
-                /*
-                if (values?.containsKey(COLUMN_COLLECTION) == true && values.getAsString(COLUMN_COLLECTION).isNotBlank()) {
-                        this.collection = values.getAsString(COLUMN_COLLECTION)
-                }
+        fun applyContentValues(values: ContentValues):ICalObject {
 
-                 */
-                if (values?.containsKey(COLUMN_SUMMARY) == true && values.getAsString(COLUMN_SUMMARY).isNotBlank()) {
-                        this.summary = values.getAsString(COLUMN_SUMMARY)
-                }
-
-                //TODO: Add validation, Journals MUST have a DTSTART!
-                if (values?.containsKey(COLUMN_DTSTART) == true && values.getAsLong(COLUMN_DTSTART) != null) {
-                        this.dtstart = values.getAsLong(COLUMN_DTSTART)
-                }
-
-                //TODO: Validieren auf gültige Timezone!
-                if (values?.containsKey(COLUMN_DTSTART_TIMEZONE) == true && values.getAsString(COLUMN_DTSTART_TIMEZONE).isNotBlank()) {
-                        this.dtstartTimezone = values.getAsString(COLUMN_DTSTART_TIMEZONE)
-                }
-                if (values?.containsKey(COLUMN_DTEND) == true && values.getAsLong(COLUMN_DTEND) != null ) {
-                        this.dtend = values.getAsLong(COLUMN_DTEND)
-                }
-                //TODO: Validieren auf gültige Timezone!
-                if (values?.containsKey(COLUMN_DTEND_TIMEZONE) == true && values.getAsString(COLUMN_DTEND_TIMEZONE).isNotBlank()) {
-                        this.dtendTimezone = values.getAsString(COLUMN_DTEND_TIMEZONE)
-                }
-
-                if (values?.containsKey(COLUMN_STATUS) == true && values.getAsString(COLUMN_STATUS).isNotBlank()) {
-                        this.status = values.getAsString(COLUMN_STATUS)
-                }
-
-                if (values?.containsKey(COLUMN_CLASSIFICATION) == true && values.getAsString(COLUMN_CLASSIFICATION).isNotBlank()) {
-                        this.classification = values.getAsString(COLUMN_CLASSIFICATION)
-                }
-                if (values?.containsKey(COLUMN_URL) == true && values.getAsString(COLUMN_URL).isNotBlank()) {
-                        this.url = values.getAsString(COLUMN_URL)
-                }
-
-                if (values?.containsKey(COLUMN_GEO_LAT) == true && values.getAsFloat(COLUMN_GEO_LAT) != null) {
-                        this.geoLat = values.getAsFloat(COLUMN_GEO_LAT)
-                }
-                if (values?.containsKey(COLUMN_GEO_LONG) == true && values.getAsFloat(COLUMN_GEO_LONG) != null) {
-                        this.geoLong = values.getAsFloat(COLUMN_GEO_LONG)
-                }
-                if (values?.containsKey(COLUMN_LOCATION) == true && values.getAsString(COLUMN_LOCATION).isNotBlank() ) {
-                        this.location = values.getAsString(COLUMN_LOCATION)
-                }
-                if (values?.containsKey(COLUMN_PERCENT) == true && values.getAsInteger(COLUMN_PERCENT) != null) {
-                        this.percent = values.getAsInteger(COLUMN_PERCENT)
-                }
-                if (values?.containsKey(COLUMN_PRIORITY) == true && values.getAsInteger(COLUMN_PRIORITY) != null) {
-                        this.priority = values.getAsInteger(COLUMN_PRIORITY)
-                }
-                if (values?.containsKey(COLUMN_DUE) == true && values.getAsLong(COLUMN_DUE) != null) {
-                        this.due = values.getAsLong(COLUMN_DUE)
-                }
-                if (values?.containsKey(COLUMN_DUE_TIMEZONE) == true && values.getAsString(COLUMN_DUE_TIMEZONE) != null) {
-                        this.dueTimezone = values.getAsString(COLUMN_DUE_TIMEZONE)
-                }
-                if (values?.containsKey(COLUMN_COMPLETED) == true && values.getAsLong(COLUMN_COMPLETED) != null) {
-                        this.completed = values.getAsLong(COLUMN_COMPLETED)
-                }
-                if (values?.containsKey(COLUMN_COMPLETED_TIMEZONE) == true && values.getAsString(COLUMN_COMPLETED_TIMEZONE) != null) {
-                        this.completedTimezone = values.getAsString(COLUMN_COMPLETED_TIMEZONE)
-                }
-                if (values?.containsKey(COLUMN_DURATION) == true && values.getAsString(COLUMN_DURATION) != null) {
-                        this.duration = values.getAsString(COLUMN_DURATION)
-                }
-                if (values?.containsKey(COLUMN_UID) == true && values.getAsString(COLUMN_UID).isNotBlank()) {
-                        this.uid = values.getAsString(COLUMN_UID)
-                }
-                if (values?.containsKey(COLUMN_CREATED) == true && values.getAsLong(COLUMN_CREATED) != null) {
-                        this.created = values.getAsLong(COLUMN_CREATED)
-                }
-                if (values?.containsKey(COLUMN_DTSTAMP) == true && values.getAsLong(COLUMN_DTSTAMP) != null) {
-                        this.dtstamp = values.getAsLong(COLUMN_DTSTAMP)
-                }
-                if (values?.containsKey(COLUMN_LAST_MODIFIED) == true && values.getAsLong(COLUMN_LAST_MODIFIED) != null) {
-                        this.lastModified = values.getAsLong(COLUMN_LAST_MODIFIED)
-                }
-                if (values?.containsKey(COLUMN_SEQUENCE) == true && values.getAsLong(COLUMN_SEQUENCE) != null) {
-                        this.sequence = values.getAsLong(COLUMN_SEQUENCE)
-                }
-                if (values?.containsKey(COLUMN_COLOR) == true && values.getAsString(COLUMN_COLOR).isNotBlank()) {
-                        this.color = values.getAsString(COLUMN_COLOR)
-                }
-                if (values?.containsKey(COLUMN_OTHER) == true && values.getAsString(COLUMN_OTHER).isNotBlank()) {
-                        this.other = values.getAsString(COLUMN_OTHER)
-                }
-                if (values?.containsKey(COLUMN_DIRTY) == true && values.getAsBoolean(COLUMN_DIRTY) != null) {
-                        this.dirty = values.getAsBoolean(COLUMN_DIRTY)
-                }
-                if (values?.containsKey(COLUMN_DELETED) == true && values.getAsBoolean(COLUMN_DELETED) != null) {
-                        this.deleted = values.getAsBoolean(COLUMN_DELETED)
-                }
+                values.getAsString(COLUMN_COMPONENT)?.let { component -> this.component = component }
+                values.getAsString(COLUMN_SUMMARY)?.let { summary -> this.summary = summary }
+                values.getAsLong(COLUMN_DTSTART)?.let { dtstart -> this.dtstart = dtstart }   //TODO: Add validation, Journals MUST have a DTSTART!
+                values.getAsString(COLUMN_DTSTART_TIMEZONE)?.let { dtstartTimezone -> this.dtstartTimezone = dtstartTimezone }   //TODO: Validieren auf gültige Timezone!
+                values.getAsLong(COLUMN_DTEND)?.let { dtend -> this.dtend = dtend }
+                values.getAsString(COLUMN_DTEND_TIMEZONE)?.let { dtendTimezone -> this.dtendTimezone = dtendTimezone}   //TODO: Validieren auf gültige Timezone!
+                values.getAsString(COLUMN_STATUS)?.let { status -> this.status = status }
+                values.getAsString(COLUMN_CLASSIFICATION)?.let { classification -> this.classification = classification }
+                values.getAsString(COLUMN_URL)?.let { url -> this.url = url }
+                values.getAsFloat(COLUMN_GEO_LAT)?.let { geoLat -> this.geoLat = geoLat }
+                values.getAsFloat(COLUMN_GEO_LONG)?.let { geoLong -> this.geoLong = geoLong }
+                values.getAsString(COLUMN_LOCATION)?.let { location -> this.location = location }
+                values.getAsInteger(COLUMN_PERCENT)?.let { percent -> this.percent = percent }
+                values.getAsInteger(COLUMN_PRIORITY)?.let { priority -> this.priority = priority }
+                values.getAsLong(COLUMN_DUE)?.let { due -> this.due = due }
+                values.getAsString(COLUMN_DUE_TIMEZONE)?.let { dueTimezone -> this.dueTimezone = dueTimezone }
+                values.getAsLong(COLUMN_COMPLETED)?.let { completed -> this.completed = completed }
+                values.getAsString(COLUMN_COMPLETED_TIMEZONE)?.let { completedTimezone -> this.completedTimezone = completedTimezone }
+                values.getAsString(COLUMN_DURATION)?.let { duration -> this.duration = duration }
+                values.getAsString(COLUMN_UID)?.let { uid -> this.uid = uid }
+                values.getAsLong(COLUMN_CREATED)?.let { created -> this.created = created }
+                values.getAsLong(COLUMN_DTSTAMP)?.let { dtstamp -> this.dtstamp = dtstamp }
+                values.getAsLong(COLUMN_LAST_MODIFIED)?.let { lastModified -> this.lastModified = lastModified }
+                values.getAsLong(COLUMN_SEQUENCE)?.let { sequence -> this.sequence = sequence }
+                values.getAsString(COLUMN_COLOR)?.let { color -> this.color = color }
+                values.getAsString(COLUMN_OTHER)?.let { other -> this.other = other }
+                values.getAsBoolean(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty }
+                values.getAsBoolean(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted }
 
                 return this
         }

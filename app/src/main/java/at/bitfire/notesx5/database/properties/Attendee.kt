@@ -6,6 +6,7 @@ import android.provider.BaseColumns
 import androidx.annotation.Nullable
 import androidx.room.*
 import at.bitfire.notesx5.R
+import at.bitfire.notesx5.database.COLUMN_COMPONENT
 import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.Classification
 import at.bitfire.notesx5.database.ICalObject
@@ -172,53 +173,22 @@ data class Attendee (
         }
 
 
-        fun applyContentValues(values: ContentValues?):Attendee {
+        fun applyContentValues(values: ContentValues):Attendee {
 
-                if(values?.containsKey(COLUMN_ATTENDEE_ICALOBJECT_ID) == true && values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID) != null)
-                        this.icalObjectId = values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID)
-
-                if(values?.containsKey(COLUMN_ATTENDEE_CALADDRESS) == true && values.getAsString(COLUMN_ATTENDEE_CALADDRESS).isNotBlank())
-                        this.caladdress = values.getAsString(COLUMN_ATTENDEE_CALADDRESS)
-
-
-
-                if (values?.containsKey(COLUMN_ATTENDEE_CUTYPE) == true && values.getAsString(COLUMN_ATTENDEE_CUTYPE).isNotBlank()) {
-                        this.cutype = values.getAsString(COLUMN_ATTENDEE_CUTYPE)
-                }
-                if (values?.containsKey(COLUMN_ATTENDEE_MEMBER) == true && values.getAsString(COLUMN_ATTENDEE_MEMBER).isNotBlank()) {
-                        this.member = values.getAsString(COLUMN_ATTENDEE_MEMBER)
-                }
-
-                if (values?.containsKey(COLUMN_ATTENDEE_ROLE) == true && values.getAsString(COLUMN_ATTENDEE_ROLE).isNotBlank()) {
-                        this.role = values.getAsString(COLUMN_ATTENDEE_ROLE)
-                }
-                if (values?.containsKey(COLUMN_ATTENDEE_PARTSTAT) == true && values.getAsString(COLUMN_ATTENDEE_PARTSTAT).isNotBlank()) {
-                        this.partstat = values.getAsString(COLUMN_ATTENDEE_PARTSTAT)
-                }
-                if (values?.containsKey(COLUMN_ATTENDEE_RSVP) == true && values.getAsBoolean(COLUMN_ATTENDEE_RSVP) != null) {
-                        this.rsvp = values.getAsBoolean(COLUMN_ATTENDEE_RSVP)
-                }
-                if (values?.containsKey(COLUMN_ATTENDEE_DELEGATEDTO) == true && values.getAsString(COLUMN_ATTENDEE_DELEGATEDTO).isNotBlank()) {
-                        this.delegatedto = values.getAsString(COLUMN_ATTENDEE_DELEGATEDTO)
-                }
-                if (values?.containsKey(COLUMN_ATTENDEE_DELEGATEDFROM) == true && values.getAsString(COLUMN_ATTENDEE_DELEGATEDFROM).isNotBlank()) {
-                        this.delegatedfrom = values.getAsString(COLUMN_ATTENDEE_DELEGATEDFROM)
-                }
-                if (values?.containsKey(COLUMN_ATTENDEE_SENTBY) == true && values.getAsString(COLUMN_ATTENDEE_SENTBY).isNotBlank()) {
-                        this.sentby = values.getAsString(COLUMN_ATTENDEE_SENTBY)
-                }
-                if (values?.containsKey(COLUMN_ATTENDEE_CN) == true && values.getAsString(COLUMN_ATTENDEE_CN).isNotBlank()) {
-                        this.cn = values.getAsString(COLUMN_ATTENDEE_CN)
-                }
-                if (values?.containsKey(COLUMN_ATTENDEE_DIR) == true && values.getAsString(COLUMN_ATTENDEE_DIR).isNotBlank()) {
-                        this.dir = values.getAsString(COLUMN_ATTENDEE_DIR)
-                }
-                if (values?.containsKey(COLUMN_ATTENDEE_LANGUAGE) == true && values.getAsString(COLUMN_ATTENDEE_LANGUAGE).isNotBlank()) {
-                        this.language = values.getAsString(COLUMN_ATTENDEE_LANGUAGE)
-                }
-                if (values?.containsKey(COLUMN_ATTENDEE_OTHER) == true && values.getAsString(COLUMN_ATTENDEE_OTHER).isNotBlank()) {
-                        this.other = values.getAsString(COLUMN_ATTENDEE_OTHER)
-                }
+                values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
+                values.getAsString(COLUMN_ATTENDEE_CALADDRESS)?.let { caladdress -> this.caladdress = caladdress }
+                values.getAsString(COLUMN_ATTENDEE_CUTYPE)?.let { cutype -> this.cutype = cutype }
+                values.getAsString(COLUMN_ATTENDEE_MEMBER)?.let { member -> this.member = member }
+                values.getAsString(COLUMN_ATTENDEE_ROLE)?.let { role -> this.role = role }
+                values.getAsString(COLUMN_ATTENDEE_PARTSTAT)?.let { partstat -> this.partstat = partstat }
+                values.getAsBoolean(COLUMN_ATTENDEE_RSVP)?.let { rsvp -> this.rsvp = rsvp }
+                values.getAsString(COLUMN_ATTENDEE_DELEGATEDTO)?.let { delegatedto -> this.delegatedto = delegatedto }
+                values.getAsString(COLUMN_ATTENDEE_DELEGATEDFROM)?.let { delegatedfrom -> this.delegatedfrom = delegatedfrom }
+                values.getAsString(COLUMN_ATTENDEE_SENTBY)?.let { sentby -> this.sentby = sentby }
+                values.getAsString(COLUMN_ATTENDEE_CN)?.let { cn -> this.cn = cn }
+                values.getAsString(COLUMN_ATTENDEE_DIR)?.let { dir -> this.dir = dir }
+                values.getAsString(COLUMN_ATTENDEE_LANGUAGE)?.let { language -> this.language = language }
+                values.getAsString(COLUMN_ATTENDEE_OTHER)?.let { other -> this.other = other }
 
                 return this
 
