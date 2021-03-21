@@ -4,32 +4,29 @@ import android.net.Uri
 import android.provider.BaseColumns
 
 @Suppress("unused")
-class SyncContentProviderContract {
+object NotesX5Contract {
 
-    object NotesX5Contract {
+    /**
+     * URI parameter to signal that the caller is a sync adapter.
+     */
+    const val CALLER_IS_SYNCADAPTER = "caller_is_syncadapter"
 
-        /**
-         * URI parameter to signal that the caller is a sync adapter.
-         */
-        const val CALLER_IS_SYNCADAPTER = "caller_is_syncadapter"
+    /**
+     * URI parameter to submit the account name of the account we operate on.
+     */
+    const val ACCOUNT_NAME = "account_name"
 
-        /**
-         * URI parameter to submit the account name of the account we operate on.
-         */
-        const val ACCOUNT_NAME = "account_name"
+    /**
+     * URI parameter to submit the account type of the account we operate on.
+     */
+    const val ACCOUNT_TYPE = "account_type"
 
-        /**
-         * URI parameter to submit the account type of the account we operate on.
-         */
-        const val ACCOUNT_TYPE = "account_type"
+    /** The authority under which the content provider can be accessed */
+    const val SYNC_PROVIDER_AUTHORITY = "at.bitfire.notesx5.provider"
 
-        /** The authority under which the content provider can be accessed */
-        const val SYNC_PROVIDER_AUTHORITY = "at.bitfire.notesx5.provider"
+    /** The version of this SyncContentProviderContract */
+    const val CONTRACT_VERSION = 1
 
-        /** The version of this SyncContentProviderContract */
-        const val CONTRACT_VERSION = 1
-
-    }
 
     @Suppress("unused")
     object X5ICalObject {
