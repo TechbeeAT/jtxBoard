@@ -41,7 +41,7 @@
             android:textStyle="bold"
             android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_collection"
             tools:text="31" />
 
         <TextView
@@ -82,6 +82,7 @@
             android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
             app:layout_constraintStart_toStartOf="@+id/edit_dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_year"
             tools:text="13:30"
@@ -123,6 +124,7 @@
             android:layout_marginTop="8dp"
             android:text="All day"
             android:checked="@={model.allDayChecked}"
+            app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
             app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/edit_collection"
             app:switchPadding="8dp"
@@ -154,7 +156,11 @@
             app:layout_constraintStart_toEndOf="@+id/edit_timezone_icon"
             app:layout_constraintTop_toTopOf="@+id/edit_all_day_switch" />
 
-
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/edit_top_barrier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_summary_edit"
@@ -164,7 +170,7 @@
             android:hint="@string/edit_summary_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_time">
+            app:layout_constraintTop_toBottomOf="@+id/edit_top_barrier">
 
 
             <com.google.android.material.textfield.TextInputEditText

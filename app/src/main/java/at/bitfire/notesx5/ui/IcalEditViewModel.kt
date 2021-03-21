@@ -354,12 +354,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         attendeesError.value = null
     }
 
-    /*
-    fun clearAttendeesError(s: Editable) {
-        attendeesError.value = null
-    }
 
-     */
 
 }
 

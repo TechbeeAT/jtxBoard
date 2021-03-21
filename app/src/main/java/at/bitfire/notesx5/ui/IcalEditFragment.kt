@@ -362,7 +362,7 @@ class IcalEditFragment : Fragment(),
             val spinner: Spinner = binding.editCollection
             val allCollectionNames: MutableList<String> = mutableListOf()
             icalEditViewModel.allCollections.value?.forEach { it.displayName?.let { name -> allCollectionNames.add(name) } }
-            val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, allCollectionNames)
+            val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, allCollectionNames)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.setAdapter(adapter)
 
