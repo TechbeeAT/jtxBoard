@@ -41,7 +41,7 @@ import at.bitfire.notesx5.database.views.ICal4List
     Relatedto::class,
     Resource::class],
         views = [ICal4List::class],
-        version = 69,
+        version = 70,
         exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {

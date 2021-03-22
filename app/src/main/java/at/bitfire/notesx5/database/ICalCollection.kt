@@ -149,6 +149,8 @@ data class ICalCollection(
                 values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVEVENT)?.let { supportsVEVENT -> this.supportsVEVENT = supportsVEVENT }
                 values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVTODO)?.let { supportsVTODO -> this.supportsVTODO = supportsVTODO }
                 values.getAsBoolean(COLUMN_COLLECTION_SUPPORTSVJOURNAL)?.let { supportsVJOURNAL -> this.supportsVJOURNAL = supportsVJOURNAL }
+                values.getAsString(COLUMN_COLLECTION_ACCOUNT_NAME)?.let { accountName -> this.accountName = accountName }
+                values.getAsString(COLUMN_COLLECTION_ACCOUNT_TYPE)?.let { accountType -> this.accountType = accountType }
                 values.getAsString(COLUMN_COLLECTION_SYNC_VERSION)?.let { syncversion -> this.syncversion = syncversion }
                 values.getAsBoolean(COLUMN_COLLECTION_READONLY)?.let { readonly -> this.readonly = readonly }
 

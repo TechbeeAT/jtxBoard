@@ -6,6 +6,7 @@ import android.provider.BaseColumns
 import androidx.room.*
 import at.bitfire.notesx5.R
 import kotlinx.android.parcel.Parcelize
+import java.lang.IllegalArgumentException
 import java.util.*
 
 
@@ -291,7 +292,7 @@ data class ICalObject(
         @ColumnInfo(name = COLUMN_COLOR) var color: String? = null,
         @ColumnInfo(name = COLUMN_OTHER) var other: String? = null,
 
-        @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID)    var collectionId: Long? = 1L,
+        @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID)    var collectionId: Long = 1L,
 
         @ColumnInfo(name = COLUMN_DIRTY) var dirty: Boolean = false,
         @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean = false
@@ -323,6 +324,9 @@ data class ICalObject(
 
                         if (values == null)
                                 return null
+
+                        if (values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID) == null)
+                                throw IllegalArgumentException("CollectionId cannot be null.")
 
                         return ICalObject().applyContentValues(values)
                 }
@@ -359,6 +363,7 @@ data class ICalObject(
                 values.getAsLong(COLUMN_SEQUENCE)?.let { sequence -> this.sequence = sequence }
                 values.getAsString(COLUMN_COLOR)?.let { color -> this.color = color }
                 values.getAsString(COLUMN_OTHER)?.let { other -> this.other = other }
+                values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)?.let { collectionId -> this.collectionId = collectionId }
                 values.getAsBoolean(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty }
                 values.getAsBoolean(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted }
 

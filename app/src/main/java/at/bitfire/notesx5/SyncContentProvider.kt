@@ -1,5 +1,6 @@
 package at.bitfire.notesx5
 
+import android.accounts.Account
 import android.content.ContentProvider
 import android.content.ContentUris
 import android.content.ContentValues
@@ -82,53 +83,53 @@ class SyncContentProvider : ContentProvider() {
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
 
+        if (context == null)
+            return 0
+
         isSyncAdapter(uri)
         // TODO: Make sure that only the items within the collection of the given account are considered
-        val accountName = getAccountNameQueryParameter(uri)
-        val accountType = getAccountTypeQueryParameter(uri)
+        val account = getAccountFromUri(uri)
 
 
         val count: Int
-        val args = arrayListOf<String>()
+        val args = arrayListOf(account.name, account.type)
         if (uri.pathSegments.size >= 2)
             args.add(uri.pathSegments[1].toLong().toString())      // add first argument (must be Long! String is expected, toLong would make other values null
 
+        var subquery = "SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID FROM $TABLE_NAME_ICALOBJECT INNER JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ?"
+
         var queryString = "DELETE FROM "
 
+        // The tables must be joined with the collections table in order to make sure that only accounts are affected that were passed in the URI!
         when (sUriMatcher.match(uri)) {
-            CODE_ICALOBJECTS_DIR -> queryString += "$TABLE_NAME_ICALOBJECT "  //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_ATTENDEES_DIR -> queryString += "$TABLE_NAME_ATTENDEE " // throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_CATEGORIES_DIR -> queryString += "$TABLE_NAME_CATEGORY " // throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_COMMENTS_DIR -> queryString += "$TABLE_NAME_COMMENT " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_CONTACTS_DIR -> queryString += "$TABLE_NAME_CONTACT " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_ORGANIZER_DIR -> queryString += "$TABLE_NAME_ORGANIZER " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_RELATEDTO_DIR -> queryString += "$TABLE_NAME_RELATEDTO " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
-            CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION " //throw java.lang.IllegalArgumentException("Invalid URI, cannot delete without ID ($uri)")
+            CODE_ICALOBJECTS_DIR -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) "
+            CODE_ATTENDEES_DIR -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) "
+            CODE_CATEGORIES_DIR -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) "
+            CODE_COMMENTS_DIR -> queryString += "$TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) "
+            CODE_CONTACTS_DIR -> queryString += "$TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) "
+            CODE_ORGANIZER_DIR -> queryString += "$TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) "
+            CODE_RELATEDTO_DIR -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) "
+            CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) "
+            CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
 
 
-            CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ?"
-            CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE WHERE $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ?"
-            CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY WHERE $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ?"
-            CODE_COMMENT_ITEM -> queryString += "$TABLE_NAME_COMMENT WHERE $TABLE_NAME_COMMENT.$COLUMN_COMMENT_ID = ?"
-            CODE_CONTACT_ITEM -> queryString += "$TABLE_NAME_CONTACT WHERE $TABLE_NAME_CONTACT.$COLUMN_CONTACT_ID = ?"
-            CODE_ORGANIZER_ITEM -> queryString += "$TABLE_NAME_ORGANIZER WHERE $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ID = ?"
-            CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ?"
-            CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ?"
-            CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = ?"
+            CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ? "
+            CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
+            CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ?"
+            CODE_COMMENT_ITEM -> queryString += "$TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_COMMENT.$COLUMN_COMMENT_ID = ? "
+            CODE_CONTACT_ITEM -> queryString += "$TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CONTACT.$COLUMN_CONTACT_ID = ? "
+            CODE_ORGANIZER_ITEM -> queryString += "$TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ID = ? "
+            CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ? "
+            CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ? "
+            CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = ? "
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
 
-        if (selection != null && sUriMatcher.match(uri) < 99)      // < 99 are DIRs and have no parameter!
-            queryString += " WHERE $selection"
-        if (selection != null && sUriMatcher.match(uri) > 99)
-            queryString += " AND ($selection)"
-
-        selectionArgs?.forEach { args.add(it) }          // add all selection args to the args array, no further validation needed here
-
-        if (context == null)
-            return 0
+        if (selection != null) {
+            queryString += "AND ($selection)"
+            selectionArgs?.forEach { args.add(it) }          // add all selection args to the args array, no further validation needed here
+        }
 
         // this block updates the count variable. The raw query doesn't return the count of the deleted rows, so we determine it before
         val countQueryString = queryString.replace("DELETE FROM ", "SELECT count(*) FROM ")
@@ -156,8 +157,7 @@ class SyncContentProvider : ContentProvider() {
 
         isSyncAdapter(uri)
         // TODO: Make sure that only the items within the collection of the given account are considered
-        val accountName = getAccountNameQueryParameter(uri)
-        val accountType = getAccountTypeQueryParameter(uri)
+        getAccountFromUri(uri)     // here this is used just for validation
 
 
         val id: Long?
@@ -214,8 +214,8 @@ class SyncContentProvider : ContentProvider() {
 
         isSyncAdapter(uri)
         // TODO: Make sure that only the items within the collection of the given account are considered
-        val accountName = getAccountNameQueryParameter(uri)
-        val accountType = getAccountTypeQueryParameter(uri)
+        val account = getAccountFromUri(uri)
+
 
 
         val args = arrayListOf<String>()
@@ -282,8 +282,7 @@ class SyncContentProvider : ContentProvider() {
 
         isSyncAdapter(uri)
         // TODO: Make sure that only the items within the collection of the given account are considered
-        val accountName = getAccountNameQueryParameter(uri)
-        val accountType = getAccountTypeQueryParameter(uri)
+        val account = getAccountFromUri(uri)
 
         if (values == null)
             throw java.lang.IllegalArgumentException("Values (Content Values) must not be null.")
@@ -386,19 +385,16 @@ class SyncContentProvider : ContentProvider() {
             throw java.lang.IllegalArgumentException("Currently only Syncadapters are supported. Uri: ($uri)")
     }
 
-    private fun getAccountNameQueryParameter(uri: Uri): String {
-        val accountName = uri.getQueryParameter(ACCOUNT_NAME)
-        if (accountName == null)
-            throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_NAME missing. Uri: ($uri)")
-        else return accountName
-    }
+    private fun getAccountFromUri(uri: Uri): Account {
+        val accountName = uri.getQueryParameter(ACCOUNT_NAME) ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_NAME missing. Uri: ($uri)")
+        if (accountName == "LOCAL")
+            throw java.lang.IllegalArgumentException("Local collections cannot be used. Uri: ($uri)")
 
+        val accountType = uri.getQueryParameter(ACCOUNT_TYPE) ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_TYPE missing. Uri: ($uri)")
+        if (accountType == "LOCAL")
+            throw java.lang.IllegalArgumentException("Local collections cannot be used. Uri: ($uri)")
 
-    private fun getAccountTypeQueryParameter(uri: Uri): String {
-        val accountType = uri.getQueryParameter(ACCOUNT_TYPE)
-        if (accountType == null)
-            throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_TYPE missing. Uri: ($uri)")
-        else return accountType
+        return Account(accountName, accountType)
     }
 }
 
