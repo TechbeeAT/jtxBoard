@@ -133,9 +133,7 @@ class SyncContentProvider : ContentProvider() {
         val countQuery = SimpleSQLiteQuery(countQueryString, args.toArray())
         count = database.deleteRAW(countQuery)
 
-
         val deleteQuery = SimpleSQLiteQuery(queryString, args.toArray())
-
         Log.println(Log.INFO, "SyncContentProvider", "Delete Query prepared: $queryString")
         Log.println(Log.INFO, "SyncContentProvider", "Delete Query args prepared: ${args.joinToString(separator = ", ")}")
 
@@ -239,7 +237,7 @@ class SyncContentProvider : ContentProvider() {
 
             CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ? "
             CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
-            CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ?"
+            CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ? "
             CODE_COMMENT_ITEM -> queryString += "$TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_COMMENT.$COLUMN_COMMENT_ID = ? "
             CODE_CONTACT_ITEM -> queryString += "$TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CONTACT.$COLUMN_CONTACT_ID = ? "
             CODE_ORGANIZER_ITEM -> queryString += "$TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ID = ? "
@@ -269,96 +267,99 @@ class SyncContentProvider : ContentProvider() {
     override fun update(uri: Uri, values: ContentValues?, selection: String?,
                         selectionArgs: Array<String>?): Int {
 
+
         if (context == null)
             return 0
 
+        if(values == null || values.size() == 0)
+            throw java.lang.IllegalArgumentException("Cannot update without values.")
+
         isSyncAdapter(uri)
-        // TODO: Make sure that only the items within the collection of the given account are considered
         val account = getAccountFromUri(uri)
 
-        if (values == null)
-            throw java.lang.IllegalArgumentException("Values (Content Values) must not be null.")
-
-        var count = 0
-
+        // construct UPDATE <tablename>
+        var queryString = "UPDATE "
         when (sUriMatcher.match(uri)) {
-            //CODE_ICALOBJECTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
-            CODE_ICALOBJECTS_DIR -> {
-                var queryString = "SELECT * FROM $TABLE_NAME_ICALOBJECT "
-                if (selection != null)
-                    queryString += "WHERE $selection"
-                val query = SimpleSQLiteQuery(queryString, selectionArgs)
-                val resultList = database.getICalObjectRaw(query)
-                if (resultList.isNullOrEmpty())
-                    throw java.lang.IllegalArgumentException("No results found for the given selection.")
-                resultList.forEach {
-                    database.updateICalObjectSync(it.applyContentValues(values))
-                    count++
-                }
-            }
-            CODE_ATTENDEES_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
-            CODE_CATEGORIES_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
-            CODE_COMMENTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
-            CODE_CONTACTS_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
-            CODE_ORGANIZER_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
-            CODE_RELATEDTO_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
-            CODE_RESOURCE_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
-            CODE_COLLECTION_DIR -> throw java.lang.IllegalArgumentException("Invalid URI, cannot update without ID ($uri)")
+            CODE_ICALOBJECTS_DIR -> queryString += "$TABLE_NAME_ICALOBJECT "
+            CODE_ATTENDEES_DIR -> queryString += "$TABLE_NAME_ATTENDEE "
+            CODE_CATEGORIES_DIR -> queryString += "$TABLE_NAME_CATEGORY "
+            CODE_COMMENTS_DIR -> queryString += "$TABLE_NAME_COMMENT "
+            CODE_CONTACTS_DIR -> queryString += "$TABLE_NAME_CONTACT "
+            CODE_ORGANIZER_DIR -> queryString += "$TABLE_NAME_ORGANIZER "
+            CODE_RELATEDTO_DIR -> queryString += "$TABLE_NAME_RELATEDTO "
+            CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE "
+            CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION "
 
+            CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT "
+            CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE "
+            CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY "
+            CODE_COMMENT_ITEM -> queryString += "$TABLE_NAME_COMMENT "
+            CODE_CONTACT_ITEM -> queryString += "$TABLE_NAME_CONTACT "
+            CODE_ORGANIZER_ITEM -> queryString += "$TABLE_NAME_ORGANIZER "
+            CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO "
+            CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE "
+            CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION "
 
-            CODE_ICALOBJECT_ITEM -> database.getICalObjectByIdSync(ContentUris.parseId(uri)).also {
-                if (it != null)
-                    count = database.updateICalObjectSync(it.applyContentValues(values))
-                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
-            }
-            CODE_ATTENDEE_ITEM -> database.getAttendeeByIdSync(ContentUris.parseId(uri)).also {
-                if (it != null)
-                    count = database.updateAttendeeSync(it.applyContentValues(values))
-                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
-            }
-            CODE_CATEGORY_ITEM -> database.getCategoryByIdSync(ContentUris.parseId(uri)).also {
-                if (it != null)
-                    count = database.updateCategorySync(it.applyContentValues(values))
-                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
-            }
-            CODE_COMMENT_ITEM -> database.getCommentByIdSync(ContentUris.parseId(uri)).also {
-                if (it != null)
-                    count = database.updateCommentSync(it.applyContentValues(values))
-                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
-            }
-            CODE_CONTACT_ITEM -> database.getContactByIdSync(ContentUris.parseId(uri)).also {
-                if (it != null)
-                    count = database.updateContactSync(it.applyContentValues(values))
-                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
-            }
-            CODE_ORGANIZER_ITEM -> database.getOrganizerByIdSync(ContentUris.parseId(uri)).also {
-                if (it != null)
-                    count = database.updateOrganizerSync(it.applyContentValues(values))
-                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
-            }
-            CODE_RELATEDTO_ITEM -> database.getRelatedtoByIdSync(ContentUris.parseId(uri)).also {
-                if (it != null)
-                    count = database.updateRelatedtoSync(it.applyContentValues(values))
-                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
-            }
-            CODE_RESOURCE_ITEM -> database.getResourceByIdSync(ContentUris.parseId(uri)).also {
-                if (it != null)
-                    count = database.updateResourceSync(it.applyContentValues(values))
-                else throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
-            }
-            CODE_COLLECTION_ITEM -> database.getCollectionByIdSync(ContentUris.parseId(uri)).also {
-                when {
-                    it == null -> throw java.lang.IllegalArgumentException("Invalid URI, ID not found ($uri)")
-                    it.collectionId == 1L -> throw java.lang.IllegalArgumentException("Local Collection cannot be updated. ($uri)")
-                    else -> count = database.updateCollectionSync(it.applyContentValues(values))
-                }
-            }
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
 
-        context!!.contentResolver.notifyChange(uri, null)
-        return count
+        //construct SET <key> = <value>
+        queryString += "SET "
+        val args: ArrayList<String> = arrayListOf()
+        values.valueSet().forEach {
+            queryString += "${it.key} = ?, "
+            args.add(it.value.toString())
+        }
+        queryString = queryString.removeSuffix(", ")
 
+        args.add(account.name)
+        args.add(account.type)
+        if (uri.pathSegments.size >= 2)
+            args.add(uri.pathSegments[1].toLong().toString())      // add first argument (must be Long! String is expected, toLong would make other values null
+
+        //construct WHERE icalobjectId in <subquery> and further conditions
+        val subquery = "SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID FROM $TABLE_NAME_ICALOBJECT INNER JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ?"
+        queryString += " WHERE "
+
+        when (sUriMatcher.match(uri)) {
+            CODE_ICALOBJECTS_DIR -> queryString += "$COLUMN_ID IN ($subquery) "
+            CODE_ATTENDEES_DIR -> queryString += "$COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) "
+            CODE_CATEGORIES_DIR -> queryString += "$COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) "
+            CODE_COMMENTS_DIR -> queryString += "$COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) "
+            CODE_CONTACTS_DIR -> queryString += "$COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) "
+            CODE_ORGANIZER_DIR -> queryString += "$COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) "
+            CODE_RELATEDTO_DIR -> queryString += "$COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) "
+            CODE_RESOURCE_DIR -> queryString += "$COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) "
+            CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
+
+            CODE_ICALOBJECT_ITEM -> queryString += "$COLUMN_ID IN ($subquery) AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ? "
+            CODE_ATTENDEE_ITEM -> queryString += "$COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
+            CODE_CATEGORY_ITEM -> queryString += "$COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ? "
+            CODE_COMMENT_ITEM -> queryString += "$COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_COMMENT.$COLUMN_COMMENT_ID = ? "
+            CODE_CONTACT_ITEM -> queryString += "$COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CONTACT.$COLUMN_CONTACT_ID = ? "
+            CODE_ORGANIZER_ITEM -> queryString += "$COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ID = ? "
+            CODE_RELATEDTO_ITEM -> queryString += "$COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ? "
+            CODE_RESOURCE_ITEM -> queryString += "$COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ? "
+            CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = ? "
+
+            else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
+        }
+
+        if (selection != null) {
+            queryString += "AND ($selection)"
+            selectionArgs?.forEach { args.add(it) }          // add all selection args to the args array, no further validation needed here
+        }
+
+        Log.println(Log.INFO, "SyncContentProvider", "Update-Query prepared: $queryString")
+        Log.println(Log.INFO, "SyncContentProvider", "Update-Query args prepared: ${args.joinToString(separator = ", ")}")
+
+        val updateQuery = SimpleSQLiteQuery(queryString, args.toArray())
+
+        // TODO: find a solution to efficiently return the actual count of updated rows (the return value of the RAW-query doesn't work)
+        //val count = database.updateRAW(updateQuery)
+        database.updateRAW(updateQuery)
+        context!!.contentResolver.notifyChange(uri, null)
+        return 1
     }
 
 

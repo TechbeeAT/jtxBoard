@@ -454,6 +454,16 @@ DELETEs by Object
     @RawQuery
     fun deleteRAW(query: SupportSQLiteQuery): Int
 
+    /**
+     * Updates entities through a RawQuery.
+     * This is especially used for the Content Provider
+     *
+     * @param query The UPDATE statement.
+     * @return A number of Entities that were updated.
+     */
+    @Transaction
+    @RawQuery
+    fun updateRAW(query: SupportSQLiteQuery): Int
 
 
 
