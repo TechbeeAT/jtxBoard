@@ -87,16 +87,13 @@ class SyncContentProvider : ContentProvider() {
             return 0
 
         isSyncAdapter(uri)
-        // TODO: Make sure that only the items within the collection of the given account are considered
         val account = getAccountFromUri(uri)
-
-
         val count: Int
         val args = arrayListOf(account.name, account.type)
         if (uri.pathSegments.size >= 2)
             args.add(uri.pathSegments[1].toLong().toString())      // add first argument (must be Long! String is expected, toLong would make other values null
 
-        var subquery = "SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID FROM $TABLE_NAME_ICALOBJECT INNER JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ?"
+        val subquery = "SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID FROM $TABLE_NAME_ICALOBJECT INNER JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ?"
 
         var queryString = "DELETE FROM "
 
@@ -159,7 +156,6 @@ class SyncContentProvider : ContentProvider() {
         // TODO: Make sure that only the items within the collection of the given account are considered
         getAccountFromUri(uri)     // here this is used just for validation
 
-
         val id: Long?
 
         when (sUriMatcher.match(uri)) {
@@ -210,57 +206,51 @@ class SyncContentProvider : ContentProvider() {
     override fun query(uri: Uri, projection: Array<String>?, selection: String?,
                        selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
 
-        // TODO: validate uri and throw IllegalArgumentException if wrong
+        if (context == null)
+            return null
 
         isSyncAdapter(uri)
-        // TODO: Make sure that only the items within the collection of the given account are considered
         val account = getAccountFromUri(uri)
-
-
-
-        val args = arrayListOf<String>()
-
+        val args = arrayListOf(account.name, account.type)
         if (uri.pathSegments.size >= 2)
             args.add(uri.pathSegments[1].toLong().toString())      // add first argument (must be Long! String is expected, toLong would make other values null
 
+        val subquery = "SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID FROM $TABLE_NAME_ICALOBJECT INNER JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ?"
 
         var queryString = "SELECT "
-        if (projection.isNullOrEmpty())
-            queryString += "*"
+        queryString += if (projection.isNullOrEmpty())
+            "*"
         else
-            queryString += projection.joinToString(separator = ", ")
+            projection.joinToString(separator = ", ")
 
         queryString += " FROM "
 
         when (sUriMatcher.match(uri)) {
-            CODE_ICALOBJECTS_DIR -> queryString += TABLE_NAME_ICALOBJECT
-            CODE_ATTENDEES_DIR -> queryString += TABLE_NAME_ATTENDEE
-            CODE_CATEGORIES_DIR -> queryString += TABLE_NAME_CATEGORY
-            CODE_COMMENTS_DIR -> queryString += TABLE_NAME_COMMENT
-            CODE_CONTACTS_DIR -> queryString += TABLE_NAME_CONTACT
-            CODE_ORGANIZER_DIR -> queryString += TABLE_NAME_ORGANIZER
-            CODE_RELATEDTO_DIR -> queryString += TABLE_NAME_RELATEDTO
-            CODE_RESOURCE_DIR -> queryString += TABLE_NAME_RESOURCE
-            CODE_COLLECTION_DIR -> queryString += TABLE_NAME_COLLECTION
+            CODE_ICALOBJECTS_DIR -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) "
+            CODE_ATTENDEES_DIR -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) "
+            CODE_CATEGORIES_DIR -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) "
+            CODE_COMMENTS_DIR -> queryString += "$TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) "
+            CODE_CONTACTS_DIR -> queryString += "$TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) "
+            CODE_ORGANIZER_DIR -> queryString += "$TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) "
+            CODE_RELATEDTO_DIR -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) "
+            CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) "
+            CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
 
 
-            CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ?"
-            CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE WHERE $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ?"
-            CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY WHERE $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ?"
-            CODE_COMMENT_ITEM -> queryString += "$TABLE_NAME_COMMENT WHERE $TABLE_NAME_COMMENT.$COLUMN_COMMENT_ID = ?"
-            CODE_CONTACT_ITEM -> queryString += "$TABLE_NAME_CONTACT WHERE $TABLE_NAME_CONTACT.$COLUMN_CONTACT_ID = ?"
-            CODE_ORGANIZER_ITEM -> queryString += "$TABLE_NAME_ORGANIZER WHERE $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ID = ?"
-            CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO WHERE $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ?"
-            CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ?"
-            CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = ?"
+            CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ? "
+            CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
+            CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ?"
+            CODE_COMMENT_ITEM -> queryString += "$TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_COMMENT.$COLUMN_COMMENT_ID = ? "
+            CODE_CONTACT_ITEM -> queryString += "$TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CONTACT.$COLUMN_CONTACT_ID = ? "
+            CODE_ORGANIZER_ITEM -> queryString += "$TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ID = ? "
+            CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ? "
+            CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ? "
+            CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = ? "
 
-
-            else -> throw IllegalArgumentException("Unknown URI: $uri")
+            else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
 
-        if (selection != null && sUriMatcher.match(uri) < 99)      // < 99 are DIRs and have no parameter!
-            queryString += " WHERE $selection"
-        if (selection != null && sUriMatcher.match(uri) > 99)
+        if (selection != null)
             queryString += " AND ($selection)"
 
         selectionArgs?.forEach { args.add(it) }          // add all selection args to the args array, no further validation needed here
@@ -274,11 +264,13 @@ class SyncContentProvider : ContentProvider() {
         Log.println(Log.INFO, "SyncContentProvider", "Query args prepared: ${args.joinToString(separator = ", ")}")
 
         return database.getCursor(query)
-
     }
 
     override fun update(uri: Uri, values: ContentValues?, selection: String?,
                         selectionArgs: Array<String>?): Int {
+
+        if (context == null)
+            return 0
 
         isSyncAdapter(uri)
         // TODO: Make sure that only the items within the collection of the given account are considered
@@ -361,13 +353,8 @@ class SyncContentProvider : ContentProvider() {
                     else -> count = database.updateCollectionSync(it.applyContentValues(values))
                 }
             }
-
-
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
-
-        if (context == null)
-            return count    // would be 0 here
 
         context!!.contentResolver.notifyChange(uri, null)
         return count
