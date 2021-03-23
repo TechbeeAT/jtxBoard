@@ -255,7 +255,7 @@ INSERTs (Synchronously)
     /*
 UPDATEs (Synchronously)
  */
-
+/*
     @Update
     fun updateICalObjectSync(iCalObject: ICalObject): Int
 
@@ -284,6 +284,8 @@ UPDATEs (Synchronously)
     @Update
     fun updateResourceSync(resource: Resource): Int
 
+
+ */
 
 /*
 DELETEs by Object

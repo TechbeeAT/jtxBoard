@@ -16,17 +16,20 @@
 
 package at.bitfire.notesx5.database
 
+import android.content.ContentValues
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import androidx.annotation.VisibleForTesting
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.views.ICal4List
 
 
 /**
- * A database that stores vJournal information.
+ * A database that stores ICal information.
  * And a global method to get access to the database.
  */
 
@@ -41,7 +44,7 @@ import at.bitfire.notesx5.database.views.ICal4List
     Relatedto::class,
     Resource::class],
         views = [ICal4List::class],
-        version = 70,
+        version = 71,
         exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {
@@ -85,6 +88,7 @@ abstract class ICalDatabase : RoomDatabase() {
          * @param context The application context Singleton, used to get access to the filesystem.
          */
         fun getInstance(context: Context): ICalDatabase {
+
             // Multiple threads can ask for the database at the same time, ensure we only initialize
             // it once by using synchronized. Only one thread may enter a synchronized block at a
             // time.
@@ -104,10 +108,44 @@ abstract class ICalDatabase : RoomDatabase() {
                             // migration with Room in this blog post:
                             // https://medium.com/androiddevelopers/understanding-migrations-with-room-f01e04b07929
                             .fallbackToDestructiveMigration()
+                            //This Callback is executed on create and on open. On create the local collection must be initialized.
+                            .addCallback( object: Callback() {
+                                override fun onCreate(db: SupportSQLiteDatabase) {
+                                    val cv = ContentValues()
+                                    cv.put(COLUMN_COLLECTION_ID, "1")
+                                    cv.put(COLUMN_COLLECTION_ACCOUNT_TYPE, "LOCAL")
+                                    cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, "LOCAL")
+                                    cv.put(COLUMN_COLLECTION_URL, "https://localhost")
+                                    cv.put(COLUMN_COLLECTION_SUPPORTSVJOURNAL, "true")
+                                    cv.put(COLUMN_COLLECTION_SUPPORTSVEVENT, "true")
+                                    cv.put(COLUMN_COLLECTION_SUPPORTSVTODO, "true")
+                                    cv.put(COLUMN_COLLECTION_READONLY, "false")
+                                    db.insert(TABLE_NAME_COLLECTION, SQLiteDatabase.CONFLICT_IGNORE, cv)
+                                    super.onCreate(db)
+                                }
+/*
+                                override fun onOpen(db: SupportSQLiteDatabase) {
+                                    val cv = ContentValues()
+                                    cv.put(COLUMN_COLLECTION_ID, "1")
+                                    cv.put(COLUMN_COLLECTION_ACCOUNT_TYPE, "LOCAL")
+                                    cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, "LOCAL")
+                                    cv.put(COLUMN_COLLECTION_URL, "https://localhost")
+                                    cv.put(COLUMN_COLLECTION_SUPPORTSVJOURNAL, "true")
+                                    cv.put(COLUMN_COLLECTION_SUPPORTSVEVENT, "true")
+                                    cv.put(COLUMN_COLLECTION_SUPPORTSVTODO, "true")
+                                    cv.put(COLUMN_COLLECTION_READONLY, "false")
+                                    db.insert(TABLE_NAME_COLLECTION, SQLiteDatabase.CONFLICT_IGNORE, cv)
+                                    super.onOpen(db)
+                                }
+
+ */
+                            })
                             .build()
                     // Assign INSTANCE to the newly created database.
                     INSTANCE = instance
                 }
+
+
                 // Return instance; smart cast to be non-null.
                 return instance
             }
