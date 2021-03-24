@@ -21,6 +21,8 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allCollections: LiveData<List<ICalCollection>>
+    lateinit var allRelatedto: LiveData<List<Relatedto>>
+
 
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
 
@@ -29,6 +31,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
     var iCalObjectUpdated: MutableLiveData<ICalObject> = MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property)}
+    var idsToDelete: MutableList<Long> = mutableListOf()
 
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
@@ -127,6 +130,8 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
 
 
+
+
     init {
 
         updateVisibility()
@@ -137,6 +142,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
             allCategories = database.getAllCategories()
             allCollections = database.getAllCollections()
+            allRelatedto = database.getAllRelatedto()
 
 
 
@@ -335,14 +341,33 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     fun delete() {
 
+        // determine all children (and children of children...) recursively and add them to the list
+        determineIdsToDelete(iCalObjectUpdated.value!!.id)
+
         if(iCalObjectUpdated.value!!.collectionId == 1L) {
             viewModelScope.launch(Dispatchers.IO) {
-                database.deleteRelatedChildren(iCalEntity.property.id)
-                database.delete(iCalEntity.property)
+                database.deleteICalObjectsbyIds(idsToDelete)
             }
         } else {
-            iCalObjectUpdated.value!!.deleted = true
-            this.update()
+            viewModelScope.launch() {
+                database.updateDeleted(idsToDelete, System.currentTimeMillis())
+            }
+        }
+    }
+
+    /**
+     * this function takes a parent [id], adds it to the list of items to be deleted and recursively calls itself
+     * for each child. The child becomes the parent and is added to the list of items to be deleted and so on.
+     */
+    fun determineIdsToDelete(id: Long) {
+
+        // add the current parent to the list
+        idsToDelete.add(id)
+
+        // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
+        val children = allRelatedto.value?.filter { it.icalObjectId == id }
+        children?.forEach {
+            determineIdsToDelete(it.linkedICalObjectId)
         }
     }
 

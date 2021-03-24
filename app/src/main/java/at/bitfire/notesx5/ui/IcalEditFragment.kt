@@ -356,6 +356,9 @@ class IcalEditFragment : Fragment(),
             }
         })
 
+        // Set up items to suggest for categories
+        icalEditViewModel.allRelatedto.observe(viewLifecycleOwner, {  })
+
         icalEditViewModel.allCollections.observe(viewLifecycleOwner, {
 
             // set up the adapter for the organizer spinner

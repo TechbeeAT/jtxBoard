@@ -197,8 +197,6 @@ abstract class ICalDatabase : RoomDatabase() {
             val jDesc = "1. Steering PPT presented and discussed\n\n" +
                     "2. Testphase will be initiated on Thursday\n\n" +
                     "3. Management presentation in progress"
-
-
              */
             val noteSummary = "Notes for the next JF"
             val noteDesc = "Get a proper pen\nOffer free coffee for everyone"

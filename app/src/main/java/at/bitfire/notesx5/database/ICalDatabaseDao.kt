@@ -21,8 +21,8 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import at.bitfire.notesx5.database.properties.*
-import at.bitfire.notesx5.database.relations.ICalEntity
 import at.bitfire.notesx5.database.relations.ICal4ListWithRelatedto
+import at.bitfire.notesx5.database.relations.ICalEntity
 import at.bitfire.notesx5.database.views.ICal4List
 import at.bitfire.notesx5.database.views.VIEW_NAME_ICAL4LIST
 
@@ -63,6 +63,17 @@ SELECTs (global selects without parameter)
     @Transaction
     @Query("SELECT * FROM collection ORDER BY displayname ASC")
     fun getAllCollections(): LiveData<List<ICalCollection>>
+
+
+    /**
+     * Retrieve an list of all Relatedto ([Relatedto]) as a List
+     *
+     * @return a list of [Relatedto] as List<Relatedto>
+     */
+    @Transaction
+    @Query("SELECT * FROM relatedto")
+    fun getAllRelatedto(): LiveData<List<Relatedto>>
+
 
     /**
      * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
@@ -301,6 +312,15 @@ DELETEs by Object
     @Delete
     fun delete(icalObject: ICalObject)
 
+    /**
+     * Delete an iCalObject by the object.
+     *
+     * @param icalObject The object of the icalObject that should be deleted.
+     */
+    @Query("DELETE FROM icalobject WHERE _id IN (:ids)")
+    fun deleteICalObjectsbyIds(ids: List<Long>)
+
+
 
 
     /**
@@ -479,6 +499,10 @@ DELETEs by Object
     @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_PERCENT = :progress, $COLUMN_STATUS = :status, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
     suspend fun updateProgress(id: Long, progress: Int, status: String, lastModified: Long)
+
+    @Transaction
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DELETED = 1, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:ids)")
+    suspend fun updateDeleted(ids: List<Long>, lastModified: Long)
 
 
 /*
