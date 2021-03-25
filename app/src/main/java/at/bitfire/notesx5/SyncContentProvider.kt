@@ -305,10 +305,10 @@ class SyncContentProvider : ContentProvider() {
 
         //construct SET <key> = <value>
         queryString += "SET "
-        val args: ArrayList<String> = arrayListOf()
+        val args: ArrayList<Any> = arrayListOf()
         values.valueSet().forEach {
             queryString += "${it.key} = ?, "
-            args.add(it.value.toString())
+            args.add(it.value)
         }
         queryString = queryString.removeSuffix(", ")
 

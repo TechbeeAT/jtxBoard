@@ -492,10 +492,21 @@ class SyncContentProviderTest {
 
     }
 
+    @Test
+    fun collection_query_all() {
+        //prepare
+        val account = Account("collection1", "collection1")
+        val col1 = insertCollection(account, null, "Collection1")
+        val col2 = insertCollection(account, null, "Collection2")
+
+        val allCollections: Cursor? = mContentResolver?.query(NotesX5Contract.X5Collection.CONTENT_URI.asSyncAdapter(account), arrayOf(NotesX5Contract.X5Collection.ID), null, null, null)
+        assertEquals(2, allCollections?.count)
+
+        mContentResolver?.delete(col1!!, null, null)
+        mContentResolver?.delete(col2!!, null, null)
 
 
-
-
+    }
 
 
 
