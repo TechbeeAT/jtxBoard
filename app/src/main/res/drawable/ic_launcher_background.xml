@@ -14,11 +14,13 @@
         android:strokeColor="#00000000"
         android:fillAlpha="0.989309"/>
     <path
-        android:pathData="M-94.85,933.83a1264.81,362.5 0,1 0,2529.62 0a1264.81,362.5 0,1 0,-2529.62 0z"
+        android:pathData="M41.78,773.88a1264.81,362.5 0,1 0,2529.62 0a1264.81,362.5 0,1 0,-2529.62 0z"
         android:strokeAlpha="0.75"
-        android:strokeWidth="0"
-        android:fillColor="#81997b"
-        android:fillAlpha="0.69"/>
+        android:strokeWidth="11.24965618"
+        android:fillColor="#ffffff"
+        android:strokeColor="#00000000"
+        android:fillType="nonZero"
+        android:fillAlpha="0.33635098"/>
     <group>
       <clip-path
           android:pathData="m923.31,974.52l-747.61,0c-39.35,0 -71.25,-31.9 -71.25,-71.25l0,-703.76c0,-39.35 31.9,-71.25 71.25,-71.25l747.61,0c39.35,0 71.25,31.9 71.25,71.25l0,703.76c0,39.35 -31.9,71.25 -71.25,71.25z"/>
