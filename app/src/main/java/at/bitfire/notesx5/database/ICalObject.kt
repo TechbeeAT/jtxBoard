@@ -5,7 +5,7 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.room.*
 import at.bitfire.notesx5.R
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.lang.IllegalArgumentException
 import java.util.*
 

@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.room.*
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 
 /** The name of the the table for Collections.

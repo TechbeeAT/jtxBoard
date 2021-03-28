@@ -18,12 +18,12 @@ import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Role
 import at.bitfire.notesx5.databinding.FragmentIcalViewBinding
+import at.bitfire.notesx5.databinding.FragmentIcalViewCommentBinding
+import at.bitfire.notesx5.databinding.FragmentIcalViewRelatedtoBinding
+import at.bitfire.notesx5.databinding.FragmentIcalViewSubtaskBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.fragment_ical_view_comment.view.*
-import kotlinx.android.synthetic.main.fragment_ical_view_relatedto.view.*
-import kotlinx.android.synthetic.main.fragment_ical_view_subtask.view.*
 import java.lang.IllegalArgumentException
 
 
@@ -31,9 +31,9 @@ class IcalViewFragment : Fragment() {
 
     lateinit var binding: FragmentIcalViewBinding
     lateinit var application: Application
-    lateinit var inflater: LayoutInflater
-    lateinit var dataSource: ICalDatabaseDao
-    lateinit var viewModelFactory: IcalViewViewModelFactory
+    private lateinit var inflater: LayoutInflater
+    private lateinit var dataSource: ICalDatabaseDao
+    private lateinit var viewModelFactory: IcalViewViewModelFactory
     lateinit var icalViewViewModel: IcalViewViewModel
 
 
@@ -57,7 +57,7 @@ class IcalViewFragment : Fragment() {
 
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-        val arguments = IcalViewFragmentArgs.fromBundle((arguments!!))
+        val arguments = IcalViewFragmentArgs.fromBundle((requireArguments()))
 
         // add menu
         setHasOptionsMenu(true)
@@ -110,9 +110,9 @@ class IcalViewFragment : Fragment() {
 
                 binding.viewCommentsLinearlayout.removeAllViews()
                 icalViewViewModel.icalEntity.value!!.comment?.forEach { comment ->
-                    val commentView = inflater.inflate(R.layout.fragment_ical_view_comment, container, false)
-                    commentView.view_comment_textview.text = comment.text
-                    binding.viewCommentsLinearlayout.addView(commentView)
+                    val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
+                    commentBinding.viewCommentTextview.text = comment.text
+                    binding.viewCommentsLinearlayout.addView(commentBinding.root)
                 }
 
                 if(it.ICalCollection?.color != null) {
@@ -138,13 +138,13 @@ class IcalViewFragment : Fragment() {
             {
                 binding.viewFeedbackLinearlayout.removeAllViews()
                 it.forEach { relatedICalObject ->
-                    val relatedView = inflater.inflate(R.layout.fragment_ical_view_relatedto, container, false)
-                    relatedView.view_related_textview.text = relatedICalObject?.summary
-                    relatedView.setOnClickListener { view ->
+                    val relatedtoBinding = FragmentIcalViewRelatedtoBinding.inflate(inflater, container, false)
+                    relatedtoBinding.viewRelatedTextview.text = relatedICalObject?.summary
+                    relatedtoBinding.root.setOnClickListener { view ->
                         view.findNavController().navigate(
                                 IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(relatedICalObject!!.id))
                     }
-                    binding.viewFeedbackLinearlayout.addView(relatedView)
+                    binding.viewFeedbackLinearlayout.addView(relatedtoBinding.root)
                 }
             }
         })
@@ -219,7 +219,7 @@ class IcalViewFragment : Fragment() {
 
         binding.viewAddNote.setOnClickListener {
 
-            val newNote = TextInputEditText(context!!)
+            val newNote = TextInputEditText(requireContext())
             newNote.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             newNote.isSingleLine = false
             newNote.maxLines = 8
@@ -419,18 +419,6 @@ class IcalViewFragment : Fragment() {
 
         binding.viewAttendeeChipgroup.addView(attendeeChip)
 
-        attendeeChip.setOnClickListener {
-            // Responds to chip click
-            // TODO: maybe go back to list view and filter all items with this attendee
-        }
-
-        attendeeChip.setOnCloseIconClickListener { chip ->
-            //vJournalEditViewModel.categoryDeleted.add(attendee)  // add the category to the list for categories to be deleted
-        }
-
-        attendeeChip.setOnCheckedChangeListener { chip, isChecked ->
-            // Responds to chip checked/unchecked
-        }
     }
 
 
@@ -439,36 +427,36 @@ class IcalViewFragment : Fragment() {
         if (subtask == null)
             return
 
+        val subtaskBinding = FragmentIcalViewSubtaskBinding.inflate(inflater, container, false)
+
         var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
 
-        val subtaskView = inflater.inflate(R.layout.fragment_ical_view_subtask, container, false)
-
-        var subtaskSummary =subtask.summary
+       var subtaskSummary =subtask.summary
         val subtaskCount = icalViewViewModel.subtasksCountList.value?.find { subtask.id == it.icalobjectId}?.count
         if (subtaskCount != null)
             subtaskSummary += " (+${subtaskCount})"
-        subtaskView.view_subtask_textview.text = subtaskSummary
-        subtaskView.view_subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
-        subtaskView.view_subtask_progress_percent.text = if(subtask.percent?.toFloat() != null) subtask.percent!!.toString() else "0"
-        subtaskView.view_subtask_progress_checkbox.isChecked = subtask.percent == 100
+        subtaskBinding.viewSubtaskTextview.text = subtaskSummary
+        subtaskBinding.viewSubtaskProgressSlider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
+        subtaskBinding.viewSubtaskProgressPercent.text = if(subtask.percent?.toFloat() != null) subtask.percent!!.toString() else "0"
+        subtaskBinding.viewSubtaskProgressCheckbox.isChecked = subtask.percent == 100
 
         // Instead of implementing here
         //        subtaskView.subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->  vJournalItemViewModel.updateProgress(subtask, value.toInt())    }
         //   the approach here is to update only onStopTrackingTouch. The OnCangeListener would update on several times on sliding causing lags and unnecessary updates  */
-        subtaskView.view_subtask_progress_slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+        subtaskBinding.viewSubtaskProgressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
             override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                if (subtaskView.view_subtask_progress_slider.value < 100)
-                    resetProgress = subtaskView.view_subtask_progress_slider.value.toInt()
-                icalViewViewModel.updateProgress(subtask, subtaskView.view_subtask_progress_slider.value.toInt())
+                if (subtaskBinding.viewSubtaskProgressSlider.value < 100)
+                    resetProgress = subtaskBinding.viewSubtaskProgressSlider.value.toInt()
+                icalViewViewModel.updateProgress(subtask, subtaskBinding.viewSubtaskProgressSlider.value.toInt())
 
 
             }
         })
 
-        subtaskView.view_subtask_progress_checkbox.setOnCheckedChangeListener { button, checked ->
+        subtaskBinding.viewSubtaskProgressCheckbox.setOnCheckedChangeListener { _, checked ->
             if (checked) {
                 icalViewViewModel.updateProgress(subtask, 100)
             } else {
@@ -477,12 +465,12 @@ class IcalViewFragment : Fragment() {
 
         }
 
-        subtaskView.view_subtask_cardview.setOnClickListener {
+        subtaskBinding.root.setOnClickListener {
             it.findNavController().navigate(
                     IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(subtask.id))
         }
 
-            binding.viewSubtasksLinearlayout.addView(subtaskView)
+            binding.viewSubtasksLinearlayout.addView(subtaskBinding.root)
     }
 
 

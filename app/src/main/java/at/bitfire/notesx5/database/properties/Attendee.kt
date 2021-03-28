@@ -6,11 +6,9 @@ import android.provider.BaseColumns
 import androidx.annotation.Nullable
 import androidx.room.*
 import at.bitfire.notesx5.R
-import at.bitfire.notesx5.database.COLUMN_COMPONENT
 import at.bitfire.notesx5.database.COLUMN_ID
-import at.bitfire.notesx5.database.Classification
 import at.bitfire.notesx5.database.ICalObject
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 
 /** The name of the the table for Attendees that are linked to an ICalObject.

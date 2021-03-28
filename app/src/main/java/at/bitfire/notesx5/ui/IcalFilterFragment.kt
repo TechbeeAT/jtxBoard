@@ -1,7 +1,6 @@
 package at.bitfire.notesx5.ui
 
 
-
 import android.app.Application
 import android.os.Bundle
 import android.view.*
@@ -14,16 +13,15 @@ import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.databinding.FragmentIcalFilterBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import kotlinx.android.synthetic.main.fragment_ical_filter.*
 import java.util.*
 
 
-class IcalFilterFragment : Fragment()  {
+class IcalFilterFragment : Fragment() {
 
     lateinit var binding: FragmentIcalFilterBinding
     lateinit var application: Application
     lateinit var dataSource: ICalDatabaseDao
-    lateinit var viewModelFactory:  IcalFilterViewModelFactory
+    lateinit var viewModelFactory: IcalFilterViewModelFactory
     lateinit var icalFilterViewModel: IcalFilterViewModel
     lateinit var inflater: LayoutInflater
 
@@ -68,9 +66,8 @@ class IcalFilterFragment : Fragment()  {
         binding.lifecycleOwner = this
 
 
-
         // get previously selected items from arguments
-        val arguments = IcalFilterFragmentArgs.fromBundle((arguments!!))
+        val arguments = IcalFilterFragmentArgs.fromBundle((requireArguments()))
 
         componentPreselected = arguments.component2preselect
 
@@ -105,11 +102,11 @@ class IcalFilterFragment : Fragment()  {
 
         // Retrieve the String values for the ENUMs Classification, StatusTodo and StatusJournal
         val classificationItems: MutableList<String> = mutableListOf()
-        Classification.values().forEach { classificationItems.add(getString(it.stringResource))       }
+        Classification.values().forEach { classificationItems.add(getString(it.stringResource)) }
         val statusTodoItems: MutableList<String> = mutableListOf()
-        StatusTodo.values().forEach { statusTodoItems.add(getString(it.stringResource))       }
+        StatusTodo.values().forEach { statusTodoItems.add(getString(it.stringResource)) }
         val statusJournalItems: MutableList<String> = mutableListOf()
-        StatusJournal.values().forEach { statusJournalItems.add(getString(it.stringResource))       }
+        StatusJournal.values().forEach { statusJournalItems.add(getString(it.stringResource)) }
 
         if (arguments.component2preselect == Component.TODO.name)
             addChips(binding.statusTodoFilterChipgroup, statusTodoItems, displayedStatusChips, statusTodoPreselected)
@@ -132,7 +129,8 @@ class IcalFilterFragment : Fragment()  {
 
             val collectionDisplayNames = mutableListOf<String>()
             icalFilterViewModel.allCollections.value?.forEach {
-                collectionDisplayNames.add(it.displayName?: it.url)}
+                collectionDisplayNames.add(it.displayName ?: it.url)
+            }
             addChips(binding.collectionFilterChipgroup, collectionDisplayNames, displayedCollectionChips, collectionPreselected)
 
         })
@@ -148,7 +146,7 @@ class IcalFilterFragment : Fragment()  {
      * [displayed] is a MutableList that saves the already created Chips in order to not display the same category twice (can be an issue especially with loading of data from the DB.
      * [preselected] items can be passed through arguments
      */
-    private fun addChips(chipGroup: ChipGroup, list: List<String>, displayed: MutableList<String>, preselected: MutableList<String>)  {
+    private fun addChips(chipGroup: ChipGroup, list: List<String>, displayed: MutableList<String>, preselected: MutableList<String>) {
 
         list.forEach() { listItem ->
 
@@ -158,14 +156,13 @@ class IcalFilterFragment : Fragment()  {
             val chip = inflater.inflate(R.layout.fragment_ical_filter_chip, chipGroup, false) as Chip
             chip.text = listItem
             chipGroup.addView(chip)
-            if(preselected.contains(listItem)) {   // if the current item is in the list of preselected items, then check it
+            if (preselected.contains(listItem)) {   // if the current item is in the list of preselected items, then check it
                 chip.isChecked = true
             }
             displayed.add(listItem)
 
         }
     }
-
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

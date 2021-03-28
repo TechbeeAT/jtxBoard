@@ -6,7 +6,7 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.room.*
 import at.bitfire.notesx5.database.*
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 
 /** The name of the the table for Resources that are linked to an ICalObject.

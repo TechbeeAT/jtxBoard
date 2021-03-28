@@ -6,7 +6,7 @@ import android.provider.BaseColumns
 import androidx.room.*
 import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.ICalObject
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 
 /** The name of the the table for Relationships (related-to) that are linked to an ICalObject.

@@ -1,7 +1,6 @@
 package at.bitfire.notesx5.ui
 
 import android.content.Context
-import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,9 +16,9 @@ import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.relations.ICal4ListWithRelatedto
 import at.bitfire.notesx5.database.views.ICal4List
+import at.bitfire.notesx5.databinding.FragmentIcalListItemSubtaskBinding
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
-import kotlinx.android.synthetic.main.fragment_ical_list_item_subtask.view.*
 import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit
 
@@ -326,7 +325,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
         var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
 
-        val subtaskView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_ical_list_item_subtask, parent, false)
+        var subtaskBinding = FragmentIcalListItemSubtaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         var subtaskSummary = subtask.summary
         //val subtaskCount = model.subtasksCountList.value?.find { subtask.id == it.icalobjectId}?.count
@@ -335,46 +334,46 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
         if (subtask.subtasksCount > 0)
             subtaskSummary += " (+${subtask.subtasksCount})"
 
-        subtaskView.list_item_subtask_textview.text = subtaskSummary
-        subtaskView.list_item_subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
-        subtaskView.list_item_subtask_progress_percent.text = if(subtask.percent?.toFloat() != null) subtask.percent!!.toString() else "0"
-        subtaskView.list_item_subtask_progress_checkbox.isChecked = subtask.percent == 100
+        subtaskBinding.listItemSubtaskTextview.text = subtaskSummary
+        subtaskBinding.listItemSubtaskProgressSlider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
+        subtaskBinding.listItemSubtaskProgressPercent.text = if(subtask.percent?.toFloat() != null) subtask.percent!!.toString() else "0"
+        subtaskBinding.listItemSubtaskProgressCheckbox.isChecked = subtask.percent == 100
 
         // Instead of implementing here
         //        subtaskView.subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->  vJournalItemViewModel.updateProgress(subtask, value.toInt())    }
         //   the approach here is to update only onStopTrackingTouch. The OnCangeListener would update on several times on sliding causing lags and unnecessary updates  */
 
 
-        subtaskView.list_item_subtask_progress_slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+        subtaskBinding.listItemSubtaskProgressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
             override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
             }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                if (subtaskView.list_item_subtask_progress_slider.value < 100)
+                if (subtaskBinding.listItemSubtaskProgressSlider.value < 100)
                     resetProgress = subtask.percent?:0
 
-                model.updateProgress(subtask.id, subtaskView.list_item_subtask_progress_slider.value.toInt())
+                model.updateProgress(subtask.id, subtaskBinding.listItemSubtaskProgressSlider.value.toInt())
             }
         })
 
 
-        subtaskView.list_item_subtask_progress_checkbox.setOnCheckedChangeListener { _, checked ->
+        subtaskBinding.listItemSubtaskProgressCheckbox.setOnCheckedChangeListener { _, checked ->
 
             if (checked)
-                subtaskView.list_item_subtask_progress_slider.value = 100F
+                subtaskBinding.listItemSubtaskProgressSlider.value = 100F
             else
-                subtaskView.list_item_subtask_progress_slider.value = resetProgress.toFloat()
+                subtaskBinding.listItemSubtaskProgressSlider.value = resetProgress.toFloat()
 
-            model.updateProgress(subtask.id, subtaskView.list_item_subtask_progress_slider.value.toInt())
+            model.updateProgress(subtask.id, subtaskBinding.listItemSubtaskProgressSlider.value.toInt())
         }
 
-        subtaskView.setOnClickListener {
+        subtaskBinding.root.setOnClickListener {
             holder.listItemCardView.findNavController().navigate(
                     IcalListFragmentDirections.actionIcalListFragmentToIcalViewFragment().setItem2show(subtask.id))
         }
 
-        holder.subtasksLinearLayout.addView(subtaskView)
+        holder.subtasksLinearLayout.addView(subtaskBinding.root)
     }
 }
 

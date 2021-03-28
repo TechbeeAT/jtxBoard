@@ -80,7 +80,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 
         // pass filter arguments to view model
-        val arguments = IcalListFragmentArgs.fromBundle((arguments!!))
+        val arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
 
         if (arguments.category2filter?.isNotEmpty() == true)
             icalListViewModel.searchCategories = arguments.category2filter!!.toMutableList()
@@ -261,7 +261,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 val year = c.get(Calendar.YEAR)
                 val month = c.get(Calendar.MONTH)
                 val day = c.get(Calendar.DAY_OF_MONTH)
-                val dpd = DatePickerDialog(activity!!, this, year, month, day)
+                val dpd = DatePickerDialog(requireActivity(), this, year, month, day)
 
 
                 val startItem = icalListViewModel.iCal4List.value?.lastOrNull()

@@ -8,7 +8,6 @@ import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Relatedto
 import at.bitfire.notesx5.database.properties.Reltype
 import at.bitfire.notesx5.database.relations.ICalEntity
-import kotlinx.android.synthetic.*
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.*
@@ -165,7 +164,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map item?.property?.completed != null
             }
             startedVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.dtstart != null && item?.property?.component == Component.TODO.name)
+                return@map (item?.property?.dtstart != null && item.property.component == Component.TODO.name)
             }
         }
 
@@ -192,11 +191,8 @@ class IcalViewViewModel(private val icalItemId: Long,
 
     fun updateProgress(item: ICalObject, newPercent: Int) {
 
-        viewModelScope.launch() {
+        viewModelScope.launch {
             database.update(item.setUpdatedProgress(newPercent))
         }
     }
 }
-
-
-

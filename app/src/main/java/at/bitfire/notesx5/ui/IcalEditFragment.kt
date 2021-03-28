@@ -26,18 +26,13 @@ import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Comment
 import at.bitfire.notesx5.database.properties.Role
 import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
+import at.bitfire.notesx5.databinding.FragmentIcalEditCommentBinding
+import at.bitfire.notesx5.databinding.FragmentIcalEditSubtaskBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.fragment_ical_edit_comment.view.*
-import kotlinx.android.synthetic.main.fragment_ical_edit_subtask.view.*
 import java.text.DateFormat
 import java.util.*
-
-const val PICKER_ORIGIN_DTSTART = 0
-const val PICKER_ORIGIN_DUE = 1
-const val PICKER_ORIGIN_COMPLETED = 2
-const val PICKER_ORIGIN_STARTED = 3
 
 
 
@@ -46,6 +41,7 @@ class IcalEditFragment : Fragment(),
         DatePickerDialog.OnDateSetListener {
 
     private lateinit var binding: FragmentIcalEditBinding
+
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
     private lateinit var viewModelFactory: IcalEditViewModelFactory
@@ -61,6 +57,15 @@ class IcalEditFragment : Fragment(),
     private var datetimepickerOrigin: Int? = null
 
 
+    companion object {
+        const val PICKER_ORIGIN_DTSTART = 0
+        const val PICKER_ORIGIN_DUE = 1
+        const val PICKER_ORIGIN_COMPLETED = 2
+        const val PICKER_ORIGIN_STARTED = 3
+
+    }
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -73,22 +78,22 @@ class IcalEditFragment : Fragment(),
 
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-        val arguments = IcalEditFragmentArgs.fromBundle((arguments!!))
+        val arguments = IcalEditFragmentArgs.fromBundle((requireArguments()))
 
 
         // add menu
         setHasOptionsMenu(true)
 
-        if (ContextCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.READ_CONTACTS)
+        if (ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.READ_CONTACTS)
                 == PackageManager.PERMISSION_GRANTED) {
             loadContacts()
         } else {
             //request for permission to load contacts
-            MaterialAlertDialogBuilder(context!!)
+            MaterialAlertDialogBuilder(requireContext())
                     .setTitle(getString(R.string.edit_fragment_app_permission))
                     .setMessage(getString(R.string.edit_fragment_app_permission_message))
                     .setPositiveButton("Ok") { dialog, which ->
-                        ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_READ_PERMISSION_CODE)
+                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_READ_PERMISSION_CODE)
                     }
                     .setNegativeButton("Cancel") { dialog, which -> }
                     .show()
@@ -365,7 +370,7 @@ class IcalEditFragment : Fragment(),
             val spinner: Spinner = binding.editCollection
             val allCollectionNames: MutableList<String> = mutableListOf()
             icalEditViewModel.allCollections.value?.forEach { it.displayName?.let { name -> allCollectionNames.add(name) } }
-            val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, allCollectionNames)
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, allCollectionNames)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.setAdapter(adapter)
 
@@ -588,7 +593,7 @@ class IcalEditFragment : Fragment(),
 
         binding.editStatusChip.setOnClickListener {
 
-            MaterialAlertDialogBuilder(context!!)
+            MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Set status")
                     .setItems(statusItems) { dialog, which ->
                         // Respond to item chosen
@@ -610,7 +615,7 @@ class IcalEditFragment : Fragment(),
 
         binding.editClassificationChip.setOnClickListener {
 
-            MaterialAlertDialogBuilder(context!!)
+            MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Set classification")
                     .setItems(classificationItems) { dialog, which ->
                         // Respond to item chosen
@@ -624,7 +629,7 @@ class IcalEditFragment : Fragment(),
 
         binding.editPriorityChip.setOnClickListener {
 
-            MaterialAlertDialogBuilder(context!!)
+            MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Set priority")
                     .setItems(priorityItems) { dialog, which ->
                         // Respond to item chosen
@@ -787,7 +792,7 @@ class IcalEditFragment : Fragment(),
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
-        DatePickerDialog(activity!!, this, year, month, day).show()
+        DatePickerDialog(requireActivity(), this, year, month, day).show()
     }
 
     fun showTimepicker(selectedTime: Long?) {
@@ -845,7 +850,7 @@ class IcalEditFragment : Fragment(),
 
         attendeeChip.setOnClickListener {
 
-            MaterialAlertDialogBuilder(context!!)
+            MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Set attendee role")
                     .setItems(attendeeRoles) { dialog, which ->
                         // Respond to item chosen
@@ -878,15 +883,16 @@ class IcalEditFragment : Fragment(),
 
     private fun addCommentView(comment: Comment, container: ViewGroup?) {
 
-        val commentView = inflater.inflate(R.layout.fragment_ical_edit_comment, container, false)
-        commentView.edit_comment_textview.text = comment.text
-        binding.editCommentsLinearlayout.addView(commentView)
+        val bindingComment = FragmentIcalEditCommentBinding.inflate(inflater, container, false)
+        bindingComment.editCommentTextview.text = comment.text
+        //commentView.edit_comment_textview.text = comment.text
+        binding.editCommentsLinearlayout.addView(bindingComment.root)
 
         // set on Click Listener to open a dialog to update the comment
-        commentView.setOnClickListener {
+        bindingComment.root.setOnClickListener {
 
             // set up the values for the TextInputEditText
-            val updatedText = TextInputEditText(context!!)
+            val updatedText = TextInputEditText(requireContext())
             updatedText.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             updatedText.setText(comment.text)
             updatedText.isSingleLine = false
@@ -904,7 +910,7 @@ class IcalEditFragment : Fragment(),
                 val updatedComment = comment.copy()
                 updatedComment.text = updatedText.text.toString()
                 icalEditViewModel.commentUpdated.add(updatedComment)
-                it.edit_comment_textview.text = updatedComment.text
+                bindingComment.editCommentTextview.text = updatedComment.text
             }
             builder.setNegativeButton("Cancel") { _, _ ->
                 // Do nothing, just close the message
@@ -912,7 +918,7 @@ class IcalEditFragment : Fragment(),
 
             builder.setNeutralButton("Delete") { _, _ ->
                 icalEditViewModel.commentDeleted.add(comment)
-                it.visibility = View.GONE
+                bindingComment.root.visibility = View.GONE
             }
             builder.show()
         }
@@ -925,18 +931,18 @@ class IcalEditFragment : Fragment(),
         if (subtask == null)
             return
 
-        val subtaskView = inflater.inflate(R.layout.fragment_ical_edit_subtask, container, false)
-        subtaskView.edit_subtask_textview.text = subtask.summary
-        subtaskView.edit_subtask_progress_slider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
-        subtaskView.edit_subtask_progress_percent.text = if(subtask.percent?.toFloat() != null)
+        val bindingSubtask = FragmentIcalEditSubtaskBinding.inflate(inflater, container, false)
+        bindingSubtask.editSubtaskTextview.text = subtask.summary
+        bindingSubtask.editSubtaskProgressSlider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
+        bindingSubtask.editSubtaskProgressPercent.text = if(subtask.percent?.toFloat() != null)
             subtask.percent?.toString()
         else "0"
 
-        subtaskView.edit_subtask_progress_checkbox.isChecked = subtask.percent == 100
+        bindingSubtask.editSubtaskProgressCheckbox.isChecked = subtask.percent == 100
 
         var restoreProgress = subtask.percent
 
-        subtaskView.edit_subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->
+        bindingSubtask.editSubtaskProgressSlider.addOnChangeListener { slider, value, fromUser ->
             //Update the progress in the updated list: try to find the matching uid (the only unique element for now) and then assign the percent
             //Attention, the new subtask must have been inserted before in the list!
             if (icalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid } == null) {
@@ -947,27 +953,27 @@ class IcalEditFragment : Fragment(),
                 icalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid }?.percent = value.toInt()
             }
 
-            subtaskView.edit_subtask_progress_checkbox.isChecked = value == 100F
-            subtaskView.edit_subtask_progress_percent.text = value.toInt().toString()
+            bindingSubtask.editSubtaskProgressCheckbox.isChecked = value == 100F
+            bindingSubtask.editSubtaskProgressPercent.text = value.toInt().toString()
             if (value != 100F)
                 restoreProgress = value.toInt()
         }
 
-        subtaskView.edit_subtask_progress_checkbox.setOnCheckedChangeListener { button, checked ->
+        bindingSubtask.editSubtaskProgressCheckbox.setOnCheckedChangeListener { button, checked ->
             val newProgress: Int = if (checked)  100
              else restoreProgress ?: 0
 
-            subtaskView.edit_subtask_progress_slider.value = newProgress.toFloat()    // This will also trigger saving through the listener!
+            bindingSubtask.editSubtaskProgressSlider.value = newProgress.toFloat()    // This will also trigger saving through the listener!
         }
 
 
-        binding.editSubtasksLinearlayout.addView(subtaskView)
+        binding.editSubtasksLinearlayout.addView(bindingSubtask.root)
 
         // set on Click Listener to open a dialog to update the comment
-        subtaskView.setOnClickListener {
+        bindingSubtask.root.setOnClickListener {
 
             // set up the values for the TextInputEditText
-            val updatedSummary = TextInputEditText(context!!)
+            val updatedSummary = TextInputEditText(requireContext())
             updatedSummary.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             updatedSummary.setText(subtask.summary)
             updatedSummary.isSingleLine = false
@@ -989,7 +995,7 @@ class IcalEditFragment : Fragment(),
                 } else {
                     icalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid }?.summary = updatedSummary.text.toString()
                 }
-                it.edit_subtask_textview.text = updatedSummary.text.toString()
+                bindingSubtask.editSubtaskTextview.text = updatedSummary.text.toString()
 
             }
             builder.setNegativeButton("Cancel") { _, _ ->
@@ -998,7 +1004,7 @@ class IcalEditFragment : Fragment(),
 
             builder.setNeutralButton("Delete") { _, _ ->
                 icalEditViewModel.subtaskDeleted.add(subtask)
-                it.visibility = View.GONE
+                bindingSubtask.root.visibility = View.GONE
             }
             builder.show()
         }
