@@ -289,7 +289,7 @@ data class ICalObject(
         //var rrule: String?,                               //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
 
 
-        @ColumnInfo(name = COLUMN_COLOR) var color: String? = null,
+        @ColumnInfo(name = COLUMN_COLOR) var color: Int? = null,
         @ColumnInfo(name = COLUMN_OTHER) var other: String? = null,
 
         @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID)    var collectionId: Long = 1L,
@@ -361,7 +361,7 @@ data class ICalObject(
                 values.getAsLong(COLUMN_DTSTAMP)?.let { dtstamp -> this.dtstamp = dtstamp }
                 values.getAsLong(COLUMN_LAST_MODIFIED)?.let { lastModified -> this.lastModified = lastModified }
                 values.getAsLong(COLUMN_SEQUENCE)?.let { sequence -> this.sequence = sequence }
-                values.getAsString(COLUMN_COLOR)?.let { color -> this.color = color }
+                values.getAsInteger(COLUMN_COLOR)?.let { color -> this.color = color }
                 values.getAsString(COLUMN_OTHER)?.let { other -> this.other = other }
                 values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)?.let { collectionId -> this.collectionId = collectionId }
                 values.getAsBoolean(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty }

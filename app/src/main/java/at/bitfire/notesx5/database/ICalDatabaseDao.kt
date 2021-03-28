@@ -61,7 +61,7 @@ SELECTs (global selects without parameter)
      * @return a list of [Collection] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT * FROM collection ORDER BY displayname ASC")
+    @Query("SELECT * FROM collection ORDER BY _id ASC")
     fun getAllCollections(): LiveData<List<ICalCollection>>
 
 

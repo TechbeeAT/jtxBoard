@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -23,6 +24,7 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_ical_view_comment.view.*
 import kotlinx.android.synthetic.main.fragment_ical_view_relatedto.view.*
 import kotlinx.android.synthetic.main.fragment_ical_view_subtask.view.*
+import java.lang.IllegalArgumentException
 
 
 class IcalViewFragment : Fragment() {
@@ -112,6 +114,17 @@ class IcalViewFragment : Fragment() {
                     commentView.view_comment_textview.text = comment.text
                     binding.viewCommentsLinearlayout.addView(commentView)
                 }
+
+                if(it.ICalCollection?.color != null) {
+                    try {
+                        binding.viewColorbar.setColorFilter(it.ICalCollection?.color!!)
+                    } catch (e: IllegalArgumentException) {
+                        Log.println(Log.INFO, "Invalid color", "Invalid Color cannot be parsed: ${it.ICalCollection?.color}")
+                        binding.viewColorbar.visibility = View.GONE
+                    }
+                }
+                else
+                    binding.viewColorbar.visibility = View.GONE
             }
         })
 

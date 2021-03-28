@@ -23,9 +23,9 @@ buildscript {
         version_coroutine = "1.4.1"
         version_constraint_layout = "2.0.4"
         version_gradle = '4.1.2'
-        version_kotlin = "1.4.30"
+        version_kotlin = "1.4.31"
         version_lifecycle_extensions = "2.2.0"
-        version_lifecycle = "2.3.0"
+        version_lifecycle = "2.3.1"
         version_navigation = '1.0.0'
         version_room = '2.2.6'
         version_gson = "2.8.6"
