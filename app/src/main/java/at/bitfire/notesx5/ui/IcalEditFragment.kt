@@ -364,7 +364,7 @@ class IcalEditFragment : Fragment(),
         icalEditViewModel.allCategories.observe(viewLifecycleOwner, {
             // Create the adapter and set it to the AutoCompleteTextView
             if (icalEditViewModel.allCategories.value != null) {
-                val arrayAdapter = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, icalEditViewModel.allCategories.value!!)
+                val arrayAdapter = ArrayAdapter(application.applicationContext, android.R.layout.simple_list_item_1, icalEditViewModel.allCategories.value!!)
                 binding.editCategoriesAddAutocomplete.setAdapter(arrayAdapter)
             }
         })
@@ -792,7 +792,7 @@ class IcalEditFragment : Fragment(),
     }
 
 
-    fun showDatepicker(selectedDate: Long?) {
+    private fun showDatepicker(selectedDate: Long?) {
         val c = Calendar.getInstance()
         c.timeInMillis = selectedDate ?: System.currentTimeMillis()
         //c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
@@ -803,7 +803,7 @@ class IcalEditFragment : Fragment(),
         DatePickerDialog(requireActivity(), this, year, month, day).show()
     }
 
-    fun showTimepicker(selectedTime: Long?) {
+    private fun showTimepicker(selectedTime: Long?) {
         val c = Calendar.getInstance()
         c.timeInMillis = selectedTime ?: System.currentTimeMillis()
         //c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
