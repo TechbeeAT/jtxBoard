@@ -107,81 +107,6 @@ SELECTs (global selects without parameter)
 
 
 
-/*
-SELECTs (SELECTs by Id, snychronous for Content Povider)
- */
-    /**
-     * Retrieve an [ICalObject] by Id synchronously (non-suspend)
-     *
-     * @param id The id of the [ICalObject] in the DB
-     * @return the [ICalObject] with the passed id or null if not found
-     */
-    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
-    fun getICalObjectByIdSync(id: Long): ICalObject?
-
-    /**
-     * Retrieve an [Attendee] by Id synchronously (non-suspend)
-     *
-     * @param id The id of the [Attendee] in the DB
-     * @return the [Attendee] with the passed id or null if not found
-     */
-    @Query("SELECT * FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ID = :id")
-    fun getAttendeeByIdSync(id: Long): Attendee?
-
-    /**
-     * Retrieve an [Category] by Id synchronously (non-suspend)
-     *
-     * @param id The id of the [Category] in the DB
-     * @return the [Category] with the passed id or null if not found
-     */
-    @Query("SELECT * FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ID = :id")
-    fun getCategoryByIdSync(id: Long): Category?
-
-    /**
-     * Retrieve an [Comment] by Id synchronously (non-suspend)
-     *
-     * @param id The id of the [Comment] in the DB
-     * @return the [Comment] with the passed id or null if not found
-     */
-    @Query("SELECT * FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ID = :id")
-    fun getCommentByIdSync(id: Long): Comment?
-
-    /**
-     * Retrieve an [Contact] by Id synchronously (non-suspend)
-     *
-     * @param id The id of the [Contact] in the DB
-     * @return the [Contact] with the passed id or null if not found
-     */
-    @Query("SELECT * FROM $TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ID = :id")
-    fun getContactByIdSync(id: Long): Contact?
-
-    /**
-     * Retrieve an [Organizer] by Id synchronously (non-suspend)
-     *
-     * @param id The id of the [Organizer] in the DB
-     * @return the [Organizer] with the passed id or null if not found
-     */
-    @Query("SELECT * FROM $TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ID = :id")
-    fun getOrganizerByIdSync(id: Long): Organizer?
-
-    /**
-     * Retrieve an [Relatedto] by Id synchronously (non-suspend)
-     *
-     * @param id The id of the [Relatedto] in the DB
-     * @return the [Relatedto] with the passed id or null if not found
-     */
-    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ID = :id")
-    fun getRelatedtoByIdSync(id: Long): Relatedto?
-
-    /**
-     * Retrieve an [Resource] by Id synchronously (non-suspend)
-     *
-     * @param id The id of the [Resource] in the DB
-     * @return the [Resource] with the passed id or null if not found
-     */
-    @Query("SELECT * FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ID = :id")
-    fun getResourceByIdSync(id: Long): Resource?
-
     /**
      * Retrieve an [ICalCollection] by Id synchronously (non-suspend)
      *
@@ -255,47 +180,12 @@ INSERTs (Synchronously)
     fun insertCollectionSync(ICalCollection: ICalCollection): Long
 
 
-    /*
-UPDATEs (Synchronously)
- */
-/*
-    @Update
-    fun updateICalObjectSync(iCalObject: ICalObject): Int
-
-    @Update
-    fun updateAttendeeSync(attendee: Attendee): Int
-
-    @Update
-    fun updateCategorySync(category: Category): Int
-
-    @Update
-    fun updateCommentSync(comment: Comment): Int
-
-    @Update
-    fun updateOrganizerSync(organizer: Organizer): Int
-
-    @Update
-    fun updateRelatedtoSync(relatedto: Relatedto): Int
-
-    @Update
-    fun updateContactSync(contact: Contact): Int
-
-
-    @Update
-    fun updateCollectionSync(collection: ICalCollection): Int
-
-    @Update
-    fun updateResourceSync(resource: Resource): Int
-
-
- */
 
 /*
 DELETEs by Object
  */
 
 
-    // TODO Take care to delete also child elements!
     /**
      * Delete an iCalObject by the object.
      *
@@ -357,96 +247,6 @@ DELETEs by Object
     fun deleteRelatedto(parentId: Long, childId: Long)
 
 
-    /*
-    DELETE by Id
-     */
-
-    /**
-     * Delete an IcalObject by the ID.
-     *
-     * @param id The row ID.
-     * @return A number of ICalObjects deleted. This should always be `1`.
-     */
-    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
-    fun deleteICalObjectById(id: Long): Int
-
-    /**
-     * Delete an Attendee by the ID.
-     *
-     * @param id The row ID.
-     * @return A number of Attendees deleted. This should always be `1`.
-     */
-    @Query("DELETE FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ID = :id")
-    fun deleteAttendeeById(id: Long): Int
-
-
-    /**
-     * Delete an Category by the ID.
-     *
-     * @param id The row ID.
-     * @return A number of Categories deleted. This should always be `1`.
-     */
-    @Query("DELETE FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ID = :id")
-    fun deleteCategoryById(id: Long): Int
-
-
-    /**
-     * Delete an Comment by the ID.
-     *
-     * @param id The row ID.
-     * @return A number of Comments deleted. This should always be `1`.
-     */
-    @Query("DELETE FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ID = :id")
-    fun deleteCommentById(id: Long): Int
-
-    /**
-     * Delete an Contact by the ID.
-     *
-     * @param id The row ID.
-     * @return A number of Contacts deleted. This should always be `1`.
-     */
-    @Query("DELETE FROM $TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ID = :id")
-    fun deleteContactById(id: Long): Int
-
-    /**
-     * Delete an Organizer by the ID.
-     *
-     * @param id The row ID.
-     * @return A number of Organizers deleted. This should always be `1`.
-     */
-    @Query("DELETE FROM $TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ID = :id")
-    fun deleteOrganizerById(id: Long): Int
-
-    /**
-     * Delete a Related-to by the ID.
-     *
-     * @param id The row ID.
-     * @return A number of Related-to deleted. This should always be `1`.
-     */
-    @Query("DELETE FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ID = :id")
-    fun deleteRelatedtoById(id: Long): Int
-
-    /**
-     * Delete an Resource by the ID.
-     *
-     * @param id The row ID.
-     * @return A number of Resource deleted. This should always be `1`.
-     */
-    @Query("DELETE FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ID = :id")
-    fun deleteResourceById(id: Long): Int
-
-
-    /**
-     * Delete an Collection by the ID. Due to the foreign constraint
-     * this would also delete all ICalObjects (and its' related entities)
-     * within the Collection
-     *
-     * @param id The row ID.
-     * @return A number of Collections deleted. This should always be `1`.
-     */
-    @Query("DELETE FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ID = :id")
-    fun deleteCollectionById(id: Long): Int
-
 
     /**
      * Delete all children of a parent ICalObject by the parent ID.
@@ -501,13 +301,9 @@ DELETEs by Object
     suspend fun updateCollection(ids: List<Long>, collectionId: Long, lastModified: Long)
 
 
-/*
-    @Transaction
-    @RawQuery
-    fun getIcalEntity(query: SupportSQLiteQuery): LiveData<List<ICalEntity>>
 
 
- */
+
 
     @Transaction
     @RawQuery(observedEntities = [ICal4List::class, Relatedto::class])
@@ -541,35 +337,6 @@ DELETEs by Object
     @Transaction
     @RawQuery
     fun getICalObjectRaw(query: SupportSQLiteQuery): List<ICalObject>
-
-
-
-
-    /*
-
-    @Query("SELECT * from attendee WHERE attendee.icalObjectId = :icalobjectId")
-    fun getAttendeesByIcalentity(icalobjectId: Long): Cursor?
-
-    @Query("SELECT * from category WHERE category.icalObjectId = :icalobjectId")
-    fun getCategoriesByIcalentity(icalobjectId: Long): Cursor?
-
-    @Query("SELECT * from comment WHERE comment.icalObjectId = :icalobjectId")
-    fun getCommentsByIcalentity(icalobjectId: Long): Cursor?
-
-    @Query("SELECT * from contact WHERE contact.icalObjectId = :icalobjectId")
-    fun getContactByIcalentity(icalobjectId: Long): Cursor?
-
-    @Query("SELECT * from organizer WHERE organizer.icalObjectId = :icalobjectId")
-    fun getOrganizersByIcalentity(icalobjectId: Long): Cursor?
-
-    @Query("SELECT * from relatedto WHERE relatedto.icalObjectId = :icalobjectId")
-    fun getRelatedtoByIcalentity(icalobjectId: Long): Cursor?
-
-    @Query("SELECT * from resource WHERE resource.icalObjectId = :icalobjectId")
-    fun getResourceByIcalentity(icalobjectId: Long): Cursor?
-
-
-     */
 
 
 }
