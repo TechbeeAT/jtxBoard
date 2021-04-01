@@ -29,10 +29,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
-import at.bitfire.notesx5.database.properties.Attendee
-import at.bitfire.notesx5.database.properties.Category
-import at.bitfire.notesx5.database.properties.Comment
-import at.bitfire.notesx5.database.properties.Role
+import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditCommentBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditSubtaskBinding
@@ -92,6 +89,8 @@ class IcalEditFragment : Fragment(),
         // add menu
         setHasOptionsMenu(true)
 
+
+        // Check if the permission to read local contacts is already granted, otherwise make a dialog to ask for permission
         if (ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.READ_CONTACTS)
                 == PackageManager.PERMISSION_GRANTED) {
             loadContacts()
@@ -369,8 +368,13 @@ class IcalEditFragment : Fragment(),
             }
         })
 
-        // Set up items to suggest for categories
-        icalEditViewModel.allRelatedto.observe(viewLifecycleOwner, {  })
+        // initialize allRelatedto
+        icalEditViewModel.allRelatedto.observe(viewLifecycleOwner, {
+
+            // if the current item can be found as linkedICalObjectId and the reltype is CHILD, then it must be a child and changing the collection is not allowed
+            if(it.isNotEmpty() && it.find { rel -> rel.linkedICalObjectId == icalEditViewModel.iCalObjectUpdated.value?.id && rel.reltype == Reltype.CHILD.name } != null)
+                binding.editCollection.isEnabled = false
+        })
 
         icalEditViewModel.allCollections.observe(viewLifecycleOwner, {
 
@@ -388,7 +392,6 @@ class IcalEditFragment : Fragment(),
                 if (selectedCollectionPos != null)
                     spinner.setSelection(selectedCollectionPos)
             }
-
         })
 
 

@@ -39,7 +39,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
     var iCalObjectUpdated: MutableLiveData<ICalObject> = MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property)}
-    var idsToDelete: MutableList<Long> = mutableListOf()
+    private var idsToDelete: MutableList<Long> = mutableListOf()
 
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
@@ -144,7 +144,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
         updateVisibility()
 
-        viewModelScope.launch() {
+        viewModelScope.launch {
 
             relatedSubtasks =  database.getRelatedTodos(iCalEntity.property.id)
 
@@ -218,7 +218,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         //deleteOldResources()
 
 
-        viewModelScope.launch() {
+        viewModelScope.launch {
 
             insertedOrUpdatedItemId = insertOrUpdateVJournal()
             insertNewCategories(insertedOrUpdatedItemId)
@@ -232,15 +232,15 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     }
 
     private suspend fun insertOrUpdateVJournal(): Long {
-        if (iCalObjectUpdated.value!!.id == 0L) {
+        return if (iCalObjectUpdated.value!!.id == 0L) {
 
             //Log.println(Log.INFO, "VJournalItemViewModel", "creating a new one")
-            return database.insertICalObject(iCalObjectUpdated.value!!)
+            database.insertICalObject(iCalObjectUpdated.value!!)
             //Log.println(Log.INFO, "vJournalItemViewModel", vJournalItemUpdate.id.toString())
         } else {
             iCalObjectUpdated.value!!.sequence++
             database.update(iCalObjectUpdated.value!!)
-            return iCalObjectUpdated.value!!.id
+            iCalObjectUpdated.value!!.id
         }
     }
 
@@ -315,7 +315,10 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     private suspend fun insertNewSubtasks(insertedOrUpdatedItemId: Long) {
 
         subtaskUpdated.forEach { subtask ->
-            // attention, linkedICalObjectId is actually set in DAO!
+            subtask.sequence++
+            subtask.lastModified = System.currentTimeMillis()
+            subtask.dirty = true
+            subtask.collectionId = iCalObjectUpdated.value?.collectionId!!
             subtask.id = database.insertSubtask(subtask)
             Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
 
