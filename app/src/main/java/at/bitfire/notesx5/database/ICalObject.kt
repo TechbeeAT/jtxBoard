@@ -302,7 +302,7 @@ data class ICalObject(
 
         @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID)    var collectionId: Long = 1L,
 
-        @ColumnInfo(name = COLUMN_DIRTY) var dirty: Boolean = false,
+        @ColumnInfo(name = COLUMN_DIRTY) var dirty: Boolean = true,
         @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean = false
 
 

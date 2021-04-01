@@ -40,6 +40,8 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     var iCalObjectUpdated: MutableLiveData<ICalObject> = MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property)}
     private var idsToDelete: MutableList<Long> = mutableListOf()
+    private var idsToUpdateCollection: MutableList<Long> = mutableListOf()
+
 
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
@@ -232,15 +234,40 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     }
 
     private suspend fun insertOrUpdateVJournal(): Long {
-        return if (iCalObjectUpdated.value!!.id == 0L) {
+        return when {
+            iCalObjectUpdated.value!!.id == 0L -> {
 
-            //Log.println(Log.INFO, "VJournalItemViewModel", "creating a new one")
-            database.insertICalObject(iCalObjectUpdated.value!!)
-            //Log.println(Log.INFO, "vJournalItemViewModel", vJournalItemUpdate.id.toString())
-        } else {
+                //Log.println(Log.INFO, "VJournalItemViewModel", "creating a new one")
+                database.insertICalObject(iCalObjectUpdated.value!!)
+                //Log.println(Log.INFO, "vJournalItemViewModel", vJournalItemUpdate.id.toString())
+            }
+            iCalEntity.property.collectionId != iCalObjectUpdated.value!!.collectionId -> {
+
+                // TODO: set the iCalObjectupdated.value!!.id == 0L
+                // TODO: Insert the iCalObjectupdated (with all subobjects)
+                // TODO: Determine all children
+                // TODO: Retrieve and copy all Children
+                // TODO: Insert all copied children
+                // TODO mark the main element as deleted or delete it, make sure all children are deleted/marked as deleted
+                /*
             iCalObjectUpdated.value!!.sequence++
+            iCalObjectUpdated.value!!.dirty = true
+            iCalObjectUpdated.value!!.lastModified = System.currentTimeMillis()
             database.update(iCalObjectUpdated.value!!)
+            determineIdsToUpdateCollection(iCalObjectUpdated.value!!.id)
+            database.updateCollection(idsToUpdateCollection, iCalObjectUpdated.value!!.collectionId, System.currentTimeMillis())
             iCalObjectUpdated.value!!.id
+
+                                      */
+                return 0L   //remove this
+            }
+            else -> {
+                iCalObjectUpdated.value!!.sequence++
+                iCalObjectUpdated.value!!.dirty = true
+                iCalObjectUpdated.value!!.lastModified = System.currentTimeMillis()
+                database.update(iCalObjectUpdated.value!!)
+                iCalObjectUpdated.value!!.id
+            }
         }
     }
 
@@ -376,9 +403,23 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         idsToDelete.add(id)
 
         // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
-        val children = allRelatedto.value?.filter { it.icalObjectId == id }
+        val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
         children?.forEach {
             determineIdsToDelete(it.linkedICalObjectId)
+        }
+    }
+
+    /**
+     * this function takes a parent [id], determines the children, adds the id to the list and calls itself for each child again.
+     * The child becomes the parent and is added to the list of items to be deleted and so on.
+     */
+    fun determineIdsToUpdateCollection(id: Long) {
+
+        // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
+        val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
+        children?.forEach {
+            idsToUpdateCollection.add(it.linkedICalObjectId)
+            determineIdsToUpdateCollection(it.linkedICalObjectId)
         }
     }
 
