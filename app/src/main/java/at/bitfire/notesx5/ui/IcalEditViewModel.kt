@@ -212,22 +212,63 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         subtaskUpdated.removeAll(subtaskDeleted)
         resourceUpdated.removeAll(resourceDeleted)
 
+        // make sure to delete all rows of items, that were deleted for this ICalObject
+        viewModelScope.launch(Dispatchers.IO) {
 
-        deleteOldCategories()
-        deleteOldComments()
-        deleteOldAttendees()
-        deleteOldSubtasks()
+            categoryDeleted.forEach { cat2del ->
+                database.deleteCategory(cat2del)
+                Log.println(Log.INFO, "Category", "${cat2del.text} deleted")
+            }
+            commentDeleted.forEach { com2del ->
+                database.deleteComment(com2del)
+                Log.println(Log.INFO, "Comment", "${com2del.text} deleted")
+            }
+            attendeeDeleted.forEach { att2del ->
+                database.deleteAttendee(att2del)
+                Log.println(Log.INFO, "Comment", "${att2del.caladdress} deleted")
+            }
+            subtaskDeleted.forEach { subtask2del ->
+                viewModelScope.launch(Dispatchers.IO) {
+                    database.deleteRelatedChildren(subtask2del.id)       // Also Child-Elements of Child-Elements need to be deleted!
+                    database.delete(subtask2del)
+                    database.deleteRelatedto(iCalObjectUpdated.value!!.id, subtask2del.id)
+                }
+                Log.println(Log.INFO, "Subtask", "${subtask2del.summary} deleted")
+            }
+        }
         //deleteOldResources()
 
 
         viewModelScope.launch {
 
             insertedOrUpdatedItemId = insertOrUpdateVJournal()
-            insertNewCategories(insertedOrUpdatedItemId)
-            insertNewComments(insertedOrUpdatedItemId)
-            insertNewAttendees(insertedOrUpdatedItemId)
-            insertNewSubtasks(insertedOrUpdatedItemId)
-            //insertNewSubtaskRelation(insertedOrUpdatedItemId)
+            // insert new Categories
+            categoryUpdated.forEach { newCategory ->
+                newCategory.icalObjectId = insertedOrUpdatedItemId
+                database.insertCategory(newCategory)
+                }
+            commentUpdated.forEach { newComment ->
+                newComment.icalObjectId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
+                database.insertComment(newComment)
+                }
+            attendeeUpdated.forEach { newAttendee ->
+                newAttendee.icalObjectId = insertedOrUpdatedItemId
+                database.insertAttendee(newAttendee)
+            }
+            subtaskUpdated.forEach { subtask ->
+                subtask.sequence++
+                subtask.lastModified = System.currentTimeMillis()
+                subtask.dirty = true
+                subtask.collectionId = iCalObjectUpdated.value?.collectionId!!
+                subtask.id = database.insertSubtask(subtask)
+                Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
+
+
+                // Only insert if the relation doesn't exist already, otherwise there's nothing to do
+                if(iCalEntity.relatedto?.find { it.icalObjectId == insertedOrUpdatedItemId && it.linkedICalObjectId == subtask.id} == null )
+                    database.insertRelatedto(Relatedto(icalObjectId = insertedOrUpdatedItemId, linkedICalObjectId = subtask.id, reltype = "CHILD", text = subtask.uid))
+
+            }
             returnVJournalItemId.value = insertedOrUpdatedItemId
         }
 
@@ -271,110 +312,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         }
     }
 
-    private suspend fun insertNewCategories(insertedOrUpdatedItemId: Long) {
 
-        categoryUpdated.forEach { newCategory ->
-            newCategory.icalObjectId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
-            viewModelScope.launch() {
-                database.insertCategory(newCategory)
-            }
-            Log.println(Log.INFO, "CategoryUpdated", "${newCategory.text} added")
-        }
-    }
-
-
-
-    private fun deleteOldCategories() {
-        categoryDeleted.forEach { cat2del ->
-                viewModelScope.launch(Dispatchers.IO) {
-                    database.deleteCategory(cat2del)
-                }
-                Log.println(Log.INFO, "Category", "${cat2del.text} deleted")
-            }
-    }
-
-    private suspend fun insertNewComments(insertedOrUpdatedItemId: Long) {
-
-        commentUpdated.forEach { newComment ->
-             newComment.icalObjectId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
-             viewModelScope.launch() {
-                 database.insertComment(newComment)
-             }
-            Log.println(Log.INFO, "CommentUpdated", "${newComment.text} added")
-        }
-    }
-
-
-    private fun deleteOldComments() {
-        commentDeleted.forEach { com2del ->
-            viewModelScope.launch(Dispatchers.IO) {
-                database.deleteComment(com2del)
-            }
-            Log.println(Log.INFO, "Comment", "${com2del.text} deleted")
-        }
-    }
-
-
-
-    private suspend fun insertNewAttendees(insertedOrUpdatedItemId: Long) {
-
-        attendeeUpdated.forEach { newAttendee ->
-            newAttendee.icalObjectId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
-            viewModelScope.launch() {
-                database.insertAttendee(newAttendee)
-            }
-            Log.println(Log.INFO, "Attendee", "${newAttendee.caladdress} added")
-        }
-    }
-
-
-    private fun deleteOldAttendees() {
-        attendeeDeleted.forEach { att2del ->
-            viewModelScope.launch(Dispatchers.IO) {
-                database.deleteAttendee(att2del)
-            }
-            Log.println(Log.INFO, "Comment", "${att2del.caladdress} deleted")
-        }
-    }
-
-
-
-    private suspend fun insertNewSubtasks(insertedOrUpdatedItemId: Long) {
-
-        subtaskUpdated.forEach { subtask ->
-            subtask.sequence++
-            subtask.lastModified = System.currentTimeMillis()
-            subtask.dirty = true
-            subtask.collectionId = iCalObjectUpdated.value?.collectionId!!
-            subtask.id = database.insertSubtask(subtask)
-            Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
-
-
-            // Only insert if the relation doesn't exist already, otherwise there's nothing to do
-            if(iCalEntity.relatedto?.find { it.icalObjectId == insertedOrUpdatedItemId && it.linkedICalObjectId == subtask.id} == null )
-                database.insertRelatedto(Relatedto(icalObjectId = insertedOrUpdatedItemId, linkedICalObjectId = subtask.id, reltype = "CHILD", text = subtask.uid))
-
-        }
-    }
-
-
-
-
-
-    private fun deleteOldSubtasks() {
-
-        if(iCalObjectUpdated.value?.id == null)      // This should not be possible to have no Id at this point, just to be sure!
-            return
-
-        subtaskDeleted.forEach { subtask2del ->
-            viewModelScope.launch(Dispatchers.IO) {
-                database.deleteRelatedChildren(subtask2del.id)       // Also Child-Elements of Child-Elements need to be deleted!
-                database.delete(subtask2del)
-                database.deleteRelatedto(iCalObjectUpdated.value!!.id, subtask2del.id)
-            }
-            Log.println(Log.INFO, "Subtask", "${subtask2del.summary} deleted")
-        }
-    }
 
 
     fun delete() {
