@@ -44,7 +44,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     private lateinit var binding: FragmentIcalListBinding
     private lateinit var application: Application
 
-    private lateinit var gotodateMenuItem: MenuItem
+    private var gotodateMenuItem: MenuItem? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -134,15 +134,15 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
             when (icalListViewModel.searchComponent) {
                 "NOTE" -> {
-                    gotodateMenuItem.isVisible = false
+                    gotodateMenuItem?.isVisible = false
                     staggeredGridLayoutManager!!.spanCount = 2
                 }
                 "JOURNAL" -> {
-                    gotodateMenuItem.isVisible = true
+                    gotodateMenuItem?.isVisible = true
                     staggeredGridLayoutManager!!.spanCount = 1
                 }
                 "TODO" -> {
-                    gotodateMenuItem.isVisible = false
+                    gotodateMenuItem?.isVisible = false
                     staggeredGridLayoutManager!!.spanCount = 1
                 }
             }
