@@ -283,7 +283,10 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
             }
             iCalEntity.ICalCollection!!.collectionId != iCalObjectUpdated.value!!.collectionId -> {
 
-                updateCollectionWithChildren(iCalObjectUpdated.value!!.id, null)
+                val newId = updateCollectionWithChildren(iCalObjectUpdated.value!!.id, null)
+                iCalObjectUpdated.value!!.id = newId
+                database.update(iCalObjectUpdated.value!!)
+                return newId
 
                 // TODO mark the main element as deleted or delete it, make sure all children are deleted/marked as deleted
 
@@ -350,8 +353,8 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
         children?.forEach {
             updateCollectionWithChildren(it.linkedICalObjectId, newParentId)
-            deleteItemWithChildren(id)                                         // make sure to delete the old item (or marked as deleted - this is already handled in the function)
         }
+        deleteItemWithChildren(id)                                         // make sure to delete the old item (or marked as deleted - this is already handled in the function)
         return newParentId
     }
 
