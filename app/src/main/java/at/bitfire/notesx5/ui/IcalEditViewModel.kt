@@ -19,6 +19,7 @@ import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.DateFormat
 import java.util.*
 
@@ -39,9 +40,6 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
     var iCalObjectUpdated: MutableLiveData<ICalObject> = MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property)}
-    private var idsToDelete: MutableList<Long> = mutableListOf()
-    private var idsToUpdateCollection: MutableList<Long> = mutableListOf()
-
 
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
@@ -202,6 +200,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
         iCalObjectUpdated.value!!.lastModified = System.currentTimeMillis()
         iCalObjectUpdated.value!!.dtstamp = System.currentTimeMillis()
+        iCalObjectUpdated.value!!.sequence++
 
         if(iCalObjectUpdated.value!!.collectionId != 1L)
             iCalObjectUpdated.value!!.dirty = true
@@ -282,30 +281,14 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
                 database.insertICalObject(iCalObjectUpdated.value!!)
                 //Log.println(Log.INFO, "vJournalItemViewModel", vJournalItemUpdate.id.toString())
             }
-            iCalEntity.property.collectionId != iCalObjectUpdated.value!!.collectionId -> {
+            iCalEntity.ICalCollection!!.collectionId != iCalObjectUpdated.value!!.collectionId -> {
 
-                // TODO: set the iCalObjectupdated.value!!.id == 0L
-                // TODO: Insert the iCalObjectupdated (with all subobjects)
-                // TODO: Determine all children
-                // TODO: Retrieve and copy all Children
-                // TODO: Insert all copied children
+                updateCollectionWithChildren(iCalObjectUpdated.value!!.id, null)
+
                 // TODO mark the main element as deleted or delete it, make sure all children are deleted/marked as deleted
-                /*
-            iCalObjectUpdated.value!!.sequence++
-            iCalObjectUpdated.value!!.dirty = true
-            iCalObjectUpdated.value!!.lastModified = System.currentTimeMillis()
-            database.update(iCalObjectUpdated.value!!)
-            determineIdsToUpdateCollection(iCalObjectUpdated.value!!.id)
-            database.updateCollection(idsToUpdateCollection, iCalObjectUpdated.value!!.collectionId, System.currentTimeMillis())
-            iCalObjectUpdated.value!!.id
 
-                                      */
-                return 0L   //remove this
             }
             else -> {
-                iCalObjectUpdated.value!!.sequence++
-                iCalObjectUpdated.value!!.dirty = true
-                iCalObjectUpdated.value!!.lastModified = System.currentTimeMillis()
                 database.update(iCalObjectUpdated.value!!)
                 iCalObjectUpdated.value!!.id
             }
@@ -313,52 +296,119 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     }
 
 
-
-
     fun delete() {
+        deleteItemWithChildren(iCalObjectUpdated.value!!.id)
+    }
 
-        // determine all children (and children of children...) recursively and add them to the list
-        determineIdsToDelete(iCalObjectUpdated.value!!.id)
+    /**
+     * this function takes a parent [id], the function recursively calls itself and deletes all items and linked children (for local collections)
+     * or updates the linked children and marks them as deleted.
+     */
+    private fun deleteItemWithChildren(id: Long) {
 
-        if(iCalObjectUpdated.value!!.collectionId == 1L) {
-            viewModelScope.launch(Dispatchers.IO) {
-                database.deleteICalObjectsbyIds(idsToDelete)
+        when {
+            iCalObjectUpdated.value!!.id == 0L            // do nothing, the item was never saved in DB
+            -> return
+            iCalEntity.ICalCollection?.collectionId == 1L -> {        // call the function again to recursively delete all children, then delete the item
+                val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
+                children?.forEach {
+                    deleteItemWithChildren(it.linkedICalObjectId)
+                }
+
+                viewModelScope.launch(Dispatchers.IO) {
+                    database.deleteICalObjectsbyIds(listOf(id))
+                }
             }
-        } else {
-            viewModelScope.launch() {
-                database.updateDeleted(idsToDelete, System.currentTimeMillis())
+            else -> {                                                 // call the function again to recursively delete all children, then mark the item as deleted
+                val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
+                children?.forEach {
+                    deleteItemWithChildren(it.linkedICalObjectId)
+                }
+
+                viewModelScope.launch {
+                    database.updateDeleted(listOf(id), System.currentTimeMillis())
+                }
             }
         }
     }
 
     /**
-     * this function takes a parent [id], adds it to the list of items to be deleted and recursively calls itself
-     * for each child. The child becomes the parent and is added to the list of items to be deleted and so on.
+     * @param [id] the id of the item for which the collection needs to be updated
+     * @param [parentId] is needed for the recursive call in order to provide it for the movItemToNewCollection(...) function. For the initial call this would be null as the function should initially always be called from the top parent.
+     *
+     * this function takes care of
+     * 1. moving the item to a new collection (by copying and deleting the current item)
+     * 2. determining the children of this item and calling itself recusively to to the same again for each child.
+     *
+     * @return The new id of the item in the new collection
      */
-    fun determineIdsToDelete(id: Long) {
+    private suspend fun updateCollectionWithChildren(id: Long, parentId: Long?): Long {
 
-        // add the current parent to the list
-        idsToDelete.add(id)
+        val newParentId = moveItemToNewCollection(id, parentId)
 
         // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
         val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
         children?.forEach {
-            determineIdsToDelete(it.linkedICalObjectId)
+            updateCollectionWithChildren(it.linkedICalObjectId, newParentId)
+            deleteItemWithChildren(id)                                         // make sure to delete the old item (or marked as deleted - this is already handled in the function)
         }
+        return newParentId
     }
 
     /**
-     * this function takes a parent [id], determines the children, adds the id to the list and calls itself for each child again.
-     * The child becomes the parent and is added to the list of items to be deleted and so on.
+     * @param [id] is the id of the original item that should be moved to another collection. On the recursive call this is the id of the original child.
+     * @param [newParentId] is the id of the parent that was already copied into the new collection. This is needed in order to re-create the relation between the parent and the child.
+     *
+     * This function creates a copy of an item with all it's children in the new collection and then
+     * deletes (or marks as deleted) the original item.
+     *
+     * @return the new id of the item that was inserted (that becomes the newParentId)
+     *
      */
-    fun determineIdsToUpdateCollection(id: Long) {
+    private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?): Long = withContext(Dispatchers.IO) {
+        val item = database.getSync(id)
+        if (item != null) {
+            item.property.id = 0L
+            item.property.collectionId = iCalObjectUpdated.value!!.collectionId
+            item.property.sequence++
+            item.property.dirty = true
+            item.property.lastModified = System.currentTimeMillis()
+            val newId = database.insertICalObject(item.property)
 
-        // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
-        val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
-        children?.forEach {
-            idsToUpdateCollection.add(it.linkedICalObjectId)
-            determineIdsToUpdateCollection(it.linkedICalObjectId)
+            item.attendee?.forEach {
+                it.icalObjectId = newId
+                database.insertAttendee(it)
+            }
+
+            item.category?.forEach {
+                it.icalObjectId = newId
+                database.insertCategory(it)
+            }
+
+            item.comment?.forEach {
+                it.icalObjectId = newId
+                database.insertComment(it)
+            }
+
+            if (item.organizer != null) {
+                item.organizer?.icalObjectId = newId
+                database.insertOrganizer(item.organizer!!)
+            }
+
+            // relations need to be rebuild from the child to the parent
+            if(newParentId != null) {
+                val rel = Relatedto()
+                rel.icalObjectId = newParentId
+                rel.linkedICalObjectId = newId
+                rel.reltype = Reltype.CHILD.name
+                // rel.text =     // TODO
+                database.insertRelatedto(rel)
+            }
+
+
+            return@withContext newId
         }
+        return@withContext 0L
     }
 
     fun clearUrlError(s: Editable) {

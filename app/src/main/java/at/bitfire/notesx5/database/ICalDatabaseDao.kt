@@ -197,7 +197,7 @@ DELETEs by Object
     /**
      * Delete an iCalObject by the object.
      *
-     * @param icalObject The object of the icalObject that should be deleted.
+     * @param ids The list of iCalObjects to be deleted.
      */
     @Query("DELETE FROM icalobject WHERE _id IN (:ids)")
     fun deleteICalObjectsbyIds(ids: List<Long>)
@@ -313,6 +313,12 @@ DELETEs by Object
     @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")
     fun get(key: Long): LiveData<ICalEntity?>
+
+
+    @Transaction
+    @Query("SELECT * from icalobject WHERE _id = :key")
+    fun getSync(key: Long): ICalEntity?
+
 
 
     // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
