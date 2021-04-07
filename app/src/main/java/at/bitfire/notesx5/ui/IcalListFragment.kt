@@ -188,8 +188,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         loadFilters()
 
         // initialize the floating action button only onStart, otherwise the fragment might not be created yet
-        val fab: View = requireNotNull(activity).findViewById(R.id.fab)
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
 
             icalListViewModel.resetFocusItem()
 
@@ -202,6 +201,11 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                     }
             this.findNavController().navigate(
                     IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
+        }
+
+        binding.fabFilter.setOnClickListener {
+
+            goToFilterFragment()
         }
 
         super.onStart()
@@ -358,39 +362,29 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
 // START Set up Datepicker
             val c = Calendar.getInstance()
-                c.timeInMillis = System.currentTimeMillis()
+            c.timeInMillis = System.currentTimeMillis()
 
-                val year = c.get(Calendar.YEAR)
-                val month = c.get(Calendar.MONTH)
-                val day = c.get(Calendar.DAY_OF_MONTH)
-                val dpd = DatePickerDialog(requireActivity(), this, year, month, day)
-
-
-                val startItem = icalListViewModel.iCal4List.value?.lastOrNull()
-                val endItem = icalListViewModel.iCal4List.value?.firstOrNull()
+            val year = c.get(Calendar.YEAR)
+            val month = c.get(Calendar.MONTH)
+            val day = c.get(Calendar.DAY_OF_MONTH)
+            val dpd = DatePickerDialog(requireActivity(), this, year, month, day)
 
 
-                if (startItem?.property?.dtstart != null && endItem?.property?.dtend != null) {
-                    dpd.datePicker.minDate = startItem.property.dtstart!!
-                    dpd.datePicker.maxDate = endItem.property.dtstart!!
-                }
+            val startItem = icalListViewModel.iCal4List.value?.lastOrNull()
+            val endItem = icalListViewModel.iCal4List.value?.firstOrNull()
 
-                dpd.show()
+
+            if (startItem?.property?.dtstart != null && endItem?.property?.dtend != null) {
+                dpd.datePicker.minDate = startItem.property.dtstart!!
+                dpd.datePicker.maxDate = endItem.property.dtstart!!
             }
 
-        if (item.itemId == R.id.menu_list_filter) {
-            icalListViewModel.resetFocusItem()
-            prefs.edit().clear().apply()
+            dpd.show()
+        }
 
-            this.findNavController().navigate(
-                    IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
-                        this.category2preselect = icalListViewModel.searchCategories.toTypedArray()
-                        this.statusJournal2preselect = icalListViewModel.searchStatusJournal.toTypedArray()
-                        this.statusTodo2preselect = icalListViewModel.searchStatusTodo.toTypedArray()
-                        this.classification2preselect = icalListViewModel.searchClassification.toTypedArray()
-                        this.collection2preselect = icalListViewModel.searchCollection.toTypedArray()
-                        this.component2preselect = icalListViewModel.searchComponent
-                    })
+        if (item.itemId == R.id.menu_list_filter) {
+
+            goToFilterFragment()
         }
 
         if (item.itemId == R.id.menu_list_clearfilter) {
@@ -463,6 +457,22 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (foundItem != null)
             icalListViewModel.setFocusItem(foundItem!!.property.id)
 
+    }
+
+
+    fun goToFilterFragment() {
+        icalListViewModel.resetFocusItem()
+        prefs.edit().clear().apply()
+
+        this.findNavController().navigate(
+                IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
+                    this.category2preselect = icalListViewModel.searchCategories.toTypedArray()
+                    this.statusJournal2preselect = icalListViewModel.searchStatusJournal.toTypedArray()
+                    this.statusTodo2preselect = icalListViewModel.searchStatusTodo.toTypedArray()
+                    this.classification2preselect = icalListViewModel.searchClassification.toTypedArray()
+                    this.collection2preselect = icalListViewModel.searchCollection.toTypedArray()
+                    this.component2preselect = icalListViewModel.searchComponent
+                })
     }
 }
 
