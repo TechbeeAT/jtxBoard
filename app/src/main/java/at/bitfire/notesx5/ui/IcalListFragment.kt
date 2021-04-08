@@ -205,7 +205,18 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         binding.fabFilter.setOnClickListener {
 
-            goToFilterFragment()
+            if (icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()) {
+                binding.fabFilter.setImageResource(R.drawable.ic_filter)
+                icalListViewModel.resetFocusItem()
+                icalListViewModel.clearFilter()
+                prefs.edit().clear().apply()
+                arguments?.clear()
+            }
+            else {
+                goToFilterFragment()
+            }
+
+
         }
 
         super.onStart()
@@ -309,9 +320,14 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             icalListViewModel.searchCollection = prefs.getStringSet(PREFS_COLLECTION, null)!!.toMutableList()
         }
 
-        if(arguments.component2show.isNotEmpty() || arguments.category2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.statusJournal2filter?.isNotEmpty() == true || arguments.statusTodo2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
+        //if(arguments.component2show.isNotEmpty() || arguments.category2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.statusJournal2filter?.isNotEmpty() == true || arguments.statusTodo2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
             icalListViewModel.updateSearch()   // updateSearch() only if there was at least one filter criteria
 
+        // Change the filter icon to make clear when a filter is active
+        if (icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty())
+            binding.fabFilter.setImageResource(R.drawable.ic_filter_delete)
+        else
+            binding.fabFilter.setImageResource(R.drawable.ic_filter)
 
         // activate the right tab according to the searchComponent
         when (icalListViewModel.searchComponent) {
