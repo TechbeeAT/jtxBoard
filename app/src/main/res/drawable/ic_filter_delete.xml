@@ -1,23 +1,15 @@
-<!--
-  ~ Copyright (c) Patrick Lang in collaboration with bitfire web engineering.
-  ~ All rights reserved. This program and the accompanying materials
-  ~ are made available under the terms of the GNU Public License v3.0
-  ~ which accompanies this distribution, and is available at
-  ~ http://www.gnu.org/licenses/gpl.html
-  -->
-
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
   <path
-      android:pathData="M4.25,5.61C6.27,8.2 10,13 10,13v6c0,0.55 0.45,1 1,1h2c0.55,0 1,-0.45 1,-1v-6c0,0 3.72,-4.8 5.74,-7.39C20.25,4.95 19.78,4 18.95,4H5.04C4.21,4 3.74,4.95 4.25,5.61z"
+      android:pathData="m7.0166,6.1257h10l-5.01,6.3zM4.2666,5.7357C6.2866,8.3257 10.0166,13.1257 10.0166,13.1257v6c0,0.55 0.45,1 1,1h2c0.55,0 1,-0.45 1,-1L14.0166,13.1257C14.0166,13.1257 17.7366,8.3257 19.7566,5.7357 20.2666,5.0757 19.7966,4.1257 18.9666,4.1257L5.0566,4.1257C4.2266,4.1257 3.7566,5.0757 4.2666,5.7357Z"
       android:fillColor="#000000"/>
   <path
-      android:pathData="m20.683,13.8943 l-0.5199,-0.5288 -2.0613,2.0963 -2.0613,-2.0963 -0.5199,0.5288 2.0613,2.0963 -2.0613,2.0962 0.5199,0.5288 2.0613,-2.0963 2.0613,2.0963 0.5199,-0.5288 -2.0613,-2.0962z"
+      android:pathData="m21.0169,15.005 l-0.5199,-0.5288 -2.0613,2.0963 -2.0613,-2.0963 -0.5199,0.5288 2.0613,2.0963 -2.0613,2.0963 0.5199,0.5288 2.0613,-2.0963 2.0613,2.0963 0.5199,-0.5288 -2.0613,-2.0963z"
       android:strokeLineJoin="round"
-      android:strokeWidth="1.80712"
+      android:strokeWidth="0.671999"
       android:fillColor="#000000"
       android:strokeColor="#000000"/>
 </vector>
