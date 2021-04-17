@@ -316,7 +316,7 @@ data class ICalObject(
                 fun createNote(): ICalObject = ICalObject(component = "NOTE", status = StatusJournal.FINAL.param)
                 fun createNote(summary: String) = ICalObject(component = "NOTE", status = StatusJournal.FINAL.param, summary = summary)
                 fun createTodo() = ICalObject(component = "TODO", status = StatusTodo.NEEDSACTION.param, percent = 0, priority = 0, dueTimezone = "ALLDAY")
-                fun createSubtask(summary: String) = ICalObject(component = "TODO", summary = summary, status = StatusTodo.NEEDSACTION.param, percent = 0, dueTimezone = "ALLDAY")
+                fun createSubtask(summary: String) = ICalObject(component = "TODO", summary = summary, status = StatusTodo.NEEDSACTION.param, percent = 0, priority = 0, dueTimezone = "ALLDAY")
 
 
                 /**
