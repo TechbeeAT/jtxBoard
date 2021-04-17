@@ -65,8 +65,9 @@
             app:nullable="true" />
         <argument
             android:name="component2show"
-            android:defaultValue="JOURNAL"
-            app:argType="string" />
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true"/>
     </fragment>
     <fragment
         android:id="@+id/icalViewFragment"

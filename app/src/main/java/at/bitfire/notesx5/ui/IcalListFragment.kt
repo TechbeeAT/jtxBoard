@@ -222,6 +222,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         super.onStart()
     }
 
+
     fun loadFilters() {
 
         prefs = activity?.getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)!!
@@ -230,8 +231,8 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         val arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
 
         // set the search values for the selected component and store in shared preferences or retrieve and set component from the shared preferences
-        if (arguments.component2show.isNotEmpty()) {
-            icalListViewModel.searchComponent = arguments.component2show
+        if (arguments.component2show?.isNotEmpty() == true) {
+            icalListViewModel.searchComponent = arguments.component2show!!
             prefs.edit().putString(PREFS_COMPONENT, arguments.component2show).apply()
         } else if (prefs.getString(PREFS_COMPONENT, null)?.isNotEmpty() == true) {
             icalListViewModel.searchComponent = prefs.getString(PREFS_COMPONENT, null)!!
@@ -476,7 +477,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     }
 
 
-    fun goToFilterFragment() {
+    private fun goToFilterFragment() {
         icalListViewModel.resetFocusItem()
         prefs.edit().clear().apply()
 
