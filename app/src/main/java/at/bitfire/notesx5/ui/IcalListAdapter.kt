@@ -102,12 +102,11 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                 holder.description.visibility = View.VISIBLE
             }
 
-            if (iCal4ListItem.property.categories?.isNotBlank() == true) {
+            if (iCal4ListItem.property.categories.isNullOrEmpty()) {
+                holder.categories.visibility = View.GONE
+            } else {
                 holder.categories.text = iCal4ListItem.property.categories
                 holder.categories.visibility = View.VISIBLE
-            } else {
-                holder.categories.visibility = View.GONE
-                //holder.categoriesIcon.visibility = View.GONE
             }
 
             if(iCal4ListItem.property.color != null) {
