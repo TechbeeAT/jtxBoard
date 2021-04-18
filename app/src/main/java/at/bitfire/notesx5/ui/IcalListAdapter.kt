@@ -102,7 +102,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                 holder.description.visibility = View.VISIBLE
             }
 
-            if (iCal4ListItem.property.categories?.isNotEmpty() == true) {
+            if (iCal4ListItem.property.categories?.isNotBlank() == true) {
                 holder.categories.text = iCal4ListItem.property.categories
                 holder.categories.visibility = View.VISIBLE
             } else {
@@ -333,7 +333,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
         var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
 
-        var subtaskBinding = FragmentIcalListItemSubtaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val subtaskBinding = FragmentIcalListItemSubtaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         var subtaskSummary = subtask.summary
         //val subtaskCount = model.subtasksCountList.value?.find { subtask.id == it.icalobjectId}?.count

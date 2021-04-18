@@ -23,7 +23,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
  * Additionally it excludes remote items that are marked as deleted.
  */
 @DatabaseView(viewName = VIEW_NAME_ICAL4LIST,
-        value = "SELECT " +
+        value = "SELECT DISTINCT " +
         "main_icalobject.$COLUMN_ID, " +
         "main_icalobject.$COLUMN_COMPONENT, " +
         "main_icalobject.$COLUMN_SUMMARY, " +
@@ -50,7 +50,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
         "main_icalobject.$COLUMN_DELETED, " +
         "(SELECT group_concat($TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT, \", \") FROM $TABLE_NAME_CATEGORY WHERE main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID GROUP BY $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
         "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = \'TODO\' AND sub_icalobject.$COLUMN_ID = main_icalobject.$COLUMN_ID ) as subtasksCount " +
-        "FROM $TABLE_NAME_ICALOBJECT main_icalobject LEFT JOIN $TABLE_NAME_CATEGORY ON main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
+        "FROM $TABLE_NAME_ICALOBJECT main_icalobject " +
+        //"LEFT JOIN $TABLE_NAME_CATEGORY ON main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
         "INNER JOIN $TABLE_NAME_COLLECTION collection ON main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID " +
         "WHERE main_icalobject.$COLUMN_DELETED = 0")           // locally deleted entries are already excluded in the view!
 data class ICal4List (
