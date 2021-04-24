@@ -11,16 +11,20 @@
 
 
     <!-- app theme -->
+    <!-- see https://github.com/material-components/material-components-android/blob/master/docs/theming/Color.md for component color names -->
 
-    <style name="AppTheme.Base" parent="Theme.MaterialComponents.Light.NoActionBar"/>
+    <style name="AppTheme.Base" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
     <style name="AppTheme" parent="AppTheme.Base">
-        <!-- see https://github.com/material-components/material-components-android/blob/master/docs/theming/Color.md for component color names -->
+
+
         <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>       <!-- additionally required for AppCompatActivity -->
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorPrimaryVariant">@color/primaryLightColor</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
+        <!--
+
         <item name="colorSecondaryVariant">@color/secondaryLightColor</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
 
@@ -29,6 +33,7 @@
 
         <item name="android:colorBackground">@color/backgroundColor</item>
         <item name="colorSurface">@android:color/white</item>
+-->
     </style>
 
     <style name="AppTheme.NoActionBar">
