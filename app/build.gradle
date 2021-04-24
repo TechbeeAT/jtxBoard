@@ -94,7 +94,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.4.0-alpha05'
 
     // Testing-only dependencies
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.31"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32"
     androidTestImplementation 'androidx.test:core:1.4.0-alpha05'
     androidTestImplementation 'androidx.test:core-ktx:1.4.0-alpha05'
 
