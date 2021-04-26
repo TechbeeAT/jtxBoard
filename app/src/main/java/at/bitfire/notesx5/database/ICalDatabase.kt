@@ -36,7 +36,7 @@ import at.bitfire.notesx5.database.views.ICal4List
     Relatedto::class,
     Resource::class],
         views = [ICal4List::class],
-        version = 74,
+        version = 76,
         exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {
@@ -208,7 +208,7 @@ abstract class ICalDatabase : RoomDatabase() {
             //onConflict strategy = IGNORE!
             database.upsertCollection(ICalCollection(collectionId = 1L, url = "https://localhost", displayName = "Local Collection"))
 
-            val newEntry = database.insertICalObject(ICalObject(collectionId = 1L, component = Component.JOURNAL.name, summary = rfcSummary, description = rfcDesc, dtstart = System.currentTimeMillis()))
+            val newEntry = database.insertICalObject(ICalObject(collectionId = 1L, module = Module.NOTE.name, component = Component.VJOURNAL.name, summary = rfcSummary, description = rfcDesc, dtstart = System.currentTimeMillis()))
             database.insertAttendee(Attendee(caladdress = "test@test.de", icalObjectId = newEntry))
             database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
             database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
@@ -223,7 +223,7 @@ abstract class ICalDatabase : RoomDatabase() {
             //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary, description=noteDesc, organizer="LOCAL", categories="JourFixe, BestProject"))
             //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary2, description=noteDesc2, organizer="LOCAL", categories="Shopping"))
 
-            val newEntry2 = database.insertICalObject(ICalObject(collectionId = 1L, component = Component.NOTE.name, summary = noteSummary, description = noteDesc))
+            val newEntry2 = database.insertICalObject(ICalObject(collectionId = 1L, module = Module.NOTE.name, component = Component.VJOURNAL.name, summary = noteSummary, description = noteDesc))
             database.insertAttendee(Attendee(caladdress = "test@test.de", icalObjectId = newEntry2))
             database.insertCategory(Category(text = "cat", icalObjectId = newEntry2))
             database.insertCategory(Category(text = "cat", icalObjectId = newEntry2))

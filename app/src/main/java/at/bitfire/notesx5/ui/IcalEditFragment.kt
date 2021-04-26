@@ -122,7 +122,7 @@ class IcalEditFragment : Fragment(),
         Classification.values().forEach { classificationItems = classificationItems.plus(getString(it.stringResource))       }
 
         var statusItems: Array<String> = arrayOf()
-        if (icalEditViewModel.iCalEntity.property.component == Component.TODO.name) {
+        if (icalEditViewModel.iCalEntity.property.component == Component.VTODO.name) {
             StatusTodo.values().forEach { statusItems = statusItems.plus(getString(it.stringResource))       }
         } else {
             StatusJournal.values().forEach { statusItems = statusItems.plus(getString(it.stringResource))       }
@@ -147,7 +147,7 @@ class IcalEditFragment : Fragment(),
                 builder.setMessage("Are you sure you want to delete \"${icalEditViewModel.iCalObjectUpdated.value?.summary}\"?")
                 builder.setPositiveButton("Delete") { _, _ ->
                     val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
-                    direction.component2show = icalEditViewModel.iCalObjectUpdated.value!!.component
+                    direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
 
                     val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
                     icalEditViewModel.delete()
@@ -163,7 +163,7 @@ class IcalEditFragment : Fragment(),
                  */
 
                 builder.setNeutralButton("Mark as cancelled") { _, _ ->
-                    if (icalEditViewModel.iCalObjectUpdated.value!!.component == "TODO")
+                    if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name)
                         icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.CANCELLED.param
                     else
                         icalEditViewModel.iCalObjectUpdated.value!!.status = StatusJournal.CANCELLED.param
@@ -182,7 +182,7 @@ class IcalEditFragment : Fragment(),
         icalEditViewModel.returnVJournalItemId.observe(viewLifecycleOwner, {
             if (it != 0L) {
                 val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
-                direction.component2show = icalEditViewModel.iCalObjectUpdated.value!!.component
+                direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
                 direction.item2focus = it
                 this.findNavController().navigate(direction)
             }
@@ -205,9 +205,9 @@ class IcalEditFragment : Fragment(),
                 binding.editPriorityChip.text = it.priority.toString()
 
             // Set the default value of the Status Chip
-            if (it.component == Component.TODO.name && it.status in StatusTodo.paramValues())
+            if (it.component == Component.VTODO.name && it.status in StatusTodo.paramValues())
                 binding.editStatusChip.text = getString(StatusTodo.getStringResourceByParam(it.status)!!)
-            else if ((it.component == Component.JOURNAL.name || it.component == Component.NOTE.name) && it.status in StatusJournal.paramValues())
+            else if (it.component == Component.VJOURNAL.name && it.status in StatusJournal.paramValues())
                 binding.editStatusChip.text = getString(StatusJournal.getStringResourceByParam(it.status)!!)
             else
                 binding.editStatusChip.text = it.status       // if unsupported just show whatever is there
@@ -467,9 +467,9 @@ class IcalEditFragment : Fragment(),
 
             // update the status only if it was actually changed, otherwise the performance sucks
             if (icalEditViewModel.iCalObjectUpdated.value!!.status != statusBefore) {
-                if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.TODO.name && icalEditViewModel.iCalObjectUpdated.value!!.status in StatusTodo.paramValues())
+                if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name && icalEditViewModel.iCalObjectUpdated.value!!.status in StatusTodo.paramValues())
                     binding.editStatusChip.text = getString(StatusTodo.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
-                else if ((icalEditViewModel.iCalObjectUpdated.value!!.component == Component.JOURNAL.name || icalEditViewModel.iCalObjectUpdated.value!!.component == Component.TODO.name) && icalEditViewModel.iCalObjectUpdated.value!!.status in StatusJournal.paramValues())
+                else if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VJOURNAL.name  && icalEditViewModel.iCalObjectUpdated.value!!.status in StatusJournal.paramValues())
                     binding.editStatusChip.text = getString(StatusJournal.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
                 else
                     binding.editStatusChip.text = icalEditViewModel.iCalObjectUpdated.value!!.status       // if unsupported just show whatever is there
@@ -608,12 +608,12 @@ class IcalEditFragment : Fragment(),
                     .setTitle("Set status")
                     .setItems(statusItems) { dialog, which ->
                         // Respond to item chosen
-                        if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.TODO.name) {
+                        if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name) {
                             icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.getParamById(which)!!
                             binding.editStatusChip.text = getString(StatusTodo.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
                         }
 
-                        if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.JOURNAL.name || icalEditViewModel.iCalObjectUpdated.value!!.component == Component.NOTE.name) {
+                        if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VJOURNAL.name) {
                             icalEditViewModel.iCalObjectUpdated.value!!.status = StatusJournal.getParamById(which)!!
                             binding.editStatusChip.text = getString(StatusJournal.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
                         }

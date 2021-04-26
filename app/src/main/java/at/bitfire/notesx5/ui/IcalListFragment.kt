@@ -52,7 +52,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     companion object {
         const val PREFS_LIST_VIEW = "sharedPreferencesListView"
-        const val PREFS_COMPONENT = "prefsComponent"
+        const val PREFS_MODULE = "prefsModule"
         const val PREFS_COLLECTION = "prefsCollection"
         const val PREFS_CATEGORIES = "prefsCategories"
         const val PREFS_CLASSIFICATION = "prefsClassification"
@@ -113,7 +113,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 icalListViewModel.setFocusItem(arguments.item2focus)
             }
 
-            when (icalListViewModel.searchComponent) {
+            when (icalListViewModel.searchModule) {
                 "NOTE" -> {
                     gotodateMenuItem?.isVisible = false
                     staggeredGridLayoutManager!!.spanCount = 2
@@ -154,15 +154,15 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 icalListViewModel.resetFocusItem()
 
                 when (tab?.position) {
-                    0 -> icalListViewModel.searchComponent = "JOURNAL"
-                    1 -> icalListViewModel.searchComponent = "NOTE"
-                    2 -> icalListViewModel.searchComponent = "TODO"
-                    else -> icalListViewModel.searchComponent = "JOURNAL"
+                    0 -> icalListViewModel.searchModule = Module.JOURNAL.name
+                    1 -> icalListViewModel.searchModule = Module.NOTE.name
+                    2 -> icalListViewModel.searchModule = Module.TODO.name
+                    else -> icalListViewModel.searchModule = Module.JOURNAL.name
                 }
 
                 // ATTENTION: As the View is recreated on Resume, the arguments are read again, therefore the searchComponent MUST be updated, otherwise the application will crash!
-                getArguments()?.putString("component2show", icalListViewModel.searchComponent)
-                prefs.edit().putString(PREFS_COMPONENT, icalListViewModel.searchComponent).apply()
+                getArguments()?.putString("module2show", icalListViewModel.searchModule)
+                prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
                 loadFilters()
 
                 icalListViewModel.updateSearch()
@@ -231,11 +231,11 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         val arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
 
         // set the search values for the selected component and store in shared preferences or retrieve and set component from the shared preferences
-        if (arguments.component2show?.isNotEmpty() == true) {
-            icalListViewModel.searchComponent = arguments.component2show!!
-            prefs.edit().putString(PREFS_COMPONENT, arguments.component2show).apply()
-        } else if (prefs.getString(PREFS_COMPONENT, null)?.isNotEmpty() == true) {
-            icalListViewModel.searchComponent = prefs.getString(PREFS_COMPONENT, null)!!
+        if (arguments.module2show?.isNotEmpty() == true) {
+            icalListViewModel.searchModule = arguments.module2show!!
+            prefs.edit().putString(PREFS_MODULE, arguments.module2show).apply()
+        } else if (prefs.getString(PREFS_MODULE, null)?.isNotEmpty() == true) {
+            icalListViewModel.searchModule = prefs.getString(PREFS_MODULE, null)!!
         }
 
 
@@ -331,7 +331,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             binding.fabFilter.setImageResource(R.drawable.ic_filter)
 
         // activate the right tab according to the searchComponent
-        when (icalListViewModel.searchComponent) {
+        when (icalListViewModel.searchModule) {
             "NOTE" -> binding.tablayoutJournalnotestodos.getTabAt(1)?.select()
             "JOURNAL" -> binding.tablayoutJournalnotestodos.getTabAt(0)?.select()
             "TODO" -> binding.tablayoutJournalnotestodos.getTabAt(2)?.select()
@@ -488,7 +488,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                     this.statusTodo2preselect = icalListViewModel.searchStatusTodo.toTypedArray()
                     this.classification2preselect = icalListViewModel.searchClassification.toTypedArray()
                     this.collection2preselect = icalListViewModel.searchCollection.toTypedArray()
-                    this.component2preselect = icalListViewModel.searchComponent
+                    this.module2preselect = icalListViewModel.searchModule
                 })
     }
 }

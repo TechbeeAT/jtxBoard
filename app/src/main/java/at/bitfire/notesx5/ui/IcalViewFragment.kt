@@ -99,9 +99,9 @@ class IcalViewFragment : Fragment() {
 
             if (it?.property != null) {
 
-                if (it.property.component == Component.TODO.name && it.property.status in StatusTodo.paramValues()) {
+                if (it.property.component == Component.VTODO.name && it.property.status in StatusTodo.paramValues()) {
                     binding.viewStatusChip.text =  getString(StatusTodo.getStringResourceByParam(it.property.status)!!)
-                } else if (((it.property.component == Component.JOURNAL.name) || it.property.component == Component.NOTE.name) && it.property.status in StatusJournal.paramValues()) {
+                } else if ((it.property.component == Component.VJOURNAL.name)  && it.property.status in StatusJournal.paramValues()) {
                     binding.viewStatusChip.text =  getString(StatusJournal.getStringResourceByParam(it.property.status)!!)
                 } else {
                     binding.viewStatusChip.text = it.property.status

@@ -12,9 +12,7 @@ import android.app.Application
 import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
-import at.bitfire.notesx5.database.ICalCollection
-import at.bitfire.notesx5.database.ICalObject
-import at.bitfire.notesx5.database.ICalDatabaseDao
+import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
@@ -126,9 +124,9 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     var showAll: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
     var allDayChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.dtstartTimezone == "ALLDAY")
-    var addDueTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == "TODO" && iCalEntity.property.dueTimezone != "ALLDAY")
-    var addCompletedTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == "TODO" && iCalEntity.property.completedTimezone != "ALLDAY")
-    var addStartedTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == "TODO" && iCalEntity.property.dtstartTimezone != "ALLDAY")
+    var addDueTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
+    var addCompletedTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.completedTimezone != "ALLDAY")
+    var addStartedTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
 
 
 
@@ -159,26 +157,26 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     fun updateVisibility() {
 
-        dateVisible.postValue(iCalEntity.property.component == "JOURNAL")
-        timeVisible.postValue(iCalEntity.property.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
-        alldayVisible.postValue(iCalEntity.property.component == "JOURNAL")
-        timezoneVisible.postValue(iCalEntity.property.component == "JOURNAL" &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if component == JOURNAL and Timezone is NOT ALLDAY
-        statusVisible.postValue(iCalEntity.property.component == "JOURNAL" || iCalEntity.property.component == "TODO" || showAll.value == true)
-        classificationVisible.postValue(iCalEntity.property.component == "JOURNAL" || showAll.value == true)
-        urlVisible.postValue((iCalEntity.property.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
-        contactVisible.postValue((iCalEntity.property.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
-        categoriesVisible.postValue(iCalEntity.property.component == "JOURNAL" || showAll.value == true)
-        attendeesVisible.postValue(iCalEntity.property.component == "JOURNAL" || showAll.value == true)
-        commentsVisible.postValue((iCalEntity.property.component == "JOURNAL" && showAll.value == true) || showAll.value == true)
-        progressVisible.postValue(iCalEntity.property.component == "TODO")
-        priorityVisible.postValue(iCalEntity.property.component == "TODO")
-        subtasksVisible.postValue(iCalEntity.property.component == "TODO")
-        duedateVisible.postValue(iCalEntity.property.component == "TODO")
-        duetimeVisible.postValue(iCalEntity.property.component == "TODO" && iCalEntity.property.dueTimezone != "ALLDAY")
-        completeddateVisible.postValue(iCalEntity.property.component == "TODO" && showAll.value == true)
-        completedtimeVisible.postValue(iCalEntity.property.component == "TODO" && showAll.value == true && iCalEntity.property.completedTimezone != "ALLDAY")
-        starteddateVisible.postValue(iCalEntity.property.component == "TODO" && showAll.value == true)
-        startedtimeVisible.postValue(iCalEntity.property.component == "TODO" && showAll.value == true && iCalEntity.property.dtstartTimezone != "ALLDAY")
+        dateVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name)
+        timeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
+        alldayVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name)
+        timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
+        statusVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name || iCalEntity.property.module == Module.TODO.name || showAll.value == true)
+        classificationVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name || showAll.value == true)
+        urlVisible.postValue((iCalEntity.property.module == Module.JOURNAL.name && showAll.value == true) || showAll.value == true)
+        contactVisible.postValue((iCalEntity.property.module == Module.JOURNAL.name && showAll.value == true) || showAll.value == true)
+        categoriesVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name || showAll.value == true)
+        attendeesVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name || showAll.value == true)
+        commentsVisible.postValue((iCalEntity.property.module == Module.JOURNAL.name && showAll.value == true) || showAll.value == true)
+        progressVisible.postValue(iCalEntity.property.module == Module.TODO.name)
+        priorityVisible.postValue(iCalEntity.property.module == Module.TODO.name)
+        subtasksVisible.postValue(iCalEntity.property.module == Module.TODO.name)
+        duedateVisible.postValue(iCalEntity.property.module == Module.TODO.name)
+        duetimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
+        completeddateVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true)
+        completedtimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true && iCalEntity.property.completedTimezone != "ALLDAY")
+        starteddateVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true)
+        startedtimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true && iCalEntity.property.dtstartTimezone != "ALLDAY")
 
 
     }

@@ -28,6 +28,13 @@ const val TABLE_NAME_ICALOBJECT = "icalobject"
  * Type: [Long]*/
 const val COLUMN_ID = BaseColumns._ID
 
+/** The column for the module.
+ * This is an internal differentiation for JOURNAL, NOTE and TODO
+ * provided in the enum [Module]
+ * Type: [String]
+ */
+const val COLUMN_MODULE = "module"
+
 /* The names of all the other columns  */
 /** The column for the component based on the values
  * provided in the enum [Component]
@@ -41,12 +48,14 @@ const val COLUMN_COMPONENT = "component"
  * Type: [String]
  */
 const val COLUMN_SUMMARY = "summary"
+
 /**
  * Purpose:  This column/property provides a more complete description of the calendar component than that provided by the "SUMMARY" property.
  * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.5]
  * Type: [String]
  */
 const val COLUMN_DESCRIPTION = "description"
+
 /**
  * Purpose:  This column/property specifies when the calendar component begins.
  * The corresponding timezone is stored in [COLUMN_DTSTART_TIMEZONE].
@@ -54,6 +63,7 @@ const val COLUMN_DESCRIPTION = "description"
  * Type: [Long]
  */
 const val COLUMN_DTSTART = "dtstart"
+
 /**
  * Purpose:  This column/property specifies the timezone of when the calendar component begins.
  * The corresponding datetime is stored in [COLUMN_DTSTART].
@@ -61,6 +71,7 @@ const val COLUMN_DTSTART = "dtstart"
  * Type: [String]
  */
 const val COLUMN_DTSTART_TIMEZONE = "dtstarttimezone"
+
 /**
  * Purpose:  This column/property specifies when the calendar component ends.
  * The corresponding timezone is stored in [COLUMN_DTEND_TIMEZONE].
@@ -68,6 +79,7 @@ const val COLUMN_DTSTART_TIMEZONE = "dtstarttimezone"
  * Type: [Long]
  */
 const val COLUMN_DTEND = "dtend"
+
 /**
  * Purpose:  This column/property specifies the timezone of when the calendar component ends.
  * The corresponding datetime is stored in [COLUMN_DTEND].
@@ -75,6 +87,7 @@ const val COLUMN_DTEND = "dtend"
  * Type: [String]
  */
 const val COLUMN_DTEND_TIMEZONE = "dtendtimezone"
+
 /**
  * Purpose:  This property defines the overall status or confirmation for the calendar component.
  * The possible values of a status are defined in [StatusTodo] for To-Dos and in [StatusJournal] for Notes and Journals
@@ -82,6 +95,7 @@ const val COLUMN_DTEND_TIMEZONE = "dtendtimezone"
  * Type: [String]
  */
 const val COLUMN_STATUS = "status"
+
 /**
  * Purpose:  This property defines the access classification for a calendar component.
  * The possible values of a status are defined in the enum [Classification].
@@ -89,12 +103,14 @@ const val COLUMN_STATUS = "status"
  * Type: [String]
  */
 const val COLUMN_CLASSIFICATION = "classification"
+
 /**
  * Purpose:  This property defines a Uniform Resource Locator (URL) associated with the iCalendar object.
  * See [https://tools.ietf.org/html/rfc5545#section-3.8.4.6]
  * Type: [String]
  */
 const val COLUMN_URL = "url"
+
 /**
  * Purpose:  This property is used to represent contact information or alternately a reference
  * to contact information associated with the calendar component.
@@ -102,6 +118,7 @@ const val COLUMN_URL = "url"
  * Type: [String]
  */
 const val COLUMN_CONTACT = "contact"
+
 /**
  * Purpose:  This property specifies information related to the global position for the activity specified by a calendar component.
  * This property is split in the fields [COLUMN_GEO_LAT] for the latitude
@@ -110,6 +127,7 @@ const val COLUMN_CONTACT = "contact"
  * Type: [Float]
  */
 const val COLUMN_GEO_LAT = "geolat"
+
 /**
  * Purpose:  This property specifies information related to the global position for the activity specified by a calendar component.
  * This property is split in the fields [COLUMN_GEO_LAT] for the latitude
@@ -118,24 +136,28 @@ const val COLUMN_GEO_LAT = "geolat"
  * Type: [Float]
  */
 const val COLUMN_GEO_LONG = "geolong"
+
 /**
  * Purpose:  This property defines the intended venue for the activity defined by a calendar component.
  * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.7]
  * Type: [String]
  */
 const val COLUMN_LOCATION = "location"
+
 /**
  * Purpose:  This property is used by an assignee or delegatee of a to-do to convey the percent completion of a to-do to the "Organizer".
  * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.8]
  * Type: [Int]
  */
 const val COLUMN_PERCENT = "percent"
+
 /**
  * Purpose:  This property defines the relative priority for a calendar component.
  * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.9]
  * Type: [Int]
  */
 const val COLUMN_PRIORITY = "priority"
+
 /**
  * Purpose:  This property defines the date and time that a to-do is expected to be completed.
  * The corresponding timezone is stored in [COLUMN_DUE_TIMEZONE].
@@ -143,6 +165,7 @@ const val COLUMN_PRIORITY = "priority"
  * Type: [Long]
  */
 const val COLUMN_DUE = "due"
+
 /**
  * Purpose:  This column/property specifies the timezone of when a to-do is expected to be completed.
  * The corresponding datetime is stored in [COLUMN_DUE].
@@ -150,6 +173,7 @@ const val COLUMN_DUE = "due"
  * Type: [String]
  */
 const val COLUMN_DUE_TIMEZONE = "duetimezone"
+
 /**
  * Purpose:  This property defines the date and time that a to-do was actually completed.
  * The corresponding timezone is stored in [COLUMN_COMPLETED_TIMEZONE].
@@ -157,6 +181,7 @@ const val COLUMN_DUE_TIMEZONE = "duetimezone"
  * Type: [Long]
  */
 const val COLUMN_COMPLETED = "completed"
+
 /**
  * Purpose:  This column/property specifies the timezone of when a to-do was actually completed.
  * The corresponding datetime is stored in [COLUMN_DUE].
@@ -164,18 +189,21 @@ const val COLUMN_COMPLETED = "completed"
  * Type: [String]
  */
 const val COLUMN_COMPLETED_TIMEZONE = "completedtimezone"
+
 /**
  * Purpose:  This property specifies a positive duration of time.
  * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.5]
  * Type: [String]
  */
 const val COLUMN_DURATION = "duration"
+
 /**
  * Purpose:  This property defines the persistent, globally unique identifier for the calendar component.
  * See [https://tools.ietf.org/html/rfc5545#section-3.8.4.7]
  * Type: [String]
  */
 const val COLUMN_UID = "uid"
+
 /**
  * Purpose:  This property specifies the date and time that the calendar information
  * was created by the calendar user agent in the calendar store.
@@ -183,6 +211,7 @@ const val COLUMN_UID = "uid"
  * Type: [Long]
  */
 const val COLUMN_CREATED = "created"
+
 /**
  * Purpose:  In the case of an iCalendar object that specifies a
  * "METHOD" property, this property specifies the date and time that
@@ -195,6 +224,7 @@ const val COLUMN_CREATED = "created"
  * Type: [Long]
  */
 const val COLUMN_DTSTAMP = "dtstamp"
+
 /**
  * Purpose:  This property specifies the date and time that the information associated
  * with the calendar component was last revised in the calendar store.
@@ -202,34 +232,40 @@ const val COLUMN_DTSTAMP = "dtstamp"
  * Type: [Long]
  */
 const val COLUMN_LAST_MODIFIED = "lastmodified"
+
 /**
  * Purpose:  This property defines the revision sequence number of the calendar component within a sequence of revisions.
  * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.4]
  * Type: [Int]
  */
 const val COLUMN_SEQUENCE = "sequence"
+
 /**
  * Purpose:  This property specifies a color used for displaying the calendar, event, todo, or journal data.
  * See [https://tools.ietf.org/html/rfc7986#section-5.9]
  * Type: [String]
  */
 const val COLUMN_COLOR = "color"
+
 /**
  * Purpose:  To specify other properties for the ICalObject.
  * This is especially used for additional attributes relevant for the synchronization
  * Type: [String]
  */
 const val COLUMN_OTHER = "other"
+
 /**
  * Purpose:  This column is the foreign key to the [TABLE_NAME_COLLECTION].
  * Type: [Long]
  */
 const val COLUMN_ICALOBJECT_COLLECTIONID = "collectionId"
+
 /**
  * Purpose:  This column defines if a local collection was changed that is supposed to be synchronised.
  * Type: [Boolean]
  */
 const val COLUMN_DIRTY = "dirty"
+
 /**
  * Purpose:  This column defines if a collection that is supposed to be synchonized was locally marked as deleted.
  * Type: [Boolean]
@@ -251,7 +287,8 @@ data class ICalObject(
         @ColumnInfo(index = true, name = COLUMN_ID)
         var id: Long = 0L,
 
-        @ColumnInfo(name = COLUMN_COMPONENT) var component: String = Component.NOTE.name,          // JOURNAL or NOTE
+        @ColumnInfo(name = COLUMN_MODULE) var module: String = Module.NOTE.name,
+        @ColumnInfo(name = COLUMN_COMPONENT) var component: String = Component.VJOURNAL.name,
         //@ColumnInfo(name = COLUMN_COLLECTION) var collection: String = "LOCAL",
         @ColumnInfo(name = COLUMN_SUMMARY) var summary: String? = null,
         @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String? = null,
@@ -300,112 +337,108 @@ data class ICalObject(
         @ColumnInfo(name = COLUMN_COLOR) var color: Int? = null,
         @ColumnInfo(name = COLUMN_OTHER) var other: String? = null,
 
-        @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID)    var collectionId: Long = 1L,
+        @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long = 1L,
 
         @ColumnInfo(name = COLUMN_DIRTY) var dirty: Boolean = true,
         @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean = false
 
 
-        ): Parcelable
-
-{
-        companion object Factory {
+) : Parcelable {
+    companion object Factory {
 
 
-                fun createJournal(): ICalObject = ICalObject(component = "JOURNAL", dtstart = System.currentTimeMillis(), status = StatusJournal.FINAL.param)
-                fun createNote(): ICalObject = ICalObject(component = "NOTE", status = StatusJournal.FINAL.param)
-                fun createNote(summary: String) = ICalObject(component = "NOTE", status = StatusJournal.FINAL.param, summary = summary)
-                fun createTodo() = ICalObject(component = "TODO", status = StatusTodo.NEEDSACTION.param, percent = 0, priority = 0, dueTimezone = "ALLDAY")
-                fun createSubtask(summary: String) = ICalObject(component = "TODO", summary = summary, status = StatusTodo.NEEDSACTION.param, percent = 0, priority = 0, dueTimezone = "ALLDAY")
+        fun createJournal(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.JOURNAL.name, dtstart = System.currentTimeMillis(), status = StatusJournal.FINAL.param)
+        fun createNote(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.param)
+        fun createNote(summary: String) = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.param, summary = summary)
+        fun createTodo() = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, status = StatusTodo.NEEDSACTION.param, percent = 0, priority = 0, dueTimezone = "ALLDAY")
+        fun createSubtask(summary: String) = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, summary = summary, status = StatusTodo.NEEDSACTION.param, percent = 0, priority = 0, dueTimezone = "ALLDAY")
 
 
-                /**
-                 * Create a new [ICalObject] from the specified [ContentValues].
-                 *
-                 * @param values A [ICalObject] that at least contain [.COLUMN_NAME].
-                 * @return A newly created [ICalObject] instance.
-                 */
-                fun fromContentValues(values: ContentValues?): ICalObject? {
+        /**
+         * Create a new [ICalObject] from the specified [ContentValues].
+         *
+         * @param values A [ICalObject] that at least contain [.COLUMN_NAME].
+         * @return A newly created [ICalObject] instance.
+         */
+        fun fromContentValues(values: ContentValues?): ICalObject? {
 
-                        // TODO initialize specific component based on values!
-                        // TODO validate some inputs, especially Int Inputs!
+            // TODO initialize specific component based on values!
+            // TODO validate some inputs, especially Int Inputs!
 
-                        if (values == null)
-                                return null
+            if (values == null)
+                return null
 
-                        if (values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID) == null)
-                                throw IllegalArgumentException("CollectionId cannot be null.")
+            if (values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID) == null)
+                throw IllegalArgumentException("CollectionId cannot be null.")
 
-                        return ICalObject().applyContentValues(values)
-                }
+            return ICalObject().applyContentValues(values)
         }
+    }
 
 
+    fun applyContentValues(values: ContentValues): ICalObject {
+
+        values.getAsString(COLUMN_COMPONENT)?.let { component -> this.component = component }
+        values.getAsString(COLUMN_SUMMARY)?.let { summary -> this.summary = summary }
+        values.getAsLong(COLUMN_DTSTART)?.let { dtstart -> this.dtstart = dtstart }   //TODO: Add validation, Journals MUST have a DTSTART!
+        values.getAsString(COLUMN_DTSTART_TIMEZONE)?.let { dtstartTimezone -> this.dtstartTimezone = dtstartTimezone }   //TODO: Validieren auf gültige Timezone!
+        values.getAsLong(COLUMN_DTEND)?.let { dtend -> this.dtend = dtend }
+        values.getAsString(COLUMN_DTEND_TIMEZONE)?.let { dtendTimezone -> this.dtendTimezone = dtendTimezone }   //TODO: Validieren auf gültige Timezone!
+        values.getAsString(COLUMN_STATUS)?.let { status -> this.status = status }
+        values.getAsString(COLUMN_CLASSIFICATION)?.let { classification -> this.classification = classification }
+        values.getAsString(COLUMN_URL)?.let { url -> this.url = url }
+        values.getAsFloat(COLUMN_GEO_LAT)?.let { geoLat -> this.geoLat = geoLat }
+        values.getAsFloat(COLUMN_GEO_LONG)?.let { geoLong -> this.geoLong = geoLong }
+        values.getAsString(COLUMN_LOCATION)?.let { location -> this.location = location }
+        values.getAsInteger(COLUMN_PERCENT)?.let { percent -> this.percent = percent }
+        values.getAsInteger(COLUMN_PRIORITY)?.let { priority -> this.priority = priority }
+        values.getAsLong(COLUMN_DUE)?.let { due -> this.due = due }
+        values.getAsString(COLUMN_DUE_TIMEZONE)?.let { dueTimezone -> this.dueTimezone = dueTimezone }
+        values.getAsLong(COLUMN_COMPLETED)?.let { completed -> this.completed = completed }
+        values.getAsString(COLUMN_COMPLETED_TIMEZONE)?.let { completedTimezone -> this.completedTimezone = completedTimezone }
+        values.getAsString(COLUMN_DURATION)?.let { duration -> this.duration = duration }
+        values.getAsString(COLUMN_UID)?.let { uid -> this.uid = uid }
+        values.getAsLong(COLUMN_CREATED)?.let { created -> this.created = created }
+        values.getAsLong(COLUMN_DTSTAMP)?.let { dtstamp -> this.dtstamp = dtstamp }
+        values.getAsLong(COLUMN_LAST_MODIFIED)?.let { lastModified -> this.lastModified = lastModified }
+        values.getAsLong(COLUMN_SEQUENCE)?.let { sequence -> this.sequence = sequence }
+        values.getAsInteger(COLUMN_COLOR)?.let { color -> this.color = color }
+        values.getAsString(COLUMN_OTHER)?.let { other -> this.other = other }
+        values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)?.let { collectionId -> this.collectionId = collectionId }
+        values.getAsBoolean(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty }
+        values.getAsBoolean(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted }
+
+        return this
+    }
 
 
-        fun applyContentValues(values: ContentValues):ICalObject {
+    fun setUpdatedProgress(newPercent: Int): ICalObject {
 
-                values.getAsString(COLUMN_COMPONENT)?.let { component -> this.component = component }
-                values.getAsString(COLUMN_SUMMARY)?.let { summary -> this.summary = summary }
-                values.getAsLong(COLUMN_DTSTART)?.let { dtstart -> this.dtstart = dtstart }   //TODO: Add validation, Journals MUST have a DTSTART!
-                values.getAsString(COLUMN_DTSTART_TIMEZONE)?.let { dtstartTimezone -> this.dtstartTimezone = dtstartTimezone }   //TODO: Validieren auf gültige Timezone!
-                values.getAsLong(COLUMN_DTEND)?.let { dtend -> this.dtend = dtend }
-                values.getAsString(COLUMN_DTEND_TIMEZONE)?.let { dtendTimezone -> this.dtendTimezone = dtendTimezone}   //TODO: Validieren auf gültige Timezone!
-                values.getAsString(COLUMN_STATUS)?.let { status -> this.status = status }
-                values.getAsString(COLUMN_CLASSIFICATION)?.let { classification -> this.classification = classification }
-                values.getAsString(COLUMN_URL)?.let { url -> this.url = url }
-                values.getAsFloat(COLUMN_GEO_LAT)?.let { geoLat -> this.geoLat = geoLat }
-                values.getAsFloat(COLUMN_GEO_LONG)?.let { geoLong -> this.geoLong = geoLong }
-                values.getAsString(COLUMN_LOCATION)?.let { location -> this.location = location }
-                values.getAsInteger(COLUMN_PERCENT)?.let { percent -> this.percent = percent }
-                values.getAsInteger(COLUMN_PRIORITY)?.let { priority -> this.priority = priority }
-                values.getAsLong(COLUMN_DUE)?.let { due -> this.due = due }
-                values.getAsString(COLUMN_DUE_TIMEZONE)?.let { dueTimezone -> this.dueTimezone = dueTimezone }
-                values.getAsLong(COLUMN_COMPLETED)?.let { completed -> this.completed = completed }
-                values.getAsString(COLUMN_COMPLETED_TIMEZONE)?.let { completedTimezone -> this.completedTimezone = completedTimezone }
-                values.getAsString(COLUMN_DURATION)?.let { duration -> this.duration = duration }
-                values.getAsString(COLUMN_UID)?.let { uid -> this.uid = uid }
-                values.getAsLong(COLUMN_CREATED)?.let { created -> this.created = created }
-                values.getAsLong(COLUMN_DTSTAMP)?.let { dtstamp -> this.dtstamp = dtstamp }
-                values.getAsLong(COLUMN_LAST_MODIFIED)?.let { lastModified -> this.lastModified = lastModified }
-                values.getAsLong(COLUMN_SEQUENCE)?.let { sequence -> this.sequence = sequence }
-                values.getAsInteger(COLUMN_COLOR)?.let { color -> this.color = color }
-                values.getAsString(COLUMN_OTHER)?.let { other -> this.other = other }
-                values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)?.let { collectionId -> this.collectionId = collectionId }
-                values.getAsBoolean(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty }
-                values.getAsBoolean(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted }
+        if (percent == newPercent)
+            return this
 
-                return this
+        percent = newPercent
+        status = when (newPercent) {
+                100 -> StatusTodo.COMPLETED.param
+                in 1..99 -> StatusTodo.INPROCESS.param
+                0 -> StatusTodo.NEEDSACTION.param
+            else -> StatusTodo.NEEDSACTION.param      // should never happen!
         }
+        lastModified = System.currentTimeMillis()
+        if (dtstart == null && percent != null && percent!! > 0)
+            dtstart = System.currentTimeMillis()
+        if (dtend == null && percent != null && percent!! == 100)
+            dtend = System.currentTimeMillis()
+        if (completed == null && percent != null && percent!! == 100)
+            completed = System.currentTimeMillis()
+        sequence++
+        dirty = true
+
+        return this
+    }
 
 
-        fun setUpdatedProgress(newPercent: Int):ICalObject {
-
-                if (percent == newPercent)
-                        return this
-
-                percent = newPercent
-                status = when (newPercent) {
-                        100 -> StatusTodo.COMPLETED.param
-                        in 1..99 -> StatusTodo.INPROCESS.param
-                        0 -> StatusTodo.NEEDSACTION.param
-                        else -> StatusTodo.NEEDSACTION.param      // should never happen!
-                }
-                lastModified = System.currentTimeMillis()
-                if(dtstart == null && percent != null && percent!! > 0)
-                        dtstart = System.currentTimeMillis()
-                if(dtend == null && percent != null && percent!! == 100)
-                        dtend = System.currentTimeMillis()
-                if(completed == null && percent != null && percent!! == 100)
-                        completed = System.currentTimeMillis()
-                sequence++
-                dirty = true
-
-                return this
-        }
-
-
-        }
+}
 
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals
  * The possible values differ for Todos and Journals/Notes
@@ -414,36 +447,36 @@ data class ICalObject(
  * @param [stringResource] is a reference to the String Resource within NotesX5
  */
 @Parcelize
-enum class StatusJournal (val id: Int, val param: String, val stringResource: Int): Parcelable {
+enum class StatusJournal(val id: Int, val param: String, val stringResource: Int) : Parcelable {
 
-        DRAFT(0,"DRAFT", R.string.journal_status_draft),
-        FINAL(1,"FINAL", R.string.journal_status_final),
-        CANCELLED(2,"CANCELLED", R.string.journal_status_cancelled);
+    DRAFT(0, "DRAFT", R.string.journal_status_draft),
+    FINAL(1, "FINAL", R.string.journal_status_final),
+    CANCELLED(2, "CANCELLED", R.string.journal_status_cancelled);
 
-        companion object {
-                fun getParamById(id: Int): String? {
-                        values().forEach {
-                                if (it.id == id)
-                                        return it.param
-                        }
-                        return null
-                }
-
-                fun getStringResourceByParam(param: String): Int? {
-                        values().forEach {
-                                if (it.param == param)
-                                        return it.stringResource
-                        }
-                        return null
-                }
-
-                fun paramValues(): List<String> {
-                        val paramValues: MutableList<String> = mutableListOf()
-                        values().forEach { paramValues.add(it.param) }
-                        return paramValues
-                }
-
+    companion object {
+        fun getParamById(id: Int): String? {
+            values().forEach {
+                if (it.id == id)
+                    return it.param
+            }
+            return null
         }
+
+        fun getStringResourceByParam(param: String): Int? {
+            values().forEach {
+                if (it.param == param)
+                    return it.stringResource
+            }
+            return null
+        }
+
+        fun paramValues(): List<String> {
+            val paramValues: MutableList<String> = mutableListOf()
+            values().forEach { paramValues.add(it.param) }
+            return paramValues
+        }
+
+    }
 }
 
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Todos
@@ -453,36 +486,36 @@ enum class StatusJournal (val id: Int, val param: String, val stringResource: In
  * @param [stringResource] is a reference to the String Resource within NotesX5
  */
 @Parcelize
-enum class StatusTodo (val id: Int, val param: String, val stringResource: Int): Parcelable {
+enum class StatusTodo(val id: Int, val param: String, val stringResource: Int) : Parcelable {
 
-        NEEDSACTION(0,"NEEDS-ACTION", R.string.todo_status_needsaction),
-        COMPLETED(1,"COMPLETED", R.string.todo_status_completed),
-        INPROCESS(2,"IN-PROCESS", R.string.todo_status_inprocess),
-        CANCELLED(3,"CANCELLED", R.string.todo_status_cancelled);
+    NEEDSACTION(0, "NEEDS-ACTION", R.string.todo_status_needsaction),
+    COMPLETED(1, "COMPLETED", R.string.todo_status_completed),
+    INPROCESS(2, "IN-PROCESS", R.string.todo_status_inprocess),
+    CANCELLED(3, "CANCELLED", R.string.todo_status_cancelled);
 
-        companion object {
-                fun getParamById(id: Int): String? {
-                        values().forEach {
-                                if (it.id == id)
-                                        return it.param
-                        }
-                        return null
-                }
-
-                fun getStringResourceByParam(param: String): Int? {
-                        values().forEach {
-                                if (it.param == param)
-                                        return it.stringResource
-                        }
-                        return null
-                }
-
-                fun paramValues(): List<String> {
-                        val paramValues: MutableList<String> = mutableListOf()
-                        values().forEach { paramValues.add(it.param) }
-                        return paramValues
-                }
+    companion object {
+        fun getParamById(id: Int): String? {
+            values().forEach {
+                if (it.id == id)
+                    return it.param
+            }
+            return null
         }
+
+        fun getStringResourceByParam(param: String): Int? {
+            values().forEach {
+                if (it.param == param)
+                    return it.stringResource
+            }
+            return null
+        }
+
+        fun paramValues(): List<String> {
+            val paramValues: MutableList<String> = mutableListOf()
+            values().forEach { paramValues.add(it.param) }
+            return paramValues
+        }
+    }
 }
 
 /** This enum class defines the possible values for the attribute [ICalObject.classification]
@@ -491,44 +524,48 @@ enum class StatusTodo (val id: Int, val param: String, val stringResource: Int):
  * @param [stringResource] is a reference to the String Resource within NotesX5
  */
 @Parcelize
-enum class Classification (val id: Int, val param: String, val stringResource: Int): Parcelable {
+enum class Classification(val id: Int, val param: String, val stringResource: Int) : Parcelable {
 
-        PUBLIC(0,"PUBLIC", R.string.classification_public),
-        PRIVATE(1,"PRIVATE", R.string.classification_private),
-        CONFIDENTIAL(2,"CONFIDENTIAL", R.string.classification_confidential);
+    PUBLIC(0, "PUBLIC", R.string.classification_public),
+    PRIVATE(1, "PRIVATE", R.string.classification_private),
+    CONFIDENTIAL(2, "CONFIDENTIAL", R.string.classification_confidential);
 
 
-        companion object {
-                fun getParamById(id: Int): String? {
-                        values().forEach {
-                                if (it.id == id)
-                                        return it.param
-                        }
-                        return null
-                }
-
-                fun getStringResourceByParam(param: String): Int? {
-                        values().forEach {
-                                if (it.param == param)
-                                        return it.stringResource
-                        }
-                        return null
-                }
-
-                fun paramValues(): List<String> {
-                        val paramValues: MutableList<String> = mutableListOf()
-                        values().forEach { paramValues.add(it.param) }
-                        return paramValues
-                }
+    companion object {
+        fun getParamById(id: Int): String? {
+            values().forEach {
+                if (it.id == id)
+                    return it.param
+            }
+            return null
         }
+
+        fun getStringResourceByParam(param: String): Int? {
+            values().forEach {
+                if (it.param == param)
+                    return it.stringResource
+            }
+            return null
+        }
+
+        fun paramValues(): List<String> {
+            val paramValues: MutableList<String> = mutableListOf()
+            values().forEach { paramValues.add(it.param) }
+            return paramValues
+        }
+    }
 
 }
 
 /** This enum class defines the possible values for the attribute [ICalObject.component]  */
 enum class Component {
-        JOURNAL, NOTE, TODO
+    VJOURNAL, VTODO
 }
 
+/** This enum class defines the possible values for the attribute [ICalObject.module]  */
+enum class Module {
+        JOURNAL, NOTE, TODO
+}
 
 
 

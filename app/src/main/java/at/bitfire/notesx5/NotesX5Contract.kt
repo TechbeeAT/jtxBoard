@@ -11,6 +11,7 @@ package at.bitfire.notesx5
 import android.accounts.Account
 import android.net.Uri
 import android.provider.BaseColumns
+import at.bitfire.notesx5.database.ICalObject
 
 @Suppress("unused")
 object NotesX5Contract {
@@ -61,6 +62,13 @@ object NotesX5Contract {
          * This is the unique identifier of an ICalObject
          * Type: [Long]*/
         const val ID = BaseColumns._ID
+
+        /** The column for the module.
+         * This is an internal differentiation for JOURNAL, NOTE and TODO
+         * provided in the enum [Module]
+         * Type: [String]
+         */
+        const val COLUMN_MODULE = "module"
 
         /* The names of all the other columns  */
         /** The column for the component based on the values
@@ -313,8 +321,16 @@ object NotesX5Contract {
 
         /** This enum class defines the possible values for the attribute component of an [X5ICalObject]  */
         enum class Component {
+            VJOURNAL, VTODO
+        }
+
+        /** This enum class defines the possible values for the attribute module of an [X5ICalObject]  */
+        enum class Module {
             JOURNAL, NOTE, TODO
         }
+
+
+
 
 
     }

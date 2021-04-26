@@ -62,13 +62,13 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
         if (iCal4List.value?.size == 0)    // only continue if there are items in the list
             return
 
-        val dtstartVisibility = if (model.searchComponent == "JOURNAL") View.VISIBLE else View.GONE
-        val statusVisibility = if (model.searchComponent == "JOURNAL") View.VISIBLE else View.GONE
-        val classificationVisibility = if (model.searchComponent  == "JOURNAL") View.VISIBLE else View.GONE
-        val progressVisibility = if (model.searchComponent == "TODO") View.VISIBLE else View.GONE
-        val priorityVisibility = if (model.searchComponent == "TODO") View.VISIBLE else View.GONE
-        val dueVisibility = if (model.searchComponent  == "TODO") View.VISIBLE else View.GONE
-        val subtasksVisibility = if (model.searchComponent == "TODO") View.VISIBLE else View.GONE
+        val dtstartVisibility = if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
+        val statusVisibility = if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
+        val classificationVisibility = if (model.searchModule  == Module.JOURNAL.name) View.VISIBLE else View.GONE
+        val progressVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
+        val priorityVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
+        val dueVisibility = if (model.searchModule  == Module.TODO.name) View.VISIBLE else View.GONE
+        val subtasksVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
 
 
         holder.dtstartDay.visibility = dtstartVisibility
@@ -120,7 +120,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
             else
                 holder.colorBar.visibility = View.GONE
 
-            if(iCal4ListItem.property.component == "JOURNAL") {
+            if(iCal4ListItem.property.module == Module.JOURNAL.name) {
                 holder.dtstartDay.text = convertLongToDayString(iCal4ListItem.property.dtstart)
                 holder.dtstartMonth.text = convertLongToMonthString(iCal4ListItem.property.dtstart)
                 holder.dtstartYear.text = convertLongToYearString(iCal4ListItem.property.dtstart)
@@ -132,7 +132,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                     holder.dtstartTime.visibility = View.VISIBLE
                 }
 
-            } else if(iCal4ListItem.property.component == "TODO") {
+            } else if(iCal4ListItem.property.module == Module.TODO.name) {
 
                 holder.progressSlider.value = iCal4ListItem.property.percent?.toFloat()?:0F
                 holder.progressCheckbox.isChecked = iCal4ListItem.property.percent == 100
@@ -177,9 +177,9 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
             }
 
 
-            if (iCal4ListItem.property.component == Component.TODO.name && iCal4ListItem.property.status in StatusTodo.paramValues())
+            if (iCal4ListItem.property.component == Component.VTODO.name && iCal4ListItem.property.status in StatusTodo.paramValues())
                 holder.status.text  = context.getString(StatusTodo.getStringResourceByParam(iCal4ListItem.property.status)!!)
-            else if ((iCal4ListItem.property.component == Component.JOURNAL.name || iCal4ListItem.property.component == Component.NOTE.name) && iCal4ListItem.property.status in StatusJournal.paramValues())
+            else if (iCal4ListItem.property.component == Component.VJOURNAL.name && iCal4ListItem.property.status in StatusJournal.paramValues())
                 holder.status.text  = context.getString(StatusJournal.getStringResourceByParam(iCal4ListItem.property.status)!!)
             else
                 holder.status.text = iCal4ListItem.property.status       // if unsupported just show whatever is there
@@ -203,7 +203,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
             var resetProgress = iCal4ListItem.property.percent ?: 0
 
             // take care to update the progress in the DB when the progress is changed
-            if(iCal4ListItem.property.component == "TODO") {
+            if(iCal4ListItem.property.module == Module.TODO.name) {
                 holder.progressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
                     override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
@@ -230,7 +230,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
                 }
 
-                if(iCal4ListItem.property.component == Component.TODO.name) {
+                if(iCal4ListItem.property.component == Component.VTODO.name) {
                     val itemSubtasks = allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id  } != null }
                     itemSubtasks?.forEach {
                         addSubtasksView(it, holder)

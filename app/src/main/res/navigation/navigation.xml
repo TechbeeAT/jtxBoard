@@ -64,7 +64,7 @@
             app:argType="string[]"
             app:nullable="true" />
         <argument
-            android:name="component2show"
+            android:name="module2show"
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true"/>
@@ -138,7 +138,7 @@
             app:argType="string[]"
             app:nullable="true" />
         <argument
-            android:name="component2preselect"
+            android:name="module2preselect"
             android:defaultValue="JOURNAL"
             app:argType="string" />
 

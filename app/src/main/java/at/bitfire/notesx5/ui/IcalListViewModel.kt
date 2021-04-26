@@ -26,7 +26,7 @@ class IcalListViewModel(
         application: Application) : AndroidViewModel(application) {
 
 
-    var searchComponent: String = "JOURNAL"
+    var searchModule: String = Module.JOURNAL.name
     var searchText: String = ""
     var searchCategories: MutableList<String> = mutableListOf()
     var searchOrganizer: MutableList<String> = mutableListOf()
@@ -94,8 +94,8 @@ class IcalListViewModel(
         //     "LEFT JOIN vRelatedto ON icalobject._id = vRelatedto.icalObjectId "
 
         // First query parameter Component must always be present!
-        queryString += "WHERE $COLUMN_COMPONENT = ? "
-        args.add(searchComponent)
+        queryString += "WHERE $COLUMN_MODULE = ? "
+        args.add(searchModule)
 
         // Query for the given text search from the action bar
         if (searchText.isNotEmpty() && searchText.length >= 2) {
@@ -116,7 +116,7 @@ class IcalListViewModel(
         }
 
         // Query for the passed filter criteria from FilterFragment
-        if (searchStatusJournal.size > 0 && (searchComponent == Component.JOURNAL.name || searchComponent == Component.JOURNAL.name)) {
+        if (searchStatusJournal.size > 0 && (searchModule == Module.JOURNAL.name || searchModule == Module.TODO.name)) {
             queryString += "AND $COLUMN_STATUS IN ("
             searchStatusJournal.forEach {
                 queryString += "?,"
@@ -127,7 +127,7 @@ class IcalListViewModel(
         }
 
         // Query for the passed filter criteria from FilterFragment
-        if (searchStatusTodo.size > 0 && searchComponent == Component.TODO.name) {
+        if (searchStatusTodo.size > 0 && searchModule == Module.TODO.name) {
             queryString += "AND $COLUMN_STATUS IN ("
             searchStatusTodo.forEach {
                 queryString += "?,"

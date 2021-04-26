@@ -163,7 +163,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map !item?.comment.isNullOrEmpty()      // true if relatedto is NOT null or empty
             }
             progressVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.percent != null && item.property.component == Component.TODO.name     // true if percent (progress) is NOT null
+                return@map item?.property?.percent != null && item.property.component == Component.VTODO.name     // true if percent (progress) is NOT null
             }
             priorityVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.priority != null      // true if priority is NOT null
@@ -172,7 +172,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map item?.property?.completed != null
             }
             startedVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.dtstart != null && item.property.component == Component.TODO.name)
+                return@map (item?.property?.dtstart != null && item.property.component == Component.VTODO.name)
             }
         }
 

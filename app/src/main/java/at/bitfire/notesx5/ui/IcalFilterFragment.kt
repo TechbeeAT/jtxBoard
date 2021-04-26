@@ -44,7 +44,7 @@ class IcalFilterFragment : Fragment() {
     private var statusJournalPreselected: MutableList<String> = mutableListOf()
     private var classificationPreselected: MutableList<String> = mutableListOf()
     private var collectionPreselected: MutableList<String> = mutableListOf()
-    private var componentPreselected: String = "JOURNAL"     // default should be overwritten
+    private var modulePreselected: String = Module.JOURNAL.name     // default should be overwritten
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -77,7 +77,7 @@ class IcalFilterFragment : Fragment() {
         // get previously selected items from arguments
         val arguments = IcalFilterFragmentArgs.fromBundle((requireArguments()))
 
-        componentPreselected = arguments.component2preselect
+        modulePreselected = arguments.module2preselect
 
         if (arguments.category2preselect?.isNotEmpty() == true)
             categoriesPreselected = arguments.category2preselect!!.toMutableList()
@@ -116,9 +116,9 @@ class IcalFilterFragment : Fragment() {
         val statusJournalItems: MutableList<String> = mutableListOf()
         StatusJournal.values().forEach { statusJournalItems.add(getString(it.stringResource)) }
 
-        if (arguments.component2preselect == Component.TODO.name)
+        if (arguments.module2preselect == Module.TODO.name)
             addChips(binding.statusTodoFilterChipgroup, statusTodoItems, displayedStatusChips, statusTodoPreselected)
-        if (arguments.component2preselect == Component.JOURNAL.name || arguments.component2preselect == Component.NOTE.name)
+        if (arguments.module2preselect == Module.JOURNAL.name || arguments.module2preselect == Module.NOTE.name)
             addChips(binding.statusJournalFilterChipgroup, statusJournalItems, displayedStatusChips, statusJournalPreselected)
 
         addChips(binding.classificationFilterChipgroup, classificationItems, displayedClassificationChips, classificationPreselected)
@@ -156,7 +156,7 @@ class IcalFilterFragment : Fragment() {
      */
     private fun addChips(chipGroup: ChipGroup, list: List<String>, displayed: MutableList<String>, preselected: MutableList<String>) {
 
-        list.forEach() { listItem ->
+        list.forEach { listItem ->
 
             if (listItem == "" || displayed.contains(listItem))   // don't show empty items and only show items that are not there yet
                 return@forEach
@@ -232,7 +232,7 @@ class IcalFilterFragment : Fragment() {
                     this.classification2filter = classificationSelected.toTypedArray()
                     this.collection2filter = collectionSelected.toTypedArray()
                     this.category2filter = categoriesSelected.toTypedArray()
-                    this.component2show = componentPreselected
+                    this.module2show = modulePreselected
                 }
 
 
