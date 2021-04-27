@@ -48,26 +48,15 @@
 
         <TextView
             android:id="@+id/edit_subtask_progress_percent"
-            android:layout_width="30dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:text="@{model.iCalObjectUpdated.percent}"
-            android:textAlignment="viewEnd"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_subtask_progress_slider"
-            app:layout_constraintEnd_toStartOf="@+id/edit_subtask_progress_percent_sign"
-            app:layout_constraintTop_toTopOf="@+id/edit_subtask_progress_slider"
-            tools:text="100" />
-
-        <TextView
-            android:id="@+id/edit_subtask_progress_percent_sign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="%"
+            android:text="@{model.iCalObjectUpdated.percent + ` %`}"
             android:textAlignment="viewEnd"
             app:layout_constraintBottom_toBottomOf="@+id/edit_subtask_progress_slider"
             app:layout_constraintEnd_toStartOf="@+id/edit_subtask_progress_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/edit_subtask_progress_slider" />
+            app:layout_constraintTop_toTopOf="@+id/edit_subtask_progress_slider"
+            tools:text="100 %" />
 
         <CheckBox
             android:id="@+id/edit_subtask_progress_checkbox"

@@ -79,7 +79,6 @@
     <string name="list_due_tomorrow">Due tomorrow</string>
     <string name="list_due_inXdays">Due in %d days</string>
     <string name="list_due_inXhours">Due in %d hours</string>
-    <string name="list_progress_percent">%s %%</string>
     <string name="list_tabitem_journals">Journals</string>
     <string name="list_tabitem_notes">Notes</string>
     <string name="list_tabitem_todos">Todos</string>
@@ -158,5 +157,7 @@
     <string name="menu_list_add_note">Add Note</string>
     <string name="menu_list_add_todo">Add Todo</string>
     <string name="menu_view_share">Share</string>
+    <string name="edit_timezone">Timezone</string>
+    <string name="list_filter">Filter</string>
 
 </resources>

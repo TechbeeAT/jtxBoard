@@ -87,7 +87,8 @@
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="88dp"
-            app:srcCompat="@drawable/ic_filter" />
+            app:srcCompat="@drawable/ic_filter"
+            android:contentDescription="@string/list_filter" />
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

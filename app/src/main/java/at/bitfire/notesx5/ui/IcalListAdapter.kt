@@ -8,6 +8,7 @@
 
 package at.bitfire.notesx5.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -56,6 +57,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
             iCal4List.value?.size!!
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VJournalItemHolder, position: Int) {
 
 
@@ -142,8 +144,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                     holder.expandSubtasks.visibility = View.VISIBLE
                 holder.subtasksLinearLayout.visibility = View.VISIBLE
 
-                holder.progressPercent.text = context.getString(R.string.list_progress_percent, iCal4ListItem.property.percent?.toString()
-                        ?: "0")
+                holder.progressPercent.text = "${iCal4ListItem.property.percent} %"
+
                 if(iCal4ListItem.property.priority in 1..9) {           // show priority only if it was set and != 0 (no priority)
                     holder.priorityIcon.visibility = View.VISIBLE
                     holder.priority.visibility = View.VISIBLE
@@ -343,7 +345,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
 
         subtaskBinding.listItemSubtaskTextview.text = subtaskSummary
         subtaskBinding.listItemSubtaskProgressSlider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
-        subtaskBinding.listItemSubtaskProgressPercent.text = if(subtask.percent?.toFloat() != null) subtask.percent!!.toString() else "0"
+        subtaskBinding.listItemSubtaskProgressPercent.text = if(subtask.percent?.toFloat() != null) "${subtask.percent!!} %" else "0 %"
         subtaskBinding.listItemSubtaskProgressCheckbox.isChecked = subtask.percent == 100
 
         // Instead of implementing here

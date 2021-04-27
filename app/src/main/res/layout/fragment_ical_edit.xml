@@ -149,7 +149,7 @@
             app:layout_constraintStart_toEndOf="@+id/edit_all_day_switch"
             app:layout_constraintTop_toTopOf="@+id/edit_timezone_spinner"
             app:srcCompat="@drawable/ic_timezone"
-             />
+            android:contentDescription="@string/edit_timezone" />
 
         <Spinner
             android:id="@+id/edit_timezone_spinner"
@@ -348,28 +348,17 @@
 
         <TextView
             android:id="@+id/edit_progress_percent"
-            android:layout_width="30dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:text="@{model.iCalObjectUpdated.percent.toString()}"
-            android:textAlignment="viewEnd"
-            android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
-            app:layout_constraintEnd_toStartOf="@+id/edit_progress_percent_sign"
-            app:layout_constraintTop_toTopOf="@+id/edit_progress_slider"
-            tools:text="100" />
-
-        <TextView
-            android:id="@+id/edit_progress_percent_sign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="%"
+            android:text="@{model.iCalObjectUpdated.percent.toString() + ` %`}"
             android:textAlignment="viewEnd"
             android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
             app:layout_constraintEnd_toStartOf="@+id/edit_progress_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
+            app:layout_constraintTop_toTopOf="@+id/edit_progress_slider"
+            tools:text="100 %" />
+
 
         <CheckBox
             android:id="@+id/edit_progress_checkbox"

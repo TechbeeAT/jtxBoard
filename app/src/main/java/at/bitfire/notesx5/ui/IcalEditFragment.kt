@@ -9,6 +9,7 @@
 package at.bitfire.notesx5.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Application
 import android.app.DatePickerDialog
@@ -72,6 +73,7 @@ class IcalEditFragment : Fragment(),
 
 
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
@@ -453,7 +455,7 @@ class IcalEditFragment : Fragment(),
         binding.editProgressSlider.addOnChangeListener { slider, value, fromUser ->
             icalEditViewModel.iCalObjectUpdated.value?.percent = value.toInt()
             binding.editProgressCheckbox.isChecked = value == 100F
-            binding.editProgressPercent.text = value.toInt().toString()
+            binding.editProgressPercent.text = "${value.toInt()} %"
             if (value != 100F)
                 restoreProgress = value.toInt()
 
@@ -937,6 +939,7 @@ class IcalEditFragment : Fragment(),
 
 
 
+    @SuppressLint("SetTextI18n")
     private fun addSubtasksView(subtask: ICalObject?, container: ViewGroup?) {
 
         if (subtask == null)
@@ -946,7 +949,7 @@ class IcalEditFragment : Fragment(),
         bindingSubtask.editSubtaskTextview.text = subtask.summary
         bindingSubtask.editSubtaskProgressSlider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
         bindingSubtask.editSubtaskProgressPercent.text = if(subtask.percent?.toFloat() != null)
-            subtask.percent?.toString()
+            "${subtask.percent!!.toInt()} %"
         else "0"
 
         bindingSubtask.editSubtaskProgressCheckbox.isChecked = subtask.percent == 100
@@ -965,7 +968,7 @@ class IcalEditFragment : Fragment(),
             }
 
             bindingSubtask.editSubtaskProgressCheckbox.isChecked = value == 100F
-            bindingSubtask.editSubtaskProgressPercent.text = value.toInt().toString()
+            bindingSubtask.editSubtaskProgressPercent.text = "${value.toInt()} %"
             if (value != 100F)
                 restoreProgress = value.toInt()
         }
