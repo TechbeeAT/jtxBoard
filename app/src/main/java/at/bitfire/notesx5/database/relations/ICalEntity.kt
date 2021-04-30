@@ -50,16 +50,16 @@ data class ICalEntity (
 
 ): Parcelable
 {
-        fun getICalString(iCalObject: ICalObject): String  {
+        fun getICalString(): String  {
 
-                var content = "BEGIN:${iCalObject.component}\n"
-                content+= "UID:${iCalObject.uid}\n"
-                content+= "DTSTAMP:${iCalObject.dtstamp}\n"
-                content+= "DUE;VALUE=DATE:${iCalObject.due}\n"
-                content+= "SUMMARY:${iCalObject.summary}\n"
-                content+= "CLASS:${iCalObject.classification}\n"
-                content+= "STATUS:${iCalObject.status}"
-                content+= "END:${iCalObject.component}\n"
+                var content = "BEGIN:${this.property.component}\n"
+                content+= "UID:${this.property.uid}\n"
+                content+= "DTSTAMP:${this.property.dtstamp}\n"
+                content+= "DUE;VALUE=DATE:${this.property.due}\n"
+                content+= "SUMMARY:${this.property.summary}\n"
+                content+= "CLASS:${this.property.classification}\n"
+                content+= "STATUS:${this.property.status}"
+                content+= "END:${this.property.component}\n"
 
                 return content
         }

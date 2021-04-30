@@ -9,6 +9,7 @@
 package at.bitfire.notesx5.database
 
 import android.content.ContentValues
+import android.content.Context
 import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.room.*
@@ -442,7 +443,6 @@ data class ICalObject(
 
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals
  * The possible values differ for Todos and Journals/Notes
- * @param [id] is an ID of the entry
  * @param [stringResource] is a reference to the String Resource within NotesX5
  */
 @Parcelize
@@ -453,34 +453,19 @@ enum class StatusJournal(val stringResource: Int) : Parcelable {
     CANCELLED(R.string.journal_status_cancelled);
 
     companion object {
-        fun getParamById(id: Int): String? {
+
+        fun getStringResource(context: Context, name: String?): String? {
             values().forEach {
-                if (it.ordinal == id)
-                    return it.name
+                if (it.name == name)
+                    return context.getString(it.stringResource)
             }
             return null
         }
-
-        fun getStringResourceByParam(param: String): Int? {
-            values().forEach {
-                if (it.name == param)
-                    return it.stringResource
-            }
-            return null
-        }
-
-        fun paramValues(): List<String> {
-            val paramValues: MutableList<String> = mutableListOf()
-            values().forEach { paramValues.add(it.name) }
-            return paramValues
-        }
-
     }
 }
 
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Todos
  * The possible values differ for Todos and Journals/Notes
- * @param [id] is an ID of the entry
  * @param [stringResource] is a reference to the String Resource within NotesX5
  */
 @Parcelize
@@ -492,32 +477,18 @@ enum class StatusTodo(val stringResource: Int) : Parcelable {
     CANCELLED(R.string.todo_status_cancelled);
 
     companion object {
-        fun getParamById(id: Int): String? {
-            values().forEach {
-                if (it.ordinal == id)
-                    return it.name
-            }
-            return null
-        }
 
-        fun getStringResourceByParam(name: String): Int? {
+        fun getStringResource(context: Context, name: String?): String? {
             values().forEach {
                 if (it.name == name)
-                    return it.stringResource
+                    return context.getString(it.stringResource)
             }
             return null
-        }
-
-        fun paramValues(): List<String> {
-            val paramValues: MutableList<String> = mutableListOf()
-            values().forEach { paramValues.add(it.name) }
-            return paramValues
         }
     }
 }
 
 /** This enum class defines the possible values for the attribute [ICalObject.classification]
- * @param [id] is an ID of the entry
  * @param [stringResource] is a reference to the String Resource within NotesX5
  */
 @Parcelize
@@ -527,28 +498,14 @@ enum class Classification(val stringResource: Int) : Parcelable {
     PRIVATE(R.string.classification_private),
     CONFIDENTIAL(R.string.classification_confidential);
 
-
     companion object {
-        fun getParamById(id: Int): String? {
-            values().forEach {
-                if (it.ordinal == id)
-                    return it.name
-            }
-            return null
-        }
 
-        fun getStringResource(name: String): Int? {
+        fun getStringResource(context: Context, name: String?): String? {
             values().forEach {
                 if (it.name == name)
-                    return it.stringResource
+                    return context.getString(it.stringResource)
             }
             return null
-        }
-
-        fun paramValues(): List<String> {
-            val paramValues: MutableList<String> = mutableListOf()
-            values().forEach { paramValues.add(it.name) }
-            return paramValues
         }
     }
 

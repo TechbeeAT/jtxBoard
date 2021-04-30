@@ -138,9 +138,9 @@ data class Attendee (
 
         @ColumnInfo(index = true, name = COLUMN_ATTENDEE_ICALOBJECT_ID)       var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_ATTENDEE_CALADDRESS)          var caladdress: String = "",
-        @ColumnInfo(name = COLUMN_ATTENDEE_CUTYPE)         var cutype: String? = Cutype.INDIVIDUAL.param,
+        @ColumnInfo(name = COLUMN_ATTENDEE_CUTYPE)         var cutype: String? = Cutype.INDIVIDUAL.name,
         @ColumnInfo(name = COLUMN_ATTENDEE_MEMBER)         var member: String? = null,
-        @ColumnInfo(name = COLUMN_ATTENDEE_ROLE)           var role: String? = Role.REQ_PARTICIPANT.param,
+        @ColumnInfo(name = COLUMN_ATTENDEE_ROLE)           var role: String? = Role.`REQ-PARTICIPANT`.name,
         @ColumnInfo(name = COLUMN_ATTENDEE_PARTSTAT)       var partstat: String? = null,
         @ColumnInfo(name = COLUMN_ATTENDEE_RSVP)           var rsvp: Boolean? = null,
         @ColumnInfo(name = COLUMN_ATTENDEE_DELEGATEDTO)    var delegatedto: String? = null,
@@ -203,47 +203,33 @@ data class Attendee (
 }
 
 /** This enum class defines the possible values for the attribute [Attendee.cutype]  */
-enum class Cutype (val id: Int, val param: String?) {
+enum class Cutype  {
 
-        INDIVIDUAL(0,"INDIVIDUAL"),
-        GROUP(1,"GROUP"),
-        RESOURCE(2,"RESOURCE"),
-        ROOM(3,"ROOM"),
-        UNKNOWN(4,"UNKNOWN")
+        INDIVIDUAL, GROUP, RESOURCE, ROOM, UNKNOWN
 }
 
 /** This enum class defines the possible values for the attribute [Attendee.role]
- * @param [id] is an ID of the entry
- * @param [param] defines the [Role] how it is stored in the database, this also corresponds to the value that is used for the ICal format
  * @param [stringResource] is a reference to the String Resource within NotesX5
  * @param [icon] is a reference to the Drawable Resource within NotesX5
 
  */
-enum class Role (val id: Int, val param: String?, val stringResource: Int, val icon: Int) {
-        CHAIR (0,"CHAIR", R.string.attendee_role_chair, R.drawable.ic_attendee_chair),            //Indicates chair of the calendar entity
-        REQ_PARTICIPANT(1,"REQ-PARTICIPANT", R.string.attendee_role_required_participant, R.drawable.ic_attendee_reqparticipant),  //Indicates a participant whose participation is required
-        OPT_PARTICIPANT(2,"OPT-PARTICIPANT", R.string.attendee_role_optional_participant, R.drawable.ic_attendee_optparticipant),  //Indicates a participant whose participation is optional
-        NON_PARTICIPANT(3,"NON-PARTICIPANT", R.string.attendee_role_non_participant, R.drawable.ic_attendee_nonparticipant);  //Indicates a participant who is copied for information
+enum class Role (val stringResource: Int, val icon: Int) {
+        CHAIR (R.string.attendee_role_chair, R.drawable.ic_attendee_chair),            //Indicates chair of the calendar entity
+        `REQ-PARTICIPANT`(R.string.attendee_role_required_participant, R.drawable.ic_attendee_reqparticipant),  //Indicates a participant whose participation is required
+        `OPT-PARTICIPANT`(R.string.attendee_role_optional_participant, R.drawable.ic_attendee_optparticipant),  //Indicates a participant whose participation is optional
+        `NON-PARTICIPANT`(R.string.attendee_role_non_participant, R.drawable.ic_attendee_nonparticipant);  //Indicates a participant who is copied for information
 
 
         companion object {
-                fun getRoleparamById(id: Int): String? {
-                        values().forEach {
-                                if (it.id == id)
-                                        return it.param
-                        }
-                        return null
-                }
 
-                fun getDrawableResourceByParam(param: String?): Int {
+                fun getDrawableResourceByName(name: String?): Int {
                         values().forEach {
-                                if (it.param == param)
+                                if (it.name == name)
                                         return it.icon
                         }
                         return R.drawable.ic_attendee_reqparticipant  // default icon
                 }
         }
-
 }
 
 

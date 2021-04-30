@@ -15,13 +15,6 @@ import org.junit.Assert.*
 
 class AttendeeTest {
 
-    @Test
-    fun getRoleparamById() {
-
-        assertEquals(Role.getRoleparamById(0), "CHAIR")
-        assertEquals(Role.getRoleparamById(3), Role.NON_PARTICIPANT.param)
-        assertEquals(Role.getRoleparamById(Role.REQ_PARTICIPANT.id), Role.REQ_PARTICIPANT.param)
-    }
 
     @Test
     fun getDrawableResourceByParam() {
@@ -30,7 +23,6 @@ class AttendeeTest {
 
     @Test
     fun checkCutypeparam() {
-        assertEquals(Cutype.INDIVIDUAL.id, 0)
         assertEquals(Cutype.GROUP.name, "GROUP")
         assertEquals(Cutype.RESOURCE.name, "RESOURCE")
     }

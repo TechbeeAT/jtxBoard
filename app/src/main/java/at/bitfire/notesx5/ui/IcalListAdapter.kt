@@ -179,17 +179,14 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
             }
 
 
-            if (iCal4ListItem.property.component == Component.VTODO.name && iCal4ListItem.property.status in StatusTodo.paramValues())
-                holder.status.text  = context.getString(StatusTodo.getStringResourceByParam(iCal4ListItem.property.status)!!)
-            else if (iCal4ListItem.property.component == Component.VJOURNAL.name && iCal4ListItem.property.status in StatusJournal.paramValues())
-                holder.status.text  = context.getString(StatusJournal.getStringResourceByParam(iCal4ListItem.property.status)!!)
+            if (iCal4ListItem.property.component == Component.VTODO.name)
+                holder.status.text  = StatusTodo.getStringResource(context, iCal4ListItem.property.status) ?: iCal4ListItem.property.status       // if unsupported just show whatever is there
+            else if (iCal4ListItem.property.component == Component.VJOURNAL.name)
+                holder.status.text  = StatusJournal.getStringResource(context, iCal4ListItem.property.status) ?: iCal4ListItem.property.status       // if unsupported just show whatever is there
             else
                 holder.status.text = iCal4ListItem.property.status       // if unsupported just show whatever is there
 
-            if (iCal4ListItem.property.classification in Classification.paramValues())
-                holder.classification.text = context.getString(Classification.getStringResource(iCal4ListItem.property.classification)!!)
-            else
-                holder.classification.text = iCal4ListItem.property.classification      // if unsupported just show whatever is there
+            holder.classification.text = Classification.getStringResource(context, iCal4ListItem.property.classification) ?: iCal4ListItem.property.classification    // if unsupported just show whatever is there
 
             val priorityArray = context.resources.getStringArray(R.array.priority)
             if(iCal4ListItem.property.priority != null && iCal4ListItem.property.priority in 0..9)

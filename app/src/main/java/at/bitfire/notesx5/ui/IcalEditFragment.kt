@@ -207,19 +207,17 @@ class IcalEditFragment : Fragment(),
                 binding.editPriorityChip.text = it.priority.toString()
 
             // Set the default value of the Status Chip
-            if (it.component == Component.VTODO.name && it.status in StatusTodo.paramValues())
-                binding.editStatusChip.text = getString(StatusTodo.getStringResourceByParam(it.status)!!)
-            else if (it.component == Component.VJOURNAL.name && it.status in StatusJournal.paramValues())
-                binding.editStatusChip.text = getString(StatusJournal.getStringResourceByParam(it.status)!!)
+            if (it.component == Component.VTODO.name)
+                binding.editStatusChip.text = StatusTodo.getStringResource(requireContext(), it.status) ?: it.status
+            else if (it.component == Component.VJOURNAL.name)
+                binding.editStatusChip.text = StatusJournal.getStringResource(requireContext(), it.status) ?: it.status
             else
                 binding.editStatusChip.text = it.status       // if unsupported just show whatever is there
 
 
             // Set the default value of the Classification Chip
-            if (it.classification in Classification.paramValues())
-                binding.editClassificationChip.text = getString(Classification.getStringResource(it.classification)!!)
-            else
-                binding.editClassificationChip.text = it.classification       // if unsupported just show whatever is there
+            binding.editClassificationChip.text = Classification.getStringResource(requireContext(), it.classification) ?: it.classification       // if unsupported just show whatever is there
+
         }
 
         icalEditViewModel.showAll.observe(viewLifecycleOwner) {
@@ -448,7 +446,6 @@ class IcalEditFragment : Fragment(),
 
 
 
-
         var restoreProgress = icalEditViewModel.iCalObjectUpdated.value?.percent ?: 0
 
         binding.editProgressSlider.addOnChangeListener { slider, value, fromUser ->
@@ -468,10 +465,10 @@ class IcalEditFragment : Fragment(),
 
             // update the status only if it was actually changed, otherwise the performance sucks
             if (icalEditViewModel.iCalObjectUpdated.value!!.status != statusBefore) {
-                if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name && icalEditViewModel.iCalObjectUpdated.value!!.status in StatusTodo.paramValues())
-                    binding.editStatusChip.text = getString(StatusTodo.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
-                else if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VJOURNAL.name  && icalEditViewModel.iCalObjectUpdated.value!!.status in StatusJournal.paramValues())
-                    binding.editStatusChip.text = getString(StatusJournal.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
+                if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name)
+                    binding.editStatusChip.text = StatusTodo.getStringResource(requireContext(), icalEditViewModel.iCalObjectUpdated.value!!.status) ?: icalEditViewModel.iCalObjectUpdated.value!!.status
+                else if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VJOURNAL.name)
+                    binding.editStatusChip.text = StatusJournal.getStringResource(requireContext(), icalEditViewModel.iCalObjectUpdated.value!!.status) ?: icalEditViewModel.iCalObjectUpdated.value!!.status
                 else
                     binding.editStatusChip.text = icalEditViewModel.iCalObjectUpdated.value!!.status       // if unsupported just show whatever is there
             }
@@ -610,13 +607,13 @@ class IcalEditFragment : Fragment(),
                     .setItems(statusItems) { dialog, which ->
                         // Respond to item chosen
                         if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name) {
-                            icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.getParamById(which)!!
-                            binding.editStatusChip.text = getString(StatusTodo.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
+                            icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.values().getOrNull(which)!!.name
+                            binding.editStatusChip.text = StatusTodo.getStringResource(requireContext(), icalEditViewModel.iCalObjectUpdated.value!!.status)
                         }
 
                         if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VJOURNAL.name) {
-                            icalEditViewModel.iCalObjectUpdated.value!!.status = StatusJournal.getParamById(which)!!
-                            binding.editStatusChip.text = getString(StatusJournal.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.status)!!)
+                            icalEditViewModel.iCalObjectUpdated.value!!.status = StatusJournal.values().getOrNull(which)!!.name
+                            binding.editStatusChip.text = StatusJournal.getStringResource(requireContext(), icalEditViewModel.iCalObjectUpdated.value!!.status)
                         }
 
                     }
@@ -631,8 +628,8 @@ class IcalEditFragment : Fragment(),
                     .setTitle("Set classification")
                     .setItems(classificationItems) { dialog, which ->
                         // Respond to item chosen
-                        icalEditViewModel.iCalObjectUpdated.value!!.classification = Classification.getParamById(which)!!
-                        binding.editClassificationChip.text = getString(Classification.getStringResource(icalEditViewModel.iCalObjectUpdated.value!!.classification)!!)    // don't forget to update the UI
+                        icalEditViewModel.iCalObjectUpdated.value!!.classification = Classification.values().getOrNull(which)!!.name
+                        binding.editClassificationChip.text = Classification.getStringResource(requireContext(), icalEditViewModel.iCalObjectUpdated.value!!.classification)    // don't forget to update the UI
                     }
                     .setIcon(R.drawable.ic_classification)
                     .show()
@@ -855,8 +852,7 @@ class IcalEditFragment : Fragment(),
 
         val attendeeChip = inflater.inflate(R.layout.fragment_ical_edit_attendees_chip, binding.editAttendeesChipgroup, false) as Chip
         attendeeChip.text = attendee.caladdress
-        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.getDrawableResourceByParam(attendee.role), null)
-
+        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.getDrawableResourceByName(attendee.role), null)
         binding.editAttendeesChipgroup.addView(attendeeChip)
 
 
@@ -870,16 +866,10 @@ class IcalEditFragment : Fragment(),
                         if (curIndex == -1)
                             icalEditViewModel.attendeeUpdated.add(attendee)                   // add the attendee to the list of updated items if it was not there yet
                         else
-                            icalEditViewModel.attendeeUpdated[curIndex].role = Role.getRoleparamById(which)      // update the roleparam
-                        attendee.role = Role.getRoleparamById(which)
+                            icalEditViewModel.attendeeUpdated[curIndex].role = Role.values().getOrNull(which)?.name      // update the roleparam
 
-                        when (which) {
-                            0 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_chair, null)
-                            1 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
-                            2 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_optparticipant, null)
-                            3 -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_nonparticipant, null)
-                            else -> attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_attendee_reqparticipant, null)
-                        }
+                        attendee.role = Role.values().getOrNull(which)?.name
+                        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.values().getOrNull(which)?.icon ?: R.drawable.ic_attendee_reqparticipant, null)
 
                     }
                     .setIcon(R.drawable.ic_attendee)

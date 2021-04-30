@@ -99,18 +99,15 @@ class IcalViewFragment : Fragment() {
 
             if (it?.property != null) {
 
-                if (it.property.component == Component.VTODO.name && it.property.status in StatusTodo.paramValues()) {
-                    binding.viewStatusChip.text =  getString(StatusTodo.getStringResourceByParam(it.property.status)!!)
-                } else if ((it.property.component == Component.VJOURNAL.name)  && it.property.status in StatusJournal.paramValues()) {
-                    binding.viewStatusChip.text =  getString(StatusJournal.getStringResourceByParam(it.property.status)!!)
+                if (it.property.component == Component.VTODO.name) {
+                    binding.viewStatusChip.text = StatusTodo.getStringResource(requireContext(), it.property.status) ?: it.property.status
+                } else if (it.property.component == Component.VJOURNAL.name) {
+                    binding.viewStatusChip.text = StatusJournal.getStringResource(requireContext(), it.property.status) ?: it.property.status
                 } else {
                     binding.viewStatusChip.text = it.property.status
                 }
 
-                if (it.property.classification in Classification.paramValues())
-                    binding.viewClassificationChip.text = getString(Classification.getStringResource(it.property.classification)!!)
-                else
-                    binding.viewClassificationChip.text = it.property.classification
+                binding.viewClassificationChip.text = Classification.getStringResource(requireContext(), it.property.classification) ?: it.property.classification
 
                 val priorityArray = resources.getStringArray(R.array.priority)
                 if (icalViewViewModel.icalEntity.value?.property?.priority != null && icalViewViewModel.icalEntity.value!!.property.priority in 0..9)
@@ -423,7 +420,7 @@ class IcalViewFragment : Fragment() {
 
         val attendeeChip = inflater.inflate(R.layout.fragment_ical_view_attendees_chip, binding.viewAttendeeChipgroup, false) as Chip
         attendeeChip.text = attendee.caladdress
-        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.getDrawableResourceByParam(attendee.role), null)
+        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.getDrawableResourceByName(attendee.role), null)
 
         binding.viewAttendeeChipgroup.addView(attendeeChip)
 
@@ -495,6 +492,7 @@ class IcalViewFragment : Fragment() {
             var shareText = "${convertLongToDateString(icalViewViewModel.icalEntity.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart)}\n"
             shareText += "${icalViewViewModel.icalEntity.value!!.property.summary}\n\n"
             shareText += "${icalViewViewModel.icalEntity.value!!.property.description}\n\n"
+            shareText += icalViewViewModel.icalEntity.value!!.getICalString()
             //todo add category again
             //shareText += "Categories/Labels: ${vJournalItemViewModel.vJournal.value!!.vCategory}"
 
