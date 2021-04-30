@@ -15,8 +15,8 @@ import android.provider.BaseColumns
 import androidx.room.*
 import at.bitfire.notesx5.R
 import kotlinx.parcelize.Parcelize
-import java.lang.IllegalArgumentException
 import java.util.*
+import kotlin.IllegalArgumentException
 
 
 /** The name of the the table for IcalObjects.
@@ -408,6 +408,15 @@ data class ICalObject(
         values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)?.let { collectionId -> this.collectionId = collectionId }
         values.getAsBoolean(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty }
         values.getAsBoolean(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted }
+
+        if (this.component == Component.VJOURNAL.name && this.dtstart == null)
+            this.module = Module.JOURNAL.name
+        else if (this.component == Component.VJOURNAL.name && this.dtstart != null)
+            this.module = Module.NOTE.name
+        else if (this.component == Component.VTODO.name)
+            this.module = Module.TODO.name
+        else
+            throw IllegalArgumentException("Unsupported component: ${this.component}. Supported components: ${Component.values()}.")
 
         return this
     }
