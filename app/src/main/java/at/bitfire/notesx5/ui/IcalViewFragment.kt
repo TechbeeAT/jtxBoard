@@ -108,7 +108,7 @@ class IcalViewFragment : Fragment() {
                 }
 
                 if (it.property.classification in Classification.paramValues())
-                    binding.viewClassificationChip.text = getString(Classification.getStringResourceByParam(it.property.classification)!!)
+                    binding.viewClassificationChip.text = getString(Classification.getStringResource(it.property.classification)!!)
                 else
                     binding.viewClassificationChip.text = it.property.classification
 

@@ -187,7 +187,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel):
                 holder.status.text = iCal4ListItem.property.status       // if unsupported just show whatever is there
 
             if (iCal4ListItem.property.classification in Classification.paramValues())
-                holder.classification.text = context.getString(Classification.getStringResourceByParam(iCal4ListItem.property.classification)!!)
+                holder.classification.text = context.getString(Classification.getStringResource(iCal4ListItem.property.classification)!!)
             else
                 holder.classification.text = iCal4ListItem.property.classification      // if unsupported just show whatever is there
 

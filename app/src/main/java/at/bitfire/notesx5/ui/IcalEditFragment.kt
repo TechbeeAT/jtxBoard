@@ -166,9 +166,9 @@ class IcalEditFragment : Fragment(),
 
                 builder.setNeutralButton("Mark as cancelled") { _, _ ->
                     if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name)
-                        icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.CANCELLED.param
+                        icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.CANCELLED.name
                     else
-                        icalEditViewModel.iCalObjectUpdated.value!!.status = StatusJournal.CANCELLED.param
+                        icalEditViewModel.iCalObjectUpdated.value!!.status = StatusJournal.CANCELLED.name
 
                     icalEditViewModel.savingClicked()
 
@@ -217,10 +217,9 @@ class IcalEditFragment : Fragment(),
 
             // Set the default value of the Classification Chip
             if (it.classification in Classification.paramValues())
-                binding.editClassificationChip.text = getString(Classification.getStringResourceByParam(it.classification)!!)
+                binding.editClassificationChip.text = getString(Classification.getStringResource(it.classification)!!)
             else
                 binding.editClassificationChip.text = it.classification       // if unsupported just show whatever is there
-
         }
 
         icalEditViewModel.showAll.observe(viewLifecycleOwner) {
@@ -462,9 +461,9 @@ class IcalEditFragment : Fragment(),
             val statusBefore = icalEditViewModel.iCalObjectUpdated.value!!.status
 
             when (value.toInt()) {
-                100 -> icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.COMPLETED.param
-                in 1..99 -> icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.INPROCESS.param
-                0 -> icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.NEEDSACTION.param
+                100 -> icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.COMPLETED.name
+                in 1..99 -> icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.`IN-PROCESS`.name
+                0 -> icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.`NEEDS-ACTION`.name
             }
 
             // update the status only if it was actually changed, otherwise the performance sucks
@@ -633,7 +632,7 @@ class IcalEditFragment : Fragment(),
                     .setItems(classificationItems) { dialog, which ->
                         // Respond to item chosen
                         icalEditViewModel.iCalObjectUpdated.value!!.classification = Classification.getParamById(which)!!
-                        binding.editClassificationChip.text = getString(Classification.getStringResourceByParam(icalEditViewModel.iCalObjectUpdated.value!!.classification)!!)    // don't forget to update the UI
+                        binding.editClassificationChip.text = getString(Classification.getStringResource(icalEditViewModel.iCalObjectUpdated.value!!.classification)!!)    // don't forget to update the UI
                     }
                     .setIcon(R.drawable.ic_classification)
                     .show()

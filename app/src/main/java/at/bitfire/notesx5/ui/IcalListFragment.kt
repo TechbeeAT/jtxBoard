@@ -286,8 +286,8 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         } else if (prefs.getStringSet(PREFS_STATUS_TODO, null)?.isNotEmpty() == true) {
             prefs.getStringSet(PREFS_STATUS_TODO, null)!!.forEach {
                 when (it) {
-                    StatusTodo.NEEDSACTION.name -> icalListViewModel.searchStatusTodo.add(StatusTodo.NEEDSACTION)
-                    StatusTodo.INPROCESS.name -> icalListViewModel.searchStatusTodo.add(StatusTodo.INPROCESS)
+                    StatusTodo.`NEEDS-ACTION`.name -> icalListViewModel.searchStatusTodo.add(StatusTodo.`NEEDS-ACTION`)
+                    StatusTodo.`IN-PROCESS`.name -> icalListViewModel.searchStatusTodo.add(StatusTodo.`IN-PROCESS`)
                     StatusTodo.COMPLETED.name -> icalListViewModel.searchStatusTodo.add(StatusTodo.COMPLETED)
                     StatusTodo.CANCELLED.name -> icalListViewModel.searchStatusTodo.add(StatusTodo.CANCELLED)
                 }

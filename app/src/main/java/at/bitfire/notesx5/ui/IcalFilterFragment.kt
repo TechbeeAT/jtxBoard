@@ -200,19 +200,19 @@ class IcalFilterFragment : Fragment() {
                 binding.classificationFilterChipgroup.checkedChipIds.forEach { checkedChipId ->
                     val chip: Chip = binding.classificationFilterChipgroup.findViewById(checkedChipId)
                     val index = binding.classificationFilterChipgroup.indexOfChild(chip)
-                    Classification.values().find { it.id == index }?.let { classificationSelected.add(it) }
+                    Classification.values()[index].let { classificationSelected.add(it) }
                 }
 
                 binding.statusTodoFilterChipgroup.checkedChipIds.forEach { checkedChipId ->
                     val chip: Chip = binding.statusTodoFilterChipgroup.findViewById(checkedChipId)
                     val index = binding.statusTodoFilterChipgroup.indexOfChild(chip)
-                    StatusTodo.values().find { it.id == index }?.let { statusTodoSelected.add(it) }
+                    StatusTodo.values()[index].let { statusTodoSelected.add(it) }
                 }
 
                 binding.statusJournalFilterChipgroup.checkedChipIds.forEach { checkedChipId ->
                     val chip: Chip = binding.statusJournalFilterChipgroup.findViewById(checkedChipId)
                     val index = binding.statusJournalFilterChipgroup.indexOfChild(chip)
-                    StatusJournal.values().find { it.id == index }?.let { statusJournalSelected.add(it) }
+                    StatusJournal.values()[index].let { statusJournalSelected.add(it) }
                 }
 
                 binding.categoryFilterChipgroup.checkedChipIds.forEach { checkedChipId ->

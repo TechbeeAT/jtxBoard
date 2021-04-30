@@ -298,8 +298,8 @@ data class ICalObject(
         @ColumnInfo(name = COLUMN_DTEND) var dtend: Long? = null,
         @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String? = null,
 
-        @ColumnInfo(name = COLUMN_STATUS) var status: String = StatusJournal.FINAL.param,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
-        @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String = Classification.PUBLIC.param,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
+        @ColumnInfo(name = COLUMN_STATUS) var status: String = StatusJournal.FINAL.name,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
+        @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String = Classification.PUBLIC.name,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
 
         @ColumnInfo(name = COLUMN_URL) var url: String? = null,
         @ColumnInfo(name = COLUMN_CONTACT) var contact: String? = null,
@@ -347,11 +347,11 @@ data class ICalObject(
     companion object Factory {
 
 
-        fun createJournal(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.JOURNAL.name, dtstart = System.currentTimeMillis(), status = StatusJournal.FINAL.param)
-        fun createNote(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.param)
-        fun createNote(summary: String) = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.param, summary = summary)
-        fun createTodo() = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, status = StatusTodo.NEEDSACTION.param, percent = 0, priority = 0, dueTimezone = "ALLDAY")
-        fun createSubtask(summary: String) = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, summary = summary, status = StatusTodo.NEEDSACTION.param, percent = 0, priority = 0, dueTimezone = "ALLDAY")
+        fun createJournal(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.JOURNAL.name, dtstart = System.currentTimeMillis(), status = StatusJournal.FINAL.name)
+        fun createNote(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.name)
+        fun createNote(summary: String) = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.name, summary = summary)
+        fun createTodo() = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY")
+        fun createSubtask(summary: String) = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, summary = summary, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY")
 
 
         /**
@@ -419,10 +419,10 @@ data class ICalObject(
 
         percent = newPercent
         status = when (newPercent) {
-                100 -> StatusTodo.COMPLETED.param
-                in 1..99 -> StatusTodo.INPROCESS.param
-                0 -> StatusTodo.NEEDSACTION.param
-            else -> StatusTodo.NEEDSACTION.param      // should never happen!
+                100 -> StatusTodo.COMPLETED.name
+                in 1..99 -> StatusTodo.`IN-PROCESS`.name
+                0 -> StatusTodo.`NEEDS-ACTION`.name
+            else -> StatusTodo.`NEEDS-ACTION`.name      // should never happen!
         }
         lastModified = System.currentTimeMillis()
         if (dtstart == null && percent != null && percent!! > 0)
@@ -443,28 +443,27 @@ data class ICalObject(
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals
  * The possible values differ for Todos and Journals/Notes
  * @param [id] is an ID of the entry
- * @param [param] defines the [StatusTodo] how it is stored in the database, this also corresponds to the value that is used for the ICal format
  * @param [stringResource] is a reference to the String Resource within NotesX5
  */
 @Parcelize
-enum class StatusJournal(val id: Int, val param: String, val stringResource: Int) : Parcelable {
+enum class StatusJournal(val stringResource: Int) : Parcelable {
 
-    DRAFT(0, "DRAFT", R.string.journal_status_draft),
-    FINAL(1, "FINAL", R.string.journal_status_final),
-    CANCELLED(2, "CANCELLED", R.string.journal_status_cancelled);
+    DRAFT(R.string.journal_status_draft),
+    FINAL(R.string.journal_status_final),
+    CANCELLED(R.string.journal_status_cancelled);
 
     companion object {
         fun getParamById(id: Int): String? {
             values().forEach {
-                if (it.id == id)
-                    return it.param
+                if (it.ordinal == id)
+                    return it.name
             }
             return null
         }
 
         fun getStringResourceByParam(param: String): Int? {
             values().forEach {
-                if (it.param == param)
+                if (it.name == param)
                     return it.stringResource
             }
             return null
@@ -472,7 +471,7 @@ enum class StatusJournal(val id: Int, val param: String, val stringResource: Int
 
         fun paramValues(): List<String> {
             val paramValues: MutableList<String> = mutableListOf()
-            values().forEach { paramValues.add(it.param) }
+            values().forEach { paramValues.add(it.name) }
             return paramValues
         }
 
@@ -482,29 +481,28 @@ enum class StatusJournal(val id: Int, val param: String, val stringResource: Int
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Todos
  * The possible values differ for Todos and Journals/Notes
  * @param [id] is an ID of the entry
- * @param [param] defines the [StatusTodo] how it is stored in the database, this also corresponds to the value that is used for the ICal format
  * @param [stringResource] is a reference to the String Resource within NotesX5
  */
 @Parcelize
-enum class StatusTodo(val id: Int, val param: String, val stringResource: Int) : Parcelable {
+enum class StatusTodo(val stringResource: Int) : Parcelable {
 
-    NEEDSACTION(0, "NEEDS-ACTION", R.string.todo_status_needsaction),
-    COMPLETED(1, "COMPLETED", R.string.todo_status_completed),
-    INPROCESS(2, "IN-PROCESS", R.string.todo_status_inprocess),
-    CANCELLED(3, "CANCELLED", R.string.todo_status_cancelled);
+    `NEEDS-ACTION`(R.string.todo_status_needsaction),
+    COMPLETED(R.string.todo_status_completed),
+    `IN-PROCESS`(R.string.todo_status_inprocess),
+    CANCELLED(R.string.todo_status_cancelled);
 
     companion object {
         fun getParamById(id: Int): String? {
             values().forEach {
-                if (it.id == id)
-                    return it.param
+                if (it.ordinal == id)
+                    return it.name
             }
             return null
         }
 
-        fun getStringResourceByParam(param: String): Int? {
+        fun getStringResourceByParam(name: String): Int? {
             values().forEach {
-                if (it.param == param)
+                if (it.name == name)
                     return it.stringResource
             }
             return null
@@ -512,7 +510,7 @@ enum class StatusTodo(val id: Int, val param: String, val stringResource: Int) :
 
         fun paramValues(): List<String> {
             val paramValues: MutableList<String> = mutableListOf()
-            values().forEach { paramValues.add(it.param) }
+            values().forEach { paramValues.add(it.name) }
             return paramValues
         }
     }
@@ -520,29 +518,28 @@ enum class StatusTodo(val id: Int, val param: String, val stringResource: Int) :
 
 /** This enum class defines the possible values for the attribute [ICalObject.classification]
  * @param [id] is an ID of the entry
- * @param [param] defines the [Classification] how it is stored in the database, this also corresponds to the value that is used for the ICal format
  * @param [stringResource] is a reference to the String Resource within NotesX5
  */
 @Parcelize
-enum class Classification(val id: Int, val param: String, val stringResource: Int) : Parcelable {
+enum class Classification(val stringResource: Int) : Parcelable {
 
-    PUBLIC(0, "PUBLIC", R.string.classification_public),
-    PRIVATE(1, "PRIVATE", R.string.classification_private),
-    CONFIDENTIAL(2, "CONFIDENTIAL", R.string.classification_confidential);
+    PUBLIC(R.string.classification_public),
+    PRIVATE(R.string.classification_private),
+    CONFIDENTIAL(R.string.classification_confidential);
 
 
     companion object {
         fun getParamById(id: Int): String? {
             values().forEach {
-                if (it.id == id)
-                    return it.param
+                if (it.ordinal == id)
+                    return it.name
             }
             return null
         }
 
-        fun getStringResourceByParam(param: String): Int? {
+        fun getStringResource(name: String): Int? {
             values().forEach {
-                if (it.param == param)
+                if (it.name == name)
                     return it.stringResource
             }
             return null
@@ -550,7 +547,7 @@ enum class Classification(val id: Int, val param: String, val stringResource: In
 
         fun paramValues(): List<String> {
             val paramValues: MutableList<String> = mutableListOf()
-            values().forEach { paramValues.add(it.param) }
+            values().forEach { paramValues.add(it.name) }
             return paramValues
         }
     }
