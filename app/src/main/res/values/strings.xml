@@ -156,7 +156,8 @@
     <string name="menu_list_add_journal">Add Journal</string>
     <string name="menu_list_add_note">Add Note</string>
     <string name="menu_list_add_todo">Add Todo</string>
-    <string name="menu_view_share">Share</string>
+    <string name="menu_view_share_text">Share</string>
+    <string name="menu_view_share_ics">Share as ICS</string>
     <string name="edit_timezone">Timezone</string>
     <string name="list_filter">Filter</string>
 

@@ -495,7 +495,7 @@ class IcalViewFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_view_share) {
+        if (item.itemId == R.id.menu_view_share_text) {
 
             var shareText = "${convertLongToDateString(icalViewViewModel.icalEntity.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart)}\n"
             shareText += "${icalViewViewModel.icalEntity.value!!.property.summary}\n\n"
@@ -504,15 +504,28 @@ class IcalViewFragment : Fragment() {
             //todo add category again
             //shareText += "Categories/Labels: ${vJournalItemViewModel.vJournal.value!!.vCategory}"
 
-            val shareIntent = Intent()
-            shareIntent.action = Intent.ACTION_SEND
-            shareIntent.type = "text/plain"
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.icalEntity.value!!.property.summary)
-            shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "text/plain"
+                putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.icalEntity.value!!.property.summary)
+                putExtra(Intent.EXTRA_TEXT, shareText)
+            }
+
             Log.d("shareIntent", shareText)
             startActivity(Intent(shareIntent))
+        }
+        else if (item.itemId == R.id.menu_view_share_ics) {
 
+            val shareText = icalViewViewModel.icalEntity.value!!.getICalString()
 
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "text/calendar"
+                putExtra(Intent.EXTRA_STREAM, shareText)
+            }
+
+            Log.d("shareIntent", shareText)
+            startActivity(Intent(shareIntent))
         }
         return super.onOptionsItemSelected(item)
     }
