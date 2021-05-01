@@ -151,10 +151,7 @@ data class Attendee (
         @ColumnInfo(name = COLUMN_ATTENDEE_LANGUAGE)       var language: String? = null,
         @ColumnInfo(name = COLUMN_ATTENDEE_OTHER)          var other: String? = null
 
-): Parcelable
-
-
-{
+): Parcelable {
         companion object Factory {
 
                 /**
@@ -179,7 +176,7 @@ data class Attendee (
         }
 
 
-        fun applyContentValues(values: ContentValues):Attendee {
+        fun applyContentValues(values: ContentValues): Attendee {
 
                 values.getAsLong(COLUMN_ATTENDEE_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
                 values.getAsString(COLUMN_ATTENDEE_CALADDRESS)?.let { caladdress -> this.caladdress = caladdress }
@@ -200,6 +197,39 @@ data class Attendee (
 
         }
 
+
+        fun getICalString(): String {
+
+                var content = "ATTENDEE;"
+                if (cutype?.isNotEmpty() == true)
+                        content += "CUTYPE=$cutype;"
+                if (member?.isNotEmpty() == true)
+                        content += "MEMBER=$member;"
+                if (role?.isNotEmpty() == true)
+                        content += "ROLE=$role;"
+                if (partstat?.isNotEmpty() == true)
+                        content += "PARTSTAT=$partstat;"
+                if (rsvp == true)
+                        content += "RSVP=$rsvp=TRUE;"
+                if (rsvp == false)
+                        content += "RSVP=$rsvp=FALSE;"
+                if (delegatedto?.isNotEmpty() == true)
+                        content += "DELEGATED-TO=\"$delegatedto\";"
+                if (delegatedfrom?.isNotEmpty() == true)
+                        content += "DELEGATED-FROM=\"$delegatedfrom\";"        // TODO: multiple delegates should get each a ""
+                if (sentby?.isNotEmpty() == true)
+                        content += "SENT-BY=\"$sentby\";"
+                if (cn?.isNotEmpty() == true)
+                        content += "CN=\"$cn\";"
+                if (dir?.isNotEmpty() == true)
+                        content += "DIR=\"$dir\";"
+                if (language?.isNotEmpty() == true)
+                        content += "LANGUAGE=$language;"
+                //other params are not considered yet
+                content += ":$caladdress\n"
+
+                return content
+        }
 }
 
 /** This enum class defines the possible values for the attribute [Attendee.cutype]  */

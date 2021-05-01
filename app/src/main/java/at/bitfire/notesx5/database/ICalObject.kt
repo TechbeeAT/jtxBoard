@@ -14,6 +14,7 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.room.*
 import at.bitfire.notesx5.R
+import at.bitfire.notesx5.convertLongToICalDateTime
 import kotlinx.parcelize.Parcelize
 import java.util.*
 import kotlin.IllegalArgumentException
@@ -30,7 +31,7 @@ const val TABLE_NAME_ICALOBJECT = "icalobject"
 const val COLUMN_ID = BaseColumns._ID
 
 /** The column for the module.
- * This is an internal differentiation for JOURNAL, NOTE and TODO
+ * This is an internal differentiation for JOURNAL, NOTE and TODOs
  * provided in the enum [Module]
  * Type: [String]
  */
@@ -447,8 +448,53 @@ data class ICalObject(
         return this
     }
 
+    fun getICalStringHead(): String {
+        return "BEGIN:VCALENDAR\n" +
+                "VERSION:2.0\n" +
+                "PRODID:-//bitfire.at//NOTESx5 v1.0//EN\n"
+    }
 
-}
+    fun getICalStringBody(): String  {
+
+        var content = "BEGIN:$component\n"
+        content+= "UID:$uid\n"
+        content+= "DTSTAMP${convertLongToICalDateTime(dtstamp, null)}\n"
+        if(component == Component.VTODO.name && due != null)
+            content+= "DUE;VALUE=DATE${convertLongToICalDateTime(due, dueTimezone)}\n"
+        content+= "SUMMARY:$summary\n"
+        if (description?.isNotEmpty() == true) { content+= "DESCRIPTION:$description\n"  }
+        if (dtstart != null)  { content+= "DTSTART${convertLongToICalDateTime(dtstart , dtstartTimezone)}\n" }
+        if (dtend != null)    { content+= "DTEND${convertLongToICalDateTime(dtend, dtendTimezone)}\n" }
+        content+= "CLASS:$classification\n"
+        content+= "STATUS:$status\n"
+        if (url?.isNotEmpty() == true) { content+= "URL:$url\n"}
+        if (contact?.isNotEmpty() == true)  { content+= "CONTACT:$contact\n"}
+        if(geoLat != null && geoLong != null)
+            content+= "GEO:$geoLat;$geoLong\n"
+        if (location?.isNotEmpty() == true) { content+= "LOCATION:$location\n"}
+        if (percent != null) { content+= "PERCENT-COMPLETE:$percent\n"}
+        if (priority != null) { content+= "PRIORITY:$priority\n"}
+        if(component == Component.VTODO.name && completed != null)
+            content+= "COMPLETED:${convertLongToICalDateTime(completed, completedTimezone)}\n"
+        if(component == Component.VTODO.name && duration?.isNotEmpty() == true)
+            content+= "DURATION:$duration\n"
+        content+= "CREATED${convertLongToICalDateTime(lastModified, null)}\n"
+        content+= "LAST-MODIFIED${convertLongToICalDateTime(lastModified, null)}\n"
+        content+= "SEQUENCE:$sequence\n"
+        if (color != null)  { content+= "COLOR:$color\n" }
+        //other.let {content+= "OTHER:$it\n"}
+
+        return content
+    }
+
+    fun getICalStringEnd(): String {
+        return "END:$component\n"
+    }
+
+
+
+
+    }
 
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals
  * The possible values differ for Todos and Journals/Notes

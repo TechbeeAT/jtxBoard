@@ -39,14 +39,21 @@ const val COLUMN_RESOURCE_ICALOBJECT_ID = "icalObjectId"
  */
 const val COLUMN_RESOURCE_TEXT = "text"
 /**
- * Purpose:  To specify the language for text values in a property or property parameter, in this case of the resource.
- * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.10] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
+ * Purpose:  To specify an alternate text representation for the property value, in this case of the comment.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
  * Type: [String]
  */
-const val COLUMN_RESOURCE_RELTYPE = "reltype"
+const val COLUMN_RESOURCE_ALTREP = "altrep"
+
 /**
- * Purpose:  To specify other properties for the resource.
- * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.10]
+ * Purpose:  To specify the language for text values in a property or property parameter, in this case of the comment.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
+ * Type: [String]
+ */
+const val COLUMN_RESOURCE_LANGUAGE = "language"
+/**
+ * Purpose:  To specify other properties for the comment.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
  * Type: [String]
  */
 const val COLUMN_RESOURCE_OTHER = "other"
@@ -67,8 +74,9 @@ data class Resource (
 
         @ColumnInfo(index = true, name = COLUMN_RESOURCE_ICALOBJECT_ID)var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_RESOURCE_TEXT)            var text: String? = "",
-        @ColumnInfo(name = COLUMN_RESOURCE_RELTYPE)    var reltype: String? = null,
-        @ColumnInfo(name = COLUMN_RESOURCE_OTHER)      var other: String? = null
+        @ColumnInfo(name = COLUMN_RESOURCE_ALTREP)                 var altrep: String? = null,
+        @ColumnInfo(name = COLUMN_RESOURCE_LANGUAGE)               var language: String? = null,
+        @ColumnInfo(name = COLUMN_RESOURCE_OTHER)                      var other: String? = null
 ): Parcelable
 
 
@@ -97,11 +105,13 @@ data class Resource (
 
                 values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
                 values.getAsString(COLUMN_RESOURCE_TEXT)?.let { text -> this.text = text }
-                values.getAsString(COLUMN_RESOURCE_RELTYPE)?.let { reltype -> this.reltype = reltype }
+                values.getAsString(COLUMN_RESOURCE_ALTREP)?.let { altrep -> this.altrep = altrep }
+                values.getAsString(COLUMN_RESOURCE_LANGUAGE)?.let { language -> this.language = language }
                 values.getAsString(COLUMN_RESOURCE_OTHER)?.let { other -> this.other = other }
 
                 return this
         }
+
 }
 
 

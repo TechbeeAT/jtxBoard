@@ -107,10 +107,21 @@ data class Relatedto (
                 values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
                 values.getAsLong(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID)?.let { linkedICalObjectId -> this.linkedICalObjectId = linkedICalObjectId }
                 values.getAsString(COLUMN_RELATEDTO_TEXT)?.let { text -> this.text = text }
-                values.getAsString(COLUMN_RESOURCE_RELTYPE)?.let { reltype -> this.reltype = reltype }
-                values.getAsString(COLUMN_RESOURCE_OTHER)?.let { other -> this.other = other }
+                values.getAsString(COLUMN_RELATEDTO_RELTYPE)?.let { reltype -> this.reltype = reltype }
+                values.getAsString(COLUMN_RELATEDTO_OTHER)?.let { other -> this.other = other }
 
                 return this
+        }
+
+
+        fun getICalString(): String {
+
+                var content = "RELATED-TO"
+                if (reltype?.isNotEmpty() == true)
+                        content += "RELTYPE=$reltype;"
+                content += ":$text\n"
+
+                return content
         }
 }
 

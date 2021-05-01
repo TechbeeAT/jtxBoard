@@ -106,13 +106,13 @@ fun convertLongToICalDateTime(datetime: Long?, timezone: String?): String? {
 
     if(timezone == "ALLDAY") {
         formatter = SimpleDateFormat("yyyyMMdd")
-        return formatter.format(Date(datetime)).toString()
+        return ":${formatter.format(Date(datetime))}"
     } else if(timezone.isNullOrEmpty()) {
         formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss'Z'")
-        return formatter.format(Date(datetime)).toString()
+        return ":${formatter.format(Date(datetime))}"
     } else if (timezone.isNotEmpty()) {
         formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss")
-        return "TZID=$timezone:${formatter.format(Date(datetime))}"
+        return ";TZID=$timezone:${formatter.format(Date(datetime))}"
     }
 
     return null

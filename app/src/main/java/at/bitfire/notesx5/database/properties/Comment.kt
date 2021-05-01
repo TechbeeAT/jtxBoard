@@ -39,13 +39,14 @@ const val COLUMN_COMMENT_ICALOBJECT_ID = "icalObjectId"
  */
 const val COLUMN_COMMENT_TEXT = "text"
 /**
- * Purpose:  To specify the language for text values in a property or property parameter, in this case of the comment.
+ * Purpose:  To specify an alternate text representation for the property value, in this case of the comment.
  * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
  * Type: [String]
  */
 const val COLUMN_COMMENT_ALTREP = "altrep"
+
 /**
- * Purpose:  To specify an alternate text representation for the property value, in this case of the comment.
+ * Purpose:  To specify the language for text values in a property or property parameter, in this case of the comment.
  * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
  * Type: [String]
  */
@@ -113,6 +114,17 @@ data class Comment (
     }
 
 
+    fun getICalString(): String {
+
+        var content = "COMMENT"
+        if (altrep?.isNotEmpty() == true)
+            content += "ALTREP=\"$altrep\";"
+        if (language?.isNotEmpty() == true)
+            content += "LANGUAGE=$language;"
+        content += ":$text\n"
+
+        return content
+    }
 }
 
 

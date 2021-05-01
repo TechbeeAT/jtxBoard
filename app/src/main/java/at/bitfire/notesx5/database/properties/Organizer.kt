@@ -128,6 +128,24 @@ data class Organizer (
 
                 return this
         }
+
+
+        fun getICalString(): String {
+
+                var content = "ORGANIZER;"
+                if (cn?.isNotEmpty() == true)
+                        content += "CN=\"$cn\";"
+                if (dir?.isNotEmpty() == true)
+                        content += "DIR=\"$dir\";"
+                if (sentby?.isNotEmpty() == true)
+                        content += "SENT-BY=\"$sentby\";"
+                if (language?.isNotEmpty() == true)
+                        content += "LANGUAGE=$language;"
+                //other params are not considered yet
+                content += ":$caladdress\n"
+
+                return content
+        }
 }
 
 

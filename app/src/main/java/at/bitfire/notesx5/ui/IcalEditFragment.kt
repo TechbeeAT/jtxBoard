@@ -136,6 +136,8 @@ class IcalEditFragment : Fragment(),
                 icalEditViewModel.iCalObjectUpdated.value?.collectionId = icalEditViewModel.allCollections.value?.find { it.displayName == binding.editCollection.selectedItem.toString() }!!.collectionId
 
                 icalEditViewModel.iCalObjectUpdated.value!!.percent = binding.editProgressSlider.value.toInt()
+                icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = binding.editDuetimezoneSpinner.selectedItem.toString()
+
                 icalEditViewModel.update()
             }
         })

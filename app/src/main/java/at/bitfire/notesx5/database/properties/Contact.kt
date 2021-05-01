@@ -40,6 +40,12 @@ const val COLUMN_CONTACT_ICALOBJECT_ID = "icalObjectId"
  */
 const val COLUMN_CONTACT_TEXT = "text"
 /**
+ * Purpose:  To specify an alternate text representation for the property value, in this case of the comment.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
+ * Type: [String]
+ */
+const val COLUMN_CONTACT_ALTREP = "altrep"
+/**
  * Purpose:  To specify the language for text values in a property or property parameter, in this case of the contact.
  * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.2] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
  * Type: [String]
@@ -68,6 +74,7 @@ data class Contact (
 
         @ColumnInfo(index = true, name = COLUMN_CONTACT_ICALOBJECT_ID) var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_CONTACT_TEXT)                        var text: String = "",
+        @ColumnInfo(name = COLUMN_CONTACT_ALTREP)                      var altrep: String? = null,
         @ColumnInfo(name = COLUMN_CONTACT_LANGUAGE)                    var language: String? = null,
         @ColumnInfo(name = COLUMN_CONTACT_OTHER)                       var other: String? = null
 
@@ -103,6 +110,19 @@ data class Contact (
                 values.getAsString(COLUMN_CONTACT_OTHER)?.let { other -> this.other = other }
 
                 return this
+        }
+
+
+        fun getICalString(): String {
+
+                var content = "CONTACT"
+                if (altrep?.isNotEmpty() == true)
+                        content += "ALTREP=\"$altrep\";"
+                if (language?.isNotEmpty() == true)
+                        content += "LANGUAGE=$language;"
+                content += ":$text\n"
+
+                return content
         }
 }
 
