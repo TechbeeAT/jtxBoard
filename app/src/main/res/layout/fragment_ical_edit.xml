@@ -210,6 +210,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textWebEditText|textMultiLine|textCapSentences"
                 android:maxLines="8"
+                android:minLines="3"
                 android:text="@={model.iCalObjectUpdated.description}"
                 tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
         </com.google.android.material.textfield.TextInputLayout>
@@ -943,7 +944,7 @@
                 android:afterTextChanged="@{model::clearUrlError}"
                 android:ems="10"
                 android:imeOptions="actionDone"
-                android:inputType="textShortMessage|textCapSentences"
+                android:inputType="textEmailAddress"
                 android:singleLine="false" />
 
 
