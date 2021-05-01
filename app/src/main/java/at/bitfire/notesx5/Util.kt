@@ -96,20 +96,33 @@ fun convertLongToYearString(date: Long?): String {
     return yearFormatter.format(Date(date)).toString()
 }
 
-/*
-fun convertCategoriesCSVtoList(categoriesString: String): MutableList<String> {
-    return categoriesString.split(",").map { it.trim() }.distinct() as MutableList<String>
+@SuppressLint("SimpleDateFormat")
+fun convertLongToICalDateTime(datetime: Long?, timezone: String?): String? {
+
+    if(datetime == null)
+        return null
+
+    val formatter: SimpleDateFormat
+
+    if(timezone == "ALLDAY") {
+        formatter = SimpleDateFormat("yyyyMMdd")
+        return formatter.format(Date(datetime)).toString()
+    } else if(timezone.isNullOrEmpty()) {
+        formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss'Z'")
+        return formatter.format(Date(datetime)).toString()
+    } else if (timezone.isNotEmpty()) {
+        formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss")
+        return "TZID=$timezone:${formatter.format(Date(datetime))}"
+    }
+
+    return null
 }
 
-fun convertCategoriesListtoCSVString(categoriesList: MutableList<String>): String {
-    return categoriesList.sorted().joinToString(separator = ", ")
-}
- */
 
 fun isValidEmail(emailString: String?): Boolean {
-    return !TextUtils.isEmpty(emailString) && Patterns.EMAIL_ADDRESS.matcher(emailString).matches()
+    return Patterns.EMAIL_ADDRESS.matcher(emailString.toString()).matches()
 }
 
 fun isValidURL(urlString: String?): Boolean {
-    return !TextUtils.isEmpty(urlString) && Patterns.WEB_URL.matcher(urlString).matches()
+    return Patterns.WEB_URL.matcher(urlString.toString()).matches()
 }

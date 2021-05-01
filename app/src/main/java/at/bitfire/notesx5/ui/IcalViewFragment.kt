@@ -20,7 +20,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import at.bitfire.notesx5.*
+import at.bitfire.notesx5.R
+import at.bitfire.notesx5.convertLongToDateString
+import at.bitfire.notesx5.convertLongToTimeString
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
@@ -32,7 +34,6 @@ import at.bitfire.notesx5.databinding.FragmentIcalViewSubtaskBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
-import java.lang.IllegalArgumentException
 
 
 class IcalViewFragment : Fragment() {
@@ -86,7 +87,7 @@ class IcalViewFragment : Fragment() {
 
 
         // set up observers
-        icalViewViewModel.editingClicked.observe(viewLifecycleOwner,  {
+        icalViewViewModel.editingClicked.observe(viewLifecycleOwner, {
             if (it) {
                 icalViewViewModel.editingClicked.value = false
                 this.findNavController().navigate(
@@ -99,15 +100,22 @@ class IcalViewFragment : Fragment() {
 
             if (it?.property != null) {
 
-                if (it.property.component == Component.VTODO.name) {
-                    binding.viewStatusChip.text = StatusTodo.getStringResource(requireContext(), it.property.status) ?: it.property.status
-                } else if (it.property.component == Component.VJOURNAL.name) {
-                    binding.viewStatusChip.text = StatusJournal.getStringResource(requireContext(), it.property.status) ?: it.property.status
-                } else {
-                    binding.viewStatusChip.text = it.property.status
+                when (it.property.component) {
+                    Component.VTODO.name -> {
+                        binding.viewStatusChip.text = StatusTodo.getStringResource(requireContext(), it.property.status)
+                                ?: it.property.status
+                    }
+                    Component.VJOURNAL.name -> {
+                        binding.viewStatusChip.text = StatusJournal.getStringResource(requireContext(), it.property.status)
+                                ?: it.property.status
+                    }
+                    else -> {
+                        binding.viewStatusChip.text = it.property.status
+                    }
                 }
 
-                binding.viewClassificationChip.text = Classification.getStringResource(requireContext(), it.property.classification) ?: it.property.classification
+                binding.viewClassificationChip.text = Classification.getStringResource(requireContext(), it.property.classification)
+                        ?: it.property.classification
 
                 val priorityArray = resources.getStringArray(R.array.priority)
                 if (icalViewViewModel.icalEntity.value?.property?.priority != null && icalViewViewModel.icalEntity.value!!.property.priority in 0..9)
@@ -120,15 +128,14 @@ class IcalViewFragment : Fragment() {
                     binding.viewCommentsLinearlayout.addView(commentBinding.root)
                 }
 
-                if(it.ICalCollection?.color != null) {
+                if (it.ICalCollection?.color != null) {
                     try {
                         binding.viewColorbar.setColorFilter(it.ICalCollection?.color!!)
                     } catch (e: IllegalArgumentException) {
                         Log.println(Log.INFO, "Invalid color", "Invalid Color cannot be parsed: ${it.ICalCollection?.color}")
                         binding.viewColorbar.visibility = View.GONE
                     }
-                }
-                else
+                } else
                     binding.viewColorbar.visibility = View.GONE
             }
         })
@@ -139,8 +146,7 @@ class IcalViewFragment : Fragment() {
 
         icalViewViewModel.relatedNotes.observe(viewLifecycleOwner, {
 
-            if (it?.size != 0)
-            {
+            if (it?.size != 0) {
                 binding.viewFeedbackLinearlayout.removeAllViews()
                 it.forEach { relatedICalObject ->
                     val relatedtoBinding = FragmentIcalViewRelatedtoBinding.inflate(inflater, container, false)
@@ -157,7 +163,7 @@ class IcalViewFragment : Fragment() {
         icalViewViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
             binding.viewSubtasksLinearlayout.removeAllViews()
-            it.forEach {singleSubtask ->
+            it.forEach { singleSubtask ->
                 addSubtasksView(singleSubtask, container)
             }
         }
@@ -251,7 +257,8 @@ class IcalViewFragment : Fragment() {
 
         binding.viewProgressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
-            override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
+            override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
+            }
 
             override fun onStopTrackingTouch(slider: Slider) {
                 if (binding.viewProgressSlider.value.toInt() < 100)
@@ -450,7 +457,8 @@ class IcalViewFragment : Fragment() {
         //   the approach here is to update only onStopTrackingTouch. The OnCangeListener would update on several times on sliding causing lags and unnecessary updates  */
         subtaskBinding.viewSubtaskProgressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
 
-            override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */  }
+            override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
+            }
 
             override fun onStopTrackingTouch(slider: Slider) {
                 if (subtaskBinding.viewSubtaskProgressSlider.value < 100)
@@ -501,6 +509,7 @@ class IcalViewFragment : Fragment() {
             shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.icalEntity.value!!.property.summary)
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
+            Log.d("shareIntent", shareText)
             startActivity(Intent(shareIntent))
 
 
