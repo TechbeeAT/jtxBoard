@@ -238,7 +238,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
         viewModelScope.launch {
 
-            insertedOrUpdatedItemId = insertOrUpdateVJournal()
+            insertedOrUpdatedItemId = insertOrUpdateICalObject()
             // insert new Categories
             categoryUpdated.forEach { newCategory ->
                 newCategory.icalObjectId = insertedOrUpdatedItemId
@@ -271,7 +271,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     }
 
-    private suspend fun insertOrUpdateVJournal(): Long {
+    private suspend fun insertOrUpdateICalObject(): Long {
         return when {
             iCalObjectUpdated.value!!.id == 0L -> {
 
@@ -416,9 +416,12 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         urlError.value = null
     }
 
+    /*
     fun clearAttendeeError(s: Editable) {
         attendeesError.value = null
     }
+
+     */
 
 
 
