@@ -131,12 +131,38 @@ class IcalEditFragment : Fragment(),
         }
 
 
+        binding.editTimezoneSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = binding.editTimezoneSpinner.getItemAtPosition(position).toString()
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {        }    // nothing to do
+        }
+        binding.editStartedtimezoneSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = binding.editStartedtimezoneSpinner.getItemAtPosition(position).toString()
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {        }    // nothing to do
+        }
+        binding.editDuetimezoneSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = binding.editDuetimezoneSpinner.getItemAtPosition(position).toString()
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {        }    // nothing to do
+        }
+        binding.editCompletedtimezoneSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                icalEditViewModel.iCalObjectUpdated.value!!.completedTimezone = binding.editCompletedtimezoneSpinner.getItemAtPosition(position).toString()
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {        }    // nothing to do
+        }
+
+
+
         icalEditViewModel.savingClicked.observe(viewLifecycleOwner, {
             if (it == true) {
                 icalEditViewModel.iCalObjectUpdated.value?.collectionId = icalEditViewModel.allCollections.value?.find { it.displayName == binding.editCollection.selectedItem.toString() }!!.collectionId
 
                 icalEditViewModel.iCalObjectUpdated.value!!.percent = binding.editProgressSlider.value.toInt()
-                icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = binding.editDuetimezoneSpinner.selectedItem.toString()
 
                 icalEditViewModel.update()
             }
@@ -219,6 +245,11 @@ class IcalEditFragment : Fragment(),
 
             // Set the default value of the Classification Chip
             binding.editClassificationChip.text = Classification.getStringResource(requireContext(), it.classification) ?: it.classification       // if unsupported just show whatever is there
+
+            binding.editTimezoneSpinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(it.dtstartTimezone))
+            binding.editCompletedtimezoneSpinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(it.completedTimezone))
+            binding.editDuetimezoneSpinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(it.dueTimezone))
+            binding.editStartedtimezoneSpinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(it.dtstartTimezone))
 
         }
 
