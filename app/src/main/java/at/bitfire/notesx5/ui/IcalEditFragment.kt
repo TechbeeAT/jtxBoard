@@ -1123,7 +1123,6 @@ class IcalEditFragment : Fragment(),
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, iCalObjectId)
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification)
 
-        // TODO: doublecheck what's the request Code
         val pendingIntent = PendingIntent.getBroadcast(context, iCalObjectId.toInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
