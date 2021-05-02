@@ -161,4 +161,12 @@
     <string name="edit_timezone">Timezone</string>
     <string name="list_filter">Filter</string>
 
+
+    <!-- Notification channel for Reminders -->
+    <string name="notification_channel_reminder_name">notification_channel_reminder_name</string>
+    <string name="notification_channel_reminder_description">notification_channel_reminder_description</string>
+
+
+
+
 </resources>

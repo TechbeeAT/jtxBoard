@@ -10,10 +10,9 @@ package at.bitfire.notesx5.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.app.Application
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.app.*
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -23,12 +22,14 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
+import at.bitfire.notesx5.NotificationPublisher
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
@@ -39,7 +40,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import java.text.DateFormat
 import java.util.*
-
 
 
 class IcalEditFragment : Fragment(),
@@ -210,7 +210,13 @@ class IcalEditFragment : Fragment(),
         })
 
         icalEditViewModel.returnVJournalItemId.observe(viewLifecycleOwner, {
+
             if (it != 0L) {
+                // saving is done now, set the notification
+                if (icalEditViewModel.iCalObjectUpdated.value!!.due != null && icalEditViewModel.iCalObjectUpdated.value!!.due!! > System.currentTimeMillis())
+                    scheduleNotification(context, icalEditViewModel.iCalObjectUpdated.value!!.id, icalEditViewModel.iCalObjectUpdated.value!!.summary ?: "", icalEditViewModel.iCalObjectUpdated.value!!.description ?: "", icalEditViewModel.iCalObjectUpdated.value!!.due!!)
+
+                // return to list view
                 val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
                 direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
                 direction.item2focus = it
@@ -359,7 +365,7 @@ class IcalEditFragment : Fragment(),
             if (icalEditViewModel.savingClicked.value == true)    // don't do anything if saving was clicked, saving could interfere here!
                 return@observe
 
-            it.forEach {singleSubtask ->
+            it.forEach { singleSubtask ->
                 addSubtasksView(singleSubtask, container)
             }
         }
@@ -404,7 +410,7 @@ class IcalEditFragment : Fragment(),
         icalEditViewModel.allRelatedto.observe(viewLifecycleOwner, {
 
             // if the current item can be found as linkedICalObjectId and the reltype is CHILD, then it must be a child and changing the collection is not allowed
-            if(it.isNotEmpty() && it.find { rel -> rel.linkedICalObjectId == icalEditViewModel.iCalObjectUpdated.value?.id && rel.reltype == Reltype.CHILD.name } != null)
+            if (it.isNotEmpty() && it.find { rel -> rel.linkedICalObjectId == icalEditViewModel.iCalObjectUpdated.value?.id && rel.reltype == Reltype.CHILD.name } != null)
                 binding.editCollection.isEnabled = false
         })
 
@@ -902,7 +908,8 @@ class IcalEditFragment : Fragment(),
                             icalEditViewModel.attendeeUpdated[curIndex].role = Role.values().getOrNull(which)?.name      // update the roleparam
 
                         attendee.role = Role.values().getOrNull(which)?.name
-                        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.values().getOrNull(which)?.icon ?: R.drawable.ic_attendee_reqparticipant, null)
+                        attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.values().getOrNull(which)?.icon
+                                ?: R.drawable.ic_attendee_reqparticipant, null)
 
                     }
                     .setIcon(R.drawable.ic_attendee)
@@ -1096,5 +1103,30 @@ class IcalEditFragment : Fragment(),
         binding.editAttendeesAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
 
 
+    }
+
+
+
+
+    private fun scheduleNotification(context: Context?, iCalObjectId: Long,  title: String, text: String, due: Long) {
+
+        if (context == null)
+            return
+
+        val notification = NotificationCompat.Builder(context, MainActivity.CHANNEL_REMINDER_DUE)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT).build()
+
+        val notificationIntent = Intent(context, NotificationPublisher::class.java)
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, iCalObjectId)
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification)
+
+        // TODO: doublecheck what's the request Code
+        val pendingIntent = PendingIntent.getBroadcast(context, iCalObjectId.toInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, due, pendingIntent)
     }
 }

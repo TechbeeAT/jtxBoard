@@ -8,9 +8,13 @@
 
 package at.bitfire.notesx5
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -29,12 +33,19 @@ const val CONTACT_READ_PERMISSION_CODE = 100   // this is necessary for the app 
  */
 class MainActivity : AppCompatActivity() {
 
+    companion object  {
+        const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Register Notification Channel for Reminders
+        createNotificationChannel()
 
         // Set up the toolbar with the navigation drawer
 
@@ -107,5 +118,23 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.notification_channel_reminder_name)
+            val descriptionText = getString(R.string.notification_channel_reminder_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_REMINDER_DUE, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
 
 }

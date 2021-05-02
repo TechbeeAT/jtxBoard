@@ -33,6 +33,8 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".NotificationPublisher" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
