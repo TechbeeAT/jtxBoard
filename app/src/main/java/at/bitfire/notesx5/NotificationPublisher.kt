@@ -16,7 +16,7 @@ class NotificationPublisher : BroadcastReceiver() {
     }
 
     companion object {
-        var NOTIFICATION_ID = "task-due-reminder"
-        var NOTIFICATION = "reminder"
+        var NOTIFICATION_ID = "notification-id"
+        var NOTIFICATION = "notification"
     }
 }
