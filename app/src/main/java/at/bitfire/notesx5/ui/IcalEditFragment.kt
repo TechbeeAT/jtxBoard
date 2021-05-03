@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDeepLinkBuilder
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.NotificationPublisher
@@ -214,7 +215,9 @@ class IcalEditFragment : Fragment(),
             if (it != 0L) {
                 // saving is done now, set the notification
                 if (icalEditViewModel.iCalObjectUpdated.value!!.due != null && icalEditViewModel.iCalObjectUpdated.value!!.due!! > System.currentTimeMillis())
-                    scheduleNotification(context, icalEditViewModel.iCalObjectUpdated.value!!.id, icalEditViewModel.iCalObjectUpdated.value!!.summary ?: "", icalEditViewModel.iCalObjectUpdated.value!!.description ?: "", icalEditViewModel.iCalObjectUpdated.value!!.due!!)
+                    scheduleNotification(context, icalEditViewModel.iCalObjectUpdated.value!!.id, icalEditViewModel.iCalObjectUpdated.value!!.summary
+                            ?: "", icalEditViewModel.iCalObjectUpdated.value!!.description
+                            ?: "", icalEditViewModel.iCalObjectUpdated.value!!.due!!)
 
                 // return to list view
                 val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
@@ -1108,24 +1111,46 @@ class IcalEditFragment : Fragment(),
 
 
 
-    private fun scheduleNotification(context: Context?, iCalObjectId: Long,  title: String, text: String, due: Long) {
+    private fun scheduleNotification(context: Context?, iCalObjectId: Long, title: String, text: String, due: Long) {
 
         if (context == null)
             return
 
+        // prepare the args to open the icalViewFragment
+        val args: Bundle = Bundle().apply {
+            putLong("item2show", iCalObjectId)
+        }
+        // prepare the intent that is passed to the notification in setContentIntent(...)
+        // this will be the intent that is executed when the user clicks on the notification
+        val contentIntent = NavDeepLinkBuilder(context)
+                .setComponentName(MainActivity::class.java)
+                .setGraph(R.navigation.navigation)
+                .setDestination(R.id.icalViewFragment)
+                .setArguments(args)
+                .createPendingIntent()
+
+        // this is the notification itself that will be put as an Extra into the notificationIntent
         val notification = NotificationCompat.Builder(context, MainActivity.CHANNEL_REMINDER_DUE)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT).build()
+                .setContentIntent(contentIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
+                .build()
+        notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL
 
-        val notificationIntent = Intent(context, NotificationPublisher::class.java)
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, iCalObjectId)
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification)
+        // the notificationIntent that is an Intent of the NotificationPublisher Class
+        val notificationIntent = Intent(context, NotificationPublisher::class.java).apply {
+            putExtra(NotificationPublisher.NOTIFICATION_ID, iCalObjectId)
+            putExtra(NotificationPublisher.NOTIFICATION, notification)
+        }
 
+        // the pendingIntent is initiated that is passed on to the alarm manager
         val pendingIntent = PendingIntent.getBroadcast(context, iCalObjectId.toInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
+        // the alarmManager finally takes care, that the pendingIntent is queued to start the notification Intent that on click would start the contentIntent
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.set(AlarmManager.RTC_WAKEUP, due, pendingIntent)
     }
 }
