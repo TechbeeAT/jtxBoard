@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <shortcut
+        android:shortcutId="addTodo"
+        android:enabled="true"
+        android:icon="@drawable/ic_about"
+        android:shortcutShortLabel="@string/shortcut_addTodo_shortLabel"
+        android:shortcutLongLabel="@string/shortcut_addTodo_longLabel">
+        <intent
+            android:action="addTodo"
+            android:targetPackage="at.bitfire.notesx5"
+            android:targetClass="at.bitfire.notesx5.MainActivity" />
+    </shortcut>
+    
+    <shortcut
+        android:shortcutId="addNote"
+        android:enabled="true"
+        android:icon="@drawable/ic_about"
+        android:shortcutShortLabel="@string/shortcut_addNote_shortLabel"
+        android:shortcutLongLabel="@string/shortcut_addNote_longLabel">
+        <intent
+            android:action="addNote"
+            android:targetPackage="at.bitfire.notesx5"
+            android:targetClass="at.bitfire.notesx5.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="addJournal"
+        android:enabled="true"
+        android:icon="@drawable/ic_about"
+        android:shortcutShortLabel="@string/shortcut_addJournal_shortLabel"
+        android:shortcutLongLabel="@string/shortcut_addJournal_longLabel">
+        <intent
+            android:action="addJournal"
+            android:targetPackage="at.bitfire.notesx5"
+            android:targetClass="at.bitfire.notesx5.MainActivity" />
+    </shortcut>
+
+</shortcuts>

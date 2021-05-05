@@ -166,6 +166,12 @@
     <string name="notification_channel_reminder_name">Todo Due Reminder</string>
     <string name="notification_channel_reminder_description">Notification for due todos</string>
 
+    <string name="shortcut_addJournal_shortLabel">Journal</string>
+    <string name="shortcut_addNote_shortLabel">Note</string>
+    <string name="shortcut_addTodo_shortLabel">Todo</string>
+    <string name="shortcut_addJournal_longLabel">Add Journal</string>
+    <string name="shortcut_addNote_longLabel">Add Note</string>
+    <string name="shortcut_addTodo_longLabel">Add Todo</string>
 
 
 
