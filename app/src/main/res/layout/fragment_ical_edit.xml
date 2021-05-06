@@ -57,7 +57,7 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:text="@{UtilKt.convertLongToMonthString(model.iCalObjectUpdated.dtstart)}"
             app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
@@ -72,7 +72,7 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:text="@{UtilKt.convertLongToYearString(model.iCalObjectUpdated.dtstart)}"
             app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
@@ -225,6 +225,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_due_date_hint"
             android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             app:endIconContentDescription="Set due date"
             app:endIconDrawable="@drawable/ic_vjournal_date"
             app:endIconMode="custom"
@@ -253,6 +254,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_due_time_hint"
             android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             app:endIconContentDescription="Set due time"
             app:endIconDrawable="@drawable/ic_vjournal_time"
             app:endIconMode="custom"
@@ -372,16 +374,6 @@
             app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
 
 
-        <ImageView
-            android:id="@+id/edit_subtasks_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_subtasks_header"
-            app:srcCompat="@drawable/ic_todo"
-            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/edit_subtasks_header"
@@ -392,9 +384,11 @@
             android:text="@string/edit_subtasks_header"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/edit_subtasks_icon"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_progress_slider"
             android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+            app:drawableStartCompat="@drawable/ic_todo"
+            android:drawablePadding="8dp"
             />
 
 
@@ -437,6 +431,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_subtasks_add_hint"
             android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             app:endIconContentDescription="Add subtask"
             app:endIconDrawable="@drawable/ic_comment_add"
             app:endIconMode="custom"
@@ -531,6 +526,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_started_date_hint"
             android:visibility="@{model.starteddateVisible ? View.VISIBLE : View.GONE}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             app:endIconContentDescription="Set started date"
             app:endIconDrawable="@drawable/ic_vjournal_date"
             app:endIconMode="custom"
@@ -559,6 +555,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_started_time_hint"
             android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             app:endIconContentDescription="Set started time"
             app:endIconDrawable="@drawable/ic_vjournal_time"
             app:endIconMode="custom"
@@ -633,6 +630,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_completed_date_hint"
             android:visibility="@{model.completeddateVisible ? View.VISIBLE : View.GONE}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             app:endIconContentDescription="Set completed date"
             app:endIconDrawable="@drawable/ic_vjournal_date"
             app:endIconMode="custom"
@@ -661,6 +659,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_completed_time_hint"
             android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             app:endIconContentDescription="Set completed time"
             app:endIconDrawable="@drawable/ic_vjournal_time"
             app:endIconMode="custom"
@@ -736,6 +735,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_url_hint"
             android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             app:endIconMode="clear_text"
             app:error="@{model.urlError}"
             app:errorEnabled="true"
@@ -765,6 +765,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_contact_hint"
+            android:labelFor="@id/edit_contact_add_autocomplete"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
             app:endIconMode="clear_text"
             app:helperText="Contact information of the responsible or owner of this entry"
             app:helperTextEnabled="true"
@@ -779,29 +781,13 @@
             <AutoCompleteTextView
                 android:id="@+id/edit_contact_add_autocomplete"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:ems="10"
+                android:layout_height="wrap_content"
                 android:imeOptions="actionDone"
                 android:inputType="textCapSentences|textEmailAddress|textShortMessage"
                 android:text="@={model.iCalObjectUpdated.contact}" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
-
-
-
-
-        <ImageView
-            android:id="@+id/edit_categories_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_categories_header"
-            app:srcCompat="@drawable/ic_category"
-            tools:ignore="ContentDescription"
-            android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
-            />
 
         <TextView
             android:id="@+id/edit_categories_header"
@@ -812,9 +798,11 @@
             android:text="@string/edit_categories_header"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/edit_categories_icon"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_contact_edit"
             android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
+            app:drawableStartCompat="@drawable/ic_category"
+            android:drawablePadding="8dp"
             />
 
 
@@ -839,11 +827,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_categories_add"
-            android:layout_width="0dp"
-            android:layout_height="70dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_add_category_hint"
+            android:labelFor="@id/edit_categories_add_autocomplete"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
             app:endIconContentDescription="Add category"
             app:endIconDrawable="@drawable/ic_category_add"
             app:endIconMode="custom"
@@ -851,16 +841,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_categories_chipgroup"
-            android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
-
-            >
+            android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}" >
 
 
             <AutoCompleteTextView
                 android:id="@+id/edit_categories_add_autocomplete"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:ems="10"
+                android:layout_height="wrap_content"
                 android:singleLine="false"
                 android:imeOptions="actionDone"
                 android:inputType="textShortMessage|textCapSentences" />
@@ -869,20 +856,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-
-
-
-        <ImageView
-            android:id="@+id/edit_attendees_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_attendees_header"
-            app:srcCompat="@drawable/ic_attendee"
-            tools:ignore="ContentDescription"
-            android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-            />
 
         <TextView
             android:id="@+id/edit_attendees_header"
@@ -893,10 +866,11 @@
             android:text="@string/edit_attendees_header"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/edit_attendees_icon"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_categories_add"
             android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-
+            app:drawableStartCompat="@drawable/ic_attendee"
+            android:drawablePadding="8dp"
             />
 
 
@@ -924,7 +898,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_attendees_hint"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
             android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+            android:labelFor="@id/edit_attendees_add_autocomplete"
             app:endIconContentDescription="Add attendee"
             app:endIconDrawable="@drawable/ic_attendee_add"
             app:endIconMode="custom"
@@ -940,9 +916,8 @@
             <AutoCompleteTextView
                 android:id="@+id/edit_attendees_add_autocomplete"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:afterTextChanged="@{model::clearUrlError}"
-                android:ems="10"
                 android:imeOptions="actionDone"
                 android:inputType="textEmailAddress"
                 android:singleLine="false" />
@@ -950,19 +925,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-
-
-        <ImageView
-            android:id="@+id/edit_comments_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_comments_header"
-            app:srcCompat="@drawable/ic_comments"
-            tools:ignore="ContentDescription"
-            android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
-            />
 
         <TextView
             android:id="@+id/edit_comments_header"
@@ -973,9 +935,11 @@
             android:text="@string/view_comments_header"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/edit_comments_icon"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_attendees_add"
             android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+            app:drawableStartCompat="@drawable/ic_comments"
+            android:drawablePadding="8dp"
             />
 
 
@@ -1002,9 +966,7 @@
                 android:clickable="true"
                 android:focusable="true">
 
-
             </com.google.android.material.card.MaterialCardView>
-
 
         </LinearLayout>
 
@@ -1018,6 +980,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="64dp"
             android:hint="@string/edit_comment_hint"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             app:endIconContentDescription="Add category"
             app:endIconDrawable="@drawable/ic_comment_add"
             app:endIconMode="custom"

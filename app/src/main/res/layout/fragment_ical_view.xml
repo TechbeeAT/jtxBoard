@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{UtilKt.convertLongToMonthString(model.icalEntity.property.dtstart)}"
                 android:textAlignment="center"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="@+id/list_item_dtstart_day"
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{UtilKt.convertLongToYearString(model.icalEntity.property.dtstart)}"
                 android:textAlignment="center"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="@+id/list_item_dtstart_day"
@@ -262,17 +262,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/view_started"
                 tools:text="Completed: March 1, 2021" />
 
-            <ImageView
-                android:id="@+id/view_subtasks_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view_subtasks_header"
-                app:srcCompat="@drawable/ic_comments"
-                tools:ignore="ContentDescription"
-                android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                />
 
             <TextView
                 android:id="@+id/view_subtasks_header"
@@ -284,8 +273,10 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@+id/view_subtasks_icon"
-                app:layout_constraintTop_toBottomOf="@+id/view_completed" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_completed"
+                app:drawableStartCompat="@drawable/ic_comments"
+                android:drawablePadding="8dp" />
 
 
             <LinearLayout
@@ -371,17 +362,6 @@
             </com.google.android.material.chip.ChipGroup>
 
 
-            <ImageView
-                android:id="@+id/view_url_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view_url_header"
-                app:srcCompat="@drawable/ic_link"
-                tools:ignore="ContentDescription" />
-
             <TextView
                 android:id="@+id/view_url_header"
                 android:layout_width="wrap_content"
@@ -392,33 +372,25 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@+id/view_url_icon"
-                app:layout_constraintTop_toBottomOf="@+id/view_spc_chipgroup" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_spc_chipgroup"
+                app:drawableStartCompat="@drawable/ic_link"
+                android:drawablePadding="8dp" />
 
             <TextView
                 android:id="@+id/view_url"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
                 android:autoLink="all"
                 android:text="@{model.icalEntity.property.url}"
                 android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/view_url_icon"
+                app:layout_constraintStart_toStartOf="@+id/view_url_header"
                 app:layout_constraintTop_toBottomOf="@+id/view_url_header"
                 tools:text="https://www.bitfire.at/" />
 
-
-            <ImageView
-                android:id="@+id/view_attendee_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view_attendee_header"
-                app:srcCompat="@drawable/ic_attendee"
-                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/view_attendee_header"
@@ -430,8 +402,10 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@+id/view_attendee_icon"
-                app:layout_constraintTop_toBottomOf="@+id/view_url" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_url"
+                app:drawableStartCompat="@drawable/ic_attendee"
+                android:drawablePadding="8dp" />
 
 
 
@@ -450,19 +424,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/view_attendee_header" />
 
 
-
-
-            <ImageView
-                android:id="@+id/view_organizer_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view_organizer_header"
-                app:srcCompat="@drawable/ic_organizer"
-                tools:ignore="ContentDescription" />
-
             <TextView
                 android:id="@+id/view_organizer_header"
                 android:layout_width="wrap_content"
@@ -473,33 +434,25 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@+id/view_organizer_icon"
-                app:layout_constraintTop_toBottomOf="@+id/view_attendee_chipgroup" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_attendee_chipgroup"
+                app:drawableStartCompat="@drawable/ic_organizer"
+                android:drawablePadding="8dp"/>
 
             <TextView
                 android:id="@+id/view_organizer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
                 android:autoLink="all"
                 android:text="@{model.icalEntity.organizer.caladdress}"
                 android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/view_attendee_icon"
+                app:layout_constraintStart_toStartOf="@+id/view_organizer_header"
                 app:layout_constraintTop_toBottomOf="@+id/view_organizer_header"
                 tools:text="patrick.doe@example.com" />
 
-
-            <ImageView
-                android:id="@+id/view_contact_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view_contact_header"
-                app:srcCompat="@drawable/ic_contact"
-                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/view_contact_header"
@@ -511,33 +464,25 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@+id/view_contact_icon"
-                app:layout_constraintTop_toBottomOf="@+id/view_organizer" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_organizer"
+                app:drawableStartCompat="@drawable/ic_contact"
+                android:drawablePadding="8dp" />
 
             <TextView
                 android:id="@+id/view_contact"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
                 android:autoLink="all"
                 android:text="@{model.icalEntity.property.contact}"
                 android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/view_contact_icon"
+                app:layout_constraintStart_toStartOf="@+id/view_contact_header"
                 app:layout_constraintTop_toBottomOf="@+id/view_contact_header"
                 tools:text="John Doe (john.doe@example.com)" />
 
-
-            <ImageView
-                android:id="@+id/view_relatedto_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view_relatedto_header"
-                app:srcCompat="@drawable/ic_link"
-                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/view_relatedto_header"
@@ -549,31 +494,23 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@+id/view_relatedto_icon"
-                app:layout_constraintTop_toBottomOf="@+id/view_contact" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_contact"
+                app:drawableStartCompat="@drawable/ic_link"
+                android:drawablePadding="8dp"/>
 
             <TextView
                 android:id="@+id/view_relatedto"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
                 android:autoLink="all"
                 android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/view_relatedto_icon"
+                app:layout_constraintStart_toStartOf="@+id/view_relatedto_header"
                 app:layout_constraintTop_toBottomOf="@+id/view_relatedto_header"
                 tools:text="https://example.com/remote.php/dav/calendars/johndoe/personal/097E4865-D073-4279-806C-3E2B3250C947.ics" />
-
-            <ImageView
-                android:id="@+id/view_comments_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view_comments_header"
-                app:srcCompat="@drawable/ic_comments"
-                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/view_comments_header"
@@ -585,8 +522,10 @@
                 android:text="@string/view_comments_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/view_comments_icon"
-                app:layout_constraintTop_toBottomOf="@id/view_relatedto"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_relatedto"
+                app:drawableStartCompat="@drawable/ic_comments"
+                android:drawablePadding="8dp" />
 
 
             <LinearLayout
@@ -594,28 +533,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:divider="?android:dividerHorizontal"
-                android:showDividers="middle"
                 android:orientation="vertical"
+                android:showDividers="middle"
                 android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_comments_header" >
+                app:layout_constraintTop_toBottomOf="@+id/view_comments_header">
 
             </LinearLayout>
 
-
-
-            <ImageView
-                android:id="@+id/view_feedback_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view_feedback_header"
-                app:srcCompat="@drawable/ic_feedback"
-                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/view_feedback_header"
@@ -626,8 +555,10 @@
                 android:text="@string/view_feedback_linked_notes"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/view_feedback_icon"
-                app:layout_constraintTop_toBottomOf="@id/view_comments_linearlayout"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_comments_linearlayout"
+                app:drawableStartCompat="@drawable/ic_feedback"
+                android:drawablePadding="8dp"/>
 
 
             <LinearLayout
@@ -635,13 +566,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:divider="?android:dividerHorizontal"
-                android:showDividers="middle"
                 android:orientation="vertical"
+                android:showDividers="middle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_feedback_header" >
+                app:layout_constraintTop_toBottomOf="@+id/view_feedback_header">
 
             </LinearLayout>
 
@@ -665,7 +597,7 @@
                 android:layout_marginEnd="8dp"
                 android:text="@{`Created: ` + model.createdFormatted}"
                 android:textAlignment="viewEnd"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_add_note"
@@ -679,7 +611,7 @@
                 android:layout_marginEnd="8dp"
                 android:text="@{`Last modified: ` + model.lastModifiedFormatted}"
                 android:textAlignment="viewEnd"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_created"
