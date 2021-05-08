@@ -1,0 +1,134 @@
+/*
+ * Copyright (c) Patrick Lang in collaboration with bitfire web engineering.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ */
+
+package at.bitfire.notesx5.database.properties
+
+import android.content.ContentValues
+import android.os.Parcelable
+import android.provider.BaseColumns
+import androidx.annotation.Nullable
+import androidx.room.*
+import at.bitfire.notesx5.database.COLUMN_ID
+import at.bitfire.notesx5.database.ICalObject
+import kotlinx.parcelize.Parcelize
+
+/** The name of the the table for Attachments that are linked to an ICalObject.
+ * [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]*/
+const val TABLE_NAME_ATTACHMENT = "attachment"
+
+/** The name of the ID column for attachments.
+ * This is the unique identifier of an Attachment
+ * Type: [Long]*/
+const val COLUMN_ATTACHMENT_ID = BaseColumns._ID
+
+/** The name of the Foreign Key Column for IcalObjects.
+ * Type: [Long] */
+const val COLUMN_ATTACHMENT_ICALOBJECT_ID = "icalObjectId"
+
+
+/* The names of all the other columns  */
+/**
+ * Purpose:  This property specifies the uri of an attachment.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
+ * Type: [String]
+ */
+const val COLUMN_ATTACHMENT_URI = "uri"
+/**
+ * Purpose:  To specify the encoding of the attachment.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
+ * Type: [String]
+ */
+const val COLUMN_ATTACHMENT_ENCODING = "encoding"
+
+/**
+ * Purpose:  To specify the value of the attachment (binary).
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
+ * Type: [String]
+ */
+const val COLUMN_ATTACHMENT_VALUE = "value"
+
+/**
+ * Purpose:  To specify the fmttype of the attachment.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
+ * Type: [String]
+ */
+const val COLUMN_ATTACHMENT_FMTTYPE = "fmttype"
+
+/**
+ * Purpose:  To specify other properties for the attachment.
+ * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
+ * Type: [String]
+ */
+const val COLUMN_ATTACHMENT_OTHER = "other"
+
+
+
+
+@Parcelize
+@Entity(tableName = TABLE_NAME_ATTACHMENT,
+        foreignKeys = [ForeignKey(entity = ICalObject::class,
+                parentColumns = arrayOf(COLUMN_ID),
+                childColumns = arrayOf(COLUMN_ATTACHMENT_ICALOBJECT_ID),
+                onDelete = ForeignKey.CASCADE)])
+data class Attachment (
+
+        @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(index = true, name = COLUMN_ATTACHMENT_ID)
+    var attachmentId: Long = 0L,
+
+        @ColumnInfo(index = true, name = COLUMN_ATTACHMENT_ICALOBJECT_ID) var icalObjectId: Long = 0L,
+        @ColumnInfo(name = COLUMN_ATTACHMENT_URI)                        var uri: String? = null,
+        @ColumnInfo(name = COLUMN_ATTACHMENT_ENCODING)                 var encoding: String? = null,
+        @ColumnInfo(name = COLUMN_ATTACHMENT_VALUE)               var value: String? = null,
+        @ColumnInfo(name = COLUMN_ATTACHMENT_FMTTYPE)               var fmttype: String? = null,
+        @ColumnInfo(name = COLUMN_ATTACHMENT_OTHER)                      var other: String? = null
+): Parcelable
+
+
+{
+    companion object Factory {
+
+        /**
+         * Create a new [Attachment] from the specified [ContentValues].
+         *
+         * @param values that at least contain [COLUMN_ATTACHMENT_ICALOBJECT_ID]
+         * @return A newly created [Attachment] instance.
+         */
+        fun fromContentValues(@Nullable values: ContentValues?): Attachment? {
+
+            if (values == null)
+                return null
+
+            if (values.getAsLong(COLUMN_ATTACHMENT_ICALOBJECT_ID) == null)     // at least a icalObjectId and text must be given!
+                return null
+
+            return Attachment().applyContentValues(values)
+        }
+    }
+
+    fun applyContentValues(values: ContentValues): Attachment {
+
+        values.getAsLong(COLUMN_ATTACHMENT_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
+        values.getAsString(COLUMN_ATTACHMENT_URI)?.let { uri -> this.uri = uri }
+        values.getAsString(COLUMN_ATTACHMENT_ENCODING)?.let { encoding -> this.encoding = encoding }
+        values.getAsString(COLUMN_ATTACHMENT_VALUE)?.let { value -> this.value = value }
+        values.getAsString(COLUMN_ATTACHMENT_FMTTYPE)?.let { fmttype -> this.fmttype = fmttype }
+        values.getAsString(COLUMN_ATTACHMENT_OTHER)?.let { other -> this.other = other }
+
+        return this
+    }
+
+
+    fun getICalString(): String {
+
+
+        return ""    // TODO
+    }
+}
+
+

@@ -36,6 +36,13 @@ data class ICalEntity (
         @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Relatedto::class)
         var relatedto: List<Relatedto>? = null,
 
+        @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Resource::class)
+        var resource: List<Resource>? = null,
+
+        @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Attachment::class)
+        var attachment: List<Attachment>? = null,
+
+
         @Relation(parentColumn = COLUMN_ICALOBJECT_COLLECTIONID, entityColumn = COLUMN_COLLECTION_ID, entity = at.bitfire.notesx5.database.ICalCollection::class)
         var ICalCollection: ICalCollection? = null
 

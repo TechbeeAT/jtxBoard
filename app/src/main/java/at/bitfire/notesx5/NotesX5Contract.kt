@@ -39,11 +39,11 @@ object NotesX5Contract {
 
 
     fun Uri.asSyncAdapter(account: Account): Uri =
-            buildUpon()
-                    .appendQueryParameter(CALLER_IS_SYNCADAPTER, "true")
-                    .appendQueryParameter(ACCOUNT_NAME, account.name)
-                    .appendQueryParameter(ACCOUNT_TYPE, account.type)
-                    .build()
+        buildUpon()
+            .appendQueryParameter(CALLER_IS_SYNCADAPTER, "true")
+            .appendQueryParameter(ACCOUNT_NAME, account.name)
+            .appendQueryParameter(ACCOUNT_TYPE, account.type)
+            .build()
 
 
     @Suppress("unused")
@@ -302,8 +302,6 @@ object NotesX5Contract {
         const val DELETED = "deleted"
 
 
-
-
         /** This enum class defines the possible values for the attribute status of an [X5ICalObject] for Journals/Notes */
         enum class StatusJournal {
             DRAFT, FINAL, CANCELLED
@@ -330,9 +328,6 @@ object NotesX5Contract {
         }
 
 
-
-
-
     }
 
 
@@ -344,7 +339,7 @@ object NotesX5Contract {
         private const val CONTENT_URI_PATH = "attendee"
 
         /** The content uri of the Attendee table */
-        val CONTENT_URI: Uri by lazy {  Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
 
         /** The name of the ID column.
@@ -456,9 +451,8 @@ object NotesX5Contract {
         const val OTHER = "other"
 
 
-
         /** This enum class defines the possible values for the attribute Cutype of an [X5Attendee]  */
-        enum class Cutype  {
+        enum class Cutype {
             INDIVIDUAL, GROUP, RESOURCE, ROOM, UNKNOWN
         }
 
@@ -522,7 +516,7 @@ object NotesX5Contract {
         private const val CONTENT_URI_PATH = "comment"
 
         /** The content uri of the Comment table */
-        val CONTENT_URI: Uri by lazy {  Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
 
         /** The name of the ID column for comments.
@@ -814,62 +808,128 @@ object NotesX5Contract {
          * Type: [String]
          */
         const val URL = "url"
+
         /**
          * Purpose:  This column/property defines the display name of the collection.
          * Type: [String]
          */
         const val DISPLAYNAME = "displayname"
+
         /**
          * Purpose:  This column/property defines a description of the collection.
          * Type: [String]
          */
         const val DESCRIPTION = "description"
+
         /**
          * Purpose:  This column/property defines the owner of the collection.
          * Type: [String]
          */
         const val OWNER = "owner"
+
         /**
          * Purpose:  This column/property defines the color of the collection items.
          * This color can also be overwritten by the color in an ICalObject.
          * Type: [Int]
          */
         const val COLOR = "color"
+
         /**
          * Purpose:  This column/property defines the if the collection supports VEVENTs.
          * Type: [Boolean]
          */
         const val SUPPORTSVEVENT = "supportsVEVENT"
+
         /**
          * Purpose:  This column/property defines the if the collection supports VTODOs.
          * Type: [Boolean]
          */
         const val SUPPORTSVTODO = "supportsVTODO"
+
         /**
          * Purpose:  This column/property defines the if the collection supports VJOURNALs.
          * Type: [Boolean]
          */
         const val SUPPORTSVJOURNAL = "supportsVJOURNAL"
+
         /**
          * Purpose:  This column/property defines the if the account name under which the collection resides.
          * Type: [String]
          */
         const val ACCOUNT_NAME = "accountname"
+
         /**
          * Purpose:  This column/property defines the if the account type under which the collection resides.
          * Type: [String]
          */
         const val ACCOUNT_TYPE = "accounttype"
+
         /**
          * Purpose:  This column/property defines a field for the Sync Version for the Sync Adapter
          * Type: [String]
          */
         const val SYNC_VERSION = "syncversion"
+
         /**
          * Purpose:  This column/property defines if a collection is marked as read-only by the Sync Adapter
          * Type: [Boolean]
          */
         const val READONLY = "readonly"
+
+    }
+
+    @Suppress("unused")
+    object X5Attachment {
+
+        /** The name of the the table for Attachments that are linked to an ICalObject.
+         * [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]*/
+        const val TABLE_NAME_ATTACHMENT = "attachment"
+
+        /** The name of the ID column for attachments.
+         * This is the unique identifier of an Attachment
+         * Type: [Long]*/
+        const val COLUMN_ATTACHMENT_ID = BaseColumns._ID
+
+        /** The name of the Foreign Key Column for IcalObjects.
+         * Type: [Long] */
+        const val COLUMN_ATTACHMENT_ICALOBJECT_ID = "icalObjectId"
+
+
+/* The names of all the other columns  */
+        /**
+         * Purpose:  This property specifies the uri of an attachment.
+         * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
+         * Type: [String]
+         */
+        const val COLUMN_ATTACHMENT_URI = "uri"
+
+        /**
+         * Purpose:  To specify the encoding of the attachment.
+         * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
+         * Type: [String]
+         */
+        const val COLUMN_ATTACHMENT_ENCODING = "encoding"
+
+        /**
+         * Purpose:  To specify the value of the attachment (binary).
+         * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
+         * Type: [String]
+         */
+        const val COLUMN_ATTACHMENT_VALUE = "value"
+
+        /**
+         * Purpose:  To specify the fmttype of the attachment.
+         * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
+         * Type: [String]
+         */
+        const val COLUMN_ATTACHMENT_FMTTYPE = "fmttype"
+
+        /**
+         * Purpose:  To specify other properties for the attachment.
+         * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
+         * Type: [String]
+         */
+        const val COLUMN_ATTACHMENT_OTHER = "other"
 
     }
 

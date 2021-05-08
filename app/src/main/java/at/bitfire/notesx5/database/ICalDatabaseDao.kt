@@ -177,6 +177,9 @@ INSERTs (Synchronously)
     fun insertResourceSync(resource: Resource): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAttachmentSync(attachment: Attachment): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCollectionSync(ICalCollection: ICalCollection): Long
 
 

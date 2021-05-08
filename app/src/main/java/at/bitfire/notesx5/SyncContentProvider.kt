@@ -30,6 +30,8 @@ private const val CODE_ORGANIZER_DIR = 6
 private const val CODE_RELATEDTO_DIR = 7
 private const val CODE_RESOURCE_DIR = 8
 private const val CODE_COLLECTION_DIR = 9
+private const val CODE_ATTACHMENT_DIR = 10
+
 
 private const val CODE_ICALOBJECT_ITEM = 101
 private const val CODE_ATTENDEE_ITEM = 102
@@ -40,6 +42,8 @@ private const val CODE_ORGANIZER_ITEM = 106
 private const val CODE_RELATEDTO_ITEM = 107
 private const val CODE_RESOURCE_ITEM = 108
 private const val CODE_COLLECTION_ITEM = 109
+private const val CODE_ATTACHMENT_ITEM = 110
+
 
 
 
@@ -73,6 +77,7 @@ class SyncContentProvider : ContentProvider() {
         addURI(SYNC_PROVIDER_AUTHORITY, "relatedto", CODE_RELATEDTO_DIR)
         addURI(SYNC_PROVIDER_AUTHORITY, "resource", CODE_RESOURCE_DIR)
         addURI(SYNC_PROVIDER_AUTHORITY, "collection", CODE_COLLECTION_DIR)
+        addURI(SYNC_PROVIDER_AUTHORITY, "attachment", CODE_ATTACHMENT_DIR)
 
 
         addURI(SYNC_PROVIDER_AUTHORITY, "icalobject/#", CODE_ICALOBJECT_ITEM)
@@ -84,6 +89,8 @@ class SyncContentProvider : ContentProvider() {
         addURI(SYNC_PROVIDER_AUTHORITY, "relatedto/#", CODE_RELATEDTO_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "resource/#", CODE_RESOURCE_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "collection/#", CODE_COLLECTION_ITEM)
+        addURI(SYNC_PROVIDER_AUTHORITY, "attachment/#", CODE_ATTACHMENT_DIR)
+
 
     }
 
@@ -116,6 +123,7 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_DIR -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) "
             CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) "
             CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
+            CODE_ATTACHMENT_DIR -> queryString += "$TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID IN ($subquery) "
 
 
             CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ? "
@@ -127,6 +135,8 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ? "
             CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ? "
             CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = ? "
+            CODE_ATTACHMENT_ITEM -> queryString += "$TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_ID = ? "
+
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
@@ -174,6 +184,7 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_DIR -> id = Relatedto.fromContentValues(values)?.let { database.insertRelatedtoSync(it) }
             CODE_RESOURCE_DIR -> id = Resource.fromContentValues(values)?.let { database.insertResourceSync(it) }
             CODE_COLLECTION_DIR -> id = ICalCollection.fromContentValues(values)?.let { database.insertCollectionSync(it) }
+            CODE_ATTACHMENT_DIR -> id = Attachment.fromContentValues(values)?.let { database.insertAttachmentSync(it) }
 
             CODE_ICALOBJECT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
             CODE_ATTENDEE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
@@ -184,6 +195,7 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
             CODE_RESOURCE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
             CODE_COLLECTION_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+            CODE_ATTACHMENT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
@@ -241,6 +253,7 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_DIR -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) "
             CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) "
             CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
+            CODE_ATTACHMENT_DIR -> queryString += "$TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID IN ($subquery) "
 
 
             CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ? "
@@ -252,6 +265,7 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ? "
             CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ? "
             CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = ? "
+            CODE_ATTACHMENT_ITEM -> queryString += "$TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_ID = ? "
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
@@ -297,6 +311,8 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_DIR -> queryString += "$TABLE_NAME_RELATEDTO "
             CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE "
             CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION "
+            CODE_ATTACHMENT_DIR -> queryString += "$TABLE_NAME_ATTACHMENT "
+
 
             CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT "
             CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE "
@@ -307,6 +323,8 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO "
             CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE "
             CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION "
+            CODE_ATTACHMENT_ITEM -> queryString += "$TABLE_NAME_ATTACHMENT "
+
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
@@ -339,6 +357,8 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_DIR -> queryString += "$COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) "
             CODE_RESOURCE_DIR -> queryString += "$COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) "
             CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
+            CODE_ATTACHMENT_DIR -> queryString += "$COLUMN_ATTACHMENT_ICALOBJECT_ID IN ($subquery) "
+
 
             CODE_ICALOBJECT_ITEM -> queryString += "$COLUMN_ID IN ($subquery) AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ? "
             CODE_ATTENDEE_ITEM -> queryString += "$COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
@@ -349,6 +369,7 @@ class SyncContentProvider : ContentProvider() {
             CODE_RELATEDTO_ITEM -> queryString += "$COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ? "
             CODE_RESOURCE_ITEM -> queryString += "$COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ? "
             CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = ? "
+            CODE_ATTACHMENT_ITEM -> queryString += "$COLUMN_ATTACHMENT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_ID = ? "
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
