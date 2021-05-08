@@ -92,11 +92,11 @@ class IcalViewViewModel(private val icalItemId: Long,
 
 
             dateVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == "JOURNAL"           // true if component == JOURNAL
+                return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null           // true if component == JOURNAL
             }
 
             timeVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == "JOURNAL" && item.property.dtstartTimezone != "ALLDAY"           // true if component == JOURNAL and it is not an All Day Event
+                return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null && item.property.dtstartTimezone != "ALLDAY"           // true if component == JOURNAL and it is not an All Day Event
             }
 
             dtstartFormatted = Transformations.map(icalEntity) { item ->
