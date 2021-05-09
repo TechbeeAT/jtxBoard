@@ -34,6 +34,7 @@
         <item name="android:colorBackground">@color/backgroundColor</item>
         <item name="colorSurface">@android:color/white</item>
 -->
+
     </style>
 
     <style name="AppTheme.NoActionBar">

@@ -250,12 +250,14 @@
                 android:id="@+id/view_started"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="@{model.startedFormatted}"
                 android:textStyle="bold|italic"
                 android:visibility="@{model.startedVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_progress_slider"
                 tools:text="Started: February 5, 2021" />
 
@@ -264,11 +266,14 @@
                 android:id="@+id/view_completed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
                 android:text="@{model.completedFormatted}"
                 android:textStyle="bold|italic"
                 android:visibility="@{model.completedVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_started"
                 tools:text="Completed: March 1, 2021" />
 
@@ -278,15 +283,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
+                android:drawablePadding="8dp"
                 android:text="@string/view_subtasks_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_completed"
                 app:drawableStartCompat="@drawable/ic_comments"
-                android:drawablePadding="8dp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_completed" />
 
 
             <LinearLayout
@@ -319,54 +324,54 @@
             </LinearLayout>
 
 
-
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/view_spc_chipgroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_subtasks_linearlayout">
 
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/view_status_chip"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:checkable="false"
-                app:chipIcon="@drawable/ic_status"
-                app:chipIconVisible="true"
-                app:closeIconVisible="false"
-                tools:text="Final" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/view_status_chip"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:checkable="false"
+                    app:chipIcon="@drawable/ic_status"
+                    app:chipIconVisible="true"
+                    app:closeIconVisible="false"
+                    tools:text="Final" />
 
-            <com.google.android.material.chip.Chip
+                <com.google.android.material.chip.Chip
 
-                android:id="@+id/view_priority_chip"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:checkable="false"
-                android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
-                app:chipIcon="@drawable/ic_priority"
-                app:chipIconVisible="true"
-                app:closeIconVisible="false"
-                tools:text="Public" />
+                    android:id="@+id/view_priority_chip"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:checkable="false"
+                    android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
+                    app:chipIcon="@drawable/ic_priority"
+                    app:chipIconVisible="true"
+                    app:closeIconVisible="false"
+                    tools:text="Public" />
 
-            <com.google.android.material.chip.Chip
+                <com.google.android.material.chip.Chip
 
-                android:id="@+id/view_classification_chip"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:checkable="false"
-                app:chipIcon="@drawable/ic_classification"
-                app:chipIconVisible="true"
-                app:closeIconVisible="false"
-                tools:text="Public" />
+                    android:id="@+id/view_classification_chip"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:checkable="false"
+                    app:chipIcon="@drawable/ic_classification"
+                    app:chipIconVisible="true"
+                    app:closeIconVisible="false"
+                    tools:text="Public" />
 
 
             </com.google.android.material.chip.ChipGroup>
