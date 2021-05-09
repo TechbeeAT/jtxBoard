@@ -39,6 +39,16 @@
             android:layout_height="wrap_content"
             tools:context=".ui.IcalViewFragment">
 
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/view_progress_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:indeterminate="true"
+                />
+
             <ImageView
                 android:id="@+id/view_colorbar"
                 android:layout_width="0dp"
@@ -48,7 +58,7 @@
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_progress_indicator"
                 app:srcCompat="@drawable/square_box"
                 tools:tint="#BC0D0D"
                 tools:ignore="ContentDescription" />
@@ -609,10 +619,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="@{`Last modified: ` + model.lastModifiedFormatted}"
                 android:textAlignment="viewEnd"
                 android:textSize="12sp"
                 android:textStyle="italic"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_created"
                 tools:text="Last modified: Sun Dec 20 20:38:30 GMT+01:00 2020" />

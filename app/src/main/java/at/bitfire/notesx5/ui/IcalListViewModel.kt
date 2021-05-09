@@ -53,7 +53,13 @@ class IcalListViewModel(
         viewModelScope.launch {
 
             allSubtasks.apply { database.getAllSubtasks() }
-            //ICalDatabase.populateInitialTestData(database)
+
+            /*
+            for (i in 1..200) {
+                ICalDatabase.populateInitialTestData(database)
+            }
+
+             */
 
         }
     }

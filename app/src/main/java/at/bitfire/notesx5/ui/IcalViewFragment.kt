@@ -98,7 +98,12 @@ class IcalViewFragment : Fragment() {
 
         icalViewViewModel.icalEntity.observe(viewLifecycleOwner, {
 
-            if (it?.property != null) {
+            if (it?.property == null) {
+                binding.viewProgressIndicator.visibility = View.VISIBLE
+            }
+            else {
+
+                binding.viewProgressIndicator.visibility = View.GONE
 
                 when (it.property.component) {
                     Component.VTODO.name -> {

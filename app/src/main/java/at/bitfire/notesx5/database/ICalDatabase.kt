@@ -209,7 +209,7 @@ abstract class ICalDatabase : RoomDatabase() {
             //onConflict strategy = IGNORE!
             database.upsertCollection(ICalCollection(collectionId = 1L, url = "https://localhost", displayName = "Local Collection"))
 
-            val newEntry = database.insertICalObject(ICalObject(collectionId = 1L, module = Module.NOTE.name, component = Component.VJOURNAL.name, summary = rfcSummary, description = rfcDesc, dtstart = System.currentTimeMillis()))
+            val newEntry = database.insertICalObject(ICalObject(collectionId = 1L, module = Module.JOURNAL.name, component = Component.VJOURNAL.name, summary = rfcSummary, description = rfcDesc, dtstart = System.currentTimeMillis()))
             database.insertAttendee(Attendee(caladdress = "test@test.de", icalObjectId = newEntry))
             database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
             database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
