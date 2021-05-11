@@ -43,11 +43,10 @@
                 android:id="@+id/view_progress_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:indeterminate="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:indeterminate="true"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/view_colorbar"
@@ -60,8 +59,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_progress_indicator"
                 app:srcCompat="@drawable/square_box"
-                tools:tint="#BC0D0D"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                tools:tint="#BC0D0D" />
 
 
             <TextView
@@ -235,7 +234,6 @@
                 tools:text="100 %" />
 
 
-
             <CheckBox
                 android:id="@+id/view_progress_checkbox"
                 android:layout_width="wrap_content"
@@ -304,11 +302,10 @@
                 android:divider="?android:dividerHorizontal"
                 android:orientation="vertical"
                 android:showDividers="middle"
+                android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_subtasks_header"
-                android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                >
+                app:layout_constraintTop_toBottomOf="@+id/view_subtasks_header">
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
@@ -383,14 +380,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:drawablePadding="8dp"
                 android:text="@string/view_url_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_spc_chipgroup"
                 app:drawableStartCompat="@drawable/ic_link"
-                android:drawablePadding="8dp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_spc_chipgroup" />
 
             <TextView
                 android:id="@+id/view_url"
@@ -413,15 +410,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
                 android:text="@string/view_attendees_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_url"
                 app:drawableStartCompat="@drawable/ic_attendee"
-                android:drawablePadding="8dp" />
-
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_url" />
 
 
             <com.google.android.material.chip.ChipGroup
@@ -431,9 +427,9 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
                 app:chipSpacingHorizontal="8dp"
                 app:chipSpacingVertical="0dp"
-                android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_attendee_header" />
@@ -445,14 +441,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
                 android:text="@string/view_organizer_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_attendee_chipgroup"
                 app:drawableStartCompat="@drawable/ic_organizer"
-                android:drawablePadding="8dp"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_attendee_chipgroup" />
 
             <TextView
                 android:id="@+id/view_organizer"
@@ -475,14 +471,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
                 android:text="@string/view_contact_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_organizer"
                 app:drawableStartCompat="@drawable/ic_contact"
-                android:drawablePadding="8dp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_organizer" />
 
             <TextView
                 android:id="@+id/view_contact"
@@ -505,14 +501,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
                 android:text="@string/view_relatedto_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_contact"
                 app:drawableStartCompat="@drawable/ic_link"
-                android:drawablePadding="8dp"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_contact" />
 
             <TextView
                 android:id="@+id/view_relatedto"
@@ -533,14 +529,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+                android:drawablePadding="8dp"
                 android:text="@string/view_comments_header"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_relatedto"
+                android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
                 app:drawableStartCompat="@drawable/ic_comments"
-                android:drawablePadding="8dp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_relatedto" />
 
 
             <LinearLayout
@@ -567,13 +563,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
                 android:text="@string/view_feedback_linked_notes"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_comments_linearlayout"
                 app:drawableStartCompat="@drawable/ic_feedback"
-                android:drawablePadding="8dp"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_comments_linearlayout" />
 
 
             <LinearLayout
@@ -599,9 +595,24 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/view_add_note"
                 app:icon="@drawable/ic_comment_add"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/view_add_audio_note"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout" />
+
+            <Button
+                android:id="@+id/view_add_audio_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/view_add_audio_note"
+                app:icon="@drawable/ic_microphone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintBottom_toBottomOf="@+id/view_add_note"
+                app:layout_constraintStart_toEndOf="@+id/view_add_note"  />
+
 
 
             <TextView
@@ -624,7 +635,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="32dp"
                 android:text="@{`Last modified: ` + model.lastModifiedFormatted}"
                 android:textAlignment="viewEnd"
                 android:textSize="12sp"

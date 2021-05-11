@@ -8,32 +8,37 @@
 
 package at.bitfire.notesx5.ui
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.Application
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.os.Bundle
 import android.text.InputType
+import android.util.Base64
 import android.util.Log
 import android.view.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import at.bitfire.notesx5.R
-import at.bitfire.notesx5.convertLongToDateString
-import at.bitfire.notesx5.convertLongToTimeString
+import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Role
-import at.bitfire.notesx5.databinding.FragmentIcalViewBinding
-import at.bitfire.notesx5.databinding.FragmentIcalViewCommentBinding
-import at.bitfire.notesx5.databinding.FragmentIcalViewRelatedtoBinding
-import at.bitfire.notesx5.databinding.FragmentIcalViewSubtaskBinding
+import at.bitfire.notesx5.databinding.*
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
+import java.io.File
+import java.io.IOException
 
 
 class IcalViewFragment : Fragment() {
@@ -44,6 +49,15 @@ class IcalViewFragment : Fragment() {
     private lateinit var dataSource: ICalDatabaseDao
     private lateinit var viewModelFactory: IcalViewViewModelFactory
     lateinit var icalViewViewModel: IcalViewViewModel
+
+    private var fileName: String = ""
+    private var recorder: MediaRecorder? = null
+    private var player: MediaPlayer? = null
+
+    private var recording: Boolean = false
+    private var playing: Boolean = false
+
+
 
 
     /*
@@ -254,6 +268,97 @@ class IcalViewFragment : Fragment() {
             }
 
             builder.show()
+
+        }
+
+
+        // handling audio recording
+        binding.viewAddAudioNote.setOnClickListener {
+
+            // Check if the permission to record audio is already granted, otherwise make a dialog to ask for permission
+            if (ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED) {
+
+                val audioDialogBinding = FragmentIcalViewAudioDialogBinding.inflate(inflater, container, false)
+
+                audioDialogBinding.viewAudioDialogStartrecordingFab.setOnClickListener {
+
+                    if(!recording) {
+                        fileName = "${requireContext().cacheDir}/recorded.3gp"
+                        audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
+                        startRecording()
+                        audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = false
+                        recording = true
+                    } else {
+                        stopRecording()
+                        audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_microphone))
+                        audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = true
+                        recording = false
+                        val file = File(fileName)
+                        Log.d("Filesize", file.length().toString())
+                        val fileBase64 = Base64.encodeToString(file.readBytes(), Base64.DEFAULT)
+                        Log.d("Base64", fileBase64)
+
+                        player?.duration?.let { audioDialogBinding.viewAudioDialogProgressbar.max = it }
+                        player?.currentPosition?.let { audioDialogBinding.viewAudioDialogProgressbar.progress = it }
+
+                    }
+                }
+
+
+                audioDialogBinding.viewAudioDialogStartplayingFab.setOnClickListener {
+                    if(!playing && player != null) {
+                        startPlaying()
+                        audioDialogBinding.viewAudioDialogStartplayingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
+                        playing = true
+
+                        player?.setOnCompletionListener {
+                            audioDialogBinding.viewAudioDialogStartplayingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
+                        }
+
+                    }
+                    else {
+                        stopPlaying()
+                        audioDialogBinding.viewAudioDialogStartplayingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
+                        playing = false
+                    }
+                }
+
+                /*
+                audioDialogBinding.viewAudioDialogProgressbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        if (fromUser)
+                            player?.seekTo(progress)
+                    }
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {   }
+                    override fun onStopTrackingTouch(seekBar: SeekBar?)  {   }
+                })
+
+                 */
+
+
+
+                //Open dialog to record audio
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(getString(R.string.view_fragment_audio_dialog_add_audio_note))
+                        //.setMessage(getString(R.string.view_fragment_audio_permission_message))
+                        .setView(audioDialogBinding.root)
+                        .setPositiveButton("Save") { dialog, which ->
+
+                        }
+                        .setNegativeButton("Discard") { dialog, which -> }
+                        .show()
+            } else {
+                //request for permission to load contacts
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(getString(R.string.view_fragment_audio_permission))
+                    .setMessage(getString(R.string.view_fragment_audio_permission_message))
+                    .setPositiveButton("Ok") { dialog, which ->
+                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_CODE)
+                    }
+                    .setNegativeButton("Cancel") { dialog, which -> }
+                    .show()
+            }
 
         }
 
@@ -533,6 +638,53 @@ class IcalViewFragment : Fragment() {
             startActivity(Intent(shareIntent))
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun startRecording() {
+        recorder = MediaRecorder().apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            setOutputFile(fileName)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+            setMaxDuration(60000)
+
+            try {
+                prepare()
+            } catch (e: IOException) {
+                Log.e("startRecording()", "prepare() failed")
+            }
+
+            start()
+        }
+    }
+
+    private fun stopRecording() {
+        recorder?.apply {
+            stop()
+            release()
+        }
+        recorder = null
+
+        // initialise the player
+        player = MediaPlayer().apply {
+            try {
+                setDataSource(fileName)
+                prepare()
+            } catch (e: IOException) {
+                Log.e("preparePlaying()", "prepare() failed")
+            }
+        }
+    }
+
+    private fun startPlaying() {
+        // was already initialised on finishing the recording
+        player?.start()
+    }
+
+    private fun stopPlaying() {
+        player?.release()
+        player = null
     }
 }
 

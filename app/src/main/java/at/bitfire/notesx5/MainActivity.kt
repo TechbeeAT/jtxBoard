@@ -29,6 +29,8 @@ import com.google.android.material.navigation.NavigationView
 
 
 const val CONTACT_READ_PERMISSION_CODE = 100   // this is necessary for the app permission, 100 ist just a freely chosen value
+const val RECORD_AUDIO_PERMISSION_CODE = 200   // this is necessary for the app permission, 200 ist just a freely chosen value
+
 
 
 /**
@@ -134,13 +136,15 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
 
         if (requestCode == CONTACT_READ_PERMISSION_CODE) {
-            if (grantResults.isNotEmpty()
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 Toast.makeText(this, "Contacts Read Permission Granted", Toast.LENGTH_SHORT).show()
-            }
-            else {
+            else
                 Toast.makeText(this, "Contacts Read Permission Denied", Toast.LENGTH_SHORT).show()
-            }
+        } else if (requestCode == RECORD_AUDIO_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                Toast.makeText(this, "Record Audio Permission Granted", Toast.LENGTH_SHORT).show()
+            else
+                Toast.makeText(this, "Record Audio Permission Denied", Toast.LENGTH_SHORT).show()
         }
 
     }

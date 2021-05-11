@@ -105,6 +105,11 @@
     <string name="view_contact_header">Contact</string>
     <string name="view_relatedto_header">Related to</string>
     <string name="view_comments_header">Comments</string>
+    <string name="view_fragment_audio_permission">App Permission</string>
+    <string name="view_fragment_audio_permission_message">NOTESx5 needs the permission in order to record audio. Please grant the permission to use this feature.</string>
+    <string name="view_fragment_audio_dialog_add_audio_note">Add Audio Note</string>
+
+
     <string name="edit_attendees_roledialog_chair">Chair</string>
     <string name="edit_attendees_roledialog_required">Required</string>
     <string name="edit_attendees_roledialog_optional">Optional</string>
@@ -138,6 +143,7 @@
     <string name="filter_category">Category</string>
     <string name="view_feedback_linked_notes">Feedback / Linked Notes</string>
     <string name="view_add_note">Add note</string>
+    <string name="view_add_audio_note">Add audio</string>
     <string name="view_fab_edit_entry_contentDesc">Edit entry</string>
     <string name="view_subtasks_header">Subtasks</string>
     <string name="view_progress_label">Progress</string>
