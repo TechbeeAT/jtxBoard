@@ -305,17 +305,16 @@ class IcalViewFragment : Fragment() {
                     }
                 }
 
-
                 audioDialogBinding.viewAudioDialogStartplayingFab.setOnClickListener {
-                    if(!playing && player != null) {
+                    if(!playing) {
                         startPlaying()
                         audioDialogBinding.viewAudioDialogStartplayingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
                         playing = true
 
                         player?.setOnCompletionListener {
                             audioDialogBinding.viewAudioDialogStartplayingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
+                            playing = false
                         }
-
                     }
                     else {
                         stopPlaying()
@@ -678,7 +677,16 @@ class IcalViewFragment : Fragment() {
     }
 
     private fun startPlaying() {
-        // was already initialised on finishing the recording
+        // initialise the player
+        player = MediaPlayer().apply {
+            try {
+                setDataSource(fileName)
+                prepare()
+            } catch (e: IOException) {
+                Log.e("preparePlaying()", "prepare() failed")
+            }
+        }
+
         player?.start()
     }
 
