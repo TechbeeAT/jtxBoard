@@ -11,11 +11,9 @@ package at.bitfire.notesx5.ui
 import android.app.Application
 import androidx.lifecycle.*
 import at.bitfire.notesx5.database.*
-import at.bitfire.notesx5.database.properties.Attendee
-import at.bitfire.notesx5.database.properties.Category
-import at.bitfire.notesx5.database.properties.Relatedto
-import at.bitfire.notesx5.database.properties.Reltype
+import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.relations.ICalEntity
+import at.bitfire.notesx5.database.views.ICal4ViewNote
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.*
@@ -28,7 +26,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var icalEntity: LiveData<ICalEntity?>
     lateinit var categories: LiveData<List<Category>>
     lateinit var attendees: LiveData<List<Attendee>>
-    lateinit var relatedNotes: LiveData<List<ICalObject?>>
+    lateinit var relatedNotes: LiveData<List<ICal4ViewNote?>>
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
 
     lateinit var dtstartFormatted: LiveData<String>
@@ -187,12 +185,24 @@ class IcalViewViewModel(private val icalItemId: Long,
     }
 
 
-    fun insertRelatedNote(note: ICalObject) {
+    fun insertRelatedNote(noteText: String) {
         viewModelScope.launch {
-            val newNoteId = database.insertICalObject(note)
-            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = note.uid))
-
+            val newNote = ICalObject.createNote(noteText)
+            val newNoteId = database.insertICalObject(newNote)
+            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newNote.uid))
         }
+    }
+
+    fun insertRelatedAudioNote(audioBase64: String) {
+
+        viewModelScope.launch {
+            val newNote = ICalObject.createNote("Audio Comment")
+            val newNoteId = database.insertICalObject(newNote)
+            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newNote.uid))
+            val attachment = Attachment(icalObjectId = newNoteId, encoding = "?", value = audioBase64, fmttype = "?")
+            database.insertAttachment(attachment)
+        }
+
     }
 
 

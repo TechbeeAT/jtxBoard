@@ -16,7 +16,9 @@ import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.relations.ICal4ListWithRelatedto
 import at.bitfire.notesx5.database.relations.ICalEntity
 import at.bitfire.notesx5.database.views.ICal4List
+import at.bitfire.notesx5.database.views.ICal4ViewNote
 import at.bitfire.notesx5.database.views.VIEW_NAME_ICAL4LIST
+import at.bitfire.notesx5.database.views.VIEW_NAME_ICAL4VIEWNOTE
 
 
 /**
@@ -140,6 +142,9 @@ INSERTs (Asyncronously / Suspend)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRelatedto(relatedto: Relatedto): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAttachment(attachment: Attachment): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun upsertCollection(ICalCollection: ICalCollection): Long
@@ -326,8 +331,8 @@ DELETEs by Object
 
     // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
     @Transaction
-    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey and icalobject.component = 'VJOURNAL'")
-    fun getRelatedNotes(parentKey: Long): LiveData<List<ICalObject?>>
+    @Query("SELECT * from $VIEW_NAME_ICAL4VIEWNOTE WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :parentKey")
+    fun getRelatedNotes(parentKey: Long): LiveData<List<ICal4ViewNote?>>
 
     // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
     @Transaction

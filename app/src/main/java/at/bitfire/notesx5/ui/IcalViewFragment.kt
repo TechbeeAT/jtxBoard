@@ -167,14 +167,20 @@ class IcalViewFragment : Fragment() {
 
             if (it?.size != 0) {
                 binding.viewFeedbackLinearlayout.removeAllViews()
-                it.forEach { relatedICalObject ->
-                    val relatedtoBinding = FragmentIcalViewRelatedtoBinding.inflate(inflater, container, false)
-                    relatedtoBinding.viewRelatedTextview.text = relatedICalObject?.summary
-                    relatedtoBinding.root.setOnClickListener { view ->
-                        view.findNavController().navigate(
-                                IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(relatedICalObject!!.id))
+                it.forEach { relatedNote ->
+                    if(relatedNote == null)
+                        return@forEach
+
+                    val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
+                    commentBinding.viewCommentTextview.text = relatedNote.summary
+                    if(relatedNote.attachmentValue?.isNotEmpty() == true) {
+                        commentBinding.viewCommentPlaybutton.visibility = View.VISIBLE
                     }
-                    binding.viewFeedbackLinearlayout.addView(relatedtoBinding.root)
+                    commentBinding.root.setOnClickListener { view ->
+                        view.findNavController().navigate(
+                                IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(relatedNote.id))
+                    }
+                    binding.viewFeedbackLinearlayout.addView(commentBinding.root)
                 }
             }
         })
@@ -187,50 +193,7 @@ class IcalViewFragment : Fragment() {
             }
         }
 
-       // icalViewViewModel.subtasksCountHashmap.observe(viewLifecycleOwner) { }
 
-
-            /*
-
-            // set on Click Listener to open a dialog to update the comment
-            commentView.setOnClickListener {
-
-                // set up the values for the TextInputEditText
-                val updatedText: TextInputEditText = TextInputEditText(context!!)
-                updatedText.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-                updatedText.setText(comment.text)
-                updatedText.isSingleLine = false;
-                updatedText.maxLines = 8
-
-                // set up the builder for the AlertDialog
-                val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Edit comment")
-                builder.setIcon(R.drawable.ic_comment_add)
-                builder.setView(updatedText)
-
-
-                builder.setPositiveButton("Save") { _, _ ->
-                    // update the comment
-                    val updatedComment = comment.copy()
-                    updatedComment.text = updatedText.text.toString()
-                    vJournalItemViewModel.upsertComment(updatedComment)
-                }
-                builder.setNegativeButton("Cancel") { _, _ ->
-                    // Do nothing, just close the message
-                }
-
-                builder.setNeutralButton("Delete") { _, _ ->
-                    vJournalItemViewModel.deleteComment(comment)
-                    Snackbar.make(this.view!!, "Comment deleted: ${comment.text}", Snackbar.LENGTH_LONG).show()
-                }
-
-                builder.show()
-            }
-
-        }
-
-
-             */
 
         icalViewViewModel.categories.observe(viewLifecycleOwner, {
             binding.viewCategoriesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
@@ -260,7 +223,7 @@ class IcalViewFragment : Fragment() {
             builder.setView(newNote)
 
             builder.setPositiveButton("Save") { _, _ ->
-                icalViewViewModel.insertRelatedNote(ICalObject.createNote(summary = newNote.text.toString()))
+                icalViewViewModel.insertRelatedNote(newNote.text.toString())
             }
 
             builder.setNegativeButton("Cancel") { _, _ ->
@@ -294,10 +257,6 @@ class IcalViewFragment : Fragment() {
                         audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_microphone))
                         audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = true
                         recording = false
-                        val file = File(fileName)
-                        Log.d("Filesize", file.length().toString())
-                        val fileBase64 = Base64.encodeToString(file.readBytes(), Base64.DEFAULT)
-                        Log.d("Base64", fileBase64)
 
                         player?.duration?.let { audioDialogBinding.viewAudioDialogProgressbar.max = it }
                         player?.currentPosition?.let { audioDialogBinding.viewAudioDialogProgressbar.progress = it }
@@ -343,9 +302,22 @@ class IcalViewFragment : Fragment() {
                         //.setMessage(getString(R.string.view_fragment_audio_permission_message))
                         .setView(audioDialogBinding.root)
                         .setPositiveButton("Save") { dialog, which ->
+                            stopRecording()
+                            stopPlaying()
 
+                            if(fileName.isNotEmpty()) {
+                                val file = File(fileName)
+                                Log.d("Filesize", file.length().toString())
+                                val fileBase64 =
+                                    Base64.encodeToString(file.readBytes(), Base64.DEFAULT)
+                                Log.d("Base64", fileBase64)
+                                icalViewViewModel.insertRelatedAudioNote(fileBase64)
+                            }
                         }
-                        .setNegativeButton("Discard") { dialog, which -> }
+                        .setNegativeButton("Discard") { dialog, which ->
+                            stopRecording()
+                            stopPlaying()
+                        }
                         .show()
             } else {
                 //request for permission to load contacts
