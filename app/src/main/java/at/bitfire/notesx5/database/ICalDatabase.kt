@@ -40,7 +40,7 @@ import at.bitfire.notesx5.database.views.ICal4ViewNote
         views = [
             ICal4List::class,
             ICal4ViewNote::class],
-        version = 81,
+        version = 82,
         exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {

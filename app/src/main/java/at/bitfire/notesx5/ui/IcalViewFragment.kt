@@ -29,6 +29,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
+import at.bitfire.notesx5.database.properties.Attachment
 import at.bitfire.notesx5.database.properties.Attendee
 import at.bitfire.notesx5.database.properties.Category
 import at.bitfire.notesx5.database.properties.Role
@@ -173,7 +174,7 @@ class IcalViewFragment : Fragment() {
 
                     val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
                     commentBinding.viewCommentTextview.text = relatedNote.summary
-                    if(relatedNote.attachmentValue?.isNotEmpty() == true) {
+                    if(relatedNote.attachmentValue?.isNotEmpty() == true && relatedNote.attachmentEncoding == Attachment.ENCODING_BASE64 && relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_3GPP) {
                         commentBinding.viewCommentPlaybutton.visibility = View.VISIBLE
 
                         // TODO TRY Catch
@@ -182,18 +183,31 @@ class IcalViewFragment : Fragment() {
                         //playback on click
                         commentBinding.viewCommentPlaybutton.setOnClickListener {
 
-                            val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
-                            fileName = "${requireContext().cacheDir}/cached_audiocomment.3gp"
+                            //stop playing if playback is on
+                            if(playing) {
+                                stopPlaying()
+                                commentBinding.viewCommentPlaybutton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
+                                playing = false
+                            } else {
+                                // write the base64 decoded Bytestream in a file and use it as an input for the player
+                                val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
+                                fileName = "${requireContext().cacheDir}/cached_audiocomment.3gp"
 
-                            File(fileName).apply {
-                                writeBytes(fileBytestream)
-                                createNewFile()
+                                File(fileName).apply {
+                                    writeBytes(fileBytestream)
+                                    createNewFile()
+                                }
+                                startPlaying()
+                                commentBinding.viewCommentPlaybutton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
+                                playing = true
+
+                                // make sure to set the icon back to the play icon when the player reached the end
+                                player?.setOnCompletionListener {
+                                    commentBinding.viewCommentPlaybutton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
+                                    playing = false
+                                }
                             }
-
-                            startPlaying()
-
                         }
-
 
                     }
                     commentBinding.root.setOnClickListener { view ->

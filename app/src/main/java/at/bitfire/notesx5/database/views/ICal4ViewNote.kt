@@ -35,7 +35,7 @@ const val VIEW_NAME_ICAL4VIEWNOTE = "ical4viewNote"
                 "$TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_FMTTYPE, " +
                 "$TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_URI " +
                 "FROM $TABLE_NAME_ICALOBJECT " +
-                "INNER JOIN $TABLE_NAME_RELATEDTO ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID " +
+                "INNER JOIN $TABLE_NAME_RELATEDTO ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID " +  // this join filters standalone notes already
                 "LEFT JOIN $TABLE_NAME_ATTACHMENT ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_ICALOBJECT_ID " +
                 "WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_DELETED = 0 " +
                 "AND $TABLE_NAME_ICALOBJECT.$COLUMN_MODULE = 'NOTE'")           // locally deleted entries are already excluded in the view!
@@ -53,8 +53,8 @@ data class ICal4ViewNote (
         @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long,
         @ColumnInfo(name = COLUMN_RELATEDTO_ICALOBJECT_ID) var parentId: Long,
         @ColumnInfo(name = COLUMN_ATTACHMENT_VALUE) var attachmentValue: String?,
-        @ColumnInfo(name = COLUMN_ATTACHMENT_ENCODING) var attachmentEncoding: Long?,
-        @ColumnInfo(name = COLUMN_ATTACHMENT_FMTTYPE) var attachmentFmttype: Long?,
-        @ColumnInfo(name = COLUMN_ATTACHMENT_URI) var attachmentUri: Long?
+        @ColumnInfo(name = COLUMN_ATTACHMENT_ENCODING) var attachmentEncoding: String?,
+        @ColumnInfo(name = COLUMN_ATTACHMENT_FMTTYPE) var attachmentFmttype: String?,
+        @ColumnInfo(name = COLUMN_ATTACHMENT_URI) var attachmentUri: String?
 )
 

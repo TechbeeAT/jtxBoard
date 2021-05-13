@@ -199,7 +199,7 @@ class IcalViewViewModel(private val icalItemId: Long,
             val newNote = ICalObject.createNote("Audio Comment")
             val newNoteId = database.insertICalObject(newNote)
             database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newNote.uid))
-            val attachment = Attachment(icalObjectId = newNoteId, encoding = "?", value = audioBase64, fmttype = "?")
+            val attachment = Attachment.create3GPAttachment(newNoteId, audioBase64)
             database.insertAttachment(attachment)
         }
 

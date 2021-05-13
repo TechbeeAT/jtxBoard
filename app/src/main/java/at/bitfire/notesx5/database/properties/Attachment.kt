@@ -93,6 +93,10 @@ data class Attachment (
 {
     companion object Factory {
 
+        const val ENCODING_BASE64 = "BASE64"
+        const val FMTTYPE_AUDIO_3GPP = "audio/3gpp"
+
+
         /**
          * Create a new [Attachment] from the specified [ContentValues].
          *
@@ -108,6 +112,12 @@ data class Attachment (
                 return null
 
             return Attachment().applyContentValues(values)
+        }
+
+        fun create3GPAttachment(icalObjectId: Long, value: String): Attachment {
+
+            return Attachment(icalObjectId = icalObjectId, encoding = ENCODING_BASE64, fmttype = FMTTYPE_AUDIO_3GPP, value = value)
+
         }
     }
 
