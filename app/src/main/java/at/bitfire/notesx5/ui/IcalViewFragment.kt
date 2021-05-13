@@ -175,6 +175,26 @@ class IcalViewFragment : Fragment() {
                     commentBinding.viewCommentTextview.text = relatedNote.summary
                     if(relatedNote.attachmentValue?.isNotEmpty() == true) {
                         commentBinding.viewCommentPlaybutton.visibility = View.VISIBLE
+
+                        // TODO TRY Catch
+                        // Maybe ther's a better solution here anyway
+
+                        //playback on click
+                        commentBinding.viewCommentPlaybutton.setOnClickListener {
+
+                            val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
+                            fileName = "${requireContext().cacheDir}/cached_audiocomment.3gp"
+
+                            File(fileName).apply {
+                                writeBytes(fileBytestream)
+                                createNewFile()
+                            }
+
+                            startPlaying()
+
+                        }
+
+
                     }
                     commentBinding.root.setOnClickListener { view ->
                         view.findNavController().navigate(
