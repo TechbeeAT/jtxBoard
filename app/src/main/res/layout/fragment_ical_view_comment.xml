@@ -34,7 +34,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_play"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            android:contentDescription="@string/view_comment_playbutton_content_desc" />
 
         <TextView
             android:id="@+id/view_comment_textview"

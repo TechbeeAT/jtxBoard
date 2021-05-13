@@ -108,6 +108,8 @@
     <string name="view_fragment_audio_permission">App Permission</string>
     <string name="view_fragment_audio_permission_message">NOTESx5 needs the permission in order to record audio. Please grant the permission to use this feature.</string>
     <string name="view_fragment_audio_dialog_add_audio_note">Add Audio Note</string>
+    <string name="view_comment_playbutton_content_desc">Play audio comment</string>
+
 
 
     <string name="edit_attendees_roledialog_chair">Chair</string>
@@ -178,7 +180,6 @@
     <string name="shortcut_addJournal_longLabel">Add Journal</string>
     <string name="shortcut_addNote_longLabel">Add Note</string>
     <string name="shortcut_addTodo_longLabel">Add Todo</string>
-
 
 
 </resources>
