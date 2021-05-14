@@ -624,6 +624,9 @@ class IcalViewFragment : Fragment() {
             icalViewViewModel.icalEntity.value!!.category?.forEach { categories.add(it.text) }
             shareText += "Categories/Labels: ${categories.joinToString(separator=", ")}"
 
+            val attendees: MutableList<String> = mutableListOf()
+            icalViewViewModel.icalEntity.value!!.attendee?.forEach { attendees.add(it.caladdress) }
+
             // prepare file attachment, the file is stored in the externalCacheDir and then provided through a FileProvider
             var uri: Uri? = null
             try {
@@ -644,6 +647,8 @@ class IcalViewFragment : Fragment() {
                 putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.icalEntity.value!!.property.summary)
                 putExtra(Intent.EXTRA_TEXT, shareText)
                 putExtra(Intent.EXTRA_STREAM, uri)
+                putExtra(Intent.EXTRA_EMAIL, attendees.toTypedArray())
+
             }
 
             Log.d("shareIntent", shareText)
