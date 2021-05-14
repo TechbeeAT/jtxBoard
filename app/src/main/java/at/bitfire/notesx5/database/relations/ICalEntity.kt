@@ -61,28 +61,38 @@ data class ICalEntity (
 
                 var content = property.getICalStringHead()
                 content += property.getICalStringBody()
+
                 attendee?.forEach {  content += it.getICalString() }
+
                 if(category?.isNotEmpty() == true) {
                         content += "CATEGORIES:"
                         category?.forEach { content+= "${it.text}," }
-                        content += "\n"
+                        content += "\r\n"
                 }
+
                 comment?.forEach { content += it.getICalString() }
                 //contact?.forEach { content += it.getICalString() }
+
                 if(organizer != null)
                         content += organizer?.getICalString()
                 relatedto?.forEach { content += it.getICalString() }
 
-
-                /* if(resource?.isNotEmpty() == true) {
+                if(resource?.isNotEmpty() == true) {
                         content += "RESOURCES:"
                         resource?.forEach { content+= "${it.text}," }
-                        content += "\n"
-                }   */
+                        content += "\r\n"
+                }
 
-
+                attachment?.forEach {  content += it.getICalString() }
 
                 content += property.getICalStringEnd()
+
+                // replace(...) replaces every 75 characters with itself PLUS a line break and a space
+                // this is needed according to the ICAL specification
+                // see https://stackoverflow.com/questions/537174/putting-char-into-a-java-string-for-each-n-characters for technique
+                // see https://icalendar.org/iCalendar-RFC-5545/3-1-content-lines.html for content line restrictions
+                content = content.replace("(.{74})".toRegex(), "$1\r\n ")
+
                 return content
 
         }

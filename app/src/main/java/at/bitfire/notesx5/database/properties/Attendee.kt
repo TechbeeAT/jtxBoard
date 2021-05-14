@@ -200,33 +200,33 @@ data class Attendee (
 
         fun getICalString(): String {
 
-                var content = "ATTENDEE;"
+                var content = "ATTENDEE"
                 if (cutype?.isNotEmpty() == true)
-                        content += "CUTYPE=$cutype;"
+                        content += ";CUTYPE=$cutype"
                 if (member?.isNotEmpty() == true)
-                        content += "MEMBER=$member;"
+                        content += ";MEMBER=$member"
                 if (role?.isNotEmpty() == true)
-                        content += "ROLE=$role;"
+                        content += ";ROLE=$role"
                 if (partstat?.isNotEmpty() == true)
-                        content += "PARTSTAT=$partstat;"
+                        content += ";PARTSTAT=$partstat"
                 if (rsvp == true)
-                        content += "RSVP=$rsvp=TRUE;"
+                        content += ";RSVP=$rsvp=TRUE"
                 if (rsvp == false)
-                        content += "RSVP=$rsvp=FALSE;"
+                        content += ";RSVP=$rsvp=FALSE"
                 if (delegatedto?.isNotEmpty() == true)
-                        content += "DELEGATED-TO=\"$delegatedto\";"
+                        content += ";DELEGATED-TO=\"$delegatedto\""
                 if (delegatedfrom?.isNotEmpty() == true)
-                        content += "DELEGATED-FROM=\"$delegatedfrom\";"        // TODO: multiple delegates should get each a ""
+                        content += ";DELEGATED-FROM=\"$delegatedfrom\""        // TODO: multiple delegates should get each a ""
                 if (sentby?.isNotEmpty() == true)
-                        content += "SENT-BY=\"$sentby\";"
+                        content += ";SENT-BY=\"$sentby\""
                 if (cn?.isNotEmpty() == true)
-                        content += "CN=\"$cn\";"
+                        content += ";CN=\"$cn\""
                 if (dir?.isNotEmpty() == true)
-                        content += "DIR=\"$dir\";"
+                        content += ";DIR=\"$dir\""
                 if (language?.isNotEmpty() == true)
-                        content += "LANGUAGE=$language;"
+                        content += ";LANGUAGE=$language"
                 //other params are not considered yet
-                content += ":$caladdress\n"
+                content += ":$caladdress\r\n"
 
                 return content
         }

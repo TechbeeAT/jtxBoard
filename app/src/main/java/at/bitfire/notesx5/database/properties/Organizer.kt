@@ -132,17 +132,17 @@ data class Organizer (
 
         fun getICalString(): String {
 
-                var content = "ORGANIZER;"
+                var content = "ORGANIZER"
                 if (cn?.isNotEmpty() == true)
-                        content += "CN=\"$cn\";"
+                        content += ";CN=\"$cn\""
                 if (dir?.isNotEmpty() == true)
-                        content += "DIR=\"$dir\";"
+                        content += ";DIR=\"$dir\""
                 if (sentby?.isNotEmpty() == true)
-                        content += "SENT-BY=\"$sentby\";"
+                        content += ";SENT-BY=\"$sentby\""
                 if (language?.isNotEmpty() == true)
-                        content += "LANGUAGE=$language;"
+                        content += ";LANGUAGE=$language"
                 //other params are not considered yet
-                content += ":$caladdress\n"
+                content += ":$caladdress\r\n"
 
                 return content
         }

@@ -118,8 +118,8 @@ data class Relatedto (
 
                 var content = "RELATED-TO"
                 if (reltype?.isNotEmpty() == true)
-                        content += "RELTYPE=$reltype;"
-                content += ":$text\n"
+                        content += ";RELTYPE=$reltype"
+                content += ":$text\r\n"
 
                 return content
         }

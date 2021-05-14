@@ -449,46 +449,46 @@ data class ICalObject(
     }
 
     fun getICalStringHead(): String {
-        return "BEGIN:VCALENDAR\n" +
-                "VERSION:2.0\n" +
-                "PRODID:-//bitfire.at//NOTESx5 v1.0//EN\n"
+        return "BEGIN:VCALENDAR\r\n" +
+                "VERSION:2.0\r\n" +
+                "PRODID:-//bitfire.at//NOTESx5 v1.0//EN\r\n"
     }
 
     fun getICalStringBody(): String  {
 
-        var content = "BEGIN:$component\n"
-        content+= "UID:$uid\n"
-        content+= "DTSTAMP${convertLongToICalDateTime(dtstamp, null)}\n"
+        var content = "BEGIN:$component\r\n"
+        content+= "UID:$uid\r\n"
+        content+= "DTSTAMP${convertLongToICalDateTime(dtstamp, null)}\r\n"
         if(component == Component.VTODO.name && due != null)
-            content+= "DUE;VALUE=DATE${convertLongToICalDateTime(due, dueTimezone)}\n"
-        content+= "SUMMARY:$summary\n"
-        if (description?.isNotEmpty() == true) { content+= "DESCRIPTION:$description\n"  }
-        if (dtstart != null)  { content+= "DTSTART${convertLongToICalDateTime(dtstart , dtstartTimezone)}\n" }
-        if (dtend != null)    { content+= "DTEND${convertLongToICalDateTime(dtend, dtendTimezone)}\n" }
-        content+= "CLASS:$classification\n"
-        content+= "STATUS:$status\n"
-        if (url?.isNotEmpty() == true) { content+= "URL:$url\n"}
-        if (contact?.isNotEmpty() == true)  { content+= "CONTACT:$contact\n"}
+            content+= "DUE;VALUE=DATE${convertLongToICalDateTime(due, dueTimezone)}\r\n"
+        content+= "SUMMARY:$summary\r\n"
+        if (description?.isNotEmpty() == true) { content+= "DESCRIPTION:$description\r\n"  }
+        if (dtstart != null)  { content+= "DTSTART${convertLongToICalDateTime(dtstart , dtstartTimezone)}\r\n" }
+        if (dtend != null)    { content+= "DTEND${convertLongToICalDateTime(dtend, dtendTimezone)}\r\n" }
+        content+= "CLASS:$classification\r\n"
+        content+= "STATUS:$status\r\n"
+        if (url?.isNotEmpty() == true) { content+= "URL:$url\r\n"}
+        if (contact?.isNotEmpty() == true)  { content+= "CONTACT:$contact\r\n"}
         if(geoLat != null && geoLong != null)
-            content+= "GEO:$geoLat;$geoLong\n"
-        if (location?.isNotEmpty() == true) { content+= "LOCATION:$location\n"}
-        if (percent != null) { content+= "PERCENT-COMPLETE:$percent\n"}
-        if (priority != null) { content+= "PRIORITY:$priority\n"}
+            content+= "GEO:$geoLat;$geoLong\r\n"
+        if (location?.isNotEmpty() == true) { content+= "LOCATION:$location\r\n"}
+        if (percent != null) { content+= "PERCENT-COMPLETE:$percent\r\n"}
+        if (priority != null) { content+= "PRIORITY:$priority\r\n"}
         if(component == Component.VTODO.name && completed != null)
-            content+= "COMPLETED:${convertLongToICalDateTime(completed, completedTimezone)}\n"
+            content+= "COMPLETED:${convertLongToICalDateTime(completed, completedTimezone)}\r\n"
         if(component == Component.VTODO.name && duration?.isNotEmpty() == true)
-            content+= "DURATION:$duration\n"
-        content+= "CREATED${convertLongToICalDateTime(lastModified, null)}\n"
-        content+= "LAST-MODIFIED${convertLongToICalDateTime(lastModified, null)}\n"
-        content+= "SEQUENCE:$sequence\n"
-        if (color != null)  { content+= "COLOR:$color\n" }
-        //other.let {content+= "OTHER:$it\n"}
+            content+= "DURATION:$duration\r\n"
+        content+= "CREATED${convertLongToICalDateTime(lastModified, null)}\r\n"
+        content+= "LAST-MODIFIED${convertLongToICalDateTime(lastModified, null)}\r\n"
+        content+= "SEQUENCE:$sequence\r\n"
+        if (color != null)  { content+= "COLOR:$color\r\n" }
+        //other.let {content+= "OTHER:$it\r\n"}
 
         return content
     }
 
     fun getICalStringEnd(): String {
-        return "END:$component\n"
+        return "END:$component\r\n"
     }
 
 

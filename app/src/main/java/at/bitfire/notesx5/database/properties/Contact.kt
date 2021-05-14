@@ -117,10 +117,10 @@ data class Contact (
 
                 var content = "CONTACT"
                 if (altrep?.isNotEmpty() == true)
-                        content += "ALTREP=\"$altrep\";"
+                        content += ";ALTREP=\"$altrep\""
                 if (language?.isNotEmpty() == true)
-                        content += "LANGUAGE=$language;"
-                content += ":$text\n"
+                        content += ";LANGUAGE=$language"
+                content += ":$text\r\n"
 
                 return content
         }

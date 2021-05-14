@@ -15,13 +15,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
+import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.util.Base64
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -343,7 +346,7 @@ class IcalViewFragment : Fragment() {
                                 val file = File(fileName)
                                 Log.d("Filesize", file.length().toString())
                                 val fileBase64 =
-                                    Base64.encodeToString(file.readBytes(), Base64.DEFAULT)
+                                    Base64.encodeToString(file.readBytes(), Base64.NO_WRAP)
                                 Log.d("Base64", fileBase64)
                                 icalViewViewModel.insertRelatedAudioNote(fileBase64)
                             }
@@ -615,15 +618,32 @@ class IcalViewFragment : Fragment() {
             var shareText = "${convertLongToDateString(icalViewViewModel.icalEntity.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart)}\n"
             shareText += "${icalViewViewModel.icalEntity.value!!.property.summary}\n\n"
             shareText += "${icalViewViewModel.icalEntity.value!!.property.description}\n\n"
-            shareText += icalViewViewModel.icalEntity.value!!.getICalString()
-            //todo add category again
-            //shareText += "Categories/Labels: ${vJournalItemViewModel.vJournal.value!!.vCategory}"
+            //shareText += icalViewViewModel.icalEntity.value!!.getICalString()
+
+            val categories: MutableList<String> = mutableListOf()
+            icalViewViewModel.icalEntity.value!!.category?.forEach { categories.add(it.text) }
+            shareText += "Categories/Labels: ${categories.joinToString(separator=", ")}"
+
+            // prepare file attachment, the file is stored in the externalCacheDir and then provided through a FileProvider
+            var uri: Uri? = null
+            try {
+                val icsFileName = "${requireContext().externalCacheDir}/ics_file.ics"
+                val icsFile = File(icsFileName).apply {
+                    writeText(icalViewViewModel.icalEntity.value!!.getICalString())
+                    createNewFile()
+                }
+                uri = getUriForFile(requireContext(),"at.bitfire.notesx5.fileprovider", icsFile)
+            } catch (e: Exception) {
+                Log.i("fileprovider", "Failed to attach ICS File")
+                Toast.makeText(requireContext(), "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
+            }
 
             val shareIntent = Intent().apply {
                 action = Intent.ACTION_SEND
                 type = "text/plain"
                 putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.icalEntity.value!!.property.summary)
                 putExtra(Intent.EXTRA_TEXT, shareText)
+                putExtra(Intent.EXTRA_STREAM, uri)
             }
 
             Log.d("shareIntent", shareText)
