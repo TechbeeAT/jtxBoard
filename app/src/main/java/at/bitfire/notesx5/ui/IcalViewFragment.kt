@@ -177,7 +177,7 @@ class IcalViewFragment : Fragment() {
 
                     val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
                     commentBinding.viewCommentTextview.text = relatedNote.summary
-                    if(relatedNote.attachmentValue?.isNotEmpty() == true && relatedNote.attachmentEncoding == Attachment.ENCODING_BASE64 && relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_3GPP) {
+                    if(relatedNote.attachmentValue?.isNotEmpty() == true && relatedNote.attachmentEncoding == Attachment.ENCODING_BASE64 && (relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_MP4_AAC || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_3GPP)) {
                         commentBinding.viewCommentPlaybutton.visibility = View.VISIBLE
 
                         // TODO TRY Catch
@@ -194,7 +194,7 @@ class IcalViewFragment : Fragment() {
                             } else {
                                 // write the base64 decoded Bytestream in a file and use it as an input for the player
                                 val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
-                                fileName = "${requireContext().cacheDir}/cached_audiocomment.3gp"
+                                fileName = "${requireContext().cacheDir}/cached_audiocomment.mp4"
 
                                 File(fileName).apply {
                                     writeBytes(fileBytestream)
@@ -284,7 +284,7 @@ class IcalViewFragment : Fragment() {
                 audioDialogBinding.viewAudioDialogStartrecordingFab.setOnClickListener {
 
                     if(!recording) {
-                        fileName = "${requireContext().cacheDir}/recorded.3gp"
+                        fileName = "${requireContext().cacheDir}/recorded.mp4"
                         audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
                         startRecording()
                         audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = false
@@ -674,9 +674,9 @@ class IcalViewFragment : Fragment() {
     private fun startRecording() {
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setOutputFile(fileName)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setMaxDuration(60000)
 
             try {

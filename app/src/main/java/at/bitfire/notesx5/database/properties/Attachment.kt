@@ -122,6 +122,8 @@ data class Attachment (
 
         const val ENCODING_BASE64 = "BASE64"
         const val FMTTYPE_AUDIO_3GPP = "audio/3gpp"
+        const val FMTTYPE_AUDIO_MP4_AAC = "audio/aac"
+
 
         const val ATTACHMENT_DIR = "attachments"
 
@@ -145,7 +147,7 @@ data class Attachment (
 
         fun create3GPAttachment(icalObjectId: Long, value: String): Attachment {
 
-            return Attachment(icalObjectId = icalObjectId, encoding = ENCODING_BASE64, fmttype = FMTTYPE_AUDIO_3GPP, value = value)
+            return Attachment(icalObjectId = icalObjectId, encoding = ENCODING_BASE64, fmttype = FMTTYPE_AUDIO_MP4_AAC, value = value)
 
         }
 
@@ -202,7 +204,8 @@ data class Attachment (
         if (value?.isNotEmpty() == true)
             content += ";VALUE=BINARY:$value"
         if (uri?.isNotEmpty() == true)
-            uri += ":$uri\r\n"
+            uri += ":$uri"
+        content += "\r\n"
 
         return content
     }
