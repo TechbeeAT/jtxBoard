@@ -31,6 +31,7 @@ import com.google.android.material.navigation.NavigationView
 const val CONTACT_READ_PERMISSION_CODE = 100   // this is necessary for the app permission, 100 ist just a freely chosen value
 const val RECORD_AUDIO_PERMISSION_CODE = 200   // this is necessary for the app permission, 200 ist just a freely chosen value
 
+const val PICKFILE_RESULT_CODE = 301
 
 
 /**

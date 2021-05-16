@@ -230,6 +230,14 @@ DELETEs by Object
     fun deleteComment(comment: Comment)
 
     /**
+     * Delete an attachment by the object.
+     *
+     * @param attachment The object of the attachment that should be deleted.
+     */
+    @Delete
+    fun deleteAttachment(attachment: Attachment)
+
+    /**
      * Delete a relatedto by the object.
      *
      * @param rel The object of the relatedto that should be deleted.

@@ -1002,6 +1002,66 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
+        <TextView
+            android:id="@+id/edit_attachments_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/view_attachments_header"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_comment_add"
+            android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+            app:drawableStartCompat="@drawable/ic_attachment"
+            android:drawablePadding="8dp"
+            />
+
+
+        <LinearLayout
+            android:id="@+id/edit_attachments_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:divider="?android:dividerHorizontal"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_attachments_header"
+            android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+            >
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true">
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/button_attachment_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:layout_weight="1"
+            android:text="@string/edit_attachment_button_text"
+            android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+            app:icon="@drawable/ic_attachment_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_attachments_linearlayout" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -16,8 +16,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.OpenableColumns
 import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -33,12 +35,14 @@ import at.bitfire.notesx5.*
 import at.bitfire.notesx5.NotificationPublisher
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
+import at.bitfire.notesx5.databinding.FragmentIcalEditAttachmentBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditCommentBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditSubtaskBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import java.io.File
 import java.text.DateFormat
 import java.util.*
 
@@ -54,6 +58,7 @@ class IcalEditFragment : Fragment(),
     private lateinit var viewModelFactory: IcalEditViewModelFactory
     private lateinit var icalEditViewModel: IcalEditViewModel
     private lateinit var inflater: LayoutInflater
+    private var container: ViewGroup? = null
 
     private val allContactsMail: MutableList<String> = mutableListOf()
     //private val allContactsNameAndMail: MutableList<String> = mutableListOf()
@@ -82,6 +87,7 @@ class IcalEditFragment : Fragment(),
 
         this.inflater = inflater
         this.binding = FragmentIcalEditBinding.inflate(inflater, container, false)
+        this.container = container
         this.application = requireNotNull(this.activity).application
 
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
@@ -369,7 +375,7 @@ class IcalEditFragment : Fragment(),
                 return@observe
 
             it.forEach { singleSubtask ->
-                addSubtasksView(singleSubtask, container)
+                addSubtasksView(singleSubtask)
             }
         }
 
@@ -379,7 +385,11 @@ class IcalEditFragment : Fragment(),
 
 
         icalEditViewModel.iCalEntity.comment?.forEach { singleComment ->
-            addCommentView(singleComment, container)
+            addCommentView(singleComment)
+        }
+
+        icalEditViewModel.iCalEntity.attachment?.forEach { singleAttachment ->
+            addAttachmentView(singleAttachment)
         }
 
         icalEditViewModel.iCalEntity.category?.forEach { singleCategory ->
@@ -597,7 +607,7 @@ class IcalEditFragment : Fragment(),
             // Respond to end icon presses
             val newComment = Comment(text = binding.editCommentAdd.editText?.text.toString())
             icalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
-            addCommentView(newComment, container)      // add the new comment
+            addCommentView(newComment)      // add the new comment
             binding.editCommentAdd.editText?.text?.clear()  // clear the field
 
         }
@@ -609,7 +619,7 @@ class IcalEditFragment : Fragment(),
                 EditorInfo.IME_ACTION_DONE -> {
                     val newComment = Comment(text = binding.editCommentAdd.editText?.text.toString())
                     icalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
-                    addCommentView(newComment, container)      // add the new comment
+                    addCommentView(newComment)      // add the new comment
                     binding.editCommentAdd.editText?.text?.clear()  // clear the field
                     true
                 }
@@ -617,11 +627,20 @@ class IcalEditFragment : Fragment(),
             }
         }
 
+
+        binding.buttonAttachmentAdd.setOnClickListener {
+            var chooseFile = Intent(Intent.ACTION_GET_CONTENT)
+            chooseFile.type = "*/*"
+            chooseFile = Intent.createChooser(chooseFile, "Choose a file")
+            startActivityForResult(chooseFile, PICKFILE_RESULT_CODE)
+        }
+
+
         binding.editSubtasksAdd.setEndIconOnClickListener {
             // Respond to end icon presses
             val newSubtask = ICalObject.createSubtask(summary = binding.editSubtasksAdd.editText?.text.toString())
             icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
-            addSubtasksView(newSubtask, container)      // add the new comment
+            addSubtasksView(newSubtask)      // add the new comment
             binding.editSubtasksAdd.editText?.text?.clear()  // clear the field
 
         }
@@ -633,7 +652,7 @@ class IcalEditFragment : Fragment(),
                 EditorInfo.IME_ACTION_DONE -> {
                     val newSubtask = ICalObject.createSubtask(summary = binding.editSubtasksAdd.editText?.text.toString())
                     icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
-                    addSubtasksView(newSubtask, container)      // add the new comment
+                    addSubtasksView(newSubtask)      // add the new comment
                     binding.editSubtasksAdd.editText?.text?.clear()  // clear the field
                     true
                 }
@@ -701,7 +720,6 @@ class IcalEditFragment : Fragment(),
             if ((binding.editAttendeesAdd.editText?.text?.isNotBlank() == true && !isValidEmail(binding.editAttendeesAdd.editText?.text.toString())))
                 icalEditViewModel.attendeesError.value = "Please enter a valid E-Mail address"
         }
-
 
         return binding.root
     }
@@ -926,7 +944,7 @@ class IcalEditFragment : Fragment(),
     }
 
 
-    private fun addCommentView(comment: Comment, container: ViewGroup?) {
+    private fun addCommentView(comment: Comment) {
 
         val bindingComment = FragmentIcalEditCommentBinding.inflate(inflater, container, false)
         bindingComment.editCommentTextview.text = comment.text
@@ -971,8 +989,23 @@ class IcalEditFragment : Fragment(),
 
 
 
+
+    private fun addAttachmentView(attachment: Attachment) {
+
+        val bindingAttachment = FragmentIcalEditAttachmentBinding.inflate(inflater, container, false)
+        bindingAttachment.editAttachmentTextview.text = "${attachment.filename}"
+        binding.editAttachmentsLinearlayout.addView(bindingAttachment.root)
+
+        // delete the attachment on click on the X
+        bindingAttachment.editAttachmentDelete.setOnClickListener {
+            icalEditViewModel.attachmentDeleted.add(attachment)
+            bindingAttachment.root.visibility = View.GONE
+        }
+    }
+
+
     @SuppressLint("SetTextI18n")
-    private fun addSubtasksView(subtask: ICalObject?, container: ViewGroup?) {
+    private fun addSubtasksView(subtask: ICalObject?) {
 
         if (subtask == null)
             return
@@ -1153,4 +1186,57 @@ class IcalEditFragment : Fragment(),
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.set(AlarmManager.RTC_WAKEUP, due, pendingIntent)
     }
+
+
+    // callback for Intents, now used for the filepicker to handle the file
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        when (requestCode) {
+            PICKFILE_RESULT_CODE -> if (resultCode == Activity.RESULT_OK) {
+                val fileUri = intent?.data
+                val filePath = fileUri?.path
+                Log.d("fileUri", fileUri.toString())
+                Log.d("filePath", filePath.toString())
+                Log.d("fileName", fileUri?.lastPathSegment.toString())
+
+                val mimeType = fileUri?.let { returnUri ->
+                    requireContext().contentResolver.getType(returnUri)
+                }
+
+                var filesize: Long? = null
+                var filename: String? = null
+                var fileextension: String? = null
+                fileUri?.let { returnUri ->
+                    requireContext().contentResolver.query(returnUri, null, null, null, null)
+                }?.use { cursor ->
+                    // Get the column indexes of the data in the Cursor, move to the first row in the Cursor, get the data, and display it.
+                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+                    cursor.moveToFirst()
+                    filename = cursor.getString(nameIndex)
+                    filesize = cursor.getLong(sizeIndex)
+                    fileextension = "." + filename?.substringAfterLast('.', "")
+                }
+
+
+                if(filePath?.isNotEmpty() == true) {
+                    //val newFilePath = "${}/${System.currentTimeMillis()}$fileextension"
+                    val newFile = File(Attachment.getAttachmentDirectory(requireContext()), "${System.currentTimeMillis()}$fileextension")
+                    newFile.createNewFile()
+
+                    val stream = requireContext().contentResolver.openInputStream(fileUri)
+                    if (stream != null) {
+                        newFile.writeBytes(stream.readBytes())
+
+                        val newAttachment = Attachment(encoding = Attachment.ENCODING_BASE64, fmttype = mimeType, uri = "/${Attachment.ATTACHMENT_DIR}/${newFile.name}", filename = filename, extension = fileextension, filesize = filesize )
+                        icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
+                        addAttachmentView(newAttachment)      // add the new attachment
+                        stream.close()
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, intent)
+
+    }
+
 }

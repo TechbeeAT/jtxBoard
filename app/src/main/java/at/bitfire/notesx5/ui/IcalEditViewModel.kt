@@ -41,6 +41,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
+    var attachmentUpdated: MutableList<Attachment> = mutableListOf(Attachment())
     var attendeeUpdated: MutableList<Attendee> = mutableListOf(Attendee())
     var resourceUpdated: MutableList<Resource> = mutableListOf(Resource())
     var subtaskUpdated: MutableList<ICalObject> = mutableListOf()
@@ -48,6 +49,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     var categoryDeleted: MutableList<Category> = mutableListOf(Category())
     var commentDeleted: MutableList<Comment> = mutableListOf(Comment())
+    var attachmentDeleted: MutableList<Attachment> = mutableListOf(Attachment())
     var attendeeDeleted: MutableList<Attendee> = mutableListOf(Attendee())
     var resourceDeleted: MutableList<Resource> = mutableListOf(Resource())
     var subtaskDeleted: MutableList<ICalObject> = mutableListOf()
@@ -66,6 +68,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var categoriesVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var attendeesVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var commentsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var attachmentsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var progressVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var priorityVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var subtasksVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
@@ -168,6 +171,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         categoriesVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name || showAll.value == true)
         attendeesVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name || showAll.value == true)
         commentsVisible.postValue((iCalEntity.property.module == Module.JOURNAL.name && showAll.value == true) || showAll.value == true)
+        attachmentsVisible.postValue((iCalEntity.property.module == Module.JOURNAL.name && showAll.value == true) || showAll.value == true)
         progressVisible.postValue(iCalEntity.property.module == Module.TODO.name)
         priorityVisible.postValue(iCalEntity.property.module == Module.TODO.name)
         subtasksVisible.postValue(iCalEntity.property.module == Module.TODO.name)
@@ -205,6 +209,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
         commentUpdated.removeAll(commentDeleted)    // make sure to not accidentially upsert a comment that was deleted
         categoryUpdated.removeAll(categoryDeleted)  // make sure to not accidentially upsert a category that was deleted
+        attachmentUpdated.removeAll(attachmentDeleted)  // make sure to not accidentially upsert a category that was deleted
         attendeeUpdated.removeAll(attendeeDeleted)  // make sure to not accidentially upsert a attendee that was deleted
         subtaskUpdated.removeAll(subtaskDeleted)
         resourceUpdated.removeAll(resourceDeleted)
@@ -220,9 +225,13 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
                 database.deleteComment(com2del)
                 Log.println(Log.INFO, "Comment", "${com2del.text} deleted")
             }
+            attachmentDeleted.forEach { att2del ->
+                database.deleteAttachment(att2del)
+                Log.println(Log.INFO, "Attachment", "Attachment deleted")
+            }
             attendeeDeleted.forEach { att2del ->
                 database.deleteAttendee(att2del)
-                Log.println(Log.INFO, "Comment", "${att2del.caladdress} deleted")
+                Log.println(Log.INFO, "Attendee", "${att2del.caladdress} deleted")
             }
             subtaskDeleted.forEach { subtask2del ->
                 viewModelScope.launch(Dispatchers.IO) {
@@ -243,11 +252,15 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
             categoryUpdated.forEach { newCategory ->
                 newCategory.icalObjectId = insertedOrUpdatedItemId
                 database.insertCategory(newCategory)
-                }
+            }
             commentUpdated.forEach { newComment ->
                 newComment.icalObjectId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
                 database.insertComment(newComment)
-                }
+            }
+            attachmentUpdated.forEach { newAttachment ->
+                newAttachment.icalObjectId = insertedOrUpdatedItemId                    //Update the foreign key for newly added attachments
+                database.insertAttachment(newAttachment)
+            }
             attendeeUpdated.forEach { newAttendee ->
                 newAttendee.icalObjectId = insertedOrUpdatedItemId
                 database.insertAttendee(newAttendee)

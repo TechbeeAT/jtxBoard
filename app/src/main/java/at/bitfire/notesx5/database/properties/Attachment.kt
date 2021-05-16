@@ -9,13 +9,17 @@
 package at.bitfire.notesx5.database.properties
 
 import android.content.ContentValues
+import android.content.Context
 import android.os.Parcelable
 import android.provider.BaseColumns
+import android.util.Log
 import androidx.annotation.Nullable
 import androidx.room.*
 import at.bitfire.notesx5.database.COLUMN_ID
 import at.bitfire.notesx5.database.ICalObject
 import kotlinx.parcelize.Parcelize
+import java.io.File
+
 
 /** The name of the the table for Attachments that are linked to an ICalObject.
  * [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]*/
@@ -66,7 +70,26 @@ const val COLUMN_ATTACHMENT_FMTTYPE = "fmttype"
  */
 const val COLUMN_ATTACHMENT_OTHER = "other"
 
+/**
+ * Purpose:  To specify the filename for the attachment.
+ * not in RFC-5545
+ * Type: [String]
+ */
+const val COLUMN_ATTACHMENT_FILENAME = "filename"
 
+/**
+ * Purpose:  To specify the extension for the attachment including "." (eg. ".pdf").
+ * not in RFC-5545
+ * Type: [String]
+ */
+const val COLUMN_ATTACHMENT_EXTENSION = "extension"
+
+/**
+ * Purpose:  To specify the filesize for the attachment in Bytes.
+ * not in RFC-5545
+ * Type: [Long]
+ */
+const val COLUMN_ATTACHMENT_FILESIZE = "filesize"
 
 
 @Parcelize
@@ -86,7 +109,11 @@ data class Attachment (
         @ColumnInfo(name = COLUMN_ATTACHMENT_ENCODING)                 var encoding: String? = null,
         @ColumnInfo(name = COLUMN_ATTACHMENT_VALUE)               var value: String? = null,
         @ColumnInfo(name = COLUMN_ATTACHMENT_FMTTYPE)               var fmttype: String? = null,
-        @ColumnInfo(name = COLUMN_ATTACHMENT_OTHER)                      var other: String? = null
+        @ColumnInfo(name = COLUMN_ATTACHMENT_OTHER)                      var other: String? = null,
+        @ColumnInfo(name = COLUMN_ATTACHMENT_FILENAME)                      var filename: String? = null,
+        @ColumnInfo(name = COLUMN_ATTACHMENT_EXTENSION)                      var extension: String? = null,
+        @ColumnInfo(name = COLUMN_ATTACHMENT_FILESIZE)                      var filesize: Long? = null
+
 ): Parcelable
 
 
@@ -95,6 +122,8 @@ data class Attachment (
 
         const val ENCODING_BASE64 = "BASE64"
         const val FMTTYPE_AUDIO_3GPP = "audio/3gpp"
+
+        const val ATTACHMENT_DIR = "attachments"
 
 
         /**
@@ -119,6 +148,29 @@ data class Attachment (
             return Attachment(icalObjectId = icalObjectId, encoding = ENCODING_BASE64, fmttype = FMTTYPE_AUDIO_3GPP, value = value)
 
         }
+
+
+        /**
+         * Returns the directory with the attachments.
+         * If the folder doesn't exist, it will be created.
+         * This function is necessary, as the user might
+         * choose to put the application to the external storage,
+         * the files must still be stored and retrieved from the right place
+         */
+        fun getAttachmentDirectory(context: Context): String? {
+
+            val filePath = "${context.filesDir}/$ATTACHMENT_DIR"
+            val file = File(filePath)
+
+            if (!file.exists()) {
+                if (!file.mkdirs()) {
+                    Log.e("Attachment", "Failed creating attachment directory")
+                    return null
+                }
+            }
+
+            return filePath
+        }
     }
 
     fun applyContentValues(values: ContentValues): Attachment {
@@ -129,6 +181,12 @@ data class Attachment (
         values.getAsString(COLUMN_ATTACHMENT_VALUE)?.let { value -> this.value = value }
         values.getAsString(COLUMN_ATTACHMENT_FMTTYPE)?.let { fmttype -> this.fmttype = fmttype }
         values.getAsString(COLUMN_ATTACHMENT_OTHER)?.let { other -> this.other = other }
+        values.getAsString(COLUMN_ATTACHMENT_FILENAME)?.let { filename -> this.filename = filename }
+        values.getAsString(COLUMN_ATTACHMENT_EXTENSION)?.let { extension -> this.extension = extension }
+        values.getAsLong(COLUMN_ATTACHMENT_FILESIZE)?.let { filesize -> this.filesize = filesize }
+
+
+        // TODO: make sure that the additional fields are filled out (filename, filesize and extension)
 
         return this
     }
@@ -148,6 +206,7 @@ data class Attachment (
 
         return content
     }
+
 }
 
 
