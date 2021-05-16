@@ -10,6 +10,7 @@
 
 
 
+
     <!-- app theme -->
     <!-- see https://github.com/material-components/material-components-android/blob/master/docs/theming/Color.md for component color names -->
 
@@ -30,10 +31,10 @@
 
         <item name="colorError">@color/errorColor</item>
         <item name="colorOnError">@color/colorOnError</item>
-
+-->
         <item name="android:colorBackground">@color/backgroundColor</item>
         <item name="colorSurface">@android:color/white</item>
--->
+
 
     </style>
 
