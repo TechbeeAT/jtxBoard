@@ -558,6 +558,40 @@
 
 
             <TextView
+                android:id="@+id/view_attachments_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
+                android:text="@string/view_attachments_header"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+                app:drawableStartCompat="@drawable/ic_attachment"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_comments_linearlayout" />
+
+
+            <LinearLayout
+                android:id="@+id/view_attachments_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:divider="?android:dividerHorizontal"
+                android:orientation="vertical"
+                android:showDividers="middle"
+                android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_attachments_header">
+
+            </LinearLayout>
+
+
+            <TextView
                 android:id="@+id/view_feedback_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -569,7 +603,7 @@
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_feedback"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_comments_linearlayout" />
+                app:layout_constraintTop_toBottomOf="@id/view_attachments_linearlayout" />
 
 
             <LinearLayout

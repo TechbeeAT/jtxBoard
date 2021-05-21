@@ -12,6 +12,7 @@ import android.Manifest
 import android.app.AlertDialog
 import android.app.Application
 import android.content.Intent
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
@@ -149,6 +150,43 @@ class IcalViewFragment : Fragment() {
                     val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
                     commentBinding.viewCommentTextview.text = comment.text
                     binding.viewCommentsLinearlayout.addView(commentBinding.root)
+                }
+
+                binding.viewAttachmentsLinearlayout.removeAllViews()
+                icalViewViewModel.icalEntity.value!!.attachment?.forEach { attachment ->
+                    val attachmentBinding = FragmentIcalViewAttachmentBinding.inflate(inflater, container, false)
+
+                    //open the attachment on click
+                    attachmentBinding.viewAttachmentCardview.setOnClickListener {
+                        var uri: Uri? = null
+                        try {
+                            val fileName = "${requireContext().filesDir}/${attachment.uri}"
+                            val icsFile = File(fileName)
+                            uri = getUriForFile(requireContext(),"at.bitfire.notesx5.fileprovider", icsFile)
+
+                            val intent = Intent()
+                            intent.action = Intent.ACTION_VIEW
+                            intent.setDataAndType(uri, attachment.fmttype)
+                            intent.flags = FLAG_GRANT_READ_URI_PERMISSION
+                            startActivity(intent)
+
+                        } catch (e: Exception) {
+                            Log.i("fileprovider", "Failed to retrieve file")
+                            Toast.makeText(requireContext(), "Failed to retrieve file.", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+                    if (attachment.filename!!.isNotEmpty())
+                        attachmentBinding.viewAttachmentTextview.text = attachment.filename
+                    else
+                        attachmentBinding.viewAttachmentTextview.text = attachment.fmttype
+                    when {
+                        attachment.filesize == null -> attachmentBinding.viewAttachmentFilesize.visibility = View.GONE
+                        attachment.filesize!! < 1024 -> attachmentBinding.viewAttachmentFilesize.text = "${attachment.filesize!! } Bytes"
+                        attachment.filesize!!/1024 < 1024 -> attachmentBinding.viewAttachmentFilesize.text = "${attachment.filesize!! /1024} KB"
+                        else  -> attachmentBinding.viewAttachmentFilesize.text = "${attachment.filesize!! /1024/1024} MB"
+                    }
+                    binding.viewAttachmentsLinearlayout.addView(attachmentBinding.root)
                 }
 
                 if (it.ICalCollection?.color != null) {

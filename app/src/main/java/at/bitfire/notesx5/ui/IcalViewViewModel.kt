@@ -42,6 +42,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var organizerVisible: LiveData<Boolean>
     lateinit var contactVisible: LiveData<Boolean>
     lateinit var commentsVisible: LiveData<Boolean>
+    lateinit var attachmentsVisible: LiveData<Boolean>
     lateinit var relatedtoVisible: LiveData<Boolean>
     lateinit var progressVisible: LiveData<Boolean>
     lateinit var priorityVisible: LiveData<Boolean>
@@ -158,7 +159,10 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map subtasks?.isNotEmpty()      // true if relatedto is NOT null or empty
             }
             commentsVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.comment.isNullOrEmpty()      // true if relatedto is NOT null or empty
+                return@map !item?.comment.isNullOrEmpty()      // true if comment is NOT null or empty
+            }
+            attachmentsVisible = Transformations.map(icalEntity) { item ->
+                return@map !item?.attachment.isNullOrEmpty()      // true if attachment is NOT null or empty
             }
             progressVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.percent != null && item.property.component == Component.VTODO.name     // true if percent (progress) is NOT null
