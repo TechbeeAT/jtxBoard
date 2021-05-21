@@ -9,6 +9,7 @@
 package at.bitfire.notesx5.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Application
 import android.content.Intent
@@ -74,6 +75,7 @@ class IcalViewFragment : Fragment() {
 
 
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
@@ -157,7 +159,7 @@ class IcalViewFragment : Fragment() {
 
                     //open the attachment on click
                     attachmentBinding.viewAttachmentCardview.setOnClickListener {
-                        var uri: Uri? = null
+                        val uri: Uri?
                         try {
                             val fileName = "${requireContext().filesDir}/${attachment.uri}"
                             val icsFile = File(fileName)
@@ -371,7 +373,7 @@ class IcalViewFragment : Fragment() {
                         .setTitle(getString(R.string.view_fragment_audio_dialog_add_audio_note))
                         //.setMessage(getString(R.string.view_fragment_audio_permission_message))
                         .setView(audioDialogBinding.root)
-                        .setPositiveButton("Save") { dialog, which ->
+                        .setPositiveButton("Save") { _, _ ->
                             stopRecording()
                             stopPlaying()
 
@@ -402,7 +404,7 @@ class IcalViewFragment : Fragment() {
                                 }
                             }
                         }
-                        .setNegativeButton("Discard") { dialog, which ->
+                        .setNegativeButton("Discard") { _, _ ->
                             stopRecording()
                             stopPlaying()
                         }
@@ -412,10 +414,10 @@ class IcalViewFragment : Fragment() {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(getString(R.string.view_fragment_audio_permission))
                     .setMessage(getString(R.string.view_fragment_audio_permission_message))
-                    .setPositiveButton("Ok") { dialog, which ->
+                    .setPositiveButton("Ok") { _, _ ->
                         ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_CODE)
                     }
-                    .setNegativeButton("Cancel") { dialog, which -> }
+                    .setNegativeButton("Cancel") { _, _ -> }
                     .show()
             }
 
