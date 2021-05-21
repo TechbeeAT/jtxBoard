@@ -43,6 +43,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import java.io.File
+import java.io.IOException
 import java.text.DateFormat
 import java.util.*
 
@@ -1219,18 +1220,32 @@ class IcalEditFragment : Fragment(),
 
 
                 if(filePath?.isNotEmpty() == true) {
-                    //val newFilePath = "${}/${System.currentTimeMillis()}$fileextension"
-                    val newFile = File(Attachment.getAttachmentDirectory(requireContext()), "${System.currentTimeMillis()}$fileextension")
-                    newFile.createNewFile()
 
-                    val stream = requireContext().contentResolver.openInputStream(fileUri)
-                    if (stream != null) {
-                        newFile.writeBytes(stream.readBytes())
+                    try {
+                        //val newFilePath = "${}/${System.currentTimeMillis()}$fileextension"
+                        val newFile = File(
+                            Attachment.getAttachmentDirectory(requireContext()),
+                            "${System.currentTimeMillis()}$fileextension"
+                        )
+                        newFile.createNewFile()
 
-                        val newAttachment = Attachment(encoding = Attachment.ENCODING_BASE64, fmttype = mimeType, uri = "/${Attachment.ATTACHMENT_DIR}/${newFile.name}", filename = filename, extension = fileextension, filesize = filesize )
-                        icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
-                        addAttachmentView(newAttachment)      // add the new attachment
-                        stream.close()
+                        val stream = requireContext().contentResolver.openInputStream(fileUri)
+                        if (stream != null) {
+                            newFile.writeBytes(stream.readBytes())
+
+                            val newAttachment = Attachment(
+                                fmttype = mimeType,
+                                uri = "/${Attachment.ATTACHMENT_DIR}/${newFile.name}",
+                                filename = filename,
+                                extension = fileextension,
+                                filesize = filesize
+                            )
+                            icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
+                            addAttachmentView(newAttachment)      // add the new attachment
+                            stream.close()
+                        }
+                    } catch (e: IOException) {
+                        Log.e("IOException", "Failed to process file\n${e.toString()}")
                     }
                 }
             }

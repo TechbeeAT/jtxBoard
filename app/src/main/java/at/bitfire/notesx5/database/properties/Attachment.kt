@@ -106,7 +106,7 @@ data class Attachment (
 
         @ColumnInfo(index = true, name = COLUMN_ATTACHMENT_ICALOBJECT_ID) var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_ATTACHMENT_URI)                        var uri: String? = null,
-        @ColumnInfo(name = COLUMN_ATTACHMENT_ENCODING)                 var encoding: String? = null,
+        @ColumnInfo(name = COLUMN_ATTACHMENT_ENCODING)                 var encoding: String? = ENCODING_BASE64,
         @ColumnInfo(name = COLUMN_ATTACHMENT_VALUE)               var value: String? = null,
         @ColumnInfo(name = COLUMN_ATTACHMENT_FMTTYPE)               var fmttype: String? = null,
         @ColumnInfo(name = COLUMN_ATTACHMENT_OTHER)                      var other: String? = null,
