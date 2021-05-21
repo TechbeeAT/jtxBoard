@@ -145,12 +145,6 @@ data class Attachment (
             return Attachment().applyContentValues(values)
         }
 
-        fun create3GPAttachment(icalObjectId: Long, value: String): Attachment {
-
-            return Attachment(icalObjectId = icalObjectId, encoding = ENCODING_BASE64, fmttype = FMTTYPE_AUDIO_MP4_AAC, value = value)
-
-        }
-
 
         /**
          * Returns the directory with the attachments.

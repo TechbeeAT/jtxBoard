@@ -19,7 +19,6 @@ import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
-import android.util.Base64
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -215,7 +214,7 @@ class IcalViewFragment : Fragment() {
 
                     val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
                     commentBinding.viewCommentTextview.text = relatedNote.summary
-                    if(relatedNote.attachmentValue?.isNotEmpty() == true && relatedNote.attachmentEncoding == Attachment.ENCODING_BASE64 && (relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_MP4_AAC || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_3GPP)) {
+                    if(relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_MP4_AAC || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_3GPP) {
                         commentBinding.viewCommentPlaybutton.visibility = View.VISIBLE
 
                         // TODO TRY Catch
@@ -231,13 +230,9 @@ class IcalViewFragment : Fragment() {
                                 playing = false
                             } else {
                                 // write the base64 decoded Bytestream in a file and use it as an input for the player
-                                val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
-                                fileName = "${requireContext().cacheDir}/cached_audiocomment.mp4"
+                                //val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
+                                fileName = "${requireContext().filesDir}/${relatedNote.attachmentUri}"
 
-                                File(fileName).apply {
-                                    writeBytes(fileBytestream)
-                                    createNewFile()
-                                }
                                 startPlaying()
                                 commentBinding.viewCommentPlaybutton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
                                 playing = true
@@ -381,12 +376,30 @@ class IcalViewFragment : Fragment() {
                             stopPlaying()
 
                             if(fileName.isNotEmpty()) {
-                                val file = File(fileName)
-                                Log.d("Filesize", file.length().toString())
-                                val fileBase64 =
-                                    Base64.encodeToString(file.readBytes(), Base64.NO_WRAP)
-                                Log.d("Base64", fileBase64)
-                                icalViewViewModel.insertRelatedAudioNote(fileBase64)
+
+                                try {
+                                    val cachedFile = File(fileName)
+                                    val newFilename = "${System.currentTimeMillis()}.mp4"
+                                    val newFile = File(
+                                        Attachment.getAttachmentDirectory(requireContext()),
+                                        newFilename
+                                    )
+                                    newFile.createNewFile()
+                                    newFile.writeBytes(cachedFile.readBytes())
+
+                                    val newAttachment = Attachment(
+                                        fmttype = Attachment.FMTTYPE_AUDIO_MP4_AAC,
+                                        uri = "/${Attachment.ATTACHMENT_DIR}/${newFile.name}",
+                                        filename = newFilename,
+                                        extension = ".mp4",
+                                        filesize = newFile.length()
+                                    )
+                                    icalViewViewModel.insertRelatedAudioNote(newAttachment)
+
+
+                                } catch (e: IOException) {
+                                    Log.e("IOException", "Failed to process file\n$e")
+                                }
                             }
                         }
                         .setNegativeButton("Discard") { dialog, which ->
