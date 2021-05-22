@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<SwitchPreference
-    app:key="enable_journals"
-    app:title="Enable journals"/>
+    <PreferenceCategory
+        app:key="enable_disable_modules"
+        app:title="Enable/Disable Modules">
 
-    <SwitchPreference
-        app:key="enable_notes"
-        app:title="Enable notes"/>
+        <SwitchPreference
+            app:key="journals_enabled"
+            app:defaultValue="true"
+            app:title="Journals" />
 
-    <SwitchPreference
-        app:key="enable_todos"
-        app:title="Enable todos"/>
+        <SwitchPreference
+            app:key="notes_enabled"
+            app:defaultValue="true"
+            app:title="Notes" />
 
-    <DropDownPreference
-        app:key="audio_format"
-        app:title="Audio format"
-        app:entries="@array/audio_formats"
-        app:useSimpleSummaryProvider="true"
-        app:entryValues="@array/audio_formats"/>
+        <SwitchPreference
+            app:key="todos_enabled"
+            app:defaultValue="true"
+            app:title="Todos" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="format_settings"
+        app:title="Format Settings">
+
+        <DropDownPreference
+            app:entries="@array/audio_formats"
+            app:entryValues="@array/audio_formats"
+            app:key="audio_format"
+            app:title="Audio format"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
