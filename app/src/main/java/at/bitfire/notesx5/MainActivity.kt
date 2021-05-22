@@ -28,8 +28,10 @@ import at.bitfire.notesx5.ui.IcalListFragmentDirections
 import com.google.android.material.navigation.NavigationView
 
 
-const val CONTACT_READ_PERMISSION_CODE = 100   // this is necessary for the app permission, 100 ist just a freely chosen value
-const val RECORD_AUDIO_PERMISSION_CODE = 200   // this is necessary for the app permission, 200 ist just a freely chosen value
+const val CONTACT_READ_PERMISSION_CODE =
+    100   // this is necessary for the app permission, 100 ist just a freely chosen value
+const val RECORD_AUDIO_PERMISSION_CODE =
+    200   // this is necessary for the app permission, 200 ist just a freely chosen value
 
 const val PICKFILE_RESULT_CODE = 301
 
@@ -40,7 +42,7 @@ const val PICKFILE_RESULT_CODE = 301
  */
 class MainActivity : AppCompatActivity() {
 
-    companion object  {
+    companion object {
         const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
 
     }
@@ -61,7 +63,12 @@ class MainActivity : AppCompatActivity() {
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_main_layout)
         val toggle = ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -69,8 +76,11 @@ class MainActivity : AppCompatActivity() {
         // React on selection in Navigation View
         val navView: NavigationView = findViewById(R.id.nav_view)
         navView.setNavigationItemSelectedListener { menuItem ->
-            // Handle menu item selected
 
+            //close drawer
+            drawerLayout.close()
+
+            // Handle menu item selected
             when (menuItem.itemId) {
                 /*
                 R.id.nav_about ->
@@ -82,6 +92,10 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(activity, R.string.install_email_client, Toast.LENGTH_LONG).show()
 
                  */
+                R.id.nav_app_settings ->
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_settingsFragment)
+
                 R.id.nav_twitter ->
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
 
@@ -116,25 +130,39 @@ class MainActivity : AppCompatActivity() {
         when (intent.action) {
             "addJournal" -> {
                 findNavController(R.id.nav_host_fragment)
-                    .navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(ICalEntity(ICalObject.createJournal())))
+                    .navigate(
+                        IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
+                            ICalEntity(ICalObject.createJournal())
+                        )
+                    )
             }
             "addNote" -> {
                 findNavController(R.id.nav_host_fragment)
-                    .navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(ICalEntity(ICalObject.createNote())))
+                    .navigate(
+                        IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
+                            ICalEntity(ICalObject.createNote())
+                        )
+                    )
             }
             "addTodo" -> {
                 findNavController(R.id.nav_host_fragment)
-                    .navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(ICalEntity(ICalObject.createTodo())))
+                    .navigate(
+                        IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
+                            ICalEntity(ICalObject.createTodo())
+                        )
+                    )
             }
         }
 
     }
 
 
-
-
     // this is called when the user accepts a permission
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
 
         if (requestCode == CONTACT_READ_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
@@ -162,7 +190,7 @@ class MainActivity : AppCompatActivity() {
             }
             // Register the channel with the system
             val notificationManager: NotificationManager =
-                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }

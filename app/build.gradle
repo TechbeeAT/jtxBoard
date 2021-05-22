@@ -80,6 +80,8 @@ dependencies {
     // Material.io
     implementation "com.google.android.material:material:$version_material"
 
+    implementation "androidx.preference:preference-ktx:1.1.1"
+
 
     // Testing
     testImplementation 'junit:junit:4.13.2'

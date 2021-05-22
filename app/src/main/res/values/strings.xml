@@ -11,6 +11,11 @@
     <!-- App title and fragment titles -->
     <string name="app_name">NOTESx⁵</string>
 
+    <!-- Possible audio formats for settings -->
+    <array name="audio_formats">
+        <item>audio/3gpp</item>
+        <item>audio/aac</item>
+    </array>
 
     <!-- Global Dialog Strings -->
     <string name="cancel">Cancel</string>

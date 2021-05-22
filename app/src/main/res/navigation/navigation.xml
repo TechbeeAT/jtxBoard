@@ -143,5 +143,13 @@
             app:argType="string" />
 
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="at.bitfire.notesx5.SettingsFragment"
+        android:label="SettingsFragment" />
+
+    <!--Global action-->
+    <action android:id="@+id/action_global_settingsFragment"
+        app:destination="@id/settingsFragment"/>
 
 </navigation>

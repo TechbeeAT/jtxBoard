@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<SwitchPreference
+    app:key="enable_journals"
+    app:title="Enable journals"/>
+
+    <SwitchPreference
+        app:key="enable_notes"
+        app:title="Enable notes"/>
+
+    <SwitchPreference
+        app:key="enable_todos"
+        app:title="Enable todos"/>
+
+    <DropDownPreference
+        app:key="audio_format"
+        app:title="Audio format"
+        app:entries="@array/audio_formats"
+        app:useSimpleSummaryProvider="true"
+        app:entryValues="@array/audio_formats"/>
+
+</androidx.preference.PreferenceScreen>

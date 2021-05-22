@@ -25,12 +25,12 @@
     android:title="@string/navigation_drawer_beta_feedback"
     android:visible="false"/>
 
-    <!--
+
 <item
     android:id="@+id/nav_app_settings"
-    android:icon="@drawable/ic_settings_dark"
+    android:icon="@drawable/ic_settings"
     android:title="@string/navigation_drawer_settings"/>
--->
+
 <item android:title="@string/navigation_drawer_news_updates">
     <menu>
         <item
