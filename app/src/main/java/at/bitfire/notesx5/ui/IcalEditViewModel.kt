@@ -174,7 +174,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         attachmentsVisible.postValue((iCalEntity.property.module == Module.JOURNAL.name && showAll.value == true) || showAll.value == true)
         progressVisible.postValue(iCalEntity.property.module == Module.TODO.name)
         priorityVisible.postValue(iCalEntity.property.module == Module.TODO.name)
-        subtasksVisible.postValue(iCalEntity.property.module == Module.TODO.name)
+        subtasksVisible.postValue(iCalEntity.property.module == Module.TODO.name || showAll.value == true)
         duedateVisible.postValue(iCalEntity.property.module == Module.TODO.name)
         duetimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
         completeddateVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true)
