@@ -2,35 +2,28 @@
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        app:key="enable_disable_modules"
-        app:title="Enable/Disable Modules">
+        app:key="settings_list"
+        app:title="Settings for the item list">
 
         <SwitchPreference
-            app:key="journals_enabled"
+            app:key="settings_show_subtasks_in_list"
             app:defaultValue="true"
-            app:title="Journals" />
-
-        <SwitchPreference
-            app:key="notes_enabled"
-            app:defaultValue="true"
-            app:title="Notes" />
-
-        <SwitchPreference
-            app:key="todos_enabled"
-            app:defaultValue="true"
-            app:title="Todos" />
+            app:title="Show subtasks in list"
+            app:icon="@drawable/ic_todo"
+            app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:key="format_settings"
+        app:key="settings_format"
         app:title="Format Settings">
 
         <DropDownPreference
-            app:entries="@array/audio_formats"
-            app:entryValues="@array/audio_formats"
-            app:key="audio_format"
-            app:title="Audio format"
+            app:key="setting_audio_format"
+            app:entries="@array/settings_audio_formats"
+            app:entryValues="@array/settings_audio_formats"
+            app:title="Select Mimetype for audio notes"
+            app:icon="@drawable/ic_audio"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>

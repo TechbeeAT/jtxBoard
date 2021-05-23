@@ -86,7 +86,6 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         // add menu
         setHasOptionsMenu(true)
 
-
         // set up recycler view
         recyclerView = binding.vjournalListItemsRecyclerView
         //linearLayoutManager = LinearLayoutManager(application.applicationContext)
@@ -146,6 +145,8 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         })
 
+
+
         binding.tablayoutJournalnotestodos.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -177,7 +178,6 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 // nothing to do
             }
         })
-
 
         return binding.root
     }

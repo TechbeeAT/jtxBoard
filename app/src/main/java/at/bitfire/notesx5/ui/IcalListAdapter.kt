@@ -10,6 +10,7 @@ package at.bitfire.notesx5.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
@@ -35,12 +37,18 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
     RecyclerView.Adapter<IcalListAdapter.VJournalItemHolder>() {
 
     lateinit var parent: ViewGroup
+    private lateinit var settings: SharedPreferences
+    private var settingShowSubtasks = true
     private var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = model.iCal4List
     private var allSubtasks: LiveData<List<ICal4List?>> = model.allSubtasks
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VJournalItemHolder {
 
         this.parent = parent
+        //load settings
+        settings = PreferenceManager.getDefaultSharedPreferences(context)
+        settingShowSubtasks = settings.getBoolean("settings_show_subtasks_in_list", true)
+
         val itemHolder = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_ical_list_item, parent, false)
         return VJournalItemHolder(itemHolder)
@@ -65,21 +73,14 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         if (iCal4List.value?.size == 0)    // only continue if there are items in the list
             return
 
-        val dtstartVisibility =
-            if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
-        val statusVisibility =
-            if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
-        val classificationVisibility =
-            if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
-        val progressVisibility =
-            if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
-        val subtaskExpandVisibility =
-            if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
-        val priorityVisibility =
-            if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
+        val dtstartVisibility = if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
+        val statusVisibility = if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
+        val classificationVisibility = if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
+        val progressVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
+        val subtaskExpandVisibility = if (model.searchModule == Module.TODO.name && settingShowSubtasks) View.VISIBLE else View.GONE
+        val priorityVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
         val dueVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
-        val subtasksVisibility =
-            View.VISIBLE //if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
+        val subtasksVisibility = if (settingShowSubtasks)  View.VISIBLE else View.GONE
 
 
         holder.dtstartDay.visibility = dtstartVisibility
@@ -151,7 +152,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             /* START handle subtasks */
             holder.progressSlider.value = iCal4ListItem.property.percent?.toFloat() ?: 0F
             holder.progressCheckbox.isChecked = iCal4ListItem.property.percent == 100
-            if (iCal4ListItem.relatedto?.isNotEmpty() == true && iCal4ListItem.property.component == Component.VTODO.name) {   // TODO: also tasks with a subnote would be shown here, they should also be excluded!
+            if (iCal4ListItem.relatedto?.isNotEmpty() == true && iCal4ListItem.property.component == Component.VTODO.name && settingShowSubtasks) {   // TODO: also tasks with a subnote would be shown here, they should also be excluded!
                 holder.expandSubtasks.visibility = View.VISIBLE
             } else {
                 holder.expandSubtasks.visibility = View.INVISIBLE

@@ -12,9 +12,10 @@
     <string name="app_name">NOTESx⁵</string>
 
     <!-- Possible audio formats for settings -->
-    <array name="audio_formats">
-        <item>audio/3gpp</item>
+    <array name="settings_audio_formats">
         <item>audio/aac</item>
+        <item>audio/3gpp</item>
+        <item>audio/ogg</item>
     </array>
 
     <!-- Global Dialog Strings -->

@@ -123,7 +123,7 @@ data class Attachment (
         const val ENCODING_BASE64 = "BASE64"
         const val FMTTYPE_AUDIO_3GPP = "audio/3gpp"
         const val FMTTYPE_AUDIO_MP4_AAC = "audio/aac"
-
+        const val FMTTYPE_AUDIO_OGG = "audio/ogg"
 
         const val ATTACHMENT_DIR = "attachments"
 

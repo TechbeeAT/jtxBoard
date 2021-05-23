@@ -14,10 +14,12 @@ import android.app.AlertDialog
 import android.app.Application
 import android.content.Intent
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -31,6 +33,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.Attachment
@@ -62,15 +65,18 @@ class IcalViewFragment : Fragment() {
     private var recording: Boolean = false
     private var playing: Boolean = false
 
+    private lateinit var settings: SharedPreferences
 
+    // set default audio format (might be overwritten by settings)
+    private var audioFileExtension = "mp4"
+    private var audioOutputFormat = MediaRecorder.OutputFormat.MPEG_4
+    private var audioEncoder = MediaRecorder.AudioEncoder.AAC
 
 
     /*
     val allContactsWithName: MutableList<String> = mutableListOf()
     val allContactsWithNameAndMail: MutableList<String> = mutableListOf()
     val allContactsAsAttendee: MutableList<Attendee> = mutableListOf()
-
-
      */
 
 
@@ -91,7 +97,21 @@ class IcalViewFragment : Fragment() {
         // add menu
         setHasOptionsMenu(true)
 
-
+        settings = PreferenceManager.getDefaultSharedPreferences(context)
+        val settingMimetype = settings.getString("setting_audio_format", Attachment.FMTTYPE_AUDIO_MP4_AAC)!!
+        if(settingMimetype == Attachment.FMTTYPE_AUDIO_MP4_AAC) {
+            audioFileExtension = "aac"
+            audioOutputFormat = MediaRecorder.OutputFormat.MPEG_4
+            audioEncoder = MediaRecorder.AudioEncoder.AAC
+        } else if (settingMimetype == Attachment.FMTTYPE_AUDIO_3GPP) {
+            audioFileExtension = "3gp"
+            audioOutputFormat = MediaRecorder.OutputFormat.THREE_GPP
+            audioEncoder = MediaRecorder.AudioEncoder.AMR_NB
+        } else if (settingMimetype == Attachment.FMTTYPE_AUDIO_OGG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            audioFileExtension = "ogg"
+            audioOutputFormat = MediaRecorder.OutputFormat.OGG
+            audioEncoder = MediaRecorder.AudioEncoder.OPUS
+        }
 
 
         // set up view model
@@ -216,7 +236,7 @@ class IcalViewFragment : Fragment() {
 
                     val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
                     commentBinding.viewCommentTextview.text = relatedNote.summary
-                    if(relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_MP4_AAC || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_3GPP) {
+                    if(relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_MP4_AAC || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_3GPP || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_OGG) {
                         commentBinding.viewCommentPlaybutton.visibility = View.VISIBLE
 
                         // TODO TRY Catch
@@ -319,7 +339,7 @@ class IcalViewFragment : Fragment() {
                 audioDialogBinding.viewAudioDialogStartrecordingFab.setOnClickListener {
 
                     if(!recording) {
-                        fileName = "${requireContext().cacheDir}/recorded.mp4"
+                        fileName = "${requireContext().cacheDir}/recorded.$audioFileExtension"
                         audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
                         startRecording()
                         audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = false
@@ -381,7 +401,7 @@ class IcalViewFragment : Fragment() {
 
                                 try {
                                     val cachedFile = File(fileName)
-                                    val newFilename = "${System.currentTimeMillis()}.mp4"
+                                    val newFilename = "${System.currentTimeMillis()}.$audioFileExtension"
                                     val newFile = File(
                                         Attachment.getAttachmentDirectory(requireContext()),
                                         newFilename
@@ -727,9 +747,9 @@ class IcalViewFragment : Fragment() {
     private fun startRecording() {
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            setOutputFormat(audioOutputFormat)
+            setAudioEncoder(audioEncoder)
             setOutputFile(fileName)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setMaxDuration(60000)
 
             try {
