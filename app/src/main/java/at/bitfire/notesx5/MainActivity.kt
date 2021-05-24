@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
         // user interface settings
         val settings = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        var enforceDark = settings.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false)
+        val enforceDark = settings.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false)
         if(enforceDark)
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         else
