@@ -4,6 +4,9 @@
         name="external_cache_files"
         path="." />
     <files-path
-        name="files_path"
+        name="notesx5_files"
         path="." />
+    <external-files-path
+        name="notesx5_images"
+        path="Pictures" />
 </paths>

@@ -179,19 +179,15 @@ class IcalViewFragment : Fragment() {
 
                     //open the attachment on click
                     attachmentBinding.viewAttachmentCardview.setOnClickListener {
-                        val uri: Uri?
-                        try {
-                            val fileName = "${requireContext().filesDir}/${attachment.uri}"
-                            val icsFile = File(fileName)
-                            uri = getUriForFile(requireContext(),"at.bitfire.notesx5.fileprovider", icsFile)
 
+                        try {
                             val intent = Intent()
                             intent.action = Intent.ACTION_VIEW
-                            intent.setDataAndType(uri, attachment.fmttype)
+                            intent.setDataAndType(Uri.parse(attachment.uri), attachment.fmttype)
                             intent.flags = FLAG_GRANT_READ_URI_PERMISSION
                             startActivity(intent)
 
-                        } catch (e: Exception) {
+                        } catch (e: IOException) {
                             Log.i("fileprovider", "Failed to retrieve file")
                             Toast.makeText(requireContext(), "Failed to retrieve file.", Toast.LENGTH_SHORT).show()
                         }
@@ -708,7 +704,8 @@ class IcalViewFragment : Fragment() {
                     writeText(icalViewViewModel.icalEntity.value!!.getICalString())
                     createNewFile()
                 }
-                uri = getUriForFile(requireContext(),"at.bitfire.notesx5.fileprovider", icsFile)
+                uri = getUriForFile(requireContext(),
+                    AUTHORITY_FILEPROVIDER, icsFile)
             } catch (e: Exception) {
                 Log.i("fileprovider", "Failed to attach ICS File")
                 Toast.makeText(requireContext(), "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()

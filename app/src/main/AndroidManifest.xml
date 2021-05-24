@@ -13,6 +13,9 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <uses-feature android:name="android.hardware.camera2"
+        android:required="false" />
+
 
     <application
         android:allowBackup="true"
@@ -32,7 +35,6 @@
             android:authorities="at.bitfire.notesx5.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <!-- ressource file to create -->
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths">

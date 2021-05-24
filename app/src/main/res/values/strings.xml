@@ -103,6 +103,7 @@
     <string name="edit_contact_hint">Contact information</string>
     <string name="edit_comment_hint">Add comment</string>
     <string name="edit_attachment_button_text">Add attachment</string>
+    <string name="edit_take_picture_button_text">Take picture</string>
     <string name="edit_relatedto_hint">Related to …</string>
     <string name="edit_url_hint">URL</string>
     <string name="edit_fab_save_contentDescription">Save</string>

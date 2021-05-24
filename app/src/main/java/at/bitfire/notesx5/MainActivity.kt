@@ -34,6 +34,9 @@ const val RECORD_AUDIO_PERMISSION_CODE =
     200   // this is necessary for the app permission, 200 ist just a freely chosen value
 
 const val PICKFILE_RESULT_CODE = 301
+const val REQUEST_IMAGE_CAPTURE_CODE = 401
+
+const val AUTHORITY_FILEPROVIDER = "at.bitfire.notesx5.fileprovider"
 
 
 /**

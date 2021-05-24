@@ -32,1037 +32,1031 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ical_edit_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".ui.IcalEditFragment">
-
-
-        <TextView
-            android:id="@+id/edit_dtstart_day"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="@{UtilKt.convertLongToDayString(model.iCalObjectUpdated.dtstart)}"
-            android:textAlignment="center"
-            android:textSize="36sp"
-            android:textStyle="bold"
-            android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_collection"
-            tools:text="31" />
-
-        <TextView
-            android:id="@+id/edit_dtstart_month"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:text="@{UtilKt.convertLongToMonthString(model.iCalObjectUpdated.dtstart)}"
-            app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_day"
-            tools:text="December"
-            android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-            />
-
-        <TextView
-            android:id="@+id/edit_dtstart_year"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:text="@{UtilKt.convertLongToYearString(model.iCalObjectUpdated.dtstart)}"
-            app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_month"
-            tools:text="2020"
-            android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-            />
-
-        <TextView
-            android:id="@+id/edit_dtstart_time"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="@{UtilKt.convertLongToTimeString(model.iCalObjectUpdated.dtstart)}"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
-            app:layout_constraintStart_toStartOf="@+id/edit_dtstart_day"
-            app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_year"
-            tools:text="13:30"
-            android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
-            />
-
-
-        <ImageView
-            android:id="@+id/edit_collection_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_collection"
-            app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
-            app:layout_constraintTop_toTopOf="@+id/edit_collection"
-            app:srcCompat="@drawable/ic_collection"
-            tools:ignore="ContentDescription" />
-
-        <Spinner
-            android:id="@+id/edit_collection"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:drawableStart="@drawable/ic_collection"
-            android:drawablePadding="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/edit_collection_icon"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Collection" />
-
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/edit_all_day_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/edit_all_day"
-            android:checked="@={model.allDayChecked}"
-            app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
-            app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
-            app:layout_constraintTop_toBottomOf="@+id/edit_collection"
-            app:switchPadding="8dp"
-            android:visibility="@{model.alldayVisible ? View.VISIBLE : View.GONE}"
-            />
-
-        <ImageView
-            android:id="@+id/edit_timezone_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_timezone_spinner"
-            app:layout_constraintStart_toEndOf="@+id/edit_all_day_switch"
-            app:layout_constraintTop_toTopOf="@+id/edit_timezone_spinner"
-            app:srcCompat="@drawable/ic_timezone"
-            android:contentDescription="@string/edit_timezone" />
-
-        <Spinner
-            android:id="@+id/edit_timezone_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:entries="@{model.possibleTimezones}"
-            android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
-            android:spinnerMode="dialog"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_all_day_switch"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/edit_timezone_icon"
-            app:layout_constraintTop_toTopOf="@+id/edit_all_day_switch" />
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/edit_top_barrier"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ical_edit_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:barrierDirection="top" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_summary_edit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/edit_summary_hint"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_top_barrier">
+            tools:context=".ui.IcalEditFragment">
 
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_summary_edit_textinputfield"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/edit_dtstart_day"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:inputType="textShortMessage|textCapSentences"
-                android:text="@={model.iCalObjectUpdated.summary}"
+                android:text="@{UtilKt.convertLongToDayString(model.iCalObjectUpdated.dtstart)}"
+                android:textAlignment="center"
+                android:textSize="36sp"
                 android:textStyle="bold"
-                tools:text="Summary ... Lorem ipsum dolor sit amet" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_collection"
+                tools:text="31" />
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_description_edit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/edit_description_hint"
-            app:layout_constraintEnd_toEndOf="@+id/edit_summary_edit"
-            app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
-            app:layout_constraintStart_toStartOf="@+id/edit_summary_edit"
-            app:layout_constraintTop_toBottomOf="@+id/edit_summary_edit">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/edit_dtstart_month"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:inputType="textWebEditText|textMultiLine|textCapSentences"
-                android:maxLines="8"
-                android:minLines="3"
-                android:text="@={model.iCalObjectUpdated.description}"
-                tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:text="@{UtilKt.convertLongToMonthString(model.iCalObjectUpdated.dtstart)}"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_day"
+                tools:text="December" />
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_due_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_due_date_hint"
-            android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            app:endIconContentDescription="Set due date"
-            app:endIconDrawable="@drawable/ic_vjournal_date"
-            app:endIconMode="custom"
-            app:helperText="Set due date"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toStartOf="@id/edit_due_time"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_description_edit">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_due_date_edittext"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/edit_dtstart_year"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:enabled="false"
-                android:inputType="date"
-                android:text="@{model.duedateFormated}" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:text="@{UtilKt.convertLongToYearString(model.iCalObjectUpdated.dtstart)}"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_month"
+                tools:text="2020" />
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_due_time"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_due_time_hint"
-            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            app:endIconContentDescription="Set due time"
-            app:endIconDrawable="@drawable/ic_vjournal_time"
-            app:endIconMode="custom"
-            app:helperText="Set due time"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/edit_due_date"
-            app:layout_constraintTop_toTopOf="@+id/edit_due_date">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_due_time_edittext"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/edit_dtstart_time"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:enabled="false"
-                android:inputType="time"
-                android:text="@{model.duetimeFormated}"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <ImageView
-            android:id="@+id/edit_duetimezone_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_duetimezone_spinner"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_duetimezone_spinner"
-            app:srcCompat="@drawable/ic_timezone"
-            tools:ignore="ContentDescription" />
+                android:text="@{UtilKt.convertLongToTimeString(model.iCalObjectUpdated.dtstart)}"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
+                app:layout_constraintStart_toStartOf="@+id/edit_dtstart_day"
+                app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_year"
+                tools:text="13:30" />
 
 
-        <Spinner
-            android:id="@+id/edit_duetimezone_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:entries="@{model.possibleTimezones}"
-            android:spinnerMode="dialog"
-            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toStartOf="@id/edit_due_addtime_switch"
-            app:layout_constraintStart_toEndOf="@id/edit_duetimezone_icon"
-            app:layout_constraintTop_toBottomOf="@+id/edit_due_date" />
-
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/edit_due_addtime_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:checked="@={model.addDueTimeChecked}"
-            android:text="@string/edit_add_time_switch"
-            android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_duetimezone_spinner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_duetimezone_spinner"
-            app:switchPadding="8dp" />
-
-
-        <TextView
-            android:id="@+id/edit_progress_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/edit_progress"
-            android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
-
-        <com.google.android.material.slider.Slider
-            android:id="@+id/edit_progress_slider"
-            style="@style/Widget.AppCompat.SeekBar.Discrete"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:stepSize="1.0"
-            android:value="@{model.iCalObjectUpdated.percent}"
-            android:valueFrom="0.0"
-            android:valueTo="100.0"
-            android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toStartOf="@id/edit_progress_percent"
-            app:layout_constraintStart_toEndOf="@+id/edit_progress_label"
-            app:layout_constraintTop_toBottomOf="@+id/edit_duetimezone_spinner" />
-
-
-        <TextView
-            android:id="@+id/edit_progress_percent"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:text="@{model.iCalObjectUpdated.percent.toString() + ` %`}"
-            android:textAlignment="viewEnd"
-            android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
-            app:layout_constraintEnd_toStartOf="@+id/edit_progress_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/edit_progress_slider"
-            tools:text="100 %" />
-
-
-        <CheckBox
-            android:id="@+id/edit_progress_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-            android:checked="@{model.iCalObjectUpdated.percent == 100}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
-
-
-
-        <TextView
-            android:id="@+id/edit_subtasks_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/edit_subtasks_header"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_progress_slider"
-            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-            app:drawableStartCompat="@drawable/ic_todo"
-            android:drawablePadding="8dp"
-            />
-
-
-        <LinearLayout
-            android:id="@+id/edit_subtasks_linearlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:divider="?android:dividerHorizontal"
-            android:orientation="vertical"
-            android:showDividers="middle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_subtasks_header"
-            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-            >
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/edit_collection_icon"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checkable="true"
-                android:clickable="true"
-                android:focusable="true">
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_collection"
+                app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
+                app:layout_constraintTop_toTopOf="@+id/edit_collection"
+                app:srcCompat="@drawable/ic_collection"
+                tools:ignore="ContentDescription" />
 
-
-            </com.google.android.material.card.MaterialCardView>
-
-
-        </LinearLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_subtasks_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_subtasks_add_hint"
-            android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            app:endIconContentDescription="Add subtask"
-            app:endIconDrawable="@drawable/ic_comment_add"
-            app:endIconMode="custom"
-            app:helperText="Add a subtask"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_subtasks_linearlayout">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_subtasks_add_edittext"
-                android:layout_width="match_parent"
+            <Spinner
+                android:id="@+id/edit_collection"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:drawableStart="@drawable/ic_collection"
+                android:drawablePadding="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/edit_collection_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Collection" />
 
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/edit_spc_chipgroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_subtasks_add">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/edit_status_chip"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/edit_all_day_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:checkable="false"
-                android:visibility="@{model.statusVisible ? View.VISIBLE : View.GONE}"
-                app:chipIcon="@drawable/ic_status"
-                app:chipIconVisible="true"
-                app:closeIconVisible="false"
-                tools:text="Medium" />
+                android:checked="@={model.allDayChecked}"
+                android:text="@string/edit_all_day"
+                android:visibility="@{model.alldayVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
+                app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
+                app:layout_constraintTop_toBottomOf="@+id/edit_collection"
+                app:switchPadding="8dp" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/edit_priority_chip"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
+            <ImageView
+                android:id="@+id/edit_timezone_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:contentDescription="@string/edit_timezone"
+                android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_timezone_spinner"
+                app:layout_constraintStart_toEndOf="@+id/edit_all_day_switch"
+                app:layout_constraintTop_toTopOf="@+id/edit_timezone_spinner"
+                app:srcCompat="@drawable/ic_timezone" />
+
+            <Spinner
+                android:id="@+id/edit_timezone_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:entries="@{model.possibleTimezones}"
+                android:spinnerMode="dialog"
+                android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_all_day_switch"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/edit_timezone_icon"
+                app:layout_constraintTop_toTopOf="@+id/edit_all_day_switch" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/edit_top_barrier"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:barrierDirection="top" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_summary_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/edit_summary_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_top_barrier">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_summary_edit_textinputfield"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textShortMessage|textCapSentences"
+                    android:text="@={model.iCalObjectUpdated.summary}"
+                    android:textStyle="bold"
+                    tools:text="Summary ... Lorem ipsum dolor sit amet" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_description_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/edit_description_hint"
+                app:layout_constraintEnd_toEndOf="@+id/edit_summary_edit"
+                app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
+                app:layout_constraintStart_toStartOf="@+id/edit_summary_edit"
+                app:layout_constraintTop_toBottomOf="@+id/edit_summary_edit">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textWebEditText|textMultiLine|textCapSentences"
+                    android:maxLines="8"
+                    android:minLines="3"
+                    android:text="@={model.iCalObjectUpdated.description}"
+                    tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_due_date"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_due_date_hint"
+                android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
+                app:endIconContentDescription="Set due date"
+                app:endIconDrawable="@drawable/ic_vjournal_date"
+                app:endIconMode="custom"
+                app:helperText="Set due date"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toStartOf="@id/edit_due_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_description_edit">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_due_date_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="date"
+                    android:text="@{model.duedateFormated}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_due_time"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_due_time_hint"
+                android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
+                app:endIconContentDescription="Set due time"
+                app:endIconDrawable="@drawable/ic_vjournal_time"
+                app:endIconMode="custom"
+                app:helperText="Set due time"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/edit_due_date"
+                app:layout_constraintTop_toTopOf="@+id/edit_due_date">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_due_time_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="time"
+                    android:text="@{model.duetimeFormated}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <ImageView
+                android:id="@+id/edit_duetimezone_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:checkable="false"
-                android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
-                app:chipIcon="@drawable/ic_priority"
-                app:chipIconVisible="true"
-                app:closeIconVisible="false"
-                tools:text="Final" />
+                android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_duetimezone_spinner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_duetimezone_spinner"
+                app:srcCompat="@drawable/ic_timezone"
+                tools:ignore="ContentDescription" />
 
-            <com.google.android.material.chip.Chip
 
-                android:id="@+id/edit_classification_chip"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
+            <Spinner
+                android:id="@+id/edit_duetimezone_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:entries="@{model.possibleTimezones}"
+                android:spinnerMode="dialog"
+                android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toStartOf="@id/edit_due_addtime_switch"
+                app:layout_constraintStart_toEndOf="@id/edit_duetimezone_icon"
+                app:layout_constraintTop_toBottomOf="@+id/edit_due_date" />
+
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/edit_due_addtime_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:checked="@={model.addDueTimeChecked}"
+                android:text="@string/edit_add_time_switch"
+                android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_duetimezone_spinner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_duetimezone_spinner"
+                app:switchPadding="8dp" />
+
+
+            <TextView
+                android:id="@+id/edit_progress_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:checkable="false"
-                android:visibility="@{model.classificationVisible ? View.VISIBLE : View.GONE}"
-                app:chipIcon="@drawable/ic_classification"
-                app:chipIconVisible="true"
-                app:closeIconVisible="false"
-                tools:text="Public" />
+                android:text="@string/edit_progress"
+                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/edit_progress_slider"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:stepSize="1.0"
+                android:value="@{model.iCalObjectUpdated.percent}"
+                android:valueFrom="0.0"
+                android:valueTo="100.0"
+                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toStartOf="@id/edit_progress_percent"
+                app:layout_constraintStart_toEndOf="@+id/edit_progress_label"
+                app:layout_constraintTop_toBottomOf="@+id/edit_duetimezone_spinner" />
 
 
-        </com.google.android.material.chip.ChipGroup>
+            <TextView
+                android:id="@+id/edit_progress_percent"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="@{model.iCalObjectUpdated.percent.toString() + ` %`}"
+                android:textAlignment="viewEnd"
+                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
+                app:layout_constraintEnd_toStartOf="@+id/edit_progress_checkbox"
+                app:layout_constraintTop_toTopOf="@+id/edit_progress_slider"
+                tools:text="100 %" />
 
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/edit_show_all_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:checked="@={model.showAll}"
-            android:text="@string/edit_show_all_switch"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_spc_chipgroup"
-            app:switchPadding="8dp"
-            tools:checked="false" />
+            <CheckBox
+                android:id="@+id/edit_progress_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@{model.iCalObjectUpdated.percent == 100}"
+                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
 
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_started_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_started_date_hint"
-            android:visibility="@{model.starteddateVisible ? View.VISIBLE : View.GONE}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            app:endIconContentDescription="Set started date"
-            app:endIconDrawable="@drawable/ic_vjournal_date"
-            app:endIconMode="custom"
-            app:helperText="Set started date"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toStartOf="@id/edit_started_time"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_show_all_switch">
+            <TextView
+                android:id="@+id/edit_subtasks_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
+                android:text="@string/edit_subtasks_header"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+                app:drawableStartCompat="@drawable/ic_todo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_progress_slider" />
 
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_started_date_edittext"
+            <LinearLayout
+                android:id="@+id/edit_subtasks_linearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
-                android:inputType="date"
-                android:text="@{model.starteddateFormated}"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:divider="?android:dividerHorizontal"
+                android:orientation="vertical"
+                android:showDividers="middle"
+                android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_subtasks_header">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:focusable="true">
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_started_time"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_started_time_hint"
-            android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            app:endIconContentDescription="Set started time"
-            app:endIconDrawable="@drawable/ic_vjournal_time"
-            app:endIconMode="custom"
-            app:helperText="Set started time"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/edit_started_date"
-            app:layout_constraintTop_toTopOf="@+id/edit_started_date">
+                </com.google.android.material.card.MaterialCardView>
 
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_started_time_edittext"
+            </LinearLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_subtasks_add"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
-                android:inputType="time"
-                android:text="@{model.startedtimeFormated}"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <ImageView
-            android:id="@+id/edit_startedtimezone_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_startedtimezone_spinner"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_startedtimezone_spinner"
-            app:srcCompat="@drawable/ic_timezone"
-            tools:ignore="ContentDescription" />
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_subtasks_add_hint"
+                android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+                app:endIconContentDescription="Add subtask"
+                app:endIconDrawable="@drawable/ic_comment_add"
+                app:endIconMode="custom"
+                app:helperText="Add a subtask"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_subtasks_linearlayout">
 
 
-        <Spinner
-            android:id="@+id/edit_startedtimezone_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:entries="@{model.possibleTimezones}"
-            android:spinnerMode="dialog"
-            android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toStartOf="@id/edit_started_addtime_switch"
-            app:layout_constraintStart_toEndOf="@id/edit_startedtimezone_icon"
-            app:layout_constraintTop_toBottomOf="@+id/edit_started_date" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_subtasks_add_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapSentences" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/edit_started_addtime_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:checked="@={model.addStartedTimeChecked}"
-            android:text="@string/edit_add_time_switch"
-            android:visibility="@{model.starteddateVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_startedtimezone_spinner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_startedtimezone_spinner"
-            app:switchPadding="8dp" />
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_completed_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_completed_date_hint"
-            android:visibility="@{model.completeddateVisible ? View.VISIBLE : View.GONE}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            app:endIconContentDescription="Set completed date"
-            app:endIconDrawable="@drawable/ic_vjournal_date"
-            app:endIconMode="custom"
-            app:helperText="Set completed date"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toStartOf="@id/edit_completed_time"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_startedtimezone_spinner">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_completed_date_edittext"
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/edit_spc_chipgroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
-                android:inputType="date"
-                android:text="@{model.completeddateFormated}" />
-        </com.google.android.material.textfield.TextInputLayout>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_subtasks_add">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/edit_status_chip"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:checkable="false"
+                    android:visibility="@{model.statusVisible ? View.VISIBLE : View.GONE}"
+                    app:chipIcon="@drawable/ic_status"
+                    app:chipIconVisible="true"
+                    app:closeIconVisible="false"
+                    tools:text="Medium" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/edit_priority_chip"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:checkable="false"
+                    android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
+                    app:chipIcon="@drawable/ic_priority"
+                    app:chipIconVisible="true"
+                    app:closeIconVisible="false"
+                    tools:text="Final" />
+
+                <com.google.android.material.chip.Chip
+
+                    android:id="@+id/edit_classification_chip"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:checkable="false"
+                    android:visibility="@{model.classificationVisible ? View.VISIBLE : View.GONE}"
+                    app:chipIcon="@drawable/ic_classification"
+                    app:chipIconVisible="true"
+                    app:closeIconVisible="false"
+                    tools:text="Public" />
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_completed_time"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_completed_time_hint"
-            android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            app:endIconContentDescription="Set completed time"
-            app:endIconDrawable="@drawable/ic_vjournal_time"
-            app:endIconMode="custom"
-            app:helperText="Set completed time"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/edit_completed_date"
-            app:layout_constraintTop_toTopOf="@+id/edit_completed_date">
+            </com.google.android.material.chip.ChipGroup>
 
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_completed_time_edittext"
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/edit_show_all_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:checked="@={model.showAll}"
+                android:text="@string/edit_show_all_switch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_spc_chipgroup"
+                app:switchPadding="8dp"
+                tools:checked="false" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_started_date"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_started_date_hint"
+                android:visibility="@{model.starteddateVisible ? View.VISIBLE : View.GONE}"
+                app:endIconContentDescription="Set started date"
+                app:endIconDrawable="@drawable/ic_vjournal_date"
+                app:endIconMode="custom"
+                app:helperText="Set started date"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toStartOf="@id/edit_started_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_show_all_switch">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_started_date_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="date"
+                    android:text="@{model.starteddateFormated}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_started_time"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_started_time_hint"
+                android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
+                app:endIconContentDescription="Set started time"
+                app:endIconDrawable="@drawable/ic_vjournal_time"
+                app:endIconMode="custom"
+                app:helperText="Set started time"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/edit_started_date"
+                app:layout_constraintTop_toTopOf="@+id/edit_started_date">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_started_time_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="time"
+                    android:text="@{model.startedtimeFormated}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <ImageView
+                android:id="@+id/edit_startedtimezone_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_startedtimezone_spinner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_startedtimezone_spinner"
+                app:srcCompat="@drawable/ic_timezone"
+                tools:ignore="ContentDescription" />
+
+
+            <Spinner
+                android:id="@+id/edit_startedtimezone_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:entries="@{model.possibleTimezones}"
+                android:spinnerMode="dialog"
+                android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toStartOf="@id/edit_started_addtime_switch"
+                app:layout_constraintStart_toEndOf="@id/edit_startedtimezone_icon"
+                app:layout_constraintTop_toBottomOf="@+id/edit_started_date" />
+
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/edit_started_addtime_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:checked="@={model.addStartedTimeChecked}"
+                android:text="@string/edit_add_time_switch"
+                android:visibility="@{model.starteddateVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_startedtimezone_spinner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_startedtimezone_spinner"
+                app:switchPadding="8dp" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_completed_date"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_completed_date_hint"
+                android:visibility="@{model.completeddateVisible ? View.VISIBLE : View.GONE}"
+                app:endIconContentDescription="Set completed date"
+                app:endIconDrawable="@drawable/ic_vjournal_date"
+                app:endIconMode="custom"
+                app:helperText="Set completed date"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toStartOf="@id/edit_completed_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_startedtimezone_spinner">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_completed_date_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="date"
+                    android:text="@{model.completeddateFormated}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_completed_time"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_completed_time_hint"
+                android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
+                app:endIconContentDescription="Set completed time"
+                app:endIconDrawable="@drawable/ic_vjournal_time"
+                app:endIconMode="custom"
+                app:helperText="Set completed time"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/edit_completed_date"
+                app:layout_constraintTop_toTopOf="@+id/edit_completed_date">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_completed_time_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="time"
+                    android:text="@{model.completedtimeFormated}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <ImageView
+                android:id="@+id/edit_completedtimezone_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_completedtimezone_spinner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_completedtimezone_spinner"
+                app:srcCompat="@drawable/ic_timezone"
+                tools:ignore="ContentDescription" />
+
+
+            <Spinner
+                android:id="@+id/edit_completedtimezone_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:entries="@{model.possibleTimezones}"
+                android:spinnerMode="dialog"
+                android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toStartOf="@id/edit_completed_addtime_switch"
+                app:layout_constraintStart_toEndOf="@id/edit_completedtimezone_icon"
+                app:layout_constraintTop_toBottomOf="@+id/edit_completed_date" />
+
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/edit_completed_addtime_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:checked="@={model.addCompletedTimeChecked}"
+                android:text="@string/edit_add_time_switch"
+                android:visibility="@{model.completeddateVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_completedtimezone_spinner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_completedtimezone_spinner"
+                app:switchPadding="8dp" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_url_edit"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
-                android:inputType="time"
-                android:text="@{model.completedtimeFormated}"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <ImageView
-            android:id="@+id/edit_completedtimezone_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_completedtimezone_spinner"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_completedtimezone_spinner"
-            app:srcCompat="@drawable/ic_timezone"
-            tools:ignore="ContentDescription" />
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_url_hint"
+                android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
+                app:endIconMode="clear_text"
+                app:error="@{model.urlError}"
+                app:errorEnabled="true"
+                app:helperText="URL related to this entry"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_completed_addtime_switch"
+                app:startIconDrawable="@drawable/ic_link">
 
 
-        <Spinner
-            android:id="@+id/edit_completedtimezone_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:entries="@{model.possibleTimezones}"
-            android:spinnerMode="dialog"
-            android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toStartOf="@id/edit_completed_addtime_switch"
-            app:layout_constraintStart_toEndOf="@id/edit_completedtimezone_icon"
-            app:layout_constraintTop_toBottomOf="@+id/edit_completed_date" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:afterTextChanged="@{model::clearUrlError}"
+                    android:inputType="textUri"
+                    android:text="@={model.iCalObjectUpdated.url}" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/edit_completed_addtime_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:checked="@={model.addCompletedTimeChecked}"
-            android:text="@string/edit_add_time_switch"
-            android:visibility="@{model.completeddateVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_completedtimezone_spinner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_completedtimezone_spinner"
-            app:switchPadding="8dp" />
-
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_url_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_url_hint"
-            android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            app:endIconMode="clear_text"
-            app:error="@{model.urlError}"
-            app:errorEnabled="true"
-            app:helperText="URL related to this entry"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_completed_addtime_switch"
-            app:startIconDrawable="@drawable/ic_link">
-
-
-            <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_contact_edit"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:afterTextChanged="@{model::clearUrlError}"
-                android:inputType="textUri"
-                android:text="@={model.iCalObjectUpdated.url}" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_contact_hint"
+                android:labelFor="@id/edit_contact_add_autocomplete"
+                android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
+                app:endIconMode="clear_text"
+                app:helperText="Contact information of the responsible or owner of this entry"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_url_edit"
+                app:startIconDrawable="@drawable/ic_contact">
 
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_contact_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_contact_hint"
-            android:labelFor="@id/edit_contact_add_autocomplete"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-            app:endIconMode="clear_text"
-            app:helperText="Contact information of the responsible or owner of this entry"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_url_edit"
-            app:startIconDrawable="@drawable/ic_contact"
-            android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
-            >
+                <AutoCompleteTextView
+                    android:id="@+id/edit_contact_add_autocomplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapSentences|textEmailAddress|textShortMessage"
+                    android:text="@={model.iCalObjectUpdated.contact}" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <AutoCompleteTextView
-                android:id="@+id/edit_contact_add_autocomplete"
+            <TextView
+                android:id="@+id/edit_categories_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
+                android:text="@string/edit_categories_header"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
+                app:drawableStartCompat="@drawable/ic_category"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_contact_edit" />
+
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/edit_categories_chipgroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_categories_header">
+
+            </com.google.android.material.chip.ChipGroup>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_categories_add"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
-                android:inputType="textCapSentences|textEmailAddress|textShortMessage"
-                android:text="@={model.iCalObjectUpdated.contact}" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_add_category_hint"
+                android:labelFor="@id/edit_categories_add_autocomplete"
+                android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
+                app:endIconContentDescription="Add category"
+                app:endIconDrawable="@drawable/ic_category_add"
+                app:endIconMode="custom"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_categories_chipgroup">
 
 
-
-        <TextView
-            android:id="@+id/edit_categories_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/edit_categories_header"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_contact_edit"
-            android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
-            app:drawableStartCompat="@drawable/ic_category"
-            android:drawablePadding="8dp"
-            />
+                <AutoCompleteTextView
+                    android:id="@+id/edit_categories_add_autocomplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="textShortMessage|textCapSentences"
+                    android:singleLine="false" />
 
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/edit_categories_chipgroup"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:chipSpacingHorizontal="8dp"
-            app:chipSpacingVertical="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_categories_header"
-            android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
-            >
-
-        </com.google.android.material.chip.ChipGroup>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_categories_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_add_category_hint"
-            android:labelFor="@id/edit_categories_add_autocomplete"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-            app:endIconContentDescription="Add category"
-            app:endIconDrawable="@drawable/ic_category_add"
-            app:endIconMode="custom"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_categories_chipgroup"
-            android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}" >
+            <TextView
+                android:id="@+id/edit_attendees_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
+                android:text="@string/edit_attendees_header"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+                app:drawableStartCompat="@drawable/ic_attendee"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_categories_add" />
 
 
-            <AutoCompleteTextView
-                android:id="@+id/edit_categories_add_autocomplete"
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/edit_attendees_chipgroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_attendees_header" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_attendees_add"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="false"
-                android:imeOptions="actionDone"
-                android:inputType="textShortMessage|textCapSentences" />
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_attendees_hint"
+                android:labelFor="@id/edit_attendees_add_autocomplete"
+                android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+                app:endIconContentDescription="Add attendee"
+                app:endIconDrawable="@drawable/ic_attendee_add"
+                app:endIconMode="custom"
+                app:error="@{model.attendeesError}"
+                app:errorEnabled="true"
+                app:helperText="Add an attendee"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_attendees_chipgroup">
 
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <AutoCompleteTextView
+                    android:id="@+id/edit_attendees_add_autocomplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:afterTextChanged="@{model::clearUrlError}"
+                    android:imeOptions="actionDone"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="false" />
 
 
-
-        <TextView
-            android:id="@+id/edit_attendees_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/edit_attendees_header"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_categories_add"
-            android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-            app:drawableStartCompat="@drawable/ic_attendee"
-            android:drawablePadding="8dp"
-            />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/edit_attendees_chipgroup"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:chipSpacingHorizontal="8dp"
-            app:chipSpacingVertical="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_attendees_header"
-            android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-            />
+            <TextView
+                android:id="@+id/edit_comments_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
+                android:text="@string/view_comments_header"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+                app:drawableStartCompat="@drawable/ic_comments"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_attendees_add" />
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_attendees_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_attendees_hint"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-            android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-            android:labelFor="@id/edit_attendees_add_autocomplete"
-            app:endIconContentDescription="Add attendee"
-            app:endIconDrawable="@drawable/ic_attendee_add"
-            app:endIconMode="custom"
-            app:error="@{model.attendeesError}"
-            app:errorEnabled="true"
-            app:helperTextEnabled="true"
-            app:helperText="Add an attendee"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_attendees_chipgroup">
-
-
-            <AutoCompleteTextView
-                android:id="@+id/edit_attendees_add_autocomplete"
+            <LinearLayout
+                android:id="@+id/edit_comments_linearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:afterTextChanged="@{model::clearUrlError}"
-                android:imeOptions="actionDone"
-                android:inputType="textEmailAddress"
-                android:singleLine="false" />
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:divider="?android:dividerHorizontal"
+                android:orientation="vertical"
+                android:showDividers="middle"
+                android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_comments_header">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
 
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <TextView
-            android:id="@+id/edit_comments_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/view_comments_header"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_attendees_add"
-            android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
-            app:drawableStartCompat="@drawable/ic_comments"
-            android:drawablePadding="8dp"
-            />
-
-
-        <LinearLayout
-            android:id="@+id/edit_comments_linearlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:divider="?android:dividerHorizontal"
-            android:orientation="vertical"
-            android:showDividers="middle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_comments_header"
-            android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
-            >
-
-            <com.google.android.material.card.MaterialCardView
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_comment_add"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checkable="true"
-                android:clickable="true"
-                android:focusable="true">
-
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_comment_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="64dp"
-            android:hint="@string/edit_comment_hint"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            app:endIconContentDescription="Add category"
-            app:endIconDrawable="@drawable/ic_comment_add"
-            app:endIconMode="custom"
-            app:helperText="Add a comment"
-            app:helperTextEnabled="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_comments_linearlayout"
-            android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
-            >
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="64dp"
+                android:hint="@string/edit_comment_hint"
+                android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+                app:endIconContentDescription="Add category"
+                app:endIconDrawable="@drawable/ic_comment_add"
+                app:endIconMode="custom"
+                app:helperText="Add a comment"
+                app:helperTextEnabled="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_comments_linearlayout">
 
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_comment_add_edittext"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_comment_add_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textWebEmailAddress|textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/edit_attachments_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
+                android:text="@string/view_attachments_header"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+                app:drawableStartCompat="@drawable/ic_attachment"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_comment_add" />
+
+
+            <LinearLayout
+                android:id="@+id/edit_attachments_linearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textWebEmailAddress|textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:divider="?android:dividerHorizontal"
+                android:orientation="vertical"
+                android:showDividers="middle"
+                android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_attachments_header">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/edit_attachments_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/view_attachments_header"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_comment_add"
-            android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
-            app:drawableStartCompat="@drawable/ic_attachment"
-            android:drawablePadding="8dp"
-            />
-
-
-        <LinearLayout
-            android:id="@+id/edit_attachments_linearlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:divider="?android:dividerHorizontal"
-            android:orientation="vertical"
-            android:showDividers="middle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_attachments_header"
-            android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
-            >
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/button_attachment_add"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checkable="true"
-                android:clickable="true"
-                android:focusable="true">
-
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-
-
-        <Button
-            android:id="@+id/button_attachment_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:layout_weight="1"
-            android:text="@string/edit_attachment_button_text"
-            android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
-            app:icon="@drawable/ic_attachment_add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_attachments_linearlayout" />
+                android:layout_marginBottom="64dp"
+                android:layout_weight="1"
+                android:text="@string/edit_attachment_button_text"
+                android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+                app:icon="@drawable/ic_attachment_add"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_take_picture"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_attachments_linearlayout" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/button_take_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/edit_take_picture_button_text"
+                android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+                app:icon="@drawable/ic_photo_add"
+                app:layout_constraintBottom_toBottomOf="@+id/button_attachment_add"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/button_attachment_add"
+                app:layout_constraintTop_toTopOf="@+id/button_attachment_add" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </ScrollView>

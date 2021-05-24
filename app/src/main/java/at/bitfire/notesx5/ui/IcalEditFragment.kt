@@ -11,11 +11,15 @@ package at.bitfire.notesx5.ui
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.ContactsContract
+import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
@@ -26,6 +30,7 @@ import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -66,8 +71,9 @@ class IcalEditFragment : Fragment(),
 
     private var displayedCategoryChips = mutableListOf<Category>()
 
-
     private var datetimepickerOrigin: Int? = null
+
+    private var photoUri: Uri? = null     // Uri for captured photo
 
 
     companion object {
@@ -251,12 +257,11 @@ class IcalEditFragment : Fragment(),
                 binding.editPriorityChip.text = it.priority.toString()
 
             // Set the default value of the Status Chip
-            if (it.component == Component.VTODO.name)
-                binding.editStatusChip.text = StatusTodo.getStringResource(requireContext(), it.status) ?: it.status
-            else if (it.component == Component.VJOURNAL.name)
-                binding.editStatusChip.text = StatusJournal.getStringResource(requireContext(), it.status) ?: it.status
-            else
-                binding.editStatusChip.text = it.status       // if unsupported just show whatever is there
+            when (it.component) {
+                Component.VTODO.name -> binding.editStatusChip.text = StatusTodo.getStringResource(requireContext(), it.status) ?: it.status
+                Component.VJOURNAL.name -> binding.editStatusChip.text = StatusJournal.getStringResource(requireContext(), it.status) ?: it.status
+                else -> binding.editStatusChip.text = it.status
+            }       // if unsupported just show whatever is there
 
 
             // Set the default value of the Classification Chip
@@ -436,7 +441,7 @@ class IcalEditFragment : Fragment(),
             icalEditViewModel.allCollections.value?.forEach { it.displayName?.let { name -> allCollectionNames.add(name) } }
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, allCollectionNames)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.setAdapter(adapter)
+            spinner.adapter = adapter
 
             // set the default selection for the spinner. The same snippet exists for the vJournalItem observer
             if (icalEditViewModel.allCollections.value != null) {
@@ -518,12 +523,11 @@ class IcalEditFragment : Fragment(),
 
             // update the status only if it was actually changed, otherwise the performance sucks
             if (icalEditViewModel.iCalObjectUpdated.value!!.status != statusBefore) {
-                if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name)
-                    binding.editStatusChip.text = StatusTodo.getStringResource(requireContext(), icalEditViewModel.iCalObjectUpdated.value!!.status) ?: icalEditViewModel.iCalObjectUpdated.value!!.status
-                else if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VJOURNAL.name)
-                    binding.editStatusChip.text = StatusJournal.getStringResource(requireContext(), icalEditViewModel.iCalObjectUpdated.value!!.status) ?: icalEditViewModel.iCalObjectUpdated.value!!.status
-                else
-                    binding.editStatusChip.text = icalEditViewModel.iCalObjectUpdated.value!!.status       // if unsupported just show whatever is there
+                when (icalEditViewModel.iCalObjectUpdated.value!!.component) {
+                    Component.VTODO.name -> binding.editStatusChip.text = StatusTodo.getStringResource(requireContext(), icalEditViewModel.iCalObjectUpdated.value!!.status) ?: icalEditViewModel.iCalObjectUpdated.value!!.status
+                    Component.VJOURNAL.name -> binding.editStatusChip.text = StatusJournal.getStringResource(requireContext(), icalEditViewModel.iCalObjectUpdated.value!!.status) ?: icalEditViewModel.iCalObjectUpdated.value!!.status
+                    else -> binding.editStatusChip.text = icalEditViewModel.iCalObjectUpdated.value!!.status
+                }       // if unsupported just show whatever is there
             }
         }
 
@@ -633,7 +637,40 @@ class IcalEditFragment : Fragment(),
             var chooseFile = Intent(Intent.ACTION_GET_CONTENT)
             chooseFile.type = "*/*"
             chooseFile = Intent.createChooser(chooseFile, "Choose a file")
-            startActivityForResult(chooseFile, PICKFILE_RESULT_CODE)
+            try {
+                startActivityForResult(chooseFile, PICKFILE_RESULT_CODE)
+            } catch (e: ActivityNotFoundException) {
+                Log.e("chooseFileIntent", "Failed to open filepicker\n$e")
+                Toast.makeText(context, "Failed to open filepicker", Toast.LENGTH_LONG).show()
+            }
+        }
+
+
+        // don't show the button if the device does not have a camera
+        if(!requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY))
+            binding.buttonTakePicture.visibility = View.GONE
+
+        binding.buttonTakePicture.setOnClickListener {
+
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if(requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                try {
+                    val storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                    val file = File.createTempFile("notesx5_", ".jpg", storageDir)
+                    //Log.d("externalFilesPath", file.absolutePath)
+
+                    photoUri = FileProvider.getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, file)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE_CODE)
+
+                } catch (e: ActivityNotFoundException) {
+                    Log.e("takePictureIntent", "Failed to open camera\n$e")
+                    Toast.makeText(context, "Failed to open camera", Toast.LENGTH_LONG).show()
+                } catch (e: IOException) {
+                    Log.e("takePictureIntent", "Failed to access storage\n$e")
+                    Toast.makeText(context, "Failed to access storage", Toast.LENGTH_LONG).show()
+                }
+            }
         }
 
 
@@ -1134,7 +1171,7 @@ class IcalEditFragment : Fragment(),
 
         // TODO: Here it can be considered that also the cuname in the attendee is filled out based on the contacts entry.
         //val arrayAdapterNameAndMail = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsNameAndMail)
-        val arrayAdapterNameAndMail = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsMail)
+        val arrayAdapterNameAndMail = ArrayAdapter(application.applicationContext, android.R.layout.simple_list_item_1, allContactsMail)
 
         binding.editContactAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
         binding.editAttendeesAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
@@ -1191,8 +1228,8 @@ class IcalEditFragment : Fragment(),
 
     // callback for Intents, now used for the filepicker to handle the file
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        when (requestCode) {
-            PICKFILE_RESULT_CODE -> if (resultCode == Activity.RESULT_OK) {
+        when  {
+            requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK -> {
                 val fileUri = intent?.data
                 val filePath = fileUri?.path
                 Log.d("fileUri", fileUri.toString())
@@ -1235,7 +1272,8 @@ class IcalEditFragment : Fragment(),
 
                             val newAttachment = Attachment(
                                 fmttype = mimeType,
-                                uri = "/${Attachment.ATTACHMENT_DIR}/${newFile.name}",
+                                //uri = "/${Attachment.ATTACHMENT_DIR}/${newFile.name}",
+                                uri = FileProvider.getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, newFile).toString(),
                                 filename = filename,
                                 extension = fileextension,
                                 filesize = filesize
@@ -1245,11 +1283,55 @@ class IcalEditFragment : Fragment(),
                             stream.close()
                         }
                     } catch (e: IOException) {
-                        Log.e("IOException", "Failed to process file\n${e.toString()}")
+                        Log.e("IOException", "Failed to process file\n$e")
                     }
                 }
             }
-        }
+
+            // save the picture taken by the camera
+            requestCode == REQUEST_IMAGE_CAPTURE_CODE && resultCode == Activity.RESULT_OK -> {
+                //val imageBitmap = intent?.extras?.get("data") as Bitmap
+                Log.d("photoUri", "photoUri is now $photoUri")
+
+                if(photoUri != null) {
+
+                    val mimeType = photoUri?.let { returnUri -> requireContext().contentResolver.getType(returnUri)  }
+
+                    var filesize: Long? = null
+                    var filename: String? = null
+                    var fileextension: String? = null
+                    photoUri?.let { returnUri ->
+                        requireContext().contentResolver.query(returnUri, null, null, null, null)
+                    }?.use { cursor ->
+                        // Get the column indexes of the data in the Cursor, move to the first row in the Cursor, get the data, and display it.
+                        val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                        val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+
+                        cursor.moveToFirst()
+                        filename = cursor.getString(nameIndex)
+                        filesize = cursor.getLong(sizeIndex)
+                        fileextension = "." + filename?.substringAfterLast('.', "")
+                    }
+
+                    val newAttachment = Attachment(
+                        fmttype = mimeType,
+                        uri = photoUri.toString(),
+                        filename = filename,
+                        extension = fileextension,
+                        filesize = filesize
+                    )
+                    icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
+                    addAttachmentView(newAttachment)      // add the new attachment
+
+                    // Scanning the file makes it available in the gallery (currently not working) TODO
+                    //MediaScannerConnection.scanFile(requireContext(), arrayOf(photoUri.toString()), arrayOf(mimeType), null)
+
+                } else {
+                        Log.e("REQUEST_IMAGE_CAPTURE", "Failed to process and store picture")
+                    }
+                photoUri = null
+                }
+            }
         super.onActivityResult(requestCode, resultCode, intent)
 
     }
