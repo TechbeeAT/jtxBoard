@@ -12,6 +12,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Application
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.content.SharedPreferences
@@ -23,6 +24,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
+import android.util.Size
 import android.view.*
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -46,6 +48,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
 
 
@@ -188,8 +191,11 @@ class IcalViewFragment : Fragment() {
                             startActivity(intent)
 
                         } catch (e: IOException) {
-                            Log.i("fileprovider", "Failed to retrieve file")
-                            Toast.makeText(requireContext(), "Failed to retrieve file.", Toast.LENGTH_SHORT).show()
+                            Log.i("fileprovider", "Failed to retrieve file\n$e")
+                            Toast.makeText(requireContext(), "Failed to retrieve file.", Toast.LENGTH_LONG).show()
+                        } catch (e: ActivityNotFoundException) {
+                            Log.i("ActivityNotFound", "No activity found to open file\n$e")
+                            Toast.makeText(requireContext(), "No app was found to open this file.", Toast.LENGTH_LONG).show()
                         }
 
                     }
@@ -203,6 +209,21 @@ class IcalViewFragment : Fragment() {
                         attachment.filesize!!/1024 < 1024 -> attachmentBinding.viewAttachmentFilesize.text = "${attachment.filesize!! /1024} KB"
                         else  -> attachmentBinding.viewAttachmentFilesize.text = "${attachment.filesize!! /1024/1024} MB"
                     }
+
+                    // load thumbnail if possible
+                    try {
+                        val thumbSize = Size(50, 50)
+                        val thumbUri = Uri.parse(attachment.uri)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            val thumbBitmap = context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
+                            attachmentBinding.viewAttachmentPictureThumbnail.setImageBitmap(thumbBitmap)
+                            attachmentBinding.viewAttachmentPictureThumbnail.visibility = View.VISIBLE
+                        }
+                    } catch (e: FileNotFoundException) {
+                        Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
+                    }
+
                     binding.viewAttachmentsLinearlayout.addView(attachmentBinding.root)
                 }
 

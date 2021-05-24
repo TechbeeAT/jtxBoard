@@ -1043,9 +1043,7 @@ class IcalEditFragment : Fragment(),
         var thumbUri: Uri? = null
 
         try {
-
-
-            val thumbSize = Size(500, 500)           // TODO: make dependend on screen size
+            val thumbSize = Size(50, 50)
             thumbUri = Uri.parse(attachment.uri)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

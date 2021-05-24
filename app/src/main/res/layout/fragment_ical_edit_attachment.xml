@@ -22,19 +22,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/edit_attachment_picture_thumbnail"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/ic_launcher_background"
+            tools:visibility="visible" />
+
         <TextView
             android:id="@+id/edit_attachment_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
             android:ellipsize="middle"
             android:singleLine="true"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_attachment_picture_thumbnail"
             app:layout_constraintEnd_toStartOf="@+id/edit_attachment_delete"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/edit_attachment_picture_thumbnail"
+            app:layout_constraintTop_toTopOf="@+id/edit_attachment_picture_thumbnail"
             tools:text="Attachment.pdf" />
 
         <ImageView
@@ -48,20 +62,7 @@
             app:srcCompat="@drawable/ic_attachment_delete"
             android:contentDescription="@string/edit_attachment_delete_attachment" />
 
-        <ImageView
-            android:id="@+id/edit_attachment_picture_thumbnail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:visibility="invisible"
-            tools:visibility="visible"
-            tools:src="@drawable/ic_launcher_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/edit_attachment_textview"
-            app:layout_constraintStart_toStartOf="@+id/edit_attachment_textview"
-            app:layout_constraintTop_toBottomOf="@+id/edit_attachment_textview"
-            tools:ignore="ContentDescription" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
