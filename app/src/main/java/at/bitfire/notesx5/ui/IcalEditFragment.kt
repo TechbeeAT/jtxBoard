@@ -15,7 +15,11 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.ContactsContract
@@ -23,7 +27,9 @@ import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
+import android.util.DisplayMetrics
 import android.util.Log
+import android.util.Size
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -48,6 +54,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.DateFormat
 import java.util.*
@@ -1032,6 +1039,49 @@ class IcalEditFragment : Fragment(),
 
         val bindingAttachment = FragmentIcalEditAttachmentBinding.inflate(inflater, container, false)
         bindingAttachment.editAttachmentTextview.text = "${attachment.filename}"
+
+        var thumbUri: Uri? = null
+
+        try {
+
+
+            val thumbSize = Size(500, 500)           // TODO: make dependend on screen size
+            thumbUri = Uri.parse(attachment.uri)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val thumbBitmap = context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
+                bindingAttachment.editAttachmentPictureThumbnail.setImageBitmap(thumbBitmap)
+                bindingAttachment.editAttachmentPictureThumbnail.visibility = View.VISIBLE
+            }
+
+
+            // the method with the MediaMetadataRetriever might be useful when also PDF-thumbnails should be displayed. But currently this is not working...
+            /*
+            thumbUri = Uri.parse(attachment.uri)
+
+            val mmr = MediaMetadataRetriever()
+            mmr.setDataSource(requireContext(), thumbUri)
+
+            //show a thumbnail if possible
+            if(mmr.embeddedPicture != null) {
+                val bitmap = BitmapFactory.decodeByteArray(mmr.embeddedPicture, 0, mmr.embeddedPicture!!.size)
+                bindingAttachment.editAttachmentPictureThumbnail.setImageBitmap(bitmap)
+                bindingAttachment.editAttachmentPictureThumbnail.visibility = View.VISIBLE
+            }
+
+            mmr.release()
+
+             */
+
+        } catch (e: IllegalArgumentException) {
+            Log.d("MediaMetadataRetriever", "Failed to retrive thumbnail \nUri: $thumbUri\n$e")
+        } catch (e: FileNotFoundException) {
+            Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
+        }
+
+
+
+
         binding.editAttachmentsLinearlayout.addView(bindingAttachment.root)
 
         // delete the attachment on click on the X
@@ -1290,7 +1340,6 @@ class IcalEditFragment : Fragment(),
 
             // save the picture taken by the camera
             requestCode == REQUEST_IMAGE_CAPTURE_CODE && resultCode == Activity.RESULT_OK -> {
-                //val imageBitmap = intent?.extras?.get("data") as Bitmap
                 Log.d("photoUri", "photoUri is now $photoUri")
 
                 if(photoUri != null) {
@@ -1321,10 +1370,12 @@ class IcalEditFragment : Fragment(),
                         filesize = filesize
                     )
                     icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
+
                     addAttachmentView(newAttachment)      // add the new attachment
 
                     // Scanning the file makes it available in the gallery (currently not working) TODO
                     //MediaScannerConnection.scanFile(requireContext(), arrayOf(photoUri.toString()), arrayOf(mimeType), null)
+
 
                 } else {
                         Log.e("REQUEST_IMAGE_CAPTURE", "Failed to process and store picture")
