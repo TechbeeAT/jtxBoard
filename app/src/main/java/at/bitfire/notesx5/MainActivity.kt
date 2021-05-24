@@ -19,9 +19,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
+import androidx.preference.PreferenceManager
 import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.relations.ICalEntity
 import at.bitfire.notesx5.ui.IcalListFragmentDirections
@@ -63,6 +65,17 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar: Toolbar = findViewById(R.id.topAppBar)
         setSupportActionBar(toolbar)
+
+
+        // user interface settings
+        val settings = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        var enforceDark = settings.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false)
+        if(enforceDark)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+
+
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_main_layout)
         val toggle = ActionBarDrawerToggle(
