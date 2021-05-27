@@ -79,7 +79,7 @@ class AttendeeAndroidTest {
 
         val attendee = Attendee()
         val conval = ContentValues()
-        val newVal = Cutype.INDIVIDUAL.param
+        val newVal = Cutype.INDIVIDUAL.name
 
         conval.put(COLUMN_ATTENDEE_CUTYPE, newVal)
         val attendee2 = attendee.applyContentValues(conval)
@@ -108,7 +108,7 @@ class AttendeeAndroidTest {
 
         val attendee = Attendee()
         val conval = ContentValues()
-        val newVal = Role.NON_PARTICIPANT.param
+        val newVal = Role.`NON-PARTICIPANT`.name
 
         conval.put(COLUMN_ATTENDEE_ROLE, newVal)
         val attendee2 = attendee.applyContentValues(conval)

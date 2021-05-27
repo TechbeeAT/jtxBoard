@@ -141,6 +141,9 @@ INSERTs (Asyncronously / Suspend)
     suspend fun insertOrganizer(organizer: Organizer): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertResource(resource: Resource): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRelatedto(relatedto: Relatedto): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -8,8 +8,8 @@
 
 package at.bitfire.notesx5.database
 
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
@@ -36,11 +36,12 @@ class ICalDatabaseDaoTest {
 
 
     private lateinit var database: ICalDatabaseDao
+    private lateinit var context: Context
     //private lateinit var db: ICalDatabase
 
     @Before
     fun createDb() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        context = InstrumentationRegistry.getInstrumentation().targetContext
         database = ICalDatabase.getInMemoryDB(context).iCalDatabaseDao
 
         database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests"))
@@ -73,25 +74,27 @@ class ICalDatabaseDaoTest {
         preparedICalObject.id = database.insertICalObject(preparedICalObject)
 
         val preparedAttendee = Attendee(icalObjectId = preparedICalObject.id, caladdress = "mailto:test@test.net")
+        val preparedAttachment = Attachment(icalObjectId = preparedICalObject.id, uri = "https://localhost/")
         val preparedCategory = Category(icalObjectId = preparedICalObject.id, text = "category")
         val preparedComment = Comment(icalObjectId = preparedICalObject.id, text = "comment")
         //val preparedContact = Contact(icalObjectId = preparedEntry.id, text = "contact")
         val preparedOrganizer = Organizer(icalObjectId = preparedICalObject.id, caladdress = "mailto:test@test.net")
-        //val preparedResource = Resource(icalObjectId = preparedEntry.id, text = "resource")
+        val preparedResource = Resource(icalObjectId = preparedICalObject.id, text = "resource")
 
         val preparedSubNote = ICalObject.createNote("Subnote")
         preparedSubNote.id = database.insertICalObject(preparedSubNote)
         val preparedRelatedto = Relatedto(icalObjectId = preparedICalObject.id, linkedICalObjectId = preparedSubNote.id, reltype = "Child")
 
         preparedAttendee.attendeeId = database.insertAttendee(preparedAttendee)
+        preparedAttachment.attachmentId = database.insertAttachment(preparedAttachment)
         preparedCategory.categoryId = database.insertCategory(preparedCategory)
         preparedComment.commentId = database.insertComment(preparedComment)
         //database.insertContact(preparedContact)
         preparedOrganizer.organizerId = database.insertOrganizer(preparedOrganizer)
-        //database.insertResource(preparedResource)
+        preparedResource.resourceId = database.insertResource(preparedResource)
         preparedRelatedto.relatedtoId = database.insertRelatedto(preparedRelatedto)
 
-        val preparedIcalEntity = ICalEntity(preparedICalObject, listOf(preparedComment), listOf(preparedCategory), listOf(preparedAttendee), preparedOrganizer, listOf(preparedRelatedto))
+        val preparedIcalEntity = ICalEntity(preparedICalObject, listOf(preparedComment), listOf(preparedCategory), listOf(preparedAttendee), preparedOrganizer, listOf(preparedRelatedto), listOf(preparedResource), listOf(preparedAttachment))
         preparedIcalEntity.ICalCollection = database.getCollectionByIdSync(1L)
 
         val retrievedEntry = database.get(preparedICalObject.id).getOrAwaitValue()
@@ -101,7 +104,7 @@ class ICalDatabaseDaoTest {
 
     @After
     fun closeDb() {
-        //db.close()
+        ICalDatabase.getInMemoryDB(context).close()
     }
 
 
