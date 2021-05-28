@@ -34,7 +34,6 @@ class ICalDatabaseDaoTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-
     private lateinit var database: ICalDatabaseDao
     private lateinit var context: Context
     //private lateinit var db: ICalDatabase

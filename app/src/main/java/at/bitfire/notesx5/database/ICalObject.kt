@@ -353,7 +353,7 @@ data class ICalObject(
         fun createNote(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.name)
         fun createNote(summary: String) = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.name, summary = summary)
         fun createTodo() = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY")
-        fun createSubtask(summary: String) = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, summary = summary, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY")
+        fun createTask(summary: String) = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, summary = summary, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY")
 
 
         /**

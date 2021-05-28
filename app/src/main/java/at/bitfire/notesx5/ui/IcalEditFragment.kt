@@ -15,9 +15,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -27,7 +24,6 @@ import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
-import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
 import android.view.*
@@ -683,7 +679,7 @@ class IcalEditFragment : Fragment(),
 
         binding.editSubtasksAdd.setEndIconOnClickListener {
             // Respond to end icon presses
-            val newSubtask = ICalObject.createSubtask(summary = binding.editSubtasksAdd.editText?.text.toString())
+            val newSubtask = ICalObject.createTask(summary = binding.editSubtasksAdd.editText?.text.toString())
             icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
             addSubtasksView(newSubtask)      // add the new comment
             binding.editSubtasksAdd.editText?.text?.clear()  // clear the field
@@ -695,7 +691,7 @@ class IcalEditFragment : Fragment(),
         binding.editSubtasksAdd.editText?.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    val newSubtask = ICalObject.createSubtask(summary = binding.editSubtasksAdd.editText?.text.toString())
+                    val newSubtask = ICalObject.createTask(summary = binding.editSubtasksAdd.editText?.text.toString())
                     icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
                     addSubtasksView(newSubtask)      // add the new comment
                     binding.editSubtasksAdd.editText?.text?.clear()  // clear the field

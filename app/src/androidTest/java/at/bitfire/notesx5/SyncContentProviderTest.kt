@@ -32,6 +32,8 @@ class SyncContentProviderTest {
 
     private var mContentResolver: ContentResolver? = null
 
+    private var testaccount = Account("testAccount", "testAccount")
+
 
     @Before
     fun setUp() {
@@ -43,15 +45,15 @@ class SyncContentProviderTest {
     }
 
 
+
     @Test
     fun icalObject_insert_find_delete()  {
         //prepare
-        val account = Account("note2delete", "note2delete")
-        val newCollection = insertCollection(account, null, null)
+        val newCollection = insertCollection(testaccount, null, null)
         val newCollectionId = newCollection?.lastPathSegment?.toLongOrNull()
 
         //insert
-        val newICalObject = insertIcalObject(account, "note2delete", newCollectionId!!)
+        val newICalObject = insertIcalObject(testaccount, "note2delete", newCollectionId!!)
 
         //find
         val cursor: Cursor? = mContentResolver?.query(newICalObject!!, arrayOf(NotesX5Contract.X5ICalObject.ID, NotesX5Contract.X5ICalObject.SUMMARY), null, null, null)

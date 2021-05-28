@@ -61,7 +61,7 @@ class IcalViewViewModel(private val icalItemId: Long,
 
         viewModelScope.launch {
 
-            // insert a new value to initialize the vJournalItem or load the existing one from the DB
+            // insert a new value to initialize the item or load the existing one from the DB
             icalEntity = if (icalItemId == 0L)
                 MutableLiveData<ICalEntity?>().apply {
                     postValue(ICalEntity(ICalObject(), null, null, null, null, null))
