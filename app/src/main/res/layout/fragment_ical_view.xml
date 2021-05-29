@@ -64,7 +64,7 @@
 
 
             <TextView
-                android:id="@+id/list_item_dtstart_day"
+                android:id="@+id/view_dtstart_day"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -79,7 +79,7 @@
                 tools:text="31" />
 
             <TextView
-                android:id="@+id/list_item_dtstart_month"
+                android:id="@+id/view_dtstart_month"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="@{UtilKt.convertLongToMonthString(model.icalEntity.property.dtstart)}"
@@ -87,13 +87,13 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="@+id/list_item_dtstart_day"
-                app:layout_constraintStart_toStartOf="@+id/list_item_dtstart_day"
-                app:layout_constraintTop_toBottomOf="@+id/list_item_dtstart_day"
+                app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
+                app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
+                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_day"
                 tools:text="December" />
 
             <TextView
-                android:id="@+id/list_item_dtstart_year"
+                android:id="@+id/view_dtstart_year"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="@{UtilKt.convertLongToYearString(model.icalEntity.property.dtstart)}"
@@ -101,13 +101,13 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="@+id/list_item_dtstart_day"
-                app:layout_constraintStart_toStartOf="@+id/list_item_dtstart_day"
-                app:layout_constraintTop_toBottomOf="@+id/list_item_dtstart_month"
+                app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
+                app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
+                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_month"
                 tools:text="2020" />
 
             <TextView
-                android:id="@+id/list_item_dtstart_time"
+                android:id="@+id/view_dtstart_time"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="@{UtilKt.convertLongToTimeString(model.icalEntity.property.dtstart)}"
@@ -116,8 +116,8 @@
                 android:textStyle="bold"
                 android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
-                app:layout_constraintStart_toStartOf="@+id/list_item_dtstart_day"
-                app:layout_constraintTop_toBottomOf="@+id/list_item_dtstart_year"
+                app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
+                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_year"
                 app:layout_constraintVertical_bias="0.0"
                 tools:text="13:30" />
 
@@ -133,7 +133,7 @@
                 android:text="@{model.icalEntity.ICalCollection.displayName}"
                 app:drawableStartCompat="@drawable/ic_collection"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
+                app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
                 app:layout_constraintTop_toBottomOf="@+id/view_colorbar"
                 tools:text="Collection" />
 
@@ -148,7 +148,7 @@
                 app:chipSpacingVertical="0dp"
                 app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
+                app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
                 app:layout_constraintTop_toBottomOf="@+id/view_collection" />
 
 
@@ -248,14 +248,12 @@
                 android:id="@+id/view_started"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="@{model.startedFormatted}"
                 android:textStyle="bold|italic"
                 android:visibility="@{model.startedVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_progress_slider"
                 tools:text="Started: February 5, 2021" />
 
@@ -264,14 +262,12 @@
                 android:id="@+id/view_completed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
                 android:text="@{model.completedFormatted}"
                 android:textStyle="bold|italic"
                 android:visibility="@{model.completedVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_started"
                 tools:text="Completed: March 1, 2021" />
 

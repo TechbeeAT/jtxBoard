@@ -46,7 +46,6 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var resourceUpdated: MutableList<Resource> = mutableListOf(Resource())
     var subtaskUpdated: MutableList<ICalObject> = mutableListOf()
 
-
     var categoryDeleted: MutableList<Category> = mutableListOf(Category())
     var commentDeleted: MutableList<Comment> = mutableListOf(Comment())
     var attachmentDeleted: MutableList<Attachment> = mutableListOf(Attachment())
@@ -79,7 +78,6 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var completedtimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var starteddateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var startedtimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-
 
 
     var duedateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
@@ -133,13 +131,8 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var addStartedTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
 
 
-
-
     val urlError = MutableLiveData<String>()
     val attendeesError = MutableLiveData<String>()
-
-
-
 
 
     init {
@@ -153,8 +146,6 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
             allCategories = database.getAllCategories()
             allCollections = database.getAllCollections()
             allRelatedto = database.getAllRelatedto()
-
-
 
         }
     }
@@ -183,8 +174,6 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         completedtimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true && iCalEntity.property.completedTimezone != "ALLDAY")
         starteddateVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true)
         startedtimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true && iCalEntity.property.dtstartTimezone != "ALLDAY")
-
-
     }
 
     fun savingClicked() {
@@ -409,6 +398,11 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
             if (item.organizer != null) {
                 item.organizer?.icalObjectId = newId
                 database.insertOrganizer(item.organizer!!)
+            }
+
+            item.attachment?.forEach {
+                it.icalObjectId = newId
+                database.insertAttachment(it)
             }
 
             // relations need to be rebuild from the child to the parent

@@ -1380,5 +1380,4 @@ class IcalEditFragment : Fragment(),
         super.onActivityResult(requestCode, resultCode, intent)
 
     }
-
 }
