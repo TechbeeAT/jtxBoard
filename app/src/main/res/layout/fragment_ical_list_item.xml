@@ -91,7 +91,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="2"
@@ -113,6 +113,79 @@
             app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/list_item_summary"
             tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
+
+
+        <ImageView
+            android:id="@+id/list_item_num_attendees_icon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_num_attendees_text"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
+            app:srcCompat="@drawable/ic_attendee"
+            app:tint="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/list_item_num_attendees_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_num_attendees_icon"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_num_attachments_icon"
+            app:layout_constraintTop_toTopOf="@+id/list_item_num_attendees_icon"
+            tools:text="0" />
+
+        <ImageView
+            android:id="@+id/list_item_num_attachments_icon"
+            android:layout_width="10dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_num_attachments_text"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
+            app:srcCompat="@drawable/ic_attachment"
+            app:tint="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/list_item_num_attachments_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_num_attachments_icon"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_num_comments_icon"
+            app:layout_constraintTop_toTopOf="@+id/list_item_num_attachments_icon"
+            tools:text="0" />
+
+        <ImageView
+            android:id="@+id/list_item_num_comments_icon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_num_comments_text"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
+            app:srcCompat="@drawable/ic_comments"
+            app:tint="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/list_item_num_comments_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_num_comments_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/list_item_num_comments_icon"
+            tools:text="0" />
 
 
         <TextView
@@ -272,7 +345,7 @@
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/list_item_summary"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_num_attendees_icon"
             tools:text="Category1, Category2" />
 
         <TextView

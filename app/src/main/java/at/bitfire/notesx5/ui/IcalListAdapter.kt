@@ -221,8 +221,38 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             if (iCal4ListItem.property.priority != null && iCal4ListItem.property.priority in 0..9)
                 holder.priority.text = priorityArray[iCal4ListItem.property.priority!!]
 
+            // field numAttendees
+            if(iCal4ListItem.property.numAttendees == 0) {
+                holder.numAttendeesIcon.visibility = View.GONE
+                holder.numAttendeesText.visibility = View.GONE
+            } else {
+                holder.numAttendeesIcon.visibility = View.VISIBLE
+                holder.numAttendeesText.visibility = View.VISIBLE
+                holder.numAttendeesText.text = iCal4ListItem.property.numAttendees.toString()
+            }
 
-            // turn to item view when the card is clicked
+            //field numAttachments
+            if(iCal4ListItem.property.numAttachments == 0) {
+                holder.numAttachmentsIcon.visibility = View.GONE
+                holder.numAttachmentsText.visibility = View.GONE
+            } else {
+                holder.numAttachmentsIcon.visibility = View.VISIBLE
+                holder.numAttachmentsText.visibility = View.VISIBLE
+                holder.numAttachmentsText.text = iCal4ListItem.property.numAttachments.toString()
+            }
+
+            //field numComments
+            if(iCal4ListItem.property.numComments == 0) {
+                holder.numCommentsIcon.visibility = View.GONE
+                holder.numCommentsText.visibility = View.GONE
+            } else {
+                holder.numCommentsIcon.visibility = View.VISIBLE
+                holder.numCommentsText.visibility = View.VISIBLE
+                holder.numCommentsText.text = iCal4ListItem.property.numComments.toString()
+            }
+
+
+                    // turn to item view when the card is clicked
             holder.listItemCardView.setOnClickListener {
                 it.findNavController().navigate(
                     IcalListFragmentDirections.actionIcalListFragmentToIcalViewFragment()
@@ -305,6 +335,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                     holder.expandSubtasks.setImageResource(R.drawable.ic_expand)
                 }
             }
+
         }
 
         //TODO: Check the impact of this setting!
@@ -350,6 +381,16 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         var subtasksLinearLayout: LinearLayout =
             itemView.findViewById(R.id.list_item_subtasks_linearlayout)
 
+        var numAttendeesIcon: ImageView = itemView.findViewById(R.id.list_item_num_attendees_icon)
+        var numAttachmentsIcon: ImageView = itemView.findViewById(R.id.list_item_num_attachments_icon)
+        var numCommentsIcon: ImageView = itemView.findViewById(R.id.list_item_num_comments_icon)
+        var numAttendeesText: TextView = itemView.findViewById(R.id.list_item_num_attendees_text)
+        var numAttachmentsText: TextView = itemView.findViewById(R.id.list_item_num_attachments_text)
+        var numCommentsText: TextView = itemView.findViewById(R.id.list_item_num_comments_text)
+
+
+
+
     }
 
 
@@ -371,8 +412,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         //val subtaskCount = model.subtasksCountList.value?.find { subtask.id == it.icalobjectId}?.count
         /*if (subtaskCount != null)
             subtaskSummary += " (+${subtaskCount})" */
-        if (subtask.subtasksCount > 0)
-            subtaskSummary += " (+${subtask.subtasksCount})"
+        if (subtask.numSubtasks > 0)
+            subtaskSummary += " (+${subtask.numSubtasks})"
 
         subtaskBinding.listItemSubtaskTextview.text = subtaskSummary
         subtaskBinding.listItemSubtaskProgressSlider.value =
