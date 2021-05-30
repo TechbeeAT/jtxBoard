@@ -16,6 +16,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +33,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
+import java.util.concurrent.TimeUnit
 
 
 const val CONTACT_READ_PERMISSION_CODE =
@@ -53,6 +55,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
+        const val TRIAL_PERIOD_DAYS = 14L
 
     }
 
@@ -74,11 +77,10 @@ class MainActivity : AppCompatActivity() {
         // user interface settings
         val settings = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val enforceDark = settings.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false)
-        if(enforceDark)
+        if (enforceDark)
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-
 
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_main_layout)
@@ -107,14 +109,14 @@ class MainActivity : AppCompatActivity() {
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_aboutFragment)
 
-                    /*
-                R.id.nav_app_settings ->
-                    startActivity(Intent(activity, AppSettingsActivity::class.java))
-                R.id.nav_beta_feedback ->
-                    if (!UiUtils.launchUri(activity, Uri.parse(BETA_FEEDBACK_URI), Intent.ACTION_SENDTO, false))
-                        Toast.makeText(activity, R.string.install_email_client, Toast.LENGTH_LONG).show()
+                /*
+            R.id.nav_app_settings ->
+                startActivity(Intent(activity, AppSettingsActivity::class.java))
+            R.id.nav_beta_feedback ->
+                if (!UiUtils.launchUri(activity, Uri.parse(BETA_FEEDBACK_URI), Intent.ACTION_SENDTO, false))
+                    Toast.makeText(activity, R.string.install_email_client, Toast.LENGTH_LONG).show()
 
-                 */
+             */
                 R.id.nav_app_settings ->
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_settingsFragment)
@@ -145,14 +147,28 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        val firstInstalled: Long = this.applicationContext.packageManager.getPackageInfo(
+            applicationContext.packageName,
+            0
+        ).firstInstallTime
+        // TODO come back here
+        //val trialEnd = firstInstalled + TimeUnit.DAYS.toMillis(TRIAL_PERIOD_DAYS)
+        val trialEnd = firstInstalled + TimeUnit.MINUTES.toMillis(5L)    // for testing
+
+
         // initialize AdMob for Ads Banner
         // TODO: opt out and other options
-        MobileAds.initialize(this) {}
-        val mAdView: AdView = findViewById(R.id.adView_banner_bottom)
-        val adRequest = AdRequest.Builder().build()
-        mAdView.loadAd(adRequest)
-
-
+        // TODO: replace adUnitId with production Unit Id
+        if (System.currentTimeMillis() > trialEnd) {
+            MobileAds.initialize(this) {}
+            val mAdView: AdView = findViewById(R.id.adView_banner_bottom)
+            mAdView.visibility = View.VISIBLE
+            val adRequest = AdRequest.Builder().build()
+            mAdView.loadAd(adRequest)
+        } else {
+            val mAdView: AdView = findViewById(R.id.adView_banner_bottom)
+            mAdView.visibility = View.GONE
+        }
 
     }
 
