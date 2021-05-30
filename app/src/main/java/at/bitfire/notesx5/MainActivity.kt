@@ -28,6 +28,9 @@ import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.relations.ICalEntity
 import at.bitfire.notesx5.ui.IcalListFragmentDirections
 import at.bitfire.notesx5.ui.SettingsFragment
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 
 
@@ -141,6 +144,16 @@ class MainActivity : AppCompatActivity() {
 
             true
         }
+
+        // initialize AdMob for Ads Banner
+        // TODO: opt out and other options
+        MobileAds.initialize(this) {}
+        val mAdView: AdView = findViewById(R.id.adView_banner_bottom)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
+
+
+
     }
 
     override fun onResume() {

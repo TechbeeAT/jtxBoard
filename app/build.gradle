@@ -83,6 +83,9 @@ dependencies {
 
     implementation "androidx.preference:preference-ktx:1.1.1"
 
+    // Admob
+    implementation 'com.google.android.gms:play-services-ads:20.1.0'
+
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
