@@ -28,6 +28,7 @@ import android.util.Log
 import android.util.Size
 import android.view.*
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -193,8 +194,13 @@ class IcalEditFragment : Fragment(),
                 builder.setTitle("Delete \"${icalEditViewModel.iCalObjectUpdated.value?.summary}\"")
                 builder.setMessage("Are you sure you want to delete \"${icalEditViewModel.iCalObjectUpdated.value?.summary}\"?")
                 builder.setPositiveButton("Delete") { _, _ ->
+
                     val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
                     direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
+
+                    //This code snippet makes sure that the soft keyboard gets closed
+                    val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                    imm?.hideSoftInputFromWindow(requireView().windowToken, 0)
 
                     val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
                     icalEditViewModel.delete()
@@ -234,6 +240,10 @@ class IcalEditFragment : Fragment(),
                     scheduleNotification(context, icalEditViewModel.iCalObjectUpdated.value!!.id, icalEditViewModel.iCalObjectUpdated.value!!.summary
                             ?: "", icalEditViewModel.iCalObjectUpdated.value!!.description
                             ?: "", icalEditViewModel.iCalObjectUpdated.value!!.due!!)
+
+                //This code snippet makes sure that the soft keyboard gets closed
+                val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                imm?.hideSoftInputFromWindow(requireView().windowToken, 0)
 
                 // return to list view
                 val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
