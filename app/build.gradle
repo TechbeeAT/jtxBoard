@@ -97,11 +97,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1"
-    androidTestImplementation 'androidx.test:runner:1.4.0-alpha05'
+    androidTestImplementation 'androidx.test:runner:1.4.0-beta01'
 
     // Testing-only dependencies
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32"
-    androidTestImplementation 'androidx.test:core:1.4.0-alpha05'
-    androidTestImplementation 'androidx.test:core-ktx:1.4.0-alpha05'
+    androidTestImplementation 'androidx.test:core:1.4.0-beta01'
+    androidTestImplementation 'androidx.test:core-ktx:1.4.0-beta01'
 
 }
