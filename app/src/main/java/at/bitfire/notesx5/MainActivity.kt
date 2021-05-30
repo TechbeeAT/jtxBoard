@@ -27,6 +27,7 @@ import androidx.preference.PreferenceManager
 import at.bitfire.notesx5.database.ICalObject
 import at.bitfire.notesx5.database.relations.ICalEntity
 import at.bitfire.notesx5.ui.IcalListFragmentDirections
+import at.bitfire.notesx5.ui.SettingsFragment
 import com.google.android.material.navigation.NavigationView
 
 
@@ -98,9 +99,12 @@ class MainActivity : AppCompatActivity() {
 
             // Handle menu item selected
             when (menuItem.itemId) {
-                /*
+
                 R.id.nav_about ->
-                    startActivity(Intent(activity, AboutActivity::class.java))
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_aboutFragment)
+
+                    /*
                 R.id.nav_app_settings ->
                     startActivity(Intent(activity, AppSettingsActivity::class.java))
                 R.id.nav_beta_feedback ->

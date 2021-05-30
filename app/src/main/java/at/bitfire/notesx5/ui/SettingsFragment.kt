@@ -1,9 +1,10 @@
-package at.bitfire.notesx5
+package at.bitfire.notesx5.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import at.bitfire.notesx5.R
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -25,7 +26,5 @@ class SettingsFragment : PreferenceFragmentCompat() {
             else
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
-
-
     }
 }

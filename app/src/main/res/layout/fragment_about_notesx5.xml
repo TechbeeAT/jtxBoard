@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/about_notesx5_icon"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@mipmap/ic_launcher"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"/>
+
+        <TextView
+            android:id="@+id/about_notesx5_app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            android:text="@string/app_name" />
+
+        <TextView
+            android:id="@+id/about_notesx5_app_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_marginTop="4dp"
+            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+            tools:text="Version 1.0 (1)" />
+
+        <TextView
+            android:id="@+id/about_notesx5_build_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            android:textAlignment="center"
+            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+            tools:text="Compiled on May 30, 2021" />
+
+        <TextView
+            android:id="@+id/about_notesx5_copyright"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/about_notesx5_copyright"
+            android:textAlignment="viewStart" />
+
+        <TextView
+            android:id="@+id/about_notesx5_warranty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/about_notesx5_pixels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textAlignment="center" />
+
+        <FrameLayout
+            android:id="@+id/about_notesx5_license_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/about_notesx5_license_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -16,6 +16,7 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "at.bitfire.notesx5"
+        buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
