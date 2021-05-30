@@ -88,7 +88,7 @@
     <string name="list_due_inXhours">Due in %d hours</string>
     <string name="list_tabitem_journals">Journals</string>
     <string name="list_tabitem_notes">Notes</string>
-    <string name="list_tabitem_todos">Todos</string>
+    <string name="list_tabitem_todos">Tasks</string>
     <string name="list_fab_add_contentdesc">Add new item</string>
     <string name="list_progress">Progress</string>
     <string name="list_expand">Expand</string>
