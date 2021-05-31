@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/topAppBarLayout"
-        android:layout_above="@id/adView_banner_bottom"
+        android:layout_above="@id/main_adlinearlayout"
         tools:openDrawer="start">
 
 
@@ -48,12 +48,13 @@
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:defaultNavHost="true"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             app:layout_scrollFlags="scroll"
             app:navGraph="@navigation/navigation"
             tools:layout="@layout/fragment_ical_list" />
+
 
 
         <com.google.android.material.navigation.NavigationView
@@ -65,18 +66,17 @@
             app:headerLayout="@layout/drawer_main_header"
             app:menu="@menu/menu_drawer_main" />
 
+
     </androidx.drawerlayout.widget.DrawerLayout>
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView_banner_bottom"
+
+    <LinearLayout
+        android:id="@+id/main_adlinearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        app:adSize="SMART_BANNER"
-        app:adUnitId="ca-app-pub-3940256099942544/6300978111">  <!-- for testing only -->
-        <!-- ads:adUnitId="ca-app-pub-4426141011962540/8164268500">    -->
-    </com.google.android.gms.ads.AdView>
+        android:orientation="vertical" />
 
 </RelativeLayout>
 

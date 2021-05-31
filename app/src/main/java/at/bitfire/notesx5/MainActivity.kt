@@ -16,7 +16,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.View
+import android.util.DisplayMetrics
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +31,7 @@ import at.bitfire.notesx5.database.relations.ICalEntity
 import at.bitfire.notesx5.ui.IcalListFragmentDirections
 import at.bitfire.notesx5.ui.SettingsFragment
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
@@ -47,6 +49,9 @@ const val REQUEST_IMAGE_CAPTURE_CODE = 401
 const val AUTHORITY_FILEPROVIDER = "at.bitfire.notesx5.fileprovider"
 
 
+
+
+
 /**
  * This main activity is just a container for our fragments,
  * where the real action is.
@@ -56,6 +61,9 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
         const val TRIAL_PERIOD_DAYS = 14L
+
+        const val ADMOB_UNIT_ID_BANNER_TEST = "ca-app-pub-3940256099942544/6300978111"
+        const val ADMOB_UNIT_ID_BANNER_PROD = "ca-app-pub-4426141011962540/8164268500"
 
     }
 
@@ -161,13 +169,29 @@ class MainActivity : AppCompatActivity() {
         // TODO: replace adUnitId with production Unit Id
         if (System.currentTimeMillis() > trialEnd) {
             MobileAds.initialize(this) {}
-            val mAdView: AdView = findViewById(R.id.adView_banner_bottom)
-            mAdView.visibility = View.VISIBLE
+
+            // Section to retrieve the width of the device to set the adSize
+            val outMetrics = DisplayMetrics()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                display!!.getRealMetrics(outMetrics)
+            } else {
+                val display = windowManager.defaultDisplay
+                display.getMetrics(outMetrics)
+            }
+            val adWidth = (outMetrics.widthPixels.toFloat() / outMetrics.density).toInt()
+            val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
+
+            // now that the adSize is determined we can place the add
+            val adView = AdView(this)
+            //adView.adSize = AdSize.SMART_BANNER          // adaptive ads replace the smart banner
+            adView.adSize = adSize
+            adView.adUnitId = ADMOB_UNIT_ID_BANNER_TEST  // for testing
+
+            val adLinearLayout: LinearLayout = findViewById(R.id.main_adlinearlayout)  // add to the linear layout container
             val adRequest = AdRequest.Builder().build()
-            mAdView.loadAd(adRequest)
-        } else {
-            val mAdView: AdView = findViewById(R.id.adView_banner_bottom)
-            mAdView.visibility = View.GONE
+            adView.loadAd(adRequest)
+
+            adLinearLayout.addView(adView)
         }
 
     }
