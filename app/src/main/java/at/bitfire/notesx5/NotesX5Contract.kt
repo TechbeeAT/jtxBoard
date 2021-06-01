@@ -11,7 +11,6 @@ package at.bitfire.notesx5
 import android.accounts.Account
 import android.net.Uri
 import android.provider.BaseColumns
-import at.bitfire.notesx5.database.ICalObject
 
 @Suppress("unused")
 object NotesX5Contract {

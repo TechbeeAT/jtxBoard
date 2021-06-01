@@ -9,7 +9,6 @@
 package at.bitfire.notesx5
 
 import android.annotation.SuppressLint
-import android.text.TextUtils
 import android.util.Patterns
 import java.text.DateFormat
 import java.text.SimpleDateFormat
