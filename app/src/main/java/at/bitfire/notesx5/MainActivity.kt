@@ -37,19 +37,14 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 import java.util.concurrent.TimeUnit
 
-
-const val CONTACT_READ_PERMISSION_CODE =
-    100   // this is necessary for the app permission, 100 ist just a freely chosen value
-const val RECORD_AUDIO_PERMISSION_CODE =
-    200   // this is necessary for the app permission, 200 ist just a freely chosen value
+// this is necessary for the app permission, 100  and 200 ist just a freely chosen value
+const val CONTACT_READ_PERMISSION_CODE = 100
+const val RECORD_AUDIO_PERMISSION_CODE = 200
 
 const val PICKFILE_RESULT_CODE = 301
 const val REQUEST_IMAGE_CAPTURE_CODE = 401
 
 const val AUTHORITY_FILEPROVIDER = "at.bitfire.notesx5.fileprovider"
-
-
-
 
 
 /**
@@ -67,6 +62,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    lateinit var toolbar: Toolbar
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -77,124 +74,15 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
 
         // Set up the toolbar with the navigation drawer
-
-        val toolbar: Toolbar = findViewById(R.id.topAppBar)
+        toolbar = findViewById(R.id.topAppBar)
         setSupportActionBar(toolbar)
 
-
-        // user interface settings
-        val settings = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val enforceDark = settings.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false)
-        if (enforceDark)
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        else
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-
-
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_main_layout)
-        val toggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
-        )
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
-
-        // React on selection in Navigation View
-        val navView: NavigationView = findViewById(R.id.nav_view)
-        navView.setNavigationItemSelectedListener { menuItem ->
-
-            //close drawer
-            drawerLayout.close()
-
-            // Handle menu item selected
-            when (menuItem.itemId) {
-
-                R.id.nav_about ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_aboutFragment)
-
-                /*
-            R.id.nav_app_settings ->
-                startActivity(Intent(activity, AppSettingsActivity::class.java))
-            R.id.nav_beta_feedback ->
-                if (!UiUtils.launchUri(activity, Uri.parse(BETA_FEEDBACK_URI), Intent.ACTION_SENDTO, false))
-                    Toast.makeText(activity, R.string.install_email_client, Toast.LENGTH_LONG).show()
-
-             */
-                R.id.nav_app_settings ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_settingsFragment)
-
-                R.id.nav_twitter ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
-
-                R.id.nav_website ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
-
-                R.id.nav_manual ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
-
-                R.id.nav_faq ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
-
-                R.id.nav_forums ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
-
-                R.id.nav_donate ->
-                    //if (BuildConfig.FLAVOR != App.FLAVOR_GOOGLE_PLAY)
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
-
-                R.id.nav_privacy ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
-            }
-
-            true
-        }
-
-        val firstInstalled: Long = this.applicationContext.packageManager.getPackageInfo(
-            applicationContext.packageName,
-            0
-        ).firstInstallTime
-        // TODO come back here
-        //val trialEnd = firstInstalled + TimeUnit.DAYS.toMillis(TRIAL_PERIOD_DAYS)
-        val trialEnd = firstInstalled + TimeUnit.MINUTES.toMillis(5L)    // for testing
-
-
-        // initialize AdMob for Ads Banner
-        // TODO: opt out and other options
-        // TODO: replace adUnitId with production Unit Id
-        if (System.currentTimeMillis() > trialEnd) {
-            MobileAds.initialize(this) {}
-
-            // Section to retrieve the width of the device to set the adSize
-            val outMetrics = DisplayMetrics()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                display!!.getRealMetrics(outMetrics)
-            } else {
-                val display = windowManager.defaultDisplay
-                display.getMetrics(outMetrics)
-            }
-            val adWidth = (outMetrics.widthPixels.toFloat() / outMetrics.density).toInt()
-            val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
-
-            // now that the adSize is determined we can place the add
-            val adView = AdView(this)
-            //adView.adSize = AdSize.SMART_BANNER          // adaptive ads replace the smart banner
-            adView.adSize = adSize
-            adView.adUnitId = ADMOB_UNIT_ID_BANNER_TEST  // for testing
-
-            val adLinearLayout: LinearLayout = findViewById(R.id.main_adlinearlayout)  // add to the linear layout container
-            val adRequest = AdRequest.Builder().build()
-            adView.loadAd(adRequest)
-
-            adLinearLayout.addView(adView)
-        }
+        setUpDrawer()
+        checkThemeSetting()
+        setUpAds()
 
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -225,6 +113,118 @@ class MainActivity : AppCompatActivity() {
                         )
                     )
             }
+        }
+
+    }
+
+
+    fun setUpDrawer() {
+
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_main_layout)
+        val toggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+
+        // React on selection in Navigation View
+        val navView: NavigationView = findViewById(R.id.nav_view)
+        navView.setNavigationItemSelectedListener { menuItem ->
+
+            //close drawer
+            drawerLayout.close()
+
+            // Handle menu item selected
+            when (menuItem.itemId) {
+
+                R.id.nav_about ->
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_aboutFragment)
+
+                R.id.nav_app_settings ->
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_settingsFragment)
+
+                R.id.nav_twitter ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_website ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_manual ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_faq ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_forums ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_donate ->
+                    //if (BuildConfig.FLAVOR != App.FLAVOR_GOOGLE_PLAY)
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+
+                R.id.nav_privacy ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+            }
+            true
+        }
+    }
+
+    fun checkThemeSetting() {
+        // user interface settings
+        val settings = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val enforceDark = settings.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false)
+        if (enforceDark)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    }
+
+    fun setUpAds() {
+
+        val firstInstalled: Long = this.applicationContext.packageManager.getPackageInfo(
+            applicationContext.packageName,
+            0
+        ).firstInstallTime
+        // TODO come back here
+        //val trialEnd = firstInstalled + TimeUnit.DAYS.toMillis(TRIAL_PERIOD_DAYS)
+        val trialEnd = firstInstalled + TimeUnit.MINUTES.toMillis(5L)    // for testing
+
+        // initialize AdMob for Ads Banner
+        // TODO: opt out and other options
+        // TODO: replace adUnitId with production Unit Id
+        if (System.currentTimeMillis() > trialEnd) {
+            MobileAds.initialize(this) {}
+
+            // Section to retrieve the width of the device to set the adSize
+            val outMetrics = DisplayMetrics()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                display!!.getRealMetrics(outMetrics)
+            } else {
+                val display = windowManager.defaultDisplay
+                display.getMetrics(outMetrics)
+            }
+            val adWidth = (outMetrics.widthPixels.toFloat() / outMetrics.density).toInt()
+            val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
+
+            // now that the adSize is determined we can place the add
+            val adView = AdView(this)
+            //adView.adSize = AdSize.SMART_BANNER          // adaptive ads replace the smart banner
+            adView.adSize = adSize
+            adView.adUnitId = ADMOB_UNIT_ID_BANNER_TEST  // for testing
+
+            val adLinearLayout: LinearLayout =
+                findViewById(R.id.main_adlinearlayout)  // add to the linear layout container
+            val adRequest = AdRequest.Builder().build()
+            adView.loadAd(adRequest)
+
+            adLinearLayout.addView(adView)
         }
 
     }
@@ -269,4 +269,37 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun initializeUserConsent() {
+
+        // Set tag for underage of consent. false means users are not underage.
+        val params = ConsentRequestParameters.Builder()
+            .setTagForUnderAgeOfConsent(false)
+            .build()
+
+        consentInformation = UserMessagingPlatform.getConsentInformation(this)
+        consentInformation.requestConsentInfoUpdate()
+        consentInformation.requestConsentInfoUpdate(
+            this,
+            params,
+            OnConsentInfoUpdateSuccessListener {
+                // The consent information state was updated.
+                // You are now ready to check if a form is available.
+            },
+            OnConsentInfoUpdateFailureListener {
+                // Handle the error.
+            })
+
+    }
+
+    fun loadForm() {
+        UserMessagingPlatform.loadConsentForm(
+            this,
+            { consentForm -> this@MainActivity.consentForm = consentForm }
+        ) {
+            // Handle the error
+        }
+    }
+
 }
+
+

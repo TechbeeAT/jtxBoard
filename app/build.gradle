@@ -86,6 +86,10 @@ dependencies {
     // Admob
     implementation 'com.google.android.gms:play-services-ads:20.1.0'
 
+    // Google Consent for Admob
+    implementation 'com.google.android.ump:user-messaging-platform:1.0.0'
+
+
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
@@ -100,7 +104,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.4.0-beta01'
 
     // Testing-only dependencies
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.10"
     androidTestImplementation 'androidx.test:core:1.4.0-beta01'
     androidTestImplementation 'androidx.test:core-ktx:1.4.0-beta01'
 
