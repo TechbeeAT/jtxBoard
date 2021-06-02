@@ -43,4 +43,16 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:key="gdpr"
+        app:title="GDPR Ad Settings">
+
+        <Preference
+            app:key="show_user_consent"
+            app:summary="Show User Consent"
+            app:title="Show User Consent for Ad Settings"/>
+
+    </PreferenceCategory>
+
+
 </androidx.preference.PreferenceScreen>

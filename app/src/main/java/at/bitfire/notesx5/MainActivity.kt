@@ -17,6 +17,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -35,7 +36,9 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
+import com.google.android.ump.*
 import java.util.concurrent.TimeUnit
+
 
 // this is necessary for the app permission, 100  and 200 ist just a freely chosen value
 const val CONTACT_READ_PERMISSION_CODE = 100
@@ -63,6 +66,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     lateinit var toolbar: Toolbar
+    var consentInformation: ConsentInformation? = null
+    var consentForm: ConsentForm? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +84,11 @@ class MainActivity : AppCompatActivity() {
 
         setUpDrawer()
         checkThemeSetting()
-        setUpAds()
+
+        // if trial period ended, then initialize the consent to show ads
+        // TODO: opt out and other options
+        if (trialPeriodEnded())
+            initializeUserConsent()
 
     }
 
@@ -118,7 +127,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun setUpDrawer() {
+    private fun setUpDrawer() {
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_main_layout)
         val toggle = ActionBarDrawerToggle(
@@ -176,7 +185,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun checkThemeSetting() {
+    private fun checkThemeSetting() {
         // user interface settings
         val settings = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val enforceDark = settings.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false)
@@ -186,8 +195,7 @@ class MainActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
     }
 
-    fun setUpAds() {
-
+    fun trialPeriodEnded(): Boolean {
         val firstInstalled: Long = this.applicationContext.packageManager.getPackageInfo(
             applicationContext.packageName,
             0
@@ -196,37 +204,39 @@ class MainActivity : AppCompatActivity() {
         //val trialEnd = firstInstalled + TimeUnit.DAYS.toMillis(TRIAL_PERIOD_DAYS)
         val trialEnd = firstInstalled + TimeUnit.MINUTES.toMillis(5L)    // for testing
 
-        // initialize AdMob for Ads Banner
-        // TODO: opt out and other options
+        return System.currentTimeMillis() > trialEnd
+    }
+
+
+    fun setUpAds() {
+
         // TODO: replace adUnitId with production Unit Id
-        if (System.currentTimeMillis() > trialEnd) {
-            MobileAds.initialize(this) {}
+        MobileAds.initialize(this) {}
 
-            // Section to retrieve the width of the device to set the adSize
-            val outMetrics = DisplayMetrics()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                display!!.getRealMetrics(outMetrics)
-            } else {
-                val display = windowManager.defaultDisplay
-                display.getMetrics(outMetrics)
-            }
-            val adWidth = (outMetrics.widthPixels.toFloat() / outMetrics.density).toInt()
-            val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
-
-            // now that the adSize is determined we can place the add
-            val adView = AdView(this)
-            //adView.adSize = AdSize.SMART_BANNER          // adaptive ads replace the smart banner
-            adView.adSize = adSize
-            adView.adUnitId = ADMOB_UNIT_ID_BANNER_TEST  // for testing
-
-            val adLinearLayout: LinearLayout =
-                findViewById(R.id.main_adlinearlayout)  // add to the linear layout container
-            val adRequest = AdRequest.Builder().build()
-            adView.loadAd(adRequest)
-
-            adLinearLayout.addView(adView)
+        // Section to retrieve the width of the device to set the adSize
+        val outMetrics = DisplayMetrics()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            display!!.getRealMetrics(outMetrics)
+        } else {
+            val display = windowManager.defaultDisplay
+            display.getMetrics(outMetrics)
         }
+        val adWidth = (outMetrics.widthPixels.toFloat() / outMetrics.density).toInt()
+        val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
 
+        // now that the adSize is determined we can place the add
+        val adView = AdView(this)
+        //adView.adSize = AdSize.SMART_BANNER          // adaptive ads replace the smart banner
+        adView.adSize = adSize
+        adView.adUnitId = ADMOB_UNIT_ID_BANNER_TEST  // for testing
+
+        val adLinearLayout: LinearLayout =
+            findViewById(R.id.main_adlinearlayout)  // add to the linear layout container
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+
+        adLinearLayout.removeAllViews()
+        adLinearLayout.addView(adView)
     }
 
 
@@ -248,6 +258,8 @@ class MainActivity : AppCompatActivity() {
             else
                 Toast.makeText(this, "Record Audio Permission Denied", Toast.LENGTH_SHORT).show()
         }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
     }
 
@@ -271,35 +283,82 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeUserConsent() {
 
+
+        val debugSettings = ConsentDebugSettings.Builder(this)
+            .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
+            //.addTestDeviceHashedId("TEST-DEVICE-HASHED-ID")
+            .build()
+
+
         // Set tag for underage of consent. false means users are not underage.
         val params = ConsentRequestParameters.Builder()
             .setTagForUnderAgeOfConsent(false)
+            .setConsentDebugSettings(debugSettings)      // only for testing, todo: remove for production!
             .build()
 
-        consentInformation = UserMessagingPlatform.getConsentInformation(this)
-        consentInformation.requestConsentInfoUpdate()
+        val consentInformation = UserMessagingPlatform.getConsentInformation(this)
         consentInformation.requestConsentInfoUpdate(
             this,
             params,
-            OnConsentInfoUpdateSuccessListener {
+            {
                 // The consent information state was updated.
                 // You are now ready to check if a form is available.
+                Log.d("ConsentInformation", consentInformation.consentStatus.toString())
+                loadForm(consentInformation)
             },
-            OnConsentInfoUpdateFailureListener {
+            {
                 // Handle the error.
             })
 
+        this@MainActivity.consentInformation = consentInformation
+
     }
 
-    fun loadForm() {
-        UserMessagingPlatform.loadConsentForm(
-            this,
-            { consentForm -> this@MainActivity.consentForm = consentForm }
-        ) {
-            // Handle the error
+    private fun loadForm(consentInformation: ConsentInformation) {
+
+        //consentInformation.reset()
+        if (consentInformation.consentStatus == ConsentInformation.ConsentStatus.REQUIRED || consentInformation.consentStatus == ConsentInformation.ConsentStatus.UNKNOWN) {
+
+            UserMessagingPlatform.loadConsentForm(
+                this,
+                { consentForm ->
+
+                    consentForm.show(this) {
+                        //Handle dismissal by reloading form
+                        loadForm(consentInformation)
+                    }
+                    this.consentForm = consentForm
+                    setUpAds()
+                }
+            ) {
+                // Handle the error
+                Log.d("consentForm", "Failed loading consent form")
+                Log.d("consentForm", it.message)
+            }
+        } else {
+            setUpAds()
         }
     }
 
+    fun resetUserConsent() {
+
+        // just show the message, the consentInformation is already loaded
+        UserMessagingPlatform.loadConsentForm(
+            this,
+            { consentForm ->
+                consentForm.show(this) {
+                    //Handle dismissal by reloading form
+                    loadForm(consentInformation!!)
+                }
+                this.consentForm = consentForm
+            }
+        ) {
+            // Handle the error
+            Log.d("consentForm", "Failed loading consent form")
+            Log.d("consentForm", it.message)
+        }
+
+    }
 }
 
 
