@@ -19,6 +19,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.database.views.ICal4List
 import at.bitfire.notesx5.database.views.ICal4ViewNote
+import java.util.*
 
 
 /**
@@ -212,8 +213,8 @@ abstract class ICalDatabase : RoomDatabase() {
             database.upsertCollection(ICalCollection(collectionId = 1L, url = "https://localhost", displayName = "Local Collection"))
 
             val newEntry = database.insertICalObject(ICalObject(collectionId = 1L, module = Module.JOURNAL.name, component = Component.VJOURNAL.name, summary = rfcSummary, description = rfcDesc, dtstart = System.currentTimeMillis()))
-            database.insertAttendee(Attendee(caladdress = "test@test.de", icalObjectId = newEntry))
-            database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
+            database.insertAttendee(Attendee(caladdress = "${UUID.randomUUID()}@test.de", icalObjectId = newEntry))
+            database.insertCategory(Category(text = UUID.randomUUID().toString(), icalObjectId = newEntry))
             database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
 
             database.insertComment(Comment(text = "comment", icalObjectId = newEntry))
@@ -227,13 +228,15 @@ abstract class ICalDatabase : RoomDatabase() {
             //database.insert(vJournalItem(component="NOTE", dtstart=0L, summary=noteSummary2, description=noteDesc2, organizer="LOCAL", categories="Shopping"))
 
             val newEntry2 = database.insertICalObject(ICalObject(collectionId = 1L, module = Module.NOTE.name, component = Component.VJOURNAL.name, summary = noteSummary, description = noteDesc))
-            database.insertAttendee(Attendee(caladdress = "test@test.de", icalObjectId = newEntry2))
+            database.insertAttendee(Attendee(caladdress = "${UUID.randomUUID()}@test.de", icalObjectId = newEntry2))
             database.insertCategory(Category(text = "cat", icalObjectId = newEntry2))
             database.insertCategory(Category(text = "cat", icalObjectId = newEntry2))
 
-            database.insertComment(Comment(text = "comment", icalObjectId = newEntry2))
-            database.insertOrganizer(Organizer(caladdress = "organizer", icalObjectId = newEntry2))
+            database.insertComment(Comment(text = UUID.randomUUID().toString(), icalObjectId = newEntry2))
+            database.insertOrganizer(Organizer(caladdress = UUID.randomUUID().toString(), icalObjectId = newEntry2))
             // database.insertRelatedto(Relatedto(text = "related to", icalObjectId = newEntry2))
+
+
 
         }
 
