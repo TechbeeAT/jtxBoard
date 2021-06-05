@@ -28,4 +28,4 @@ pages:
     paths:
       - public
   only:
-    - master-ose
+    - main
