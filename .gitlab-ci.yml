@@ -19,7 +19,7 @@ variables:
   # There, look down below at the cli tools only, sdk tools package is of format:
   #        commandlinetools-os_type-ANDROID_SDK_TOOLS_latest.zip
   # when the script was last modified for latest compileSdkVersion, it was which is written down below
-  ANDROID_SDK_TOOLS: "7351085"
+  ANDROID_SDK_TOOLS: "7302050"
 
 # Packages installation before running script
 before_script:
