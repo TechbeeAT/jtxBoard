@@ -13,8 +13,8 @@
     android:id="@+id/list_item_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="4dp"
-    android:layout_marginTop="4dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
     android:checkable="true"
     android:clickable="true"
     android:focusable="true">
