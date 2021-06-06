@@ -17,24 +17,20 @@
     <style name="AppTheme.Base" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
     <style name="AppTheme" parent="AppTheme.Base">
 
-
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorPrimaryVariant">@color/primaryLightColor</item>
-        <item name="colorOnPrimary">@color/colorOnPrimary</item>
-
         <item name="colorSecondary">@color/secondaryColor</item>
-        <!--
-
         <item name="colorSecondaryVariant">@color/secondaryLightColor</item>
-        <item name="colorOnSecondary">@color/colorOnSecondary</item>
-
-        <item name="colorError">@color/errorColor</item>
-        <item name="colorOnError">@color/colorOnError</item>
--->
         <item name="android:colorBackground">@color/backgroundColor</item>
         <item name="colorSurface">@android:color/white</item>
 
+        <!--
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="colorError">@color/errorColor</item>
+        <item name="colorOnError">@color/colorOnError</item>
+        -->
 
     </style>
 

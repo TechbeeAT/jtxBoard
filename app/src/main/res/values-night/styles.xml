@@ -14,11 +14,13 @@
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorPrimaryVariant">@color/primaryLightColor</item>
+        <!--
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        -->
 
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="android:colorBackground">#1E1E1E</item>
-        <item name="colorSurface">@android:color/black</item>
+        <item name="colorSurface">#222222</item>
 
 
     </style>
