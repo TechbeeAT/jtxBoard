@@ -1,0 +1,31 @@
+image: registry.gitlab.com/bitfireat/docker-android-emulator:latest
+
+before_script:
+  - git submodule update --init --recursive
+  - export GRADLE_USER_HOME=`pwd`/.gradle; chmod +x gradlew
+
+cache:
+  paths:
+     - .gradle/
+
+test:
+  tags:
+    - privileged
+  script:
+   - start-emulator.sh
+   - ./gradlew app:check app:connectedCheck
+  artifacts:
+    paths:
+      - app/build/outputs/lint-results-debug.html
+      - app/build/reports
+      - build/reports
+
+pages:
+  script:
+    - ./gradlew app:dokka
+    - mkdir public && mv app/build/dokka public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
