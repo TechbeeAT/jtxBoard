@@ -311,7 +311,12 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             }
 
 
-            addAttachmentView(iCal4ListItem.attachment, holder)
+            if(iCal4ListItem.attachment.isNullOrEmpty()) {
+                holder.attachmentsLinearLayout.visibility = View.GONE
+            } else {
+                holder.attachmentsLinearLayout.visibility = View.VISIBLE
+                addAttachmentView(iCal4ListItem.attachment, holder)
+            }
 
 
 

@@ -107,8 +107,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:ellipsize="end"
-            android:maxLines="5"
-            android:minLines="5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/list_item_summary"
