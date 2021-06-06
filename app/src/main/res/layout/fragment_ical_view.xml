@@ -26,661 +26,672 @@
 
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/view_item_view"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:context=".ui.IcalViewFragment">
+            android:layout_height="match_parent">
 
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/view_progress_indicator"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/view_item_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                tools:context=".ui.IcalViewFragment">
 
-            <ImageView
-                android:id="@+id/view_colorbar"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_progress_indicator"
-                app:srcCompat="@drawable/square_box"
-                tools:ignore="ContentDescription"
-                tools:tint="#BC0D0D" />
-
-
-            <TextView
-                android:id="@+id/view_dtstart_day"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@{UtilKt.convertLongToDayString(model.icalEntity.property.dtstart)}"
-                android:textAlignment="center"
-                android:textSize="36sp"
-                android:textStyle="bold"
-                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="31" />
-
-            <TextView
-                android:id="@+id/view_dtstart_month"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:text="@{UtilKt.convertLongToMonthString(model.icalEntity.property.dtstart)}"
-                android:textAlignment="center"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
-                app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
-                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_day"
-                tools:text="December" />
-
-            <TextView
-                android:id="@+id/view_dtstart_year"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:text="@{UtilKt.convertLongToYearString(model.icalEntity.property.dtstart)}"
-                android:textAlignment="center"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
-                app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
-                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_month"
-                tools:text="2020" />
-
-            <TextView
-                android:id="@+id/view_dtstart_time"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:text="@{UtilKt.convertLongToTimeString(model.icalEntity.property.dtstart)}"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
-                app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
-                app:layout_constraintTop_toBottomOf="@+id/view_dtstart_year"
-                app:layout_constraintVertical_bias="0.0"
-                tools:text="13:30" />
-
-
-            <TextView
-                android:id="@+id/view_collection"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:drawablePadding="4dp"
-                android:text="@{model.icalEntity.ICalCollection.displayName}"
-                app:drawableStartCompat="@drawable/ic_collection"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
-                app:layout_constraintTop_toBottomOf="@+id/view_colorbar"
-                tools:text="Collection" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/view_categories_chipgroup"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                app:chipSpacingHorizontal="8dp"
-                app:chipSpacingVertical="0dp"
-                app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
-                app:layout_constraintTop_toBottomOf="@+id/view_collection" />
-
-
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/view_top_barrier"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:barrierDirection="top" />
-
-
-            <TextView
-                android:id="@+id/list_item_summary"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:text="@{model.icalEntity.property.summary}"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_top_barrier"
-                tools:text="Summary ... Lorem ipsum dolor sit amet" />
-
-
-            <TextView
-                android:id="@+id/list_item_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:autoLink="all"
-                android:ems="10"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:text="@{model.icalEntity.property.description}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/list_item_summary"
-                app:layout_constraintTop_toBottomOf="@id/list_item_summary"
-                tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
-
-
-            <TextView
-                android:id="@+id/view_progress_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/view_progress_label"
-                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
-
-            <com.google.android.material.slider.Slider
-                android:id="@+id/view_progress_slider"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:enabled="true"
-                android:stepSize="1.0"
-                android:value="@{model.icalEntity.property.percent}"
-                android:valueFrom="0.0"
-                android:valueTo="100.0"
-                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                app:labelBehavior="gone"
-                app:layout_constraintEnd_toStartOf="@+id/view_progress_percent"
-                app:layout_constraintStart_toEndOf="@+id/view_progress_label"
-                app:layout_constraintTop_toBottomOf="@+id/list_item_description" />
-
-
-            <TextView
-                android:id="@+id/view_progress_percent"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="@{model.icalEntity.property.percent.toString() + ` %`}"
-                android:textAlignment="viewEnd"
-                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
-                app:layout_constraintEnd_toStartOf="@+id/view_progress_checkbox"
-                app:layout_constraintTop_toTopOf="@+id/view_progress_slider"
-                tools:text="100 %" />
-
-
-            <CheckBox
-                android:id="@+id/view_progress_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="@{model.icalEntity.property.percent == 100}"
-                android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
-
-            <TextView
-                android:id="@+id/view_started"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@{model.startedFormatted}"
-                android:textStyle="bold|italic"
-                android:visibility="@{model.startedVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_progress_slider"
-                tools:text="Started: February 5, 2021" />
-
-
-            <TextView
-                android:id="@+id/view_completed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="8dp"
-                android:text="@{model.completedFormatted}"
-                android:textStyle="bold|italic"
-                android:visibility="@{model.completedVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_started"
-                tools:text="Completed: March 1, 2021" />
-
-
-            <TextView
-                android:id="@+id/view_subtasks_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
-                android:drawablePadding="8dp"
-                android:text="@string/view_subtasks_header"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                app:drawableStartCompat="@drawable/ic_comments"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_completed" />
-
-
-            <LinearLayout
-                android:id="@+id/view_subtasks_linearlayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:divider="?android:dividerHorizontal"
-                android:orientation="vertical"
-                android:showDividers="middle"
-                android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_subtasks_header">
-
-                <com.google.android.material.card.MaterialCardView
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/view_progress_indicator"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:clickable="true"
-                    android:focusable="true">
+                    android:indeterminate="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/view_colorbar"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_progress_indicator"
+                    app:srcCompat="@drawable/square_box"
+                    tools:ignore="ContentDescription"
+                    tools:tint="#BC0D0D" />
 
 
+                <TextView
+                    android:id="@+id/view_dtstart_day"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@{UtilKt.convertLongToDayString(model.icalEntity.property.dtstart)}"
+                    android:textAlignment="center"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="31" />
+
+                <TextView
+                    android:id="@+id/view_dtstart_month"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{UtilKt.convertLongToMonthString(model.icalEntity.property.dtstart)}"
+                    android:textAlignment="center"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
+                    app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
+                    app:layout_constraintTop_toBottomOf="@+id/view_dtstart_day"
+                    tools:text="December" />
+
+                <TextView
+                    android:id="@+id/view_dtstart_year"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{UtilKt.convertLongToYearString(model.icalEntity.property.dtstart)}"
+                    android:textAlignment="center"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
+                    app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
+                    app:layout_constraintTop_toBottomOf="@+id/view_dtstart_month"
+                    tools:text="2020" />
+
+                <TextView
+                    android:id="@+id/view_dtstart_time"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{UtilKt.convertLongToTimeString(model.icalEntity.property.dtstart)}"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
+                    app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
+                    app:layout_constraintTop_toBottomOf="@+id/view_dtstart_year"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="13:30" />
+
+
+                <TextView
+                    android:id="@+id/view_collection"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:drawablePadding="4dp"
+                    android:text="@{model.icalEntity.ICalCollection.displayName}"
+                    app:drawableStartCompat="@drawable/ic_collection"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
+                    app:layout_constraintTop_toBottomOf="@+id/view_colorbar"
+                    tools:text="Collection" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/view_categories_chipgroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    app:chipSpacingHorizontal="8dp"
+                    app:chipSpacingVertical="0dp"
+                    app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
+                    app:layout_constraintTop_toBottomOf="@+id/view_collection" />
+
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/view_top_barrier"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="top" />
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/view_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:checkable="false"
+                    android:clickable="false"
+                    android:focusable="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_top_barrier">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/view_summary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="@{model.icalEntity.property.summary}"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:text="Summary ... Lorem ipsum dolor sit amet" />
+
+
+                        <TextView
+                            android:id="@+id/list_item_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:autoLink="all"
+                            android:ems="10"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="8dp"
+                            android:text="@{model.icalEntity.property.description}"
+                            tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
+                    </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <TextView
+                    android:id="@+id/view_progress_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/view_progress_label"
+                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
 
-            </LinearLayout>
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/view_progress_slider"
+                    style="@style/Widget.AppCompat.SeekBar.Discrete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:enabled="true"
+                    android:stepSize="1.0"
+                    android:value="@{model.icalEntity.property.percent}"
+                    android:valueFrom="0.0"
+                    android:valueTo="100.0"
+                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                    app:labelBehavior="gone"
+                    app:layout_constraintEnd_toStartOf="@+id/view_progress_percent"
+                    app:layout_constraintStart_toEndOf="@+id/view_progress_label"
+                    app:layout_constraintTop_toBottomOf="@+id/view_card_view" />
 
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/view_spc_chipgroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_subtasks_linearlayout">
+                <TextView
+                    android:id="@+id/view_progress_percent"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:text="@{model.icalEntity.property.percent.toString() + ` %`}"
+                    android:textAlignment="viewEnd"
+                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
+                    app:layout_constraintEnd_toStartOf="@+id/view_progress_checkbox"
+                    app:layout_constraintTop_toTopOf="@+id/view_progress_slider"
+                    tools:text="100 %" />
 
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/view_status_chip"
-                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                <CheckBox
+                    android:id="@+id/view_progress_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="@{model.icalEntity.property.percent == 100}"
+                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
+
+                <TextView
+                    android:id="@+id/view_started"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@{model.startedFormatted}"
+                    android:textStyle="bold|italic"
+                    android:visibility="@{model.startedVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_progress_slider"
+                    tools:text="Started: February 5, 2021" />
+
+
+                <TextView
+                    android:id="@+id/view_completed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@{model.completedFormatted}"
+                    android:textStyle="bold|italic"
+                    android:visibility="@{model.completedVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_started"
+                    tools:text="Completed: March 1, 2021" />
+
+
+                <TextView
+                    android:id="@+id/view_subtasks_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_subtasks_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_comments"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_completed" />
+
+
+                <LinearLayout
+                    android:id="@+id/view_subtasks_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:divider="?android:dividerHorizontal"
+                    android:orientation="vertical"
+                    android:showDividers="middle"
+                    android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_subtasks_header">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:clickable="true"
+                        android:focusable="true">
+
+
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                </LinearLayout>
+
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/view_spc_chipgroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_subtasks_linearlayout">
+
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/view_status_chip"
+                        style="@style/Widget.MaterialComponents.Chip.Entry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:checkable="false"
+                        app:chipIcon="@drawable/ic_status"
+                        app:chipIconVisible="true"
+                        app:closeIconVisible="false"
+                        tools:text="Final" />
+
+                    <com.google.android.material.chip.Chip
+
+                        android:id="@+id/view_priority_chip"
+                        style="@style/Widget.MaterialComponents.Chip.Entry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:checkable="false"
+                        android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
+                        app:chipIcon="@drawable/ic_priority"
+                        app:chipIconVisible="true"
+                        app:closeIconVisible="false"
+                        tools:text="Public" />
+
+                    <com.google.android.material.chip.Chip
+
+                        android:id="@+id/view_classification_chip"
+                        style="@style/Widget.MaterialComponents.Chip.Entry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:checkable="false"
+                        app:chipIcon="@drawable/ic_classification"
+                        app:chipIconVisible="true"
+                        app:closeIconVisible="false"
+                        tools:text="Public" />
+
+
+                </com.google.android.material.chip.ChipGroup>
+
+
+                <TextView
+                    android:id="@+id/view_url_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_url_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_link"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_spc_chipgroup" />
+
+                <TextView
+                    android:id="@+id/view_url"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:autoLink="all"
+                    android:text="@{model.icalEntity.property.url}"
+                    android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/view_url_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_url_header"
+                    tools:text="https://www.bitfire.at/" />
+
+
+                <TextView
+                    android:id="@+id/view_attendee_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
-                    android:checkable="false"
-                    app:chipIcon="@drawable/ic_status"
-                    app:chipIconVisible="true"
-                    app:closeIconVisible="false"
-                    tools:text="Final" />
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_attendees_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_attendee"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_url" />
 
-                <com.google.android.material.chip.Chip
 
-                    android:id="@+id/view_priority_chip"
-                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/view_attendee_chipgroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+                    app:chipSpacingHorizontal="8dp"
+                    app:chipSpacingVertical="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_attendee_header" />
+
+
+                <TextView
+                    android:id="@+id/view_organizer_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:checkable="false"
-                    android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
-                    app:chipIcon="@drawable/ic_priority"
-                    app:chipIconVisible="true"
-                    app:closeIconVisible="false"
-                    tools:text="Public" />
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_organizer_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_organizer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_attendee_chipgroup" />
 
-                <com.google.android.material.chip.Chip
+                <TextView
+                    android:id="@+id/view_organizer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:autoLink="all"
+                    android:text="@{model.icalEntity.organizer.caladdress}"
+                    android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/view_organizer_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_organizer_header"
+                    tools:text="patrick.doe@example.com" />
 
-                    android:id="@+id/view_classification_chip"
-                    style="@style/Widget.MaterialComponents.Chip.Entry"
+
+                <TextView
+                    android:id="@+id/view_contact_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:checkable="false"
-                    app:chipIcon="@drawable/ic_classification"
-                    app:chipIconVisible="true"
-                    app:closeIconVisible="false"
-                    tools:text="Public" />
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_contact_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_contact"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_organizer" />
+
+                <TextView
+                    android:id="@+id/view_contact"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:autoLink="all"
+                    android:text="@{model.icalEntity.property.contact}"
+                    android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/view_contact_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_contact_header"
+                    tools:text="John Doe (john.doe@example.com)" />
 
 
-            </com.google.android.material.chip.ChipGroup>
+                <TextView
+                    android:id="@+id/view_relatedto_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_relatedto_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_link"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_contact" />
+
+                <TextView
+                    android:id="@+id/view_relatedto"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:autoLink="all"
+                    android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/view_relatedto_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_relatedto_header"
+                    tools:text="https://example.com/remote.php/dav/calendars/johndoe/personal/097E4865-D073-4279-806C-3E2B3250C947.ics" />
+
+                <TextView
+                    android:id="@+id/view_comments_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_comments_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_comments"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_relatedto" />
 
 
-            <TextView
-                android:id="@+id/view_url_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:drawablePadding="8dp"
-                android:text="@string/view_url_header"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
-                app:drawableStartCompat="@drawable/ic_link"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_spc_chipgroup" />
+                <LinearLayout
+                    android:id="@+id/view_comments_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:divider="?android:dividerHorizontal"
+                    android:orientation="vertical"
+                    android:showDividers="middle"
+                    android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_comments_header">
 
-            <TextView
-                android:id="@+id/view_url"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:autoLink="all"
-                android:text="@{model.icalEntity.property.url}"
-                android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/view_url_header"
-                app:layout_constraintTop_toBottomOf="@+id/view_url_header"
-                tools:text="https://www.bitfire.at/" />
+                </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/view_attendee_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:drawablePadding="8dp"
-                android:text="@string/view_attendees_header"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-                app:drawableStartCompat="@drawable/ic_attendee"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_url" />
+                <TextView
+                    android:id="@+id/view_attachments_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_attachments_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_attachment"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_comments_linearlayout" />
 
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/view_attendee_chipgroup"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-                app:chipSpacingHorizontal="8dp"
-                app:chipSpacingVertical="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_attendee_header" />
+                <LinearLayout
+                    android:id="@+id/view_attachments_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:divider="?android:dividerHorizontal"
+                    android:orientation="vertical"
+                    android:showDividers="middle"
+                    android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_attachments_header">
+
+                </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/view_organizer_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:drawablePadding="8dp"
-                android:text="@string/view_organizer_header"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
-                app:drawableStartCompat="@drawable/ic_organizer"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_attendee_chipgroup" />
-
-            <TextView
-                android:id="@+id/view_organizer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:autoLink="all"
-                android:text="@{model.icalEntity.organizer.caladdress}"
-                android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/view_organizer_header"
-                app:layout_constraintTop_toBottomOf="@+id/view_organizer_header"
-                tools:text="patrick.doe@example.com" />
+                <TextView
+                    android:id="@+id/view_feedback_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_feedback_linked_notes"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_feedback"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_attachments_linearlayout" />
 
 
-            <TextView
-                android:id="@+id/view_contact_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:drawablePadding="8dp"
-                android:text="@string/view_contact_header"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
-                app:drawableStartCompat="@drawable/ic_contact"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_organizer" />
+                <LinearLayout
+                    android:id="@+id/view_feedback_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:divider="?android:dividerHorizontal"
+                    android:orientation="vertical"
+                    android:showDividers="middle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_feedback_header">
 
-            <TextView
-                android:id="@+id/view_contact"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:autoLink="all"
-                android:text="@{model.icalEntity.property.contact}"
-                android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/view_contact_header"
-                app:layout_constraintTop_toBottomOf="@+id/view_contact_header"
-                tools:text="John Doe (john.doe@example.com)" />
+                </LinearLayout>
 
+                <Button
+                    android:id="@+id/view_add_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/view_add_note"
+                    app:icon="@drawable/ic_comment_add"
+                    app:layout_constraintEnd_toStartOf="@+id/view_add_audio_note"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout" />
 
-            <TextView
-                android:id="@+id/view_relatedto_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:drawablePadding="8dp"
-                android:text="@string/view_relatedto_header"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
-                app:drawableStartCompat="@drawable/ic_link"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_contact" />
-
-            <TextView
-                android:id="@+id/view_relatedto"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:autoLink="all"
-                android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/view_relatedto_header"
-                app:layout_constraintTop_toBottomOf="@+id/view_relatedto_header"
-                tools:text="https://example.com/remote.php/dav/calendars/johndoe/personal/097E4865-D073-4279-806C-3E2B3250C947.ics" />
-
-            <TextView
-                android:id="@+id/view_comments_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:drawablePadding="8dp"
-                android:text="@string/view_comments_header"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
-                app:drawableStartCompat="@drawable/ic_comments"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_relatedto" />
+                <Button
+                    android:id="@+id/view_add_audio_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/view_add_audio_note"
+                    app:icon="@drawable/ic_microphone"
+                    app:layout_constraintBottom_toBottomOf="@+id/view_add_note"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/view_add_note"
+                    app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout" />
 
 
-            <LinearLayout
-                android:id="@+id/view_comments_linearlayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:divider="?android:dividerHorizontal"
-                android:orientation="vertical"
-                android:showDividers="middle"
-                android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_comments_header">
-
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/view_created"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@{`Created: ` + model.createdFormatted}"
+                    android:textAlignment="viewEnd"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_add_note"
+                    tools:text="Created: Sun Dec 20 20:38:30 GMT+01:00 2020" />
 
 
-            <TextView
-                android:id="@+id/view_attachments_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:drawablePadding="8dp"
-                android:text="@string/view_attachments_header"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
-                app:drawableStartCompat="@drawable/ic_attachment"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_comments_linearlayout" />
+                <TextView
+                    android:id="@+id/view_lastModified"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="32dp"
+                    android:text="@{`Last modified: ` + model.lastModifiedFormatted}"
+                    android:textAlignment="viewEnd"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_created"
+                    tools:text="Last modified: Sun Dec 20 20:38:30 GMT+01:00 2020" />
 
 
-            <LinearLayout
-                android:id="@+id/view_attachments_linearlayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:divider="?android:dividerHorizontal"
-                android:orientation="vertical"
-                android:showDividers="middle"
-                android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_attachments_header">
-
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <TextView
-                android:id="@+id/view_feedback_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:drawablePadding="8dp"
-                android:text="@string/view_feedback_linked_notes"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:drawableStartCompat="@drawable/ic_feedback"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_attachments_linearlayout" />
-
-
-            <LinearLayout
-                android:id="@+id/view_feedback_linearlayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:divider="?android:dividerHorizontal"
-                android:orientation="vertical"
-                android:showDividers="middle"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_feedback_header">
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/view_add_note"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/view_add_note"
-                app:icon="@drawable/ic_comment_add"
-                app:layout_constraintEnd_toStartOf="@+id/view_add_audio_note"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout" />
-
-            <Button
-                android:id="@+id/view_add_audio_note"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/view_add_audio_note"
-                app:icon="@drawable/ic_microphone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintBottom_toBottomOf="@+id/view_add_note"
-                app:layout_constraintStart_toEndOf="@+id/view_add_note"  />
-
-
-
-            <TextView
-                android:id="@+id/view_created"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:text="@{`Created: ` + model.createdFormatted}"
-                android:textAlignment="viewEnd"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_add_note"
-                tools:text="Created: Sun Dec 20 20:38:30 GMT+01:00 2020" />
-
-
-            <TextView
-                android:id="@+id/view_lastModified"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="32dp"
-                android:text="@{`Last modified: ` + model.lastModifiedFormatted}"
-                android:textAlignment="viewEnd"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_created"
-                tools:text="Last modified: Sun Dec 20 20:38:30 GMT+01:00 2020" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </ScrollView>
-
+        </ScrollView>
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -691,9 +702,9 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
+            android:contentDescription="@string/view_fab_edit_entry_contentDesc"
             android:onClick="@{() -> model.editingClicked()}"
-            app:srcCompat="@drawable/ic_vjournal_edit"
-            android:contentDescription="@string/view_fab_edit_entry_contentDesc" />
+            app:srcCompat="@drawable/ic_vjournal_edit" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
