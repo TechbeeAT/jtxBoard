@@ -27,6 +27,14 @@
             app:icon="@drawable/ic_todo"
             app:useSimpleSummaryProvider="true"/>
 
+        <SwitchPreference
+            app:key="settings_show_attachments_in_list"
+            app:defaultValue="true"
+            app:title="Show attachments in list"
+            app:icon="@drawable/ic_attachment"
+            app:useSimpleSummaryProvider="true"/>
+
+
     </PreferenceCategory>
 
     <PreferenceCategory

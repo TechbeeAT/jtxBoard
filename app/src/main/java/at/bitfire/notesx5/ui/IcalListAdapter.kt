@@ -9,27 +9,33 @@
 package at.bitfire.notesx5.ui
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
+import android.os.Build
 import android.util.Log
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.database.*
+import at.bitfire.notesx5.database.properties.Attachment
 import at.bitfire.notesx5.database.relations.ICal4ListWithRelatedto
 import at.bitfire.notesx5.database.views.ICal4List
+import at.bitfire.notesx5.databinding.FragmentIcalListItemAttachmentBinding
 import at.bitfire.notesx5.databinding.FragmentIcalListItemSubtaskBinding
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit
 
@@ -39,6 +45,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
     lateinit var parent: ViewGroup
     private lateinit var settings: SharedPreferences
     private var settingShowSubtasks = true
+    private var settingShowAttachments = true
     private var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = model.iCal4List
     private var allSubtasks: LiveData<List<ICal4List?>> = model.allSubtasks
 
@@ -47,7 +54,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         this.parent = parent
         //load settings
         settings = PreferenceManager.getDefaultSharedPreferences(context)
-        settingShowSubtasks = settings.getBoolean("settings_show_subtasks_in_list", true)
+        settingShowSubtasks = settings.getBoolean(SettingsFragment.SHOW_SUBTASKS_IN_LIST, true)
+        settingShowAttachments = settings.getBoolean(SettingsFragment.SHOW_ATTACHMENTS_IN_LIST, true)
 
         val itemHolder = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_ical_list_item, parent, false)
@@ -303,6 +311,11 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             }
 
 
+            addAttachmentView(iCal4ListItem.attachment, holder)
+
+
+
+
             var toggleSubtasksExpanded = true
 
             holder.expandSubtasks.setOnClickListener {
@@ -381,14 +394,14 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         var subtasksLinearLayout: LinearLayout =
             itemView.findViewById(R.id.list_item_subtasks_linearlayout)
 
+        var attachmentsLinearLayout: LinearLayout = itemView.findViewById(R.id.list_item_attachments)
+
         var numAttendeesIcon: ImageView = itemView.findViewById(R.id.list_item_num_attendees_icon)
         var numAttachmentsIcon: ImageView = itemView.findViewById(R.id.list_item_num_attachments_icon)
         var numCommentsIcon: ImageView = itemView.findViewById(R.id.list_item_num_comments_icon)
         var numAttendeesText: TextView = itemView.findViewById(R.id.list_item_num_attendees_text)
         var numAttachmentsText: TextView = itemView.findViewById(R.id.list_item_num_attachments_text)
         var numCommentsText: TextView = itemView.findViewById(R.id.list_item_num_comments_text)
-
-
 
 
     }
@@ -466,6 +479,85 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         }
 
         holder.subtasksLinearLayout.addView(subtaskBinding.root)
+    }
+
+
+
+    private fun addAttachmentView(attachments: List<Attachment>?, holder: VJournalItemHolder) {
+
+        holder.attachmentsLinearLayout.removeAllViews()
+
+        if(settingShowAttachments) {
+
+            attachments?.forEach { attachment ->
+
+                val attachmentBinding = FragmentIcalListItemAttachmentBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+
+                //open the attachment on click
+                attachmentBinding.listItemAttachmentCardview.setOnClickListener {
+
+                    try {
+                        val intent = Intent()
+                        intent.action = Intent.ACTION_VIEW
+                        intent.setDataAndType(Uri.parse(attachment.uri), attachment.fmttype)
+                        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(intent)
+
+                    } catch (e: IOException) {
+                        Log.i("fileprovider", "Failed to retrieve file\n$e")
+                        Toast.makeText(context, "Failed to retrieve file.", Toast.LENGTH_LONG)
+                            .show()
+                    } catch (e: ActivityNotFoundException) {
+                        Log.i("ActivityNotFound", "No activity found to open file\n$e")
+                        Toast.makeText(
+                            context,
+                            "No app was found to open this file.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                }
+                if (attachment.filename!!.isNotEmpty())
+                    attachmentBinding.listItemAttachmentTextview.text = attachment.filename
+                else
+                    attachmentBinding.listItemAttachmentTextview.text = attachment.fmttype
+                when {
+                    attachment.filesize == null -> attachmentBinding.listItemAttachmentFilesize.visibility =
+                        View.GONE
+                    attachment.filesize!! < 1024 -> attachmentBinding.listItemAttachmentFilesize.text =
+                        "${attachment.filesize!!} Bytes"
+                    attachment.filesize!! / 1024 < 1024 -> attachmentBinding.listItemAttachmentFilesize.text =
+                        "${attachment.filesize!! / 1024} KB"
+                    else -> attachmentBinding.listItemAttachmentFilesize.text =
+                        "${attachment.filesize!! / 1024 / 1024} MB"
+                }
+
+                // load thumbnail if possible
+                try {
+                    val thumbSize = Size(50, 50)
+                    val thumbUri = Uri.parse(attachment.uri)
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val thumbBitmap =
+                            context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
+                        attachmentBinding.listItemAttachmentPictureThumbnail.setImageBitmap(
+                            thumbBitmap
+                        )
+                        attachmentBinding.listItemAttachmentPictureThumbnail.visibility =
+                            View.VISIBLE
+                    }
+                } catch (e: FileNotFoundException) {
+                    Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
+                }
+
+                holder.attachmentsLinearLayout.addView(attachmentBinding.root)
+            }
+        }
     }
 }
 

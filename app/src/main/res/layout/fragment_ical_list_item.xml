@@ -115,6 +115,18 @@
             tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
 
 
+        <LinearLayout
+            android:id="@+id/list_item_attachments"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="start"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/list_item_description"
+            app:layout_constraintStart_toStartOf="@+id/list_item_description"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_description" />
+
         <ImageView
             android:id="@+id/list_item_num_attendees_icon"
             android:layout_width="15dp"
@@ -328,7 +340,7 @@
             android:layout_marginEnd="8dp"
             android:textColor="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_description"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_attachments"
             tools:text="Public" />
 
         <TextView

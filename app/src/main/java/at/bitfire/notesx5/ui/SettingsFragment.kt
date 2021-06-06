@@ -16,6 +16,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     companion object {
         const val ENFORCE_DARK_THEME = "settings_enfore_dark_theme"
         const val SHOW_USER_CONSENT = "show_user_consent"
+        const val SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_in_list"
+        const val SHOW_ATTACHMENTS_IN_LIST = "settings_show_attachments_in_list"
 
     }
 
