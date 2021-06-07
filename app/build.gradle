@@ -43,14 +43,6 @@ android {
         dataBinding true
         viewBinding true
     }
-
-    dokka.configuration {
-        sourceLink {
-            url = "https://gitlab.com/patrick_unterwegs/notesx5/-/tree/main"
-            lineSuffix = "#L"
-        }
-        jdkVersion = 8
-    }
 }
 
 dependencies {
