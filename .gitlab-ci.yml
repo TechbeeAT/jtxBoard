@@ -9,8 +9,6 @@ cache:
      - .gradle/
 
 test:
-  tags:
-    - privileged
   script:
    - start-emulator.sh
    - ./gradlew app:check app:connectedCheck
