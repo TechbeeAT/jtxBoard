@@ -11,6 +11,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
+apply plugin: 'org.jetbrains.dokka'
+
 
 android {
     compileSdkVersion 30
@@ -88,7 +90,6 @@ dependencies {
 
     // Google Consent for Admob
     implementation 'com.google.android.ump:user-messaging-platform:1.0.0'
-
 
 
     // Testing
