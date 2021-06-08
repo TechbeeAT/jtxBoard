@@ -61,7 +61,7 @@ class IcalViewFragment : Fragment() {
     private lateinit var viewModelFactory: IcalViewViewModelFactory
     lateinit var icalViewViewModel: IcalViewViewModel
 
-    private var fileName: String = ""
+    private var fileName: Uri? = null
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
 
@@ -257,7 +257,7 @@ class IcalViewFragment : Fragment() {
                         commentBinding.viewCommentPlaybutton.visibility = View.VISIBLE
 
                         // TODO TRY Catch
-                        // Maybe ther's a better solution here anyway
+                        // Maybe there is a better solution here anyway
 
                         //playback on click
                         commentBinding.viewCommentPlaybutton.setOnClickListener {
@@ -270,7 +270,7 @@ class IcalViewFragment : Fragment() {
                             } else {
                                 // write the base64 decoded Bytestream in a file and use it as an input for the player
                                 //val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
-                                fileName = "${requireContext().filesDir}/${relatedNote.attachmentUri}"
+                                fileName = Uri.parse(relatedNote.attachmentUri)
 
                                 startPlaying()
                                 commentBinding.viewCommentPlaybutton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
@@ -356,7 +356,7 @@ class IcalViewFragment : Fragment() {
                 audioDialogBinding.viewAudioDialogStartrecordingFab.setOnClickListener {
 
                     if(!recording) {
-                        fileName = "${requireContext().cacheDir}/recorded.$audioFileExtension"
+                        fileName = Uri.parse("${requireContext().cacheDir}/recorded.$audioFileExtension")
                         audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
                         startRecording()
                         audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = false
@@ -414,10 +414,10 @@ class IcalViewFragment : Fragment() {
                             stopRecording()
                             stopPlaying()
 
-                            if(fileName.isNotEmpty()) {
+                            if(fileName != null) {
 
                                 try {
-                                    val cachedFile = File(fileName)
+                                    val cachedFile = File(fileName.toString())
                                     val newFilename = "${System.currentTimeMillis()}.$audioFileExtension"
                                     val newFile = File(
                                         Attachment.getAttachmentDirectory(requireContext()),
@@ -428,7 +428,7 @@ class IcalViewFragment : Fragment() {
 
                                     val newAttachment = Attachment(
                                         fmttype = Attachment.FMTTYPE_AUDIO_MP4_AAC,
-                                        uri = "/${Attachment.ATTACHMENT_DIR}/${newFile.name}",
+                                        uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, newFile).toString(),
                                         filename = newFilename,
                                         extension = ".mp4",
                                         filesize = newFile.length()
@@ -767,7 +767,7 @@ class IcalViewFragment : Fragment() {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(audioOutputFormat)
             setAudioEncoder(audioEncoder)
-            setOutputFile(fileName)
+            setOutputFile(fileName.toString())
             setMaxDuration(60000)
 
             try {
@@ -790,7 +790,7 @@ class IcalViewFragment : Fragment() {
         // initialise the player
         player = MediaPlayer().apply {
             try {
-                setDataSource(fileName)
+                setDataSource(fileName.toString())
                 prepare()
             } catch (e: IOException) {
                 Log.e("preparePlaying()", "prepare() failed")
@@ -800,16 +800,18 @@ class IcalViewFragment : Fragment() {
 
     private fun startPlaying() {
         // initialise the player
-        player = MediaPlayer().apply {
-            try {
-                setDataSource(fileName)
-                prepare()
-            } catch (e: IOException) {
-                Log.e("preparePlaying()", "prepare() failed")
+        if(fileName != null) {
+            player = MediaPlayer().apply {
+                try {
+                    setDataSource(requireContext(), fileName!!)
+                    //setDataSource(fileName)
+                    prepare()
+                } catch (e: IOException) {
+                    Log.e("preparePlaying()", "prepare() failed: \n$e")
+                }
             }
+            player?.start()
         }
-
-        player?.start()
     }
 
     private fun stopPlaying() {

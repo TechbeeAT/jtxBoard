@@ -125,7 +125,7 @@ data class Attachment (
         const val FMTTYPE_AUDIO_MP4_AAC = "audio/aac"
         const val FMTTYPE_AUDIO_OGG = "audio/ogg"
 
-        const val ATTACHMENT_DIR = "attachments"
+        //const val ATTACHMENT_DIR = "attachments"
 
 
         /**
@@ -155,7 +155,7 @@ data class Attachment (
          */
         fun getAttachmentDirectory(context: Context): String? {
 
-            val filePath = "${context.filesDir}/$ATTACHMENT_DIR"
+            val filePath = "${context.filesDir}"
             val file = File(filePath)
 
             if (!file.exists()) {
