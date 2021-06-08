@@ -3,7 +3,7 @@ image: openjdk:8-jdk
 variables:
   ANDROID_COMPILE_SDK: "30"
   ANDROID_BUILD_TOOLS: "30.0.2"
-  ANDROID_SDK_TOOLS:   "7302050"
+  ANDROID_SDK_TOOLS:   "4333796"
   CMAKE:               "3.10.2.4988404"
 
 before_script:
