@@ -39,6 +39,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDeepLinkBuilder
 import androidx.navigation.fragment.findNavController
+import androidx.work.Constraints
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.NotificationPublisher
 import at.bitfire.notesx5.database.*
@@ -205,6 +209,8 @@ class IcalEditFragment : Fragment(),
                     val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
                     icalEditViewModel.delete()
                     Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG).show()
+
+                    scheduleCleanupJob()
 
                     this.findNavController().navigate(direction)
                 }
@@ -1389,5 +1395,35 @@ class IcalEditFragment : Fragment(),
             }
         super.onActivityResult(requestCode, resultCode, intent)
 
+    }
+
+    fun scheduleCleanupJob() {
+
+        //TODO: This constraint is currently not used as it didn't work in the test, this should be further investigated!
+        // set constraints for the scheduler
+        val constraints = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Constraints.Builder()
+                .setRequiresDeviceIdle(true)
+                .setRequiresBatteryNotLow(true)
+                .build()
+        } else {
+            Constraints.Builder()
+                .setRequiresBatteryNotLow(true)
+                .build()
+        }
+
+        //create the cleanup job to make sure that the files are getting deleted as well when the device is idle
+        val fileCleanupWorkRequest: WorkRequest =
+            OneTimeWorkRequestBuilder<FileCleanupJob>()
+                // Additional configuration
+                //.setConstraints(constraints)
+                .build()
+
+        // enqueue the fileCleanupWorkRequest
+        WorkManager
+            .getInstance(requireContext())
+            .enqueue(fileCleanupWorkRequest)
+
+        Log.d("IcalEditFragment", "enqueued fileCleanupWorkRequest")
     }
 }

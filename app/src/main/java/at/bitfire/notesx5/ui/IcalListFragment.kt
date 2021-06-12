@@ -44,6 +44,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     private lateinit var binding: FragmentIcalListBinding
     private lateinit var application: Application
+    private lateinit var dataSource: ICalDatabaseDao
 
     private var gotodateMenuItem: MenuItem? = null
 
@@ -71,7 +72,7 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // set up DB DAO
         application = requireNotNull(this.activity).application
-        val dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
+        dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
 
         // create the view model through the view model factory
@@ -85,6 +86,9 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         // add menu
         setHasOptionsMenu(true)
+
+        //doFilesCheck()
+
 
         // set up recycler view
         recyclerView = binding.vjournalListItemsRecyclerView
@@ -491,6 +495,50 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                     this.module2preselect = icalListViewModel.searchModule
                 })
     }
+
+/*
+    private fun doFilesCheck() {
+
+
+        val foundFileContentUris = mutableListOf<Uri>()
+
+
+        val filesPath = File(requireContext().filesDir, ".")
+        filesPath.listFiles().forEach {
+            Log.d("FileInFolder", it.path.toString())
+            val fileContentUri = FileProvider.getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, it)
+            foundFileContentUris.add(fileContentUri)
+            Log.d("FileInFolderCUri", fileContentUri.toString())
+
+        }
+
+        val extFilesPath = File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString())
+        extFilesPath.listFiles().forEach {
+            Log.d("FileInExtFolder", it.path.toString())
+            val fileContentUri = FileProvider.getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, it)
+            foundFileContentUris.add(fileContentUri)
+            Log.d("FileInFolderCUri", fileContentUri.toString())
+        }
+
+        lifecycleScope.launchWhenStarted {
+            val allAttachmentUris = dataSource.getAllAttachmentUris()
+            allAttachmentUris.forEach { attachment2keep ->
+                foundFileContentUris.remove(Uri.parse(attachment2keep))
+            }
+
+            Log.d("remainingItems", foundFileContentUris.toString())
+
+            foundFileContentUris.forEach {
+                requireContext().contentResolver.delete(it, null, null)
+            }
+
+        }
+
+
+    }
+
+
+ */
 }
 
 

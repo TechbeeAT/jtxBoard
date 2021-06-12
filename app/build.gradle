@@ -91,6 +91,9 @@ dependencies {
     // Google Consent for Admob
     implementation 'com.google.android.ump:user-messaging-platform:1.0.0'
 
+    // Workmanager support
+    implementation("androidx.work:work-runtime-ktx:$work_version")
+
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
@@ -108,5 +111,9 @@ dependencies {
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.10"
     androidTestImplementation 'androidx.test:core:1.4.0-beta01'
     androidTestImplementation 'androidx.test:core-ktx:1.4.0-beta01'
+
+    // Testing for Workmanager
+    androidTestImplementation("androidx.work:work-testing:$work_version")
+
 
 }

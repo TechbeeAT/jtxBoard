@@ -41,6 +41,16 @@ SELECTs (global selects without parameter)
     fun getAllCategories(): LiveData<List<String>>
 
     /**
+     * Retrieve an list of all Attachment Uris
+     *
+     * @return a list of [Attachment.uri] as List<String>
+     */
+    @Transaction
+    @Query("SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT")
+    suspend fun getAllAttachmentUris(): List<String>
+
+
+    /**
      * Retrieve an list of all DISTINCT Organizer caladdresses ([Organizer.caladdress]) as a LiveData-List
      *
      * @return a list of [Organizer.caladdress] as LiveData<List<String>>
