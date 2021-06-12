@@ -95,6 +95,7 @@
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="2"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/list_item_due"
             app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
