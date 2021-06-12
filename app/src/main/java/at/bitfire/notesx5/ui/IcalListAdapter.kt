@@ -46,6 +46,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
     private lateinit var settings: SharedPreferences
     private var settingShowSubtasks = true
     private var settingShowAttachments = true
+    private var settingShowProgress = true
     private var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = model.iCal4List
     private var allSubtasks: LiveData<List<ICal4List?>> = model.allSubtasks
 
@@ -56,6 +57,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         settings = PreferenceManager.getDefaultSharedPreferences(context)
         settingShowSubtasks = settings.getBoolean(SettingsFragment.SHOW_SUBTASKS_IN_LIST, true)
         settingShowAttachments = settings.getBoolean(SettingsFragment.SHOW_ATTACHMENTS_IN_LIST, true)
+        settingShowProgress = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_IN_LIST, true)
 
         val itemHolder = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_ical_list_item, parent, false)
@@ -481,6 +483,14 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                 IcalListFragmentDirections.actionIcalListFragmentToIcalViewFragment()
                     .setItem2show(subtask.id)
             )
+        }
+
+        if(settingShowProgress) {
+            subtaskBinding.listItemSubtaskProgressSlider.visibility = View.VISIBLE
+            subtaskBinding.listItemSubtaskProgressPercent.visibility = View.VISIBLE
+        } else {
+            subtaskBinding.listItemSubtaskProgressSlider.visibility = View.GONE
+            subtaskBinding.listItemSubtaskProgressPercent.visibility = View.GONE
         }
 
         holder.subtasksLinearLayout.addView(subtaskBinding.root)

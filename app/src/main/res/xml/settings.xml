@@ -34,6 +34,13 @@
             app:icon="@drawable/ic_attachment"
             app:useSimpleSummaryProvider="true"/>
 
+        <SwitchPreference
+            app:key="settings_show_progress_in_list"
+            app:defaultValue="true"
+            app:title="Show progress in list"
+            app:useSimpleSummaryProvider="true"/>
+
+
 
     </PreferenceCategory>
 
