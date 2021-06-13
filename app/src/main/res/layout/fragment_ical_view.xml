@@ -704,7 +704,7 @@
             android:layout_marginBottom="16dp"
             android:contentDescription="@string/view_fab_edit_entry_contentDesc"
             android:onClick="@{() -> model.editingClicked()}"
-            app:srcCompat="@drawable/ic_vjournal_edit" />
+            app:srcCompat="@drawable/ic_edit" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

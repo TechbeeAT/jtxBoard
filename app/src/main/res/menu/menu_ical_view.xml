@@ -12,13 +12,13 @@
 
     <item
         android:id="@+id/menu_view_share_text"
-        android:icon="@drawable/ic_icalobject_send"
+        android:icon="@drawable/ic_send"
         android:title="@string/menu_view_share_text"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_view_share_ics"
-        android:icon="@drawable/ic_vjournal_share"
+        android:icon="@drawable/ic_share"
         android:title="@string/menu_view_share_ics"
         app:showAsAction="ifRoom" />
 

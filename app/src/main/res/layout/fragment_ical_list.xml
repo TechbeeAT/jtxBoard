@@ -38,14 +38,14 @@
                     android:id="@+id/journals_tab"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:icon="@drawable/ic_vjournal_date"
+                    android:icon="@drawable/ic_date"
                     android:text="@string/list_tabitem_journals" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/notes_tab"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:icon="@drawable/ic_vjournal_note"
+                    android:icon="@drawable/ic_note"
                     android:text="@string/list_tabitem_notes" />
 
                 <com.google.android.material.tabs.TabItem
@@ -98,7 +98,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:contentDescription="@string/list_fab_add_contentdesc"
-            app:srcCompat="@drawable/ic_vjournal_add"
+            app:srcCompat="@drawable/ic_add"
             />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

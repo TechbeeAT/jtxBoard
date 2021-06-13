@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/menu_edit_delete"
-        android:icon="@drawable/ic_vjournal_delete"
+        android:icon="@drawable/ic_delete"
         android:iconTint="#000000"
         android:title="@string/menu_edit_delete"
         app:showAsAction="ifRoom" />

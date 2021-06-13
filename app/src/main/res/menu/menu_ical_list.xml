@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/menu_list_search"
-        android:icon="@drawable/ic_vjournal_search"
+        android:icon="@drawable/ic_search"
         android:iconTint="#000000"
         android:queryHint="Search for keyword or #categories"
         android:title="@string/menu_list_search"
@@ -21,7 +21,7 @@
 
     <item
         android:id="@+id/menu_list_gotodate"
-        android:icon="@drawable/ic_vjournal_date"
+        android:icon="@drawable/ic_date"
         android:iconTint="#000000"
         android:title="@string/menu_list_gotodate"
         app:showAsAction="ifRoom" />
