@@ -12,6 +12,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -35,6 +36,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.ump.*
 import java.util.concurrent.TimeUnit
@@ -68,12 +70,17 @@ class MainActivity : AppCompatActivity() {
     lateinit var toolbar: Toolbar
     var consentInformation: ConsentInformation? = null
     var consentForm: ConsentForm? = null
+    var settings: SharedPreferences? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //load settings
+        settings = PreferenceManager.getDefaultSharedPreferences(this)
+
 
         // Register Notification Channel for Reminders
         createNotificationChannel()
@@ -87,8 +94,26 @@ class MainActivity : AppCompatActivity() {
 
         // if trial period ended, then initialize the consent to show ads
         // TODO: opt out and other options
-        if (trialPeriodEnded())
-            initializeUserConsent()
+        if (!isTrialPeriod()) {
+
+            //MaterialAlertDialogBuilder(applicationContext, R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog_Centered)
+            MaterialAlertDialogBuilder(this)
+                .setTitle(resources.getString(R.string.list_dialog_contribution_title))
+                .setMessage(resources.getString(R.string.list_dialog_contribution_message))
+                .setNegativeButton(resources.getString(R.string.list_dialog_contribution_buyadfree)) { dialog, which ->
+                    // Respond to negative button press
+                    settings!!.edit().putBoolean(SettingsFragment.SHOW_ADS, false).apply()
+                    //TODO: open in app-buying for ad-free option
+                }
+                .setPositiveButton(resources.getString(R.string.list_dialog_contribution_acceptads)) { dialog, which ->
+                    // Respond to positive button press
+                    // Ads are accepted, load user consent
+                    settings!!.edit().putBoolean(SettingsFragment.SHOW_ADS, true).apply()
+                    initializeUserConsent()
+
+                }
+                .show()
+        }
 
     }
 
@@ -187,15 +212,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkThemeSetting() {
         // user interface settings
-        val settings = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val enforceDark = settings.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false)
+        val enforceDark = settings!!.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false)
         if (enforceDark)
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
     }
 
-    fun trialPeriodEnded(): Boolean {
+    fun isTrialPeriod(): Boolean {
         val firstInstalled: Long = this.applicationContext.packageManager.getPackageInfo(
             applicationContext.packageName,
             0
@@ -204,7 +228,7 @@ class MainActivity : AppCompatActivity() {
         //val trialEnd = firstInstalled + TimeUnit.DAYS.toMillis(TRIAL_PERIOD_DAYS)
         val trialEnd = firstInstalled + TimeUnit.MINUTES.toMillis(5L)    // for testing
 
-        return System.currentTimeMillis() > trialEnd
+        return System.currentTimeMillis() <= trialEnd
     }
 
 
@@ -281,8 +305,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun initializeUserConsent() {
-
+    fun initializeUserConsent() {
 
         val debugSettings = ConsentDebugSettings.Builder(this)
             .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)

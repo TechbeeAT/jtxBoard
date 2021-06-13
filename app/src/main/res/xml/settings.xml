@@ -45,8 +45,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:key="settings_format"
-        app:title="Format Settings">
+        app:key="settings_global"
+        app:title="App Settings">
 
         <DropDownPreference
             app:key="setting_audio_format"
@@ -56,16 +56,19 @@
             app:icon="@drawable/ic_audio"
             app:useSimpleSummaryProvider="true" />
 
-    </PreferenceCategory>
 
-    <PreferenceCategory
-        app:key="gdpr"
-        app:title="GDPR Ad Settings">
+        <SwitchPreference
+            app:key="settings_show_ads"
+            app:defaultValue="false"
+            app:icon="@drawable/ic_money"
+            app:title="Support app by showing ads"
+            app:summary="As an alternative to ads you can buy the ad-free option"/>
 
         <Preference
             app:key="show_user_consent"
-            app:summary="Show User Consent"
-            app:title="Show User Consent for Ad Settings"/>
+            app:title="Show User Consent (GDPR)"
+            app:summary="Show User Consent for Ad Settings"/>
+
 
     </PreferenceCategory>
 

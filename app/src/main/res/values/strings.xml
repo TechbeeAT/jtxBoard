@@ -92,6 +92,13 @@
     <string name="list_fab_add_contentdesc">Add new item</string>
     <string name="list_progress">Progress</string>
     <string name="list_expand">Expand</string>
+    <string name="list_dialog_contribution_title">Select your contribution form</string>
+    <string name="list_dialog_contribution_message">Please choose your contribution to this app: Accept ads or buy the ad-free option from the store. If you are unsure, check the ad-option, you can still change your mind and buy the ad-free option later through the settings menu!</string>
+    <string name="list_dialog_contribution_acceptads">Accept ads</string>
+    <string name="list_dialog_contribution_buyadfree">Buy ad-free</string>
+
+
+
 
 
 
