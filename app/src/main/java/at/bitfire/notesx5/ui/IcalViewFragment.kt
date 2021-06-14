@@ -22,10 +22,13 @@ import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.InputType
 import android.util.Log
 import android.util.Size
 import android.view.*
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -376,6 +379,7 @@ class IcalViewFragment : Fragment() {
                 audioDialogBinding.viewAudioDialogStartplayingFab.setOnClickListener {
                     if(!playing) {
                         startPlaying()
+                        initialiseSeekBar(audioDialogBinding.viewAudioDialogProgressbar)
                         audioDialogBinding.viewAudioDialogStartplayingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
                         playing = true
 
@@ -391,7 +395,7 @@ class IcalViewFragment : Fragment() {
                     }
                 }
 
-                /*
+
                 audioDialogBinding.viewAudioDialogProgressbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                         if (fromUser)
@@ -401,7 +405,7 @@ class IcalViewFragment : Fragment() {
                     override fun onStopTrackingTouch(seekBar: SeekBar?)  {   }
                 })
 
-                 */
+
 
 
 
@@ -817,6 +821,23 @@ class IcalViewFragment : Fragment() {
     private fun stopPlaying() {
         player?.release()
         player = null
+    }
+
+    private fun initialiseSeekBar(seekbar: SeekBar) {
+
+        seekbar.max = player!!.duration
+
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed(object: Runnable {
+            override fun run() {
+                try {
+                    seekbar.progress = player!!.currentPosition
+                    handler.postDelayed(this, 10)
+                } catch (e: Exception) {
+                    seekbar.progress = 0
+                }
+            }
+        }, 0)
     }
 }
 
