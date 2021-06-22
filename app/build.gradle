@@ -86,7 +86,7 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.1.1"
 
     // Admob
-    implementation 'com.google.android.gms:play-services-ads:20.1.0'
+    implementation 'com.google.android.gms:play-services-ads:20.2.0'
 
     // Google Consent for Admob
     implementation 'com.google.android.ump:user-messaging-platform:1.0.0'
@@ -105,12 +105,12 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1"
-    androidTestImplementation 'androidx.test:runner:1.4.0-beta01'
+    androidTestImplementation 'androidx.test:runner:1.4.0-rc01'
 
     // Testing-only dependencies
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.10"
-    androidTestImplementation 'androidx.test:core:1.4.0-beta01'
-    androidTestImplementation 'androidx.test:core-ktx:1.4.0-beta01'
+    androidTestImplementation 'androidx.test:core:1.4.0-rc01'
+    androidTestImplementation 'androidx.test:core-ktx:1.4.0-rc01'
 
     // Testing for Workmanager
     androidTestImplementation("androidx.work:work-testing:$work_version")
