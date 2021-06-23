@@ -1416,7 +1416,7 @@ class IcalEditFragment : Fragment(),
         val fileCleanupWorkRequest: WorkRequest =
             OneTimeWorkRequestBuilder<FileCleanupJob>()
                 // Additional configuration
-                //.setConstraints(constraints)
+                .setConstraints(constraints)
                 .build()
 
         // enqueue the fileCleanupWorkRequest

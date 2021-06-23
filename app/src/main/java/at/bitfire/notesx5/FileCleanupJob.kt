@@ -42,9 +42,13 @@ class FileCleanupJob (val appContext: Context, workerParams: WorkerParameters):
                 foundFileContentUris.remove(Uri.parse(attachment2keep))
             }
 
-            foundFileContentUris.forEach {
-                appContext.contentResolver.delete(it, null, null)
-                Log.d("FileCleanupJob", "$it deleted")
+            if(foundFileContentUris.size == 0)
+                Log.d("FileCleanupJob", "No files to delete")
+            else {
+                foundFileContentUris.forEach {
+                    appContext.contentResolver.delete(it, null, null)
+                    Log.d("FileCleanupJob", "$it deleted")
+                }
             }
 
             // Indicate whether the work finished successfully with the Result
