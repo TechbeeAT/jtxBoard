@@ -22,4 +22,21 @@
         android:title="@string/menu_view_share_ics"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/menu_view_copy_as_journal"
+        android:title="@string/menu_view_copy_as_journal"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_view_copy_as_note"
+        android:title="@string/menu_view_copy_as_note"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_view_copy_as_todo"
+        android:title="@string/menu_view_copy_as_todo"
+        app:showAsAction="ifRoom" />
+
+
+
 </menu>

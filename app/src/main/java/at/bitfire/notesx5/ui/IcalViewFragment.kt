@@ -762,6 +762,59 @@ class IcalViewFragment : Fragment() {
             Log.d("shareIntent", shareText)
             startActivity(Intent(shareIntent))
         }
+        else if (item.itemId == R.id.menu_view_copy_as_journal) {
+            val icalEntityCopy = icalViewViewModel.icalEntity.value!!
+            icalEntityCopy.property.id = 0L
+            icalEntityCopy.property.component = Component.VJOURNAL.name
+            icalEntityCopy.property.module = Module.JOURNAL.name
+            icalEntityCopy.property.completed = null
+            icalEntityCopy.property.completedTimezone = null
+            if(icalEntityCopy.property.dtstart == null)
+                icalEntityCopy.property.dtstart = System.currentTimeMillis()
+            icalEntityCopy.property.dtstamp = System.currentTimeMillis()
+            icalEntityCopy.property.dtend = null
+            icalEntityCopy.property.dtendTimezone = null
+            icalEntityCopy.property.due = null
+            icalEntityCopy.property.dueTimezone = null
+            icalEntityCopy.property.duration = null
+            icalEntityCopy.property.priority = null
+
+            this.findNavController().navigate(
+                IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
+            )
+        }
+        else if (item.itemId == R.id.menu_view_copy_as_note) {
+            val icalEntityCopy = icalViewViewModel.icalEntity.value!!
+            icalEntityCopy.property.id = 0L
+            icalEntityCopy.property.component = Component.VJOURNAL.name
+            icalEntityCopy.property.module = Module.NOTE.name
+            icalEntityCopy.property.completed = null
+            icalEntityCopy.property.completedTimezone = null
+            icalEntityCopy.property.dtstart = null
+            icalEntityCopy.property.dtstartTimezone = null
+            icalEntityCopy.property.dtstamp = System.currentTimeMillis()
+            icalEntityCopy.property.dtend = null
+            icalEntityCopy.property.dtendTimezone = null
+            icalEntityCopy.property.due = null
+            icalEntityCopy.property.dueTimezone = null
+            icalEntityCopy.property.duration = null
+            icalEntityCopy.property.priority = null
+
+            this.findNavController().navigate(
+                IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
+            )
+        }
+        else if (item.itemId == R.id.menu_view_copy_as_todo) {
+            val icalEntityCopy = icalViewViewModel.icalEntity.value!!
+            icalEntityCopy.property.id = 0L
+            icalEntityCopy.property.component = Component.VTODO.name
+            icalEntityCopy.property.module = Module.TODO.name
+            icalEntityCopy.property.dtstamp = System.currentTimeMillis()
+
+            this.findNavController().navigate(
+                IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
+            )
+        }
         return super.onOptionsItemSelected(item)
     }
 

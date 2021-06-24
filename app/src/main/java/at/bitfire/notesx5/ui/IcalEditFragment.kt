@@ -411,18 +411,34 @@ class IcalEditFragment : Fragment(),
 
         icalEditViewModel.iCalEntity.comment?.forEach { singleComment ->
             addCommentView(singleComment)
+
+            // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
+            if(icalEditViewModel.iCalEntity.property.id == 0L)
+                icalEditViewModel.commentUpdated.add(singleComment)
         }
 
         icalEditViewModel.iCalEntity.attachment?.forEach { singleAttachment ->
             addAttachmentView(singleAttachment)
+
+            // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
+            if(icalEditViewModel.iCalEntity.property.id == 0L)
+                icalEditViewModel.attachmentUpdated.add(singleAttachment)
         }
 
         icalEditViewModel.iCalEntity.category?.forEach { singleCategory ->
             addCategoryChip(singleCategory)
+
+            // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
+            if(icalEditViewModel.iCalEntity.property.id == 0L)
+                icalEditViewModel.categoryUpdated.add(singleCategory)
         }
 
         icalEditViewModel.iCalEntity.attendee?.forEach { singleAttendee ->
             addAttendeeChip(singleAttendee)
+
+            // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
+            if(icalEditViewModel.iCalEntity.property.id == 0L)
+                icalEditViewModel.attendeeUpdated.add(singleAttendee)
         }
 
 

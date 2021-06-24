@@ -193,6 +193,9 @@
     <string name="menu_list_add_todo">Add Todo</string>
     <string name="menu_view_share_text">Share</string>
     <string name="menu_view_share_ics">Share as ICS</string>
+    <string name="menu_view_copy_as_journal">Copy as Journal</string>
+    <string name="menu_view_copy_as_todo">Copy as Todo</string>
+    <string name="menu_view_copy_as_note">Copy as Note</string>
     <string name="edit_timezone">Timezone</string>
     <string name="list_filter">Filter</string>
 
