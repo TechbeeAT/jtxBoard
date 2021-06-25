@@ -195,7 +195,7 @@ class IcalListViewModel(
 
     fun updateProgress(itemId: Long, newPercent: Int) {
 
-        viewModelScope.launch() {
+        viewModelScope.launch {
             val currentItem = database.getICalObjectById(itemId)?.setUpdatedProgress(newPercent)
             if(currentItem != null) {
                 database.update(currentItem)

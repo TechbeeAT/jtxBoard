@@ -103,18 +103,22 @@ fun convertLongToICalDateTime(datetime: Long?, timezone: String?): String? {
 
     val formatter: SimpleDateFormat
 
-    if(timezone == "ALLDAY") {
-        formatter = SimpleDateFormat("yyyyMMdd")
-        return ":${formatter.format(Date(datetime))}"
-    } else if(timezone.isNullOrEmpty()) {
-        formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss'Z'")
-        return ":${formatter.format(Date(datetime))}"
-    } else if (timezone.isNotEmpty()) {
-        formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss")
-        return ";TZID=$timezone:${formatter.format(Date(datetime))}"
+    return when {
+        timezone == "ALLDAY" -> {
+            formatter = SimpleDateFormat("yyyyMMdd")
+            ":${formatter.format(Date(datetime))}"
+        }
+        timezone.isNullOrEmpty() -> {
+            formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss'Z'")
+            ":${formatter.format(Date(datetime))}"
+        }
+        timezone.isNotEmpty() -> {
+            formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss")
+            ";TZID=$timezone:${formatter.format(Date(datetime))}"
+        }
+        else -> null
     }
 
-    return null
 }
 
 

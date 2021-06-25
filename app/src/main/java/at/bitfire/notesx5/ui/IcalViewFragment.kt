@@ -707,113 +707,115 @@ class IcalViewFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_view_share_text) {
+        when (item.itemId) {
+            R.id.menu_view_share_text -> {
 
-            var shareText = "${convertLongToDateString(icalViewViewModel.icalEntity.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart)}\n"
-            shareText += "${icalViewViewModel.icalEntity.value!!.property.summary}\n\n"
-            shareText += "${icalViewViewModel.icalEntity.value!!.property.description}\n\n"
-            //shareText += icalViewViewModel.icalEntity.value!!.getICalString()
+                var shareText = "${convertLongToDateString(icalViewViewModel.icalEntity.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart)}\n"
+                shareText += "${icalViewViewModel.icalEntity.value!!.property.summary}\n\n"
+                shareText += "${icalViewViewModel.icalEntity.value!!.property.description}\n\n"
+                //shareText += icalViewViewModel.icalEntity.value!!.getICalString()
 
-            val categories: MutableList<String> = mutableListOf()
-            icalViewViewModel.icalEntity.value!!.category?.forEach { categories.add(it.text) }
-            shareText += "Categories/Labels: ${categories.joinToString(separator=", ")}"
+                val categories: MutableList<String> = mutableListOf()
+                icalViewViewModel.icalEntity.value!!.category?.forEach { categories.add(it.text) }
+                shareText += "Categories/Labels: ${categories.joinToString(separator=", ")}"
 
-            val attendees: MutableList<String> = mutableListOf()
-            icalViewViewModel.icalEntity.value!!.attendee?.forEach { attendees.add(it.caladdress) }
+                val attendees: MutableList<String> = mutableListOf()
+                icalViewViewModel.icalEntity.value!!.attendee?.forEach { attendees.add(it.caladdress) }
 
-            // prepare file attachment, the file is stored in the externalCacheDir and then provided through a FileProvider
-            var uri: Uri? = null
-            try {
-                val icsFileName = "${requireContext().externalCacheDir}/ics_file.ics"
-                val icsFile = File(icsFileName).apply {
-                    writeText(icalViewViewModel.icalEntity.value!!.getICalString())
-                    createNewFile()
+                // prepare file attachment, the file is stored in the externalCacheDir and then provided through a FileProvider
+                var uri: Uri? = null
+                try {
+                    val icsFileName = "${requireContext().externalCacheDir}/ics_file.ics"
+                    val icsFile = File(icsFileName).apply {
+                        writeText(icalViewViewModel.icalEntity.value!!.getICalString())
+                        createNewFile()
+                    }
+                    uri = getUriForFile(requireContext(),
+                        AUTHORITY_FILEPROVIDER, icsFile)
+                } catch (e: Exception) {
+                    Log.i("fileprovider", "Failed to attach ICS File")
+                    Toast.makeText(requireContext(), "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
                 }
-                uri = getUriForFile(requireContext(),
-                    AUTHORITY_FILEPROVIDER, icsFile)
-            } catch (e: Exception) {
-                Log.i("fileprovider", "Failed to attach ICS File")
-                Toast.makeText(requireContext(), "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
+
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.icalEntity.value!!.property.summary)
+                    putExtra(Intent.EXTRA_TEXT, shareText)
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    putExtra(Intent.EXTRA_EMAIL, attendees.toTypedArray())
+
+                }
+
+                Log.d("shareIntent", shareText)
+                startActivity(Intent(shareIntent))
             }
+            R.id.menu_view_share_ics -> {
 
-            val shareIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                type = "text/plain"
-                putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.icalEntity.value!!.property.summary)
-                putExtra(Intent.EXTRA_TEXT, shareText)
-                putExtra(Intent.EXTRA_STREAM, uri)
-                putExtra(Intent.EXTRA_EMAIL, attendees.toTypedArray())
+                val shareText = icalViewViewModel.icalEntity.value!!.getICalString()
 
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "text/calendar"
+                    putExtra(Intent.EXTRA_STREAM, shareText)
+                }
+
+                Log.d("shareIntent", shareText)
+                startActivity(Intent(shareIntent))
             }
+            R.id.menu_view_copy_as_journal -> {
+                val icalEntityCopy = icalViewViewModel.icalEntity.value!!
+                icalEntityCopy.property.id = 0L
+                icalEntityCopy.property.component = Component.VJOURNAL.name
+                icalEntityCopy.property.module = Module.JOURNAL.name
+                icalEntityCopy.property.completed = null
+                icalEntityCopy.property.completedTimezone = null
+                if(icalEntityCopy.property.dtstart == null)
+                    icalEntityCopy.property.dtstart = System.currentTimeMillis()
+                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
+                icalEntityCopy.property.dtend = null
+                icalEntityCopy.property.dtendTimezone = null
+                icalEntityCopy.property.due = null
+                icalEntityCopy.property.dueTimezone = null
+                icalEntityCopy.property.duration = null
+                icalEntityCopy.property.priority = null
 
-            Log.d("shareIntent", shareText)
-            startActivity(Intent(shareIntent))
-        }
-        else if (item.itemId == R.id.menu_view_share_ics) {
-
-            val shareText = icalViewViewModel.icalEntity.value!!.getICalString()
-
-            val shareIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                type = "text/calendar"
-                putExtra(Intent.EXTRA_STREAM, shareText)
+                this.findNavController().navigate(
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
+                )
             }
+            R.id.menu_view_copy_as_note -> {
+                val icalEntityCopy = icalViewViewModel.icalEntity.value!!
+                icalEntityCopy.property.id = 0L
+                icalEntityCopy.property.component = Component.VJOURNAL.name
+                icalEntityCopy.property.module = Module.NOTE.name
+                icalEntityCopy.property.completed = null
+                icalEntityCopy.property.completedTimezone = null
+                icalEntityCopy.property.dtstart = null
+                icalEntityCopy.property.dtstartTimezone = null
+                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
+                icalEntityCopy.property.dtend = null
+                icalEntityCopy.property.dtendTimezone = null
+                icalEntityCopy.property.due = null
+                icalEntityCopy.property.dueTimezone = null
+                icalEntityCopy.property.duration = null
+                icalEntityCopy.property.priority = null
 
-            Log.d("shareIntent", shareText)
-            startActivity(Intent(shareIntent))
-        }
-        else if (item.itemId == R.id.menu_view_copy_as_journal) {
-            val icalEntityCopy = icalViewViewModel.icalEntity.value!!
-            icalEntityCopy.property.id = 0L
-            icalEntityCopy.property.component = Component.VJOURNAL.name
-            icalEntityCopy.property.module = Module.JOURNAL.name
-            icalEntityCopy.property.completed = null
-            icalEntityCopy.property.completedTimezone = null
-            if(icalEntityCopy.property.dtstart == null)
-                icalEntityCopy.property.dtstart = System.currentTimeMillis()
-            icalEntityCopy.property.dtstamp = System.currentTimeMillis()
-            icalEntityCopy.property.dtend = null
-            icalEntityCopy.property.dtendTimezone = null
-            icalEntityCopy.property.due = null
-            icalEntityCopy.property.dueTimezone = null
-            icalEntityCopy.property.duration = null
-            icalEntityCopy.property.priority = null
+                this.findNavController().navigate(
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
+                )
+            }
+            R.id.menu_view_copy_as_todo -> {
+                val icalEntityCopy = icalViewViewModel.icalEntity.value!!
+                icalEntityCopy.property.id = 0L
+                icalEntityCopy.property.component = Component.VTODO.name
+                icalEntityCopy.property.module = Module.TODO.name
+                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
 
-            this.findNavController().navigate(
-                IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
-            )
-        }
-        else if (item.itemId == R.id.menu_view_copy_as_note) {
-            val icalEntityCopy = icalViewViewModel.icalEntity.value!!
-            icalEntityCopy.property.id = 0L
-            icalEntityCopy.property.component = Component.VJOURNAL.name
-            icalEntityCopy.property.module = Module.NOTE.name
-            icalEntityCopy.property.completed = null
-            icalEntityCopy.property.completedTimezone = null
-            icalEntityCopy.property.dtstart = null
-            icalEntityCopy.property.dtstartTimezone = null
-            icalEntityCopy.property.dtstamp = System.currentTimeMillis()
-            icalEntityCopy.property.dtend = null
-            icalEntityCopy.property.dtendTimezone = null
-            icalEntityCopy.property.due = null
-            icalEntityCopy.property.dueTimezone = null
-            icalEntityCopy.property.duration = null
-            icalEntityCopy.property.priority = null
-
-            this.findNavController().navigate(
-                IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
-            )
-        }
-        else if (item.itemId == R.id.menu_view_copy_as_todo) {
-            val icalEntityCopy = icalViewViewModel.icalEntity.value!!
-            icalEntityCopy.property.id = 0L
-            icalEntityCopy.property.component = Component.VTODO.name
-            icalEntityCopy.property.module = Module.TODO.name
-            icalEntityCopy.property.dtstamp = System.currentTimeMillis()
-
-            this.findNavController().navigate(
-                IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
-            )
+                this.findNavController().navigate(
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
+                )
+            }
         }
         return super.onOptionsItemSelected(item)
     }

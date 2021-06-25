@@ -559,7 +559,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         val thumbBitmap =
-                            context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
+                            context.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
                         attachmentBinding.listItemAttachmentPictureThumbnail.setImageBitmap(
                             thumbBitmap
                         )
