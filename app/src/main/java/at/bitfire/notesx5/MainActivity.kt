@@ -92,9 +92,12 @@ class MainActivity : AppCompatActivity() {
         setUpDrawer()
         checkThemeSetting()
 
-        // if trial period ended, then initialize the consent to show ads
-        // TODO: opt out and other options
-        if (!isTrialPeriod()) {
+        // if trial period ended, then check if ads are accepted, if the
+        // app was bought, then skip the Dialog, otherwise show the dialog to let the user choose
+        val adsAccepted = settings!!.getBoolean(SettingsFragment.SHOW_ADS, false)
+        if (!isTrialPeriod() && !adsAccepted) {
+
+            // TODO: Check if the user already bought the app. If yes, skip the Dialog Box
 
             //MaterialAlertDialogBuilder(applicationContext, R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog_Centered)
             MaterialAlertDialogBuilder(this)
@@ -103,6 +106,7 @@ class MainActivity : AppCompatActivity() {
                 .setNegativeButton(resources.getString(R.string.list_dialog_contribution_buyadfree)) { dialog, which ->
                     // Respond to negative button press
                     settings!!.edit().putBoolean(SettingsFragment.SHOW_ADS, false).apply()
+                    Toast.makeText(this, "Start the Intent for the play store", Toast.LENGTH_LONG).show()
                     //TODO: open in app-buying for ad-free option
                 }
                 .setPositiveButton(resources.getString(R.string.list_dialog_contribution_acceptads)) { dialog, which ->
@@ -110,9 +114,11 @@ class MainActivity : AppCompatActivity() {
                     // Ads are accepted, load user consent
                     settings!!.edit().putBoolean(SettingsFragment.SHOW_ADS, true).apply()
                     initializeUserConsent()
-
                 }
                 .show()
+        }
+        else if (!isTrialPeriod() && adsAccepted) {
+            initializeUserConsent()
         }
 
     }
