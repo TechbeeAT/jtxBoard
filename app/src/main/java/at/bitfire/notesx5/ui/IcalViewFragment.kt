@@ -780,6 +780,14 @@ class IcalViewFragment : Fragment() {
                 icalEntityCopy.property.duration = null
                 icalEntityCopy.property.priority = null
 
+                icalEntityCopy.attachment?.forEach { it.attachmentId = 0L }
+                icalEntityCopy.attendee?.forEach { it.attendeeId = 0L }
+                icalEntityCopy.category?.forEach { it.categoryId = 0L }
+                icalEntityCopy.comment?.forEach { it.commentId = 0L }
+                icalEntityCopy.organizer?.organizerId = 0L
+                icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
+                icalEntityCopy.resource?.forEach { it.resourceId = 0L }
+
                 this.findNavController().navigate(
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
                 )
@@ -801,6 +809,14 @@ class IcalViewFragment : Fragment() {
                 icalEntityCopy.property.duration = null
                 icalEntityCopy.property.priority = null
 
+                icalEntityCopy.attachment?.forEach { it.attachmentId = 0L }
+                icalEntityCopy.attendee?.forEach { it.attendeeId = 0L }
+                icalEntityCopy.category?.forEach { it.categoryId = 0L }
+                icalEntityCopy.comment?.forEach { it.commentId = 0L }
+                icalEntityCopy.organizer?.organizerId = 0L
+                icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
+                icalEntityCopy.resource?.forEach { it.resourceId = 0L }
+
                 this.findNavController().navigate(
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
                 )
@@ -811,6 +827,14 @@ class IcalViewFragment : Fragment() {
                 icalEntityCopy.property.component = Component.VTODO.name
                 icalEntityCopy.property.module = Module.TODO.name
                 icalEntityCopy.property.dtstamp = System.currentTimeMillis()
+
+                icalEntityCopy.attachment?.forEach { it.attachmentId = 0L }
+                icalEntityCopy.attendee?.forEach { it.attendeeId = 0L }
+                icalEntityCopy.category?.forEach { it.categoryId = 0L }
+                icalEntityCopy.comment?.forEach { it.commentId = 0L }
+                icalEntityCopy.organizer?.organizerId = 0L
+                icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
+                icalEntityCopy.resource?.forEach { it.resourceId = 0L }
 
                 this.findNavController().navigate(
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
