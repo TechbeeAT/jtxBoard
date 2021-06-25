@@ -8,6 +8,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="at.bitfire.notesx5">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -28,7 +29,8 @@
             android:name=".SyncContentProvider"
             android:authorities="at.bitfire.notesx5.provider"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
