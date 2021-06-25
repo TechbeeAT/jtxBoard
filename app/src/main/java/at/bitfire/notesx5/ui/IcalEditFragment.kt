@@ -30,6 +30,7 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -82,6 +83,19 @@ class IcalEditFragment : Fragment(),
     private var datetimepickerOrigin: Int? = null
 
     private var photoUri: Uri? = null     // Uri for captured photo
+
+    private var filepickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            processFileAttachment(result.data?.data)
+        }
+    }
+
+    private var photoAttachmentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            processPhotoAttachment()
+        }
+    }
+
 
 
     companion object {
@@ -673,7 +687,7 @@ class IcalEditFragment : Fragment(),
             chooseFile.type = "*/*"
             chooseFile = Intent.createChooser(chooseFile, "Choose a file")
             try {
-                startActivityForResult(chooseFile, PICKFILE_RESULT_CODE)
+                filepickerLauncher.launch(chooseFile)
             } catch (e: ActivityNotFoundException) {
                 Log.e("chooseFileIntent", "Failed to open filepicker\n$e")
                 Toast.makeText(context, "Failed to open filepicker", Toast.LENGTH_LONG).show()
@@ -696,7 +710,7 @@ class IcalEditFragment : Fragment(),
 
                     photoUri = FileProvider.getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, file)
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE_CODE)
+                    photoAttachmentLauncher.launch(takePictureIntent)
 
                 } catch (e: ActivityNotFoundException) {
                     Log.e("takePictureIntent", "Failed to open camera\n$e")
@@ -1256,8 +1270,6 @@ class IcalEditFragment : Fragment(),
     }
 
 
-
-
     private fun scheduleNotification(context: Context?, iCalObjectId: Long, title: String, text: String, due: Long) {
 
         if (context == null)
@@ -1302,116 +1314,110 @@ class IcalEditFragment : Fragment(),
     }
 
 
-    // callback for Intents, now used for the filepicker to handle the file
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        when  {
-            requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK -> {
-                val fileUri = intent?.data
-                val filePath = fileUri?.path
-                Log.d("fileUri", fileUri.toString())
-                Log.d("filePath", filePath.toString())
-                Log.d("fileName", fileUri?.lastPathSegment.toString())
 
-                val mimeType = fileUri?.let { returnUri ->
-                    requireContext().contentResolver.getType(returnUri)
-                }
+    private fun processFileAttachment(fileUri: Uri?) {
 
-                var filesize: Long? = null
-                var filename: String? = null
-                var fileextension: String? = null
-                fileUri?.let { returnUri ->
-                    requireContext().contentResolver.query(returnUri, null, null, null, null)
-                }?.use { cursor ->
-                    // Get the column indexes of the data in the Cursor, move to the first row in the Cursor, get the data, and display it.
-                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-                    cursor.moveToFirst()
-                    filename = cursor.getString(nameIndex)
-                    filesize = cursor.getLong(sizeIndex)
-                    fileextension = "." + filename?.substringAfterLast('.', "")
-                }
+        val filePath = fileUri?.path
+        Log.d("fileUri", fileUri.toString())
+        Log.d("filePath", filePath.toString())
+        Log.d("fileName", fileUri?.lastPathSegment.toString())
+
+        val mimeType = fileUri?.let { returnUri ->
+            requireContext().contentResolver.getType(returnUri)
+        }
+
+        var filesize: Long? = null
+        var filename: String? = null
+        var fileextension: String? = null
+        fileUri?.let { returnUri ->
+            requireContext().contentResolver.query(returnUri, null, null, null, null)
+        }?.use { cursor ->
+            // Get the column indexes of the data in the Cursor, move to the first row in the Cursor, get the data, and display it.
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+            cursor.moveToFirst()
+            filename = cursor.getString(nameIndex)
+            filesize = cursor.getLong(sizeIndex)
+            fileextension = "." + filename?.substringAfterLast('.', "")
+        }
 
 
-                if(filePath?.isNotEmpty() == true) {
+        if(filePath?.isNotEmpty() == true) {
 
-                    try {
-                        //val newFilePath = "${}/${System.currentTimeMillis()}$fileextension"
-                        val newFile = File(
-                            Attachment.getAttachmentDirectory(requireContext()),
-                            "${System.currentTimeMillis()}$fileextension"
-                        )
-                        newFile.createNewFile()
+            try {
+                //val newFilePath = "${}/${System.currentTimeMillis()}$fileextension"
+                val newFile = File(
+                    Attachment.getAttachmentDirectory(requireContext()),
+                    "${System.currentTimeMillis()}$fileextension"
+                )
+                newFile.createNewFile()
 
-                        val stream = requireContext().contentResolver.openInputStream(fileUri)
-                        if (stream != null) {
-                            newFile.writeBytes(stream.readBytes())
-
-                            val newAttachment = Attachment(
-                                fmttype = mimeType,
-                                //uri = "/${Attachment.ATTACHMENT_DIR}/${newFile.name}",
-                                uri = FileProvider.getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, newFile).toString(),
-                                filename = filename,
-                                extension = fileextension,
-                                filesize = filesize
-                            )
-                            icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
-                            addAttachmentView(newAttachment)      // add the new attachment
-                            stream.close()
-                        }
-                    } catch (e: IOException) {
-                        Log.e("IOException", "Failed to process file\n$e")
-                    }
-                }
-            }
-
-            // save the picture taken by the camera
-            requestCode == REQUEST_IMAGE_CAPTURE_CODE && resultCode == Activity.RESULT_OK -> {
-                Log.d("photoUri", "photoUri is now $photoUri")
-
-                if(photoUri != null) {
-
-                    val mimeType = photoUri?.let { returnUri -> requireContext().contentResolver.getType(returnUri)  }
-
-                    var filesize: Long? = null
-                    var filename: String? = null
-                    var fileextension: String? = null
-                    photoUri?.let { returnUri ->
-                        requireContext().contentResolver.query(returnUri, null, null, null, null)
-                    }?.use { cursor ->
-                        // Get the column indexes of the data in the Cursor, move to the first row in the Cursor, get the data, and display it.
-                        val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                        val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-
-                        cursor.moveToFirst()
-                        filename = cursor.getString(nameIndex)
-                        filesize = cursor.getLong(sizeIndex)
-                        fileextension = "." + filename?.substringAfterLast('.', "")
-                    }
+                val stream = requireContext().contentResolver.openInputStream(fileUri)
+                if (stream != null) {
+                    newFile.writeBytes(stream.readBytes())
 
                     val newAttachment = Attachment(
                         fmttype = mimeType,
-                        uri = photoUri.toString(),
+                        //uri = "/${Attachment.ATTACHMENT_DIR}/${newFile.name}",
+                        uri = FileProvider.getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, newFile).toString(),
                         filename = filename,
                         extension = fileextension,
                         filesize = filesize
                     )
                     icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
-
                     addAttachmentView(newAttachment)      // add the new attachment
-
-                    // Scanning the file makes it available in the gallery (currently not working) TODO
-                    //MediaScannerConnection.scanFile(requireContext(), arrayOf(photoUri.toString()), arrayOf(mimeType), null)
-
-
-                } else {
-                        Log.e("REQUEST_IMAGE_CAPTURE", "Failed to process and store picture")
-                    }
-                photoUri = null
+                    stream.close()
                 }
+            } catch (e: IOException) {
+                Log.e("IOException", "Failed to process file\n$e")
             }
-        super.onActivityResult(requestCode, resultCode, intent)
-
+        }
     }
+
+    private fun processPhotoAttachment() {
+
+        Log.d("photoUri", "photoUri is now $photoUri")
+
+        if(photoUri != null) {
+
+            val mimeType = photoUri?.let { returnUri -> requireContext().contentResolver.getType(returnUri)  }
+
+            var filesize: Long? = null
+            var filename: String? = null
+            var fileextension: String? = null
+            photoUri?.let { returnUri ->
+                requireContext().contentResolver.query(returnUri, null, null, null, null)
+            }?.use { cursor ->
+                // Get the column indexes of the data in the Cursor, move to the first row in the Cursor, get the data, and display it.
+                val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+
+                cursor.moveToFirst()
+                filename = cursor.getString(nameIndex)
+                filesize = cursor.getLong(sizeIndex)
+                fileextension = "." + filename?.substringAfterLast('.', "")
+            }
+
+            val newAttachment = Attachment(
+                fmttype = mimeType,
+                uri = photoUri.toString(),
+                filename = filename,
+                extension = fileextension,
+                filesize = filesize
+            )
+            icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
+
+            addAttachmentView(newAttachment)      // add the new attachment
+
+            // Scanning the file makes it available in the gallery (currently not working) TODO
+            //MediaScannerConnection.scanFile(requireContext(), arrayOf(photoUri.toString()), arrayOf(mimeType), null)
+
+        } else {
+            Log.e("REQUEST_IMAGE_CAPTURE", "Failed to process and store picture")
+        }
+        photoUri = null
+    }
+
 
     fun scheduleCleanupJob() {
 

@@ -46,11 +46,7 @@ import java.util.concurrent.TimeUnit
 const val CONTACT_READ_PERMISSION_CODE = 100
 const val RECORD_AUDIO_PERMISSION_CODE = 200
 
-const val PICKFILE_RESULT_CODE = 301
-const val REQUEST_IMAGE_CAPTURE_CODE = 401
-
 const val AUTHORITY_FILEPROVIDER = "at.bitfire.notesx5.fileprovider"
-
 
 /**
  * This main activity is just a container for our fragments,
@@ -62,8 +58,8 @@ class MainActivity : AppCompatActivity() {
         const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
         const val TRIAL_PERIOD_DAYS = 14L
 
-        const val ADMOB_UNIT_ID_BANNER_TEST = "ca-app-pub-3940256099942544/6300978111"
-        const val ADMOB_UNIT_ID_BANNER_PROD = "ca-app-pub-4426141011962540/8164268500"
+        const val ADMOB_UNIT_ID_BANNER = "ca-app-pub-3940256099942544/6300978111"    // TEST
+        //const val ADMOB_UNIT_ID_BANNER = "ca-app-pub-4426141011962540/8164268500"  // PROD
 
     }
 
@@ -258,7 +254,7 @@ class MainActivity : AppCompatActivity() {
         val adView = AdView(this)
         //adView.adSize = AdSize.SMART_BANNER          // adaptive ads replace the smart banner
         adView.adSize = adSize
-        adView.adUnitId = ADMOB_UNIT_ID_BANNER_TEST  // for testing
+        adView.adUnitId = ADMOB_UNIT_ID_BANNER
 
         val adLinearLayout: LinearLayout =
             findViewById(R.id.main_adlinearlayout)  // add to the linear layout container
