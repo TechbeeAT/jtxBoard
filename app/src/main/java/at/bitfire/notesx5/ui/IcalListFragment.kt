@@ -10,13 +10,11 @@ package at.bitfire.notesx5.ui
 
 
 import android.app.Application
-import android.app.DatePickerDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.DatePicker
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -28,11 +26,13 @@ import at.bitfire.notesx5.R
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.relations.ICalEntity
 import at.bitfire.notesx5.databinding.FragmentIcalListBinding
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.tabs.TabLayout
 import java.util.*
 
 
-class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
+class IcalListFragment : Fragment() {
 
     private var recyclerView: RecyclerView? = null
     //private var linearLayoutManager: LinearLayoutManager? = null
@@ -381,26 +381,66 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         if (item.itemId == R.id.menu_list_gotodate) {
 
-// START Set up Datepicker
-            val c = Calendar.getInstance()
-            c.timeInMillis = System.currentTimeMillis()
+            // Build constraints.
+            val constraintsBuilder =
+                CalendarConstraints.Builder().apply {
 
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-            val dpd = DatePickerDialog(requireActivity(), this, year, month, day)
+                    val startItem = icalListViewModel.iCal4List.value?.lastOrNull()
+                    val endItem = icalListViewModel.iCal4List.value?.firstOrNull()
 
+                    if (startItem?.property?.dtstart != null && endItem?.property?.dtstart != null) {
+                        setStart(startItem.property.dtstart!!)
+                        setEnd(endItem.property.dtstart!!)
+                    }
+                }
 
-            val startItem = icalListViewModel.iCal4List.value?.lastOrNull()
-            val endItem = icalListViewModel.iCal4List.value?.firstOrNull()
+            val datePicker =
+                MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Select date")
+                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                    .setCalendarConstraints(constraintsBuilder.build())
+                    .build()
 
+            datePicker.addOnPositiveButtonClickListener {
+                // Respond to positive button click.
 
-            if (startItem?.property?.dtstart != null && endItem?.property?.dtend != null) {
-                dpd.datePicker.minDate = startItem.property.dtstart!!
-                dpd.datePicker.maxDate = endItem.property.dtstart!!
+                // create a Calendar Object out of the selected dates
+                val selectedDate = Calendar.getInstance()
+                selectedDate.timeInMillis = it
+
+                // find the item with the same date
+                var foundItem = icalListViewModel.iCal4List.value?.find { item ->
+                    val cItem = Calendar.getInstance()
+                    cItem.timeInMillis = item.property.dtstart?: 0L
+
+                    // if this condition is true, the item is considered as found
+                    cItem.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR)
+                            && cItem.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH)
+                            && cItem.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)
+                }
+
+                // if no exact match was found, find the closest match
+                if (foundItem == null) {
+                    var datediff = 0L
+                    icalListViewModel.iCal4List.value?.forEach { item ->
+                        val cItem = Calendar.getInstance()
+                        cItem.timeInMillis = item.property.dtstart?: 0L
+
+                        if (datediff == 0L || kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis) < datediff) {
+                            datediff = kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis)
+                            foundItem = item
+
+                        }
+                    }
+                }
+
+                if (foundItem != null)
+                    icalListViewModel.setFocusItem(foundItem!!.property.id)
+
             }
 
-            dpd.show()
+            datePicker.show(parentFragmentManager, "menu_list_gotodate")
+
         }
 
         if (item.itemId == R.id.menu_list_filter) {
@@ -443,42 +483,6 @@ class IcalListFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     }
 
 
-    override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
-
-        // create a Calendar Object out of the selected dates
-        val selectedDate = Calendar.getInstance()
-        selectedDate.set(Calendar.YEAR, year)
-        selectedDate.set(Calendar.MONTH, month)
-        selectedDate.set(Calendar.DAY_OF_MONTH, day)
-
-        // find the item with the same date
-        var foundItem = icalListViewModel.iCal4List.value?.find { item ->
-            val cItem = Calendar.getInstance()
-            cItem.timeInMillis = item.property.dtstart?: 0L
-
-            // if this condition is true, the item is considered as found
-            cItem.get(Calendar.YEAR) == year && cItem.get(Calendar.MONTH) == month && cItem.get(Calendar.DAY_OF_MONTH) == day
-        }
-
-        // if no exact match was found, find the closest match
-        if (foundItem == null) {
-            var datediff = 0L
-            icalListViewModel.iCal4List.value?.forEach { item ->
-                val cItem = Calendar.getInstance()
-                cItem.timeInMillis = item.property.dtstart?: 0L
-
-                if (datediff == 0L || kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis) < datediff) {
-                    datediff = kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis)
-                    foundItem = item
-
-                }
-            }
-        }
-
-        if (foundItem != null)
-            icalListViewModel.setFocusItem(foundItem!!.property.id)
-
-    }
 
 
     private fun goToFilterFragment() {
