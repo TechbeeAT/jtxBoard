@@ -23,7 +23,6 @@ import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.text.InputType
-import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
 import android.util.Size
 import android.view.*
@@ -53,8 +52,10 @@ import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditCommentBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditSubtaskBinding
 import com.google.android.material.chip.Chip
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.timepicker.MaterialTimePicker
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -62,9 +63,7 @@ import java.text.DateFormat
 import java.util.*
 
 
-class IcalEditFragment : Fragment(),
-        TimePickerDialog.OnTimeSetListener,
-        DatePickerDialog.OnDateSetListener {
+class IcalEditFragment : Fragment() {
 
     private lateinit var binding: FragmentIcalEditBinding
 
@@ -79,8 +78,6 @@ class IcalEditFragment : Fragment(),
     //private val allContactsNameAndMail: MutableList<String> = mutableListOf()
 
     private var displayedCategoryChips = mutableListOf<Category>()
-
-    private var datetimepickerOrigin: Int? = null
 
     private var photoUri: Uri? = null     // Uri for captured photo
 
@@ -99,10 +96,10 @@ class IcalEditFragment : Fragment(),
 
 
     companion object {
-        const val PICKER_ORIGIN_DTSTART = 0
-        const val PICKER_ORIGIN_DUE = 1
-        const val PICKER_ORIGIN_COMPLETED = 2
-        const val PICKER_ORIGIN_STARTED = 3
+        const val TAG_PICKER_DTSTART = "dtstart"
+        const val TAG_PICKER_DUE = "due"
+        const val TAG_PICKER_COMPLETED = "completed"
+        const val TAG_PICKER_STARTED = "started"
 
     }
 
@@ -305,6 +302,8 @@ class IcalEditFragment : Fragment(),
             binding.editDuetimezoneSpinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(it.dueTimezone))
             binding.editStartedtimezoneSpinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(it.dtstartTimezone))
 
+
+
         }
 
         icalEditViewModel.showAll.observe(viewLifecycleOwner) {
@@ -501,54 +500,45 @@ class IcalEditFragment : Fragment(),
         })
 
 
+
         binding.editDtstartTime.setOnClickListener {
-            datetimepickerOrigin = PICKER_ORIGIN_DTSTART
-            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
+            showDatePicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart?:System.currentTimeMillis(), TAG_PICKER_DTSTART)
         }
 
         binding.editDtstartYear.setOnClickListener {
-            datetimepickerOrigin = PICKER_ORIGIN_DTSTART
-            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
+            showDatePicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart?:System.currentTimeMillis(), TAG_PICKER_DTSTART)
         }
 
         binding.editDtstartMonth.setOnClickListener {
-            datetimepickerOrigin = PICKER_ORIGIN_DTSTART
-            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
+            showDatePicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart?:System.currentTimeMillis(), TAG_PICKER_DTSTART)
         }
 
         binding.editDtstartDay.setOnClickListener {
-            datetimepickerOrigin = PICKER_ORIGIN_DTSTART
-            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
+            showDatePicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart?:System.currentTimeMillis(), TAG_PICKER_DTSTART)
         }
 
         binding.editDueDate.setEndIconOnClickListener {
-            datetimepickerOrigin = PICKER_ORIGIN_DUE
-            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.due)
+            showDatePicker(icalEditViewModel.iCalObjectUpdated.value?.due?:System.currentTimeMillis(), TAG_PICKER_DUE)
         }
 
         binding.editDueTime.setEndIconOnClickListener {
-            datetimepickerOrigin = PICKER_ORIGIN_DUE
-            showTimepicker(icalEditViewModel.iCalObjectUpdated.value?.due)
+            showTimePicker(icalEditViewModel.iCalObjectUpdated.value?.due?:System.currentTimeMillis(), TAG_PICKER_DUE)
         }
 
         binding.editCompletedDate.setEndIconOnClickListener {
-            datetimepickerOrigin = PICKER_ORIGIN_COMPLETED
-            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.completed)
+            showDatePicker(icalEditViewModel.iCalObjectUpdated.value?.completed?:System.currentTimeMillis(), TAG_PICKER_COMPLETED)
         }
 
         binding.editCompletedTime.setEndIconOnClickListener {
-            datetimepickerOrigin = PICKER_ORIGIN_COMPLETED
-            showTimepicker(icalEditViewModel.iCalObjectUpdated.value?.completed)
+            showTimePicker(icalEditViewModel.iCalObjectUpdated.value?.completed?:System.currentTimeMillis(), TAG_PICKER_COMPLETED)
         }
 
         binding.editStartedDate.setEndIconOnClickListener {
-            datetimepickerOrigin = PICKER_ORIGIN_STARTED
-            showDatepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
+            showDatePicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart?:System.currentTimeMillis(), TAG_PICKER_STARTED)
         }
 
         binding.editStartedTime.setEndIconOnClickListener {
-            datetimepickerOrigin = PICKER_ORIGIN_STARTED
-            showTimepicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart)
+            showTimePicker(icalEditViewModel.iCalObjectUpdated.value?.dtstart?:System.currentTimeMillis(), TAG_PICKER_STARTED)
         }
 
 
@@ -812,154 +802,142 @@ class IcalEditFragment : Fragment(),
     }
 
 
-    override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
 
-        // depending on the origin of the click the date/time is processed for the dtstart-field (Journal) or for the due-field (Todos) or for the completed-field (Todos)
-        when (datetimepickerOrigin) {
-            PICKER_ORIGIN_DTSTART -> {
+    private fun showTimePicker(fieldValue: Long, tag: String) {
 
-                val c = Calendar.getInstance()
-                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
+        val dtstartTime = Calendar.getInstance()
+        dtstartTime.timeInMillis = fieldValue
 
-                c.set(Calendar.YEAR, year)
-                c.set(Calendar.MONTH, month)
-                c.set(Calendar.DAY_OF_MONTH, day)
+        val timePicker =
+            MaterialTimePicker.Builder()
+                .setHour(dtstartTime.get(Calendar.HOUR))
+                .setMinute(dtstartTime.get(Calendar.MINUTE))
+                .setTitleText("Select time")
+                .build()
 
-                binding.editDtstartYear.text = convertLongToYearString(c.timeInMillis)
-                binding.editDtstartMonth.text = convertLongToMonthString(c.timeInMillis)
-                binding.editDtstartDay.text = convertLongToDayString(c.timeInMillis)
+        timePicker.addOnPositiveButtonClickListener {
 
-                icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
-
-                if (!icalEditViewModel.allDayChecked.value!!)     // let the user set the time only if the allDaySwitch is not set!
-                    showTimepicker(icalEditViewModel.iCalObjectUpdated.value!!.dtstart)
-
-            }
-            PICKER_ORIGIN_DUE -> {
-
-                val c = Calendar.getInstance()
-                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.due
+            when (tag) {
+                TAG_PICKER_DTSTART -> {
+                    val dtstart = Calendar.getInstance()
+                    dtstart.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart
                         ?: System.currentTimeMillis()
+                    dtstart.set(Calendar.HOUR_OF_DAY, timePicker.hour)
+                    dtstart.set(Calendar.MINUTE, timePicker.minute)
 
-                c.set(Calendar.YEAR, year)
-                c.set(Calendar.MONTH, month)
-                c.set(Calendar.DAY_OF_MONTH, day)
-
-                val dateString = DateFormat.getDateInstance().format(c.time)
-                binding.editDueDateEdittext.setText(dateString)
-                icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
-            }
-            PICKER_ORIGIN_COMPLETED -> {
-
-                val c = Calendar.getInstance()
-                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.completed
+                    binding.editDtstartTime.text = convertLongToTimeString(dtstart.timeInMillis)
+                    icalEditViewModel.iCalObjectUpdated.value!!.dtstart = dtstart.timeInMillis
+                }
+               TAG_PICKER_DUE -> {
+                    val due = Calendar.getInstance()
+                    due.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.due
                         ?: System.currentTimeMillis()
+                    due.set(Calendar.HOUR_OF_DAY, timePicker.hour)
+                    due.set(Calendar.MINUTE, timePicker.minute)
 
-                c.set(Calendar.YEAR, year)
-                c.set(Calendar.MONTH, month)
-                c.set(Calendar.DAY_OF_MONTH, day)
-
-                val dateString = DateFormat.getDateInstance().format(c.time)
-                binding.editCompletedDateEdittext.setText(dateString)
-                icalEditViewModel.iCalObjectUpdated.value!!.completed = c.timeInMillis
-            }
-            PICKER_ORIGIN_STARTED -> {
-
-                val c = Calendar.getInstance()
-                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart
+                    val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(due.time)
+                    binding.editDueTimeEdittext.setText(timeString)
+                    icalEditViewModel.iCalObjectUpdated.value!!.due = due.timeInMillis
+                }
+                TAG_PICKER_COMPLETED -> {
+                    val completed = Calendar.getInstance()
+                    completed.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.completed
                         ?: System.currentTimeMillis()
+                    completed.set(Calendar.HOUR_OF_DAY, timePicker.hour)
+                    completed.set(Calendar.MINUTE, timePicker.minute)
 
-                c.set(Calendar.YEAR, year)
-                c.set(Calendar.MONTH, month)
-                c.set(Calendar.DAY_OF_MONTH, day)
+                    val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(completed.time)
+                    binding.editCompletedTimeEdittext.setText(timeString)
+                    icalEditViewModel.iCalObjectUpdated.value!!.completed = completed.timeInMillis
+                }
+                TAG_PICKER_STARTED -> {
+                    val dtstart = Calendar.getInstance()
+                    dtstart.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart
+                        ?: System.currentTimeMillis()
+                    dtstart.set(Calendar.HOUR_OF_DAY, timePicker.hour)
+                    dtstart.set(Calendar.MINUTE, timePicker.minute)
 
-                val dateString = DateFormat.getDateInstance().format(c.time)
-                binding.editStartedDateEdittext.setText(dateString)
-                icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+                    val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(dtstart.time)
+                    binding.editStartedTimeEdittext.setText(timeString)
+                    icalEditViewModel.iCalObjectUpdated.value!!.dtstart = dtstart.timeInMillis
+                }
             }
         }
+
+        timePicker.show(parentFragmentManager, tag)
     }
 
+    private fun showDatePicker(fieldValue: Long, tag: String) {
 
-    override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
+        val datePicker =
+            MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .setSelection(fieldValue)
+                .build()
 
-        // depending on the component the date/time is processed for the dtstart-field (Journal) or for the due-field (Todos)
-        when (datetimepickerOrigin) {
-            PICKER_ORIGIN_DTSTART -> {
+        datePicker.addOnPositiveButtonClickListener {
+            // Respond to positive button click.
+            val c = Calendar.getInstance()
+            c.timeInMillis = it
 
-                val c = Calendar.getInstance()
-                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
-                c.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                c.set(Calendar.MINUTE, minute)
+            when(tag) {
+                TAG_PICKER_DTSTART -> {
+                    binding.editDtstartYear.text = convertLongToYearString(c.timeInMillis)
+                    binding.editDtstartMonth.text = convertLongToMonthString(c.timeInMillis)
+                    binding.editDtstartDay.text = convertLongToDayString(c.timeInMillis)
 
-                binding.editDtstartTime.text = convertLongToTimeString(c.timeInMillis)
+                    icalEditViewModel.iCalObjectUpdated.value!!.dtstart = it
 
-                icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
-            }
-            PICKER_ORIGIN_DUE -> {
-
-                val c = Calendar.getInstance()
-                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.due
+                    if (!icalEditViewModel.allDayChecked.value!!) {    // let the user set the time only if the allDaySwitch is not set!
+                        showTimePicker(it, tag)
+                    }
+                }
+                TAG_PICKER_DUE -> {
+                    val due = Calendar.getInstance()
+                    due.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.due
                         ?: System.currentTimeMillis()
-                c.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                c.set(Calendar.MINUTE, minute)
 
-                val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.time)
-                binding.editDueTimeEdittext.setText(timeString)
-                icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
-            }
+                    due.set(Calendar.YEAR, c.get(Calendar.YEAR))
+                    due.set(Calendar.MONTH, c.get(Calendar.MONTH))
+                    due.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
 
-            PICKER_ORIGIN_COMPLETED -> {
-
-                val c = Calendar.getInstance()
-                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.completed
+                    val dateString = DateFormat.getDateInstance().format(due.time)
+                    binding.editDueDateEdittext.setText(dateString)
+                    icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
+                }
+                TAG_PICKER_COMPLETED -> {
+                    val completed = Calendar.getInstance()
+                    completed.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.completed
                         ?: System.currentTimeMillis()
-                c.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                c.set(Calendar.MINUTE, minute)
 
-                val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.time)
-                binding.editCompletedTimeEdittext.setText(timeString)
-                icalEditViewModel.iCalObjectUpdated.value!!.completed = c.timeInMillis
-            }
+                    completed.set(Calendar.YEAR, c.get(Calendar.YEAR))
+                    completed.set(Calendar.MONTH, c.get(Calendar.MONTH))
+                    completed.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
 
-            PICKER_ORIGIN_STARTED -> {
-
-                val c = Calendar.getInstance()
-                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart
+                    val dateString = DateFormat.getDateInstance().format(completed.time)
+                    binding.editCompletedDateEdittext.setText(dateString)
+                    icalEditViewModel.iCalObjectUpdated.value!!.completed = c.timeInMillis
+                }
+                TAG_PICKER_STARTED -> {
+                    val dtstart = Calendar.getInstance()
+                    dtstart.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart
                         ?: System.currentTimeMillis()
-                c.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                c.set(Calendar.MINUTE, minute)
 
-                val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.time)
-                binding.editStartedTimeEdittext.setText(timeString)
-                icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+                    dtstart.set(Calendar.YEAR, c.get(Calendar.YEAR))
+                    dtstart.set(Calendar.MONTH, c.get(Calendar.MONTH))
+                    dtstart.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
+
+                    val dateString = DateFormat.getDateInstance().format(dtstart.time)
+                    binding.editStartedDateEdittext.setText(dateString)
+                    icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+                }
             }
-
         }
 
+        datePicker.show(parentFragmentManager, tag)
+
     }
 
-
-    private fun showDatepicker(selectedDate: Long?) {
-        val c = Calendar.getInstance()
-        c.timeInMillis = selectedDate ?: System.currentTimeMillis()
-        //c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
-
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
-        DatePickerDialog(requireActivity(), this, year, month, day).show()
-    }
-
-    private fun showTimepicker(selectedTime: Long?) {
-        val c = Calendar.getInstance()
-        c.timeInMillis = selectedTime ?: System.currentTimeMillis()
-        //c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart!!
-
-        val hourOfDay = c.get(Calendar.HOUR_OF_DAY)
-        val minute = c.get(Calendar.MINUTE)
-        TimePickerDialog(activity, this, hourOfDay, minute, is24HourFormat(activity)).show()
-    }
 
 
 
