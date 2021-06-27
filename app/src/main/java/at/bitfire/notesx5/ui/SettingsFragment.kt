@@ -2,6 +2,7 @@ package at.bitfire.notesx5.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.*
 import at.bitfire.notesx5.MainActivity
@@ -16,7 +17,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_in_list"
         const val SHOW_ATTACHMENTS_IN_LIST = "settings_show_attachments_in_list"
         const val SHOW_PROGRESS_IN_LIST = "settings_show_progress_in_list"
-        const val SHOW_ADS = "settings_show_ads"
+        const val ACCEPT_ADS = "settings_accept_ads"
 
 
 
@@ -46,15 +47,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
             return@setOnPreferenceClickListener true
         }
 
-        preferenceScreen.get<SwitchPreference>(SHOW_ADS)?.setOnPreferenceChangeListener { preference, adsEnabled ->
+        preferenceScreen.get<SwitchPreference>(ACCEPT_ADS)?.setOnPreferenceChangeListener { preference, adsEnabled ->
             preferenceScreen.get<Preference>(SHOW_USER_CONSENT)?.isEnabled = adsEnabled as Boolean
             if(adsEnabled)
                 mainActivity.initializeUserConsent()     // show user consent if ads get enabled (despite the user bought the full version?)
+            else
+                Toast.makeText(activity, "Start the Intent for the play store", Toast.LENGTH_LONG).show()
             return@setOnPreferenceChangeListener true
         }
 
         if(mainActivity.isTrialPeriod()) {
-            preferenceScreen.get<Preference>(SHOW_ADS)?.isEnabled = false
+            preferenceScreen.get<Preference>(ACCEPT_ADS)?.isEnabled = false
             preferenceScreen.get<Preference>(SHOW_USER_CONSENT)?.isEnabled = false
         }
 

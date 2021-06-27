@@ -58,7 +58,7 @@
 
 
         <SwitchPreference
-            app:key="settings_show_ads"
+            app:key="settings_accept_ads"
             app:defaultValue="false"
             app:icon="@drawable/ic_ads"
             app:title="Support app by showing ads"

@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
         // if trial period ended, then check if ads are accepted, if the
         // app was bought, then skip the Dialog, otherwise show the dialog to let the user choose
-        val adsAccepted = settings!!.getBoolean(SettingsFragment.SHOW_ADS, false)
+        val adsAccepted = settings!!.getBoolean(SettingsFragment.ACCEPT_ADS, false)
         if (!isTrialPeriod() && !adsAccepted) {
 
             // TODO: Check if the user already bought the app. If yes, skip the Dialog Box
@@ -101,14 +101,14 @@ class MainActivity : AppCompatActivity() {
                 .setMessage(resources.getString(R.string.list_dialog_contribution_message))
                 .setNegativeButton(resources.getString(R.string.list_dialog_contribution_buyadfree)) { dialog, which ->
                     // Respond to negative button press
-                    settings!!.edit().putBoolean(SettingsFragment.SHOW_ADS, false).apply()
+                    settings!!.edit().putBoolean(SettingsFragment.ACCEPT_ADS, false).apply()
                     Toast.makeText(this, "Start the Intent for the play store", Toast.LENGTH_LONG).show()
                     //TODO: open in app-buying for ad-free option
                 }
                 .setPositiveButton(resources.getString(R.string.list_dialog_contribution_acceptads)) { dialog, which ->
                     // Respond to positive button press
                     // Ads are accepted, load user consent
-                    settings!!.edit().putBoolean(SettingsFragment.SHOW_ADS, true).apply()
+                    settings!!.edit().putBoolean(SettingsFragment.ACCEPT_ADS, true).apply()
                     initializeUserConsent()
                 }
                 .show()
