@@ -13,6 +13,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Parcel
 import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
@@ -381,6 +382,27 @@ class IcalListFragment : Fragment() {
 
         if (item.itemId == R.id.menu_list_gotodate) {
 
+            // Create a custom date validator to only enable dates that are in the list
+            val customDateValidator = object: CalendarConstraints.DateValidator {
+                override fun describeContents(): Int {  return 0  }
+                override fun writeToParcel(dest: Parcel?, flags: Int) {   }
+                override fun isValid(date: Long): Boolean {
+
+                    icalListViewModel.iCal4List.value?.forEach {
+                        val c = Calendar.getInstance()
+                        c.timeInMillis = it.property.dtstart?: System.currentTimeMillis()
+                        c.set(Calendar.HOUR_OF_DAY, 0)
+                        c.set(Calendar.MINUTE, 0)
+                        c.set(Calendar.SECOND, 0)
+                        c.set(Calendar.MILLISECOND, 0)
+
+                        if(date == c.timeInMillis)
+                            return true
+                    }
+                    return false
+                }
+            }
+
             // Build constraints.
             val constraintsBuilder =
                 CalendarConstraints.Builder().apply {
@@ -391,6 +413,7 @@ class IcalListFragment : Fragment() {
                     if (startItem?.property?.dtstart != null && endItem?.property?.dtstart != null) {
                         setStart(startItem.property.dtstart!!)
                         setEnd(endItem.property.dtstart!!)
+                        setValidator(customDateValidator)
                     }
                 }
 
@@ -409,7 +432,7 @@ class IcalListFragment : Fragment() {
                 selectedDate.timeInMillis = it
 
                 // find the item with the same date
-                var foundItem = icalListViewModel.iCal4List.value?.find { item ->
+                val foundItem = icalListViewModel.iCal4List.value?.find { item ->
                     val cItem = Calendar.getInstance()
                     cItem.timeInMillis = item.property.dtstart?: 0L
 
@@ -418,25 +441,8 @@ class IcalListFragment : Fragment() {
                             && cItem.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH)
                             && cItem.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)
                 }
-
-                // if no exact match was found, find the closest match
-                if (foundItem == null) {
-                    var datediff = 0L
-                    icalListViewModel.iCal4List.value?.forEach { item ->
-                        val cItem = Calendar.getInstance()
-                        cItem.timeInMillis = item.property.dtstart?: 0L
-
-                        if (datediff == 0L || kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis) < datediff) {
-                            datediff = kotlin.math.abs(cItem.timeInMillis - selectedDate.timeInMillis)
-                            foundItem = item
-
-                        }
-                    }
-                }
-
                 if (foundItem != null)
-                    icalListViewModel.setFocusItem(foundItem!!.property.id)
-
+                    icalListViewModel.setFocusItem(foundItem.property.id)
             }
 
             datePicker.show(parentFragmentManager, "menu_list_gotodate")
