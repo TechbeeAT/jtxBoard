@@ -385,18 +385,19 @@ class IcalListFragment : Fragment() {
             // Create a custom date validator to only enable dates that are in the list
             val customDateValidator = object: CalendarConstraints.DateValidator {
                 override fun describeContents(): Int {  return 0  }
-                override fun writeToParcel(dest: Parcel?, flags: Int) {   }
+                override fun writeToParcel(dest: Parcel?, flags: Int) {  }
                 override fun isValid(date: Long): Boolean {
 
                     icalListViewModel.iCal4List.value?.forEach {
-                        val c = Calendar.getInstance()
-                        c.timeInMillis = it.property.dtstart?: System.currentTimeMillis()
-                        c.set(Calendar.HOUR_OF_DAY, 0)
-                        c.set(Calendar.MINUTE, 0)
-                        c.set(Calendar.SECOND, 0)
-                        c.set(Calendar.MILLISECOND, 0)
+                        val itemDateTime = Calendar.getInstance()
+                        itemDateTime.timeInMillis = it.property.dtstart?: System.currentTimeMillis()
 
-                        if(date == c.timeInMillis)
+                        val dateDateTime = Calendar.getInstance()
+                        dateDateTime.timeInMillis = date
+
+                        if(itemDateTime.get(Calendar.YEAR) == dateDateTime.get(Calendar.YEAR)
+                            && itemDateTime.get(Calendar.MONTH) == dateDateTime.get(Calendar.MONTH)
+                            && itemDateTime.get(Calendar.DAY_OF_MONTH) == dateDateTime.get(Calendar.DAY_OF_MONTH))
                             return true
                     }
                     return false
