@@ -28,10 +28,10 @@ class IcalFilterFragment : Fragment() {
 
     lateinit var binding: FragmentIcalFilterBinding
     lateinit var application: Application
-    lateinit var dataSource: ICalDatabaseDao
-    lateinit var viewModelFactory: IcalFilterViewModelFactory
-    lateinit var icalFilterViewModel: IcalFilterViewModel
-    lateinit var inflater: LayoutInflater
+    private lateinit var dataSource: ICalDatabaseDao
+    private lateinit var viewModelFactory: IcalFilterViewModelFactory
+    private lateinit var icalFilterViewModel: IcalFilterViewModel
+    private lateinit var inflater: LayoutInflater
 
     private var displayedCategoryChips: MutableList<String> = mutableListOf()
     private var displayedStatusChips: MutableList<String> = mutableListOf()

@@ -152,7 +152,7 @@ class IcalViewViewModel(private val icalItemId: Long,
             contactVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.property?.contact.isNullOrBlank()      // true if contact is NOT null or empty
             }
-           relatedtoVisible = Transformations.map(icalEntity) { item ->
+           relatedtoVisible = Transformations.map(icalEntity) {
                 //return@map !item?.relatedto.isNullOrEmpty()      // true if relatedto is NOT null or empty
                return@map false    // currently not in use, therefore always false
             }

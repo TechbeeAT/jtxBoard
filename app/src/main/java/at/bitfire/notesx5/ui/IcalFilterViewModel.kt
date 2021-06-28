@@ -24,7 +24,7 @@ class IcalFilterViewModel(val database: ICalDatabaseDao,
 
     init {
 
-        viewModelScope.launch() {
+        viewModelScope.launch {
 
         }
     }

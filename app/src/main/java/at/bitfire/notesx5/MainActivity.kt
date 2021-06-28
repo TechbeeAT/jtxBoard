@@ -244,7 +244,9 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             display!!.getRealMetrics(outMetrics)
         } else {
+            @Suppress("DEPRECATION")
             val display = windowManager.defaultDisplay
+            @Suppress("DEPRECATION")
             display.getMetrics(outMetrics)
         }
         val adWidth = (outMetrics.widthPixels.toFloat() / outMetrics.density).toInt()
