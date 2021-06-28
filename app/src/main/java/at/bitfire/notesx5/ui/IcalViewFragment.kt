@@ -9,7 +9,6 @@
 package at.bitfire.notesx5.ui
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Application
 import android.content.ActivityNotFoundException
@@ -87,7 +86,6 @@ class IcalViewFragment : Fragment() {
 
 
 
-    @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
@@ -206,12 +204,12 @@ class IcalViewFragment : Fragment() {
                         attachmentBinding.viewAttachmentTextview.text = attachment.filename
                     else
                         attachmentBinding.viewAttachmentTextview.text = attachment.fmttype
-                    when {
-                        attachment.filesize == null -> attachmentBinding.viewAttachmentFilesize.visibility = View.GONE
-                        attachment.filesize!! < 1024 -> attachmentBinding.viewAttachmentFilesize.text = "${attachment.filesize!! } Bytes"
-                        attachment.filesize!!/1024 < 1024 -> attachmentBinding.viewAttachmentFilesize.text = "${attachment.filesize!! /1024} KB"
-                        else  -> attachmentBinding.viewAttachmentFilesize.text = "${attachment.filesize!! /1024/1024} MB"
-                    }
+
+                    if (attachment.filesize == null)
+                        attachmentBinding.viewAttachmentFilesize.visibility = View.GONE
+                    else
+                        attachmentBinding.viewAttachmentFilesize.text = getAttachmentSizeString(attachment.filesize?:0L)
+
 
                     // load thumbnail if possible
                     try {

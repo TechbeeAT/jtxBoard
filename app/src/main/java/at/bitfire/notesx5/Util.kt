@@ -129,3 +129,11 @@ fun isValidEmail(emailString: String?): Boolean {
 fun isValidURL(urlString: String?): Boolean {
     return Patterns.WEB_URL.matcher(urlString.toString()).matches()
 }
+
+fun getAttachmentSizeString(filesize: Long): String {
+    return when {
+        filesize < 1024 -> "$filesize Bytes"
+        filesize / 1024 < 1024 -> "${filesize / 1024} KB"
+        else -> "${filesize / 1024 / 1024} MB"
+    }
+}

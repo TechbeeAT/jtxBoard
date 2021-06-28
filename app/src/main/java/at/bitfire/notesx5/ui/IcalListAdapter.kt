@@ -541,16 +541,11 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                     attachmentBinding.listItemAttachmentTextview.text = attachment.filename
                 else
                     attachmentBinding.listItemAttachmentTextview.text = attachment.fmttype
-                when {
-                    attachment.filesize == null -> attachmentBinding.listItemAttachmentFilesize.visibility =
-                        View.GONE
-                    attachment.filesize!! < 1024 -> attachmentBinding.listItemAttachmentFilesize.text =
-                        "${attachment.filesize!!} Bytes"
-                    attachment.filesize!! / 1024 < 1024 -> attachmentBinding.listItemAttachmentFilesize.text =
-                        "${attachment.filesize!! / 1024} KB"
-                    else -> attachmentBinding.listItemAttachmentFilesize.text =
-                        "${attachment.filesize!! / 1024 / 1024} MB"
-                }
+
+                if (attachment.filesize == null)
+                    attachmentBinding.listItemAttachmentFilesize.visibility = View.GONE
+                else
+                    attachmentBinding.listItemAttachmentFilesize.text = getAttachmentSizeString(attachment.filesize?:0L)
 
                 // load thumbnail if possible
                 try {
