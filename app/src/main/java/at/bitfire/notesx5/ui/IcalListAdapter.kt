@@ -519,8 +519,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                         val intent = Intent()
                         intent.action = Intent.ACTION_VIEW
                         intent.setDataAndType(Uri.parse(attachment.uri), attachment.fmttype)
-                        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                         context.startActivity(intent)
 
                     } catch (e: IOException) {
