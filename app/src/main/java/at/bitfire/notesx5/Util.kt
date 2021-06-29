@@ -8,7 +8,6 @@
 
 package at.bitfire.notesx5
 
-import android.annotation.SuppressLint
 import android.util.Patterns
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -35,14 +34,12 @@ fun convertLongToDateString2(systemTime: Long): String {
  */
 
 
-@SuppressLint("SimpleDateFormat")
 fun convertLongToDateString(date: Long?): String {
     if (date == null || date == 0L)
         return ""
     return DateFormat.getDateInstance(DateFormat.LONG).format(date)
 }
 
-@SuppressLint("SimpleDateFormat")
 fun convertLongToTimeString(time: Long?): String {
     if (time == null || time == 0L)
         return ""
@@ -50,7 +47,6 @@ fun convertLongToTimeString(time: Long?): String {
 }
 
 /*
-@SuppressLint("SimpleDateFormat")
 fun convertLongToHourString(time: Long?): String {
     if (time == null || time == 0L)
         return ""
@@ -59,7 +55,6 @@ fun convertLongToHourString(time: Long?): String {
 }
 
 
-@SuppressLint("SimpleDateFormat")
 fun convertLongToMinuteString(time: Long): String {
     if (time == 0L)
         return ""
@@ -69,33 +64,29 @@ fun convertLongToMinuteString(time: Long): String {
 
  */
 
-@SuppressLint("SimpleDateFormat")
 fun convertLongToDayString(date: Long?): String {
     if (date == null || date == 0L)
         return ""
-    val dayFormatter = SimpleDateFormat("dd")
+    val dayFormatter = SimpleDateFormat("dd", Locale.getDefault())
     return dayFormatter.format(Date(date)).toString()
 }
 
 
-@SuppressLint("SimpleDateFormat")
 fun convertLongToMonthString(date: Long?): String {
     if (date == null || date == 0L)
         return ""
-    val monthFormatter = SimpleDateFormat("MMMM")
+    val monthFormatter = SimpleDateFormat("MMMM", Locale.getDefault())
     return monthFormatter.format(Date(date)).toString()
 }
 
 
-@SuppressLint("SimpleDateFormat")
 fun convertLongToYearString(date: Long?): String {
     if (date == null || date == 0L)
         return ""
-    val yearFormatter = SimpleDateFormat("yyyy")
+    val yearFormatter = SimpleDateFormat("yyyy", Locale.getDefault())
     return yearFormatter.format(Date(date)).toString()
 }
 
-@SuppressLint("SimpleDateFormat")
 fun convertLongToICalDateTime(datetime: Long?, timezone: String?): String? {
 
     if(datetime == null)
@@ -105,15 +96,15 @@ fun convertLongToICalDateTime(datetime: Long?, timezone: String?): String? {
 
     return when {
         timezone == "ALLDAY" -> {
-            formatter = SimpleDateFormat("yyyyMMdd")
+            formatter = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
             ":${formatter.format(Date(datetime))}"
         }
         timezone.isNullOrEmpty() -> {
-            formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss'Z'")
+            formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss'Z'", Locale.getDefault())
             ":${formatter.format(Date(datetime))}"
         }
         timezone.isNotEmpty() -> {
-            formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss")
+            formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss", Locale.getDefault())
             ";TZID=$timezone:${formatter.format(Date(datetime))}"
         }
         else -> null
