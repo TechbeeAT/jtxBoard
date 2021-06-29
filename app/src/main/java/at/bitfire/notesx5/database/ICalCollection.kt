@@ -12,7 +12,6 @@ import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.room.*
-import at.bitfire.notesx5.R
 import kotlinx.parcelize.Parcelize
 
 

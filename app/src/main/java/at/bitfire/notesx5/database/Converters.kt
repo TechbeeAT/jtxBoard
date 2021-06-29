@@ -8,7 +8,7 @@
 
 package at.bitfire.notesx5.database
 
-public class Converters {
+class Converters {
 
     /*
     @TypeConverter
