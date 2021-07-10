@@ -548,6 +548,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                     attachmentBinding.listItemAttachmentFilesize.text = getAttachmentSizeString(attachment.filesize?:0L)
 
                 // load thumbnail if possible
+                // deactivated for now as the loading caused some lags in the recycler view!
+                /*
                 try {
                     val thumbSize = Size(50, 50)
                     val thumbUri = Uri.parse(attachment.uri)
@@ -564,6 +566,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                 } catch (e: FileNotFoundException) {
                     Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
                 }
+                 */
 
                 holder.attachmentsLinearLayout.addView(attachmentBinding.root)
             }

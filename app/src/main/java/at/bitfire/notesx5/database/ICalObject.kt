@@ -382,6 +382,7 @@ data class ICalObject(
 
         values.getAsString(COLUMN_COMPONENT)?.let { component -> this.component = component }
         values.getAsString(COLUMN_SUMMARY)?.let { summary -> this.summary = summary }
+        values.getAsString(COLUMN_DESCRIPTION)?.let { description -> this.description = description }
         values.getAsLong(COLUMN_DTSTART)?.let { dtstart -> this.dtstart = dtstart }   //TODO: Add validation, Journals MUST have a DTSTART!
         values.getAsString(COLUMN_DTSTART_TIMEZONE)?.let { dtstartTimezone -> this.dtstartTimezone = dtstartTimezone }   //TODO: Validieren auf gültige Timezone!
         values.getAsLong(COLUMN_DTEND)?.let { dtend -> this.dtend = dtend }

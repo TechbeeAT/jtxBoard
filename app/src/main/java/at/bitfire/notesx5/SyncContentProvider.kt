@@ -209,7 +209,6 @@ class SyncContentProvider : ContentProvider() {
         context!!.contentResolver.notifyChange(uri, null)
         Log.println(Log.INFO, "newContentUri", ContentUris.withAppendedId(uri, id).toString())
         return ContentUris.withAppendedId(uri, id)
-
     }
 
     override fun onCreate(): Boolean {
