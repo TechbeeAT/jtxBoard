@@ -102,13 +102,13 @@ data class ICalCollection(
         @ColumnInfo(name = COLUMN_COLLECTION_COLOR)             var color: Int? = null,
 
         /** whether the collection supports VEVENT; in case of calendars: null means true */
-        @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVEVENT)          var supportsVEVENT: Boolean? = null,
+        @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVEVENT)          var supportsVEVENT: Boolean = false,
 
         /** whether the collection supports VTODO; in case of calendars: null means true */
-        @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVTODO)     var supportsVTODO: Boolean? = null,
+        @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVTODO)     var supportsVTODO: Boolean = false,
 
         /** whether the collection supports VJOURNAL; in case of calendars: null means true */
-        @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVJOURNAL)    var supportsVJOURNAL: Boolean? = null,
+        @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVJOURNAL)    var supportsVJOURNAL: Boolean = false,
 
         /** Account name */
         @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME)            var accountName: String? = LocalCollectionParams.LOCAL.name,

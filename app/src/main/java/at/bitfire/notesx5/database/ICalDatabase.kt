@@ -41,7 +41,7 @@ import java.util.*
         views = [
             ICal4List::class,
             ICal4ViewNote::class],
-        version = 88,
+        version = 90,
         exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {
@@ -129,10 +129,10 @@ abstract class ICalDatabase : RoomDatabase() {
                                     cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, "LOCAL")
                                     cv.put(COLUMN_COLLECTION_DISPLAYNAME, "LOCAL")
                                     cv.put(COLUMN_COLLECTION_URL, "https://localhost")
-                                    cv.put(COLUMN_COLLECTION_SUPPORTSVJOURNAL, "true")
-                                    cv.put(COLUMN_COLLECTION_SUPPORTSVEVENT, "true")
-                                    cv.put(COLUMN_COLLECTION_SUPPORTSVTODO, "true")
-                                    cv.put(COLUMN_COLLECTION_READONLY, "false")
+                                    cv.put(COLUMN_COLLECTION_SUPPORTSVJOURNAL, true)
+                                    cv.put(COLUMN_COLLECTION_SUPPORTSVEVENT, true)
+                                    cv.put(COLUMN_COLLECTION_SUPPORTSVTODO, true)
+                                    cv.put(COLUMN_COLLECTION_READONLY, false)
                                     db.insert(TABLE_NAME_COLLECTION, SQLiteDatabase.CONFLICT_IGNORE, cv)
                                     super.onOpen(db)
                                 }
