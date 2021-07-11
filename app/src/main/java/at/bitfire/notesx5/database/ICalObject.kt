@@ -346,11 +346,11 @@ data class ICalObject(
 
     @ColumnInfo(name = COLUMN_UID) var uid: String = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.notesx5",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
 
-        /*
-         The following properties specify change management information in  calendar components.
-         https://tools.ietf.org/html/rfc5545#section-3.8.7
-         */
-        @ColumnInfo(name = COLUMN_CREATED) var created: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.1
+    /*
+     The following properties specify change management information in  calendar components.
+     https://tools.ietf.org/html/rfc5545#section-3.8.7
+     */
+    @ColumnInfo(name = COLUMN_CREATED) var created: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.1
     @ColumnInfo(name = COLUMN_DTSTAMP) var dtstamp: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.2
     @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long = System.currentTimeMillis(), // see https://tools.ietf.org/html/rfc5545#section-3.8.7.3
     @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long = 0,                             // increase on every change (+1), see https://tools.ietf.org/html/rfc5545#section-3.8.7.4
@@ -514,7 +514,7 @@ data class ICalObject(
             content+= "COMPLETED:${convertLongToICalDateTime(completed, completedTimezone)}\r\n"
         if(component == Component.VTODO.name && duration?.isNotEmpty() == true)
             content+= "DURATION:$duration\r\n"
-        content+= "CREATED${convertLongToICalDateTime(lastModified, null)}\r\n"
+        content+= "CREATED${convertLongToICalDateTime(created, null)}\r\n"
         content+= "LAST-MODIFIED${convertLongToICalDateTime(lastModified, null)}\r\n"
         content+= "SEQUENCE:$sequence\r\n"
         if (color != null)  { content+= "COLOR:$color\r\n" }
