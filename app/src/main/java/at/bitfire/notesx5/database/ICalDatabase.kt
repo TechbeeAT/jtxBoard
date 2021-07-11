@@ -41,7 +41,7 @@ import java.util.*
         views = [
             ICal4List::class,
             ICal4ViewNote::class],
-        version = 84,
+        version = 88,
         exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {

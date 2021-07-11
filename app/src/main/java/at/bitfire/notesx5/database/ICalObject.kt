@@ -274,6 +274,31 @@ const val COLUMN_DIRTY = "dirty"
  */
 const val COLUMN_DELETED = "deleted"
 
+/**
+ * Purpose:  filename of the synched entry (*.ics), only relevant for synched entries through sync-adapter
+ * Type: [String]
+ */
+const val COLUMN_FILENAME = "filename"
+
+/**
+ * Purpose:  eTag for SyncAdapter, only relevant for synched entries through sync-adapter
+ * Type: [String]
+ */
+const val COLUMN_ETAG = "etag"
+
+/**
+ * Purpose:  scheduleTag for SyncAdapter, only relevant for synched entries through sync-adapter
+ * Type: [String]
+ */
+const val COLUMN_SCHEDULETAG = "scheduletag"
+
+/**
+ * Purpose:  flags for SyncAdapter, only relevant for synched entries through sync-adapter
+ * Type: [Int]
+ */
+const val COLUMN_FLAGS = "flags"
+
+
 
 @Parcelize
 @Entity(tableName = TABLE_NAME_ICALOBJECT,
@@ -285,50 +310,50 @@ const val COLUMN_DELETED = "deleted"
 )
 data class ICalObject(
 
-        @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
         @ColumnInfo(index = true, name = COLUMN_ID)
         var id: Long = 0L,
 
-        @ColumnInfo(name = COLUMN_MODULE) var module: String = Module.NOTE.name,
-        @ColumnInfo(name = COLUMN_COMPONENT) var component: String = Component.VJOURNAL.name,
+    @ColumnInfo(name = COLUMN_MODULE) var module: String = Module.NOTE.name,
+    @ColumnInfo(name = COLUMN_COMPONENT) var component: String = Component.VJOURNAL.name,
         //@ColumnInfo(name = COLUMN_COLLECTION) var collection: String = "LOCAL",
-        @ColumnInfo(name = COLUMN_SUMMARY) var summary: String? = null,
-        @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String? = null,
-        @ColumnInfo(name = COLUMN_DTSTART) var dtstart: Long? = null,
-        @ColumnInfo(name = COLUMN_DTSTART_TIMEZONE) var dtstartTimezone: String? = null,
+    @ColumnInfo(name = COLUMN_SUMMARY) var summary: String? = null,
+    @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String? = null,
+    @ColumnInfo(name = COLUMN_DTSTART) var dtstart: Long? = null,
+    @ColumnInfo(name = COLUMN_DTSTART_TIMEZONE) var dtstartTimezone: String? = null,
 
-        @ColumnInfo(name = COLUMN_DTEND) var dtend: Long? = null,
-        @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String? = null,
+    @ColumnInfo(name = COLUMN_DTEND) var dtend: Long? = null,
+    @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String? = null,
 
-        @ColumnInfo(name = COLUMN_STATUS) var status: String = StatusJournal.FINAL.name,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
-        @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String = Classification.PUBLIC.name,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
+    @ColumnInfo(name = COLUMN_STATUS) var status: String = StatusJournal.FINAL.name,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
+    @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String = Classification.PUBLIC.name,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
 
-        @ColumnInfo(name = COLUMN_URL) var url: String? = null,
-        @ColumnInfo(name = COLUMN_CONTACT) var contact: String? = null,
-        @ColumnInfo(name = COLUMN_GEO_LAT) var geoLat: Float? = null,
-        @ColumnInfo(name = COLUMN_GEO_LONG) var geoLong: Float? = null,
-        @ColumnInfo(name = COLUMN_LOCATION) var location: String? = null,
+    @ColumnInfo(name = COLUMN_URL) var url: String? = null,
+    @ColumnInfo(name = COLUMN_CONTACT) var contact: String? = null,
+    @ColumnInfo(name = COLUMN_GEO_LAT) var geoLat: Float? = null,
+    @ColumnInfo(name = COLUMN_GEO_LONG) var geoLong: Float? = null,
+    @ColumnInfo(name = COLUMN_LOCATION) var location: String? = null,
 
-        @ColumnInfo(name = COLUMN_PERCENT) var percent: Int? = null,    // VTODO only!
-        @ColumnInfo(name = COLUMN_PRIORITY) var priority: Int? = null,   // VTODO and VEVENT
+    @ColumnInfo(name = COLUMN_PERCENT) var percent: Int? = null,    // VTODO only!
+    @ColumnInfo(name = COLUMN_PRIORITY) var priority: Int? = null,   // VTODO and VEVENT
 
-        @ColumnInfo(name = COLUMN_DUE) var due: Long? = null,      // VTODO only!
-        @ColumnInfo(name = COLUMN_DUE_TIMEZONE) var dueTimezone: String? = null, //VTODO only!
-        @ColumnInfo(name = COLUMN_COMPLETED) var completed: Long? = null, // VTODO only!
-        @ColumnInfo(name = COLUMN_COMPLETED_TIMEZONE) var completedTimezone: String? = null, //VTODO only!
-        @ColumnInfo(name = COLUMN_DURATION) var duration: String? = null, //VTODO only!
+    @ColumnInfo(name = COLUMN_DUE) var due: Long? = null,      // VTODO only!
+    @ColumnInfo(name = COLUMN_DUE_TIMEZONE) var dueTimezone: String? = null, //VTODO only!
+    @ColumnInfo(name = COLUMN_COMPLETED) var completed: Long? = null, // VTODO only!
+    @ColumnInfo(name = COLUMN_COMPLETED_TIMEZONE) var completedTimezone: String? = null, //VTODO only!
+    @ColumnInfo(name = COLUMN_DURATION) var duration: String? = null, //VTODO only!
 
 
-        @ColumnInfo(name = COLUMN_UID) var uid: String = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.notesx5",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
+    @ColumnInfo(name = COLUMN_UID) var uid: String = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.notesx5",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
 
         /*
          The following properties specify change management information in  calendar components.
          https://tools.ietf.org/html/rfc5545#section-3.8.7
          */
         @ColumnInfo(name = COLUMN_CREATED) var created: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.1
-        @ColumnInfo(name = COLUMN_DTSTAMP) var dtstamp: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.2
-        @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long = System.currentTimeMillis(), // see https://tools.ietf.org/html/rfc5545#section-3.8.7.3
-        @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long = 0,                             // increase on every change (+1), see https://tools.ietf.org/html/rfc5545#section-3.8.7.4
+    @ColumnInfo(name = COLUMN_DTSTAMP) var dtstamp: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.2
+    @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long = System.currentTimeMillis(), // see https://tools.ietf.org/html/rfc5545#section-3.8.7.3
+    @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long = 0,                             // increase on every change (+1), see https://tools.ietf.org/html/rfc5545#section-3.8.7.4
 
         //var exdate: Long? = System.currentTimeMillis(),   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
         //var rdate: Long? = System.currentTimeMillis()     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
@@ -336,13 +361,18 @@ data class ICalObject(
         //var rrule: String?,                               //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
 
 
-        @ColumnInfo(name = COLUMN_COLOR) var color: Int? = null,
-        @ColumnInfo(name = COLUMN_OTHER) var other: String? = null,
+    @ColumnInfo(name = COLUMN_COLOR) var color: Int? = null,
+    @ColumnInfo(name = COLUMN_OTHER) var other: String? = null,
 
-        @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long = 1L,
+    @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long = 1L,
 
-        @ColumnInfo(name = COLUMN_DIRTY) var dirty: Boolean = true,
-        @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean = false
+    @ColumnInfo(name = COLUMN_DIRTY) var dirty: Boolean = true,
+    @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean = false,
+
+    @ColumnInfo(name = COLUMN_FILENAME)   var fileName: String? = null,
+    @ColumnInfo(name = COLUMN_ETAG) var eTag: String? = null,
+    @ColumnInfo(name = COLUMN_SCHEDULETAG) var scheduleTag: String? = null,
+    @ColumnInfo(name = COLUMN_FLAGS) var flags: Int? = null
 
 
 ) : Parcelable {
@@ -410,6 +440,11 @@ data class ICalObject(
         values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)?.let { collectionId -> this.collectionId = collectionId }
         values.getAsBoolean(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty }
         values.getAsBoolean(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted }
+        values.getAsString(COLUMN_FILENAME)?.let { fileName -> this.fileName = fileName }
+        values.getAsString(COLUMN_ETAG)?.let { eTag -> this.eTag = eTag }
+        values.getAsString(COLUMN_SCHEDULETAG)?.let { scheduleTag -> this.scheduleTag = scheduleTag }
+        values.getAsInteger(COLUMN_FLAGS)?.let { flags -> this.flags = flags }
+
 
         if (this.component == Component.VJOURNAL.name && this.dtstart == null)
             this.module = Module.JOURNAL.name

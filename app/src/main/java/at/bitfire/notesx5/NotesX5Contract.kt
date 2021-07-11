@@ -67,7 +67,7 @@ object NotesX5Contract {
          * provided in the enum [Module]
          * Type: [String]
          */
-        const val COLUMN_MODULE = "module"
+        const val MODULE = "module"
 
         /* The names of all the other columns  */
         /** The column for the component based on the values
@@ -299,6 +299,32 @@ object NotesX5Contract {
          * Type: [Boolean]
          */
         const val DELETED = "deleted"
+
+        /**
+         * Purpose:  filename of the synched entry (*.ics), only relevant for synched entries through sync-adapter
+         * Type: [String]
+         */
+        const val FILENAME = "filename"
+
+        /**
+         * Purpose:  eTag for SyncAdapter, only relevant for synched entries through sync-adapter
+         * Type: [String]
+         */
+        const val ETAG = "etag"
+
+        /**
+         * Purpose:  scheduleTag for SyncAdapter, only relevant for synched entries through sync-adapter
+         * Type: [String]
+         */
+        const val SCHEDULETAG = "scheduletag"
+
+        /**
+         * Purpose:  flags for SyncAdapter, only relevant for synched entries through sync-adapter
+         * Type: [Int]
+         */
+        const val FLAGS = "flags"
+
+
 
 
         /** This enum class defines the possible values for the attribute status of an [X5ICalObject] for Journals/Notes */
