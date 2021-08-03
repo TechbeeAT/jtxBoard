@@ -39,12 +39,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDeepLinkBuilder
 import androidx.navigation.fragment.findNavController
-import androidx.work.Constraints
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkRequest
+import androidx.work.*
 import at.bitfire.notesx5.*
 import at.bitfire.notesx5.NotificationPublisher
+import at.bitfire.notesx5.R
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
 import at.bitfire.notesx5.databinding.FragmentIcalEditAttachmentBinding
@@ -1397,7 +1395,7 @@ class IcalEditFragment : Fragment() {
     }
 
 
-    fun scheduleCleanupJob() {
+    private fun scheduleCleanupJob() {
 
         //TODO: This constraint is currently not used as it didn't work in the test, this should be further investigated!
         // set constraints for the scheduler
@@ -1413,7 +1411,7 @@ class IcalEditFragment : Fragment() {
         }
 
         //create the cleanup job to make sure that the files are getting deleted as well when the device is idle
-        val fileCleanupWorkRequest: WorkRequest =
+        val fileCleanupWorkRequest: OneTimeWorkRequest =
             OneTimeWorkRequestBuilder<FileCleanupJob>()
                 // Additional configuration
                 .setConstraints(constraints)
@@ -1422,7 +1420,7 @@ class IcalEditFragment : Fragment() {
         // enqueue the fileCleanupWorkRequest
         WorkManager
             .getInstance(requireContext())
-            .enqueue(fileCleanupWorkRequest)
+            .enqueueUniqueWork("fileCleanupWorkRequest", ExistingWorkPolicy.KEEP, fileCleanupWorkRequest)
 
         Log.d("IcalEditFragment", "enqueued fileCleanupWorkRequest")
     }

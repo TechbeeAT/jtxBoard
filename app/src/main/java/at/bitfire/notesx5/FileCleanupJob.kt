@@ -15,9 +15,7 @@ class FileCleanupJob (val appContext: Context, workerParams: WorkerParameters):
 
         override suspend fun doWork(): Result {
 
-
             val foundFileContentUris = mutableListOf<Uri>()
-
             val dataSource = ICalDatabase.getInstance(appContext.applicationContext).iCalDatabaseDao
 
             Log.d("FileCleanupJob", "File CleanupJob started")
@@ -28,7 +26,6 @@ class FileCleanupJob (val appContext: Context, workerParams: WorkerParameters):
                 val fileContentUri = FileProvider.getUriForFile(appContext, AUTHORITY_FILEPROVIDER, it)
                 foundFileContentUris.add(fileContentUri)
                 Log.d("FileInFolderCUri", fileContentUri.toString())
-
             }
 
             val extFilesPath = File(appContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString())
