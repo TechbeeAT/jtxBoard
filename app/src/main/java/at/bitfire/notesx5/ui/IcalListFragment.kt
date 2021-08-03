@@ -120,7 +120,7 @@ class IcalListFragment : Fragment() {
             when (icalListViewModel.searchModule) {
                 "NOTE" -> {
                     gotodateMenuItem?.isVisible = false
-                    staggeredGridLayoutManager!!.spanCount = 2
+                    staggeredGridLayoutManager!!.spanCount = 1
                 }
                 "JOURNAL" -> {
                     gotodateMenuItem?.isVisible = true
