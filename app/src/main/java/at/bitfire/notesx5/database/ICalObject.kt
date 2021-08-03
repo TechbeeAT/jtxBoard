@@ -325,7 +325,7 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_DTEND) var dtend: Long? = null,
     @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String? = null,
 
-    @ColumnInfo(name = COLUMN_STATUS) var status: String = StatusJournal.FINAL.name,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
+    @ColumnInfo(name = COLUMN_STATUS) var status: String = "",     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
     @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String = Classification.PUBLIC.name,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
 
     @ColumnInfo(name = COLUMN_URL) var url: String? = null,
