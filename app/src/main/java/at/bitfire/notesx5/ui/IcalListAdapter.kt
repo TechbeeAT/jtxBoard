@@ -169,7 +169,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             }
 
             //holder.subtasksLinearLayout.visibility = View.VISIBLE
-            holder.progressPercent.text = "${iCal4ListItem.property.percent} %"
+            holder.progressPercent.text = "${iCal4ListItem.property.percent?:0} %"
 
             if (iCal4ListItem.property.priority in 1..9) {           // show priority only if it was set and != 0 (no priority)
                 holder.priorityIcon.visibility = View.VISIBLE

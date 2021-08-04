@@ -277,6 +277,7 @@ class IcalEditFragment : Fragment() {
             binding.editDtstartYear.text = convertLongToYearString(it.dtstart)
             binding.editDtstartTime.text = convertLongToTimeString(it.dtstart)
 
+            binding.editProgressPercent.text = "${it.percent?:0} %"
 
             // Set the default value of the priority Chip
             if (it.priority != null && it.priority in 0..9)   // if unsupported don't show the classification
