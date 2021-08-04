@@ -135,7 +135,8 @@
             app:layout_constraintEnd_toStartOf="@+id/list_item_num_attendees_text"
             app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
             app:srcCompat="@drawable/ic_attendee"
-            app:tint="@android:color/darker_gray" />
+            app:tint="@android:color/darker_gray"
+            android:contentDescription="@string/list_num_attendees_contentdesc" />
 
         <TextView
             android:id="@+id/list_item_num_attendees_text"
@@ -159,7 +160,8 @@
             app:layout_constraintEnd_toStartOf="@+id/list_item_num_attachments_text"
             app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
             app:srcCompat="@drawable/ic_attachment"
-            app:tint="@android:color/darker_gray" />
+            app:tint="@android:color/darker_gray"
+            android:contentDescription="@string/list_num_attachments_contentdesc"/>
 
         <TextView
             android:id="@+id/list_item_num_attachments_text"
@@ -183,7 +185,8 @@
             app:layout_constraintEnd_toStartOf="@+id/list_item_num_comments_text"
             app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
             app:srcCompat="@drawable/ic_comments"
-            app:tint="@android:color/darker_gray" />
+            app:tint="@android:color/darker_gray"
+            android:contentDescription="@string/list_num_comments_contentdesc"/>
 
         <TextView
             android:id="@+id/list_item_num_comments_text"

@@ -96,10 +96,9 @@
     <string name="list_dialog_contribution_message">Please choose your contribution to this app: Accept ads or buy the ad-free option from the store. If you are unsure, check the ad-option, you can still change your mind and buy the ad-free option later through the settings menu!</string>
     <string name="list_dialog_contribution_acceptads">Accept ads</string>
     <string name="list_dialog_contribution_buyadfree">Buy ad-free</string>
-
-
-
-
+    <string name="list_num_attendees_contentdesc">Number of attendees</string>
+    <string name="list_num_attachments_contentdesc">Number of attachments</string>
+    <string name="list_num_comments_contentdesc">Number of comments</string>
 
 
     <!-- fragment_ical_edit -->
@@ -126,6 +125,9 @@
     <string name="view_fragment_audio_permission_message">NOTESx5 needs the permission in order to record audio. Please grant the permission to use this feature.</string>
     <string name="view_fragment_audio_dialog_add_audio_note">Add Audio Note</string>
     <string name="view_comment_playbutton_content_desc">Play audio comment</string>
+    <string name="view_fragment_audio_start_stop_recording_contentdesc">Start/Stop recording</string>
+    <string name="view_fragment_audio_start_stop_playback_contentdesc">Play audio comment</string>
+
 
 
 
