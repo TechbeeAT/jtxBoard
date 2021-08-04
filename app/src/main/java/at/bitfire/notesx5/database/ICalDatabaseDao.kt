@@ -68,6 +68,27 @@ SELECTs (global selects without parameter)
     @Query("SELECT * FROM collection ORDER BY _id ASC")
     fun getAllCollections(): LiveData<List<ICalCollection>>
 
+    /**
+     * Retrieve an list of all DISTINCT Collections ([Collection])
+     * that support VTODO as a LiveData-List
+     *
+     * @return a list of VTODO-[Collection] as LiveData<List<String>>
+     */
+    @Transaction
+    @Query("SELECT * FROM collection WHERE supportsVTODO = 1 ORDER BY _id ASC")
+    fun getAllVTODOCollections(): LiveData<List<ICalCollection>>
+
+    /**
+     * Retrieve an list of all DISTINCT Collections ([Collection])
+     * that support VJOURNAL as a LiveData-List
+     *
+     * @return a list of VJOURNAL-[Collection] as LiveData<List<String>>
+     */
+    @Transaction
+    @Query("SELECT * FROM collection WHERE supportsVJOURNAL = 1 ORDER BY _id ASC")
+    fun getAllVJOURNALCollections(): LiveData<List<ICalCollection>>
+
+
 
     /**
      * Retrieve an list of all Relatedto ([Relatedto]) as a List

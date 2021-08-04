@@ -144,7 +144,12 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
             relatedSubtasks =  database.getRelatedTodos(iCalEntity.property.id)
 
             allCategories = database.getAllCategories()
-            allCollections = database.getAllCollections()
+            allCollections = when(iCalEntity.property.component) {
+                Component.VTODO.name -> database.getAllVTODOCollections()
+                Component.VJOURNAL.name -> database.getAllVJOURNALCollections()
+                else -> database.getAllCollections() // should not happen!
+            }
+
             allRelatedto = database.getAllRelatedto()
 
         }
