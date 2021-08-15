@@ -68,7 +68,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
-            android:clipToPadding="false">
+            android:clipToPadding="false"
+            android:paddingBottom="70dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/ical_edit_view"
@@ -148,7 +149,7 @@
                 <Spinner
                     android:id="@+id/edit_collection"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
@@ -190,7 +191,7 @@
                 <Spinner
                     android:id="@+id/edit_timezone_spinner"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:entries="@{model.possibleTimezones}"
@@ -449,8 +450,6 @@
                     app:layout_constraintTop_toBottomOf="@id/edit_spc_chipgroup" />
 
 
-
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_due_date"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
@@ -527,16 +526,16 @@
                 <Spinner
                     android:id="@+id/edit_duetimezone_spinner"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:entries="@{model.possibleTimezones}"
                     android:spinnerMode="dialog"
                     android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_due_addtime_switch"
                     app:layout_constraintEnd_toStartOf="@id/edit_due_addtime_switch"
                     app:layout_constraintStart_toEndOf="@id/edit_duetimezone_icon"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_due_date" />
+                    app:layout_constraintTop_toTopOf="@+id/edit_due_addtime_switch" />
 
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
@@ -545,16 +544,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
                     android:checked="@={model.addDueTimeChecked}"
                     android:text="@string/edit_add_time_switch"
                     android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit_duetimezone_spinner"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/edit_duetimezone_spinner"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_due_date"
                     app:switchPadding="8dp" />
-
-
 
 
                 <TextView
@@ -571,7 +566,6 @@
                     app:drawableStartCompat="@drawable/ic_task_started"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edit_due_addtime_switch" />
-
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -650,16 +644,16 @@
                 <Spinner
                     android:id="@+id/edit_startedtimezone_spinner"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:entries="@{model.possibleTimezones}"
                     android:spinnerMode="dialog"
                     android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_started_addtime_switch"
                     app:layout_constraintEnd_toStartOf="@id/edit_started_addtime_switch"
                     app:layout_constraintStart_toEndOf="@id/edit_startedtimezone_icon"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_started_date" />
+                    app:layout_constraintTop_toTopOf="@+id/edit_started_addtime_switch" />
 
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
@@ -668,13 +662,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
                     android:checked="@={model.addStartedTimeChecked}"
                     android:text="@string/edit_add_time_switch"
                     android:visibility="@{model.starteddateVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit_startedtimezone_spinner"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/edit_startedtimezone_spinner"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_started_date"
                     app:switchPadding="8dp" />
 
 
@@ -770,16 +762,16 @@
                 <Spinner
                     android:id="@+id/edit_completedtimezone_spinner"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:entries="@{model.possibleTimezones}"
                     android:spinnerMode="dialog"
                     android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_completed_addtime_switch"
                     app:layout_constraintEnd_toStartOf="@id/edit_completed_addtime_switch"
                     app:layout_constraintStart_toEndOf="@id/edit_completedtimezone_icon"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_completed_date" />
+                    app:layout_constraintTop_toTopOf="@+id/edit_completed_addtime_switch" />
 
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
@@ -788,15 +780,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
                     android:checked="@={model.addCompletedTimeChecked}"
                     android:text="@string/edit_add_time_switch"
                     android:visibility="@{model.completeddateVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit_completedtimezone_spinner"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/edit_completedtimezone_spinner"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_completed_date"
                     app:switchPadding="8dp" />
-
 
 
                 <TextView
@@ -813,7 +802,6 @@
                     app:drawableStartCompat="@drawable/ic_link"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edit_completed_addtime_switch" />
-
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -846,7 +834,6 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-
                 <TextView
                     android:id="@+id/edit_contact_header"
                     android:layout_width="wrap_content"
@@ -861,7 +848,6 @@
                     app:drawableStartCompat="@drawable/ic_contact"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edit_url_edit" />
-
 
 
                 <com.google.android.material.textfield.TextInputLayout
