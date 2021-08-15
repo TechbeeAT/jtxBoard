@@ -26,6 +26,15 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
                         val database: ICalDatabaseDao,
                         application: Application) : AndroidViewModel(application) {
 
+    companion object {
+        const val TAB_GENERAL = 0
+        const val TAB_CATEGORIES = 1
+        const val TAB_PEOPLE = 2
+        const val TAB_COMMENTS = 3
+        const val TAB_ATTACHMENTS = 4
+        const val TAB_SUBTASKS = 5
+    }
+
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allCollections: LiveData<List<ICalCollection>>
     lateinit var allRelatedto: LiveData<List<Relatedto>>
@@ -56,6 +65,9 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     var possibleTimezones: MutableList<String> = mutableListOf("").also { it.addAll(TimeZone.getAvailableIDs().toList()) }
 
+    var collectionVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var summaryVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var descriptionVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var dateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var timeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var alldayVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
@@ -124,7 +136,6 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
 
 
-    var showAll: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
     var allDayChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.dtstartTimezone == "ALLDAY")
     var addDueTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
     var addCompletedTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.completedTimezone != "ALLDAY")
@@ -133,6 +144,9 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     val urlError = MutableLiveData<String>()
     val attendeesError = MutableLiveData<String>()
+
+    var selectedTab = TAB_GENERAL
+
 
 
     init {
@@ -157,28 +171,31 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     fun updateVisibility() {
 
-        dateVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name)
-        timeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
-        alldayVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name)
-        timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name &&  iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
-        statusVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name || iCalEntity.property.module == Module.TODO.name || showAll.value == true)
-        classificationVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name || showAll.value == true)
-        urlVisible.postValue((iCalEntity.property.module == Module.JOURNAL.name && showAll.value == true) || showAll.value == true)
-        contactVisible.postValue((iCalEntity.property.module == Module.JOURNAL.name && showAll.value == true) || showAll.value == true)
-        categoriesVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name || showAll.value == true)
-        attendeesVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name || showAll.value == true)
-        commentsVisible.postValue((iCalEntity.property.module == Module.JOURNAL.name && showAll.value == true) || showAll.value == true)
-        attachmentsVisible.postValue((iCalEntity.property.module == Module.JOURNAL.name && showAll.value == true) || showAll.value == true)
-        takePhotoVisible.postValue((iCalEntity.property.module == Module.JOURNAL.name && showAll.value == true) || showAll.value == true)
-        progressVisible.postValue(iCalEntity.property.module == Module.TODO.name)
-        priorityVisible.postValue(iCalEntity.property.module == Module.TODO.name)
-        subtasksVisible.postValue(iCalEntity.property.module == Module.TODO.name || showAll.value == true)
-        duedateVisible.postValue(iCalEntity.property.module == Module.TODO.name)
-        duetimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
-        completeddateVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true)
-        completedtimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true && iCalEntity.property.completedTimezone != "ALLDAY")
-        starteddateVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true)
-        startedtimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && showAll.value == true && iCalEntity.property.dtstartTimezone != "ALLDAY")
+        collectionVisible.postValue(selectedTab == TAB_GENERAL)
+        summaryVisible.postValue(selectedTab == TAB_GENERAL)
+        descriptionVisible.postValue(selectedTab == TAB_GENERAL)
+        dateVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && selectedTab == TAB_GENERAL)
+        timeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && selectedTab == TAB_GENERAL && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
+        alldayVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && selectedTab == TAB_GENERAL)
+        timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && selectedTab == TAB_GENERAL && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
+        statusVisible.postValue(selectedTab == TAB_GENERAL)
+        classificationVisible.postValue(selectedTab == TAB_GENERAL)
+        urlVisible.postValue(selectedTab == TAB_PEOPLE)
+        categoriesVisible.postValue(selectedTab == TAB_CATEGORIES)
+        contactVisible.postValue(selectedTab == TAB_PEOPLE)
+        attendeesVisible.postValue(selectedTab == TAB_PEOPLE)
+        commentsVisible.postValue(selectedTab == TAB_COMMENTS)
+        attachmentsVisible.postValue(selectedTab == TAB_ATTACHMENTS)
+        takePhotoVisible.postValue(selectedTab == TAB_ATTACHMENTS)
+        progressVisible.postValue(iCalEntity.property.module == Module.TODO.name && selectedTab == TAB_GENERAL)
+        priorityVisible.postValue(iCalEntity.property.module == Module.TODO.name && selectedTab == TAB_GENERAL)
+        subtasksVisible.postValue(selectedTab == TAB_SUBTASKS)
+        duedateVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name)
+        duetimeVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
+        completeddateVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name)
+        completedtimeVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.completedTimezone != "ALLDAY")
+        starteddateVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name)
+        startedtimeVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
     }
 
     fun savingClicked() {

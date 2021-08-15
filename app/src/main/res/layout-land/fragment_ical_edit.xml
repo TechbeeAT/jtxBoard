@@ -494,21 +494,7 @@
                     app:closeIconVisible="false"
                     tools:text="Public" />
 
-
             </com.google.android.material.chip.ChipGroup>
-
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/edit_show_all_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:checked="@={model.showAll}"
-                android:text="@string/edit_show_all_switch"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_spc_chipgroup"
-                app:switchPadding="8dp"
-                tools:checked="false" />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -528,7 +514,7 @@
                 app:helperTextEnabled="true"
                 app:layout_constraintEnd_toStartOf="@id/edit_started_time"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_show_all_switch">
+                app:layout_constraintTop_toBottomOf="@id/edit_spc_chipgroup">
 
 
                 <com.google.android.material.textfield.TextInputEditText

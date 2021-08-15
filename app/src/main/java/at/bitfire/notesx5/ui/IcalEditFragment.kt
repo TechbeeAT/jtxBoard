@@ -49,9 +49,16 @@ import at.bitfire.notesx5.databinding.FragmentIcalEditAttachmentBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditCommentBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditSubtaskBinding
+import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_ATTACHMENTS
+import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_CATEGORIES
+import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_COMMENTS
+import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_GENERAL
+import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_PEOPLE
+import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_SUBTASKS
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import java.io.File
@@ -187,6 +194,32 @@ class IcalEditFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {        }    // nothing to do
         }
 
+        binding.icalEditTabs?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+
+                when (tab?.position) {
+                    TAB_GENERAL -> icalEditViewModel.selectedTab = TAB_GENERAL
+                    TAB_CATEGORIES -> icalEditViewModel.selectedTab = TAB_CATEGORIES
+                    TAB_PEOPLE -> icalEditViewModel.selectedTab = TAB_PEOPLE
+                    TAB_COMMENTS -> icalEditViewModel.selectedTab = TAB_COMMENTS
+                    TAB_ATTACHMENTS -> icalEditViewModel.selectedTab = TAB_ATTACHMENTS
+                    TAB_SUBTASKS -> icalEditViewModel.selectedTab = TAB_SUBTASKS
+                    else -> TAB_GENERAL
+                }
+                icalEditViewModel.updateVisibility()
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // nothing to do
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // nothing to do
+            }
+        })
+
 
 
         icalEditViewModel.savingClicked.observe(viewLifecycleOwner, {
@@ -305,10 +338,6 @@ class IcalEditFragment : Fragment() {
 
         }
 
-        icalEditViewModel.showAll.observe(viewLifecycleOwner) {
-            icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
-        }
-
 
         icalEditViewModel.allDayChecked.observe(viewLifecycleOwner) {
 
@@ -378,7 +407,7 @@ class IcalEditFragment : Fragment() {
                 icalEditViewModel.iCalObjectUpdated.value!!.completedTimezone = ""
             }
 
-            icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
+            icalEditViewModel.updateVisibility()                 // Update visibility of Elements
         }
 
         icalEditViewModel.addStartedTimeChecked.observe(viewLifecycleOwner) {
@@ -402,7 +431,7 @@ class IcalEditFragment : Fragment() {
                 icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ""
             }
 
-            icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
+            icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change
         }
 
 
