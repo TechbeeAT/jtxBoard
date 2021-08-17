@@ -446,9 +446,9 @@ data class ICalObject(
         values.getAsInteger(COLUMN_FLAGS)?.let { flags -> this.flags = flags }
 
 
-        if (this.component == Component.VJOURNAL.name && this.dtstart == null)
+        if (this.component == Component.VJOURNAL.name && this.dtstart != null)
             this.module = Module.JOURNAL.name
-        else if (this.component == Component.VJOURNAL.name && this.dtstart != null)
+        else if (this.component == Component.VJOURNAL.name && this.dtstart == null)
             this.module = Module.NOTE.name
         else if (this.component == Component.VTODO.name)
             this.module = Module.TODO.name
