@@ -53,6 +53,7 @@ import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_ATTACHMENTS
 import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_CATEGORIES
 import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_COMMENTS
 import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_GENERAL
+import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_LOCATION
 import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_PEOPLE
 import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_SUBTASKS
 import com.google.android.material.chip.Chip
@@ -203,6 +204,7 @@ class IcalEditFragment : Fragment() {
                     TAB_CATEGORIES -> icalEditViewModel.selectedTab = TAB_CATEGORIES
                     TAB_PEOPLE -> icalEditViewModel.selectedTab = TAB_PEOPLE
                     TAB_COMMENTS -> icalEditViewModel.selectedTab = TAB_COMMENTS
+                    TAB_LOCATION -> icalEditViewModel.selectedTab = TAB_LOCATION
                     TAB_ATTACHMENTS -> icalEditViewModel.selectedTab = TAB_ATTACHMENTS
                     TAB_SUBTASKS -> icalEditViewModel.selectedTab = TAB_SUBTASKS
                     else -> TAB_GENERAL

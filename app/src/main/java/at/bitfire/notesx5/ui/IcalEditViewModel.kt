@@ -31,8 +31,9 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         const val TAB_CATEGORIES = 1
         const val TAB_PEOPLE = 2
         const val TAB_COMMENTS = 3
-        const val TAB_ATTACHMENTS = 4
-        const val TAB_SUBTASKS = 5
+        const val TAB_LOCATION = 4
+        const val TAB_ATTACHMENTS = 5
+        const val TAB_SUBTASKS = 6
     }
 
     lateinit var allCategories: LiveData<List<String>>
