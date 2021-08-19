@@ -69,7 +69,7 @@ const val COLUMN_RELATEDTO_OTHER = "other"
                 parentColumns = arrayOf(COLUMN_ID),
                 childColumns = arrayOf(COLUMN_RELATEDTO_ICALOBJECT_ID),
                 onDelete = ForeignKey.CASCADE)],
-                indices = [Index(value = [COLUMN_RELATEDTO_ICALOBJECT_ID, COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, COLUMN_RELATEDTO_RELTYPE], unique = true)])
+                indices = [Index(value = [COLUMN_RELATEDTO_ICALOBJECT_ID, COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, COLUMN_RELATEDTO_RELTYPE, COLUMN_RELATEDTO_TEXT], unique = true)])
 data class Relatedto (
 
         @PrimaryKey(autoGenerate = true)
