@@ -335,12 +335,11 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     private fun deleteItemWithChildren(id: Long) {
 
         when {
-            iCalObjectUpdated.value!!.id == 0L            // do nothing, the item was never saved in DB
-            -> return
+            iCalObjectUpdated.value!!.id == 0L  -> return // do nothing, the item was never saved in DB
             iCalEntity.ICalCollection?.collectionId == 1L -> {        // call the function again to recursively delete all children, then delete the item
                 val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
                 children?.forEach {
-                    deleteItemWithChildren(it.linkedICalObjectId)
+                    it.linkedICalObjectId?.let { linkedICalObjectId -> deleteItemWithChildren(linkedICalObjectId) }
                 }
 
                 viewModelScope.launch(Dispatchers.IO) {
@@ -350,7 +349,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
             else -> {                                                 // call the function again to recursively delete all children, then mark the item as deleted
                 val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
                 children?.forEach {
-                    deleteItemWithChildren(it.linkedICalObjectId)
+                    it.linkedICalObjectId?.let { linkedICalObjectId -> deleteItemWithChildren(linkedICalObjectId) }
                 }
 
                 viewModelScope.launch {
@@ -377,7 +376,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
         val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
         children?.forEach {
-            updateCollectionWithChildren(it.linkedICalObjectId, newParentId)
+            it.linkedICalObjectId?.let { linkedICalObjectId -> updateCollectionWithChildren(linkedICalObjectId, newParentId) }
         }
         deleteItemWithChildren(id)                                         // make sure to delete the old item (or marked as deleted - this is already handled in the function)
         return newParentId

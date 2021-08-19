@@ -77,7 +77,7 @@ data class Relatedto (
         var relatedtoId: Long = 0L,
 
         @ColumnInfo(index = true, name = COLUMN_RELATEDTO_ICALOBJECT_ID)    var icalObjectId: Long = 0L,
-        @ColumnInfo(index = true, name = COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) var linkedICalObjectId: Long = 0L,
+        @ColumnInfo(index = true, name = COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) var linkedICalObjectId: Long? = 0L,
         @ColumnInfo(name = COLUMN_RELATEDTO_TEXT)                var text: String? = null,
         @ColumnInfo(name = COLUMN_RELATEDTO_RELTYPE)        var reltype: String? = null,
         @ColumnInfo(name = COLUMN_RELATEDTO_OTHER)          var other: String? = null
@@ -95,7 +95,7 @@ data class Relatedto (
                         if (values == null)
                                 return null
 
-                        if (values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID) == null || values.getAsLong(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) == null)     // at least the the two linking entries must be set!
+                        if (values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID) == null)     // at least icalobject_id must be given, the related icalobject_id can be added after based on the text-field
                                 return null
 
                         return Relatedto().applyContentValues(values)
