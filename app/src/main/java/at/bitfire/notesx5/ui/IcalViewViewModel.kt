@@ -193,8 +193,12 @@ class IcalViewViewModel(private val icalItemId: Long,
     fun insertRelatedNote(noteText: String) {
         viewModelScope.launch {
             val newNote = ICalObject.createNote(noteText)
+            newNote.collectionId = icalEntity.value?.ICalCollection?.collectionId ?: 1L
             val newNoteId = database.insertICalObject(newNote)
+
             database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newNote.uid))
+
+            database.updateSetDirty(icalItemId, System.currentTimeMillis())
         }
     }
 
@@ -202,10 +206,14 @@ class IcalViewViewModel(private val icalItemId: Long,
 
         viewModelScope.launch {
             val newNote = ICalObject.createNote("Audio Comment")
+            newNote.collectionId = icalEntity.value?.ICalCollection?.collectionId ?: 1L
             val newNoteId = database.insertICalObject(newNote)
+
             database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newNote.uid))
             attachment.icalObjectId = newNoteId
             database.insertAttachment(attachment)
+
+            database.updateSetDirty(icalItemId, System.currentTimeMillis())
         }
 
     }
