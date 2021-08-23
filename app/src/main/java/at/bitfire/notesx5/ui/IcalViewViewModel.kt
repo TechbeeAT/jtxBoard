@@ -38,6 +38,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
     lateinit var urlVisible: LiveData<Boolean>
+    lateinit var locationVisible: LiveData<Boolean>
     lateinit var attendeesVisible: LiveData<Boolean>
     lateinit var organizerVisible: LiveData<Boolean>
     lateinit var contactVisible: LiveData<Boolean>
@@ -142,6 +143,9 @@ class IcalViewViewModel(private val icalItemId: Long,
 
             urlVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.property?.url.isNullOrBlank()      // true if url is NOT null or empty
+            }
+            locationVisible = Transformations.map(icalEntity) { item ->
+                return@map !item?.property?.location.isNullOrBlank()      // true if url is NOT null or empty
             }
             attendeesVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.attendee.isNullOrEmpty()      // true if attendees is NOT null or empty

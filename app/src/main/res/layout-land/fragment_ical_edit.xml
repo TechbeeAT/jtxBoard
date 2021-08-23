@@ -736,6 +736,70 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
+
+            <TextView
+                android:id="@+id/edit_location_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
+                android:text="@string/edit_location_header"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
+                app:drawableStartCompat="@drawable/ic_location"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/edit_summary_edit"
+                app:layout_constraintTop_toBottomOf="@id/edit_url_edit" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_location_edit"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/edit_location_hint"
+                android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
+                app:endIconMode="clear_text"
+                app:helperText="Location related to this entry"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/edit_summary_edit"
+                app:layout_constraintTop_toBottomOf="@+id/edit_location_header"
+                app:startIconDrawable="@drawable/ic_location">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPostalAddress"
+                    android:imeOptions="actionDone"
+                    android:text="@={model.iCalObjectUpdated.location}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <TextView
+                android:id="@+id/edit_contact_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
+                android:text="@string/edit_contact_header"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
+                app:drawableStartCompat="@drawable/ic_contact"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/edit_summary_edit"
+                app:layout_constraintTop_toBottomOf="@id/edit_location_edit" />
+
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/edit_contact_edit"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
@@ -752,7 +816,7 @@
                 app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/edit_summary_edit"
-                app:layout_constraintTop_toBottomOf="@+id/edit_url_edit"
+                app:layout_constraintTop_toBottomOf="@+id/edit_contact_header"
                 app:startIconDrawable="@drawable/ic_contact">
 
 

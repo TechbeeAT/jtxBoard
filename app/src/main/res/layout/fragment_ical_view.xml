@@ -414,6 +414,36 @@
 
 
                 <TextView
+                    android:id="@+id/view_location_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_location_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_location"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_url" />
+
+                <TextView
+                    android:id="@+id/view_location"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:autoLink="all"
+                    android:text="@{model.icalEntity.property.location}"
+                    android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/view_location_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_location_header"
+                    tools:text="Office 1020 Vienna" />
+
+
+                <TextView
                     android:id="@+id/view_attendee_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -426,7 +456,7 @@
                     android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_attendee"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_url" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_location" />
 
 
                 <com.google.android.material.chip.ChipGroup

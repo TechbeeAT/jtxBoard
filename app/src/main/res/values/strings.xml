@@ -113,8 +113,10 @@
     <string name="edit_take_picture_button_text">Take picture</string>
     <string name="edit_relatedto_hint">Related to …</string>
     <string name="edit_url_hint">URL</string>
+    <string name="edit_location_hint">Location</string>
     <string name="edit_fab_save_contentDescription">Save</string>
     <string name="view_url_header">URL</string>
+    <string name="view_location_header">Location</string>
     <string name="view_attendees_header">Attendees</string>
     <string name="view_organizer_header">Organizer</string>
     <string name="view_contact_header">Contact</string>
@@ -149,6 +151,7 @@
     <string name="edit_show_all_switch">Show all</string>
     <string name="edit_contact_header">Contact</string>
     <string name="edit_url_header">URL</string>
+    <string name="edit_location_header">Location</string>
     <string name="edit_due_header">Due</string>
     <string name="edit_started_header">Started</string>
     <string name="edit_completed_header">Completed</string>
