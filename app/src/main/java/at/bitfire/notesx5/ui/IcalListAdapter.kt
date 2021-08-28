@@ -537,10 +537,12 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                     }
 
                 }
-                if (attachment.filename!!.isNotEmpty())
+                if (attachment.filename?.isNotEmpty() == true)
                     attachmentBinding.listItemAttachmentTextview.text = attachment.filename
-                else
+                else if (attachment.fmttype?.isNotEmpty() == true)
                     attachmentBinding.listItemAttachmentTextview.text = attachment.fmttype
+                else
+                    attachmentBinding.listItemAttachmentTextview.text = "<Attachment>"
 
                 if (attachment.filesize == null)
                     attachmentBinding.listItemAttachmentFilesize.visibility = View.GONE

@@ -903,21 +903,25 @@ object NotesX5Contract {
 
     }
 
+
     @Suppress("unused")
     object X5Attachment {
 
-        /** The name of the the table for Attachments that are linked to an ICalObject.
-         * [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]*/
-        const val TABLE_NAME_ATTACHMENT = "attachment"
+        /** The name of the the table for Attachments that are linked to an ICalObject.*/
+        private const val CONTENT_URI_PATH = "attachment"
+
+        /** The content uri of the resources table */
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+
 
         /** The name of the ID column for attachments.
          * This is the unique identifier of an Attachment
          * Type: [Long]*/
-        const val COLUMN_ATTACHMENT_ID = BaseColumns._ID
+        const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
          * Type: [Long] */
-        const val COLUMN_ATTACHMENT_ICALOBJECT_ID = "icalObjectId"
+        const val ICALOBJECT_ID = "icalObjectId"
 
 
 /* The names of all the other columns  */
@@ -926,38 +930,37 @@ object NotesX5Contract {
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
          * Type: [String]
          */
-        const val COLUMN_ATTACHMENT_URI = "uri"
+        const val URI = "uri"
 
         /**
          * Purpose:  To specify the encoding of the attachment.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
          * Type: [String]
          */
-        const val COLUMN_ATTACHMENT_ENCODING = "encoding"
+        const val ENCODING = "encoding"
 
         /**
          * Purpose:  To specify the value of the attachment (binary).
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
          * Type: [String]
          */
-        const val COLUMN_ATTACHMENT_VALUE = "value"
+        const val VALUE = "value"
 
         /**
          * Purpose:  To specify the fmttype of the attachment.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
          * Type: [String]
          */
-        const val COLUMN_ATTACHMENT_FMTTYPE = "fmttype"
+        const val FMTTYPE = "fmttype"
 
         /**
          * Purpose:  To specify other properties for the attachment.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
          * Type: [String]
          */
-        const val COLUMN_ATTACHMENT_OTHER = "other"
+        const val OTHER = "other"
 
     }
-
 }
 
 

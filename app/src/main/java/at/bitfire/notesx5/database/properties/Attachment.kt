@@ -10,6 +10,7 @@ package at.bitfire.notesx5.database.properties
 
 import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
@@ -181,6 +182,13 @@ data class Attachment (
         values.getAsString(COLUMN_ATTACHMENT_EXTENSION)?.let { extension -> this.extension = extension }
         values.getAsLong(COLUMN_ATTACHMENT_FILESIZE)?.let { filesize -> this.filesize = filesize }
 
+        try {
+            val uri = Uri.parse(uri)
+            if (filename.isNullOrBlank())
+                filename = uri.lastPathSegment
+        } catch (e: NullPointerException) {
+            Log.e("Attachment", "$uri is not a valid Uri. \n $e")
+        }
 
         // TODO: make sure that the additional fields are filled out (filename, filesize and extension)
 
