@@ -315,10 +315,11 @@ class IcalEditFragment : Fragment() {
             binding.editProgressPercent.text = "${it.percent?:0} %"
 
             // Set the default value of the priority Chip
-            if (it.priority != null && it.priority in 0..9)   // if unsupported don't show the classification
-                binding.editPriorityChip.text = priorityItems[it.priority!!]  // if supported show the priority according to the String Array
-            else
-                binding.editPriorityChip.text = it.priority.toString()
+            when (it.priority) {
+                null -> binding.editPriorityChip.text = priorityItems[0]
+                in 0..9 -> binding.editPriorityChip.text = priorityItems[it.priority!!]  // if supported show the priority according to the String Array
+                else -> binding.editPriorityChip.text = it.priority.toString()
+            }
 
             // Set the default value of the Status Chip
             when (it.component) {
@@ -1416,6 +1417,10 @@ class IcalEditFragment : Fragment() {
             icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
 
             addAttachmentView(newAttachment)      // add the new attachment
+
+            //TODO: grantUriPermission could enable DAVx5 to access the files, further investigation is needed!
+            //requireContext().grantUriPermission("at.bitfire.ical4android", photoUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            //requireContext().grantUriPermission("at.bitfire.ical4android", photoUri, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
 
             // Scanning the file makes it available in the gallery (currently not working) TODO
             //MediaScannerConnection.scanFile(requireContext(), arrayOf(photoUri.toString()), arrayOf(mimeType), null)
