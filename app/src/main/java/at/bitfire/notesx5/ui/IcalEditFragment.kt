@@ -381,8 +381,16 @@ class IcalEditFragment : Fragment() {
                 binding.editDueTimeEdittext.text?.clear()
                 binding.editDuetimezoneSpinner.setSelection(0)
 
+                // dtstart and due MUST both be either both ALLDAY or both with times
+                if(icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone != "ALLDAY")
+                    icalEditViewModel.addStartedTimeChecked.postValue(false)
+
             } else {
                 icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = ""
+
+                // dtstart and due MUST both be either both ALLDAY or both with times
+                if(icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone == "ALLDAY")
+                    icalEditViewModel.addStartedTimeChecked.postValue(true)
             }
 
             icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
@@ -430,8 +438,16 @@ class IcalEditFragment : Fragment() {
                 binding.editStartedTimeEdittext.text?.clear()
                 binding.editStartedtimezoneSpinner.setSelection(0)
 
+                // dtstart and due MUST both be either both ALLDAY or both with times
+                if(icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone != "ALLDAY")
+                    icalEditViewModel.addDueTimeChecked.postValue(false)
+
             } else {
                 icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ""
+
+                // dtstart and due MUST both be either both ALLDAY or both with times
+                if(icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone == "ALLDAY")
+                    icalEditViewModel.addDueTimeChecked.postValue(true)
             }
 
             icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change

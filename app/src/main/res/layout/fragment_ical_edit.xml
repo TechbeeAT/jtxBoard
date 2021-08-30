@@ -756,12 +756,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/edit_completedtimezone_spinner"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/edit_completedtimezone_spinner"
                     app:srcCompat="@drawable/ic_timezone"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"
+                    tools:visibility="visible" />
 
 
                 <Spinner
@@ -772,11 +773,12 @@
                     android:layout_marginEnd="8dp"
                     android:entries="@{model.possibleTimezones}"
                     android:spinnerMode="dialog"
-                    android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/edit_completed_addtime_switch"
                     app:layout_constraintEnd_toStartOf="@id/edit_completed_addtime_switch"
                     app:layout_constraintStart_toEndOf="@id/edit_completedtimezone_icon"
-                    app:layout_constraintTop_toTopOf="@+id/edit_completed_addtime_switch" />
+                    app:layout_constraintTop_toTopOf="@+id/edit_completed_addtime_switch"
+                    tools:visibility="visible" />
 
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
@@ -785,12 +787,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:checked="@={model.addCompletedTimeChecked}"
+                    android:checked="true"
+                    android:clickable="false"
                     android:text="@string/edit_add_time_switch"
-                    android:visibility="@{model.completeddateVisible ? View.VISIBLE : View.GONE}"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/edit_completed_date"
-                    app:switchPadding="8dp" />
+                    app:switchPadding="8dp"
+                    tools:visibility="visible"/>
 
 
                 <TextView
