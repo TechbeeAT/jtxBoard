@@ -60,7 +60,7 @@ SELECTs (global selects without parameter)
     fun getAllOrganizers(): LiveData<List<String>>
 
     /**
-     * Retrieve an list of all DISTINCT Collections ([Collection]) as a LiveData-List
+     * Retrieve an list of all Collections ([Collection]) as a LiveData-List
      *
      * @return a list of [Collection] as LiveData<List<String>>
      */
