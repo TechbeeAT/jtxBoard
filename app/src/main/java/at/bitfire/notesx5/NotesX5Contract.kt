@@ -933,18 +933,11 @@ object NotesX5Contract {
         const val URI = "uri"
 
         /**
-         * Purpose:  To specify the encoding of the attachment.
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
-         * Type: [String]
-         */
-        const val ENCODING = "encoding"
-
-        /**
          * Purpose:  To specify the value of the attachment (binary).
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
          * Type: [String]
          */
-        const val VALUE = "value"
+        const val BINARY = "binary"
 
         /**
          * Purpose:  To specify the fmttype of the attachment.
@@ -962,8 +955,4 @@ object NotesX5Contract {
 
     }
 }
-
-
-
-
 

@@ -9,16 +9,19 @@
 package at.bitfire.notesx5
 
 import android.accounts.Account
-import android.content.ContentProvider
-import android.content.ContentUris
-import android.content.ContentValues
-import android.content.UriMatcher
+import android.content.*
 import android.database.Cursor
 import android.net.Uri
+import android.os.Environment
+import android.util.Base64
 import android.util.Log
+import androidx.core.content.FileProvider
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.properties.*
+import java.io.File
+import java.io.IOException
+import android.webkit.MimeTypeMap
 
 
 private const val CODE_ICALOBJECTS_DIR = 1
@@ -157,6 +160,9 @@ class SyncContentProvider : ContentProvider() {
 
         database.deleteRAW(deleteQuery)
         context!!.contentResolver.notifyChange(uri, null)
+
+        Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
+
         return count
 
     }
@@ -208,6 +214,11 @@ class SyncContentProvider : ContentProvider() {
 
         context!!.contentResolver.notifyChange(uri, null)
         Log.println(Log.INFO, "newContentUri", ContentUris.withAppendedId(uri, id).toString())
+
+        if(sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR)
+            storeBinaryAttachmentInDir(id)
+
+
         return ContentUris.withAppendedId(uri, id)
     }
 
@@ -282,7 +293,20 @@ class SyncContentProvider : ContentProvider() {
         Log.println(Log.INFO, "SyncContentProvider", "Query prepared: $queryString")
         Log.println(Log.INFO, "SyncContentProvider", "Query args prepared: ${args.joinToString(separator = ", ")}")
 
-        return database.getCursor(query)
+        val result = database.getCursor(query)
+
+        // if the request was for an Attachment, then allow the calling application to access the file by grantUriPermission
+        if(sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR || CODE_ATTACHMENT_DIR == CODE_ATTACHMENT_ITEM) {
+            while(result?.moveToNext() == true) {
+                val attachmentUriString = result.getString(result.getColumnIndex(COLUMN_ATTACHMENT_URI))
+                val attachmentUri = Uri.parse(attachmentUriString)
+
+                //TODO: grantUriPermission could enable DAVx5 to access the files, further investigation is needed!
+                context!!.grantUriPermission("at.bitfire.davdroid", attachmentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+        }
+
+        return result
     }
 
     override fun update(uri: Uri, values: ContentValues?, selection: String?,
@@ -412,6 +436,42 @@ class SyncContentProvider : ContentProvider() {
             throw java.lang.IllegalArgumentException("Local collections cannot be used. Uri: ($uri)")
 
         return Account(accountName, accountType)
+    }
+
+    private fun storeBinaryAttachmentInDir(id: Long) {
+
+        val attachment = database.getAttachmentById(id)
+        if(attachment?.binary == null)
+            return
+
+        val bytearray = Base64.decode(attachment.binary, Base64.DEFAULT)
+        val fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(attachment.fmttype)
+
+
+        try {
+            val storageDir = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            val file = File.createTempFile("notesx5_", ".$fileExtension", storageDir)
+            file.writeBytes(bytearray)
+            //Log.d("externalFilesPath", file.absolutePath)
+
+            val attachmentUri = FileProvider.getUriForFile(context!!, AUTHORITY_FILEPROVIDER, file)
+            val contentResolver = context!!.contentResolver
+
+            if(attachment.fmttype == null)
+                attachment.fmttype = contentResolver.getType(attachmentUri)
+
+            attachment.binary = null
+            attachment.uri = attachmentUri.toString()
+            attachment.extension = ".$fileExtension"
+            attachment.filename = file.name
+            attachment.filesize = file.length()
+
+            database.updateAttachment(attachment)
+
+        } catch (e: IOException) {
+            Log.e("SyncContentProvider", "Failed to access storage\n$e")
+        }
+
     }
 }
 

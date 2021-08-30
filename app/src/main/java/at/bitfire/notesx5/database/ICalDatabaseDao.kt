@@ -49,6 +49,16 @@ SELECTs (global selects without parameter)
     @Query("SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT")
     suspend fun getAllAttachmentUris(): List<String>
 
+    /**
+     * Retrieve an Attachment with a specific [id]
+     *
+     * @return the [Attachment] with this [id]
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ID = :id")
+    fun getAttachmentById(id: Long): Attachment?
+
+
 
     /**
      * Retrieve an list of all DISTINCT Organizer caladdresses ([Organizer.caladdress]) as a LiveData-List
@@ -337,6 +347,9 @@ DELETEs by Object
 
     @Update
     suspend fun update(icalObject: ICalObject)
+
+    @Update
+    fun updateAttachment(attachment: Attachment)
 
     @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_PERCENT = :progress, $COLUMN_STATUS = :status, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")

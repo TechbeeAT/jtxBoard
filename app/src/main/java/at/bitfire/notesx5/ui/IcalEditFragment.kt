@@ -254,7 +254,7 @@ class IcalEditFragment : Fragment() {
                     icalEditViewModel.delete()
                     Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG).show()
 
-                    scheduleCleanupJob()
+                    context?.let { context -> Attachment.scheduleCleanupJob(context) }
 
                     this.findNavController().navigate(direction)
                 }
@@ -1434,10 +1434,6 @@ class IcalEditFragment : Fragment() {
 
             addAttachmentView(newAttachment)      // add the new attachment
 
-            //TODO: grantUriPermission could enable DAVx5 to access the files, further investigation is needed!
-            //requireContext().grantUriPermission("at.bitfire.ical4android", photoUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            //requireContext().grantUriPermission("at.bitfire.ical4android", photoUri, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
-
             // Scanning the file makes it available in the gallery (currently not working) TODO
             //MediaScannerConnection.scanFile(requireContext(), arrayOf(photoUri.toString()), arrayOf(mimeType), null)
 
@@ -1448,33 +1444,4 @@ class IcalEditFragment : Fragment() {
     }
 
 
-    private fun scheduleCleanupJob() {
-
-        //TODO: This constraint is currently not used as it didn't work in the test, this should be further investigated!
-        // set constraints for the scheduler
-        val constraints = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Constraints.Builder()
-                .setRequiresDeviceIdle(true)
-                .setRequiresBatteryNotLow(true)
-                .build()
-        } else {
-            Constraints.Builder()
-                .setRequiresBatteryNotLow(true)
-                .build()
-        }
-
-        //create the cleanup job to make sure that the files are getting deleted as well when the device is idle
-        val fileCleanupWorkRequest: OneTimeWorkRequest =
-            OneTimeWorkRequestBuilder<FileCleanupJob>()
-                // Additional configuration
-                .setConstraints(constraints)
-                .build()
-
-        // enqueue the fileCleanupWorkRequest
-        WorkManager
-            .getInstance(requireContext())
-            .enqueueUniqueWork("fileCleanupWorkRequest", ExistingWorkPolicy.KEEP, fileCleanupWorkRequest)
-
-        Log.d("IcalEditFragment", "enqueued fileCleanupWorkRequest")
-    }
 }
