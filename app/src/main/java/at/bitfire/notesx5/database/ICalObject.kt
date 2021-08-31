@@ -379,11 +379,11 @@ data class ICalObject(
     companion object Factory {
 
 
-        fun createJournal(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.JOURNAL.name, dtstart = System.currentTimeMillis(), status = StatusJournal.FINAL.name)
-        fun createNote(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.name)
-        fun createNote(summary: String) = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.name, summary = summary)
-        fun createTodo() = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY")
-        fun createTask(summary: String) = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, summary = summary, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY")
+        fun createJournal(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.JOURNAL.name, dtstart = System.currentTimeMillis(), status = StatusJournal.FINAL.name, dirty = true)
+        fun createNote(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.name, dirty = true)
+        fun createNote(summary: String) = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.name, summary = summary, dirty = true)
+        fun createTodo() = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY", dirty = true)
+        fun createTask(summary: String) = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, summary = summary, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY", dirty = true)
 
 
         /**
