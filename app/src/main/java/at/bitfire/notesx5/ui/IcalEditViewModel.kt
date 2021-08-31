@@ -22,9 +22,11 @@ import java.text.DateFormat
 import java.util.*
 
 
-class IcalEditViewModel(val iCalEntity: ICalEntity,
-                        val database: ICalDatabaseDao,
-                        application: Application) : AndroidViewModel(application) {
+class IcalEditViewModel(
+    val iCalEntity: ICalEntity,
+    val database: ICalDatabaseDao,
+    application: Application
+) : AndroidViewModel(application) {
 
     companion object {
         const val TAB_GENERAL = 0
@@ -43,11 +45,15 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
 
-    var returnVJournalItemId: MutableLiveData<Long> = MutableLiveData<Long>().apply { postValue(0L) }
-    var savingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
-    var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
+    var returnVJournalItemId: MutableLiveData<Long> =
+        MutableLiveData<Long>().apply { postValue(0L) }
+    var savingClicked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>().apply { postValue(false) }
+    var deleteClicked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>().apply { postValue(false) }
 
-    var iCalObjectUpdated: MutableLiveData<ICalObject> = MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property)}
+    var iCalObjectUpdated: MutableLiveData<ICalObject> =
+        MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property) }
 
     var categoryUpdated: MutableList<Category> = mutableListOf(Category())
     var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
@@ -64,7 +70,8 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var subtaskDeleted: MutableList<ICalObject> = mutableListOf()
 
 
-    var possibleTimezones: MutableList<String> = mutableListOf("").also { it.addAll(TimeZone.getAvailableIDs().toList()) }
+    var possibleTimezones: MutableList<String> =
+        mutableListOf("").also { it.addAll(TimeZone.getAvailableIDs().toList()) }
 
     var collectionVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var summaryVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
@@ -95,53 +102,56 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
 
     var duedateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if(it.due != null)
+        if (it.due != null)
             return@map DateFormat.getDateInstance().format(it.due)
         else
             return@map null
     }
 
     var duetimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if(it.due != null)
+        if (it.due != null)
             return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(it.due)
         else
             return@map null
     }
 
     var completeddateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if(it.completed != null)
+        if (it.completed != null)
             return@map DateFormat.getDateInstance().format(it.completed)
         else
             return@map null
     }
 
     var completedtimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if(it.completed != null)
+        if (it.completed != null)
             return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(it.completed)
         else
             return@map null
     }
 
     var starteddateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if(it.dtstart != null)
+        if (it.dtstart != null)
             return@map DateFormat.getDateInstance().format(it.dtstart)
         else
             return@map null
     }
 
     var startedtimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if(it.dtstart != null)
+        if (it.dtstart != null)
             return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(it.dtstart)
         else
             return@map null
     }
 
 
-
-    var allDayChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.dtstartTimezone == "ALLDAY")
-    var addDueTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
-    var addCompletedTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.completedTimezone != "ALLDAY")
-    var addStartedTimeChecked: MutableLiveData<Boolean> = MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
+    var allDayChecked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(iCalEntity.property.dtstartTimezone == "ALLDAY")
+    var addDueTimeChecked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
+    var addCompletedTimeChecked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.completedTimezone != "ALLDAY")
+    var addStartedTimeChecked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
 
 
     val urlError = MutableLiveData<String>()
@@ -150,17 +160,16 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     var selectedTab = TAB_GENERAL
 
 
-
     init {
 
         updateVisibility()
 
         viewModelScope.launch {
 
-            relatedSubtasks =  database.getRelatedTodos(iCalEntity.property.id)
+            relatedSubtasks = database.getRelatedTodos(iCalEntity.property.id)
 
             allCategories = database.getAllCategories()
-            allCollections = when(iCalEntity.property.component) {
+            allCollections = when (iCalEntity.property.component) {
                 Component.VTODO.name -> database.getAllVTODOCollections()
                 Component.VJOURNAL.name -> database.getAllVJOURNALCollections()
                 else -> database.getAllCollections() // should not happen!
@@ -210,7 +219,6 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     }
 
 
-
     fun update() {
         var insertedOrUpdatedItemId: Long
 
@@ -220,7 +228,7 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         iCalObjectUpdated.value!!.dtstamp = System.currentTimeMillis()
         iCalObjectUpdated.value!!.sequence++
 
-        if(iCalObjectUpdated.value!!.collectionId != 1L)
+        if (iCalObjectUpdated.value!!.collectionId != 1L)
             iCalObjectUpdated.value!!.dirty = true
 
         commentUpdated.removeAll(commentDeleted)    // make sure to not accidentially upsert a comment that was deleted
@@ -270,11 +278,13 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
                 database.insertCategory(newCategory)
             }
             commentUpdated.forEach { newComment ->
-                newComment.icalObjectId = insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
+                newComment.icalObjectId =
+                    insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
                 database.insertComment(newComment)
             }
             attachmentUpdated.forEach { newAttachment ->
-                newAttachment.icalObjectId = insertedOrUpdatedItemId                    //Update the foreign key for newly added attachments
+                newAttachment.icalObjectId =
+                    insertedOrUpdatedItemId                    //Update the foreign key for newly added attachments
                 database.insertAttachment(newAttachment)
             }
             attendeeUpdated.forEach { newAttendee ->
@@ -291,8 +301,15 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
 
 
                 // Only insert if the relation doesn't exist already, otherwise there's nothing to do
-                if(iCalEntity.relatedto?.find { it.icalObjectId == insertedOrUpdatedItemId && it.linkedICalObjectId == subtask.id} == null )
-                    database.insertRelatedto(Relatedto(icalObjectId = insertedOrUpdatedItemId, linkedICalObjectId = subtask.id, reltype = "CHILD", text = subtask.uid))
+                if (iCalEntity.relatedto?.find { it.icalObjectId == insertedOrUpdatedItemId && it.linkedICalObjectId == subtask.id } == null)
+                    database.insertRelatedto(
+                        Relatedto(
+                            icalObjectId = insertedOrUpdatedItemId,
+                            linkedICalObjectId = subtask.id,
+                            reltype = "CHILD",
+                            text = subtask.uid
+                        )
+                    )
 
             }
             returnVJournalItemId.value = insertedOrUpdatedItemId
@@ -314,7 +331,6 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
                 iCalObjectUpdated.value!!.id = newId
                 database.update(iCalObjectUpdated.value!!)
                 return newId
-
                 // TODO mark the main element as deleted or delete it, make sure all children are deleted/marked as deleted
 
             }
@@ -337,11 +353,14 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
     private fun deleteItemWithChildren(id: Long) {
 
         when {
-            iCalObjectUpdated.value!!.id == 0L  -> return // do nothing, the item was never saved in DB
+            iCalObjectUpdated.value!!.id == 0L -> return // do nothing, the item was never saved in DB
             iCalEntity.ICalCollection?.collectionId == 1L -> {        // call the function again to recursively delete all children, then delete the item
-                val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
+                val children =
+                    allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
                 children?.forEach {
-                    it.linkedICalObjectId?.let { linkedICalObjectId -> deleteItemWithChildren(linkedICalObjectId) }
+                    it.linkedICalObjectId?.let { linkedICalObjectId ->
+                        deleteItemWithChildren(linkedICalObjectId)
+                    }
                 }
 
                 viewModelScope.launch(Dispatchers.IO) {
@@ -349,9 +368,12 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
                 }
             }
             else -> {                                                 // call the function again to recursively delete all children, then mark the item as deleted
-                val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
+                val children =
+                    allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
                 children?.forEach {
-                    it.linkedICalObjectId?.let { linkedICalObjectId -> deleteItemWithChildren(linkedICalObjectId) }
+                    it.linkedICalObjectId?.let { linkedICalObjectId ->
+                        deleteItemWithChildren(linkedICalObjectId)
+                    }
                 }
 
                 viewModelScope.launch {
@@ -376,9 +398,15 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
         val newParentId = moveItemToNewCollection(id, parentId)
 
         // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
-        val children = allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
+        val children =
+            allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
         children?.forEach {
-            it.linkedICalObjectId?.let { linkedICalObjectId -> updateCollectionWithChildren(linkedICalObjectId, newParentId) }
+            it.linkedICalObjectId?.let { linkedICalObjectId ->
+                updateCollectionWithChildren(
+                    linkedICalObjectId,
+                    newParentId
+                )
+            }
         }
         deleteItemWithChildren(id)                                         // make sure to delete the old item (or marked as deleted - this is already handled in the function)
         return newParentId
@@ -394,69 +422,75 @@ class IcalEditViewModel(val iCalEntity: ICalEntity,
      * @return the new id of the item that was inserted (that becomes the newParentId)
      *
      */
-    private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?): Long = withContext(Dispatchers.IO) {
-        val item = database.getSync(id)
-        if (item != null) {
-            item.property.id = 0L
-            item.property.collectionId = iCalObjectUpdated.value!!.collectionId
-            item.property.sequence++
-            item.property.dirty = true
-            item.property.lastModified = System.currentTimeMillis()
-            val newId = database.insertICalObject(item.property)
+    private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?): Long =
+        withContext(Dispatchers.IO) {
+            val item = database.getSync(id)
+            if (item != null) {
+                item.property.id = 0L
+                item.property.collectionId = iCalObjectUpdated.value!!.collectionId
+                item.property.sequence = 0
+                item.property.dirty = true
+                item.property.lastModified = System.currentTimeMillis()
+                item.property.created = System.currentTimeMillis()
+                item.property.dtstamp = System.currentTimeMillis()
+                item.property.uid = ICalObject.generateNewUID()
+                val newId = database.insertICalObject(item.property)
 
-            item.attendee?.forEach {
-                it.icalObjectId = newId
-                database.insertAttendee(it)
+                item.attendee?.forEach {
+                    it.icalObjectId = newId
+                    database.insertAttendee(it)
+                }
+
+                item.category?.forEach {
+                    it.icalObjectId = newId
+                    database.insertCategory(it)
+                }
+
+                item.comment?.forEach {
+                    it.icalObjectId = newId
+                    database.insertComment(it)
+                }
+
+                if (item.organizer != null) {
+                    item.organizer?.icalObjectId = newId
+                    database.insertOrganizer(item.organizer!!)
+                }
+
+                item.attachment?.forEach {
+                    it.icalObjectId = newId
+                    database.insertAttachment(it)
+                }
+
+                // relations need to be rebuilt from the child to the parent
+                if (newParentId != null) {
+                    val rel = Relatedto()
+                    rel.icalObjectId = newParentId
+                    rel.linkedICalObjectId = newId
+                    rel.reltype = Reltype.CHILD.name
+                    rel.text = item.property.uid
+                    database.insertRelatedto(rel)
+                }
+
+
+                return@withContext newId
             }
-
-            item.category?.forEach {
-                it.icalObjectId = newId
-                database.insertCategory(it)
-            }
-
-            item.comment?.forEach {
-                it.icalObjectId = newId
-                database.insertComment(it)
-            }
-
-            if (item.organizer != null) {
-                item.organizer?.icalObjectId = newId
-                database.insertOrganizer(item.organizer!!)
-            }
-
-            item.attachment?.forEach {
-                it.icalObjectId = newId
-                database.insertAttachment(it)
-            }
-
-            // relations need to be rebuild from the child to the parent
-            if(newParentId != null) {
-                val rel = Relatedto()
-                rel.icalObjectId = newParentId
-                rel.linkedICalObjectId = newId
-                rel.reltype = Reltype.CHILD.name
-                // rel.text =     // TODO
-                database.insertRelatedto(rel)
-            }
-
-
-            return@withContext newId
+            return@withContext 0L
         }
-        return@withContext 0L
-    }
+
 
     fun clearUrlError(s: Editable) {
         urlError.value = null
     }
-
-    /*
-    fun clearAttendeeError(s: Editable) {
-        attendeesError.value = null
-    }
-
-     */
-
-
-
 }
+
+/*
+fun clearAttendeeError(s: Editable) {
+    attendeesError.value = null
+}
+
+ */
+
+
+
+
 

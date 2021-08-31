@@ -344,7 +344,7 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_DURATION) var duration: String? = null, //VTODO only!
 
 
-    @ColumnInfo(name = COLUMN_UID) var uid: String = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.notesx5",                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
+    @ColumnInfo(name = COLUMN_UID) var uid: String = generateNewUID(),                              //unique identifier, see https://tools.ietf.org/html/rfc5545#section-3.8.4.7
 
     /*
      The following properties specify change management information in  calendar components.
@@ -385,6 +385,7 @@ data class ICalObject(
         fun createTodo() = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY", dirty = true)
         fun createTask(summary: String) = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, summary = summary, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY", dirty = true)
 
+        fun generateNewUID() = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.notesx5"
 
         /**
          * Create a new [ICalObject] from the specified [ContentValues].

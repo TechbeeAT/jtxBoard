@@ -17,6 +17,8 @@
     <style name="AppTheme.Base" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
     <style name="AppTheme" parent="AppTheme.Base">
 
+        <item name="fontFamily">@font/montserrat_alternates</item>
+
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorPrimaryVariant">@color/primaryLightColor</item>
