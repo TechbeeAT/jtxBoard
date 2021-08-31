@@ -9,7 +9,7 @@
 <resources>
 
     <!-- App title and fragment titles -->
-    <string name="app_name">NOTESx⁵</string>
+    <string name="app_name">jtxBoard</string>
 
     <!-- Possible audio formats for settings -->
     <array name="settings_audio_formats">
@@ -172,6 +172,8 @@
     <string name="filter_status">Status</string>
     <string name="filter_classification">Classification</string>
     <string name="filter_category">Category</string>
+    <string name="filter_fab_apply_filter_contentdescription">Apply filter</string>
+
     <string name="view_feedback_linked_notes">Feedback / Linked Notes</string>
     <string name="view_add_note">Add note</string>
     <string name="view_add_audio_note">Add audio</string>
