@@ -9,9 +9,7 @@ import androidx.fragment.app.Fragment
 import at.bitfire.notesx5.BuildConfig
 import at.bitfire.notesx5.R
 import at.bitfire.notesx5.databinding.FragmentAboutBinding
-import at.bitfire.notesx5.databinding.FragmentAboutNotesx5Binding
 import com.google.android.material.tabs.TabLayout
-import com.mikepenz.aboutlibraries.LibsBuilder
 import java.text.SimpleDateFormat
 
 class AboutFragment : Fragment() {
