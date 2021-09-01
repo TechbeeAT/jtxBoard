@@ -45,9 +45,9 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:$version_gradle"
+        classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:8.9.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5"
-        classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:8.9.1"
 
 
         // dokka documentation

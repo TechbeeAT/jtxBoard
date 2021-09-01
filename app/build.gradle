@@ -7,6 +7,7 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
