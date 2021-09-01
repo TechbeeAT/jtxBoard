@@ -49,9 +49,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
+import java.io.*
 
 
 class IcalViewFragment : Fragment() {
@@ -171,14 +169,14 @@ class IcalViewFragment : Fragment() {
                     binding.viewPriorityChip.text = priorityArray[icalViewViewModel.icalEntity.value!!.property.priority!!]
 
                 binding.viewCommentsLinearlayout.removeAllViews()
-                icalViewViewModel.icalEntity.value!!.comment?.forEach { comment ->
+                icalViewViewModel.icalEntity.value!!.comments?.forEach { comment ->
                     val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
                     commentBinding.viewCommentTextview.text = comment.text
                     binding.viewCommentsLinearlayout.addView(commentBinding.root)
                 }
 
                 binding.viewAttachmentsLinearlayout.removeAllViews()
-                icalViewViewModel.icalEntity.value!!.attachment?.forEach { attachment ->
+                icalViewViewModel.icalEntity.value!!.attachments?.forEach { attachment ->
                     val attachmentBinding = FragmentIcalViewAttachmentBinding.inflate(inflater, container, false)
 
                     //open the attachment on click
@@ -714,18 +712,21 @@ class IcalViewFragment : Fragment() {
                 //shareText += icalViewViewModel.icalEntity.value!!.getICalString()
 
                 val categories: MutableList<String> = mutableListOf()
-                icalViewViewModel.icalEntity.value!!.category?.forEach { categories.add(it.text) }
+                icalViewViewModel.icalEntity.value!!.categories?.forEach { categories.add(it.text) }
                 shareText += "Categories/Labels: ${categories.joinToString(separator=", ")}"
 
                 val attendees: MutableList<String> = mutableListOf()
-                icalViewViewModel.icalEntity.value!!.attendee?.forEach { attendees.add(it.caladdress) }
+                icalViewViewModel.icalEntity.value!!.attendees?.forEach { attendees.add(it.caladdress) }
 
                 // prepare file attachment, the file is stored in the externalCacheDir and then provided through a FileProvider
                 var uri: Uri? = null
                 try {
                     val icsFileName = "${requireContext().externalCacheDir}/ics_file.ics"
                     val icsFile = File(icsFileName).apply {
-                        writeText(icalViewViewModel.icalEntity.value!!.getICalString())
+                        val os = ByteArrayOutputStream()
+                        val ical = icalViewViewModel.icalEntity.value!!.getIcalFormat(requireContext())
+                        icalViewViewModel.icalEntity.value!!.writeIcalOutputStream(ical, os)
+                        this.writeBytes(os.toByteArray())
                         createNewFile()
                     }
                     uri = getUriForFile(requireContext(),
@@ -750,7 +751,7 @@ class IcalViewFragment : Fragment() {
             }
             R.id.menu_view_share_ics -> {
 
-                val shareText = icalViewViewModel.icalEntity.value!!.getICalString()
+                val shareText = icalViewViewModel.icalEntity.value!!.getIcalFormat(requireContext()).toString()
 
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND
@@ -778,13 +779,13 @@ class IcalViewFragment : Fragment() {
                 icalEntityCopy.property.duration = null
                 icalEntityCopy.property.priority = null
 
-                icalEntityCopy.attachment?.forEach { it.attachmentId = 0L }
-                icalEntityCopy.attendee?.forEach { it.attendeeId = 0L }
-                icalEntityCopy.category?.forEach { it.categoryId = 0L }
-                icalEntityCopy.comment?.forEach { it.commentId = 0L }
+                icalEntityCopy.attachments?.forEach { it.attachmentId = 0L }
+                icalEntityCopy.attendees?.forEach { it.attendeeId = 0L }
+                icalEntityCopy.categories?.forEach { it.categoryId = 0L }
+                icalEntityCopy.comments?.forEach { it.commentId = 0L }
                 icalEntityCopy.organizer?.organizerId = 0L
                 icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
-                icalEntityCopy.resource?.forEach { it.resourceId = 0L }
+                icalEntityCopy.resources?.forEach { it.resourceId = 0L }
 
                 this.findNavController().navigate(
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
@@ -807,13 +808,13 @@ class IcalViewFragment : Fragment() {
                 icalEntityCopy.property.duration = null
                 icalEntityCopy.property.priority = null
 
-                icalEntityCopy.attachment?.forEach { it.attachmentId = 0L }
-                icalEntityCopy.attendee?.forEach { it.attendeeId = 0L }
-                icalEntityCopy.category?.forEach { it.categoryId = 0L }
-                icalEntityCopy.comment?.forEach { it.commentId = 0L }
+                icalEntityCopy.attachments?.forEach { it.attachmentId = 0L }
+                icalEntityCopy.attendees?.forEach { it.attendeeId = 0L }
+                icalEntityCopy.categories?.forEach { it.categoryId = 0L }
+                icalEntityCopy.comments?.forEach { it.commentId = 0L }
                 icalEntityCopy.organizer?.organizerId = 0L
                 icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
-                icalEntityCopy.resource?.forEach { it.resourceId = 0L }
+                icalEntityCopy.resources?.forEach { it.resourceId = 0L }
 
                 this.findNavController().navigate(
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
@@ -826,13 +827,13 @@ class IcalViewFragment : Fragment() {
                 icalEntityCopy.property.module = Module.TODO.name
                 icalEntityCopy.property.dtstamp = System.currentTimeMillis()
 
-                icalEntityCopy.attachment?.forEach { it.attachmentId = 0L }
-                icalEntityCopy.attendee?.forEach { it.attendeeId = 0L }
-                icalEntityCopy.category?.forEach { it.categoryId = 0L }
-                icalEntityCopy.comment?.forEach { it.commentId = 0L }
+                icalEntityCopy.attachments?.forEach { it.attachmentId = 0L }
+                icalEntityCopy.attendees?.forEach { it.attendeeId = 0L }
+                icalEntityCopy.categories?.forEach { it.categoryId = 0L }
+                icalEntityCopy.comments?.forEach { it.commentId = 0L }
                 icalEntityCopy.organizer?.organizerId = 0L
                 icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
-                icalEntityCopy.resource?.forEach { it.resourceId = 0L }
+                icalEntityCopy.resources?.forEach { it.resourceId = 0L }
 
                 this.findNavController().navigate(
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
@@ -844,7 +845,11 @@ class IcalViewFragment : Fragment() {
 
 
     private fun startRecording() {
-        recorder = MediaRecorder().apply {
+        recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            MediaRecorder(requireContext())
+        else
+            MediaRecorder()
+        recorder?.apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(audioOutputFormat)
             setAudioEncoder(audioEncoder)

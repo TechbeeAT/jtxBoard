@@ -436,17 +436,17 @@ class IcalEditViewModel(
                 item.property.uid = ICalObject.generateNewUID()
                 val newId = database.insertICalObject(item.property)
 
-                item.attendee?.forEach {
+                item.attendees?.forEach {
                     it.icalObjectId = newId
                     database.insertAttendee(it)
                 }
 
-                item.category?.forEach {
+                item.categories?.forEach {
                     it.icalObjectId = newId
                     database.insertCategory(it)
                 }
 
-                item.comment?.forEach {
+                item.comments?.forEach {
                     it.icalObjectId = newId
                     database.insertComment(it)
                 }
@@ -456,7 +456,7 @@ class IcalEditViewModel(
                     database.insertOrganizer(item.organizer!!)
                 }
 
-                item.attachment?.forEach {
+                item.attachments?.forEach {
                     it.icalObjectId = newId
                     database.insertAttachment(it)
                 }

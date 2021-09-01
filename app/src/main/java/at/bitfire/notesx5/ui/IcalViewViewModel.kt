@@ -74,11 +74,11 @@ class IcalViewViewModel(private val icalItemId: Long,
 
 
             categories = Transformations.map(icalEntity) {
-                it?.category
+                it?.categories
             }
 
             attendees = Transformations.map(icalEntity) {
-                it?.attendee
+                it?.attendees
             }
 
 
@@ -148,7 +148,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map !item?.property?.location.isNullOrBlank()      // true if url is NOT null or empty
             }
             attendeesVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.attendee.isNullOrEmpty()      // true if attendees is NOT null or empty
+                return@map !item?.attendees.isNullOrEmpty()      // true if attendees is NOT null or empty
             }
             organizerVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.organizer != null      // true if organizer is NOT null or empty
@@ -164,10 +164,10 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map subtasks?.isNotEmpty()      // true if relatedto is NOT null or empty
             }
             commentsVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.comment.isNullOrEmpty()      // true if comment is NOT null or empty
+                return@map !item?.comments.isNullOrEmpty()      // true if comment is NOT null or empty
             }
             attachmentsVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.attachment.isNullOrEmpty()      // true if attachment is NOT null or empty
+                return@map !item?.attachments.isNullOrEmpty()      // true if attachment is NOT null or empty
             }
             progressVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.percent != null && item.property.component == Component.VTODO.name     // true if percent (progress) is NOT null

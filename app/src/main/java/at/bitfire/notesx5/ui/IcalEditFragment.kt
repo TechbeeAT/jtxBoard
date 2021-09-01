@@ -195,6 +195,14 @@ class IcalEditFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {        }    // nothing to do
         }
 
+        binding.editCollectionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+            override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
+                icalEditViewModel.iCalObjectUpdated.value!!.collectionId = icalEditViewModel.allCollections.value?.get(pos)?.collectionId?:1L
+            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {     }
+        }
+
         binding.icalEditTabs?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -226,10 +234,7 @@ class IcalEditFragment : Fragment() {
 
         icalEditViewModel.savingClicked.observe(viewLifecycleOwner, {
             if (it == true) {
-                icalEditViewModel.iCalObjectUpdated.value?.collectionId = icalEditViewModel.allCollections.value?.find { it.displayName == binding.editCollection.selectedItem.toString() }!!.collectionId
-
                 icalEditViewModel.iCalObjectUpdated.value!!.percent = binding.editProgressSlider.value.toInt()
-
                 icalEditViewModel.update()
             }
         })
@@ -469,7 +474,7 @@ class IcalEditFragment : Fragment() {
         //TODO: Check if the Sequence was updated in the meantime and notify user!
 
 
-        icalEditViewModel.iCalEntity.comment?.forEach { singleComment ->
+        icalEditViewModel.iCalEntity.comments?.forEach { singleComment ->
             addCommentView(singleComment)
 
             // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
@@ -477,7 +482,7 @@ class IcalEditFragment : Fragment() {
                 icalEditViewModel.commentUpdated.add(singleComment)
         }
 
-        icalEditViewModel.iCalEntity.attachment?.forEach { singleAttachment ->
+        icalEditViewModel.iCalEntity.attachments?.forEach { singleAttachment ->
             addAttachmentView(singleAttachment)
 
             // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
@@ -485,7 +490,7 @@ class IcalEditFragment : Fragment() {
                 icalEditViewModel.attachmentUpdated.add(singleAttachment)
         }
 
-        icalEditViewModel.iCalEntity.category?.forEach { singleCategory ->
+        icalEditViewModel.iCalEntity.categories?.forEach { singleCategory ->
             addCategoryChip(singleCategory)
 
             // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
@@ -493,7 +498,7 @@ class IcalEditFragment : Fragment() {
                 icalEditViewModel.categoryUpdated.add(singleCategory)
         }
 
-        icalEditViewModel.iCalEntity.attendee?.forEach { singleAttendee ->
+        icalEditViewModel.iCalEntity.attendees?.forEach { singleAttendee ->
             addAttendeeChip(singleAttendee)
 
             // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
@@ -505,9 +510,8 @@ class IcalEditFragment : Fragment() {
 
         // set the default selection for the spinner. The same snippet exists for the allOrganizers observer
         if (icalEditViewModel.allCollections.value != null) {
-            val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection)
-            if (selectedCollectionPos != null)
-                binding.editCollection.setSelection(selectedCollectionPos)
+            val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection) ?: 0
+            binding.editCollectionSpinner.setSelection(selectedCollectionPos)
         }
 
 
@@ -524,14 +528,14 @@ class IcalEditFragment : Fragment() {
         icalEditViewModel.allRelatedto.observe(viewLifecycleOwner, {
 
             // if the current item can be found as linkedICalObjectId and the reltype is CHILD, then it must be a child and changing the collection is not allowed
-            if (it.isNotEmpty() && it.find { rel -> rel.linkedICalObjectId == icalEditViewModel.iCalObjectUpdated.value?.id && rel.reltype == Reltype.CHILD.name } != null)
-                binding.editCollection.isEnabled = false
+            if (icalEditViewModel.iCalObjectUpdated.value?.id != 0L && it?.find { rel -> rel.linkedICalObjectId == icalEditViewModel.iCalObjectUpdated.value?.id && rel.reltype == Reltype.CHILD.name } != null)
+                binding.editCollectionSpinner.isEnabled = false
         })
 
         icalEditViewModel.allCollections.observe(viewLifecycleOwner, {
 
             // set up the adapter for the organizer spinner
-            val spinner: Spinner = binding.editCollection
+            val spinner: Spinner = binding.editCollectionSpinner
             val allCollectionNames: MutableList<String> = mutableListOf()
             icalEditViewModel.allCollections.value?.forEach { it.displayName?.let { name -> allCollectionNames.add(name) } }
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, allCollectionNames)

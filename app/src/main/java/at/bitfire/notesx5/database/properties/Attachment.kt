@@ -222,20 +222,6 @@ data class Attachment (
         return this
     }
 
-
-    fun getICalString(): String {
-
-        var content = "ATTACH"
-        if (fmttype?.isNotEmpty() == true)
-            content += ";FMTTYPE=\"$fmttype\""
-        if (binary?.isNotEmpty() == true)
-            content += ";ENCODING=BASE64;VALUE=BINARY:$binary"
-        if (uri?.isNotEmpty() == true)
-            uri += ":$uri"
-        content += "\r\n"
-
-        return content
-    }
 }
 
 

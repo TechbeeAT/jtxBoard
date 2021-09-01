@@ -112,19 +112,6 @@ data class Comment (
 
         return this
     }
-
-
-    fun getICalString(): String {
-
-        var content = "COMMENT"
-        if (altrep?.isNotEmpty() == true)
-            content += ";ALTREP=\"$altrep\""
-        if (language?.isNotEmpty() == true)
-            content += ";LANGUAGE=$language"
-        content += ":$text\r\n"
-
-        return content
-    }
 }
 
 

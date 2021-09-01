@@ -112,17 +112,6 @@ data class Relatedto (
 
                 return this
         }
-
-
-        fun getICalString(): String {
-
-                var content = "RELATED-TO"
-                if (reltype?.isNotEmpty() == true)
-                        content += ";RELTYPE=$reltype"
-                content += ":$text\r\n"
-
-                return content
-        }
 }
 
 /** This enum class defines the possible values for the attribute [Relatedto.reltype]  */

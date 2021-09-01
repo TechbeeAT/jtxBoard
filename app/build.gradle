@@ -15,12 +15,12 @@ apply plugin: 'org.jetbrains.dokka'
 
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         applicationId "at.bitfire.notesx5"
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -43,6 +43,14 @@ android {
         dataBinding true
         viewBinding true
     }
+
+    //necessary for ical4j
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/*.md'
+    }
+
 }
 
 dependencies {
@@ -86,7 +94,7 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.1.1"
 
     // Admob
-    implementation 'com.google.android.gms:play-services-ads:20.2.0'
+    implementation 'com.google.android.gms:play-services-ads:20.3.0'
 
     // Google Consent for Admob
     implementation 'com.google.android.ump:user-messaging-platform:2.0.0'
@@ -108,12 +116,35 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.4.0'
 
     // Testing-only dependencies
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.21"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.30"
     androidTestImplementation 'androidx.test:core:1.4.0'
     androidTestImplementation 'androidx.test:core-ktx:1.4.0'
 
     // Testing for Workmanager
     androidTestImplementation("androidx.work:work-testing:$work_version")
 
+    // START packages for ical4j
+    api("org.mnode.ical4j:ical4j:3.1.0") {
+        exclude module: 'javax.mail'
+        exclude group: 'org.codehaus.groovy', module: 'groovy'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-dateutil'
+    }
+    // ical4j requires newer Apache Commons libraries, which require Java8. Force latest Java7 versions.
+    // noinspection GradleDependency
+    api("org.apache.commons:commons-collections4:4.2") { force = true }
+    // noinspection GradleDependency
+    api("org.apache.commons:commons-lang3:3.8.1") { force = true }
+
+    // ical4j requires JavaMail API (e.g. for EMAIL parameter)
+    implementation 'com.sun.mail:android-mail:1.6.7'
+
+    // noinspection GradleDependency
+    implementation "commons-io:commons-io:2.6"
+    implementation("commons-codec:commons-codec:1.15")
+
+    implementation 'org.slf4j:slf4j-jdk14:1.7.32'
+
+    // END packages for ical4j
 
 }
+

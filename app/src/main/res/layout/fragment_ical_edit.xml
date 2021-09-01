@@ -93,7 +93,7 @@
                     android:textStyle="bold"
                     android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/edit_collection"
+                    app:layout_constraintTop_toTopOf="@+id/edit_collection_spinner"
                     tools:text="31" />
 
                 <TextView
@@ -145,14 +145,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:visibility="@{model.collectionVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit_collection"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_collection_spinner"
                     app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
-                    app:layout_constraintTop_toTopOf="@+id/edit_collection"
+                    app:layout_constraintTop_toTopOf="@+id/edit_collection_spinner"
                     app:srcCompat="@drawable/ic_collection"
                     tools:ignore="ContentDescription" />
 
                 <Spinner
-                    android:id="@+id/edit_collection"
+                    android:id="@+id/edit_collection_spinner"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
@@ -178,7 +178,7 @@
                     android:visibility="@{model.alldayVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
                     app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_collection"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_collection_spinner"
                     app:switchPadding="8dp" />
 
                 <ImageView

@@ -111,19 +111,6 @@ data class Contact (
 
                 return this
         }
-
-
-        fun getICalString(): String {
-
-                var content = "CONTACT"
-                if (altrep?.isNotEmpty() == true)
-                        content += ";ALTREP=\"$altrep\""
-                if (language?.isNotEmpty() == true)
-                        content += ";LANGUAGE=$language"
-                content += ":$text\r\n"
-
-                return content
-        }
 }
 
 
