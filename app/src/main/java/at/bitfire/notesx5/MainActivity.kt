@@ -83,6 +83,8 @@ class MainActivity : AppCompatActivity() {
 
         // Set up the toolbar with the navigation drawer
         toolbar = findViewById(R.id.topAppBar)
+        setToolbarText("Board")
+
         setSupportActionBar(toolbar)
 
         setUpDrawer()
@@ -385,6 +387,10 @@ class MainActivity : AppCompatActivity() {
             Log.d("consentForm", it.message)
         }
 
+    }
+
+    fun setToolbarText(text: String) {
+        toolbar.title = text
     }
 }
 

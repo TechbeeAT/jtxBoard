@@ -607,6 +607,15 @@ class IcalViewFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+
+        val activity = requireActivity() as MainActivity
+        activity.setToolbarText("View")
+
+        super.onResume()
+    }
+
+
 
 
     private fun addCategoryChip(category: Category) {

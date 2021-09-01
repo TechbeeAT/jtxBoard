@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import at.bitfire.notesx5.BuildConfig
+import at.bitfire.notesx5.MainActivity
 import at.bitfire.notesx5.R
 import at.bitfire.notesx5.databinding.FragmentAboutBinding
 import com.google.android.material.tabs.TabLayout
@@ -31,7 +32,6 @@ class AboutFragment : Fragment() {
         //val aboutNotesx5Binding = FragmentAboutNotesx5Binding.inflate(inflater, container, false)
         binding.fragmentAboutNotesx5.aboutNotesx5AppVersion.text = getString(R.string.about_notesx5_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
         binding.fragmentAboutNotesx5.aboutNotesx5BuildTime.text = getString(R.string.about_notesx5_build_date, SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime))
-
 
         binding.aboutTablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
@@ -63,4 +63,13 @@ class AboutFragment : Fragment() {
 
         return binding.root
     }
+
+    override fun onResume() {
+
+        val activity = requireActivity() as MainActivity
+        activity.setToolbarText("About")
+
+        super.onResume()
+    }
+
 }

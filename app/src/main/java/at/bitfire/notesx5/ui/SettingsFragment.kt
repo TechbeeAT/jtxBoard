@@ -60,6 +60,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
             preferenceScreen.get<Preference>(ACCEPT_ADS)?.isEnabled = false
             preferenceScreen.get<Preference>(SHOW_USER_CONSENT)?.isEnabled = false
         }
-
     }
+
+    override fun onResume() {
+
+        val activity = requireActivity() as MainActivity
+        activity.setToolbarText("Settings")
+
+        super.onResume()
+    }
+
 }

@@ -852,6 +852,15 @@ class IcalEditFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+
+        val activity = requireActivity() as MainActivity
+        activity.setToolbarText("Edit")
+
+        super.onResume()
+    }
+
+
 
 
     private fun showTimePicker(fieldValue: Long, tag: String) {

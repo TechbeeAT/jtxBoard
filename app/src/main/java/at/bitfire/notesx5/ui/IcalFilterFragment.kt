@@ -178,6 +178,15 @@ class IcalFilterFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+
+        val activity = requireActivity() as MainActivity
+        activity.setToolbarText("Filter")
+
+        super.onResume()
+    }
+
+
 
     /**
      * Method to add Chips to a [chipGroup] based on the String value for Classification and Status.

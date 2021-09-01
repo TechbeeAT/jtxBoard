@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import at.bitfire.notesx5.MainActivity
 import at.bitfire.notesx5.R
 import at.bitfire.notesx5.database.*
 import at.bitfire.notesx5.database.relations.ICalEntity
@@ -225,6 +226,14 @@ class IcalListFragment : Fragment() {
         }
 
         super.onStart()
+    }
+
+    override fun onResume() {
+
+        val activity = requireActivity() as MainActivity
+        activity.setToolbarText("Board")
+
+        super.onResume()
     }
 
 
