@@ -30,33 +30,38 @@ class AboutFragment : Fragment() {
         this.binding = FragmentAboutBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
-        val aboutNotesx5Binding = FragmentAboutNotesx5Binding.inflate(inflater, container, false)
-        aboutNotesx5Binding.aboutNotesx5AppVersion.text = getString(R.string.about_notesx5_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
-        aboutNotesx5Binding.aboutNotesx5BuildTime.text = getString(R.string.about_notesx5_build_date, SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime))
-        binding.aboutLinearlayoutContainer.addView(aboutNotesx5Binding.root)
+        //val aboutNotesx5Binding = FragmentAboutNotesx5Binding.inflate(inflater, container, false)
+        binding.fragmentAboutNotesx5.aboutNotesx5AppVersion.text = getString(R.string.about_notesx5_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+        binding.fragmentAboutNotesx5.aboutNotesx5BuildTime.text = getString(R.string.about_notesx5_build_date, SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime))
 
 
         binding.aboutTablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
-                binding.aboutLinearlayoutContainer.removeAllViews()
-
-
-
-
                 when (tab?.position) {
-                    0 -> binding.aboutLinearlayoutContainer.addView(aboutNotesx5Binding.root)
-                    1 -> return // TODO: replace with translations
-                    2 -> LibsBuilder().start(requireContext())                  // TODO: make it appear under tab
-                    else -> binding.aboutLinearlayoutContainer.addView(aboutNotesx5Binding.root)
+                    0 -> {
+                        binding.fragmentAboutNotesx5.aboutNotesx5Scrollview.visibility = View.VISIBLE
+                        binding.fragmentAboutLibrariesContainerView.visibility = View.INVISIBLE
+                    }
+                    1 -> {
+                        binding.fragmentAboutNotesx5.aboutNotesx5Scrollview.visibility = View.INVISIBLE
+                        binding.fragmentAboutLibrariesContainerView.visibility = View.INVISIBLE
+                    } // TODO: replace with translations
+                    2 -> {
+                        binding.fragmentAboutNotesx5.aboutNotesx5Scrollview.visibility = View.INVISIBLE
+                        binding.fragmentAboutLibrariesContainerView.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        binding.fragmentAboutNotesx5.aboutNotesx5Scrollview.visibility = View.INVISIBLE
+                        binding.fragmentAboutLibrariesContainerView.visibility = View.INVISIBLE
+                    }
                 }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
             override fun onTabReselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
         })
-
 
         return binding.root
     }
