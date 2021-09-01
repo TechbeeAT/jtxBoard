@@ -137,9 +137,9 @@ dependencies {
     }
     // ical4j requires newer Apache Commons libraries, which require Java8. Force latest Java7 versions.
     // noinspection GradleDependency
-    api("org.apache.commons:commons-collections4:4.2") { force = true }
+    api("org.apache.commons:commons-collections4:4.2")
     // noinspection GradleDependency
-    api("org.apache.commons:commons-lang3:3.8.1") { force = true }
+    api("org.apache.commons:commons-lang3:3.8.1")
 
     // ical4j requires JavaMail API (e.g. for EMAIL parameter)
     implementation 'com.sun.mail:android-mail:1.6.7'
