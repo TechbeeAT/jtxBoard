@@ -53,6 +53,12 @@ android {
 
 }
 
+aboutLibraries {
+    additionalLicenses {
+        mpl_2_0
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
@@ -113,7 +119,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1"
-    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation "androidx.test:runner:1.4.0"
 
     // Testing-only dependencies
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.30"
@@ -140,11 +146,15 @@ dependencies {
 
     // noinspection GradleDependency
     implementation "commons-io:commons-io:2.6"
-    implementation("commons-codec:commons-codec:1.15")
+    implementation "commons-codec:commons-codec:1.15"
 
-    implementation 'org.slf4j:slf4j-jdk14:1.7.32'
+    implementation "org.slf4j:slf4j-jdk14:1.7.32"
 
     // END packages for ical4j
+
+    //About Libraries
+    implementation "com.mikepenz:aboutlibraries:8.9.1"
+
 
 }
 

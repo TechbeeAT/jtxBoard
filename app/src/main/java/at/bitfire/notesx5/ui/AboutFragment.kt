@@ -11,6 +11,7 @@ import at.bitfire.notesx5.R
 import at.bitfire.notesx5.databinding.FragmentAboutBinding
 import at.bitfire.notesx5.databinding.FragmentAboutNotesx5Binding
 import com.google.android.material.tabs.TabLayout
+import com.mikepenz.aboutlibraries.LibsBuilder
 import java.text.SimpleDateFormat
 
 class AboutFragment : Fragment() {
@@ -34,16 +35,20 @@ class AboutFragment : Fragment() {
         aboutNotesx5Binding.aboutNotesx5BuildTime.text = getString(R.string.about_notesx5_build_date, SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime))
         binding.aboutLinearlayoutContainer.addView(aboutNotesx5Binding.root)
 
+
         binding.aboutTablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
                 binding.aboutLinearlayoutContainer.removeAllViews()
 
+
+
+
                 when (tab?.position) {
                     0 -> binding.aboutLinearlayoutContainer.addView(aboutNotesx5Binding.root)
                     1 -> return // TODO: replace with translations
-                    2 -> return // TODO: replace with libraries
+                    2 -> LibsBuilder().start(requireContext())                  // TODO: make it appear under tab
                     else -> binding.aboutLinearlayoutContainer.addView(aboutNotesx5Binding.root)
                 }
             }

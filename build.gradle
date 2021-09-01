@@ -38,12 +38,17 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+
+        // AboutLibraries
+        maven { url "https://plugins.gradle.org/m2/" }
     }
 
     dependencies {
         classpath "com.android.tools.build:gradle:$version_gradle"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5"
+        classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:8.9.1"
+
 
         // dokka documentation
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.30"
@@ -58,6 +63,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+
+        // AboutLibraries
+        maven { url "https://plugins.gradle.org/m2/" }
     }
 }
 
