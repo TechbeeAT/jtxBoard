@@ -298,7 +298,8 @@ class SyncContentProvider : ContentProvider() {
         // if the request was for an Attachment, then allow the calling application to access the file by grantUriPermission
         if(sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR || CODE_ATTACHMENT_DIR == CODE_ATTACHMENT_ITEM) {
             while(result?.moveToNext() == true) {
-                val attachmentUriString = result.getString(result.getColumnIndex(COLUMN_ATTACHMENT_URI))
+                val uriColumnIndex = result.getColumnIndex(COLUMN_ATTACHMENT_URI)
+                val attachmentUriString = result.getString(uriColumnIndex)
                 val attachmentUri = Uri.parse(attachmentUriString)
 
                 //TODO: grantUriPermission could enable DAVx5 to access the files, further investigation is needed!
