@@ -103,6 +103,9 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
 
             timezoneVisible = Transformations.map(icalEntity) { item ->
+                if (item?.property?.dtstartTimezone == "ALLDAY" || item?.property?.dtstartTimezone.isNullOrEmpty())
+                    return@map false
+
                 item?.property?.dtstartTimezone?.let {
                     val tz = TimeZone.getTimeZone(it)
                     if (tz != null)
