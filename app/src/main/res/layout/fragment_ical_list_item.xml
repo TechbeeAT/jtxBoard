@@ -78,12 +78,24 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="12sp"
-            android:textStyle="italic"
+            android:textSize="14sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/list_item_dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/list_item_dtstart_year"
-            app:layout_constraintVertical_bias="0.0"
             tools:text="13:30" />
+
+        <TextView
+            android:id="@+id/list_item_dtstart_timezone"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@id/list_item_barrier"
+            app:layout_constraintStart_toStartOf="@+id/list_item_dtstart_day"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_dtstart_time"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="GMT+02:00" />
+
 
 
         <TextView
@@ -111,8 +123,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/list_item_summary"
+            app:layout_constraintBottom_toTopOf="@id/list_item_barrier"
             tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
 
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/list_item_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            tools:layout_editor_absoluteY="510dp" />
 
         <LinearLayout
             android:id="@+id/list_item_attachments"
@@ -124,7 +144,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="@+id/list_item_summary"
             app:layout_constraintStart_toStartOf="@+id/list_item_summary"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_description" />
+            app:layout_constraintTop_toBottomOf="@+id/list_item_barrier" />
 
         <ImageView
             android:id="@+id/list_item_num_attendees_icon"

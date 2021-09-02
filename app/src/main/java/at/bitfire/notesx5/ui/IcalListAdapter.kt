@@ -34,6 +34,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
 import java.io.IOException
 import java.lang.IllegalArgumentException
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
@@ -94,6 +95,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         holder.dtstartMonth.visibility = dtstartVisibility
         holder.dtstartYear.visibility = dtstartVisibility
         holder.dtstartTime.visibility = dtstartVisibility
+        holder.dtstartTimeZone.visibility = dtstartVisibility
         holder.status.visibility = statusVisibility
         holder.statusIcon.visibility = statusVisibility
         holder.classification.visibility = classificationVisibility
@@ -154,7 +156,16 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                         convertLongToTimeString(iCal4ListItem.property.dtstart)
                     holder.dtstartTime.visibility = View.VISIBLE
                 }
+
+                if (iCal4ListItem.property.dtstartTimezone == "ALLDAY" || iCal4ListItem.property.dtstartTimezone.isNullOrEmpty() || TimeZone.getTimeZone(iCal4ListItem.property.dtstartTimezone).getDisplayName(true, TimeZone.SHORT) == null) {
+                    holder.dtstartTime.visibility = View.GONE
+                } else {
+                    holder.dtstartTimeZone.text = TimeZone.getTimeZone(iCal4ListItem.property.dtstartTimezone).getDisplayName(true, TimeZone.SHORT)
+                    holder.dtstartTimeZone.visibility = View.VISIBLE
+                }
             }
+
+            //todo: check timezone
 
             /* START handle subtasks */
             holder.progressSlider.value = iCal4ListItem.property.percent?.toFloat() ?: 0F
@@ -391,6 +402,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         var dtstartMonth: TextView = itemView.findViewById(R.id.list_item_dtstart_month)
         var dtstartYear: TextView = itemView.findViewById(R.id.list_item_dtstart_year)
         var dtstartTime: TextView = itemView.findViewById(R.id.list_item_dtstart_time)
+        var dtstartTimeZone: TextView = itemView.findViewById(R.id.list_item_dtstart_timezone)
+
 
         var colorBar: ImageView = itemView.findViewById(R.id.list_item_colorbar)
 
