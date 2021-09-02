@@ -10,7 +10,7 @@
     <SwitchPreference
         app:key="settings_enfore_dark_theme"
         app:defaultValue="false"
-        app:title="Enforce dark theme"
+        app:title="@string/settings_enforce_dark_theme"
         app:icon="@drawable/ic_theme"
         app:useSimpleSummaryProvider="true"/>
 
@@ -18,26 +18,26 @@
 
     <PreferenceCategory
         app:key="settings_list"
-        app:title="Settings for the item list">
+        app:title="@string/settings_list">
 
         <SwitchPreference
             app:key="settings_show_subtasks_in_list"
             app:defaultValue="true"
-            app:title="Show subtasks in list"
+            app:title="@string/settings_show_subtasks_in_list"
             app:icon="@drawable/ic_todo"
             app:useSimpleSummaryProvider="true"/>
 
         <SwitchPreference
             app:key="settings_show_attachments_in_list"
             app:defaultValue="true"
-            app:title="Show attachments in list"
+            app:title="@string/settings_show_attachments_in_list"
             app:icon="@drawable/ic_attachment"
             app:useSimpleSummaryProvider="true"/>
 
         <SwitchPreference
             app:key="settings_show_progress_in_list"
             app:defaultValue="true"
-            app:title="Show progress in list"
+            app:title="@string/settings_show_progress_in_list"
             app:useSimpleSummaryProvider="true"/>
 
 
@@ -46,13 +46,13 @@
 
     <PreferenceCategory
         app:key="settings_global"
-        app:title="App Settings">
+        app:title="@string/settings_app">
 
         <DropDownPreference
             app:key="setting_audio_format"
             app:entries="@array/settings_audio_formats"
             app:entryValues="@array/settings_audio_formats"
-            app:title="Select Mimetype for audio notes"
+            app:title="@string/settings_select_mimetype_for_audio"
             app:icon="@drawable/ic_audio"
             app:useSimpleSummaryProvider="true" />
 
@@ -61,16 +61,14 @@
             app:key="settings_accept_ads"
             app:defaultValue="false"
             app:icon="@drawable/ic_ads"
-            app:title="Support app by showing ads"
-            app:summary="As an alternative to ads you can buy the ad-free option"/>
+            app:title="@string/settings_accept_ads_title"
+            app:summary="@string/settings_accept_ads_summary"/>
 
         <Preference
             app:key="show_user_consent"
-            app:title="Show User Consent (GDPR)"
-            app:summary="Show User Consent for Ad Settings"/>
-
+            app:title="@string/settings_show_user_consent_title"
+            app:summary="@string/settings_show_user_consent_summary"/>
 
     </PreferenceCategory>
-
 
 </androidx.preference.PreferenceScreen>

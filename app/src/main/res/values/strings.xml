@@ -224,4 +224,17 @@
     <string name="shortcut_addTodo_longLabel">Add Todo</string>
 
 
+    <string name="settings_enforce_dark_theme">Enforce dark theme</string>
+    <string name="settings_list">Settings for the item list</string>
+    <string name="settings_show_subtasks_in_list">Show subtasks in list</string>
+    <string name="settings_show_attachments_in_list">Show attachments in list</string>
+    <string name="settings_show_progress_in_list">Show progress in list</string>
+    <string name="settings_app">App Settings</string>
+    <string name="settings_select_mimetype_for_audio">Select Mimetype for audio notes</string>
+
+    <string name="settings_accept_ads_title">Support app by showing ads</string>
+    <string name="settings_accept_ads_summary">As an alternative to ads you can buy the ad-free option</string>
+    <string name="settings_show_user_consent_title">Show User Consent (GDPR)</string>
+    <string name="settings_show_user_consent_summary">Show User Consent for Ad Settings</string>
+
 </resources>
