@@ -11,6 +11,8 @@ import at.bitfire.notesx5.MainActivity
 import at.bitfire.notesx5.R
 import at.bitfire.notesx5.databinding.FragmentAboutBinding
 import com.google.android.material.tabs.TabLayout
+import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.LibsBuilder
 import java.text.SimpleDateFormat
 
 class AboutFragment : Fragment() {
@@ -32,6 +34,21 @@ class AboutFragment : Fragment() {
         //val aboutNotesx5Binding = FragmentAboutNotesx5Binding.inflate(inflater, container, false)
         binding.fragmentAboutNotesx5.aboutNotesx5AppVersion.text = getString(R.string.about_notesx5_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
         binding.fragmentAboutNotesx5.aboutNotesx5BuildTime.text = getString(R.string.about_notesx5_build_date, SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime))
+
+        // get the fragment for the about library
+        val aboutLibrariesFragment = LibsBuilder()
+            .withFields(R.string::class.java.fields)        // mandatory for non-standard build flavors
+            .withLicenseShown(true)
+            .withAboutIconShown(false)
+            // https://github.com/mikepenz/AboutLibraries/issues/490
+            .withLibraryModification("org_brotli__dec", Libs.LibraryFields.LIBRARY_NAME, "Brotli")
+            .withLibraryModification("org_brotli__dec", Libs.LibraryFields.AUTHOR_NAME, "Google")
+            .supportFragment()
+
+        // add the about library fragment to the container view
+        parentFragmentManager.beginTransaction()
+            .add(binding.fragmentAboutLibrariesContainerView.id, aboutLibrariesFragment)
+            .commit()
 
         binding.aboutTablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 

@@ -44,7 +44,6 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_about_libraries_container_view"
-        android:name="com.mikepenz.aboutlibraries.ui.LibsSupportFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="invisible"
