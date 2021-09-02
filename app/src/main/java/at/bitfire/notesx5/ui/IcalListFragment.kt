@@ -122,14 +122,17 @@ class IcalListFragment : Fragment() {
                 "NOTE" -> {
                     gotodateMenuItem?.isVisible = false
                     staggeredGridLayoutManager!!.spanCount = 1
+                    binding.fab.setImageResource(R.drawable.ic_add_note)
                 }
                 "JOURNAL" -> {
                     gotodateMenuItem?.isVisible = true
                     staggeredGridLayoutManager!!.spanCount = 1
+                    binding.fab.setImageResource(R.drawable.ic_add)
                 }
                 "TODO" -> {
                     gotodateMenuItem?.isVisible = false
                     staggeredGridLayoutManager!!.spanCount = 1
+                    binding.fab.setImageResource(R.drawable.ic_todo_add)
                 }
             }
             binding.listProgressIndicator.visibility = View.GONE
