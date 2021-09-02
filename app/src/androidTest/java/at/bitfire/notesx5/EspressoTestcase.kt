@@ -33,7 +33,7 @@ class EspressoTestcase {
         @get:Rule var activityScenarioRule = activityScenarioRule<MainActivity>()
 
         @Test
-        fun GoToDate_only_visible_for_Journals() {
+        fun goToDate_only_visible_for_Journals() {
 
             // Type text and then press the button.
             onView(withText(R.string.list_tabitem_todos)).perform(click())
@@ -46,7 +46,7 @@ class EspressoTestcase {
 
 
     @Test
-    fun Use_fab_to_create_new_journal() {
+    fun use_fab_to_create_new_journal() {
 
         onView(withText(R.string.list_tabitem_journals)).perform(click())
         onView(withId(R.id.fab)).perform(click())
@@ -56,7 +56,7 @@ class EspressoTestcase {
     }
 
     @Test
-    fun Use_fab_to_create_new_note() {
+    fun use_fab_to_create_new_note() {
 
         onView(withText(R.string.list_tabitem_notes)).perform(click())
         onView(withId(R.id.fab)).perform(click())
@@ -66,7 +66,7 @@ class EspressoTestcase {
     }
 
     @Test
-    fun Use_fab_to_create_new_todo() {
+    fun use_fab_to_create_new_todo() {
 
         onView(withText(R.string.list_tabitem_todos)).perform(click())
         onView(withId(R.id.fab)).perform(click())
@@ -77,7 +77,7 @@ class EspressoTestcase {
 
 
     @Test
-    fun Open_about_click_through_tabs() {
+    fun open_about_click_through_tabs() {
 
         onView(withContentDescription("Open navigation drawer")).perform(click())
         onView(withId(R.id.nav_about)).perform(click())
@@ -89,7 +89,7 @@ class EspressoTestcase {
     }
 
     @Test
-    fun Open_settings_menu() {
+    fun open_settings_menu() {
 
         onView(withContentDescription("Open navigation drawer")).perform(click())
         onView(withId(R.id.nav_app_settings)).perform(click())
