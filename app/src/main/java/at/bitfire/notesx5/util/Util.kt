@@ -87,31 +87,6 @@ fun convertLongToYearString(date: Long?): String {
     return yearFormatter.format(Date(date)).toString()
 }
 
-fun convertLongToICalDateTime(datetime: Long?, timezone: String?): String? {
-
-    if(datetime == null)
-        return null
-
-    val formatter: SimpleDateFormat
-
-    return when {
-        timezone == "ALLDAY" -> {
-            formatter = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-            ":${formatter.format(Date(datetime))}"
-        }
-        timezone.isNullOrEmpty() -> {
-            formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss'Z'", Locale.getDefault())
-            ":${formatter.format(Date(datetime))}"
-        }
-        timezone.isNotEmpty() -> {
-            formatter = SimpleDateFormat("yyyyMMdd'T'hhmmss", Locale.getDefault())
-            ";TZID=$timezone:${formatter.format(Date(datetime))}"
-        }
-        else -> null
-    }
-
-}
-
 
 fun isValidEmail(emailString: String?): Boolean {
     return Patterns.EMAIL_ADDRESS.matcher(emailString.toString()).matches()

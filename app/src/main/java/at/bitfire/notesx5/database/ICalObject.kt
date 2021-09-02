@@ -14,7 +14,6 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.room.*
 import at.bitfire.notesx5.R
-import at.bitfire.notesx5.convertLongToICalDateTime
 import kotlinx.parcelize.Parcelize
 import java.util.*
 import kotlin.IllegalArgumentException
@@ -299,24 +298,26 @@ const val COLUMN_SCHEDULETAG = "scheduletag"
 const val COLUMN_FLAGS = "flags"
 
 
-
 @Parcelize
-@Entity(tableName = TABLE_NAME_ICALOBJECT,
-        indices = [Index(value = ["_id", "summary", "description"])],
-        foreignKeys = [ForeignKey(entity = ICalCollection::class,
-                parentColumns = arrayOf(COLUMN_COLLECTION_ID),
-                childColumns = arrayOf(COLUMN_ICALOBJECT_COLLECTIONID),
-                onDelete = ForeignKey.CASCADE)]
+@Entity(
+    tableName = TABLE_NAME_ICALOBJECT,
+    indices = [Index(value = ["_id", "summary", "description"])],
+    foreignKeys = [ForeignKey(
+        entity = ICalCollection::class,
+        parentColumns = arrayOf(COLUMN_COLLECTION_ID),
+        childColumns = arrayOf(COLUMN_ICALOBJECT_COLLECTIONID),
+        onDelete = ForeignKey.CASCADE
+    )]
 )
 data class ICalObject(
 
     @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(index = true, name = COLUMN_ID)
-        var id: Long = 0L,
+    @ColumnInfo(index = true, name = COLUMN_ID)
+    var id: Long = 0L,
 
     @ColumnInfo(name = COLUMN_MODULE) var module: String = Module.NOTE.name,
     @ColumnInfo(name = COLUMN_COMPONENT) var component: String = Component.VJOURNAL.name,
-        //@ColumnInfo(name = COLUMN_COLLECTION) var collection: String = "LOCAL",
+    //@ColumnInfo(name = COLUMN_COLLECTION) var collection: String = "LOCAL",
     @ColumnInfo(name = COLUMN_SUMMARY) var summary: String? = null,
     @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String? = null,
     @ColumnInfo(name = COLUMN_DTSTART) var dtstart: Long? = null,
@@ -355,10 +356,10 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long = System.currentTimeMillis(), // see https://tools.ietf.org/html/rfc5545#section-3.8.7.3
     @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long = 0,                             // increase on every change (+1), see https://tools.ietf.org/html/rfc5545#section-3.8.7.4
 
-        //var exdate: Long? = System.currentTimeMillis(),   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
-        //var rdate: Long? = System.currentTimeMillis()     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
-        //var recurrenceId: String? = null,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
-        //var rrule: String?,                               //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
+    //var exdate: Long? = System.currentTimeMillis(),   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
+    //var rdate: Long? = System.currentTimeMillis()     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
+    //var recurrenceId: String? = null,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
+    //var rrule: String?,                               //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
 
 
     @ColumnInfo(name = COLUMN_COLOR) var color: Int? = null,
@@ -369,7 +370,7 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_DIRTY) var dirty: Boolean = false,
     @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean = false,
 
-    @ColumnInfo(name = COLUMN_FILENAME)   var fileName: String? = null,
+    @ColumnInfo(name = COLUMN_FILENAME) var fileName: String? = null,
     @ColumnInfo(name = COLUMN_ETAG) var eTag: String? = null,
     @ColumnInfo(name = COLUMN_SCHEDULETAG) var scheduleTag: String? = null,
     @ColumnInfo(name = COLUMN_FLAGS) var flags: Int? = null
@@ -379,13 +380,52 @@ data class ICalObject(
     companion object Factory {
 
 
-        fun createJournal(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.JOURNAL.name, dtstart = System.currentTimeMillis(), status = StatusJournal.FINAL.name, dirty = true)
-        fun createNote(): ICalObject = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.name, dirty = true)
-        fun createNote(summary: String) = ICalObject(component = Component.VJOURNAL.name, module = Module.NOTE.name, status = StatusJournal.FINAL.name, summary = summary, dirty = true)
-        fun createTodo() = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY", dirty = true)
-        fun createTask(summary: String) = ICalObject(component = Component.VTODO.name, module = Module.TODO.name, summary = summary, status = StatusTodo.`NEEDS-ACTION`.name, percent = 0, priority = 0, dueTimezone = "ALLDAY", dirty = true)
+        fun createJournal(): ICalObject = ICalObject(
+            component = Component.VJOURNAL.name,
+            module = Module.JOURNAL.name,
+            dtstart = System.currentTimeMillis(),
+            status = StatusJournal.FINAL.name,
+            dirty = true
+        )
 
-        fun generateNewUID() = "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.notesx5"
+        fun createNote(): ICalObject = ICalObject(
+            component = Component.VJOURNAL.name,
+            module = Module.NOTE.name,
+            status = StatusJournal.FINAL.name,
+            dirty = true
+        )
+
+        fun createNote(summary: String) = ICalObject(
+            component = Component.VJOURNAL.name,
+            module = Module.NOTE.name,
+            status = StatusJournal.FINAL.name,
+            summary = summary,
+            dirty = true
+        )
+
+        fun createTodo() = ICalObject(
+            component = Component.VTODO.name,
+            module = Module.TODO.name,
+            status = StatusTodo.`NEEDS-ACTION`.name,
+            percent = 0,
+            priority = 0,
+            dueTimezone = "ALLDAY",
+            dirty = true
+        )
+
+        fun createTask(summary: String) = ICalObject(
+            component = Component.VTODO.name,
+            module = Module.TODO.name,
+            summary = summary,
+            status = StatusTodo.`NEEDS-ACTION`.name,
+            percent = 0,
+            priority = 0,
+            dueTimezone = "ALLDAY",
+            dirty = true
+        )
+
+        fun generateNewUID() =
+            "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.bitfire.notesx5"
 
         /**
          * Create a new [ICalObject] from the specified [ContentValues].
@@ -413,13 +453,21 @@ data class ICalObject(
 
         values.getAsString(COLUMN_COMPONENT)?.let { component -> this.component = component }
         values.getAsString(COLUMN_SUMMARY)?.let { summary -> this.summary = summary }
-        values.getAsString(COLUMN_DESCRIPTION)?.let { description -> this.description = description }
-        values.getAsLong(COLUMN_DTSTART)?.let { dtstart -> this.dtstart = dtstart }   //TODO: Add validation, Journals MUST have a DTSTART!
-        values.getAsString(COLUMN_DTSTART_TIMEZONE)?.let { dtstartTimezone -> this.dtstartTimezone = dtstartTimezone }   //TODO: Validieren auf gültige Timezone!
+        values.getAsString(COLUMN_DESCRIPTION)
+            ?.let { description -> this.description = description }
+        values.getAsLong(COLUMN_DTSTART)?.let { dtstart ->
+            this.dtstart = dtstart
+        }   //TODO: Add validation, Journals MUST have a DTSTART!
+        values.getAsString(COLUMN_DTSTART_TIMEZONE)?.let { dtstartTimezone ->
+            this.dtstartTimezone = dtstartTimezone
+        }   //TODO: Validieren auf gültige Timezone!
         values.getAsLong(COLUMN_DTEND)?.let { dtend -> this.dtend = dtend }
-        values.getAsString(COLUMN_DTEND_TIMEZONE)?.let { dtendTimezone -> this.dtendTimezone = dtendTimezone }   //TODO: Validieren auf gültige Timezone!
+        values.getAsString(COLUMN_DTEND_TIMEZONE)?.let { dtendTimezone ->
+            this.dtendTimezone = dtendTimezone
+        }   //TODO: Validieren auf gültige Timezone!
         values.getAsString(COLUMN_STATUS)?.let { status -> this.status = status }
-        values.getAsString(COLUMN_CLASSIFICATION)?.let { classification -> this.classification = classification }
+        values.getAsString(COLUMN_CLASSIFICATION)
+            ?.let { classification -> this.classification = classification }
         values.getAsString(COLUMN_URL)?.let { url -> this.url = url }
         values.getAsFloat(COLUMN_GEO_LAT)?.let { geoLat -> this.geoLat = geoLat }
         values.getAsFloat(COLUMN_GEO_LONG)?.let { geoLong -> this.geoLong = geoLong }
@@ -427,23 +475,28 @@ data class ICalObject(
         values.getAsInteger(COLUMN_PERCENT)?.let { percent -> this.percent = percent }
         values.getAsInteger(COLUMN_PRIORITY)?.let { priority -> this.priority = priority }
         values.getAsLong(COLUMN_DUE)?.let { due -> this.due = due }
-        values.getAsString(COLUMN_DUE_TIMEZONE)?.let { dueTimezone -> this.dueTimezone = dueTimezone }
+        values.getAsString(COLUMN_DUE_TIMEZONE)
+            ?.let { dueTimezone -> this.dueTimezone = dueTimezone }
         values.getAsLong(COLUMN_COMPLETED)?.let { completed -> this.completed = completed }
-        values.getAsString(COLUMN_COMPLETED_TIMEZONE)?.let { completedTimezone -> this.completedTimezone = completedTimezone }
+        values.getAsString(COLUMN_COMPLETED_TIMEZONE)
+            ?.let { completedTimezone -> this.completedTimezone = completedTimezone }
         values.getAsString(COLUMN_DURATION)?.let { duration -> this.duration = duration }
         values.getAsString(COLUMN_UID)?.let { uid -> this.uid = uid }
         values.getAsLong(COLUMN_CREATED)?.let { created -> this.created = created }
         values.getAsLong(COLUMN_DTSTAMP)?.let { dtstamp -> this.dtstamp = dtstamp }
-        values.getAsLong(COLUMN_LAST_MODIFIED)?.let { lastModified -> this.lastModified = lastModified }
+        values.getAsLong(COLUMN_LAST_MODIFIED)
+            ?.let { lastModified -> this.lastModified = lastModified }
         values.getAsLong(COLUMN_SEQUENCE)?.let { sequence -> this.sequence = sequence }
         values.getAsInteger(COLUMN_COLOR)?.let { color -> this.color = color }
         values.getAsString(COLUMN_OTHER)?.let { other -> this.other = other }
-        values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)?.let { collectionId -> this.collectionId = collectionId }
+        values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)
+            ?.let { collectionId -> this.collectionId = collectionId }
         values.getAsBoolean(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty }
         values.getAsBoolean(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted }
         values.getAsString(COLUMN_FILENAME)?.let { fileName -> this.fileName = fileName }
         values.getAsString(COLUMN_ETAG)?.let { eTag -> this.eTag = eTag }
-        values.getAsString(COLUMN_SCHEDULETAG)?.let { scheduleTag -> this.scheduleTag = scheduleTag }
+        values.getAsString(COLUMN_SCHEDULETAG)
+            ?.let { scheduleTag -> this.scheduleTag = scheduleTag }
         values.getAsInteger(COLUMN_FLAGS)?.let { flags -> this.flags = flags }
 
 
@@ -467,9 +520,9 @@ data class ICalObject(
 
         percent = newPercent
         status = when (newPercent) {
-                100 -> StatusTodo.COMPLETED.name
-                in 1..99 -> StatusTodo.`IN-PROCESS`.name
-                0 -> StatusTodo.`NEEDS-ACTION`.name
+            100 -> StatusTodo.COMPLETED.name
+            in 1..99 -> StatusTodo.`IN-PROCESS`.name
+            0 -> StatusTodo.`NEEDS-ACTION`.name
             else -> StatusTodo.`NEEDS-ACTION`.name      // should never happen!
         }
         lastModified = System.currentTimeMillis()
@@ -485,53 +538,8 @@ data class ICalObject(
         return this
     }
 
-    fun getICalStringHead(): String {
-        return "BEGIN:VCALENDAR\r\n" +
-                "VERSION:2.0\r\n" +
-                "PRODID:-//bitfire.at//NOTESx5 v1.0//EN\r\n"
-    }
 
-    fun getICalStringBody(): String  {
-
-        var content = "BEGIN:$component\r\n"
-        content+= "UID:$uid\r\n"
-        content+= "DTSTAMP${convertLongToICalDateTime(dtstamp, null)}\r\n"
-        if(component == Component.VTODO.name && due != null)
-            content+= "DUE;VALUE=DATE${convertLongToICalDateTime(due, dueTimezone)}\r\n"
-        content+= "SUMMARY:$summary\r\n"
-        if (description?.isNotEmpty() == true) { content+= "DESCRIPTION:$description\r\n"  }
-        if (dtstart != null)  { content+= "DTSTART${convertLongToICalDateTime(dtstart , dtstartTimezone)}\r\n" }
-        if (dtend != null)    { content+= "DTEND${convertLongToICalDateTime(dtend, dtendTimezone)}\r\n" }
-        content+= "CLASS:$classification\r\n"
-        content+= "STATUS:$status\r\n"
-        if (url?.isNotEmpty() == true) { content+= "URL:$url\r\n"}
-        if (contact?.isNotEmpty() == true)  { content+= "CONTACT:$contact\r\n"}
-        if(geoLat != null && geoLong != null)
-            content+= "GEO:$geoLat;$geoLong\r\n"
-        if (location?.isNotEmpty() == true) { content+= "LOCATION:$location\r\n"}
-        if (percent != null) { content+= "PERCENT-COMPLETE:$percent\r\n"}
-        if (priority != null) { content+= "PRIORITY:$priority\r\n"}
-        if(component == Component.VTODO.name && completed != null)
-            content+= "COMPLETED:${convertLongToICalDateTime(completed, completedTimezone)}\r\n"
-        if(component == Component.VTODO.name && duration?.isNotEmpty() == true)
-            content+= "DURATION:$duration\r\n"
-        content+= "CREATED${convertLongToICalDateTime(created, null)}\r\n"
-        content+= "LAST-MODIFIED${convertLongToICalDateTime(lastModified, null)}\r\n"
-        content+= "SEQUENCE:$sequence\r\n"
-        if (color != null)  { content+= "COLOR:$color\r\n" }
-        //other.let {content+= "OTHER:$it\r\n"}
-
-        return content
-    }
-
-    fun getICalStringEnd(): String {
-        return "END:$component\r\n"
-    }
-
-
-
-
-    }
+}
 
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals
  * The possible values differ for Todos and Journals/Notes
@@ -610,7 +618,7 @@ enum class Component {
 
 /** This enum class defines the possible values for the attribute [ICalObject.module]  */
 enum class Module {
-        JOURNAL, NOTE, TODO
+    JOURNAL, NOTE, TODO
 }
 
 

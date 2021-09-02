@@ -14,9 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import android.os.Build
 import android.util.Log
-import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +32,6 @@ import at.bitfire.notesx5.databinding.FragmentIcalListItemAttachmentBinding
 import at.bitfire.notesx5.databinding.FragmentIcalListItemSubtaskBinding
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
-import java.io.FileNotFoundException
 import java.io.IOException
 import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit
