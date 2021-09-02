@@ -41,11 +41,6 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/ic_category" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:icon="@drawable/ic_attendee" />
 
             <com.google.android.material.tabs.TabItem
@@ -563,7 +558,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
                     android:text="@string/edit_started_header"
                     android:textSize="18sp"
@@ -681,7 +676,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
                     android:text="@string/edit_completed_header"
                     android:textSize="18sp"
@@ -939,7 +934,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="24dp"
                     android:drawablePadding="8dp"
                     android:text="@string/edit_categories_header"
                     android:textSize="18sp"
@@ -1187,14 +1182,14 @@
                     android:id="@+id/button_attachment_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="64dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:text="@string/edit_attachment_button_text"
                     android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
                     app:icon="@drawable/ic_attachment_add"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/button_take_picture"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edit_attachments_linearlayout" />
@@ -1204,15 +1199,19 @@
                     android:id="@+id/button_take_picture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="64dp"
                     android:layout_weight="1"
                     android:text="@string/edit_take_picture_button_text"
                     android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
                     app:icon="@drawable/ic_photo_add"
-                    app:layout_constraintBottom_toBottomOf="@+id/button_attachment_add"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/button_attachment_add"
-                    app:layout_constraintTop_toTopOf="@+id/button_attachment_add" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button_attachment_add" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

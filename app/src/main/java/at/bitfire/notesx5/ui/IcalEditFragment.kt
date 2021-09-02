@@ -50,7 +50,6 @@ import at.bitfire.notesx5.databinding.FragmentIcalEditBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditCommentBinding
 import at.bitfire.notesx5.databinding.FragmentIcalEditSubtaskBinding
 import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_ATTACHMENTS
-import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_CATEGORIES
 import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_COMMENTS
 import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_GENERAL
 import at.bitfire.notesx5.ui.IcalEditViewModel.Companion.TAB_LOCATION
@@ -214,7 +213,6 @@ class IcalEditFragment : Fragment() {
 
                 when (tab?.position) {
                     TAB_GENERAL -> icalEditViewModel.selectedTab = TAB_GENERAL
-                    TAB_CATEGORIES -> icalEditViewModel.selectedTab = TAB_CATEGORIES
                     TAB_PEOPLE -> icalEditViewModel.selectedTab = TAB_PEOPLE
                     TAB_COMMENTS -> icalEditViewModel.selectedTab = TAB_COMMENTS
                     TAB_LOCATION -> icalEditViewModel.selectedTab = TAB_LOCATION
