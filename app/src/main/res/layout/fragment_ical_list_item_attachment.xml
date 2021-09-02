@@ -23,7 +23,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/list_item__attachment_picture_thumbnail"
+            android:id="@+id/list_item_attachment_picture_thumbnail"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
@@ -34,11 +34,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription"
-            tools:src="@drawable/ic_launcher_background"
+            tools:src="@tools:sample/backgrounds/scenic"
             tools:visibility="visible" />
 
         <TextView
-            android:id="@+id/list_item__attachment_textview"
+            android:id="@+id/list_item_attachment_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -47,20 +47,20 @@
             android:layout_marginBottom="16dp"
             android:ellipsize="middle"
             android:singleLine="true"
-            app:layout_constraintEnd_toStartOf="@+id/list_item__attachment_filesize"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item__attachment_picture_thumbnail"
-            app:layout_constraintStart_toEndOf="@+id/list_item__attachment_picture_thumbnail"
-            app:layout_constraintTop_toTopOf="@+id/list_item__attachment_picture_thumbnail"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_attachment_filesize"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_attachment_picture_thumbnail"
+            app:layout_constraintStart_toEndOf="@+id/list_item_attachment_picture_thumbnail"
+            app:layout_constraintTop_toTopOf="@+id/list_item_attachment_picture_thumbnail"
             tools:text="Attachment.pdf" />
 
         <TextView
-            android:id="@+id/list_item__attachment_filesize"
+            android:id="@+id/list_item_attachment_filesize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item__attachment_textview"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_attachment_textview"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/list_item__attachment_textview"
+            app:layout_constraintTop_toTopOf="@+id/list_item_attachment_textview"
             tools:text="800 KB" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
