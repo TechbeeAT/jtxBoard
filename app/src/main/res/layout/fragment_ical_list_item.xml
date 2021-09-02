@@ -22,7 +22,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
@@ -37,8 +37,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/square_box"
-            tools:tint="#BC0D0D"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            tools:tint="#BC0D0D" />
+
+        <TextView
+            android:id="@+id/list_item_due"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="12sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintStart_toStartOf="@+id/list_item_summary"
+            app:layout_constraintTop_toTopOf="@+id/list_item_colorbar"
+            tools:text="Due in 365 days" />
 
         <TextView
             android:id="@+id/list_item_dtstart_day"
@@ -47,8 +58,11 @@
             android:textAlignment="center"
             android:textSize="36sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/list_item_dtstart_month"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/list_item_summary"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_chainStyle="packed"
             tools:text="31" />
 
         <TextView
@@ -57,6 +71,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@id/list_item_dtstart_year"
             app:layout_constraintEnd_toEndOf="@+id/list_item_dtstart_day"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/list_item_dtstart_day"
@@ -68,9 +83,11 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@id/list_item_dtstart_time"
             app:layout_constraintEnd_toEndOf="@+id/list_item_dtstart_day"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/list_item_dtstart_month"
+            app:layout_constraintVertical_bias="0.0"
             tools:text="2020" />
 
         <TextView
@@ -80,6 +97,7 @@
             android:textAlignment="center"
             android:textSize="14sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/list_item_dtstart_timezone"
             app:layout_constraintStart_toStartOf="@+id/list_item_dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/list_item_dtstart_year"
             tools:text="13:30" />
@@ -97,7 +115,6 @@
             tools:text="GMT+02:00" />
 
 
-
         <TextView
             android:id="@+id/list_item_summary"
             android:layout_width="0dp"
@@ -109,21 +126,26 @@
             android:maxLines="2"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:flow_verticalAlign="top"
+            app:layout_constraintBottom_toTopOf="@id/list_item_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
             app:layout_constraintTop_toBottomOf="@+id/list_item_due"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_chainStyle="packed"
             tools:text="Summary ... Lorem ipsum dolor sit amet" />
 
         <TextView
             android:id="@+id/list_item_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:ellipsize="end"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/list_item_dtstart_day"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_summary"
+            app:flow_verticalAlign="top"
             app:layout_constraintBottom_toTopOf="@id/list_item_barrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/list_item_summary"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_summary"
             tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
 
 
@@ -133,152 +155,6 @@
             android:layout_height="wrap_content"
             app:barrierDirection="top"
             tools:layout_editor_absoluteY="510dp" />
-
-        <LinearLayout
-            android:id="@+id/list_item_attachments"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:gravity="start"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="@+id/list_item_summary"
-            app:layout_constraintStart_toStartOf="@+id/list_item_summary"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_barrier" />
-
-        <ImageView
-            android:id="@+id/list_item_num_attendees_icon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_num_attendees_text"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
-            app:srcCompat="@drawable/ic_attendee"
-            app:tint="@android:color/darker_gray"
-            android:contentDescription="@string/list_num_attendees_contentdesc" />
-
-        <TextView
-            android:id="@+id/list_item_num_attendees_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_num_attendees_icon"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_num_attachments_icon"
-            app:layout_constraintTop_toTopOf="@+id/list_item_num_attendees_icon"
-            tools:text="0" />
-
-        <ImageView
-            android:id="@+id/list_item_num_attachments_icon"
-            android:layout_width="10dp"
-            android:layout_height="15dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_num_attachments_text"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
-            app:srcCompat="@drawable/ic_attachment"
-            app:tint="@android:color/darker_gray"
-            android:contentDescription="@string/list_num_attachments_contentdesc"/>
-
-        <TextView
-            android:id="@+id/list_item_num_attachments_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_num_attachments_icon"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_num_comments_icon"
-            app:layout_constraintTop_toTopOf="@+id/list_item_num_attachments_icon"
-            tools:text="0" />
-
-        <ImageView
-            android:id="@+id/list_item_num_comments_icon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_num_comments_text"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
-            app:srcCompat="@drawable/ic_comments"
-            app:tint="@android:color/darker_gray"
-            android:contentDescription="@string/list_num_comments_contentdesc"/>
-
-        <TextView
-            android:id="@+id/list_item_num_comments_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_num_comments_icon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/list_item_num_comments_icon"
-            tools:text="0" />
-
-
-        <TextView
-            android:id="@+id/list_item_progress_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/list_progress"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_slider"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider" />
-
-        <com.google.android.material.slider.Slider
-            android:id="@+id/list_item_progress_slider"
-            style="@style/Widget.AppCompat.SeekBar.Discrete"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:stepSize="1.0"
-            android:valueFrom="0.0"
-            android:valueTo="100.0"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_progress_percent"
-            app:layout_constraintStart_toEndOf="@+id/list_item_expand"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_categories" />
-
-
-        <TextView
-            android:id="@+id/list_item_progress_percent"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="viewEnd"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_slider"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_progress_checkbox"
-            app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider"
-            tools:text="100 %" />
-
-        <CheckBox
-            android:id="@+id/list_item_progress_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_slider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider" />
-
-
-        <LinearLayout
-            android:id="@+id/list_item_subtasks_linearlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:divider="?android:dividerHorizontal"
-            android:orientation="vertical"
-            android:showDividers="middle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_progress_slider"/>
 
 
         <ImageView
@@ -352,12 +228,162 @@
             app:layout_constraintTop_toBottomOf="@+id/list_item_attachments"
             tools:text="Public" />
 
+
+        <LinearLayout
+            android:id="@+id/list_item_attachments"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:gravity="start"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/list_item_summary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_barrier" />
+
+        <ImageView
+            android:id="@+id/list_item_num_attendees_icon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:contentDescription="@string/list_num_attendees_contentdesc"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_num_attendees_text"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
+            app:srcCompat="@drawable/ic_attendee"
+            app:tint="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/list_item_num_attendees_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_num_attendees_icon"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_num_attachments_icon"
+            app:layout_constraintTop_toTopOf="@+id/list_item_num_attendees_icon"
+            tools:text="0" />
+
+        <ImageView
+            android:id="@+id/list_item_num_attachments_icon"
+            android:layout_width="10dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:contentDescription="@string/list_num_attachments_contentdesc"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_num_attachments_text"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
+            app:srcCompat="@drawable/ic_attachment"
+            app:tint="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/list_item_num_attachments_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_num_attachments_icon"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_num_comments_icon"
+            app:layout_constraintTop_toTopOf="@+id/list_item_num_attachments_icon"
+            tools:text="0" />
+
+        <ImageView
+            android:id="@+id/list_item_num_comments_icon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:contentDescription="@string/list_num_comments_contentdesc"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_num_comments_text"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_classification"
+            app:srcCompat="@drawable/ic_comments"
+            app:tint="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/list_item_num_comments_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_num_comments_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/list_item_num_comments_icon"
+            tools:text="0" />
+
+
+        <TextView
+            android:id="@+id/list_item_progress_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/list_progress"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_slider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/list_item_progress_slider"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:stepSize="1.0"
+            android:valueFrom="0.0"
+            android:valueTo="100.0"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_progress_percent"
+            app:layout_constraintStart_toEndOf="@+id/list_item_expand"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_categories" />
+
+
+        <TextView
+            android:id="@+id/list_item_progress_percent"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="viewEnd"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_slider"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_progress_checkbox"
+            app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider"
+            tools:text="100 %" />
+
+        <CheckBox
+            android:id="@+id/list_item_progress_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_slider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/list_item_progress_slider" />
+
+
+        <LinearLayout
+            android:id="@+id/list_item_subtasks_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:divider="?android:dividerHorizontal"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_progress_slider" />
+
+
         <TextView
             android:id="@+id/list_item_categories"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textAlignment="textEnd"
@@ -365,30 +391,20 @@
             android:textSize="12sp"
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/list_item_summary"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/list_item_classification"
             tools:text="Category1, Category2" />
 
-        <TextView
-            android:id="@+id/list_item_due"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="12sp"
-            android:textStyle="bold|italic"
-            app:layout_constraintStart_toStartOf="@+id/list_item_summary"
-            app:layout_constraintTop_toTopOf="@+id/list_item_colorbar"
-            tools:text="Due in 365 days" />
 
         <ImageView
             android:id="@+id/list_item_expand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/list_expand"
             app:layout_constraintBottom_toBottomOf="@+id/list_item_progress_label"
             app:layout_constraintStart_toEndOf="@+id/list_item_progress_label"
             app:layout_constraintTop_toTopOf="@+id/list_item_progress_label"
-            app:srcCompat="@drawable/ic_expand"
-            android:contentDescription="@string/list_expand" />
+            app:srcCompat="@drawable/ic_expand" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

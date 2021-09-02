@@ -30,13 +30,16 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
 
     lateinit var dtstartFormatted: LiveData<String>
+    lateinit var dtstartTimezone: LiveData<String>
     lateinit var createdFormatted: LiveData<String>
     lateinit var lastModifiedFormatted: LiveData<String>
     lateinit var completedFormatted: LiveData<String>
     lateinit var startedFormatted: LiveData<String>
 
+
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
+    lateinit var timezoneVisible: LiveData<Boolean>
     lateinit var urlVisible: LiveData<Boolean>
     lateinit var locationVisible: LiveData<Boolean>
     lateinit var attendeesVisible: LiveData<Boolean>
@@ -99,6 +102,15 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null && item.property.dtstartTimezone != "ALLDAY"           // true if component == JOURNAL and it is not an All Day Event
             }
 
+            timezoneVisible = Transformations.map(icalEntity) { item ->
+                item?.property?.dtstartTimezone?.let {
+                    val tz = TimeZone.getTimeZone(it)
+                    if (tz != null)
+                        return@map true
+                }
+                return@map false    // true if timezone can be resolved with Java Timezones
+            }
+
             dtstartFormatted = Transformations.map(icalEntity) { item ->
                 if (item!!.property.dtstart != null) {
                     val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.property.dtstart!!))
@@ -106,7 +118,15 @@ class IcalViewViewModel(private val icalItemId: Long,
                     return@map "$formattedDate $formattedTime"
                 } else
                     return@map ""
+            }
 
+            dtstartTimezone = Transformations.map(icalEntity) { item ->
+                item?.property?.dtstartTimezone?.let {
+                    val tz = TimeZone.getTimeZone(it)
+                    if (tz != null)
+                        return@map tz.getDisplayName(true, TimeZone.SHORT)
+                }
+                return@map ""
             }
 
             createdFormatted = Transformations.map(icalEntity) { item ->

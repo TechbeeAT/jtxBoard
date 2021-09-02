@@ -144,6 +144,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             } else
                 holder.colorBar.visibility = View.GONE
 
+            //set date and time (if applicable) for Journals
             if (iCal4ListItem.property.module == Module.JOURNAL.name) {
                 holder.dtstartDay.text = convertLongToDayString(iCal4ListItem.property.dtstart)
                 holder.dtstartMonth.text = convertLongToMonthString(iCal4ListItem.property.dtstart)
@@ -152,20 +153,22 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                 if (iCal4ListItem.property.dtstartTimezone == "ALLDAY") {
                     holder.dtstartTime.visibility = View.GONE
                 } else {
-                    holder.dtstartTime.text =
-                        convertLongToTimeString(iCal4ListItem.property.dtstart)
+                    holder.dtstartTime.text = convertLongToTimeString(iCal4ListItem.property.dtstart)
                     holder.dtstartTime.visibility = View.VISIBLE
                 }
 
+                //set the timezone (if applicable)
                 if (iCal4ListItem.property.dtstartTimezone == "ALLDAY" || iCal4ListItem.property.dtstartTimezone.isNullOrEmpty() || TimeZone.getTimeZone(iCal4ListItem.property.dtstartTimezone).getDisplayName(true, TimeZone.SHORT) == null) {
-                    holder.dtstartTime.visibility = View.GONE
+                    holder.dtstartTimeZone.visibility = View.GONE
                 } else {
                     holder.dtstartTimeZone.text = TimeZone.getTimeZone(iCal4ListItem.property.dtstartTimezone).getDisplayName(true, TimeZone.SHORT)
                     holder.dtstartTimeZone.visibility = View.VISIBLE
                 }
+            } else {
+                holder.dtstartTimeZone.visibility = View.GONE
+                holder.dtstartTime.visibility = View.GONE
             }
 
-            //todo: check timezone
 
             /* START handle subtasks */
             holder.progressSlider.value = iCal4ListItem.property.percent?.toFloat() ?: 0F

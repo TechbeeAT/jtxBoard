@@ -104,6 +104,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
                     app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
                     app:layout_constraintTop_toBottomOf="@+id/view_dtstart_month"
+                    app:layout_constraintBottom_toTopOf="@id/view_dtstart_time"
                     tools:text="2020" />
 
                 <TextView
@@ -115,11 +116,25 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
                     app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
                     app:layout_constraintTop_toBottomOf="@+id/view_dtstart_year"
+                    app:layout_constraintBottom_toTopOf="@id/view_dtstart_timezone"
                     app:layout_constraintVertical_bias="0.0"
                     tools:text="13:30" />
+
+                <TextView
+                    android:id="@+id/view_dtstart_timezone"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="12sp"
+                    android:text="@{model.dtstartTimezone}"
+                    android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
+                    app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
+                    app:layout_constraintTop_toBottomOf="@+id/view_dtstart_time"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="GMT+02:00" />
 
 
                 <TextView
