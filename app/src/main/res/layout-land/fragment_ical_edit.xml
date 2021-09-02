@@ -441,6 +441,7 @@
                     android:id="@+id/edit_subtasks_add_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
                     android:inputType="textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -1028,6 +1029,7 @@
                     android:id="@+id/edit_comment_add_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
                     android:inputType="textWebEmailAddress|textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
