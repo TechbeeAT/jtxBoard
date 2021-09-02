@@ -1353,7 +1353,11 @@ class IcalEditFragment : Fragment() {
         }
 
         // the pendingIntent is initiated that is passed on to the alarm manager
-        val pendingIntent = PendingIntent.getBroadcast(context, iCalObjectId.toInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(context, iCalObjectId.toInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        } else {
+            PendingIntent.getBroadcast(context, iCalObjectId.toInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
 
         // the alarmManager finally takes care, that the pendingIntent is queued to start the notification Intent that on click would start the contentIntent
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

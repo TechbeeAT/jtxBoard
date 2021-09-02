@@ -236,22 +236,24 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun setUpAds() {
+    private fun setUpAds() {
 
         // TODO: replace adUnitId with production Unit Id
         MobileAds.initialize(this) {}
 
         // Section to retrieve the width of the device to set the adSize
-        val outMetrics = DisplayMetrics()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            display!!.getRealMetrics(outMetrics)
+        val adWidth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val wm = windowManager.currentWindowMetrics
+            wm.bounds.width()
         } else {
+            val outMetrics = DisplayMetrics()
             @Suppress("DEPRECATION")
             val display = windowManager.defaultDisplay
             @Suppress("DEPRECATION")
             display.getMetrics(outMetrics)
+            (outMetrics.widthPixels.toFloat() / outMetrics.density).toInt()
         }
-        val adWidth = (outMetrics.widthPixels.toFloat() / outMetrics.density).toInt()
+
         val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
 
         // now that the adSize is determined we can place the add

@@ -82,7 +82,6 @@ class SyncContentProvider : ContentProvider() {
         addURI(SYNC_PROVIDER_AUTHORITY, "collection", CODE_COLLECTION_DIR)
         addURI(SYNC_PROVIDER_AUTHORITY, "attachment", CODE_ATTACHMENT_DIR)
 
-
         addURI(SYNC_PROVIDER_AUTHORITY, "icalobject/#", CODE_ICALOBJECT_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "attendee/#", CODE_ATTENDEE_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "category/#", CODE_CATEGORY_ITEM)
@@ -128,7 +127,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
             CODE_ATTACHMENT_DIR -> queryString += "$TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID IN ($subquery) "
 
-
             CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ? "
             CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
             CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ?"
@@ -139,7 +137,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ? "
             CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = ? "
             CODE_ATTACHMENT_ITEM -> queryString += "$TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_ID = ? "
-
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
@@ -164,7 +161,6 @@ class SyncContentProvider : ContentProvider() {
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
 
         return count
-
     }
 
     override fun getType(uri: Uri): String? {
@@ -218,7 +214,6 @@ class SyncContentProvider : ContentProvider() {
         if(sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR)
             storeBinaryAttachmentInDir(id)
 
-
         return ContentUris.withAppendedId(uri, id)
     }
 
@@ -264,7 +259,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) "
             CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
             CODE_ATTACHMENT_DIR -> queryString += "$TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID IN ($subquery) "
-
 
             CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID IN ($subquery) AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ? "
             CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
@@ -337,7 +331,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION "
             CODE_ATTACHMENT_DIR -> queryString += "$TABLE_NAME_ATTACHMENT "
 
-
             CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT "
             CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE "
             CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY "
@@ -348,7 +341,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE "
             CODE_COLLECTION_ITEM -> queryString += "$TABLE_NAME_COLLECTION "
             CODE_ATTACHMENT_ITEM -> queryString += "$TABLE_NAME_ATTACHMENT "
-
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
@@ -384,7 +376,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_COLLECTION_DIR -> queryString += "$TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
             CODE_ATTACHMENT_DIR -> queryString += "$COLUMN_ATTACHMENT_ICALOBJECT_ID IN ($subquery) "
 
-
             CODE_ICALOBJECT_ITEM -> queryString += "$COLUMN_ID IN ($subquery) AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ? "
             CODE_ATTENDEE_ITEM -> queryString += "$COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
             CODE_CATEGORY_ITEM -> queryString += "$COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ? "
@@ -415,7 +406,6 @@ class SyncContentProvider : ContentProvider() {
         context!!.contentResolver.notifyChange(uri, null)
         return 1
     }
-
 
 
     private fun isSyncAdapter(uri: Uri): Boolean {
@@ -472,7 +462,6 @@ class SyncContentProvider : ContentProvider() {
         } catch (e: IOException) {
             Log.e("SyncContentProvider", "Failed to access storage\n$e")
         }
-
     }
 }
 

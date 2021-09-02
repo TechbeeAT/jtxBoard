@@ -22,7 +22,7 @@ buildscript {
         version_core = "1.6.0"
         version_coroutine = "1.4.1"
         version_constraint_layout = "2.1.0"
-        version_gradle = '7.0.1'
+        version_gradle = '7.0.2'
         version_kotlin = "1.5.30"
         version_lifecycle_extensions = "2.2.0"
         version_lifecycle = "2.3.1"
