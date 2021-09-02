@@ -107,6 +107,9 @@ class IcalEditFragment : Fragment() {
         const val TAG_PICKER_COMPLETED = "completed"
         const val TAG_PICKER_STARTED = "started"
 
+        const val PREFS_EDIT_VIEW = "sharedPreferencesEditView"
+        const val PREFS_LAST_COLLECTION = "lastUsedCollection"
+
     }
 
 
@@ -125,6 +128,8 @@ class IcalEditFragment : Fragment() {
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
         val arguments = IcalEditFragmentArgs.fromBundle((requireArguments()))
+
+        val prefs = activity?.getSharedPreferences(PREFS_EDIT_VIEW, Context.MODE_PRIVATE)!!
 
 
         // add menu
@@ -235,6 +240,8 @@ class IcalEditFragment : Fragment() {
         icalEditViewModel.savingClicked.observe(viewLifecycleOwner, {
             if (it == true) {
                 icalEditViewModel.iCalObjectUpdated.value!!.percent = binding.editProgressSlider.value.toInt()
+                prefs.edit().putLong(PREFS_LAST_COLLECTION, icalEditViewModel.iCalObjectUpdated.value!!.collectionId).apply()
+
                 icalEditViewModel.update()
             }
         })
@@ -508,13 +515,6 @@ class IcalEditFragment : Fragment() {
 
 
 
-        // set the default selection for the spinner. The same snippet exists for the allOrganizers observer
-        if (icalEditViewModel.allCollections.value != null) {
-            val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection) ?: 0
-            binding.editCollectionSpinner.setSelection(selectedCollectionPos)
-        }
-
-
         // Set up items to suggest for categories
         icalEditViewModel.allCategories.observe(viewLifecycleOwner, {
             // Create the adapter and set it to the AutoCompleteTextView
@@ -534,19 +534,28 @@ class IcalEditFragment : Fragment() {
 
         icalEditViewModel.allCollections.observe(viewLifecycleOwner, {
 
+            if(it.isNullOrEmpty())
+                return@observe
+
             // set up the adapter for the organizer spinner
             val spinner: Spinner = binding.editCollectionSpinner
             val allCollectionNames: MutableList<String> = mutableListOf()
-            icalEditViewModel.allCollections.value?.forEach { it.displayName?.let { name -> allCollectionNames.add(name) } }
+            icalEditViewModel.allCollections.value?.forEach { collection -> collection.displayName?.let { name -> allCollectionNames.add(name) } }
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, allCollectionNames)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
 
-            // set the default selection for the spinner. The same snippet exists for the vJournalItem observer
-            if (icalEditViewModel.allCollections.value != null) {
-                val selectedCollectionPos = icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection)
-                if (selectedCollectionPos != null)
-                    spinner.setSelection(selectedCollectionPos)
+
+            // set the default selection for the spinner.
+            val lastUsedCollectionId = prefs.getLong(PREFS_LAST_COLLECTION, 1L)
+            if (icalEditViewModel.iCalEntity.property.collectionId == 1L) {
+                val selectedCollectionPos: Int = if(icalEditViewModel.iCalEntity.property.id != 0L)         // set the spinner to the actual collection if it was not a new item
+                    icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection) ?: 0
+                else  {
+                    val lastUsedCollection = icalEditViewModel.allCollections.value?.find { it.collectionId == lastUsedCollectionId }
+                    icalEditViewModel.allCollections.value?.indexOf(lastUsedCollection) ?: 0
+                }
+                binding.editCollectionSpinner.setSelection(selectedCollectionPos)
             }
         })
 
