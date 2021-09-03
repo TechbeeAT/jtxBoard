@@ -48,6 +48,7 @@ class IcalListFragment : Fragment() {
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
 
+    private lateinit var optionsMenu: Menu
     private var gotodateMenuItem: MenuItem? = null
 
     private lateinit var prefs: SharedPreferences
@@ -98,7 +99,7 @@ class IcalListFragment : Fragment() {
         staggeredGridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
 
         recyclerView?.layoutManager = staggeredGridLayoutManager
-        recyclerView?.setHasFixedSize(true)
+        recyclerView?.setHasFixedSize(false)
 
         // create adapter and provide data
         //vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vjournalList, vJournalListViewModel.vjournaListCount)
@@ -213,19 +214,10 @@ class IcalListFragment : Fragment() {
         }
 
         binding.fabFilter.setOnClickListener {
-
-            if (icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()) {
-                binding.fabFilter.setImageResource(R.drawable.ic_filter)
-                icalListViewModel.resetFocusItem()
-                icalListViewModel.clearFilter()
-                prefs.edit().clear().apply()
-                arguments?.clear()
-            }
-            else {
-                goToFilterFragment()
-            }
-
-
+            if (icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty())
+                resetFilter()
+            else
+                goToFilter()
         }
 
         super.onStart()
@@ -359,13 +351,19 @@ class IcalListFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_ical_list, menu)
         MenuCompat.setGroupDividerEnabled(menu, true)
-
+        optionsMenu = menu
 
 
         // Tell the variable the menu item to later make it visible or invisible
         gotodateMenuItem = menu.findItem(R.id.menu_list_gotodate)
 
-        // add listener for search!
+        // don't show the option to clear the filter if no filter was set
+        if (icalListViewModel.searchCategories.isEmpty() && icalListViewModel.searchOrganizer.isEmpty() && icalListViewModel.searchStatusJournal.isEmpty() && icalListViewModel.searchStatusTodo.isEmpty() && icalListViewModel.searchClassification.isEmpty() && icalListViewModel.searchCollection.isEmpty()) {
+            optionsMenu.findItem(R.id.menu_list_clearfilter).isVisible = false
+            binding.fabFilter.setImageResource(R.drawable.ic_filter)
+        }
+
+            // add listener for search!
         val searchMenuItem = menu.findItem(R.id.menu_list_search)
         val searchView = searchMenuItem.actionView as SearchView
 
@@ -463,15 +461,11 @@ class IcalListFragment : Fragment() {
         }
 
         if (item.itemId == R.id.menu_list_filter) {
-
-            goToFilterFragment()
+            goToFilter()
         }
 
         if (item.itemId == R.id.menu_list_clearfilter) {
-            icalListViewModel.resetFocusItem()
-            icalListViewModel.clearFilter()
-            prefs.edit().clear().apply()
-            arguments?.clear()
+            resetFilter()
         }
 
         if (item.itemId == R.id.menu_list_add_journal) {
@@ -502,21 +496,30 @@ class IcalListFragment : Fragment() {
     }
 
 
+    private fun resetFilter() {
 
+        binding.fabFilter.setImageResource(R.drawable.ic_filter)
+        optionsMenu.findItem(R.id.menu_list_clearfilter).isVisible = false
+        icalListViewModel.resetFocusItem()
+        icalListViewModel.clearFilter()
+        prefs.edit().clear().apply()
+        arguments?.clear()
+    }
 
-    private fun goToFilterFragment() {
+    private fun goToFilter() {
         icalListViewModel.resetFocusItem()
         prefs.edit().clear().apply()
 
         this.findNavController().navigate(
-                IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
-                    this.category2preselect = icalListViewModel.searchCategories.toTypedArray()
-                    this.statusJournal2preselect = icalListViewModel.searchStatusJournal.toTypedArray()
-                    this.statusTodo2preselect = icalListViewModel.searchStatusTodo.toTypedArray()
-                    this.classification2preselect = icalListViewModel.searchClassification.toTypedArray()
-                    this.collection2preselect = icalListViewModel.searchCollection.toTypedArray()
-                    this.module2preselect = icalListViewModel.searchModule
-                })
+            IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
+                this.category2preselect = icalListViewModel.searchCategories.toTypedArray()
+                this.statusJournal2preselect = icalListViewModel.searchStatusJournal.toTypedArray()
+                this.statusTodo2preselect = icalListViewModel.searchStatusTodo.toTypedArray()
+                this.classification2preselect = icalListViewModel.searchClassification.toTypedArray()
+                this.collection2preselect = icalListViewModel.searchCollection.toTypedArray()
+                this.module2preselect = icalListViewModel.searchModule
+            })
+
     }
 
 /*
