@@ -21,8 +21,8 @@ import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import at.bitfire.notesx5.MainActivity
 import at.bitfire.notesx5.R
 import at.bitfire.notesx5.database.*
@@ -37,8 +37,8 @@ import java.util.*
 class IcalListFragment : Fragment() {
 
     private var recyclerView: RecyclerView? = null
-    //private var linearLayoutManager: LinearLayoutManager? = null
-    private var staggeredGridLayoutManager: StaggeredGridLayoutManager? = null
+    private var linearLayoutManager: LinearLayoutManager? = null
+    //private var staggeredGridLayoutManager: StaggeredGridLayoutManager? = null
 
     private var icalListAdapter: IcalListAdapter? = null
 
@@ -95,10 +95,11 @@ class IcalListFragment : Fragment() {
 
         // set up recycler view
         recyclerView = binding.vjournalListItemsRecyclerView
-        //linearLayoutManager = LinearLayoutManager(application.applicationContext)
-        staggeredGridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        linearLayoutManager = LinearLayoutManager(application.applicationContext)
+        //staggeredGridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
 
-        recyclerView?.layoutManager = staggeredGridLayoutManager
+        //recyclerView?.layoutManager = staggeredGridLayoutManager
+        recyclerView?.layoutManager = linearLayoutManager
         recyclerView?.setHasFixedSize(false)
 
         // create adapter and provide data
@@ -122,17 +123,17 @@ class IcalListFragment : Fragment() {
             when (icalListViewModel.searchModule) {
                 "NOTE" -> {
                     gotodateMenuItem?.isVisible = false
-                    staggeredGridLayoutManager!!.spanCount = 1
+                    //staggeredGridLayoutManager!!.spanCount = 1
                     binding.fab.setImageResource(R.drawable.ic_add_note)
                 }
                 "JOURNAL" -> {
                     gotodateMenuItem?.isVisible = true
-                    staggeredGridLayoutManager!!.spanCount = 1
+                    //staggeredGridLayoutManager!!.spanCount = 1
                     binding.fab.setImageResource(R.drawable.ic_add)
                 }
                 "TODO" -> {
                     gotodateMenuItem?.isVisible = false
-                    staggeredGridLayoutManager!!.spanCount = 1
+                    //staggeredGridLayoutManager!!.spanCount = 1
                     binding.fab.setImageResource(R.drawable.ic_todo_add)
                 }
             }
@@ -567,44 +568,6 @@ class IcalListFragment : Fragment() {
  */
 }
 
-
-    /*
-    binding.topAppBar.setOnMenuItemClickListener { menuItem ->
-        when (menuItem.itemId) {
-            R.id.favorite -> {
-                // Handle favorite icon press
-                true
-            }
-            R.id.search -> {
-                // Handle search icon press
-                true
-            }
-            R.id.more -> {
-                // Handle more item (inside overflow menu) press
-                true
-            }
-            else -> false
-        }
-    }
-*/
-    // END Set up Search
-
-
-    /*
-    val materialDateBuilder: MaterialDatePicker.Builder<*> = MaterialDatePicker.Builder.datePicker()
-    materialDateBuilder.setTitleText("Go to date")
-    materialDateBuilder.setTheme(R.style.MaterialDatepicker)
-    val materialDatePicker = materialDateBuilder.build()
-
-    materialDatePicker.show(parentFragmentManager, "GOTO_MATERIAL_DATE_PICKER")
-    materialDatePicker.addOnPositiveButtonClickListener {
-        Toast.makeText(context, "Selected Date is : " + materialDatePicker.headerText, Toast.LENGTH_LONG)
-    }
-
-     */
-
-
-// END Set up Datepicker
 
 
 /*
