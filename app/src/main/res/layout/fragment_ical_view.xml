@@ -163,8 +163,9 @@
                     app:chipSpacingVertical="0dp"
                     app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
-                    app:layout_constraintTop_toBottomOf="@+id/view_collection" />
+                    app:layout_constraintStart_toStartOf="@+id/view_collection"
+                    app:layout_constraintTop_toBottomOf="@+id/view_collection"
+                    app:layout_constraintVertical_bias="0.0" />
 
 
                 <androidx.constraintlayout.widget.Barrier

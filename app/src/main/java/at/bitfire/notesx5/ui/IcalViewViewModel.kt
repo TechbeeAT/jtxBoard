@@ -103,15 +103,7 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
 
             timezoneVisible = Transformations.map(icalEntity) { item ->
-                if (item?.property?.dtstartTimezone == "ALLDAY" || item?.property?.dtstartTimezone.isNullOrEmpty())
-                    return@map false
-
-                item?.property?.dtstartTimezone?.let {
-                    val tz = TimeZone.getTimeZone(it)
-                    if (tz != null)
-                        return@map true
-                }
-                return@map false    // true if timezone can be resolved with Java Timezones
+                return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null && !(item.property.dtstartTimezone == "ALLDAY" || item.property.dtstartTimezone.isNullOrEmpty())           // true if component == JOURNAL and it is not an All Day Event
             }
 
             dtstartFormatted = Transformations.map(icalEntity) { item ->
