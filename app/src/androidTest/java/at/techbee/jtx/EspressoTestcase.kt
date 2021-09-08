@@ -81,9 +81,9 @@ class EspressoTestcase {
 
         onView(withContentDescription("Open navigation drawer")).perform(click())
         onView(withId(R.id.nav_about)).perform(click())
-        onView(withContentDescription("Translations")).perform(click())
-        onView(withContentDescription("Libraries")).perform(click())
-        onView(withContentDescription("JTX")).perform(click())
+        onView(withContentDescription(R.string.about_tabitem_translations)).perform(click())
+        onView(withContentDescription(R.string.about_tabitem_libraries)).perform(click())
+        onView(withContentDescription(R.string.about_tabitem_jtx)).perform(click())
 
         onView(withId(R.id.about_app_icon))
     }
