@@ -4,9 +4,9 @@
         name="external_cache_files"
         path="." />
     <files-path
-        name="notesx5_files"
+        name="jtx_files"
         path="." />
     <external-files-path
-        name="notesx5_images"
+        name="jtx_images"
         path="Pictures" />
 </paths>

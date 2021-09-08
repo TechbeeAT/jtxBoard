@@ -16,7 +16,7 @@
         android:id="@+id/relative_layout_activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="at.bitfire.notesx5.MainActivity">
+        tools:context="at.techbee.jtx.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topAppBarLayout"

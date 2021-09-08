@@ -15,7 +15,7 @@
 
         <variable
             name="vJournalListViewModel"
-            type="at.bitfire.notesx5.ui.IcalListViewModel" />
+            type="at.techbee.jtx.ui.IcalListViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

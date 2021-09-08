@@ -62,7 +62,7 @@
     <string name="cleared_message">All your data is gone forever.</string>
 
     <!-- Navigation Drawer  -->
-    <string name="drawer_main_header_app_icon">NotesX5 App Icon</string>
+    <string name="drawer_main_header_app_icon">App Icon</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -124,7 +124,7 @@
     <string name="view_comments_header">Comments</string>
     <string name="view_attachments_header">Attachments</string>
     <string name="view_fragment_audio_permission">App Permission</string>
-    <string name="view_fragment_audio_permission_message">NOTESx5 needs the permission in order to record audio. Please grant the permission to use this feature.</string>
+    <string name="view_fragment_audio_permission_message">JTX needs the permission in order to record audio. Please grant the permission to use this feature.</string>
     <string name="view_fragment_audio_dialog_add_audio_note">Add Audio Note</string>
     <string name="view_comment_playbutton_content_desc">Play audio comment</string>
     <string name="view_fragment_audio_start_stop_recording_contentdesc">Start/Stop recording</string>
@@ -163,7 +163,7 @@
 
 
     <string name="edit_fragment_app_permission">App Permission</string>
-    <string name="edit_fragment_app_permission_message">NOTESx5 can propose Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
+    <string name="edit_fragment_app_permission_message">JTX can propose Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
 
 
 
@@ -182,13 +182,13 @@
     <string name="view_progress_label">Progress</string>
 
     <!-- fragment_about -->
-    <string name="about_tabitem_notesx5" translatable="false">NOTESx5</string>
+    <string name="about_tabitem_jtx" translatable="false">JTX app</string>
     <string name="about_tabitem_translations">Translations</string>
     <string name="about_tabitem_libraries">Libraries</string>
-    <string name="about_notesx5_version">Version %1$s (%2$d)</string>
-    <string name="about_notesx5_build_date">Compiled on %s</string>
-    <string name="about_notesx5_copyright" translatable="false">© TECHBEE apps &amp; consulting</string>
-    <string name="about_notesx5_techbee_link" translatable="false">https://techbee.at</string>
+    <string name="about_app_version">Version %1$s (%2$d)</string>
+    <string name="about_app_build_date">Compiled on %s</string>
+    <string name="about_app_copyright" translatable="false">© TECHBEE apps &amp; consulting</string>
+    <string name="about_app_techbee_link" translatable="false">https://techbee.at</string>
 
 
 

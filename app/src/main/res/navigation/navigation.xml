@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/icalListFragment"
-        android:name="at.bitfire.notesx5.ui.IcalListFragment"
+        android:name="at.techbee.jtx.ui.IcalListFragment"
         android:label="icalListFragment"
         tools:layout="@layout/fragment_ical_list">
 
@@ -46,17 +46,17 @@
         <argument
             android:name="statusTodo2filter"
             android:defaultValue="@null"
-            app:argType="at.bitfire.notesx5.database.StatusTodo[]"
+            app:argType="at.techbee.jtx.database.StatusTodo[]"
             app:nullable="true" />
         <argument
             android:name="statusJournal2filter"
             android:defaultValue="@null"
-            app:argType="at.bitfire.notesx5.database.StatusJournal[]"
+            app:argType="at.techbee.jtx.database.StatusJournal[]"
             app:nullable="true" />
         <argument
             android:name="classification2filter"
             android:defaultValue="@null"
-            app:argType="at.bitfire.notesx5.database.Classification[]"
+            app:argType="at.techbee.jtx.database.Classification[]"
             app:nullable="true" />
         <argument
             android:name="collection2filter"
@@ -71,7 +71,7 @@
     </fragment>
     <fragment
         android:id="@+id/icalViewFragment"
-        android:name="at.bitfire.notesx5.ui.IcalViewFragment"
+        android:name="at.techbee.jtx.ui.IcalViewFragment"
         android:label="icalViewFragment"
         tools:layout="@layout/fragment_ical_view">
         <argument
@@ -92,7 +92,7 @@
     </fragment>
     <fragment
         android:id="@+id/icalEditFragment"
-        android:name="at.bitfire.notesx5.ui.IcalEditFragment"
+        android:name="at.techbee.jtx.ui.IcalEditFragment"
         android:label="icalEditFragment"
         tools:layout="@layout/fragment_ical_edit">
         <action
@@ -101,11 +101,11 @@
             app:popUpTo="@id/icalListFragment" />
         <argument
             android:name="icalentity"
-            app:argType="at.bitfire.notesx5.database.relations.ICalEntity" />
+            app:argType="at.techbee.jtx.database.relations.ICalEntity" />
     </fragment>
     <fragment
         android:id="@+id/icalFilterFragment"
-        android:name="at.bitfire.notesx5.ui.IcalFilterFragment"
+        android:name="at.techbee.jtx.ui.IcalFilterFragment"
         android:label="icalFilterFragment"
         tools:layout="@layout/fragment_ical_filter">
         <action
@@ -119,17 +119,17 @@
             app:nullable="true" />
         <argument
             android:name="statusTodo2preselect"
-            app:argType="at.bitfire.notesx5.database.StatusTodo[]"
+            app:argType="at.techbee.jtx.database.StatusTodo[]"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
             android:name="statusJournal2preselect"
-            app:argType="at.bitfire.notesx5.database.StatusJournal[]"
+            app:argType="at.techbee.jtx.database.StatusJournal[]"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
             android:name="classification2preselect"
-            app:argType="at.bitfire.notesx5.database.Classification[]"
+            app:argType="at.techbee.jtx.database.Classification[]"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
@@ -145,14 +145,14 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="at.bitfire.notesx5.ui.SettingsFragment"
+        android:name="at.techbee.jtx.ui.SettingsFragment"
         android:label="SettingsFragment"/>
     <!--Global action-->
     <action android:id="@+id/action_global_settingsFragment"
         app:destination="@id/settingsFragment"/>
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="at.bitfire.notesx5.ui.AboutFragment"
+        android:name="at.techbee.jtx.ui.AboutFragment"
         android:label="AboutFragment"
         tools:layout="@layout/fragment_about"/>
     <action android:id="@+id/action_global_aboutFragment"

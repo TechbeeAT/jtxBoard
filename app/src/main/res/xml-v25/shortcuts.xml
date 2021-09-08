@@ -10,8 +10,8 @@
         android:shortcutLongLabel="@string/shortcut_addTodo_longLabel">
         <intent
             android:action="addTodo"
-            android:targetPackage="at.bitfire.notesx5"
-            android:targetClass="at.bitfire.notesx5.MainActivity" />
+            android:targetPackage="at.techbee.jtx"
+            android:targetClass="at.techbee.jtx.MainActivity" />
     </shortcut>
     
     <shortcut
@@ -22,8 +22,8 @@
         android:shortcutLongLabel="@string/shortcut_addNote_longLabel">
         <intent
             android:action="addNote"
-            android:targetPackage="at.bitfire.notesx5"
-            android:targetClass="at.bitfire.notesx5.MainActivity" />
+            android:targetPackage="at.techbee.jtx"
+            android:targetClass="at.techbee.jtx.MainActivity" />
     </shortcut>
 
     <shortcut
@@ -34,8 +34,8 @@
         android:shortcutLongLabel="@string/shortcut_addJournal_longLabel">
         <intent
             android:action="addJournal"
-            android:targetPackage="at.bitfire.notesx5"
-            android:targetClass="at.bitfire.notesx5.MainActivity" />
+            android:targetPackage="at.techbee.jtx"
+            android:targetClass="at.techbee.jtx.MainActivity" />
     </shortcut>
 
 </shortcuts>

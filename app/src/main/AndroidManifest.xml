@@ -9,7 +9,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="at.bitfire.notesx5">
+    package="at.techbee.jtx">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -27,15 +27,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <provider
-            android:name=".SyncContentProvider"
-            android:authorities="at.bitfire.notesx5.provider"
+            android:name="at.techbee.jtx.SyncContentProvider"
+            android:authorities="at.techbee.jtx.provider"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedContentProvider" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="at.bitfire.notesx5.fileprovider"
+            android:authorities="at.techbee.jtx.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -44,7 +44,7 @@
             </meta-data>
         </provider>
 
-        <activity android:name=".MainActivity"
+        <activity android:name="at.techbee.jtx.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,7 +56,7 @@
 
         </activity>
 
-        <receiver android:name=".NotificationPublisher" />
+        <receiver android:name="at.techbee.jtx.NotificationPublisher" />
 
         <meta-data
             android:name="preloaded_fonts"

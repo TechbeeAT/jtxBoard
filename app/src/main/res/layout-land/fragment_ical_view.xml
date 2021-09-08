@@ -17,11 +17,11 @@
 
         <import type="android.view.View" />
 
-        <import type="at.bitfire.notesx5.UtilKt" />
+        <import type="at.techbee.jtx.UtilKt" />
 
         <variable
             name="model"
-            type="at.bitfire.notesx5.ui.IcalViewViewModel" />
+            type="at.techbee.jtx.ui.IcalViewViewModel" />
     </data>
 
 

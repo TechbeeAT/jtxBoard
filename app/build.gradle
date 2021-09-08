@@ -18,7 +18,7 @@ apply plugin: 'org.jetbrains.dokka'
 android {
     compileSdkVersion 31
     defaultConfig {
-        applicationId "at.bitfire.notesx5"
+        applicationId "at.techbee.jtx"
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 31

@@ -15,12 +15,12 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="at.bitfire.notesx5.UtilKt" />
+        <import type="at.techbee.jtx.UtilKt" />
 
 
         <variable
             name="model"
-            type="at.bitfire.notesx5.ui.IcalEditViewModel" />
+            type="at.techbee.jtx.ui.IcalEditViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

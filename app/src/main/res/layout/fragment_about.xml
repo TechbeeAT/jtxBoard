@@ -17,7 +17,7 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/about_tabitem_notesx5" />
+            android:text="@string/about_tabitem_jtx" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -32,8 +32,8 @@
 
 
     <include
-        android:id="@+id/fragment_about_notesx5"
-        layout="@layout/fragment_about_notesx5"
+        android:id="@+id/fragment_about_app"
+        layout="@layout/fragment_about_jtx"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

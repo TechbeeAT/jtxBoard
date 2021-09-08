@@ -18,7 +18,7 @@
 
         <variable
             name="model"
-            type="at.bitfire.notesx5.ui.IcalFilterViewModel" />
+            type="at.techbee.jtx.ui.IcalFilterViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
