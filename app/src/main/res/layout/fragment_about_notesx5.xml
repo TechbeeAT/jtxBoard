@@ -56,8 +56,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:autoLink="web"
             android:text="@string/about_notesx5_copyright"
-            android:textAlignment="viewStart" />
+            android:textAlignment="center" />
+
+        <ImageView
+            android:id="@+id/about_notesx5_techbee_logo"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="16dp"
+            android:autoLink="web"
+            android:textAlignment="center"
+            app:srcCompat="@drawable/logo_techbee"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/about_notesx5_techbee_link"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:autoLink="web"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:text="@string/about_notesx5_techbee_link"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/about_notesx5_warranty"
