@@ -145,10 +145,10 @@ class IcalEditFragment : Fragment() {
             MaterialAlertDialogBuilder(requireContext())
                     .setTitle(getString(R.string.edit_fragment_app_permission))
                     .setMessage(getString(R.string.edit_fragment_app_permission_message))
-                    .setPositiveButton("Ok") { dialog, which ->
+                    .setPositiveButton("Ok") { _, _ ->
                         ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_READ_PERMISSION_CODE)
                     }
-                    .setNegativeButton("Cancel") { dialog, which -> }
+                    .setNegativeButton("Cancel") { _, _ -> }
                     .show()
         }
 
@@ -551,7 +551,7 @@ class IcalEditFragment : Fragment() {
                 val selectedCollectionPos: Int = if(icalEditViewModel.iCalEntity.property.id != 0L)         // set the spinner to the actual collection if it was not a new item
                     icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection) ?: 0
                 else  {
-                    val lastUsedCollection = icalEditViewModel.allCollections.value?.find { it.collectionId == lastUsedCollectionId }
+                    val lastUsedCollection = icalEditViewModel.allCollections.value?.find { colList -> colList.collectionId == lastUsedCollectionId }
                     icalEditViewModel.allCollections.value?.indexOf(lastUsedCollection) ?: 0
                 }
                 binding.editCollectionSpinner.setSelection(selectedCollectionPos)
@@ -604,7 +604,7 @@ class IcalEditFragment : Fragment() {
 
         var restoreProgress = icalEditViewModel.iCalObjectUpdated.value?.percent ?: 0
 
-        binding.editProgressSlider.addOnChangeListener { slider, value, fromUser ->
+        binding.editProgressSlider.addOnChangeListener { _, value, _ ->
             icalEditViewModel.iCalObjectUpdated.value?.percent = value.toInt()
             binding.editProgressCheckbox.isChecked = value == 100F
             binding.editProgressPercent.text = "${value.toInt()} %"
@@ -629,7 +629,7 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-        binding.editProgressCheckbox.setOnCheckedChangeListener { button, checked ->
+        binding.editProgressCheckbox.setOnCheckedChangeListener { _, checked ->
             val newProgress: Int = if (checked)  100
             else restoreProgress
 
@@ -652,7 +652,7 @@ class IcalEditFragment : Fragment() {
 
 
         // Transform the category input into a chip when the Done button in the keyboard is clicked
-        binding.editCategoriesAdd.editText?.setOnEditorActionListener { v, actionId, event ->
+        binding.editCategoriesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     icalEditViewModel.categoryUpdated.add(Category(text = binding.editCategoriesAdd.editText?.text.toString()))
@@ -665,7 +665,7 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-        binding.editAttendeesAddAutocomplete.setOnItemClickListener { adapterView, view, i, l ->
+        binding.editAttendeesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
             //TODO
             val newAttendee = binding.editAttendeesAddAutocomplete.adapter.getItem(i).toString()
             addAttendeeChip(Attendee(caladdress = newAttendee))
@@ -686,7 +686,7 @@ class IcalEditFragment : Fragment() {
         }
 
         // Transform the category input into a chip when the Done button in the keyboard is clicked
-        binding.editAttendeesAdd.editText?.setOnEditorActionListener { v, actionId, event ->
+        binding.editAttendeesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     if ((!binding.editAttendeesAdd.editText?.text.isNullOrEmpty() && !isValidEmail(binding.editAttendeesAdd.editText?.text.toString())))
@@ -717,7 +717,7 @@ class IcalEditFragment : Fragment() {
 
 
         // Transform the comment input into a view when the Done button in the keyboard is clicked
-        binding.editCommentAdd.editText?.setOnEditorActionListener { v, actionId, event ->
+        binding.editCommentAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     val newComment = Comment(text = binding.editCommentAdd.editText?.text.toString())
@@ -783,7 +783,7 @@ class IcalEditFragment : Fragment() {
 
 
         // Transform the comment input into a view when the Done button in the keyboard is clicked
-        binding.editSubtasksAdd.editText?.setOnEditorActionListener { v, actionId, event ->
+        binding.editSubtasksAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     val newSubtask = ICalObject.createTask(summary = binding.editSubtasksAdd.editText?.text.toString())
@@ -801,7 +801,7 @@ class IcalEditFragment : Fragment() {
 
             MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Set status")
-                    .setItems(statusItems) { dialog, which ->
+                    .setItems(statusItems) { _, which ->
                         // Respond to item chosen
                         if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name) {
                             icalEditViewModel.iCalObjectUpdated.value!!.status = StatusTodo.values().getOrNull(which)!!.name
@@ -823,7 +823,7 @@ class IcalEditFragment : Fragment() {
 
             MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Set classification")
-                    .setItems(classificationItems) { dialog, which ->
+                    .setItems(classificationItems) { _, which ->
                         // Respond to item chosen
                         icalEditViewModel.iCalObjectUpdated.value!!.classification = Classification.values().getOrNull(which)!!.name
                         binding.editClassificationChip.text = Classification.getStringResource(requireContext(), icalEditViewModel.iCalObjectUpdated.value!!.classification)    // don't forget to update the UI
@@ -837,7 +837,7 @@ class IcalEditFragment : Fragment() {
 
             MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Set priority")
-                    .setItems(priorityItems) { dialog, which ->
+                    .setItems(priorityItems) { _, which ->
                         // Respond to item chosen
                         icalEditViewModel.iCalObjectUpdated.value!!.priority = which
                         binding.editPriorityChip.text = priorityItems[which]     // don't forget to update the UI
@@ -847,12 +847,12 @@ class IcalEditFragment : Fragment() {
         }
 
 
-        binding.editUrlEdit.editText?.setOnFocusChangeListener { view, hasFocus ->
+        binding.editUrlEdit.editText?.setOnFocusChangeListener { _, _ ->
             if ((binding.editUrlEdit.editText?.text?.isNotBlank() == true && !isValidURL(binding.editUrlEdit.editText?.text.toString())))
                 icalEditViewModel.urlError.value = "Please enter a valid URL"
         }
 
-        binding.editAttendeesAdd.editText?.setOnFocusChangeListener { view, hasFocus ->
+        binding.editAttendeesAdd.editText?.setOnFocusChangeListener { _, _ ->
             if ((binding.editAttendeesAdd.editText?.text?.isNotBlank() == true && !isValidEmail(binding.editAttendeesAdd.editText?.text.toString())))
                 icalEditViewModel.attendeesError.value = "Please enter a valid E-Mail address"
         }
@@ -1033,7 +1033,7 @@ class IcalEditFragment : Fragment() {
             chip.visibility = View.GONE
         }
 
-        categoryChip.setOnCheckedChangeListener { chip, isChecked ->
+        categoryChip.setOnCheckedChangeListener { _, _ ->
             // Responds to chip checked/unchecked
         }
     }
@@ -1057,7 +1057,7 @@ class IcalEditFragment : Fragment() {
 
             MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Set attendee role")
-                    .setItems(attendeeRoles) { dialog, which ->
+                    .setItems(attendeeRoles) { _, which ->
                         // Respond to item chosen
                         val curIndex = icalEditViewModel.attendeeUpdated.indexOf(attendee)    // find the attendee in the original list
                         if (curIndex == -1)
@@ -1199,7 +1199,7 @@ class IcalEditFragment : Fragment() {
 
         var restoreProgress = subtask.percent
 
-        bindingSubtask.editSubtaskProgressSlider.addOnChangeListener { slider, value, fromUser ->
+        bindingSubtask.editSubtaskProgressSlider.addOnChangeListener { _, value, _ ->
             //Update the progress in the updated list: try to find the matching uid (the only unique element for now) and then assign the percent
             //Attention, the new subtask must have been inserted before in the list!
             if (icalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid } == null) {
@@ -1216,7 +1216,7 @@ class IcalEditFragment : Fragment() {
                 restoreProgress = value.toInt()
         }
 
-        bindingSubtask.editSubtaskProgressCheckbox.setOnCheckedChangeListener { button, checked ->
+        bindingSubtask.editSubtaskProgressCheckbox.setOnCheckedChangeListener { _, checked ->
             val newProgress: Int = if (checked)  100
              else restoreProgress ?: 0
 
