@@ -42,6 +42,9 @@ import com.google.android.ump.*
 import java.util.concurrent.TimeUnit
 
 
+
+
+
 // this is necessary for the app permission, 100  and 200 ist just a freely chosen value
 const val CONTACT_READ_PERMISSION_CODE = 100
 const val RECORD_AUDIO_PERMISSION_CODE = 200
@@ -243,8 +246,7 @@ class MainActivity : AppCompatActivity() {
 
         // Section to retrieve the width of the device to set the adSize
         val adWidth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val wm = windowManager.currentWindowMetrics
-            wm.bounds.width()
+            windowManager.currentWindowMetrics.bounds.width() / resources.displayMetrics.density.toInt()
         } else {
             val outMetrics = DisplayMetrics()
             @Suppress("DEPRECATION")
