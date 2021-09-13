@@ -36,6 +36,10 @@ import org.apache.commons.io.IOUtils
 import java.io.ByteArrayOutputStream
 import java.net.URI
 import java.net.URISyntaxException
+import net.fortuna.ical4j.util.MapTimeZoneCache
+
+
+
 
 @Parcelize
 data class ICalEntity(
@@ -85,6 +89,9 @@ data class ICalEntity(
 
 
     fun getIcalFormat(context: Context): Calendar {
+
+        // fix for crash when Timezones are needed for ical4j, see https://github.com/ical4j/ical4j/issues/195
+        System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
 
         val ical = Calendar()
         ical.properties += Version.VERSION_2_0

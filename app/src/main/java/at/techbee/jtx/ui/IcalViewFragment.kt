@@ -734,6 +734,7 @@ class IcalViewFragment : Fragment() {
                     val icsFile = File(icsFileName).apply {
                         val os = ByteArrayOutputStream()
                         val ical = icalViewViewModel.icalEntity.value!!.getIcalFormat(requireContext())
+                        Log.d("iCalFileContent", ical.toString())
                         icalViewViewModel.icalEntity.value!!.writeIcalOutputStream(ical, os)
                         this.writeBytes(os.toByteArray())
                         createNewFile()
@@ -761,6 +762,7 @@ class IcalViewFragment : Fragment() {
             R.id.menu_view_share_ics -> {
 
                 val shareText = icalViewViewModel.icalEntity.value!!.getIcalFormat(requireContext()).toString()
+                Log.d("iCalFileContent", shareText.toString())
 
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND
