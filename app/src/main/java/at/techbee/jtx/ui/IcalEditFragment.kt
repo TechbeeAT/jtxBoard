@@ -15,6 +15,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -864,6 +865,10 @@ class IcalEditFragment : Fragment() {
         val activity = requireActivity() as MainActivity
         activity.setToolbarText("Edit")
 
+        icalEditViewModel.isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        icalEditViewModel.updateVisibility()
+
+
         super.onResume()
     }
 
@@ -1351,11 +1356,12 @@ class IcalEditFragment : Fragment() {
         }
 
         // the pendingIntent is initiated that is passed on to the alarm manager
-        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(context, iCalObjectId.toInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getBroadcast(context, iCalObjectId.toInt(), notificationIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         } else {
             PendingIntent.getBroadcast(context, iCalObjectId.toInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
+
 
         // the alarmManager finally takes care, that the pendingIntent is queued to start the notification Intent that on click would start the contentIntent
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

@@ -47,7 +47,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             return@setOnPreferenceClickListener true
         }
 
-        preferenceScreen.get<SwitchPreference>(ACCEPT_ADS)?.setOnPreferenceChangeListener { preference, adsEnabled ->
+        preferenceScreen.get<SwitchPreference>(ACCEPT_ADS)?.setOnPreferenceChangeListener { _, adsEnabled ->
             preferenceScreen.get<Preference>(SHOW_USER_CONSENT)?.isEnabled = adsEnabled as Boolean
             if(adsEnabled)
                 mainActivity.initializeUserConsent()     // show user consent if ads get enabled (despite the user bought the full version?)

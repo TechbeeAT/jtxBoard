@@ -156,6 +156,7 @@ class IcalEditViewModel(
     val urlError = MutableLiveData<String>()
     val attendeesError = MutableLiveData<String>()
 
+    var isLandscape = false
     var selectedTab = TAB_GENERAL
 
 
@@ -181,32 +182,32 @@ class IcalEditViewModel(
 
     fun updateVisibility() {
 
-        collectionVisible.postValue(selectedTab == TAB_GENERAL)
-        summaryVisible.postValue(selectedTab == TAB_GENERAL)
-        descriptionVisible.postValue(selectedTab == TAB_GENERAL)
-        dateVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && selectedTab == TAB_GENERAL)
-        timeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && selectedTab == TAB_GENERAL && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
-        alldayVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && selectedTab == TAB_GENERAL)
-        timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && selectedTab == TAB_GENERAL && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY") // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
-        statusVisible.postValue(selectedTab == TAB_GENERAL)
-        classificationVisible.postValue(selectedTab == TAB_GENERAL)
-        urlVisible.postValue(selectedTab == TAB_LOCATION)
-        locationVisible.postValue(selectedTab == TAB_LOCATION)
-        categoriesVisible.postValue(selectedTab == TAB_GENERAL)
-        contactVisible.postValue(selectedTab == TAB_PEOPLE)
-        attendeesVisible.postValue(selectedTab == TAB_PEOPLE)
-        commentsVisible.postValue(selectedTab == TAB_COMMENTS)
-        attachmentsVisible.postValue(selectedTab == TAB_ATTACHMENTS)
-        takePhotoVisible.postValue(selectedTab == TAB_ATTACHMENTS)
-        progressVisible.postValue(iCalEntity.property.module == Module.TODO.name && selectedTab == TAB_GENERAL)
-        priorityVisible.postValue(iCalEntity.property.module == Module.TODO.name && selectedTab == TAB_GENERAL)
-        subtasksVisible.postValue(selectedTab == TAB_SUBTASKS)
-        duedateVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name)
-        duetimeVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
-        completeddateVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name)
-        completedtimeVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.completedTimezone != "ALLDAY")
-        starteddateVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name)
-        startedtimeVisible.postValue(selectedTab == TAB_GENERAL && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
+        collectionVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
+        summaryVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
+        descriptionVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
+        dateVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape))
+        timeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape) && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY" || isLandscape) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
+        alldayVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && selectedTab == TAB_GENERAL || isLandscape)
+        timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape) && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY" || isLandscape) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
+        statusVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
+        classificationVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
+        urlVisible.postValue(selectedTab == TAB_LOCATION || isLandscape)
+        locationVisible.postValue(selectedTab == TAB_LOCATION || isLandscape)
+        categoriesVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
+        contactVisible.postValue(selectedTab == TAB_PEOPLE || isLandscape)
+        attendeesVisible.postValue(selectedTab == TAB_PEOPLE || isLandscape)
+        commentsVisible.postValue(selectedTab == TAB_COMMENTS || isLandscape)
+        attachmentsVisible.postValue(selectedTab == TAB_ATTACHMENTS || isLandscape)
+        takePhotoVisible.postValue(selectedTab == TAB_ATTACHMENTS || isLandscape)
+        progressVisible.postValue(iCalEntity.property.module == Module.TODO.name && (selectedTab == TAB_GENERAL || isLandscape))
+        priorityVisible.postValue(iCalEntity.property.module == Module.TODO.name && (selectedTab == TAB_GENERAL || isLandscape))
+        subtasksVisible.postValue(selectedTab == TAB_SUBTASKS || isLandscape)
+        duedateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
+        duetimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
+        completeddateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
+        completedtimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.completedTimezone != "ALLDAY")
+        starteddateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
+        startedtimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
     }
 
     fun savingClicked() {
