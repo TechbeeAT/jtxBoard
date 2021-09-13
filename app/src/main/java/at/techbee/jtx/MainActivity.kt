@@ -66,10 +66,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    lateinit var toolbar: Toolbar
-    var consentInformation: ConsentInformation? = null
-    var consentForm: ConsentForm? = null
-    var settings: SharedPreferences? = null
+    private lateinit var toolbar: Toolbar
+    private var consentInformation: ConsentInformation? = null
+    private var consentForm: ConsentForm? = null
+    private var settings: SharedPreferences? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,13 +104,13 @@ class MainActivity : AppCompatActivity() {
             MaterialAlertDialogBuilder(this)
                 .setTitle(resources.getString(R.string.list_dialog_contribution_title))
                 .setMessage(resources.getString(R.string.list_dialog_contribution_message))
-                .setNegativeButton(resources.getString(R.string.list_dialog_contribution_buyadfree)) { dialog, which ->
+                .setNegativeButton(resources.getString(R.string.list_dialog_contribution_buyadfree)) { _, _ ->
                     // Respond to negative button press
                     settings!!.edit().putBoolean(SettingsFragment.ACCEPT_ADS, false).apply()
                     Toast.makeText(this, "Start the Intent for the play store", Toast.LENGTH_LONG).show()
                     //TODO: open in app-buying for ad-free option
                 }
-                .setPositiveButton(resources.getString(R.string.list_dialog_contribution_acceptads)) { dialog, which ->
+                .setPositiveButton(resources.getString(R.string.list_dialog_contribution_acceptads)) { _, _ ->
                     // Respond to positive button press
                     // Ads are accepted, load user consent
                     settings!!.edit().putBoolean(SettingsFragment.ACCEPT_ADS, true).apply()
@@ -192,16 +192,16 @@ class MainActivity : AppCompatActivity() {
                         .navigate(R.id.action_global_settingsFragment)
 
                 R.id.nav_twitter ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://techbee.at")))
 
                 R.id.nav_website ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://jtx.techbee.at")))
 
                 R.id.nav_manual ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://jtx.techbee.at")))
 
                 R.id.nav_faq ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://jtx.techbee.at")))
 
                 R.id.nav_forums ->
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
