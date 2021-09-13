@@ -186,9 +186,9 @@ class IcalEditViewModel(
         summaryVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
         descriptionVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
         dateVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape))
-        timeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape) && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY" || isLandscape) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
-        alldayVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && selectedTab == TAB_GENERAL || isLandscape)
-        timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape) && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY" || isLandscape) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
+        timeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape) && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY" ) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
+        alldayVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape))
+        timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape) && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY" ) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
         statusVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
         classificationVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
         urlVisible.postValue(selectedTab == TAB_LOCATION || isLandscape)

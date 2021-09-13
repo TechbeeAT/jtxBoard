@@ -434,6 +434,8 @@ class IcalEditFragment : Fragment() {
                 )
             )
 
+            icalEditViewModel.updateVisibility()
+
 
         }
 
