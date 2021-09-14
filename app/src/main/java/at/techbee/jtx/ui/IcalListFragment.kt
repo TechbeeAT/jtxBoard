@@ -150,7 +150,8 @@ class IcalListFragment : Fragment() {
             val pos = icalListViewModel.getFocusItemPosition()
             Log.println(Log.INFO, "vJournalListViewModel", "Item Position: $pos")
 
-            recyclerView?.scrollToPosition(pos)
+            //recyclerView?.scrollToPosition(pos)
+            linearLayoutManager!!.scrollToPositionWithOffset(pos, 20)   // offset makes the item always appear 20px from the top
             //vJournalListViewModel.resetFocusItem()
             Log.println(Log.INFO, "vJournalListViewModel", "Scrolling now to: $pos")
 
