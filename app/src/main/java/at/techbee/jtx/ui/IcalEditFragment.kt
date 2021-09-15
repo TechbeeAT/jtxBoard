@@ -374,6 +374,14 @@ class IcalEditFragment : Fragment() {
                     requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(requireView().windowToken, 0)
 
+                // show Ad if activated
+                val mainActivity = activity as MainActivity
+                if (mainActivity.mInterstitialAd != null) {
+                    mainActivity.mInterstitialAd?.show(mainActivity)
+                } else {
+                    Log.d("IcalEditFragment", "The interstitial ad wasn't ready yet.")
+                }
+
                 // return to list view
                 val direction =
                     IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()

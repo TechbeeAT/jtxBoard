@@ -17,9 +17,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -32,10 +30,9 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.SettingsFragment
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.ump.*
@@ -61,8 +58,11 @@ class MainActivity : AppCompatActivity() {
         const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
         const val TRIAL_PERIOD_DAYS = 14L
 
-        const val ADMOB_UNIT_ID_BANNER = "ca-app-pub-3940256099942544/6300978111"    // TEST
-        //const val ADMOB_UNIT_ID_BANNER = "ca-app-pub-4426141011962540/8164268500"  // PROD
+        const val ADMOB_UNIT_ID_BANNER_TEST = "ca-app-pub-3940256099942544/6300978111"    // TEST
+        const val ADMOB_UNIT_ID_BANNER = "ca-app-pub-4426141011962540/8164268500"  // PROD
+
+        const val ADMOB_UNIT_ID_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/1033173712"  // TEST
+        const val ADMOB_UNIT_ID_INTERSTITIAL = "ca-app-pub-4426141011962540/5056134647"    // PROD
 
     }
 
@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity() {
     private var consentInformation: ConsentInformation? = null
     private var consentForm: ConsentForm? = null
     private var settings: SharedPreferences? = null
+
+    var mInterstitialAd: InterstitialAd? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -244,6 +246,7 @@ class MainActivity : AppCompatActivity() {
         // TODO: replace adUnitId with production Unit Id
         MobileAds.initialize(this) {}
 
+        /*
         // Section to retrieve the width of the device to set the adSize
         val adWidth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             windowManager.currentWindowMetrics.bounds.width() / resources.displayMetrics.density.toInt()
@@ -262,7 +265,7 @@ class MainActivity : AppCompatActivity() {
         val adView = AdView(this)
         //adView.adSize = AdSize.SMART_BANNER          // adaptive ads replace the smart banner
         adView.adSize = adSize
-        adView.adUnitId = ADMOB_UNIT_ID_BANNER
+        adView.adUnitId = ADMOB_UNIT_ID_BANNER_TEST
 
         val adLinearLayout: LinearLayout =
             findViewById(R.id.main_adlinearlayout)  // add to the linear layout container
@@ -271,6 +274,38 @@ class MainActivity : AppCompatActivity() {
 
         adLinearLayout.removeAllViews()
         adLinearLayout.addView(adView)
+
+         */
+
+
+        val adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(this, ADMOB_UNIT_ID_INTERSTITIAL_TEST, adRequest, object : InterstitialAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.d("onAdFailedToLoad", adError.message)
+                mInterstitialAd = null
+            }
+
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                Log.d("onAdLoaded", "Ad was loaded.")
+                mInterstitialAd = interstitialAd
+            }
+        })
+
+        mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+            override fun onAdDismissedFullScreenContent() {
+                Log.d("onAdDismissedFull", "Ad was dismissed.")
+            }
+
+            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                Log.d("onAdFailedToShow", "Ad failed to show.")
+            }
+
+            override fun onAdShowedFullScreenContent() {
+                Log.d("onAdShowed", "Ad showed fullscreen content.")
+                mInterstitialAd = null
+            }
+        }
     }
 
 
