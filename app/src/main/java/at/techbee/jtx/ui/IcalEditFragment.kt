@@ -375,9 +375,19 @@ class IcalEditFragment : Fragment() {
                 imm?.hideSoftInputFromWindow(requireView().windowToken, 0)
 
                 // show Ad if activated
+                /*
                 val mainActivity = activity as MainActivity
                 if (mainActivity.mInterstitialAd != null) {
                     mainActivity.mInterstitialAd?.show(mainActivity)
+                } else {
+                    Log.d("IcalEditFragment", "The interstitial ad wasn't ready yet.")
+                }
+                 */
+
+                // show Ad if activated
+                val mainActivity = activity as MainActivity
+                if (mainActivity.rewardedInterstitialAd != null) {
+                    mainActivity.rewardedInterstitialAd?.show(mainActivity, mainActivity)
                 } else {
                     Log.d("IcalEditFragment", "The interstitial ad wasn't ready yet.")
                 }

@@ -32,12 +32,16 @@ import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.SettingsFragment
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.ump.*
 import java.util.concurrent.TimeUnit
-
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
 
 
 
@@ -52,7 +56,7 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
  * This main activity is just a container for our fragments,
  * where the real action is.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
     companion object {
         const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
@@ -64,6 +68,9 @@ class MainActivity : AppCompatActivity() {
         const val ADMOB_UNIT_ID_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/1033173712"  // TEST
         const val ADMOB_UNIT_ID_INTERSTITIAL = "ca-app-pub-4426141011962540/5056134647"    // PROD
 
+        const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/5354046379"  // TEST
+        const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL = "ca-app-pub-4426141011962540/9907445574"    // PROD
+
     }
 
     private lateinit var toolbar: Toolbar
@@ -72,6 +79,7 @@ class MainActivity : AppCompatActivity() {
     private var settings: SharedPreferences? = null
 
     var mInterstitialAd: InterstitialAd? = null
+    var rewardedInterstitialAd: RewardedInterstitialAd? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -277,7 +285,8 @@ class MainActivity : AppCompatActivity() {
 
          */
 
-
+        // Interstitial Ad Block
+        /*
         val adRequest = AdRequest.Builder().build()
 
         InterstitialAd.load(this, ADMOB_UNIT_ID_INTERSTITIAL_TEST, adRequest, object : InterstitialAdLoadCallback() {
@@ -306,6 +315,37 @@ class MainActivity : AppCompatActivity() {
                 mInterstitialAd = null
             }
         }
+         */
+
+        RewardedInterstitialAd.load(this@MainActivity, ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST,
+            AdRequest.Builder().build(), object : RewardedInterstitialAdLoadCallback() {
+                override fun onAdLoaded(ad: RewardedInterstitialAd) {
+                    rewardedInterstitialAd = ad
+                    rewardedInterstitialAd!!.fullScreenContentCallback = object :
+                        FullScreenContentCallback() {
+                        /** Called when the ad failed to show full screen content.  */
+                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                            Log.i("onAdFailedToShow", adError.toString())
+                        }
+
+                        /** Called when ad showed the full screen content.  */
+                        override fun onAdShowedFullScreenContent() {
+                            Log.i("onAdShowed", "onAdShowedFullScreenContent")
+                        }
+
+                        /** Called when full screen content is dismissed.  */
+                        override fun onAdDismissedFullScreenContent() {
+                            Log.i("onAdDismissed", "onAdDismissedFullScreenContent")
+                        }
+                    }
+                }
+
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    Log.e("onAdFailedToLoad", loadAdError.toString())
+                }
+            })
+
+
     }
 
 
@@ -430,6 +470,11 @@ class MainActivity : AppCompatActivity() {
 
     fun setToolbarText(text: String) {
         toolbar.title = text
+    }
+
+
+    override fun onUserEarnedReward(item: RewardItem) {
+        Log.d("onUserEarnedReward", "Ad watched, user earned Reward")
     }
 }
 
