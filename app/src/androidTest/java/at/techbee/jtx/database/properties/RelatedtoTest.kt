@@ -28,7 +28,7 @@ class RelatedtoTest {
             other = "nothing"
         )
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(5).apply {
             put(COLUMN_RELATEDTO_ICALOBJECT_ID, sampleRelatedto.icalObjectId)
             put(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, sampleRelatedto.linkedICalObjectId)
             put(COLUMN_RELATEDTO_TEXT, sampleRelatedto.text)
@@ -43,7 +43,7 @@ class RelatedtoTest {
     @Test
     fun createFromContentValuesWithoutIcalobjectId() {
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(1).apply {
             put(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, 1L)
         }
 

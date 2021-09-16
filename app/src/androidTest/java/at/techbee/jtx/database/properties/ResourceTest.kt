@@ -28,7 +28,7 @@ class ResourceTest {
             other = "nothing"
         )
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(5).apply {
             put(COLUMN_RESOURCE_ICALOBJECT_ID, sampleResource.icalObjectId)
             put(COLUMN_RESOURCE_TEXT, sampleResource.text)
             put(COLUMN_RESOURCE_ALTREP, sampleResource.altrep)
@@ -43,7 +43,7 @@ class ResourceTest {
     @Test
     fun createFromContentValuesWithoutIcalobjectId() {
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(1).apply {
             put(COLUMN_RESOURCE_TEXT,  "projector")
         }
 
@@ -55,7 +55,7 @@ class ResourceTest {
     fun createFromContentValuesWithoutText() {
 
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(1).apply {
             put(COLUMN_RESOURCE_ICALOBJECT_ID, 1L)
         }
 

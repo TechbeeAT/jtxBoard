@@ -469,6 +469,7 @@ data class ICalObject(
         values.getAsString(COLUMN_CLASSIFICATION)
             ?.let { classification -> this.classification = classification }
         values.getAsString(COLUMN_URL)?.let { url -> this.url = url }
+        values.getAsString(COLUMN_CONTACT)?.let { contact -> this.contact = contact }
         values.getAsFloat(COLUMN_GEO_LAT)?.let { geoLat -> this.geoLat = geoLat }
         values.getAsFloat(COLUMN_GEO_LONG)?.let { geoLong -> this.geoLong = geoLong }
         values.getAsString(COLUMN_LOCATION)?.let { location -> this.location = location }

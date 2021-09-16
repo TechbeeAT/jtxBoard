@@ -37,7 +37,7 @@ class ICalCollectionTest {
             readonly = false
         )
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(13).apply {
             put(COLUMN_COLLECTION_ID, sampleCollection.collectionId)
             put(COLUMN_COLLECTION_URL, sampleCollection.url)
             put(COLUMN_COLLECTION_DISPLAYNAME, sampleCollection.displayName)

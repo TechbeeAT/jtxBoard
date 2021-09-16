@@ -25,7 +25,7 @@ class AttachmentTest {
             this.uri = "http://www.google.com"
         }
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(8).apply {
             put(COLUMN_ATTACHMENT_ICALOBJECT_ID, attachment.icalObjectId)
             put(COLUMN_ATTACHMENT_URI, attachment.uri)
             put(COLUMN_ATTACHMENT_BINARY, attachment.binary)

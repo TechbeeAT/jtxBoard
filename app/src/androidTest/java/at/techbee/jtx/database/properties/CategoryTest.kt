@@ -27,7 +27,7 @@ class CategoryTest {
             other = "nothing"
         )
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(4).apply {
             put(COLUMN_CATEGORY_ICALOBJECT_ID, sampleCategory.icalObjectId)
             put(COLUMN_CATEGORY_TEXT, sampleCategory.text)
             put(COLUMN_CATEGORY_LANGUAGE, sampleCategory.language)
@@ -41,7 +41,7 @@ class CategoryTest {
     @Test
     fun createFromContentValuesWithoutIcalobjectId() {
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(1).apply {
             put(COLUMN_CATEGORY_TEXT,  "category")
         }
 
@@ -53,7 +53,7 @@ class CategoryTest {
     fun createFromContentValuesWithoutText() {
 
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(1).apply {
             put(COLUMN_CATEGORY_ICALOBJECT_ID, 1L)
         }
 

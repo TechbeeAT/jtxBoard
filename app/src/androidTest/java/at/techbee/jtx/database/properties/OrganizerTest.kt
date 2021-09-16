@@ -30,7 +30,7 @@ class OrganizerTest {
             other = "nothing"
         )
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(7).apply {
             put(COLUMN_ORGANIZER_ICALOBJECT_ID, sampleOrganizer.icalObjectId)
             put(COLUMN_ORGANIZER_CALADDRESS, sampleOrganizer.caladdress)
             put(COLUMN_ORGANIZER_CN, sampleOrganizer.cn)
@@ -47,7 +47,7 @@ class OrganizerTest {
     @Test
     fun createFromContentValuesWithoutIcalobjectId() {
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(1).apply {
             put(COLUMN_ORGANIZER_CALADDRESS,  "info@techbee.at")
         }
 
@@ -59,7 +59,7 @@ class OrganizerTest {
     fun createFromContentValuesWithoutCaladdress() {
 
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(1).apply {
             put(COLUMN_ORGANIZER_ICALOBJECT_ID, 1L)
         }
 

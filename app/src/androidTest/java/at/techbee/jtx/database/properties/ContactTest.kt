@@ -28,7 +28,7 @@ class ContactTest {
             other = "nothing"
         )
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(5).apply {
             put(COLUMN_CONTACT_ICALOBJECT_ID, sampleContact.icalObjectId)
             put(COLUMN_CONTACT_TEXT, sampleContact.text)
             put(COLUMN_CONTACT_ALTREP, sampleContact.altrep)
@@ -43,7 +43,7 @@ class ContactTest {
     @Test
     fun createFromContentValuesWithoutIcalobjectId() {
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(1).apply {
             put(COLUMN_CONTACT_TEXT,  "contact")
         }
 
@@ -55,7 +55,7 @@ class ContactTest {
     fun createFromContentValuesWithoutText() {
 
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(1).apply {
             put(COLUMN_CONTACT_ICALOBJECT_ID, 1L)
         }
 

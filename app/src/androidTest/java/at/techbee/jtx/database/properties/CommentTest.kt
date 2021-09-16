@@ -28,7 +28,7 @@ class CommentTest {
             other = "nothing"
         )
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(5).apply {
             put(COLUMN_COMMENT_ICALOBJECT_ID, sampleComment.icalObjectId)
             put(COLUMN_COMMENT_TEXT, sampleComment.text)
             put(COLUMN_COMMENT_ALTREP, sampleComment.altrep)
@@ -43,7 +43,7 @@ class CommentTest {
     @Test
     fun createFromContentValuesWithoutIcalobjectId() {
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(1).apply {
             put(COLUMN_COMMENT_TEXT,  "comment")
         }
 
@@ -55,7 +55,7 @@ class CommentTest {
     fun createFromContentValuesWithoutText() {
 
 
-        val cv = ContentValues().apply {
+        val cv = ContentValues(1).apply {
             put(COLUMN_COMMENT_ICALOBJECT_ID, 1L)
         }
 
