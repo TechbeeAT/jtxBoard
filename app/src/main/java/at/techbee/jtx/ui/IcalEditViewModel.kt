@@ -30,11 +30,13 @@ class IcalEditViewModel(
 
     companion object {
         const val TAB_GENERAL = 0
-        const val TAB_PEOPLE = 1
+        const val TAB_MORE = 1
         const val TAB_COMMENTS = 2
-        const val TAB_LOCATION = 3
-        const val TAB_ATTACHMENTS = 4
-        const val TAB_SUBTASKS = 5
+        const val TAB_ATTACHMENTS = 3
+        const val TAB_SUBTASKS = 4
+        const val TAB_ALARMS = 5
+        const val TAB_RECURRING = 6
+
     }
 
     lateinit var allCategories: LiveData<List<String>>
@@ -191,11 +193,11 @@ class IcalEditViewModel(
         timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape) && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY" ) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
         statusVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
         classificationVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
-        urlVisible.postValue(selectedTab == TAB_LOCATION || isLandscape)
-        locationVisible.postValue(selectedTab == TAB_LOCATION || isLandscape)
+        urlVisible.postValue(selectedTab == TAB_MORE || isLandscape)
+        locationVisible.postValue(selectedTab == TAB_MORE || isLandscape)
         categoriesVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
-        contactVisible.postValue(selectedTab == TAB_PEOPLE || isLandscape)
-        attendeesVisible.postValue(selectedTab == TAB_PEOPLE || isLandscape)
+        contactVisible.postValue(selectedTab == TAB_MORE || isLandscape)
+        attendeesVisible.postValue(selectedTab == TAB_MORE || isLandscape)
         commentsVisible.postValue(selectedTab == TAB_COMMENTS || isLandscape)
         attachmentsVisible.postValue(selectedTab == TAB_ATTACHMENTS || isLandscape)
         takePhotoVisible.postValue(selectedTab == TAB_ATTACHMENTS || isLandscape)

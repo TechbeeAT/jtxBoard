@@ -50,11 +50,12 @@ import at.techbee.jtx.databinding.FragmentIcalEditAttachmentBinding
 import at.techbee.jtx.databinding.FragmentIcalEditBinding
 import at.techbee.jtx.databinding.FragmentIcalEditCommentBinding
 import at.techbee.jtx.databinding.FragmentIcalEditSubtaskBinding
+import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_ALARMS
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_ATTACHMENTS
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_COMMENTS
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_GENERAL
-import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_LOCATION
-import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_PEOPLE
+import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_MORE
+import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_RECURRING
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_SUBTASKS
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -265,11 +266,12 @@ class IcalEditFragment : Fragment() {
 
                 when (tab?.position) {
                     TAB_GENERAL -> icalEditViewModel.selectedTab = TAB_GENERAL
-                    TAB_PEOPLE -> icalEditViewModel.selectedTab = TAB_PEOPLE
+                    TAB_MORE -> icalEditViewModel.selectedTab = TAB_MORE
                     TAB_COMMENTS -> icalEditViewModel.selectedTab = TAB_COMMENTS
-                    TAB_LOCATION -> icalEditViewModel.selectedTab = TAB_LOCATION
                     TAB_ATTACHMENTS -> icalEditViewModel.selectedTab = TAB_ATTACHMENTS
                     TAB_SUBTASKS -> icalEditViewModel.selectedTab = TAB_SUBTASKS
+                    TAB_RECURRING -> icalEditViewModel.selectedTab = TAB_RECURRING
+                    TAB_ALARMS -> icalEditViewModel.selectedTab = TAB_ALARMS
                     else -> TAB_GENERAL
                 }
                 icalEditViewModel.updateVisibility()
