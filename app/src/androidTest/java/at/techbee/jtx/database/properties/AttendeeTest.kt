@@ -9,12 +9,18 @@
 package at.techbee.jtx.database.properties
 
 import android.content.ContentValues
+import at.techbee.jtx.R
 import org.junit.Test
 
 import org.junit.Assert.*
 
-class AttendeeAndroidTest {
+class AttendeeTest {
 // Android Test as Content Values need Android libraries to run
+
+    @Test
+    fun getDrawableResourceByParam() {
+        assertEquals(R.string.attendee_role_chair, Role.CHAIR.stringResource)
+    }
 
     @Test
     fun fromContentValues_correct_Content_Values() {
@@ -246,4 +252,71 @@ class AttendeeAndroidTest {
         assertEquals(attendee, attendee2)
     }
 
+
+
+    @Test
+    fun createFromContentValues() {
+
+        val sampleAttendee = Attendee(
+            icalObjectId = 1L,
+            caladdress = "info@techbee.at",
+            cutype = Cutype.INDIVIDUAL.name,
+            member = "member",
+            role = Role.`REQ-PARTICIPANT`.name,
+            partstat = "partstat",
+            rsvp = false,
+            delegatedto = "info@techbee.at",
+            delegatedfrom = "info@techbee.at",
+            sentby = "info@techbee.at",
+            cn = "Techbee",
+            dir = "Techbee",
+            language = "EN",
+            other = "nothing"
+        )
+
+        val cv = ContentValues().apply {
+            put(COLUMN_ATTENDEE_ICALOBJECT_ID, sampleAttendee.icalObjectId)
+            put(COLUMN_ATTENDEE_CALADDRESS, sampleAttendee.caladdress)
+            put(COLUMN_ATTENDEE_CUTYPE, sampleAttendee.cutype)
+            put(COLUMN_ATTENDEE_MEMBER, sampleAttendee.member)
+            put(COLUMN_ATTENDEE_ROLE, sampleAttendee.role)
+            put(COLUMN_ATTENDEE_PARTSTAT, sampleAttendee.partstat)
+            put(COLUMN_ATTENDEE_RSVP, sampleAttendee.rsvp)
+            put(COLUMN_ATTENDEE_DELEGATEDTO, sampleAttendee.delegatedto)
+            put(COLUMN_ATTENDEE_DELEGATEDFROM, sampleAttendee.delegatedfrom)
+            put(COLUMN_ATTENDEE_SENTBY, sampleAttendee.sentby)
+            put(COLUMN_ATTENDEE_CN, sampleAttendee.cn)
+            put(COLUMN_ATTENDEE_DIR, sampleAttendee.dir)
+            put(COLUMN_ATTENDEE_LANGUAGE, sampleAttendee.language)
+            put(COLUMN_ATTENDEE_OTHER, sampleAttendee.other)
+        }
+
+        val cvAttendee = Attendee.fromContentValues(cv)
+        assertEquals(sampleAttendee, cvAttendee)
+    }
+
+
+
+    @Test
+    fun createFromContentValuesWithoutIcalobjectId() {
+
+        val cv = ContentValues().apply {
+            put(COLUMN_ATTENDEE_CALADDRESS,  "info@techbee.at")
+        }
+
+        val cvAttendee = Attendee.fromContentValues(cv)
+        assertNull(cvAttendee)
+    }
+
+    @Test
+    fun createFromContentValuesWithoutCaladdress() {
+
+
+        val cv = ContentValues().apply {
+            put(COLUMN_ATTENDEE_ICALOBJECT_ID, 1L)
+        }
+
+        val cvAttendee = Attendee.fromContentValues(cv)
+        assertNull(cvAttendee)
+    }
 }

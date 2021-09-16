@@ -94,9 +94,9 @@ data class ICalCollection(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(index = true, name = COLUMN_COLLECTION_ID)   var collectionId: Long = 0L,
 
-        @ColumnInfo(name = COLUMN_COLLECTION_URL)               var url: String = LocalCollectionParams.LOCAL.url,
+        @ColumnInfo(name = COLUMN_COLLECTION_URL)               var url: String = LOCAL_COLLECTION_URL,
 
-        @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME)       var displayName: String? = LocalCollectionParams.LOCAL.name,
+        @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME)       var displayName: String? = LOCAL_COLLECTION_NAME,
         @ColumnInfo(name = COLUMN_COLLECTION_DESCRIPTION)       var description: String? = null,
         @ColumnInfo(name = COLUMN_COLLECTION_OWNER)             var owner: String? = null,
         @ColumnInfo(name = COLUMN_COLLECTION_COLOR)             var color: Int? = null,
@@ -111,10 +111,10 @@ data class ICalCollection(
         @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVJOURNAL)    var supportsVJOURNAL: Boolean = false,
 
         /** Account name */
-        @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME)            var accountName: String? = LocalCollectionParams.LOCAL.name,
+        @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME)            var accountName: String? = LOCAL_COLLECTION_NAME,
 
         /** Webcal subscription source URL */
-        @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_TYPE)            var accountType: String? = LocalCollectionParams.LOCAL.name,
+        @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_TYPE)            var accountType: String? = LOCAL_COLLECTION_NAME,
 
         /** Webcal subscription source URL */
         @ColumnInfo(name = COLUMN_COLLECTION_SYNC_VERSION)            var syncversion: String? = null,
@@ -125,6 +125,9 @@ data class ICalCollection(
 
 ): Parcelable {
         companion object Factory {
+
+                const val LOCAL_COLLECTION_URL = "https://localhost/"
+                const val LOCAL_COLLECTION_NAME = "LOCAL"
 
 
                 /**
@@ -164,9 +167,4 @@ data class ICalCollection(
 
                 return this
         }
-}
-
-
-enum class LocalCollectionParams (val url: String) {
-        LOCAL ("https://localhost/")
 }

@@ -106,6 +106,7 @@ data class Contact (
 
                 values.getAsLong(COLUMN_CONTACT_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
                 values.getAsString(COLUMN_CONTACT_TEXT)?.let { text -> this.text = text }
+                values.getAsString(COLUMN_CONTACT_ALTREP)?.let { altrep -> this.altrep = altrep }
                 values.getAsString(COLUMN_CONTACT_LANGUAGE)?.let { language -> this.language = language }
                 values.getAsString(COLUMN_CONTACT_OTHER)?.let { other -> this.other = other }
 
