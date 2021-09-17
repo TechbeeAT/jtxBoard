@@ -529,10 +529,11 @@ data class ICalObject(
         lastModified = System.currentTimeMillis()
         if (dtstart == null && percent != null && percent!! > 0)
             dtstart = System.currentTimeMillis()
-        if (dtend == null && percent != null && percent!! == 100)
-            dtend = System.currentTimeMillis()
+        /* if (dtend == null && percent != null && percent!! == 100)
+            dtend = System.currentTimeMillis() */
         if (completed == null && percent != null && percent!! == 100)
             completed = System.currentTimeMillis()
+
         sequence++
         dirty = true
 

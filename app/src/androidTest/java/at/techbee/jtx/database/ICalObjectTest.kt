@@ -112,4 +112,68 @@ class ICalObjectTest {
         val uid = ICalObject.generateNewUID()
         assertTrue(uid.isNotBlank())
     }
+
+
+
+    @Test
+    fun setUpdatedProgress_no_change() {
+        val task = ICalObject.createTask("setUpdatedProgress_no_change")
+        task.setUpdatedProgress(0)
+
+        assertEquals("setUpdatedProgress_no_change", task.summary)
+        assertEquals(0, task.percent)
+        assertEquals(StatusTodo.`NEEDS-ACTION`.name, task.status)
+        assertNull(task.dtstart)
+        assertNull(task.completed)
+        assertNotNull(task.lastModified)
+        assertEquals(0, task.sequence)
+        assertEquals(true, task.dirty)
+    }
+
+
+    @Test
+    fun setUpdatedProgress_needs_action() {
+        val task = ICalObject.createTask("setUpdatedProgress_needs_action_in_Progress")
+        task.setUpdatedProgress(1)
+        task.setUpdatedProgress(0)
+
+        assertEquals("setUpdatedProgress_needs_action_in_Progress", task.summary)
+        assertEquals(0, task.percent)
+        assertEquals(StatusTodo.`NEEDS-ACTION`.name, task.status)
+        assertNotNull(task.dtstart)
+        assertNull(task.completed)
+        assertNotNull(task.lastModified)
+        assertEquals(2, task.sequence)
+        assertEquals(true, task.dirty)
+    }
+
+    @Test
+    fun setUpdatedProgress_in_Process() {
+        val task = ICalObject.createTask("setUpdatedProgress_in_Progress")
+        task.setUpdatedProgress(50)
+
+        assertEquals("setUpdatedProgress_in_Progress", task.summary)
+        assertEquals(50, task.percent)
+        assertEquals(StatusTodo.`IN-PROCESS`.name, task.status)
+        assertNotNull(task.dtstart)
+        assertNull(task.completed)
+        assertNotNull(task.lastModified)
+        assertEquals(1, task.sequence)
+        assertEquals(true, task.dirty)
+    }
+
+    @Test
+    fun setUpdatedProgress_completed() {
+        val task = ICalObject.createTask("setUpdatedProgress_completed")
+        task.setUpdatedProgress(100)
+
+        assertEquals("setUpdatedProgress_completed", task.summary)
+        assertEquals(100, task.percent)
+        assertEquals(StatusTodo.COMPLETED.name, task.status)
+        assertNotNull(task.dtstart)
+        assertNotNull(task.completed)
+        assertNotNull(task.lastModified)
+        assertEquals(1, task.sequence)
+        assertEquals(true, task.dirty)
+    }
 }
