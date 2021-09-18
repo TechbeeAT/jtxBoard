@@ -10,13 +10,13 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.*
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import org.junit.Assert.*
 import org.junit.runner.RunWith
 
 
@@ -49,12 +49,68 @@ class IcalViewViewModelTest {
         ICalDatabase.getInMemoryDB(context).close()
     }
 
+    @Test
+    fun testEditingClicked() = runBlockingTest {
 
-    fun testEditingClicked() {}
+        val preparedEntry = ICalObject.createJournal()
+        preparedEntry.id = database.insertICalObject(preparedEntry)
 
-    fun testInsertRelatedNote() {}
+        icalViewViewModel = IcalViewViewModel(preparedEntry.id, database, application)
+        Thread.sleep(100)
+        icalViewViewModel.icalEntity.getOrAwaitValue()
 
-    fun testInsertRelatedAudioNote() {}
+        icalViewViewModel.editingClicked()
+
+        assertTrue(icalViewViewModel.editingClicked.value!!)
+    }
+
+    @Test
+    fun testInsertRelatedNote() = runBlockingTest {
+
+        val preparedEntry = ICalObject.createJournal()
+        preparedEntry.id = database.insertICalObject(preparedEntry)
+
+        icalViewViewModel = IcalViewViewModel(preparedEntry.id, database, application)
+        Thread.sleep(100)
+        icalViewViewModel.icalEntity.getOrAwaitValue()
+        icalViewViewModel.icalEntity.observeForever {}
+
+        icalViewViewModel.insertRelatedNote("RelatedNote")
+        Thread.sleep(100)
+
+        val childEntry = database.get(icalViewViewModel.icalEntity.value?.relatedto?.get(0)?.linkedICalObjectId!!)
+        childEntry.getOrAwaitValue()
+
+        assertEquals(true, icalViewViewModel.icalEntity.value?.property?.dirty)
+        assertEquals(1L,  icalViewViewModel.icalEntity.value?.property?.sequence)
+        assertTrue(icalViewViewModel.icalEntity.value?.relatedto?.size!! > 0)
+        assertNotNull(childEntry)
+    }
+
+    @Test
+    fun testInsertRelatedAudioNote() = runBlockingTest {
+
+        val preparedEntry = ICalObject.createJournal()
+        preparedEntry.id = database.insertICalObject(preparedEntry)
+
+        icalViewViewModel = IcalViewViewModel(preparedEntry.id, database, application)
+        Thread.sleep(100)
+        icalViewViewModel.icalEntity.getOrAwaitValue()
+        icalViewViewModel.icalEntity.observeForever {}
+
+        icalViewViewModel.insertRelatedAudioNote(Attachment(uri = "https://10.0.0.138"))
+        Thread.sleep(100)
+
+        val childEntry = database.get(icalViewViewModel.icalEntity.value?.relatedto?.get(0)?.linkedICalObjectId!!)
+        childEntry.getOrAwaitValue()
+
+        assertEquals(true, icalViewViewModel.icalEntity.value?.property?.dirty)
+        assertEquals(1L,  icalViewViewModel.icalEntity.value?.property?.sequence)
+        assertTrue(icalViewViewModel.icalEntity.value?.relatedto?.size!! > 0)
+        assertNotNull(childEntry)
+        assertTrue(childEntry.value?.attachments?.size!! > 0)
+
+    }
 
     @Test
     fun testUpdateProgress() = runBlockingTest {
