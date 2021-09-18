@@ -733,9 +733,7 @@ class IcalViewFragment : Fragment() {
                     val icsFileName = "${requireContext().externalCacheDir}/ics_file.ics"
                     val icsFile = File(icsFileName).apply {
                         val os = ByteArrayOutputStream()
-                        val ical = icalViewViewModel.icalEntity.value!!.getIcalFormat(requireContext())
-                        Log.d("iCalFileContent", ical.toString())
-                        icalViewViewModel.icalEntity.value!!.writeIcalOutputStream(ical, os)
+                        icalViewViewModel.icalEntity.value!!.writeIcalOutputStream(requireContext(), os)
                         this.writeBytes(os.toByteArray())
                         createNewFile()
                     }

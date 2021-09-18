@@ -95,7 +95,7 @@ data class ICalEntity(
 
         val ical = Calendar()
         ical.properties += Version.VERSION_2_0
-        ical.properties += ProdId("+//IDN bitfire.at//ical4android")     // TODO to be adapted!
+        ical.properties += ProdId("+//IDN techbee.at//ical4android")     // TODO to be adapted!
 
         if (this.property.component == JtxContract.JtxICalObject.Component.VTODO.name) {
             val vTodo = VToDo(true /* generates DTSTAMP */)
@@ -274,9 +274,11 @@ data class ICalEntity(
     }
 
 
-    fun writeIcalOutputStream(ical: Calendar, os: ByteArrayOutputStream) {
+    fun writeIcalOutputStream(context: Context, os: ByteArrayOutputStream) {
 
 
+        val ical = getIcalFormat(context)
+        Log.d("iCalFileContent", ical.toString())
         // Corresponds to   ICalendar.softValidate(ical)   in ical4android
         try {
             ical.validate(true)
