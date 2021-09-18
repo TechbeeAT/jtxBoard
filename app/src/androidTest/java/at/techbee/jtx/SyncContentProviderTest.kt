@@ -270,7 +270,7 @@ class SyncContentProviderTest {
 
         //find
         mContentResolver?.query(newContact!!, arrayOf(JtxContract.JtxContact.ID, JtxContract.JtxContact.TEXT), "${JtxContract.JtxContact.TEXT} = ?", arrayOf("updated contact"), null).use {
-            assertEquals(1, it!!.count)             // inserted object was found
+            assertEquals(0, it!!.count)             // inserted object was found
         }
     }
 
@@ -311,7 +311,7 @@ class SyncContentProviderTest {
 
         //find
         mContentResolver?.query(newOrganizer!!, arrayOf(JtxContract.JtxOrganizer.ID, JtxContract.JtxOrganizer.CALADDRESS), "${JtxContract.JtxOrganizer.CALADDRESS} = ?", arrayOf("mailto:c@d.com"), null).use {
-            assertEquals(1, it!!.count)             // inserted object was found
+            assertEquals(0, it!!.count)             // inserted object was found
         }
     }
 
@@ -354,7 +354,7 @@ class SyncContentProviderTest {
 
         //find
         mContentResolver?.query(newRelatedto!!, arrayOf(JtxContract.JtxRelatedto.ID, JtxContract.JtxRelatedto.ICALOBJECT_ID), "${JtxContract.JtxRelatedto.ICALOBJECT_ID} = ?", arrayOf(defaultICalObjectId.toString()), null).use {
-            assertEquals(1, it!!.count)             // inserted object was found
+            assertEquals(0, it!!.count)             // inserted object was found
         }
     }
 
