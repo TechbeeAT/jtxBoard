@@ -9,6 +9,8 @@
 package at.techbee.jtx.database
 
 import android.content.ContentValues
+import androidx.test.platform.app.InstrumentationRegistry
+import at.techbee.jtx.R
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -175,5 +177,145 @@ class ICalObjectTest {
         assertNotNull(task.lastModified)
         assertEquals(1, task.sequence)
         assertEquals(true, task.dirty)
+    }
+
+    @Test
+    fun statusJournal_getStringResource_cancelled() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        assertEquals(context.getString(R.string.journal_status_cancelled), StatusJournal.getStringResource(context, StatusJournal.CANCELLED.name))
+    }
+
+    @Test
+    fun statusTodo_getStringResource_cancelled() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        assertEquals(context.getString(R.string.todo_status_needsaction), StatusTodo.getStringResource(context, StatusTodo.`NEEDS-ACTION`.name))
+    }
+
+    @Test
+    fun classification_getStringResource_confidential() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        assertEquals(context.getString(R.string.classification_confidential), Classification.getStringResource(context, Classification.CONFIDENTIAL.name))
+    }
+
+    @Test
+    fun factory_createJournal() {
+
+        val factoryObject = ICalObject.createJournal()
+        val createdObject = ICalObject(
+            component = Component.VJOURNAL.name,
+            module = Module.JOURNAL.name,
+            status = StatusJournal.FINAL.name,
+            dirty = true,
+            // dates and uid must be set explicitely to make the objects equal
+            dtstart = factoryObject.dtstart,
+            created = factoryObject.created,
+            lastModified = factoryObject.lastModified,
+            dtstamp = factoryObject.dtstamp,
+            uid = factoryObject.uid,
+        )
+        assertEquals(createdObject, factoryObject)
+    }
+
+    @Test
+    fun factory_createNote() {
+
+        val factoryObject = ICalObject.createNote()
+        val createdObject = ICalObject(
+            component = Component.VJOURNAL.name,
+            module = Module.NOTE.name,
+            status = StatusJournal.FINAL.name,
+            dirty = true,
+            // dates and uid must be set explicitely to make the objects equal
+            dtstart = factoryObject.dtstart,
+            created = factoryObject.created,
+            lastModified = factoryObject.lastModified,
+            dtstamp = factoryObject.dtstamp,
+            uid = factoryObject.uid,
+        )
+        assertEquals(createdObject, factoryObject)
+    }
+
+    @Test
+    fun factory_createNote_withoutSummary() {
+
+        val factoryObject = ICalObject.createNote()
+        val createdObject = ICalObject(
+            component = Component.VJOURNAL.name,
+            module = Module.NOTE.name,
+            status = StatusJournal.FINAL.name,
+            dirty = true,
+            // dates and uid must be set explicitely to make the objects equal
+            dtstart = factoryObject.dtstart,
+            created = factoryObject.created,
+            lastModified = factoryObject.lastModified,
+            dtstamp = factoryObject.dtstamp,
+            uid = factoryObject.uid,
+        )
+        assertEquals(createdObject, factoryObject)
+    }
+
+    @Test
+    fun factory_createNote_withSummary() {
+
+        val factoryObject = ICalObject.createNote("Test Summary")
+        val createdObject = ICalObject(
+            component = Component.VJOURNAL.name,
+            module = Module.NOTE.name,
+            status = StatusJournal.FINAL.name,
+            dirty = true,
+            summary = "Test Summary",
+            // dates and uid must be set explicitely to make the objects equal
+            dtstart = factoryObject.dtstart,
+            created = factoryObject.created,
+            lastModified = factoryObject.lastModified,
+            dtstamp = factoryObject.dtstamp,
+            uid = factoryObject.uid,
+        )
+        assertEquals(createdObject, factoryObject)
+    }
+
+    @Test
+    fun factory_createTodo() {
+
+        val factoryObject = ICalObject.createTodo()
+        val createdObject = ICalObject(
+            component = Component.VTODO.name,
+            module = Module.TODO.name,
+            status = StatusTodo.`NEEDS-ACTION`.name,
+            percent = 0,
+            priority = 0,
+            dueTimezone = "ALLDAY",
+            dirty = true,
+            // dates and uid must be set explicitely to make the objects equal
+            dtstart = factoryObject.dtstart,
+            created = factoryObject.created,
+            lastModified = factoryObject.lastModified,
+            dtstamp = factoryObject.dtstamp,
+            uid = factoryObject.uid,
+        )
+        assertEquals(createdObject, factoryObject)
+    }
+
+    @Test
+    fun factory_createTodo_withSummary() {
+
+        val factoryObject = ICalObject.createTask("Task Summary")
+        val createdObject = ICalObject(
+            component = Component.VTODO.name,
+            module = Module.TODO.name,
+            status = StatusTodo.`NEEDS-ACTION`.name,
+            percent = 0,
+            priority = 0,
+            dueTimezone = "ALLDAY",
+            dirty = true,
+            summary = "Task Summary",
+            // dates and uid must be set explicitely to make the objects equal
+            dtstart = factoryObject.dtstart,
+            created = factoryObject.created,
+            lastModified = factoryObject.lastModified,
+            dtstamp = factoryObject.dtstamp,
+            uid = factoryObject.uid,
+        )
+        assertEquals(createdObject, factoryObject)
     }
 }
