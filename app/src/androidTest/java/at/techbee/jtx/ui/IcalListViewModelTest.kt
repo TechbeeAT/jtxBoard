@@ -9,6 +9,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Organizer
+import at.techbee.jtx.database.properties.Relatedto
+import at.techbee.jtx.database.properties.Reltype
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
@@ -314,5 +316,21 @@ class IcalListViewModelTest {
         val icalobject = database.getICalObjectById(id)
 
         assertEquals(50, icalobject?.percent)
+    }
+
+    @Test
+    fun checkAllRelatedto() = runBlockingTest {
+
+        icalListViewModel.allSubtasks.observeForever {  }
+
+        val parent = database.insertICalObject(ICalObject.createTodo())
+        val child1 = database.insertICalObject(ICalObject.createTodo())
+        val child2 = database.insertICalObject(ICalObject.createTodo())
+
+        database.insertRelatedto(Relatedto(icalObjectId = parent, linkedICalObjectId = child1, reltype = Reltype.CHILD.name))
+        database.insertRelatedto(Relatedto(icalObjectId = parent, linkedICalObjectId = child2, reltype = Reltype.CHILD.name))
+
+        assertEquals(2, icalListViewModel.allSubtasks.value?.size)
+
     }
 }
