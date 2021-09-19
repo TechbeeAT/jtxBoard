@@ -25,7 +25,6 @@ class IcalListViewModel(
         val database: ICalDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
-
     var searchModule: String = Module.JOURNAL.name
     var searchText: String = ""
     var searchCategories: MutableList<String> = mutableListOf()
@@ -36,7 +35,7 @@ class IcalListViewModel(
     var searchCollection: MutableList<String> = mutableListOf()
 
 
-    private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
+    var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
     var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQuery) {
         database.getIcalObjectWithRelatedto(it)
     }
@@ -65,36 +64,29 @@ class IcalListViewModel(
     }
 
 
-
-
     fun setFocusItem(vJournalItemId: Long) {
         focusItemId.value = vJournalItemId
     }
 
     fun getFocusItemPosition(): Int {
-
-        val focusItem = iCal4List.value?.find {
-            focusItemId.value == it.property.id
-        }
-
-        return if (iCal4List.value != null && focusItem != null)
-            iCal4List.value!!.indexOf(focusItem)
-        else
-            -1
+        val focusItem = iCal4List.value?.find { focusItemId.value == it.property.id }
+        return iCal4List.value?.indexOf(focusItem) ?: -1
     }
 
-    fun resetFocusItem() {
-        focusItemId.value = 0L
-    }
+    fun resetFocusItem() { focusItemId.value = 0L }
 
     private fun constructQuery(): SimpleSQLiteQuery {
 
         val args = arrayListOf<String>()
 
 // Beginning of query string
-        var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST " +
-                "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
-                "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
+        var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST "
+        if(searchCategories.size > 0)
+            queryString += "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID "
+        if(searchOrganizer.size > 0)
+            queryString += "LEFT JOIN $TABLE_NAME_ORGANIZER ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ICALOBJECT_ID "
+        if(searchCollection.size > 0)
+            queryString += "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
         //     "LEFT JOIN vattendees ON icalobject._id = vattendees.icalObjectId " +
         //     "LEFT JOIN vorganizer ON icalobject._id = vorganizer.icalObjectId " +
         //     "LEFT JOIN vRelatedto ON icalobject._id = vRelatedto.icalObjectId "
@@ -121,8 +113,19 @@ class IcalListViewModel(
             queryString += ") "
         }
 
+        // Query for the passed filter criteria from VJournalFilterFragment
+        if (searchOrganizer.size > 0) {
+            queryString += "AND $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_CALADDRESS IN ("
+            searchOrganizer.forEach {
+                queryString += "?,"
+                args.add(it)
+            }
+            queryString = queryString.removeSuffix(",")      // remove the last comma
+            queryString += ") "
+        }
+
         // Query for the passed filter criteria from FilterFragment
-        if (searchStatusJournal.size > 0 && (searchModule == Module.JOURNAL.name || searchModule == Module.TODO.name)) {
+        if (searchStatusJournal.size > 0 && (searchModule == Module.JOURNAL.name || searchModule == Module.NOTE.name)) {
             queryString += "AND $COLUMN_STATUS IN ("
             searchStatusJournal.forEach {
                 queryString += "?,"
