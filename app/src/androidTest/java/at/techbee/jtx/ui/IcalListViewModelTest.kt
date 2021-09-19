@@ -150,7 +150,7 @@ class IcalListViewModelTest {
         val id3 = database.insertICalObject(ICalObject.createTask("Task3"))
         database.insertCategory(Category(icalObjectId = id3, text = "Whatever"))
         database.insertCategory(Category(icalObjectId = id3, text = "No matter"))
-        val id4 = database.insertICalObject(ICalObject.createTask("Task4"))
+        database.insertICalObject(ICalObject.createTask("Task4"))  // val id4 = ...
         // no categories for id4
 
         icalListViewModel.searchModule = Module.TODO.name
@@ -206,7 +206,7 @@ class IcalListViewModelTest {
         database.insertOrganizer(Organizer(icalObjectId = id2, caladdress = "rezinagrO@techbee.at"))
         val id3 = database.insertICalObject(ICalObject.createTask("Task3"))
         database.insertOrganizer(Organizer(icalObjectId = id3, caladdress = "rezinagrO@techbee.at"))
-        val id4 = database.insertICalObject(ICalObject.createTask("Task4"))
+        database.insertICalObject(ICalObject.createTask("Task4"))  // val id4 =
         // no organizer for id4
 
         icalListViewModel.searchModule = Module.TODO.name
