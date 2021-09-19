@@ -171,8 +171,8 @@ abstract class ICalDatabase : RoomDatabase() {
         fun getInMemoryDB(context: Context): ICalDatabase {
 
                 return Room.inMemoryDatabaseBuilder(context, ICalDatabase::class.java)
-                        .allowMainThreadQueries()
-                        .build()
+                    .allowMainThreadQueries()
+                    .build()
         }
 
         /**
