@@ -3,11 +3,14 @@ package at.techbee.jtx.ui
 import android.app.Application
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.getOrAwaitValue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.*
 
@@ -15,7 +18,12 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
+
+@ExperimentalCoroutinesApi
+@RunWith(AndroidJUnit4::class)
+@SmallTest
 class IcalEditViewModelTest {
 
 
@@ -32,22 +40,22 @@ class IcalEditViewModelTest {
 
     private var sampleCategory1 = Category(text = "Techbee")
     private var sampleCategory2 = Category(text = "jtxBoard")
-    private var sampleCategory3 = Category(text = "DAVx5")
+    //private var sampleCategory3 = Category(text = "DAVx5")
 
     private var sampleAttachment1 = Attachment(uri = "content://at.techbee.jtx.fileprovider/jtx_files/1631560872968.aac")
     private var sampleAttachment2 = Attachment(uri = "content://at.techbee.jtx.fileprovider/jtx_files/1631560872969.aac")
 
     private var sampleAttendee1 = Attendee(caladdress = "info@techbee.at")
     private var sampleAttendee2 = Attendee(caladdress = "contact@techbee.at")
-    private var sampleAttendee3 = Attendee(caladdress = "patrick@techbee.at")
+    //private var sampleAttendee3 = Attendee(caladdress = "patrick@techbee.at")
 
     private var sampleComment1 = Comment(text = "Comment1")
     private var sampleComment2 = Comment(text = "Comment2")
-    private var sampleComment3 = Comment(text = "Comment3")
+    //private var sampleComment3 = Comment(text = "Comment3")
 
     private var sampleResource1 = Resource(text = "Resource1")
     private var sampleResource2 = Resource(text = "Resource2")
-    private var sampleResource3 = Resource(text = "Resource3")
+    //private var sampleResource3 = Resource(text = "Resource3")
 
     private var sampleSubtask1 = ICalObject.createTask(summary = "Subtask1")
     private var sampleSubtask2 = ICalObject.createTask(summary = "Subtask2")
@@ -128,7 +136,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.update()
         Thread.sleep(100)
 
-        val retrievedEntry = database.get(icalEditViewModel.returnVJournalItemId.value!!).getOrAwaitValue(100)
+        val retrievedEntry = database.get(icalEditViewModel.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
 
         assertEquals(updatedEntry.property.module, retrievedEntry?.property?.module)
         assertEquals(updatedEntry.property.component, retrievedEntry?.property?.component)
