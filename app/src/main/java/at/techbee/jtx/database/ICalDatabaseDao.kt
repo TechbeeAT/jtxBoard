@@ -251,8 +251,8 @@ DELETEs by Object
      *
      * @param ids The list of iCalObjects to be deleted.
      */
-    @Query("DELETE FROM icalobject WHERE _id IN (:ids)")
-    fun deleteICalObjectsbyIds(ids: List<Long>)
+    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
+    fun deleteICalObjectsbyId(id: Long)
 
 
 

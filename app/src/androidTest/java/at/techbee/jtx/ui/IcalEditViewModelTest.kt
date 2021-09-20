@@ -35,7 +35,7 @@ class IcalEditViewModelTest {
     private lateinit var application: Application
     private lateinit var icalEditViewModel: IcalEditViewModel
 
-    private var collection1id: Long? = null
+    private var collection1id: Long? = null    //ATTENTION! The first inserted Collection is considered as LOCAL!
     private var collection2id: Long? = null
 
     private var sampleCategory1 = Category(text = "Techbee")
@@ -67,8 +67,8 @@ class IcalEditViewModelTest {
     fun setUp() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
         database = ICalDatabase.getInMemoryDB(context).iCalDatabaseDao
-        collection1id = database.insertCollectionSync(ICalCollection(displayName = "testcollection1"))
-        collection2id = database.insertCollectionSync(ICalCollection(displayName = "testcollection2"))
+        collection1id = database.insertCollectionSync(ICalCollection(displayName = "testcollection_local", accountName = "LOCAL", accountType = "LOCAL"))
+        collection2id = database.insertCollectionSync(ICalCollection(displayName = "testcollection_remote", accountName = "remote", accountType = "remote"))
         application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
         icalEditViewModel = IcalEditViewModel(ICalEntity(), database, application)
 
@@ -262,5 +262,142 @@ class IcalEditViewModelTest {
         Thread.sleep(100)
 
         assertNull(shouldBeNull)
+    }
+
+
+    @Test
+    fun deleteClicked_delete_with_Children() = runBlockingTest {
+
+        //first make a new entry and save it
+        val parent = ICalEntity().apply {
+            property.module = Module.TODO.name
+            property.component = Component.VTODO.name
+            property.summary = "New Entry"
+            property.description = "New Entry Description"
+            property.collectionId = collection1id!!
+        }
+        val child1 = ICalObject.createTask("Subtask 1 Layer 1")
+        val child2 = ICalObject.createTask("Subtask 2 Layer 1")
+
+        icalEditViewModel.iCalObjectUpdated.value = parent.property
+        icalEditViewModel.subtaskUpdated.add(child1)
+        icalEditViewModel.subtaskUpdated.add(child2)
+
+        icalEditViewModel.update()
+        Thread.sleep(100)
+
+        val retrievedParent = database.get(icalEditViewModel.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+
+        // now take a Subtask and make another two subtasks (by loading the subtask in the fragment and doing the same)
+        val firstChildId = retrievedParent?.relatedto?.get(0)?.linkedICalObjectId!!
+        val firstChildEntry = database.get(firstChildId)
+
+        val icalEditViewModelSubtask = IcalEditViewModel(firstChildEntry.getOrAwaitValue()!!, database, application)
+        Thread.sleep(200)
+        icalEditViewModelSubtask.iCalObjectUpdated.getOrAwaitValue(5)
+
+        val child1_1 = ICalObject.createTask("Subtask 1 Layer 2")
+        val child1_2 = ICalObject.createTask("Subtask 1 Layer 2")
+
+        icalEditViewModelSubtask.subtaskUpdated.add(child1_1)
+        icalEditViewModelSubtask.subtaskUpdated.add(child1_2)
+
+        icalEditViewModelSubtask.update()
+        Thread.sleep(100)
+
+        val retrievedEntrySubtask = database.get(icalEditViewModelSubtask.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+
+        //just make sure now that the retrieved Entry is not null
+        assertNotNull(retrievedEntrySubtask)
+
+        val parentId = retrievedParent.property.id
+        val child1Id = retrievedParent.relatedto?.get(0)!!.linkedICalObjectId
+        val child2Id = retrievedParent.relatedto?.get(1)!!.linkedICalObjectId
+        val child1_1Id = retrievedEntrySubtask?.relatedto?.get(0)!!.linkedICalObjectId
+        val child1_2Id = retrievedEntrySubtask.relatedto?.get(1)!!.linkedICalObjectId
+
+        //Delete the parent through the view model, all subtasks must also be deleted now
+        val icalEditViewModelParent4Delete = IcalEditViewModel(retrievedParent, database, application)
+        Thread.sleep(200)
+        icalEditViewModelParent4Delete.allRelatedto.getOrAwaitValue()
+        icalEditViewModelParent4Delete.allRelatedto.observeForever {  }
+        icalEditViewModelParent4Delete.iCalObjectUpdated.getOrAwaitValue(5)
+        icalEditViewModelParent4Delete.delete()
+        Thread.sleep(400)
+
+        assertNull(database.get(parentId).getOrAwaitValue())
+        assertNull(database.get(child1Id!!).getOrAwaitValue())
+        assertNull(database.get(child2Id!!).getOrAwaitValue())
+        assertNull(database.get(child1_1Id!!).getOrAwaitValue())
+        assertNull(database.get(child1_2Id!!).getOrAwaitValue())
+    }
+
+
+    @Test
+    fun deleteClicked_delete_mark_deleted_with_Children() = runBlockingTest {
+
+        //first make a new entry and save it
+        val parent = ICalEntity().apply {
+            property.module = Module.TODO.name
+            property.component = Component.VTODO.name
+            property.summary = "New Entry"
+            property.description = "New Entry Description"
+            property.collectionId = collection2id!!
+        }
+        val child1 = ICalObject.createTask("Subtask 1 Layer 1")
+        val child2 = ICalObject.createTask("Subtask 2 Layer 1")
+
+        icalEditViewModel.iCalObjectUpdated.value = parent.property
+        icalEditViewModel.subtaskUpdated.add(child1)
+        icalEditViewModel.subtaskUpdated.add(child2)
+
+        icalEditViewModel.update()
+        Thread.sleep(100)
+
+        val retrievedParent = database.get(icalEditViewModel.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+
+        // now take a Subtask and make another two subtasks (by loading the subtask in the fragment and doing the same)
+        val firstChildId = retrievedParent?.relatedto?.get(0)?.linkedICalObjectId!!
+        val firstChildEntry = database.get(firstChildId)
+
+        val icalEditViewModelSubtask = IcalEditViewModel(firstChildEntry.getOrAwaitValue()!!, database, application)
+        Thread.sleep(200)
+        icalEditViewModelSubtask.iCalObjectUpdated.getOrAwaitValue(5)
+
+        val child1_1 = ICalObject.createTask("Subtask 1 Layer 2")
+        val child1_2 = ICalObject.createTask("Subtask 1 Layer 2")
+
+        icalEditViewModelSubtask.subtaskUpdated.add(child1_1)
+        icalEditViewModelSubtask.subtaskUpdated.add(child1_2)
+
+        icalEditViewModelSubtask.update()
+        Thread.sleep(100)
+
+        val retrievedEntrySubtask = database.get(icalEditViewModelSubtask.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+
+        //just make sure now that the retrieved Entry is not null
+        assertNotNull(retrievedEntrySubtask)
+
+        val parentId = retrievedParent.property.id
+        val child1Id = retrievedParent.relatedto?.get(0)!!.linkedICalObjectId
+        val child2Id = retrievedParent.relatedto?.get(1)!!.linkedICalObjectId
+        val child1_1Id = retrievedEntrySubtask?.relatedto?.get(0)!!.linkedICalObjectId
+        val child1_2Id = retrievedEntrySubtask.relatedto?.get(1)!!.linkedICalObjectId
+
+        //Delete the parent through the view model, all subtasks must also be deleted now
+        val icalEditViewModelParent4Delete = IcalEditViewModel(retrievedParent, database, application)
+        Thread.sleep(200)
+        icalEditViewModelParent4Delete.allRelatedto.getOrAwaitValue()
+        icalEditViewModelParent4Delete.allRelatedto.observeForever {  }
+        icalEditViewModelParent4Delete.iCalObjectUpdated.getOrAwaitValue(5)
+        icalEditViewModelParent4Delete.delete()
+        Thread.sleep(400)
+
+        assertTrue(database.get(parentId).getOrAwaitValue()?.property?.deleted!!)
+        assertTrue(database.get(child1Id!!).getOrAwaitValue()?.property?.deleted!!)
+        assertTrue(database.get(child2Id!!).getOrAwaitValue()?.property?.deleted!!)
+        assertTrue(database.get(child1_1Id!!).getOrAwaitValue()?.property?.deleted!!)
+        assertTrue(database.get(child1_2Id!!).getOrAwaitValue()?.property?.deleted!!)
+
     }
 }

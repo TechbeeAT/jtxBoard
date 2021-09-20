@@ -375,7 +375,7 @@ class IcalEditViewModel(
                 }
 
                 viewModelScope.launch(Dispatchers.IO) {
-                    database.deleteICalObjectsbyIds(listOf(id))
+                    database.deleteICalObjectsbyId(id)
                 }
             }
             else -> {                                                 // call the function again to recursively delete all children, then mark the item as deleted
