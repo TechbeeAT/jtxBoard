@@ -225,7 +225,7 @@ class IcalEditViewModelTest {
     }
 
     @Test
-    fun deleteClicked_delete() {
+    fun deleteClicked_delete() = runBlockingTest {
 
         //first make a new entry and save it
         val updatedEntry = ICalEntity().apply {
@@ -246,7 +246,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.update()
         Thread.sleep(100)
 
-        val retrievedEntry = database.get(icalEditViewModel.returnVJournalItemId.value!!).getOrAwaitValue(100)
+        val retrievedEntry = database.get(icalEditViewModel.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
 
 
         // we create a new instance of the view model and delete the entry
