@@ -1071,6 +1071,71 @@
 
 
                 <TextView
+                    android:id="@+id/edit_resources_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/edit_resources_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_resources"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edit_attendees_add" />
+
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/edit_resources_chipgroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
+                    app:chipSpacingHorizontal="8dp"
+                    app:chipSpacingVertical="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_resources_header" />
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_resources_add"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:hint="@string/edit_resources_hint"
+                    android:labelFor="@id/edit_resources_add_autocomplete"
+                    android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
+                    app:endIconContentDescription="Add resource"
+                    app:endIconDrawable="@drawable/ic_resources"
+                    app:endIconMode="custom"
+                    app:errorEnabled="true"
+                    app:helperText="Add a resource"
+                    app:helperTextEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_resources_chipgroup">
+
+
+                    <AutoCompleteTextView
+                        android:id="@+id/edit_resources_add_autocomplete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:inputType="textCapWords"
+                        android:singleLine="true" />
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <TextView
                     android:id="@+id/edit_comments_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -1083,7 +1148,7 @@
                     android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_comments"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_attendees_add" />
+                    app:layout_constraintTop_toBottomOf="@id/edit_resources_add" />
 
 
                 <LinearLayout

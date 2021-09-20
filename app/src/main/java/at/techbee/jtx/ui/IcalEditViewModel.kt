@@ -87,6 +87,7 @@ class IcalEditViewModel(
     var contactVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var categoriesVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var attendeesVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var resourcesVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var commentsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var attachmentsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var takePhotoVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
@@ -197,6 +198,7 @@ class IcalEditViewModel(
         categoriesVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
         contactVisible.postValue(selectedTab == TAB_MORE || isLandscape)
         attendeesVisible.postValue(selectedTab == TAB_MORE || isLandscape)
+        resourcesVisible.postValue(selectedTab == TAB_MORE || isLandscape)
         commentsVisible.postValue(selectedTab == TAB_COMMENTS || isLandscape)
         attachmentsVisible.postValue(selectedTab == TAB_ATTACHMENTS || isLandscape)
         takePhotoVisible.postValue(selectedTab == TAB_ATTACHMENTS || isLandscape)
@@ -258,6 +260,10 @@ class IcalEditViewModel(
                 database.deleteAttendee(att2del)
                 Log.println(Log.INFO, "Attendee", "${att2del.caladdress} deleted")
             }
+            resourceDeleted.forEach { res ->
+                database.deleteResource(res)
+                Log.println(Log.INFO, "Resource", "{${res.text} deleted")
+            }
             subtaskDeleted.forEach { subtask2del ->
                 viewModelScope.launch(Dispatchers.IO) {
                     database.deleteRelatedChildren(subtask2del.id)       // Also Child-Elements of Child-Elements need to be deleted!
@@ -291,6 +297,10 @@ class IcalEditViewModel(
             attendeeUpdated.forEach { newAttendee ->
                 newAttendee.icalObjectId = insertedOrUpdatedItemId
                 database.insertAttendee(newAttendee)
+            }
+            resourceUpdated.forEach { newResource ->
+                newResource.icalObjectId = insertedOrUpdatedItemId
+                database.insertResource(newResource)
             }
             subtaskUpdated.forEach { subtask ->
                 subtask.sequence++
@@ -440,6 +450,11 @@ class IcalEditViewModel(
                 item.attendees?.forEach {
                     it.icalObjectId = newId
                     database.insertAttendee(it)
+                }
+
+                item.resources?.forEach {
+                    it.icalObjectId = newId
+                    database.insertResource(it)
                 }
 
                 item.categories?.forEach {

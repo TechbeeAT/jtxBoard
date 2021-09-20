@@ -298,6 +298,15 @@ DELETEs by Object
     fun deleteAttendee(attendee: Attendee)
 
     /**
+     * Delete a resource by the object.
+     *
+     * @param resource The object of the resource that should be deleted.
+     */
+    @Delete
+    fun deleteResource(resource: Resource)
+
+
+    /**
      * Delete a relatedto by parentId and childId.
      *
      * @param parentId The Id of the parent IcalObject.

@@ -490,6 +490,38 @@
                     app:layout_constraintTop_toBottomOf="@+id/view_attendee_header" />
 
 
+
+                <TextView
+                    android:id="@+id/view_resources_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_resources_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_resources"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_attendee_chipgroup" />
+
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/view_resources_chipgroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
+                    app:chipSpacingHorizontal="8dp"
+                    app:chipSpacingVertical="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_resources_header" />
+
+
                 <TextView
                     android:id="@+id/view_organizer_header"
                     android:layout_width="wrap_content"
@@ -503,7 +535,7 @@
                     android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_organizer"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_attendee_chipgroup" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_resources_chipgroup" />
 
                 <TextView
                     android:id="@+id/view_organizer"

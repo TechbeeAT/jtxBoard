@@ -84,7 +84,7 @@ class IcalEditFragment : Fragment() {
     private val allContactsMail: MutableList<String> = mutableListOf()
     //private val allContactsNameAndMail: MutableList<String> = mutableListOf()
 
-    private var displayedCategoryChips = mutableListOf<Category>()
+    //private var displayedCategoryChips = mutableListOf<Category>()
 
     private var photoUri: Uri? = null     // Uri for captured photo
 
@@ -621,6 +621,14 @@ class IcalEditFragment : Fragment() {
                 icalEditViewModel.attendeeUpdated.add(singleAttendee)
         }
 
+        icalEditViewModel.iCalEntity.resources?.forEach { singleResource ->
+            addResourceChip(singleResource)
+
+            // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
+            if (icalEditViewModel.iCalEntity.property.id == 0L)
+                icalEditViewModel.resourceUpdated.add(singleResource)
+        }
+
 
         // Set up items to suggest for categories
         icalEditViewModel.allCategories.observe(viewLifecycleOwner, {
@@ -808,7 +816,6 @@ class IcalEditFragment : Fragment() {
 
         }
 
-
         // Transform the category input into a chip when the Done button in the keyboard is clicked
         binding.editCategoriesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
@@ -817,6 +824,27 @@ class IcalEditFragment : Fragment() {
                     addCategoryChip(Category(text = binding.editCategoriesAdd.editText?.text.toString()))
                     binding.editCategoriesAdd.editText?.text?.clear()
 
+                    true
+                }
+                else -> false
+            }
+        }
+
+
+        binding.editResourcesAdd?.setEndIconOnClickListener {
+            // Respond to end icon presses
+            icalEditViewModel.resourceUpdated.add(Resource(text = binding.editResourcesAdd?.editText?.text.toString()))
+            addResourceChip(Resource(text = binding.editResourcesAdd?.editText?.text.toString()))
+            binding.editResourcesAdd?.editText?.text?.clear()
+        }
+
+        // Transform the resource input into a chip when the Done button in the keyboard is clicked
+        binding.editResourcesAdd?.editText?.setOnEditorActionListener { _, actionId, _ ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    icalEditViewModel.resourceUpdated.add(Resource(text = binding.editResourcesAdd?.editText?.text.toString()))
+                    addResourceChip(Resource(text = binding.editResourcesAdd?.editText?.text.toString()))
+                    binding.editResourcesAdd?.editText?.text?.clear()
                     true
                 }
                 else -> false
@@ -1207,7 +1235,7 @@ class IcalEditFragment : Fragment() {
         ) as Chip
         categoryChip.text = category.text
         binding.editCategoriesChipgroup.addView(categoryChip)
-        displayedCategoryChips.add(category)
+        //displayedCategoryChips.add(category)
 
         categoryChip.setOnClickListener {
             // Responds to chip click
@@ -1221,6 +1249,31 @@ class IcalEditFragment : Fragment() {
         categoryChip.setOnCheckedChangeListener { _, _ ->
             // Responds to chip checked/unchecked
         }
+    }
+
+
+    private fun addResourceChip(resource: Resource) {
+
+        if (resource.text.isNullOrBlank())
+            return
+
+        val resourceChip = inflater.inflate(
+            R.layout.fragment_ical_edit_resource_chip,
+            binding.editResourcesChipgroup,
+            false
+        ) as Chip
+        resourceChip.text = resource.text
+        binding.editResourcesChipgroup?.addView(resourceChip)
+        //displayedCategoryChips.add(resource)
+
+        resourceChip.setOnClickListener {   }
+
+        resourceChip.setOnCloseIconClickListener { chip ->
+            icalEditViewModel.resourceDeleted.add(resource)  // add the category to the list for categories to be deleted
+            chip.visibility = View.GONE
+        }
+
+        resourceChip.setOnCheckedChangeListener { _, _ ->   }
     }
 
 

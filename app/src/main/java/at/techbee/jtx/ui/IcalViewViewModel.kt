@@ -25,6 +25,7 @@ class IcalViewViewModel(private val icalItemId: Long,
 
     lateinit var icalEntity: LiveData<ICalEntity?>
     lateinit var categories: LiveData<List<Category>>
+    lateinit var resources: LiveData<List<Resource>>
     lateinit var attendees: LiveData<List<Attendee>>
     lateinit var relatedNotes: LiveData<List<ICal4ViewNote?>>
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
@@ -43,6 +44,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var urlVisible: LiveData<Boolean>
     lateinit var locationVisible: LiveData<Boolean>
     lateinit var attendeesVisible: LiveData<Boolean>
+    lateinit var resourcesVisible: LiveData<Boolean>
     lateinit var organizerVisible: LiveData<Boolean>
     lateinit var contactVisible: LiveData<Boolean>
     lateinit var commentsVisible: LiveData<Boolean>
@@ -78,6 +80,10 @@ class IcalViewViewModel(private val icalItemId: Long,
 
             categories = Transformations.map(icalEntity) {
                 it?.categories
+            }
+
+            resources = Transformations.map(icalEntity) {
+                it?.resources
             }
 
             attendees = Transformations.map(icalEntity) {
@@ -164,6 +170,9 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
             attendeesVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.attendees.isNullOrEmpty()      // true if attendees is NOT null or empty
+            }
+            resourcesVisible = Transformations.map(icalEntity) { item ->
+                return@map !item?.resources.isNullOrEmpty()      // true if attendees is NOT null or empty
             }
             organizerVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.organizer != null      // true if organizer is NOT null or empty

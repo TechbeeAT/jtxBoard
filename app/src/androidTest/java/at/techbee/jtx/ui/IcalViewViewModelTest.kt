@@ -165,6 +165,8 @@ class IcalViewViewModelTest {
         assertEquals(false, icalViewViewModel.subtasksVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.completedVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.startedVisible.getOrAwaitValue())
+        assertEquals(false, icalViewViewModel.resourcesVisible.getOrAwaitValue())
+
 
         assertEquals(listOf<ICalObject>(), icalViewViewModel.subtasksCountList.getOrAwaitValue())
 

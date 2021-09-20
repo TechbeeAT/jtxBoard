@@ -40,10 +40,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.*
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.properties.Attendee
-import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.properties.Role
+import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.databinding.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -307,6 +304,13 @@ class IcalViewFragment : Fragment() {
             binding.viewCategoriesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
             it.forEach { category ->
                 addCategoryChip(category)
+            }
+        })
+
+        icalViewViewModel.resources.observe(viewLifecycleOwner, {
+            binding.viewResourcesChipgroup?.removeAllViews()      // remove all views if something has changed to rebuild from scratch
+            it.forEach { resource ->
+                addResourceChip(resource)
             }
         })
 
@@ -634,8 +638,16 @@ class IcalViewFragment : Fragment() {
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment().setCategory2filter(selectedCategoryArray)
             )
         }
+    }
 
+    private fun addResourceChip(resource: Resource) {
 
+        if (resource.text.isNullOrBlank())     // don't add empty categories
+            return
+
+        val resourceChip = inflater.inflate(R.layout.fragment_ical_view_resources_chip, binding.viewResourcesChipgroup, false) as Chip
+        resourceChip.text = resource.text
+        binding.viewResourcesChipgroup?.addView(resourceChip)
     }
 
 
@@ -760,7 +772,7 @@ class IcalViewFragment : Fragment() {
             R.id.menu_view_share_ics -> {
 
                 val shareText = icalViewViewModel.icalEntity.value!!.getIcalFormat(requireContext()).toString()
-                Log.d("iCalFileContent", shareText.toString())
+                Log.d("iCalFileContent", shareText)
 
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND

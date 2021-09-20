@@ -119,7 +119,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.attachmentUpdated.add(sampleAttachment1)
         icalEditViewModel.attendeeUpdated.add(sampleAttendee1)
         icalEditViewModel.commentUpdated.add(sampleComment1)
-        //icalEditViewModel.resourceUpdated.add(sampleResource1)
+        icalEditViewModel.resourceUpdated.add(sampleResource1)
         //icalEditViewModel.subtaskUpdated.add()
 
 
@@ -138,7 +138,7 @@ class IcalEditViewModelTest {
         assertEquals(sampleAttachment1.uri, retrievedEntry.attachments?.get(0)!!.uri)
         assertEquals(sampleAttendee1.caladdress, retrievedEntry.attendees?.get(0)!!.caladdress)
         assertEquals(sampleComment1.text, retrievedEntry.comments?.get(0)!!.text)
-        //assertEquals(sampleResource1.text, retrievedEntry.resources?.get(0)!!.text)
+        assertEquals(sampleResource1.text, retrievedEntry.resources?.get(0)!!.text)
 
     }
 
