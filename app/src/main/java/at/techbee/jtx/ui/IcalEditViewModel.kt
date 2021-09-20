@@ -43,7 +43,6 @@ class IcalEditViewModel(
     lateinit var allCollections: LiveData<List<ICalCollection>>
     lateinit var allRelatedto: LiveData<List<Relatedto>>
 
-
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
 
     var returnVJournalItemId: MutableLiveData<Long> =
@@ -491,8 +490,3 @@ fun clearAttendeeError(s: Editable) {
 }
 
  */
-
-
-
-
-
