@@ -49,6 +49,9 @@ class IcalEditViewModelTest {
     private var sampleResource2 = Resource(text = "Resource2")
     private var sampleResource3 = Resource(text = "Resource3")
 
+    private var sampleSubtask1 = ICalObject.createTask(summary = "Subtask1")
+    private var sampleSubtask2 = ICalObject.createTask(summary = "Subtask2")
+    private var sampleSubtask3 = ICalObject.createTask(summary = "Subtask3")
 
 
 
@@ -105,7 +108,7 @@ class IcalEditViewModelTest {
     }
 
     @Test
-    fun savingClicked_newEntry() = runBlockingTest {
+    fun savingClicked_update_newEntry() = runBlockingTest {
 
         val updatedEntry = ICalEntity().apply {
             property.module = Module.JOURNAL.name
@@ -120,8 +123,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.attendeeUpdated.add(sampleAttendee1)
         icalEditViewModel.commentUpdated.add(sampleComment1)
         icalEditViewModel.resourceUpdated.add(sampleResource1)
-        //icalEditViewModel.subtaskUpdated.add()
-
+        icalEditViewModel.subtaskUpdated.add(sampleSubtask1)
 
         icalEditViewModel.update()
         Thread.sleep(100)
@@ -139,22 +141,118 @@ class IcalEditViewModelTest {
         assertEquals(sampleAttendee1.caladdress, retrievedEntry.attendees?.get(0)!!.caladdress)
         assertEquals(sampleComment1.text, retrievedEntry.comments?.get(0)!!.text)
         assertEquals(sampleResource1.text, retrievedEntry.resources?.get(0)!!.text)
-
+        assertEquals(1, retrievedEntry.relatedto?.size)
     }
 
     @Test
-    fun savingClicked_updateEntry() {
+    fun savingClicked_update_updateEntry() {
+
+        //first make a new entry and save it
+        val updatedEntry = ICalEntity().apply {
+            property.module = Module.JOURNAL.name
+            property.component = Component.VJOURNAL.name
+            property.summary = "New Entry"
+            property.description = "New Entry Description"
+            property.collectionId = collection1id!!
+        }
+        icalEditViewModel.iCalObjectUpdated.value = updatedEntry.property
+        icalEditViewModel.categoryUpdated.add(sampleCategory1)
+        icalEditViewModel.attachmentUpdated.add(sampleAttachment1)
+        icalEditViewModel.attendeeUpdated.add(sampleAttendee1)
+        icalEditViewModel.commentUpdated.add(sampleComment1)
+        icalEditViewModel.resourceUpdated.add(sampleResource1)
+        icalEditViewModel.subtaskUpdated.add(sampleSubtask1)
+
+        icalEditViewModel.update()
+        Thread.sleep(100)
+
+        val retrievedEntry = database.get(icalEditViewModel.returnVJournalItemId.value!!).getOrAwaitValue(100)
+
+
+        // we create a new instance of the view model and update the values (incl. some deletes)
+        icalEditViewModel = IcalEditViewModel(retrievedEntry!!, database, application)
+        Thread.sleep(100)
+
+        val updatedEntry2 = ICalEntity().apply {
+            property.module = Module.JOURNAL.name
+            property.component = Component.VJOURNAL.name
+            property.summary = "New Entry edited"
+            property.description = "New Entry Description edited"
+            property.collectionId = collection1id!!
+        }
+        icalEditViewModel.iCalObjectUpdated.value = updatedEntry2.property
+        icalEditViewModel.categoryUpdated.add(sampleCategory2)
+        icalEditViewModel.attachmentUpdated.add(sampleAttachment2)
+        icalEditViewModel.attendeeUpdated.add(sampleAttendee2)
+        icalEditViewModel.commentUpdated.add(sampleComment2)
+        icalEditViewModel.resourceUpdated.add(sampleResource2)
+        icalEditViewModel.subtaskUpdated.add(sampleSubtask2)
+        icalEditViewModel.subtaskUpdated.add(sampleSubtask3)
+
+        icalEditViewModel.categoryDeleted.add(sampleCategory1)
+        icalEditViewModel.attachmentDeleted.add(sampleAttachment1)
+        icalEditViewModel.attendeeDeleted.add(sampleAttendee1)
+        icalEditViewModel.resourceDeleted.add(sampleResource1)
+        icalEditViewModel.commentDeleted.add(sampleComment1)
+        icalEditViewModel.subtaskDeleted.add(sampleSubtask1)
+
+        icalEditViewModel.update()
+        Thread.sleep(100)
+
+        val retrievedEntry2 = database.get(icalEditViewModel.returnVJournalItemId.value!!).getOrAwaitValue(100)
+
+
+        assertEquals(updatedEntry2.property.module, retrievedEntry2?.property?.module)
+        assertEquals(updatedEntry2.property.component, retrievedEntry2?.property?.component)
+        assertEquals(updatedEntry2.property.summary, retrievedEntry2?.property?.summary)
+        assertEquals(updatedEntry2.property.description, retrievedEntry2?.property?.description)
+        assertEquals(updatedEntry2.property.collectionId, retrievedEntry2?.property?.collectionId)
+
+        assertEquals(sampleCategory2.text, retrievedEntry2?.categories?.get(0)!!.text)
+        assertEquals(sampleAttachment2.uri, retrievedEntry2.attachments?.get(0)!!.uri)
+        assertEquals(sampleAttendee2.caladdress, retrievedEntry2.attendees?.get(0)!!.caladdress)
+        assertEquals(sampleComment2.text, retrievedEntry2.comments?.get(0)!!.text)
+        assertEquals(sampleResource2.text, retrievedEntry2.resources?.get(0)!!.text)
+        assertEquals(2, retrievedEntry2.relatedto?.size)
     }
 
     @Test
-    fun deleteClicked() {
-    }
+    fun deleteClicked_delete() {
 
-    @Test
-    fun update() {
-    }
+        //first make a new entry and save it
+        val updatedEntry = ICalEntity().apply {
+            property.module = Module.JOURNAL.name
+            property.component = Component.VJOURNAL.name
+            property.summary = "New Entry"
+            property.description = "New Entry Description"
+            property.collectionId = collection1id!!
+        }
+        icalEditViewModel.iCalObjectUpdated.value = updatedEntry.property
+        icalEditViewModel.categoryUpdated.add(sampleCategory1)
+        icalEditViewModel.attachmentUpdated.add(sampleAttachment1)
+        icalEditViewModel.attendeeUpdated.add(sampleAttendee1)
+        icalEditViewModel.commentUpdated.add(sampleComment1)
+        icalEditViewModel.resourceUpdated.add(sampleResource1)
+        icalEditViewModel.subtaskUpdated.add(sampleSubtask1)
 
-    @Test
-    fun delete() {
+        icalEditViewModel.update()
+        Thread.sleep(100)
+
+        val retrievedEntry = database.get(icalEditViewModel.returnVJournalItemId.value!!).getOrAwaitValue(100)
+
+
+        // we create a new instance of the view model and delete the entry
+        icalEditViewModel = IcalEditViewModel(retrievedEntry!!, database, application)
+        Thread.sleep(200)
+        icalEditViewModel.iCalObjectUpdated.getOrAwaitValue(5)
+        icalEditViewModel.allRelatedto.getOrAwaitValue(5)
+
+        icalEditViewModel.delete()
+        Thread.sleep(200)
+
+        val shouldBeNull = database.get(retrievedEntry.property.id).getOrAwaitValue()
+        Thread.sleep(100)
+
+        assertNull(shouldBeNull)
     }
 }
