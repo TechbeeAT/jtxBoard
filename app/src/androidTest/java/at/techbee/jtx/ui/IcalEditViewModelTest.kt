@@ -153,7 +153,7 @@ class IcalEditViewModelTest {
     }
 
     @Test
-    fun savingClicked_update_updateEntry() {
+    fun savingClicked_update_updateEntry() = runBlockingTest{
 
         //first make a new entry and save it
         val updatedEntry = ICalEntity().apply {
