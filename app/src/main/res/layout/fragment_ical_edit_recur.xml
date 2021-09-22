@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+
+    <data>
+        <import type="android.view.View" />
+        <import type="at.techbee.jtx.UtilKt" />
+
+        <variable
+            name="model"
+            type="at.techbee.jtx.ui.IcalEditViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/edit_recur_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:drawablePadding="8dp"
+        android:text="Recurrence"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:drawableStartCompat="@drawable/ic_recurring"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+        <Switch
+            android:id="@+id/edit_recur_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_recur_header"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/edit_recur_header"
+            app:layout_constraintTop_toTopOf="@+id/edit_recur_header" />
+
+        <TextView
+        android:id="@+id/edit_recur_every"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Every"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_recur_every_x_days_months"
+        app:layout_constraintStart_toStartOf="@+id/edit_recur_header"
+        app:layout_constraintTop_toTopOf="@+id/edit_recur_every_x_days_months" />
+
+    <NumberPicker
+        android:id="@+id/edit_recur_every_x_days_months"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:layout_constraintStart_toEndOf="@+id/edit_recur_every"
+        app:layout_constraintTop_toBottomOf="@+id/edit_recur_header" />
+
+    <NumberPicker
+        android:id="@+id/edit_recur_days_months"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:spinnerMode="dialog"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_recur_every_x_days_months"
+        app:layout_constraintStart_toEndOf="@+id/edit_recur_every_x_days_months"
+        app:layout_constraintTop_toTopOf="@+id/edit_recur_every_x_days_months"
+        tools:text="Collection" />
+
+    <TextView
+        android:id="@+id/edit_recur_weekly_on"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="on"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_recur_days_months"
+        app:layout_constraintStart_toEndOf="@+id/edit_recur_days_months"
+        app:layout_constraintTop_toTopOf="@+id/edit_recur_days_months" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/edit_recur_weekly_on_chipgroup_weekdays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_recur_every_x_days_months">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/edit_recur_chip_monday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mo" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/edit_recur_chip_tuesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tu" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/edit_recur_chip_wednesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="We" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/edit_recur_chip_thursday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Th" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/edit_recur_chip_friday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fr" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/edit_recur_chip_saturday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sa" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/edit_recur_chip_sunday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Su" />
+    </com.google.android.material.chip.ChipGroup>
+
+
+    <TextView
+        android:id="@+id/edit_recur_on_the_x_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="on the"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_recur_on_the_x_month_numberPicker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_recur_on_the_x_month_numberPicker" />
+
+    <NumberPicker
+        android:id="@+id/edit_recur_on_the_x_month_numberPicker"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:layout_constraintStart_toEndOf="@+id/edit_recur_on_the_x_month"
+        app:layout_constraintTop_toBottomOf="@+id/edit_recur_weekly_on_chipgroup_weekdays" />
+
+    <TextView
+        android:id="@+id/edit_x_of_the_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="day of the month"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_recur_on_the_x_month"
+        app:layout_constraintStart_toEndOf="@+id/edit_recur_on_the_x_month_numberPicker"
+        app:layout_constraintTop_toTopOf="@+id/edit_recur_on_the_x_month" />
+
+    <NumberPicker
+        android:id="@+id/edit_recur_until_limitedto"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_recur_on_the_x_month_numberPicker" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_recur_datepicker_limitedto"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:hint="@string/edit_due_date_hint"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:endIconContentDescription="Set due date"
+        app:endIconDrawable="@drawable/ic_date"
+        app:endIconMode="custom"
+        app:helperText="Set due date"
+        app:helperTextEnabled="true"
+        app:layout_constraintStart_toEndOf="@+id/edit_recur_until_limitedto"
+        app:layout_constraintTop_toTopOf="@+id/edit_recur_until_limitedto">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_recur_datepicker_limitedto_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:inputType="date"
+            android:text="@{model.duedateFormated}" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <NumberPicker
+        android:id="@+id/edit_recur_until_x_occurences"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_recur_until_limitedto"
+        app:layout_constraintStart_toEndOf="@id/edit_recur_datepicker_limitedto"
+        app:layout_constraintTop_toTopOf="@+id/edit_recur_until_limitedto" />
+
+
+    <TextView
+        android:id="@+id/edit_recur_until_occurences"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="occurence(s)"
+        android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_recur_until_limitedto"
+        app:layout_constraintStart_toEndOf="@id/edit_recur_until_x_occurences"
+        app:layout_constraintTop_toTopOf="@+id/edit_recur_until_limitedto" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

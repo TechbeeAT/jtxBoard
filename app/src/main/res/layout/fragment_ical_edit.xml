@@ -17,7 +17,6 @@
         <import type="android.view.View" />
         <import type="at.techbee.jtx.UtilKt" />
 
-
         <variable
             name="model"
             type="at.techbee.jtx.ui.IcalEditViewModel" />
@@ -1148,7 +1147,7 @@
                     android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_comments"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_resources_add" />
+                    app:layout_constraintTop_toBottomOf="@id/edit_fragment_ical_edit_recur" />
 
 
                 <LinearLayout
@@ -1206,6 +1205,17 @@
                         android:inputType="textWebEmailAddress|textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+
+                <include
+                    android:id="@+id/edit_fragment_ical_edit_recur"
+                    layout="@layout/fragment_ical_edit_recur"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:model="@{model}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edit_resources_add" />
 
                 <TextView
                     android:id="@+id/edit_attachments_header"
@@ -1279,7 +1289,6 @@
                     android:text="@string/edit_take_picture_button_text"
                     android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
                     app:icon="@drawable/ic_photo_add"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"

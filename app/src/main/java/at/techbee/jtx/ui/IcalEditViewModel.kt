@@ -100,6 +100,7 @@ class IcalEditViewModel(
     var completedtimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var starteddateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var startedtimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var recurrenceVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
 
     var duedateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
@@ -155,7 +156,7 @@ class IcalEditViewModel(
         MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
 
 
-    val urlError = MutableLiveData<String>()
+    val urlError = MutableLiveData<String?>()
     val attendeesError = MutableLiveData<String>()
 
     var isLandscape = false
@@ -211,6 +212,8 @@ class IcalEditViewModel(
         completedtimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.completedTimezone != "ALLDAY")
         starteddateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
         startedtimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
+        recurrenceVisible.postValue((selectedTab == TAB_RECURRING || isLandscape))
+
     }
 
     fun savingClicked() {

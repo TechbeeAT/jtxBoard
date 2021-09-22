@@ -84,8 +84,6 @@ class IcalEditFragment : Fragment() {
     private val allContactsMail: MutableList<String> = mutableListOf()
     //private val allContactsNameAndMail: MutableList<String> = mutableListOf()
 
-    //private var displayedCategoryChips = mutableListOf<Category>()
-
     private var photoUri: Uri? = null     // Uri for captured photo
 
     private var filepickerLauncher =
@@ -111,7 +109,6 @@ class IcalEditFragment : Fragment() {
 
         const val PREFS_EDIT_VIEW = "sharedPreferencesEditView"
         const val PREFS_LAST_COLLECTION = "lastUsedCollection"
-
     }
 
 
