@@ -388,8 +388,8 @@ class IcalEditFragment : Fragment() {
 
                 // show Ad if activated
                 val mainActivity = activity as MainActivity
-                if (mainActivity.rewardedInterstitialAd != null) {
-                    mainActivity.rewardedInterstitialAd?.show(mainActivity, mainActivity)
+                if (AdLoader.rewardedInterstitialAd != null) {
+                    AdLoader.rewardedInterstitialAd?.show(mainActivity, mainActivity)
                 } else {
                     Log.d("IcalEditFragment", "The interstitial ad wasn't ready yet.")
                 }

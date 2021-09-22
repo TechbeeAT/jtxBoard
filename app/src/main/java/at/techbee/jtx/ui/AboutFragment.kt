@@ -2,6 +2,7 @@ package at.techbee.jtx.ui
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,8 +84,13 @@ class AboutFragment : Fragment() {
 
     override fun onResume() {
 
-        val activity = requireActivity() as MainActivity
-        activity.setToolbarText("About")
+        try {
+            val activity = requireActivity() as MainActivity
+            activity.setToolbarText("About")
+        } catch(e: Exception) {
+            Log.d("Cast not successful", e.toString())
+            //This error will always happen for fragment testing, as the cast to Main Activity cannot be successful
+        }
 
         super.onResume()
     }

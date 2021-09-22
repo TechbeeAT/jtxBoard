@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.*
+import at.techbee.jtx.AdLoader
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 
@@ -26,7 +27,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings, rootKey)
 
-        val mainActivity = activity as MainActivity
+        //val mainActivity = activity as MainActivity
 
 
         // register a change listener for the theme to update the UI immediately
@@ -43,20 +44,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         preferenceScreen.get<Preference>(SHOW_USER_CONSENT)?.setOnPreferenceClickListener {
             Log.d("showUserConsent", "Clicked on Show User Consent")
-            mainActivity.resetUserConsent()
+            AdLoader.resetUserConsent(requireActivity(), requireContext())
             return@setOnPreferenceClickListener true
         }
 
         preferenceScreen.get<SwitchPreference>(ACCEPT_ADS)?.setOnPreferenceChangeListener { _, adsEnabled ->
             preferenceScreen.get<Preference>(SHOW_USER_CONSENT)?.isEnabled = adsEnabled as Boolean
             if(adsEnabled)
-                mainActivity.initializeUserConsent()     // show user consent if ads get enabled (despite the user bought the full version?)
+                AdLoader.initializeUserConsent(requireActivity(), requireContext())     // show user consent if ads get enabled (despite the user bought the full version?)
             else
                 Toast.makeText(activity, "Start the Intent for the play store", Toast.LENGTH_LONG).show()
             return@setOnPreferenceChangeListener true
         }
 
-        if(mainActivity.isTrialPeriod()) {
+        if(AdLoader.isTrialPeriod(requireActivity())) {
             preferenceScreen.get<Preference>(ACCEPT_ADS)?.isEnabled = false
             preferenceScreen.get<Preference>(SHOW_USER_CONSENT)?.isEnabled = false
         }
