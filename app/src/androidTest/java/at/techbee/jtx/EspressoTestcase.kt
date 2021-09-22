@@ -8,10 +8,11 @@
 
 package at.techbee.jtx
 
+import android.os.Build
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -28,14 +29,17 @@ class EspressoTestcase {
         /**
          * Use [androidx.test.ext.junit.rules.ActivityScenarioRule] to create and launch the activity under test before each test,
          * and close it after each test. This is a replacement for
-         * [androidx.test.rule.ActivityTestRule].
+         * "androidx.test.rule.ActivityTestRule".
          */
         @get:Rule var activityScenarioRule = activityScenarioRule<MainActivity>()
 
         @Test
         fun goToDate_only_visible_for_Journals() {
 
-            // Type text and then press the button.
+            onView(withText(R.string.list_tabitem_journals)).perform(click())
+            onView(withId(R.id.menu_list_gotodate)).check(matches(isDisplayed()))
+
+            onView(withText(R.string.list_tabitem_notes)).perform(click())
             onView(withText(R.string.list_tabitem_todos)).perform(click())
             onView(withId(R.id.menu_list_gotodate)).check(doesNotExist())
 
@@ -50,6 +54,8 @@ class EspressoTestcase {
 
         onView(withText(R.string.list_tabitem_journals)).perform(click())
         onView(withId(R.id.fab)).perform(click())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)        // only from S it seems like the app permission dialog makes an issue here
+            onView(withText(R.string.edit_fragment_app_permission_message)).perform(pressBack())
         onView(withId(R.id.edit_summary_edit_textinputfield)).perform(typeText("Espresso Journal"))
         onView(withId(R.id.edit_fab_save)).perform(click())
         onView(withText("Espresso Journal"))
@@ -60,6 +66,8 @@ class EspressoTestcase {
 
         onView(withText(R.string.list_tabitem_notes)).perform(click())
         onView(withId(R.id.fab)).perform(click())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)        // only from S it seems like the app permission dialog makes an issue here
+            onView(withText(R.string.edit_fragment_app_permission_message)).perform(pressBack())
         onView(withId(R.id.edit_summary_edit_textinputfield)).perform(typeText("Espresso Note"))
         onView(withId(R.id.edit_fab_save)).perform(click())
         onView(withText("Espresso Note"))
@@ -70,6 +78,8 @@ class EspressoTestcase {
 
         onView(withText(R.string.list_tabitem_todos)).perform(click())
         onView(withId(R.id.fab)).perform(click())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)        // only from S it seems like the app permission dialog makes an issue here
+            onView(withText(R.string.edit_fragment_app_permission_message)).perform(pressBack())
         onView(withId(R.id.edit_summary_edit_textinputfield)).perform(typeText("Espresso Todo"))
         onView(withId(R.id.edit_fab_save)).perform(click())
         onView(withText("Espresso Todo"))
