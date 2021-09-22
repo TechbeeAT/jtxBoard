@@ -203,7 +203,7 @@ class IcalEditFragment : Fragment() {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
             }
-        binding.editStartedtimezoneSpinner.onItemSelectedListener =
+        binding.editStartedtimezoneSpinner?.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -212,12 +212,12 @@ class IcalEditFragment : Fragment() {
                     id: Long
                 ) {
                     icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone =
-                        binding.editStartedtimezoneSpinner.getItemAtPosition(position).toString()
+                        binding.editStartedtimezoneSpinner?.getItemAtPosition(position).toString()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
             }
-        binding.editDuetimezoneSpinner.onItemSelectedListener =
+        binding.editDuetimezoneSpinner?.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -226,12 +226,12 @@ class IcalEditFragment : Fragment() {
                     id: Long
                 ) {
                     icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone =
-                        binding.editDuetimezoneSpinner.getItemAtPosition(position).toString()
+                        binding.editDuetimezoneSpinner?.getItemAtPosition(position).toString()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
             }
-        binding.editCompletedtimezoneSpinner.onItemSelectedListener =
+        binding.editCompletedtimezoneSpinner?.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -240,7 +240,7 @@ class IcalEditFragment : Fragment() {
                     id: Long
                 ) {
                     icalEditViewModel.iCalObjectUpdated.value!!.completedTimezone =
-                        binding.editCompletedtimezoneSpinner.getItemAtPosition(position).toString()
+                        binding.editCompletedtimezoneSpinner?.getItemAtPosition(position).toString()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
@@ -435,17 +435,17 @@ class IcalEditFragment : Fragment() {
                     ?: it.classification       // if unsupported just show whatever is there
 
             binding.editTimezoneSpinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(it.dtstartTimezone))
-            binding.editCompletedtimezoneSpinner.setSelection(
+            binding.editCompletedtimezoneSpinner?.setSelection(
                 icalEditViewModel.possibleTimezones.indexOf(
                     it.completedTimezone
                 )
             )
-            binding.editDuetimezoneSpinner.setSelection(
+            binding.editDuetimezoneSpinner?.setSelection(
                 icalEditViewModel.possibleTimezones.indexOf(
                     it.dueTimezone
                 )
             )
-            binding.editStartedtimezoneSpinner.setSelection(
+            binding.editStartedtimezoneSpinner?.setSelection(
                 icalEditViewModel.possibleTimezones.indexOf(
                     it.dtstartTimezone
                 )
@@ -494,8 +494,8 @@ class IcalEditFragment : Fragment() {
                 c.set(Calendar.HOUR_OF_DAY, 0)
                 c.set(Calendar.MINUTE, 0)
                 icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
-                binding.editDueTimeEdittext.text?.clear()
-                binding.editDuetimezoneSpinner.setSelection(0)
+                binding.editDueTimeEdittext?.text?.clear()
+                binding.editDuetimezoneSpinner?.setSelection(0)
 
                 // dtstart and due MUST both be either both ALLDAY or both with times
                 if (icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone != "ALLDAY")
@@ -528,8 +528,8 @@ class IcalEditFragment : Fragment() {
                 c.set(Calendar.HOUR_OF_DAY, 0)
                 c.set(Calendar.MINUTE, 0)
                 icalEditViewModel.iCalObjectUpdated.value!!.completed = c.timeInMillis
-                binding.editCompletedTimeEdittext.text?.clear()
-                binding.editCompletedtimezoneSpinner.setSelection(0)
+                binding.editCompletedTimeEdittext?.text?.clear()
+                binding.editCompletedtimezoneSpinner?.setSelection(0)
 
             } else {
                 icalEditViewModel.iCalObjectUpdated.value!!.completedTimezone = ""
@@ -553,8 +553,8 @@ class IcalEditFragment : Fragment() {
                 c.set(Calendar.HOUR_OF_DAY, 0)
                 c.set(Calendar.MINUTE, 0)
                 icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
-                binding.editStartedTimeEdittext.text?.clear()
-                binding.editStartedtimezoneSpinner.setSelection(0)
+                binding.editStartedTimeEdittext?.text?.clear()
+                binding.editStartedtimezoneSpinner?.setSelection(0)
 
                 // dtstart and due MUST both be either both ALLDAY or both with times
                 if (icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone != "ALLDAY")
@@ -711,42 +711,42 @@ class IcalEditFragment : Fragment() {
             )
         }
 
-        binding.editDueDate.setEndIconOnClickListener {
+        binding.editDueDate?.setEndIconOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis(),
                 TAG_PICKER_DUE
             )
         }
 
-        binding.editDueTime.setEndIconOnClickListener {
+        binding.editDueTime?.setEndIconOnClickListener {
             showTimePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis(),
                 TAG_PICKER_DUE
             )
         }
 
-        binding.editCompletedDate.setEndIconOnClickListener {
+        binding.editCompletedDate?.setEndIconOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.completed ?: System.currentTimeMillis(),
                 TAG_PICKER_COMPLETED
             )
         }
 
-        binding.editCompletedTime.setEndIconOnClickListener {
+        binding.editCompletedTime?.setEndIconOnClickListener {
             showTimePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.completed ?: System.currentTimeMillis(),
                 TAG_PICKER_COMPLETED
             )
         }
 
-        binding.editStartedDate.setEndIconOnClickListener {
+        binding.editStartedDate?.setEndIconOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
                 TAG_PICKER_STARTED
             )
         }
 
-        binding.editStartedTime.setEndIconOnClickListener {
+        binding.editStartedTime?.setEndIconOnClickListener {
             showTimePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
                 TAG_PICKER_STARTED
@@ -1115,7 +1115,7 @@ class IcalEditFragment : Fragment() {
                     due.set(Calendar.MINUTE, timePicker.minute)
 
                     val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(due.time)
-                    binding.editDueTimeEdittext.setText(timeString)
+                    binding.editDueTimeEdittext?.setText(timeString)
                     icalEditViewModel.iCalObjectUpdated.value!!.due = due.timeInMillis
                 }
                 TAG_PICKER_COMPLETED -> {
@@ -1127,7 +1127,7 @@ class IcalEditFragment : Fragment() {
 
                     val timeString =
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(completed.time)
-                    binding.editCompletedTimeEdittext.setText(timeString)
+                    binding.editCompletedTimeEdittext?.setText(timeString)
                     icalEditViewModel.iCalObjectUpdated.value!!.completed = completed.timeInMillis
                 }
                 TAG_PICKER_STARTED -> {
@@ -1139,7 +1139,7 @@ class IcalEditFragment : Fragment() {
 
                     val timeString =
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(dtstart.time)
-                    binding.editStartedTimeEdittext.setText(timeString)
+                    binding.editStartedTimeEdittext?.setText(timeString)
                     icalEditViewModel.iCalObjectUpdated.value!!.dtstart = dtstart.timeInMillis
                 }
             }
@@ -1183,7 +1183,7 @@ class IcalEditFragment : Fragment() {
                     due.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
 
                     val dateString = DateFormat.getDateInstance().format(due.time)
-                    binding.editDueDateEdittext.setText(dateString)
+                    binding.editDueDateEdittext?.setText(dateString)
                     icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
                 }
                 TAG_PICKER_COMPLETED -> {
@@ -1196,7 +1196,7 @@ class IcalEditFragment : Fragment() {
                     completed.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
 
                     val dateString = DateFormat.getDateInstance().format(completed.time)
-                    binding.editCompletedDateEdittext.setText(dateString)
+                    binding.editCompletedDateEdittext?.setText(dateString)
                     icalEditViewModel.iCalObjectUpdated.value!!.completed = c.timeInMillis
                 }
                 TAG_PICKER_STARTED -> {
@@ -1209,7 +1209,7 @@ class IcalEditFragment : Fragment() {
                     dtstart.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
 
                     val dateString = DateFormat.getDateInstance().format(dtstart.time)
-                    binding.editStartedDateEdittext.setText(dateString)
+                    binding.editStartedDateEdittext?.setText(dateString)
                     icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
                 }
             }
