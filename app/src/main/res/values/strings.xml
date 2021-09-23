@@ -160,10 +160,10 @@
     <string name="edit_all_day">All day</string>
     <string name="edit_attachment_delete_attachment">Delete attachment</string>
     <string-array name="edit_recur_day_week_month_year">
-        <item>Day</item>
-        <item>Week</item>
-        <item>Month</item>
-        <item>Year</item>
+        <item>Day(s)</item>
+        <item>Week(s)</item>
+        <item>Month(s)</item>
+        <item>Year(s)</item>
     </string-array>
 
 
