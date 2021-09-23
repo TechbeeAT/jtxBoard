@@ -92,7 +92,7 @@
 
         <TextView
             android:id="@+id/edit_recur_weekly_on"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="on"
@@ -175,7 +175,7 @@
 
         <TextView
             android:id="@+id/edit_recur_on_the_x_month"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="on the"
@@ -200,9 +200,10 @@
 
         <TextView
             android:id="@+id/edit_x_of_the_month"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
             android:text="day of the month"
             android:textAlignment="viewStart"
             android:visibility="@{model.recurrenceDayOfMonthVisible ? View.VISIBLE : View.GONE}"
@@ -226,15 +227,28 @@
 
         <TextView
             android:id="@+id/edit_recur_until_occurences"
-            android:layout_width="90dp"
+            android:layout_width="0dp"
             android:layout_height="22dp"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
             android:text="times"
             android:textAlignment="viewStart"
             android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_recur_until_x_occurences"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/edit_recur_until_x_occurences"
             app:layout_constraintTop_toTopOf="@+id/edit_recur_until_x_occurences" />
+
+        <TextView
+            android:id="@+id/edit_recur_last_occurence"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Last occurence: \n31.12.2021"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@+id/edit_recur_until_x_occurences"
+            app:layout_constraintStart_toStartOf="@+id/edit_recur_until_x_occurences"
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_until_x_occurences" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
