@@ -165,20 +165,6 @@
         <item>Month</item>
         <item>Year</item>
     </string-array>
-    <string-array name="edit_recur_every_x_day_week_month_year">
-        <item>-</item>
-        <item>2nd</item>
-        <item>3rd</item>
-        <item>4th</item>
-        <item>5th</item>
-        <item>6th</item>
-        <item>7thth</item>
-        <item>8thth</item>
-        <item>9thth</item>
-        <item>10thth</item>
-        <item>11thth</item>
-        <item>12thth</item>
-    </string-array>
 
 
     <string name="edit_fragment_app_permission">App Permission</string>

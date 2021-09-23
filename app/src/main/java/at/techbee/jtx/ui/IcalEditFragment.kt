@@ -258,6 +258,51 @@ class IcalEditFragment : Fragment() {
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
             }
 
+        val weekdays = getLocalizedWeekdays()
+        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.text = weekdays[0]
+        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.text = weekdays[1]
+        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.text = weekdays[2]
+        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.text = weekdays[3]
+        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.text = weekdays[4]
+        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.text = weekdays[5]
+        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.text = weekdays[6]
+
+
+        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.wrapSelectorWheel = false
+        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.minValue = 1
+        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.maxValue = 31
+        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.value = 1
+
+        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.wrapSelectorWheel = false
+        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.minValue = 1
+        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.maxValue = 100
+        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.value = 1
+
+        binding.editFragmentIcalEditRecur?.editRecurOnTheXMonthNumberPicker?.wrapSelectorWheel = false
+        binding.editFragmentIcalEditRecur?.editRecurOnTheXMonthNumberPicker?.minValue = 1
+        binding.editFragmentIcalEditRecur?.editRecurOnTheXMonthNumberPicker?.maxValue = 31
+        binding.editFragmentIcalEditRecur?.editRecurOnTheXMonthNumberPicker?.value = 1
+
+        binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    when(position) {
+                        0 -> icalEditViewModel.recurrenceMode.value = IcalEditViewModel.RECURRENCE_MODE_DAY
+                        1 -> icalEditViewModel.recurrenceMode.value = IcalEditViewModel.RECURRENCE_MODE_WEEK
+                        2 -> icalEditViewModel.recurrenceMode.value = IcalEditViewModel.RECURRENCE_MODE_MONTH
+                        3 -> icalEditViewModel.recurrenceMode.value = IcalEditViewModel.RECURRENCE_MODE_YEAR
+                    }
+                    icalEditViewModel.updateVisibility()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
+            }
+
         binding.icalEditTabs?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -581,6 +626,10 @@ class IcalEditFragment : Fragment() {
             it.forEach { singleSubtask ->
                 addSubtasksView(singleSubtask)
             }
+        }
+
+        icalEditViewModel.recurrenceChecked.observe(viewLifecycleOwner) {
+            icalEditViewModel.updateVisibility()
         }
 
 

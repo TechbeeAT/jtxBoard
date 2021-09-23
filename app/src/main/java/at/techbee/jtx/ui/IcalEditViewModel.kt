@@ -37,6 +37,11 @@ class IcalEditViewModel(
         const val TAB_ALARMS = 5
         const val TAB_RECURRING = 6
 
+        const val RECURRENCE_MODE_DAY = 0
+        const val RECURRENCE_MODE_WEEK = 1
+        const val RECURRENCE_MODE_MONTH = 2
+        const val RECURRENCE_MODE_YEAR = 3
+
     }
 
     lateinit var allCategories: LiveData<List<String>>
@@ -101,6 +106,14 @@ class IcalEditViewModel(
     var starteddateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var startedtimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var recurrenceGeneralVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var recurrenceWeekdaysVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var recurrenceDayOfMonthVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+
+
+
+
+
 
 
     var duedateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
@@ -154,6 +167,10 @@ class IcalEditViewModel(
         MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.completedTimezone != "ALLDAY")
     var addStartedTimeChecked: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
+    var recurrenceChecked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(false)
+    //todo make test, pre-fill
+    var recurrenceMode: MutableLiveData<Int> = MutableLiveData<Int>(RECURRENCE_MODE_DAY)
 
 
     val urlError = MutableLiveData<String?>()
@@ -213,6 +230,10 @@ class IcalEditViewModel(
         starteddateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
         startedtimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
         recurrenceVisible.postValue((selectedTab == TAB_RECURRING || isLandscape))
+        recurrenceGeneralVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false))
+        recurrenceWeekdaysVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_WEEK))
+        recurrenceDayOfMonthVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_MONTH))
+
 
     }
 
