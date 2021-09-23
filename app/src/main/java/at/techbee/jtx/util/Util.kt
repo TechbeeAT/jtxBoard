@@ -92,9 +92,11 @@ fun getAttachmentSizeString(filesize: Long): String {
 }
 
 
-fun getLocalizedOrdinal(from: Int, to: Int): Array<String> {
+fun getLocalizedOrdinal(from: Int, to: Int, includeEmpty: Boolean): Array<String> {
 
     val ordinalValues: MutableList<String> = mutableListOf()
+    if(includeEmpty)
+        ordinalValues.add("-")
 
     for (i in from..to) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
