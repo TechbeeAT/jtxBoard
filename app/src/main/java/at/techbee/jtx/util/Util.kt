@@ -10,8 +10,7 @@ package at.techbee.jtx
 
 import android.icu.text.MessageFormat
 import android.os.Build
-import android.util.Patterns
-import androidx.annotation.RequiresApi
+import androidx.core.util.PatternsCompat
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
@@ -19,25 +18,6 @@ import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.*
 
-
-/**
- * Take the Long milliseconds returned by the system and stored in Room,
- * and convert it to a nicely formatted string for display.
- *
- * EEEE - Display the long letter version of the weekday
- * MMM - Display the letter abbreviation of the nmotny
- * dd-yyyy - day in month and full year numerically
- * HH:mm - Hours and minutes in 24hr format
- */
-
-/*
-@SuppressLint("SimpleDateFormat")
-fun convertLongToDateString2(systemTime: Long): String {
-    return SimpleDateFormat("EEEE MMM-dd-yyyy' Time: 'HH:mm")
-            .format(systemTime).toString()
-}
-
- */
 
 
 fun convertLongToDateString(date: Long?): String {
@@ -95,11 +75,12 @@ fun convertLongToYearString(date: Long?): String {
 
 
 fun isValidEmail(emailString: String?): Boolean {
-    return Patterns.EMAIL_ADDRESS.matcher(emailString.toString()).matches()
+    return PatternsCompat.EMAIL_ADDRESS.matcher(emailString.toString()).matches()
+
 }
 
 fun isValidURL(urlString: String?): Boolean {
-    return Patterns.WEB_URL.matcher(urlString.toString()).matches()
+    return PatternsCompat.WEB_URL.matcher(urlString.toString()).matches()
 }
 
 fun getAttachmentSizeString(filesize: Long): String {
@@ -140,7 +121,7 @@ fun getLocalizedWeekdays(): Array<String> {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val wf: WeekFields = WeekFields.of(Locale.getDefault())
-        var day: DayOfWeek = wf.getFirstDayOfWeek()
+        val day: DayOfWeek = wf.firstDayOfWeek
         for(i in 0L..6L) {
             weekdays.add(day.plus(i).getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault()))
         }
@@ -156,7 +137,7 @@ fun isLocalizedWeekstartMonday(): Boolean {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val wf: WeekFields = WeekFields.of(Locale.getDefault())
-        var day: DayOfWeek = wf.getFirstDayOfWeek()
+        val day: DayOfWeek = wf.firstDayOfWeek
 
         if(day == DayOfWeek.MONDAY)
             return true

@@ -1,5 +1,6 @@
 package at.techbee.jtx.util
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import at.techbee.jtx.getLocalizedOrdinal
 import at.techbee.jtx.getLocalizedWeekdays
@@ -7,12 +8,14 @@ import at.techbee.jtx.isLocalizedWeekstartMonday
 import org.junit.Assert.*
 
 import org.junit.Test
+import org.junit.runner.RunWith
 import java.util.*
 
 
-
+@RunWith(AndroidJUnit4::class)
 @SmallTest
 class UtilAndroidTest {
+
 
     @Test
     fun getLocalizedOrdinal_GERMAN() {
@@ -127,4 +130,5 @@ class UtilAndroidTest {
         Locale.setDefault(Locale.US)
         assertEquals(false, isLocalizedWeekstartMonday())
     }
+
 }

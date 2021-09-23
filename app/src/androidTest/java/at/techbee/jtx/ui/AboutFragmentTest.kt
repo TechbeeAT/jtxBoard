@@ -21,8 +21,8 @@ class AboutFragmentTest {
 
     @Test
     fun check_about_tabs() {
-        //val fragmentArgs = bundleOf()
-        val scenario = launchFragmentInContainer<AboutFragment>(null, R.style.AppTheme, Lifecycle.State.RESUMED)
+
+        launchFragmentInContainer<AboutFragment>(null, R.style.AppTheme, Lifecycle.State.RESUMED)
 
         onView(withText(R.string.app_name)).check(matches(isDisplayed()))
         onView(withText(R.string.about_tabitem_libraries)).perform(click())
