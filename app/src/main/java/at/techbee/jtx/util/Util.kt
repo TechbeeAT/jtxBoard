@@ -8,9 +8,15 @@
 
 package at.techbee.jtx
 
+import android.icu.text.MessageFormat
+import android.os.Build
 import android.util.Patterns
+import androidx.annotation.RequiresApi
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.format.TextStyle
+import java.time.temporal.WeekFields
 import java.util.*
 
 
@@ -102,4 +108,58 @@ fun getAttachmentSizeString(filesize: Long): String {
         filesize / 1024 < 1024 -> "${filesize / 1024} KB"
         else -> "${filesize / 1024 / 1024} MB"
     }
+}
+
+
+fun getLocalizedOrdinal(from: Int, to: Int): Array<String> {
+
+    val ordinalValues: MutableList<String> = mutableListOf()
+
+    for (i in from..to) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val formatter = MessageFormat("{0,ordinal}", Locale.getDefault())
+            ordinalValues.add(formatter.format(arrayOf(i)))
+        } else {
+            when (i) {
+                1 -> ordinalValues.add("1st")
+                2 -> ordinalValues.add("2nd")
+                3 -> ordinalValues.add("3rd")
+                else -> ordinalValues.add("${i}th")
+            }
+
+        }
+    }
+
+    return ordinalValues.toTypedArray()
+
+}
+
+fun getLocalizedWeekdays(): Array<String> {
+
+    val weekdays = mutableListOf<String>()
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val wf: WeekFields = WeekFields.of(Locale.getDefault())
+        var day: DayOfWeek = wf.getFirstDayOfWeek()
+        for(i in 0L..6L) {
+            weekdays.add(day.plus(i).getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault()))
+        }
+    } else {
+        weekdays.addAll(listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))
+    }
+
+    return weekdays.toTypedArray()
+}
+
+
+fun isLocalizedWeekstartMonday(): Boolean {
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val wf: WeekFields = WeekFields.of(Locale.getDefault())
+        var day: DayOfWeek = wf.getFirstDayOfWeek()
+
+        if(day == DayOfWeek.MONDAY)
+            return true
+    }
+    return false
 }

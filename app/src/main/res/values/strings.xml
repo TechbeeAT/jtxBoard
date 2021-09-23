@@ -57,7 +57,6 @@
     <string name="attendee_role_non_participant">Non-participant / Info</string>
 
 
-
     <!-- Toast to play after Clear button has been pressed -->
     <string name="cleared_message">All your data is gone forever.</string>
 
@@ -133,8 +132,6 @@
     <string name="view_fragment_audio_start_stop_playback_contentdesc">Play audio comment</string>
 
 
-
-
     <string name="edit_attendees_roledialog_chair">Chair</string>
     <string name="edit_attendees_roledialog_required">Required</string>
     <string name="edit_attendees_roledialog_optional">Optional</string>
@@ -162,12 +159,30 @@
     <string name="edit_resources_header">Resources</string>
     <string name="edit_all_day">All day</string>
     <string name="edit_attachment_delete_attachment">Delete attachment</string>
-
+    <string-array name="edit_recur_day_week_month_year">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+        <item>Year</item>
+    </string-array>
+    <string-array name="edit_recur_every_x_day_week_month_year">
+        <item>-</item>
+        <item>2nd</item>
+        <item>3rd</item>
+        <item>4th</item>
+        <item>5th</item>
+        <item>6th</item>
+        <item>7thth</item>
+        <item>8thth</item>
+        <item>9thth</item>
+        <item>10thth</item>
+        <item>11thth</item>
+        <item>12thth</item>
+    </string-array>
 
 
     <string name="edit_fragment_app_permission">App Permission</string>
     <string name="edit_fragment_app_permission_message">JTX can propose Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
-
 
 
     <!-- fragment_ical_filter -->
@@ -192,7 +207,6 @@
     <string name="about_app_build_date">Compiled on %s</string>
     <string name="about_app_copyright" translatable="false">© TECHBEE apps &amp; consulting</string>
     <string name="about_app_techbee_link" translatable="false">https://techbee.at</string>
-
 
 
     <!-- menus -->
