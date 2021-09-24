@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:drawablePadding="8dp"
-            android:text="Recurrence"
+            android:text="@string/edit_recurrence_header"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
@@ -49,12 +49,12 @@
             app:layout_constraintTop_toTopOf="@+id/edit_recur_header" />
 
         <TextView
-            android:id="@+id/edit_recur_every"
+            android:id="@+id/edit_recur_every_x"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:text="Repeat every"
+            android:text="@string/edit_recur_repeat_every_x"
             android:textAlignment="viewEnd"
             android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_recur_every_x_numberpicker"
@@ -66,17 +66,17 @@
 
         <NumberPicker
             android:id="@+id/edit_recur_every_x_numberpicker"
-            android:layout_width="150dp"
+            android:layout_width="80dp"
             android:layout_height="150dp"
             android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toStartOf="@+id/edit_recur_days_months_spinner"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/edit_recur_every"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_recur_header" />
 
         <Spinner
             android:id="@+id/edit_recur_days_months_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
@@ -91,12 +91,12 @@
             tools:text="Day/Week/Month/Year" />
 
         <TextView
-            android:id="@+id/edit_recur_weekly_on"
+            android:id="@+id/edit_recur_on_weekday"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:text="on"
+            android:text="@string/edit_recur_on_weekday"
             android:textAlignment="viewEnd"
             android:visibility="@{model.recurrenceWeekdaysVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_recur_weekly_on_chipgroup_weekdays"
@@ -175,12 +175,12 @@
 
 
         <TextView
-            android:id="@+id/edit_recur_on_the_x_month"
+            android:id="@+id/edit_recur_on_the_x_day_of_month"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:text="on the"
+            android:text="@string/edit_recur_on_the_x_day_of_month"
             android:textAlignment="viewEnd"
             android:visibility="@{model.recurrenceDayOfMonthVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_recur_on_the_x_month_numberPicker"
@@ -201,12 +201,12 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_recur_weekly_on_chipgroup_weekdays" />
 
         <TextView
-            android:id="@+id/edit_x_of_the_month"
+            android:id="@+id/edit_x_day_of_the_month"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
-            android:text="day of the month"
+            android:text="@string/edit_recur_x_day_of_the_month"
             android:textAlignment="viewStart"
             android:visibility="@{model.recurrenceDayOfMonthVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_recur_on_the_x_month_numberPicker"
@@ -233,7 +233,7 @@
             android:layout_height="22dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
-            android:text="times"
+            android:text="@string/edit_recur_x_times"
             android:textAlignment="viewStart"
             android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_recur_until_x_occurences"
@@ -246,7 +246,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:text="@string/edit_recur_last_occurrence"
             android:textAlignment="center"
