@@ -16,7 +16,7 @@ import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import java.io.StringReader
 
-class ICalEntityTest {
+class ICalEntityAndroidTest {
 
     private lateinit var context: Context
 

@@ -15,6 +15,10 @@ import android.provider.BaseColumns
 import androidx.room.*
 import at.techbee.jtx.R
 import kotlinx.parcelize.Parcelize
+import net.fortuna.ical4j.model.Date
+import net.fortuna.ical4j.model.DateTime
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import net.fortuna.ical4j.model.property.DtStart
 import java.util.*
 import kotlin.IllegalArgumentException
 
@@ -486,6 +490,25 @@ data class ICalObject(
                 throw IllegalArgumentException("CollectionId cannot be null.")
 
             return ICalObject().applyContentValues(values)
+        }
+
+
+        fun getRecurId(dtstart: Long?, dtstartTimezone: String?): String? {
+            if(dtstart == null)
+                return null
+
+            return when {
+                dtstartTimezone == "ALLDAY" -> DtStart(Date(dtstart)).value
+                dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(dtstart)).value
+                else -> {
+                    val timezone = TimeZoneRegistryFactory.getInstance().createRegistry()
+                        .getTimeZone(dtstartTimezone)
+                    val withTimezone = DtStart(DateTime(dtstart))
+                    withTimezone.timeZone = timezone
+                    withTimezone.value + withTimezone.parameters
+                }
+
+            }
         }
     }
 
