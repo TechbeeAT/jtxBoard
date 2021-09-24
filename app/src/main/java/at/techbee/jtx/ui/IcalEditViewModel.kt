@@ -18,6 +18,7 @@ import at.techbee.jtx.database.relations.ICalEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.fortuna.ical4j.model.Recur
 import java.text.DateFormat
 import java.util.*
 
@@ -168,9 +169,25 @@ class IcalEditViewModel(
     var addStartedTimeChecked: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
     var recurrenceChecked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>(false)
+        MutableLiveData<Boolean>(iCalEntity.property.rrule?.isNotEmpty())
     //todo make test, pre-fill
-    var recurrenceMode: MutableLiveData<Int> = MutableLiveData<Int>(RECURRENCE_MODE_DAY)
+    var recurrenceMode: MutableLiveData<Int> = MutableLiveData<Int>(
+        try {
+            if (iCalEntity.property.rrule.isNullOrEmpty())
+                RECURRENCE_MODE_DAY
+            else {
+                when ((Recur(iCalEntity.property.rrule).frequency)) {
+                    Recur.Frequency.YEARLY -> RECURRENCE_MODE_YEAR
+                    Recur.Frequency.MONTHLY -> RECURRENCE_MODE_MONTH
+                    Recur.Frequency.WEEKLY -> RECURRENCE_MODE_WEEK
+                    Recur.Frequency.DAILY -> RECURRENCE_MODE_DAY
+                    else -> RECURRENCE_MODE_DAY
+                }
+            }
+        } catch (e: Exception) {
+            Log.w("LoadRRule", "Failed to preset UI according to provided RRule\n$e")
+            RECURRENCE_MODE_DAY
+        })
 
 
     val urlError = MutableLiveData<String?>()

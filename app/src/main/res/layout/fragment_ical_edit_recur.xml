@@ -57,15 +57,15 @@
             android:text="@string/edit_recur_repeat_every_x"
             android:textAlignment="viewEnd"
             android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_recur_every_x_numberpicker"
-            app:layout_constraintEnd_toStartOf="@+id/edit_recur_every_x_numberpicker"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_recur_every_x_numberPicker"
+            app:layout_constraintEnd_toStartOf="@+id/edit_recur_every_x_numberPicker"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_recur_every_x_numberpicker" />
+            app:layout_constraintTop_toTopOf="@+id/edit_recur_every_x_numberPicker" />
 
         <NumberPicker
-            android:id="@+id/edit_recur_every_x_numberpicker"
+            android:id="@+id/edit_recur_every_x_numberPicker"
             android:layout_width="80dp"
             android:layout_height="150dp"
             android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
@@ -83,11 +83,11 @@
             android:entries="@array/edit_recur_day_week_month_year"
             android:spinnerMode="dropdown"
             android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_recur_every_x_numberpicker"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_recur_every_x_numberPicker"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/edit_recur_every_x_numberpicker"
-            app:layout_constraintTop_toTopOf="@+id/edit_recur_every_x_numberpicker"
+            app:layout_constraintStart_toEndOf="@+id/edit_recur_every_x_numberPicker"
+            app:layout_constraintTop_toTopOf="@+id/edit_recur_every_x_numberPicker"
             tools:text="Day/Week/Month/Year" />
 
         <TextView
@@ -103,7 +103,7 @@
             app:layout_constraintEnd_toStartOf="@+id/edit_recur_weekly_on_chipgroup_weekdays"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_recur_every_x_numberpicker"
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_every_x_numberPicker"
             app:layout_constraintTop_toTopOf="@+id/edit_recur_weekly_on_chipgroup_weekdays" />
 
         <com.google.android.material.chip.ChipGroup
@@ -113,8 +113,8 @@
             android:layout_marginEnd="8dp"
             android:visibility="@{model.recurrenceWeekdaysVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/edit_recur_every_x_numberpicker"
-            app:layout_constraintTop_toBottomOf="@+id/edit_recur_every_x_numberpicker">
+            app:layout_constraintStart_toStartOf="@+id/edit_recur_every_x_numberPicker"
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_every_x_numberPicker">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/edit_recur_weekday_chip0"
@@ -183,21 +183,21 @@
             android:text="@string/edit_recur_on_the_x_day_of_month"
             android:textAlignment="viewEnd"
             android:visibility="@{model.recurrenceDayOfMonthVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_recur_on_the_x_month_numberPicker"
-            app:layout_constraintEnd_toStartOf="@+id/edit_recur_on_the_x_month_numberPicker"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_recur_on_the_x_day_of_month_numberPicker"
+            app:layout_constraintEnd_toStartOf="@+id/edit_recur_on_the_x_day_of_month_numberPicker"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_recur_on_the_x_month_numberPicker" />
+            app:layout_constraintTop_toTopOf="@+id/edit_recur_on_the_x_day_of_month_numberPicker" />
 
         <NumberPicker
-            android:id="@+id/edit_recur_on_the_x_month_numberPicker"
+            android:id="@+id/edit_recur_on_the_x_day_of_month_numberPicker"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:visibility="@{model.recurrenceDayOfMonthVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="@+id/edit_recur_every_x_numberpicker"
+            app:layout_constraintEnd_toEndOf="@+id/edit_recur_every_x_numberPicker"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/edit_recur_every_x_numberpicker"
+            app:layout_constraintStart_toStartOf="@+id/edit_recur_every_x_numberPicker"
             app:layout_constraintTop_toBottomOf="@+id/edit_recur_weekly_on_chipgroup_weekdays" />
 
         <TextView
@@ -209,22 +209,22 @@
             android:text="@string/edit_recur_x_day_of_the_month"
             android:textAlignment="viewStart"
             android:visibility="@{model.recurrenceDayOfMonthVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_recur_on_the_x_month_numberPicker"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_recur_on_the_x_day_of_month_numberPicker"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/edit_recur_on_the_x_month_numberPicker"
-            app:layout_constraintTop_toTopOf="@+id/edit_recur_on_the_x_month_numberPicker" />
+            app:layout_constraintStart_toEndOf="@+id/edit_recur_on_the_x_day_of_month_numberPicker"
+            app:layout_constraintTop_toTopOf="@+id/edit_recur_on_the_x_day_of_month_numberPicker" />
 
 
         <NumberPicker
-            android:id="@+id/edit_recur_until_x_occurences"
+            android:id="@+id/edit_recur_until_x_occurences_picker"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="@+id/edit_recur_every_x_numberpicker"
+            app:layout_constraintEnd_toEndOf="@+id/edit_recur_every_x_numberPicker"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@+id/edit_recur_every_x_numberpicker"
-            app:layout_constraintTop_toBottomOf="@+id/edit_recur_on_the_x_month_numberPicker" />
+            app:layout_constraintStart_toStartOf="@+id/edit_recur_every_x_numberPicker"
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_on_the_x_day_of_month_numberPicker" />
 
 
         <TextView
@@ -236,10 +236,10 @@
             android:text="@string/edit_recur_x_times"
             android:textAlignment="viewStart"
             android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_recur_until_x_occurences"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_recur_until_x_occurences_picker"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/edit_recur_until_x_occurences"
-            app:layout_constraintTop_toTopOf="@+id/edit_recur_until_x_occurences" />
+            app:layout_constraintStart_toEndOf="@+id/edit_recur_until_x_occurences_picker"
+            app:layout_constraintTop_toTopOf="@+id/edit_recur_until_x_occurences_picker" />
 
         <TextView
             android:id="@+id/edit_recur_last_occurence"
@@ -254,7 +254,7 @@
             android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_recur_until_x_occurences" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_until_x_occurences_picker" />
 
 
         <TextView

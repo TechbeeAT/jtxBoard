@@ -280,23 +280,23 @@ class IcalEditFragment : Fragment() {
         binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.setOnCheckedChangeListener { compoundButton, b -> updateRRule() }
         binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.setOnCheckedChangeListener { compoundButton, b -> updateRRule() }
 
-        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.wrapSelectorWheel = false
-        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.minValue = 1
-        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.maxValue = 31
-        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.value = 1
-        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.setOnValueChangedListener { numberPicker, i, i2 -> updateRRule() }
+        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.wrapSelectorWheel = false
+        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.minValue = 1
+        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.maxValue = 31
+        //binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value = 1
+        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.setOnValueChangedListener { numberPicker, i, i2 -> updateRRule() }
 
-        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.wrapSelectorWheel = false
-        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.minValue = 1
-        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.maxValue = 100
-        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.value = 1
-        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.setOnValueChangedListener { numberPicker, i, i2 -> updateRRule() }
+        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.wrapSelectorWheel = false
+        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.minValue = 1
+        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.maxValue = 100
+        //binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value = 1
+        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.setOnValueChangedListener { numberPicker, i, i2 -> updateRRule() }
 
-        binding.editFragmentIcalEditRecur?.editRecurOnTheXMonthNumberPicker?.wrapSelectorWheel = false
-        binding.editFragmentIcalEditRecur?.editRecurOnTheXMonthNumberPicker?.minValue = 1
-        binding.editFragmentIcalEditRecur?.editRecurOnTheXMonthNumberPicker?.maxValue = 31
-        binding.editFragmentIcalEditRecur?.editRecurOnTheXMonthNumberPicker?.value = 1
-        binding.editFragmentIcalEditRecur?.editRecurOnTheXMonthNumberPicker?.setOnValueChangedListener { numberPicker, i, i2 -> updateRRule() }
+        binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.wrapSelectorWheel = false
+        binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.minValue = 1
+        binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.maxValue = 31
+        //binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.value = 1
+        binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.setOnValueChangedListener { numberPicker, i, i2 -> updateRRule() }
 
 
         binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.onItemSelectedListener =
@@ -319,6 +319,63 @@ class IcalEditFragment : Fragment() {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
             }
+        binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.setSelection(
+            when(icalEditViewModel.recurrenceMode.value) {
+                RECURRENCE_MODE_DAY -> 0
+                RECURRENCE_MODE_WEEK -> 1
+                RECURRENCE_MODE_MONTH -> 2
+                RECURRENCE_MODE_YEAR -> 3
+                else -> 0
+            })
+
+        //pre-set rules if rrule is present
+        if(icalEditViewModel.iCalEntity.property.rrule!= null) {
+
+            try {
+
+                binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value =
+                    Recur(icalEditViewModel.iCalEntity.property.rrule).interval
+
+                binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value =
+                    Recur(icalEditViewModel.iCalEntity.property.rrule).count
+
+
+                //pre-check the weekday-chips according to the rrule
+                if (icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_WEEK) {
+                    Recur(icalEditViewModel.iCalEntity.property.rrule).dayList.forEach {
+                        if ((isLocalizedWeekstartMonday() && it == WeekDay.MO) || (!isLocalizedWeekstartMonday() && it == WeekDay.SU))
+                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked =
+                                true
+                        if ((isLocalizedWeekstartMonday() && it == WeekDay.TU) || (!isLocalizedWeekstartMonday() && it == WeekDay.MO))
+                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked =
+                                true
+                        if ((isLocalizedWeekstartMonday() && it == WeekDay.WE) || (!isLocalizedWeekstartMonday() && it == WeekDay.TU))
+                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked =
+                                true
+                        if ((isLocalizedWeekstartMonday() && it == WeekDay.TH) || (!isLocalizedWeekstartMonday() && it == WeekDay.WE))
+                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked =
+                                true
+                        if ((isLocalizedWeekstartMonday() && it == WeekDay.FR) || (!isLocalizedWeekstartMonday() && it == WeekDay.TH))
+                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked =
+                                true
+                        if ((isLocalizedWeekstartMonday() && it == WeekDay.SA) || (!isLocalizedWeekstartMonday() && it == WeekDay.FR))
+                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked =
+                                true
+                        if ((isLocalizedWeekstartMonday() && it == WeekDay.SU) || (!isLocalizedWeekstartMonday() && it == WeekDay.SA))
+                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked =
+                                true
+                    }
+                }
+
+                //pre-select the day of the month according to the rrule
+                if (icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_MONTH && Recur(icalEditViewModel.iCalEntity.property.rrule).monthDayList.size > 0) {
+                    val selectedMonth = Recur(icalEditViewModel.iCalEntity.property.rrule).monthDayList[0]
+                    binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.value = selectedMonth
+                }
+            } catch (e: Exception) {
+                Log.w("LoadRRule", "Failed to preset UI according to provided RRule\n$e")
+            }
+        }
 
         binding.icalEditTabs?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
@@ -1828,8 +1885,8 @@ class IcalEditFragment : Fragment() {
         val recur =
             when( binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.selectedItemPosition) {
                 RECURRENCE_MODE_DAY -> Recur(Recur.Frequency.DAILY, null).also {
-                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.value ?: 1
-                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.value ?: 1
+                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1
+                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1
                 }
                 RECURRENCE_MODE_WEEK -> Recur(Recur.Frequency.WEEKLY, null).also {
                         if(isLocalizedWeekstartMonday()) {
@@ -1864,46 +1921,51 @@ class IcalEditFragment : Fragment() {
                             if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true)
                                 it.dayList.add(WeekDay.SA)
                         }
-                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.value ?: 1
-                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.value ?: 1
+                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1
+                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1
                 }
 
                 RECURRENCE_MODE_MONTH -> Recur(Recur.Frequency.MONTHLY, null).also {
-                    it.monthDayList.add(binding.editFragmentIcalEditRecur?.editRecurOnTheXMonthNumberPicker?.value?:1)
-                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.value ?: 1
-                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.value ?: 1
+                    it.monthDayList.add(binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.value?:1)
+                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1
+                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1
                 }
                 RECURRENCE_MODE_YEAR -> Recur(Recur.Frequency.YEARLY, null).also {
-                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.value ?: 1
-                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.value ?: 1
+                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1
+                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1
                 }
                 else -> null
             }
         Log.d("recur", recur.toString())
-        val occurences = calculateOccurencies()
+        val occurrences = calculateOccurencies()
 
 
-        var lastOccurenceString = convertLongToFullDateString(occurences.lastOrNull())
+        var lastOccurrenceString = convertLongToFullDateString(occurrences.lastOrNull())
         if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY")
-            lastOccurenceString += " " + convertLongToTimeString(occurences.lastOrNull())
+            lastOccurrenceString += " " + convertLongToTimeString(occurrences.lastOrNull())
 
         var allOccurrencesString = ""
-        occurences.forEach {
+        occurrences.forEach {
             allOccurrencesString += convertLongToFullDateString(it)
             if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY")
                 allOccurrencesString += " " + convertLongToTimeString(it)
             allOccurrencesString += "\n"
         }
 
-        binding.editFragmentIcalEditRecur?.editRecurLastOccurenceItem?.text = lastOccurenceString
+        binding.editFragmentIcalEditRecur?.editRecurLastOccurenceItem?.text = lastOccurrenceString
         binding.editFragmentIcalEditRecur?.editRecurAllOccurencesItems?.text = allOccurrencesString
+
+        if(icalEditViewModel.recurrenceChecked.value == true)
+            icalEditViewModel.iCalObjectUpdated.value?.rrule = recur.toString()
+        else
+            icalEditViewModel.iCalObjectUpdated.value?.rrule = null
     }
 
     private fun calculateOccurencies(): List<Long> {
 
-        val interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberpicker?.value ?: 1
-        val count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurences?.value ?: 1
-        val monthDay = binding.editFragmentIcalEditRecur?.editRecurOnTheXMonthNumberPicker?.value ?: 1
+        val interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1
+        val count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1
+        val monthDay = binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.value ?: 1
 
         val selectedWeekdays = mutableListOf<Int>()
         if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true) ||
