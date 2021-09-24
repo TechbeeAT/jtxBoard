@@ -241,12 +241,52 @@ const val COLUMN_LAST_MODIFIED = "lastmodified"
  */
 const val COLUMN_SEQUENCE = "sequence"
 
+
+/**
+ * Purpose:  This property defines a rule or repeating pattern for recurring events,
+ * to-dos, journal entries, or time zone definitions.
+ * Type: [String]
+ */
+const val COLUMN_RRULE = "rrule"
+
+/**
+ * Purpose:  This property defines the list of DATE-TIME values for
+ * recurring events, to-dos, journal entries, or time zone definitions.
+ * Type: [String], contains a list of comma-separated date values as Long
+ */
+const val COLUMN_RDATE = "rdate"
+
+/**
+ * Purpose:  This property defines the list of DATE-TIME exceptions for
+ * recurring events, to-dos, journal entries, or time zone definitions.
+ * Type: [String], contains a list of comma-separated date values as Long
+ */
+const val COLUMN_EXDATE = "exdate"
+
+/**
+ * Purpose:  This property is used in conjunction with the "UID" and
+ * "SEQUENCE" properties to identify a specific instance of a
+ * recurring "VEVENT", "VTODO", or "VJOURNAL" calendar component.
+ * The property value is the original value of the "DTSTART" property
+ * of the recurrence instance.
+ */
+const val COLUMN_RECURID = "recurid"
+
+/**
+ * Stores the reference to the original event from which the recurring event was derived.
+ * This value is NULL for the orignal event.
+ * Type: [Long]
+ */
+const val COLUMN_RECUR_ORIGINALICALOBJECTID = "original_id"
+
+
 /**
  * Purpose:  This property specifies a color used for displaying the calendar, event, todo, or journal data.
  * See [https://tools.ietf.org/html/rfc7986#section-5.9]
  * Type: [String]
  */
 const val COLUMN_COLOR = "color"
+
 
 /**
  * Purpose:  To specify other properties for the ICalObject.
@@ -272,6 +312,7 @@ const val COLUMN_DIRTY = "dirty"
  * Type: [Boolean]
  */
 const val COLUMN_DELETED = "deleted"
+
 
 /**
  * Purpose:  filename of the synched entry (*.ics), only relevant for synched entries through sync-adapter
@@ -356,13 +397,13 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long = System.currentTimeMillis(), // see https://tools.ietf.org/html/rfc5545#section-3.8.7.3
     @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long = 0,                             // increase on every change (+1), see https://tools.ietf.org/html/rfc5545#section-3.8.7.4
 
-    //var exdate: Long? = System.currentTimeMillis(),   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
-    //var rdate: Long? = System.currentTimeMillis()     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
-    //var recurrenceId: String? = null,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
-    //var rrule: String?,                               //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
-
+    @ColumnInfo(name = COLUMN_RRULE)  var rrule: String? = null,    //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
+    @ColumnInfo(name = COLUMN_EXDATE) var exdate: String? = null,   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
+    @ColumnInfo(name = COLUMN_RDATE)  var rdate: String? = null,     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
+    @ColumnInfo(name = COLUMN_RECURID) var recurid: String? = null,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
 
     @ColumnInfo(name = COLUMN_COLOR) var color: Int? = null,
+
     @ColumnInfo(name = COLUMN_OTHER) var other: String? = null,
 
     @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long = 1L,
