@@ -231,6 +231,45 @@ object JtxContract {
          */
         const val DURATION = "duration"
 
+
+        /**
+         * Purpose:  This property defines a rule or repeating pattern for recurring events,
+         * to-dos, journal entries, or time zone definitions.
+         * Type: [String]
+         */
+        const val RRULE = "rrule"
+
+        /**
+         * Purpose:  This property defines the list of DATE-TIME values for
+         * recurring events, to-dos, journal entries, or time zone definitions.
+         * Type: [String], contains a list of comma-separated date values as Long
+         */
+        const val RDATE = "rdate"
+
+        /**
+         * Purpose:  This property defines the list of DATE-TIME exceptions for
+         * recurring events, to-dos, journal entries, or time zone definitions.
+         * Type: [String], contains a list of comma-separated date values as Long
+         */
+        const val EXDATE = "exdate"
+
+        /**
+         * Purpose:  This property is used in conjunction with the "UID" and
+         * "SEQUENCE" properties to identify a specific instance of a
+         * recurring "VEVENT", "VTODO", or "VJOURNAL" calendar component.
+         * The property value is the original value of the "DTSTART" property
+         * of the recurrence instance.
+         */
+        const val RECURID = "recurid"
+
+        /**
+         * Stores the reference to the original event from which the recurring event was derived.
+         * This value is NULL for the orignal event.
+         * Type: [Long]
+         */
+        const val RECUR_ORIGINALICALOBJECTID = "original_id"
+
+
         /**
          * Purpose:  This property defines the persistent, globally unique identifier for the calendar component.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.4.7]
