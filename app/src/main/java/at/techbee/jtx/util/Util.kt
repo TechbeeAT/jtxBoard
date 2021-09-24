@@ -26,6 +26,12 @@ fun convertLongToDateString(date: Long?): String {
     return DateFormat.getDateInstance(DateFormat.LONG).format(date)
 }
 
+fun convertLongToFullDateString(date: Long?): String {
+    if (date == null || date == 0L)
+        return ""
+    return DateFormat.getDateInstance(DateFormat.FULL).format(date)
+}
+
 fun convertLongToTimeString(time: Long?): String {
     if (time == null || time == 0L)
         return ""

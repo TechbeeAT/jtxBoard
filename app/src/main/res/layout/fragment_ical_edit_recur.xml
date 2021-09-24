@@ -245,12 +245,61 @@
             android:id="@+id/edit_recur_last_occurence"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Last occurence: \n31.12.2021"
+            android:layout_marginEnd="8dp"
+            android:text="@string/edit_recur_last_occurrence"
             android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="@+id/edit_recur_until_x_occurences"
-            app:layout_constraintStart_toStartOf="@+id/edit_recur_until_x_occurences"
+            android:textStyle="bold"
+            android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_recur_until_x_occurences" />
+
+
+        <TextView
+            android:id="@+id/edit_recur_last_occurence_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
+            android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_last_occurence"
+            tools:text="Friday, September 24, 2021 1:34 PM" />
+
+
+        <TextView
+            android:id="@+id/edit_recur_all_occurences"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/edit_recur_all_occurrences"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_last_occurence_item" />
+
+
+        <TextView
+            android:id="@+id/edit_recur_all_occurences_items"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
+            android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_all_occurences"
+            tools:text="Friday, September 24, 2021 1:34 PM\nSaturday, September 25, 2021 1:34 PM\nSunday, September 26, 2021 1:34 PM" />
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -159,6 +159,8 @@
     <string name="edit_resources_header">Resources</string>
     <string name="edit_all_day">All day</string>
     <string name="edit_attachment_delete_attachment">Delete attachment</string>
+    <string name="edit_recur_last_occurrence">Last occurrence</string>
+    <string name="edit_recur_all_occurrences">All occurrences</string>
     <string-array name="edit_recur_day_week_month_year">
         <item>Day(s)</item>
         <item>Week(s)</item>
