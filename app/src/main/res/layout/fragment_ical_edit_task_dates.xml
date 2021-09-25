@@ -45,7 +45,8 @@
                 android:id="@+id/edit_due_date_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:enabled="true"
+                android:focusable="false"
                 android:inputType="date"
                 android:text="@{model.duedateFormated}" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -74,7 +75,8 @@
                 android:id="@+id/edit_due_time_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:enabled="true"
+                android:focusable="false"
                 android:inputType="time"
                 android:text="@{model.duetimeFormated}" />
 
@@ -147,7 +149,8 @@
                 android:id="@+id/edit_started_date_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:enabled="true"
+                android:focusable="false"
                 android:inputType="date"
                 android:text="@{model.starteddateFormated}" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -176,7 +179,8 @@
                 android:id="@+id/edit_started_time_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:enabled="true"
+                android:focusable="false"
                 android:inputType="time"
                 android:text="@{model.startedtimeFormated}" />
 
@@ -250,7 +254,8 @@
                 android:id="@+id/edit_completed_date_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:enabled="true"
+                android:focusable="false"
                 android:inputType="date"
                 android:text="@{model.completeddateFormated}" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -279,7 +284,8 @@
                 android:id="@+id/edit_completed_time_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:enabled="true"
+                android:focusable="false"
                 android:inputType="time"
                 android:text="@{model.completedtimeFormated}" />
 
