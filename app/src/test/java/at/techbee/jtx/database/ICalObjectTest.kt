@@ -225,13 +225,15 @@ class ICalObjectTest {
         assertEquals("20210923", recurId)
     }
 
+    // would use the local timezone and therefore depends on device. This Test is deactivated for now
+    /*
     @Test
     fun getRecurId_datetime() {
 
         val sampleDate = 1632474660000L   // 2021-09-24 11:11:00
         val recurId = ICalObject.getRecurId(sampleDate, null)
         assertEquals("20210924T111100", recurId)
-    }
+    }       */
 
     @Test
     fun getRecurId_datetime_withTimezone() {
