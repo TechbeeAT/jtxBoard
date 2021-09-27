@@ -1927,37 +1927,28 @@ class IcalEditFragment : Fragment() {
             RECURRENCE_MODE_WEEK -> {
                 recurBuilder.frequency(Recur.Frequency.WEEKLY)
                 val dayList = WeekDayList()
-                if (isLocalizedWeekstartMonday()) {
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true)
-                        dayList.add(WeekDay.MO)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true)
-                        dayList.add(WeekDay.TU)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true)
-                        dayList.add(WeekDay.WE)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true)
-                        dayList.add(WeekDay.TH)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true)
-                        dayList.add(WeekDay.FR)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true)
-                        dayList.add(WeekDay.SA)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true)
-                        dayList.add(WeekDay.SU)
-                } else {
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true)
-                        dayList.add(WeekDay.SU)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true)
-                        dayList.add(WeekDay.MO)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true)
-                        dayList.add(WeekDay.TU)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true)
-                        dayList.add(WeekDay.WE)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true)
-                        dayList.add(WeekDay.TH)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true)
-                        dayList.add(WeekDay.FR)
-                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true)
-                        dayList.add(WeekDay.SA)
-                }
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true))
+                    dayList.add(WeekDay.MO)
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true))
+                    dayList.add(WeekDay.TU)
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true))
+                    dayList.add(WeekDay.WE)
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true))
+                    dayList.add(WeekDay.TH)
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true))
+                    dayList.add(WeekDay.FR)
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true))
+                    dayList.add(WeekDay.SA)
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true))
+                    dayList.add(WeekDay.SU)
+
                 if(dayList.isNotEmpty())
                     recurBuilder.dayList(dayList)
             }
