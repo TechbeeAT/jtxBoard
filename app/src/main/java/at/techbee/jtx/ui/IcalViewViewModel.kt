@@ -56,6 +56,9 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var completedVisible: LiveData<Boolean>
     lateinit var startedVisible: LiveData<Boolean>
 
+    lateinit var collectionText: LiveData<String?>
+
+
 
     lateinit var subtasksCountList: LiveData<List<SubtaskCount>>
 
@@ -158,6 +161,13 @@ class IcalViewViewModel(private val icalItemId: Long,
                     return@map "Started: $formattedDate $formattedTime"
                 } else
                     return@map ""
+            }
+
+            collectionText = Transformations.map(icalEntity) { item ->
+                if (item?.ICalCollection?.accountName?.isNotEmpty() == true)
+                    item.ICalCollection?.displayName + " (" + item.ICalCollection?.accountName + ")"
+                else
+                    item?.ICalCollection?.displayName ?: "-"
             }
 
 
