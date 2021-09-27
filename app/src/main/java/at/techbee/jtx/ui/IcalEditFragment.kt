@@ -31,6 +31,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -68,8 +69,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
+import net.fortuna.ical4j.model.NumberList
 import net.fortuna.ical4j.model.Recur
 import net.fortuna.ical4j.model.WeekDay
+import net.fortuna.ical4j.model.WeekDayList
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -474,15 +477,20 @@ class IcalEditFragment : Fragment() {
             if (it != 0L) {
                 // saving is done now, set the notification
                 if (icalEditViewModel.iCalObjectUpdated.value!!.due != null && icalEditViewModel.iCalObjectUpdated.value!!.due!! > System.currentTimeMillis())
-                    scheduleNotification(
-                        context,
-                        icalEditViewModel.iCalObjectUpdated.value!!.id,
-                        icalEditViewModel.iCalObjectUpdated.value!!.summary
-                            ?: "",
-                        icalEditViewModel.iCalObjectUpdated.value!!.description
-                            ?: "",
-                        icalEditViewModel.iCalObjectUpdated.value!!.due!!
-                    )
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        scheduleNotification(
+                            context,
+                            icalEditViewModel.iCalObjectUpdated.value!!.id,
+                            icalEditViewModel.iCalObjectUpdated.value!!.summary
+                                ?: "",
+                            icalEditViewModel.iCalObjectUpdated.value!!.description
+                                ?: "",
+                            icalEditViewModel.iCalObjectUpdated.value!!.due!!
+                        )
+                    } else {
+                        Log.i("scheduleNotification", "Due to necessity of PendingIntent.FLAG_IMMUTABLE, the notification functionality can only be used from Build Versions > M (Api-Level 23)")
+                    }
 
                 //This code snippet makes sure that the soft keyboard gets closed
                 val imm =
@@ -1743,6 +1751,7 @@ class IcalEditFragment : Fragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.M)      // necessary because of the PendingIntent.FLAG_IMMUTABLE that is only available from M (API-Level 23)
     private fun scheduleNotification(
         context: Context?,
         iCalObjectId: Long,
@@ -1785,26 +1794,17 @@ class IcalEditFragment : Fragment() {
         }
 
         // the pendingIntent is initiated that is passed on to the alarm manager
-        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getBroadcast(
+        val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 iCalObjectId.toInt(),
                 notificationIntent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
-        } else {
-            PendingIntent.getBroadcast(
-                context,
-                iCalObjectId.toInt(),
-                notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
-
 
         // the alarmManager finally takes care, that the pendingIntent is queued to start the notification Intent that on click would start the contentIntent
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.set(AlarmManager.RTC_WAKEUP, due, pendingIntent)
+
     }
 
 
@@ -1919,60 +1919,64 @@ class IcalEditFragment : Fragment() {
 
     private fun updateRRule() {
 
-        val recur =
-            when( binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.selectedItemPosition) {
-                RECURRENCE_MODE_DAY -> Recur(Recur.Frequency.DAILY, null).also {
-                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1
-                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1
-                }
-                RECURRENCE_MODE_WEEK -> Recur(Recur.Frequency.WEEKLY, null).also {
-                        if(isLocalizedWeekstartMonday()) {
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true)
-                                it.dayList.add(WeekDay.MO)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true)
-                                it.dayList.add(WeekDay.TU)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true)
-                                it.dayList.add(WeekDay.WE)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true)
-                                it.dayList.add(WeekDay.TH)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true)
-                                it.dayList.add(WeekDay.FR)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true)
-                                it.dayList.add(WeekDay.SA)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true)
-                                it.dayList.add(WeekDay.SU)
-                            }
-                        else {
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true)
-                                it.dayList.add(WeekDay.SU)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true)
-                                it.dayList.add(WeekDay.MO)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true)
-                                it.dayList.add(WeekDay.TU)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true)
-                                it.dayList.add(WeekDay.WE)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true)
-                                it.dayList.add(WeekDay.TH)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true)
-                                it.dayList.add(WeekDay.FR)
-                            if(binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true)
-                                it.dayList.add(WeekDay.SA)
-                        }
-                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1
-                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1
-                }
-
-                RECURRENCE_MODE_MONTH -> Recur(Recur.Frequency.MONTHLY, null).also {
-                    it.monthDayList.add(binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.value?:1)
-                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1
-                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1
-                }
-                RECURRENCE_MODE_YEAR -> Recur(Recur.Frequency.YEARLY, null).also {
-                    it.interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1
-                    it.count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1
-                }
-                else -> null
+        val recurBuilder = Recur.Builder()
+        when( binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.selectedItemPosition) {
+            RECURRENCE_MODE_DAY ->  {
+                recurBuilder.frequency(Recur.Frequency.DAILY)
             }
+            RECURRENCE_MODE_WEEK -> {
+                recurBuilder.frequency(Recur.Frequency.WEEKLY)
+                val dayList = WeekDayList()
+                if (isLocalizedWeekstartMonday()) {
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true)
+                        dayList.add(WeekDay.MO)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true)
+                        dayList.add(WeekDay.TU)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true)
+                        dayList.add(WeekDay.WE)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true)
+                        dayList.add(WeekDay.TH)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true)
+                        dayList.add(WeekDay.FR)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true)
+                        dayList.add(WeekDay.SA)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true)
+                        dayList.add(WeekDay.SU)
+                } else {
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true)
+                        dayList.add(WeekDay.SU)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true)
+                        dayList.add(WeekDay.MO)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true)
+                        dayList.add(WeekDay.TU)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true)
+                        dayList.add(WeekDay.WE)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true)
+                        dayList.add(WeekDay.TH)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true)
+                        dayList.add(WeekDay.FR)
+                    if (binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true)
+                        dayList.add(WeekDay.SA)
+                }
+                if(dayList.isNotEmpty())
+                    recurBuilder.dayList(dayList)
+            }
+
+            RECURRENCE_MODE_MONTH -> {
+                recurBuilder.frequency(Recur.Frequency.MONTHLY)
+                val monthDayList = NumberList()
+                monthDayList.add(binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.value ?: 1)
+                recurBuilder.monthDayList(monthDayList)
+            }
+            RECURRENCE_MODE_YEAR -> {
+                recurBuilder.frequency(Recur.Frequency.MONTHLY)
+            }
+            else -> return
+        }
+        recurBuilder.interval(binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1)
+        recurBuilder.count(binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1)
+        val recur = recurBuilder.build()
+
         Log.d("recur", recur.toString())
         val occurrences = calculateOccurencies()
 
