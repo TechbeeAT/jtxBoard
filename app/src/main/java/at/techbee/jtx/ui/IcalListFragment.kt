@@ -31,6 +31,7 @@ import at.techbee.jtx.databinding.FragmentIcalListBinding
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.tabs.TabLayout
+import java.lang.ClassCastException
 import java.util.*
 
 
@@ -227,8 +228,12 @@ class IcalListFragment : Fragment() {
 
     override fun onResume() {
 
-        val activity = requireActivity() as MainActivity
-        activity.setToolbarText("Board")
+        try {
+            val activity = requireActivity() as MainActivity
+            activity.setToolbarText("Board")
+        } catch (e: ClassCastException) {
+            Log.w("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
+        }
 
         super.onResume()
     }

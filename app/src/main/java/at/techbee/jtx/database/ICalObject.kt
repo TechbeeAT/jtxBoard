@@ -281,7 +281,7 @@ const val COLUMN_RECURID = "recurid"
  * This value is NULL for the orignal event.
  * Type: [Long]
  */
-const val COLUMN_RECUR_ORIGINALICALOBJECTID = "original_id"
+const val COLUMN_RECUR_ORIGINALICALOBJECTID = "recur_original_icalobjectid"
 
 
 /**
@@ -405,6 +405,7 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_EXDATE) var exdate: String? = null,   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
     @ColumnInfo(name = COLUMN_RDATE)  var rdate: String? = null,     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
     @ColumnInfo(name = COLUMN_RECURID) var recurid: String? = null,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
+    @ColumnInfo(name = COLUMN_RECUR_ORIGINALICALOBJECTID) var recurOriginalIcalObjectId: Long? = null,
 
     @ColumnInfo(name = COLUMN_COLOR) var color: Int? = null,
 

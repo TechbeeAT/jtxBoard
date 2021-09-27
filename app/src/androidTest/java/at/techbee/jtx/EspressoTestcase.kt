@@ -8,6 +8,8 @@
 
 package at.techbee.jtx
 
+import android.app.Application
+import android.content.Context
 import android.os.Build
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
@@ -17,6 +19,14 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.platform.app.InstrumentationRegistry
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,6 +35,32 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class EspressoTestcase {
+
+
+    private lateinit var database: ICalDatabaseDao
+    private lateinit var context: Context
+    private lateinit var application: Application
+
+    private val testDispatcher = TestCoroutineDispatcher()
+    private val testScope = TestCoroutineScope(testDispatcher)
+
+    private val sampleCollection = ICalCollection(collectionId = 1L, displayName = "testcollection automated tests")
+
+
+    @Before
+    fun setup() {
+        context = InstrumentationRegistry.getInstrumentation().targetContext
+        ICalDatabase.switchToInMemory(context)
+        database = ICalDatabase.getInstance(context).iCalDatabaseDao     // should be in-memory db now
+        application =
+            InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
+
+
+        //insert sample entries
+        testScope.launch(TestCoroutineDispatcher()) {
+            database.insertCollectionSync(sampleCollection)
+        }
+    }
 
         /**
          * Use [androidx.test.ext.junit.rules.ActivityScenarioRule] to create and launch the activity under test before each test,
