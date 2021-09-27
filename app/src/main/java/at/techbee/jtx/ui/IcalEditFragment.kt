@@ -777,11 +777,10 @@ class IcalEditFragment : Fragment() {
             val spinner: Spinner = binding.editCollectionSpinner
             val allCollectionNames: MutableList<String> = mutableListOf()
             icalEditViewModel.allCollections.value?.forEach { collection ->
-                collection.displayName?.let { name ->
-                    allCollectionNames.add(
-                        name
-                    )
-                }
+                if(collection.displayName?.isNotEmpty() == true && collection.accountName?.isNotEmpty() == true)
+                    allCollectionNames.add(collection.displayName + " (" + collection.accountName + ")")
+                else
+                    allCollectionNames.add(collection.displayName?: "-")
             }
             val adapter = ArrayAdapter(
                 requireContext(),
