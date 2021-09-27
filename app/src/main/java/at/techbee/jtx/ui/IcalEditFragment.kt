@@ -1969,7 +1969,7 @@ class IcalEditFragment : Fragment() {
         val recur = recurBuilder.build()
 
         Log.d("recur", recur.toString())
-        val occurrences = calculateOccurencies()
+        val occurrences = calculateOccurrences()
 
 
         var lastOccurrenceString = convertLongToFullDateString(occurrences.lastOrNull())
@@ -1993,7 +1993,7 @@ class IcalEditFragment : Fragment() {
             icalEditViewModel.iCalObjectUpdated.value?.rrule = null
     }
 
-    private fun calculateOccurencies(): List<Long> {
+    private fun calculateOccurrences(): List<Long> {
 
         if (icalEditViewModel.iCalEntity.property.module == Module.NOTE.name) {
             Toast.makeText(requireContext(),"Recurrence can not be used for notes!",Toast.LENGTH_LONG).show()
