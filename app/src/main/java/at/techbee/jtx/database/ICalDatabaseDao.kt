@@ -421,6 +421,12 @@ DELETEs by Object
     fun getICalObjectRaw(query: SupportSQLiteQuery): List<ICalObject>
 
 
+    @Transaction
+    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECUR_ORIGINALICALOBJECTID = :id")
+    fun deleteRecurringInstances(id: Long)
+
+
+
 }
 
 

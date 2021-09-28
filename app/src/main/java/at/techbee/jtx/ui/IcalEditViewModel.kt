@@ -51,6 +51,8 @@ class IcalEditViewModel(
 
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
 
+    var recurrenceList = mutableListOf<Long>()
+
     var returnVJournalItemId: MutableLiveData<Long> =
         MutableLiveData<Long>().apply { postValue(0L) }
     var savingClicked: MutableLiveData<Boolean> =
@@ -364,6 +366,10 @@ class IcalEditViewModel(
                     )
 
             }
+
+            if(recurrenceList.size > 0)
+                ICalObject.recreateRecurring(insertedOrUpdatedItemId, recurrenceList, database, this)
+
             returnVJournalItemId.value = insertedOrUpdatedItemId
         }
 

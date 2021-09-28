@@ -14,6 +14,9 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.room.*
 import at.techbee.jtx.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.DateTime
@@ -509,6 +512,69 @@ data class ICalObject(
                     withTimezone.value + withTimezone.parameters
                 }
 
+            }
+        }
+
+
+        fun recreateRecurring(id: Long, recurrenceList: List<Long>, database: ICalDatabaseDao, scope: CoroutineScope) {
+
+
+            scope.launch(Dispatchers.IO) {
+                val original = database.getSync(id) ?: return@launch
+                database.deleteRecurringInstances(id)
+
+                recurrenceList.forEach { recurrenceDate ->
+
+                    if((original.property.component == Component.VJOURNAL.name && original.property.dtstart == recurrenceDate)
+                        || (original.property.component == Component.VTODO.name && original.property.due == recurrenceDate))
+                            return@forEach    // skip entry as it is the original event
+
+                    val instance = original.copy()
+                    instance.property.id = 0L
+                    instance.property.recurOriginalIcalObjectId = id
+                    if(instance.property.component == Component.VJOURNAL.name && instance.property.dtstart != null) {
+                        instance.property.recurid = when {
+                            instance.property.dtstartTimezone == "ALLDAY" -> DtStart(Date(instance.property.dtstart!!)).value
+                            instance.property.dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dtstart!!)).value
+                            else -> {
+                                val timezone =
+                                    TimeZoneRegistryFactory.getInstance().createRegistry()
+                                        .getTimeZone(instance.property.dtstartTimezone)
+                                val withTimezone =
+                                    DtStart(DateTime(instance.property.dtstart!!))
+                                withTimezone.timeZone = timezone
+                                withTimezone.value
+                            }
+                        }
+                    } else if(instance.property.component == Component.VTODO.name && instance.property.due != null) {
+                        instance.property.recurid = when {
+                            instance.property.dueTimezone == "ALLDAY" -> DtStart(Date(instance.property.due!!)).value
+                            instance.property.dueTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dueTimezone)).value
+                            else -> {
+                                val timezone =
+                                    TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(instance.property.dueTimezone)
+                                val withTimezone = DtStart(DateTime(instance.property.due!!))
+                                withTimezone.timeZone = timezone
+                                withTimezone.value
+                            }
+                        }
+                    }
+                    if(instance.property.component == Component.VTODO.name)
+                        instance.property.due = recurrenceDate
+                    else if(instance.property.component == Component.VJOURNAL.name)
+                        instance.property.dtstart = recurrenceDate
+
+                    instance.property.uid = generateNewUID()
+
+
+                    database.insertICalObjectSync(instance.property)
+                    //TODO Check further attributes!
+                    //TODO take care of list attributes!
+                    //TODO mark recurring events in list
+                    //TODO ask user when opening
+                    //TODO show recurring in view
+
+                }
             }
         }
     }

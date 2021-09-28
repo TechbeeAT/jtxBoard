@@ -1973,15 +1973,16 @@ class IcalEditFragment : Fragment() {
         val recur = recurBuilder.build()
 
         Log.d("recur", recur.toString())
-        val occurrences = calculateOccurrences()
+
+        calculateOccurrences()    // this updates icalEditViewModel.recurrenceList
 
 
-        var lastOccurrenceString = convertLongToFullDateString(occurrences.lastOrNull())
+        var lastOccurrenceString = convertLongToFullDateString(icalEditViewModel.recurrenceList.lastOrNull())
         if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY")
-            lastOccurrenceString += " " + convertLongToTimeString(occurrences.lastOrNull())
+            lastOccurrenceString += " " + convertLongToTimeString(icalEditViewModel.recurrenceList.lastOrNull())
 
         var allOccurrencesString = ""
-        occurrences.forEach {
+        icalEditViewModel.recurrenceList.forEach {
             allOccurrencesString += convertLongToFullDateString(it)
             if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY")
                 allOccurrencesString += " " + convertLongToTimeString(it)
@@ -1997,17 +1998,19 @@ class IcalEditFragment : Fragment() {
             icalEditViewModel.iCalObjectUpdated.value?.rrule = null
     }
 
-    private fun calculateOccurrences(): List<Long> {
+    private fun calculateOccurrences() {
+
+        icalEditViewModel.recurrenceList.clear()
 
         if (icalEditViewModel.iCalEntity.property.module == Module.NOTE.name) {
             Toast.makeText(requireContext(),"Recurrence can not be used for notes!",Toast.LENGTH_LONG).show()
-            return emptyList()
+            return
         } else if(icalEditViewModel.iCalEntity.property.module == Module.JOURNAL.name && icalEditViewModel.iCalEntity.property.dtstart == null) {
             Toast.makeText(requireContext(),"Recurrence requires a start-date to be set!",Toast.LENGTH_LONG).show()
-            return emptyList()
+            return
         } else if(icalEditViewModel.iCalEntity.property.module == Module.TODO.name && icalEditViewModel.iCalEntity.property.due == null) {
             Toast.makeText(requireContext(),"Recurrence requires a due-date to be set!",Toast.LENGTH_LONG).show()
-            return emptyList()
+            return
         }
 
 
@@ -2041,9 +2044,9 @@ class IcalEditFragment : Fragment() {
 
         val start = Calendar.getInstance()
         start.timeInMillis = when(icalEditViewModel.iCalEntity.property.component) {
-            Component.VJOURNAL.name -> icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: return emptyList()
-            Component.VTODO.name -> icalEditViewModel.iCalObjectUpdated.value?.due ?: return emptyList()
-            else -> return emptyList()
+            Component.VJOURNAL.name -> icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: return
+            Component.VTODO.name -> icalEditViewModel.iCalObjectUpdated.value?.due ?: return
+            else -> return
         }
 
 
@@ -2053,14 +2056,13 @@ class IcalEditFragment : Fragment() {
             start.timeZone = TimeZone.getTimeZone(icalEditViewModel.iCalObjectUpdated.value?.dueTimezone)
 //TODO: Continue here checking the timezone
 
-        val recurrenceList: MutableList<Long> = mutableListOf()
 
         when (binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.selectedItemPosition)
         {
             RECURRENCE_MODE_DAY ->
             {
                 for(i in 1..count) {
-                    recurrenceList.add(start.timeInMillis)
+                    icalEditViewModel.recurrenceList.add(start.timeInMillis)
                     Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
                     start.add(Calendar.DATE, interval)
                 }
@@ -2071,7 +2073,7 @@ class IcalEditFragment : Fragment() {
                     val startWeekloop = Calendar.getInstance().apply { timeInMillis = start.timeInMillis }
                     for (j in 1..6){
                         if(startWeekloop.get(Calendar.DAY_OF_WEEK) in selectedWeekdays) {
-                            recurrenceList.add(startWeekloop.timeInMillis)
+                            icalEditViewModel.recurrenceList.add(startWeekloop.timeInMillis)
                             Log.d("calculatedDay", convertLongToDateString(startWeekloop.timeInMillis))
                         }
                         startWeekloop.add(Calendar.DATE, 1)
@@ -2083,7 +2085,7 @@ class IcalEditFragment : Fragment() {
             {
                 for(i in 1..count) {
                     start.set(Calendar.DAY_OF_MONTH, monthDay)
-                    recurrenceList.add(start.timeInMillis)
+                    icalEditViewModel.recurrenceList.add(start.timeInMillis)
                     Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
                     start.add(Calendar.MONTH, interval)
                 }
@@ -2091,13 +2093,11 @@ class IcalEditFragment : Fragment() {
             RECURRENCE_MODE_YEAR ->
             {
                 for(i in 1..count) {
-                    recurrenceList.add(start.timeInMillis)
+                    icalEditViewModel.recurrenceList.add(start.timeInMillis)
                     Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
                     start.add(Calendar.YEAR, interval)
                 }
             }
         }
-
-        return recurrenceList
     }
 }
