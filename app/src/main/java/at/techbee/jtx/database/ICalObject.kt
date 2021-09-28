@@ -532,6 +532,22 @@ data class ICalObject(
                     val instance = original.copy()
                     instance.property.id = 0L
                     instance.property.recurOriginalIcalObjectId = id
+                    instance.property.uid = generateNewUID()
+                    instance.property.dtstamp = System.currentTimeMillis()
+                    instance.property.created = System.currentTimeMillis()
+                    instance.property.lastModified = System.currentTimeMillis()
+                    instance.property.rrule = null
+                    instance.property.rdate = null
+                    instance.property.exdate = null
+                    instance.property.sequence = 0
+                    instance.property.fileName = null
+                    instance.property.eTag = null
+                    instance.property.scheduleTag = null
+                    instance.property.dirty = false
+
+
+
+
                     if(instance.property.component == Component.VJOURNAL.name && instance.property.dtstart != null) {
                         instance.property.recurid = when {
                             instance.property.dtstartTimezone == "ALLDAY" -> DtStart(Date(instance.property.dtstart!!)).value
@@ -564,10 +580,41 @@ data class ICalObject(
                     else if(instance.property.component == Component.VJOURNAL.name)
                         instance.property.dtstart = recurrenceDate
 
-                    instance.property.uid = generateNewUID()
+                    val instanceId = database.insertICalObjectSync(instance.property)
 
+                    instance.categories?.forEach {
+                        it.categoryId = 0L
+                        it.icalObjectId = instanceId
+                        database.insertCategorySync(it)
+                    }
+                    instance.comments?.forEach {
+                        it.commentId = 0L
+                        it.icalObjectId = instanceId
+                        database.insertCommentSync(it)
+                    }
+                    instance.attachments?.forEach {
+                        it.attachmentId = 0L
+                        it.icalObjectId = instanceId
+                        database.insertAttachmentSync(it)
+                    }
+                    instance.organizer.apply {
+                        this?.organizerId = 0L
+                        this?.icalObjectId = instanceId
+                        this?.let { database.insertOrganizerSync(it) }
+                    }
+                    instance.attendees?.forEach {
+                        it.attendeeId = 0L
+                        it.icalObjectId = instanceId
+                        database.insertAttendeeSync(it)
+                    }
+                    instance.resources?.forEach {
+                        it.resourceId = 0L
+                        it.icalObjectId = instanceId
+                        database.insertResourceSync(it)
+                    }
 
-                    database.insertICalObjectSync(instance.property)
+                    //TODO: How to deal with relatedTo?
+
                     //TODO Check further attributes!
                     //TODO take care of list attributes!
                     //TODO mark recurring events in list
