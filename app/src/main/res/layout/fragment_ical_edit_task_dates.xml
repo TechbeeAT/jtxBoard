@@ -125,13 +125,26 @@
             app:switchPadding="8dp" />
 
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/edit_show_started_completed_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:checked="@={model.showStartedCompletedChecked}"
+            android:text="@string/edit_show_started_completed_switch"
+            android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_due_addtime_switch"
+            app:switchPadding="8dp" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_started_date"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/edit_started_date_hint"
             android:visibility="@{model.starteddateVisible ? View.VISIBLE : View.GONE}"
@@ -142,7 +155,7 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toStartOf="@id/edit_started_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_due_addtime_switch">
+            app:layout_constraintTop_toBottomOf="@+id/edit_show_started_completed_switch">
 
 
             <com.google.android.material.textfield.TextInputEditText

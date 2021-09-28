@@ -164,6 +164,8 @@ class IcalEditViewModel(
         MutableLiveData<Boolean>(iCalEntity.property.dtstartTimezone == "ALLDAY")
     var addDueTimeChecked: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
+    var showStartedCompletedChecked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(false)
     var addCompletedTimeChecked: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && iCalEntity.property.completedTimezone != "ALLDAY")
     var addStartedTimeChecked: MutableLiveData<Boolean> =
@@ -242,10 +244,10 @@ class IcalEditViewModel(
         subtasksVisible.postValue(selectedTab == TAB_SUBTASKS || isLandscape)
         duedateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
         duetimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dueTimezone != "ALLDAY")
-        completeddateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
-        completedtimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.completedTimezone != "ALLDAY")
-        starteddateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
-        startedtimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY")
+        completeddateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && showStartedCompletedChecked.value?:false)
+        completedtimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.completedTimezone != "ALLDAY" && showStartedCompletedChecked.value?:false)
+        starteddateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && showStartedCompletedChecked.value?:false)
+        startedtimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dtstartTimezone != "ALLDAY" && showStartedCompletedChecked.value?:false)
         recurrenceVisible.postValue((selectedTab == TAB_RECURRING || isLandscape))
         recurrenceGeneralVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false))
         recurrenceWeekdaysVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_WEEK))

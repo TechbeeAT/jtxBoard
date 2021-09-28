@@ -144,6 +144,7 @@
     <string name="edit_started_date_hint">Started date</string>
     <string name="edit_started_time_hint">Started time</string>
     <string name="edit_add_time_switch">Add time</string>
+    <string name="edit_show_started_completed_switch">Edit started/completed</string>
     <string name="edit_progress">Progress</string>
     <string name="edit_subtasks_header">Subtasks</string>
     <string name="edit_subtasks_add_hint">Subtask</string>

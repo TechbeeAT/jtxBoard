@@ -695,6 +695,10 @@ class IcalEditFragment : Fragment() {
             icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change
         }
 
+        icalEditViewModel.showStartedCompletedChecked.observe(viewLifecycleOwner) {
+            icalEditViewModel.updateVisibility()
+        }
+
 
         icalEditViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
