@@ -51,6 +51,18 @@
             app:layout_constraintTop_toTopOf="@+id/list_item_colorbar"
             tools:text="Due in 365 days" />
 
+
+
+        <ImageView
+            android:id="@+id/list_item_recurring_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/list_item_summary"
+            app:layout_constraintTop_toTopOf="@+id/list_item_colorbar"
+            app:srcCompat="@drawable/ic_recurring"
+            tools:ignore="ContentDescription" />
+
         <TextView
             android:id="@+id/list_item_dtstart_day"
             android:layout_width="80dp"

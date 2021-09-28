@@ -50,6 +50,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "CASE WHEN main_icalobject.$COLUMN_COLOR IS NOT NULL THEN main_icalobject.$COLUMN_COLOR ELSE collection.$COLUMN_COLLECTION_COLOR END as color, " +             // take the color of the collection if there is no color given in the item. This is just for displaying in the list view.
             "main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID, " +
             "main_icalobject.$COLUMN_DELETED, " +
+            "CASE WHEN main_icalobject.$COLUMN_RRULE IS NULL THEN 0 ELSE 1 END as isRecurringOriginal, " +
+            "CASE WHEN main_icalobject.$COLUMN_RECUR_ORIGINALICALOBJECTID IS NULL THEN 0 ELSE 1 END as isRecurringInstance, " +
             "(SELECT group_concat($TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT, \", \") FROM $TABLE_NAME_CATEGORY WHERE main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID GROUP BY $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = \'TODO\' AND sub_icalobject.$COLUMN_ID = main_icalobject.$COLUMN_ID ) as numSubtasks, " +
             "(SELECT count(*) FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAttachments, " +
@@ -97,6 +99,9 @@ data class ICal4List(
     @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long?,
 
     @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean,
+
+    var isRecurringOriginal: Boolean,
+    var isRecurringInstance: Boolean,
 
     var categories: String?,
     var numSubtasks: Int,

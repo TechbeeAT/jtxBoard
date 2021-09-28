@@ -275,6 +275,14 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                 holder.numCommentsText.text = iCal4ListItem.property.numComments.toString()
             }
 
+            //recur icon and text
+            if(iCal4ListItem.property.isRecurringInstance || iCal4ListItem.property.isRecurringOriginal)
+                holder.recurIcon.visibility = View.VISIBLE
+             else
+                holder.recurIcon.visibility = View.GONE
+
+
+
 
                     // turn to item view when the card is clicked
             holder.listItemCardView.setOnClickListener {
@@ -426,7 +434,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         var numAttachmentsText: TextView = itemView.findViewById(R.id.list_item_num_attachments_text)
         var numCommentsText: TextView = itemView.findViewById(R.id.list_item_num_comments_text)
 
-
+        var recurIcon: ImageView = itemView.findViewById(R.id.list_item_recurring_icon)
     }
 
 
