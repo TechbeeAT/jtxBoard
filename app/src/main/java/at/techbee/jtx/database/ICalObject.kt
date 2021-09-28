@@ -565,7 +565,7 @@ data class ICalObject(
                     } else if(instance.property.component == Component.VTODO.name && instance.property.due != null) {
                         instance.property.recurid = when {
                             instance.property.dueTimezone == "ALLDAY" -> DtStart(Date(instance.property.due!!)).value
-                            instance.property.dueTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dueTimezone)).value
+                            instance.property.dueTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.due!!)).value
                             else -> {
                                 val timezone =
                                     TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(instance.property.dueTimezone)

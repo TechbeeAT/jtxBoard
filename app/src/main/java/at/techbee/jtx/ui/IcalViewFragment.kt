@@ -137,20 +137,16 @@ class IcalViewFragment : Fragment() {
 
         icalViewViewModel.icalEntity.observe(viewLifecycleOwner, {
 
-            if (it?.property == null) {
-                binding.viewProgressIndicator.visibility = View.VISIBLE
-            }
-            else {
-
-                binding.viewProgressIndicator.visibility = View.GONE
-
+            it?.let {
                 when (it.property.component) {
                     Component.VTODO.name -> {
-                        binding.viewStatusChip.text = StatusTodo.getStringResource(requireContext(), it.property.status)
+                        binding.viewStatusChip.text =
+                            StatusTodo.getStringResource(requireContext(), it.property.status)
                                 ?: it.property.status
                     }
                     Component.VJOURNAL.name -> {
-                        binding.viewStatusChip.text = StatusJournal.getStringResource(requireContext(), it.property.status)
+                        binding.viewStatusChip.text =
+                            StatusJournal.getStringResource(requireContext(), it.property.status)
                                 ?: it.property.status
                     }
                     else -> {
@@ -158,23 +154,27 @@ class IcalViewFragment : Fragment() {
                     }
                 }
 
-                binding.viewClassificationChip.text = Classification.getStringResource(requireContext(), it.property.classification)
+                binding.viewClassificationChip.text =
+                    Classification.getStringResource(requireContext(), it.property.classification)
                         ?: it.property.classification
 
                 val priorityArray = resources.getStringArray(R.array.priority)
                 if (icalViewViewModel.icalEntity.value?.property?.priority != null && icalViewViewModel.icalEntity.value!!.property.priority in 0..9)
-                    binding.viewPriorityChip.text = priorityArray[icalViewViewModel.icalEntity.value!!.property.priority!!]
+                    binding.viewPriorityChip.text =
+                        priorityArray[icalViewViewModel.icalEntity.value!!.property.priority!!]
 
                 binding.viewCommentsLinearlayout.removeAllViews()
                 icalViewViewModel.icalEntity.value!!.comments?.forEach { comment ->
-                    val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
+                    val commentBinding =
+                        FragmentIcalViewCommentBinding.inflate(inflater, container, false)
                     commentBinding.viewCommentTextview.text = comment.text
                     binding.viewCommentsLinearlayout.addView(commentBinding.root)
                 }
 
                 binding.viewAttachmentsLinearlayout.removeAllViews()
                 icalViewViewModel.icalEntity.value!!.attachments?.forEach { attachment ->
-                    val attachmentBinding = FragmentIcalViewAttachmentBinding.inflate(inflater, container, false)
+                    val attachmentBinding =
+                        FragmentIcalViewAttachmentBinding.inflate(inflater, container, false)
 
                     //open the attachment on click
                     attachmentBinding.viewAttachmentCardview.setOnClickListener {
@@ -188,12 +188,19 @@ class IcalViewFragment : Fragment() {
 
                         } catch (e: IOException) {
                             Log.i("fileprovider", "Failed to retrieve file\n$e")
-                            Toast.makeText(requireContext(), "Failed to retrieve file.", Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Failed to retrieve file.",
+                                Toast.LENGTH_LONG
+                            ).show()
                         } catch (e: ActivityNotFoundException) {
                             Log.i("ActivityNotFound", "No activity found to open file\n$e")
-                            Toast.makeText(requireContext(), "No app was found to open this file.", Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "No app was found to open this file.",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
-
                     }
                     if (attachment.filename!!.isNotEmpty())
                         attachmentBinding.viewAttachmentTextview.text = attachment.filename
@@ -203,7 +210,8 @@ class IcalViewFragment : Fragment() {
                     if (attachment.filesize == null)
                         attachmentBinding.viewAttachmentFilesize.visibility = View.GONE
                     else
-                        attachmentBinding.viewAttachmentFilesize.text = getAttachmentSizeString(attachment.filesize?:0L)
+                        attachmentBinding.viewAttachmentFilesize.text =
+                            getAttachmentSizeString(attachment.filesize ?: 0L)
 
 
                     // load thumbnail if possible
@@ -212,9 +220,13 @@ class IcalViewFragment : Fragment() {
                         val thumbUri = Uri.parse(attachment.uri)
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            val thumbBitmap = context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
-                            attachmentBinding.viewAttachmentPictureThumbnail.setImageBitmap(thumbBitmap)
-                            attachmentBinding.viewAttachmentPictureThumbnail.visibility = View.VISIBLE
+                            val thumbBitmap =
+                                context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
+                            attachmentBinding.viewAttachmentPictureThumbnail.setImageBitmap(
+                                thumbBitmap
+                            )
+                            attachmentBinding.viewAttachmentPictureThumbnail.visibility =
+                                View.VISIBLE
                         }
                     } catch (e: FileNotFoundException) {
                         Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
@@ -227,16 +239,27 @@ class IcalViewFragment : Fragment() {
                     try {
                         binding.viewColorbar.setColorFilter(it.ICalCollection?.color!!)
                     } catch (e: IllegalArgumentException) {
-                        Log.println(Log.INFO, "Invalid color", "Invalid Color cannot be parsed: ${it.ICalCollection?.color}")
+                        Log.println(
+                            Log.INFO,
+                            "Invalid color",
+                            "Invalid Color cannot be parsed: ${it.ICalCollection?.color}"
+                        )
                         binding.viewColorbar.visibility = View.GONE
                     }
                 } else
                     binding.viewColorbar.visibility = View.GONE
+
+                it.property.recurOriginalIcalObjectId?.let { origId ->
+                    binding.viewReccurrenceGotooriginalButton?.setOnClickListener { view ->
+                        view.findNavController().navigate(
+                            IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(origId)
+                        )
+                    }
+                }
             }
         })
 
         icalViewViewModel.subtasksCountList.observe(viewLifecycleOwner, { })
-
 
 
         icalViewViewModel.relatedNotes.observe(viewLifecycleOwner, {
@@ -298,6 +321,27 @@ class IcalViewFragment : Fragment() {
             }
         }
 
+        icalViewViewModel.recurInstances.observe(viewLifecycleOwner) {
+            val recurDates = mutableListOf<String>()
+            it.forEach { item ->
+                item?.let {
+
+                    if(it.component == Component.VJOURNAL.name) {
+                        if (it.dtstartTimezone != "ALLDAY")
+                            recurDates.add(convertLongToFullDateString(it.dtstart) + " " + convertLongToTimeString(it.dtstart))
+                        else
+                            recurDates.add(convertLongToFullDateString(it.dtstart))
+                    }
+                    else if(it.component == Component.VTODO.name){
+                        if (it.dueTimezone != "ALLDAY")
+                            recurDates.add(convertLongToFullDateString(it.due) + " " + convertLongToTimeString(it.due))
+                        else
+                            recurDates.add(convertLongToFullDateString(it.due))
+                    }
+                }
+            }
+            binding.viewReccurrenceItems?.text = recurDates.joinToString(separator = "\n")
+        }
 
 
         icalViewViewModel.categories.observe(viewLifecycleOwner, {

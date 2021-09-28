@@ -29,6 +29,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var attendees: LiveData<List<Attendee>>
     lateinit var relatedNotes: LiveData<List<ICal4ViewNote?>>
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
+    lateinit var recurInstances: LiveData<List<ICalObject?>>
 
     lateinit var dtstartFormatted: LiveData<String>
     lateinit var dtstartTimezone: LiveData<String>
@@ -37,6 +38,8 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var completedFormatted: LiveData<String>
     lateinit var startedFormatted: LiveData<String>
 
+
+    lateinit var progressIndicatorVisible: LiveData<Boolean>
 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
@@ -55,6 +58,11 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var subtasksVisible: LiveData<Boolean>
     lateinit var completedVisible: LiveData<Boolean>
     lateinit var startedVisible: LiveData<Boolean>
+
+    lateinit var recurrenceVisible: LiveData<Boolean>
+    lateinit var recurrenceItemsVisible: LiveData<Boolean>
+    lateinit var recurrenceGoToOriginalVisible: LiveData<Boolean>
+
 
     lateinit var collectionText: LiveData<String?>
 
@@ -80,7 +88,6 @@ class IcalViewViewModel(private val icalItemId: Long,
 
             subtasksCountList = database.getSubtasksCount()
 
-
             categories = Transformations.map(icalEntity) {
                 it?.categories
             }
@@ -102,7 +109,13 @@ class IcalViewViewModel(private val icalItemId: Long,
                 it?.property?.id?.let { parentId -> database.getRelatedTodos(parentId) }
             }
 
+            recurInstances = Transformations.switchMap(icalEntity) {
+                it?.property?.id?.let { originalId -> database.getRecurInstances(originalId) }
+            }
 
+            progressIndicatorVisible = Transformations.map(icalEntity) { item ->
+                return@map item?.property == null     // show progress indicator as long as item.property is null
+            }
             dateVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null           // true if component == JOURNAL
             }
@@ -214,6 +227,16 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
             startedVisible = Transformations.map(icalEntity) { item ->
                 return@map (item?.property?.dtstart != null && item.property.component == Component.VTODO.name)
+            }
+
+            recurrenceVisible = Transformations.map(icalEntity) { item ->
+                return@map (item?.property?.rrule != null || item?.property?.recurOriginalIcalObjectId != null)
+            }
+            recurrenceItemsVisible = Transformations.map(icalEntity) { item ->
+                return@map (item?.property?.rrule != null)
+            }
+            recurrenceGoToOriginalVisible = Transformations.map(icalEntity) { item ->
+                return@map (item?.property?.recurOriginalIcalObjectId != null)
             }
         }
 
