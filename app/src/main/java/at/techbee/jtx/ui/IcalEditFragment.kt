@@ -199,6 +199,7 @@ class IcalEditFragment : Fragment() {
         }
 
 
+
         binding.editTimezoneSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -391,6 +392,7 @@ class IcalEditFragment : Fragment() {
                     TAB_ALARMS -> icalEditViewModel.selectedTab = TAB_ALARMS
                     else -> TAB_GENERAL
                 }
+                hideKeyboard()
                 icalEditViewModel.updateVisibility()
 
             }
@@ -431,10 +433,7 @@ class IcalEditFragment : Fragment() {
                         IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
                     direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
 
-                    //This code snippet makes sure that the soft keyboard gets closed
-                    val imm =
-                        requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                    imm?.hideSoftInputFromWindow(requireView().windowToken, 0)
+                    hideKeyboard()
 
                     val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
                     icalEditViewModel.delete()
@@ -492,10 +491,7 @@ class IcalEditFragment : Fragment() {
                         Log.i("scheduleNotification", "Due to necessity of PendingIntent.FLAG_IMMUTABLE, the notification functionality can only be used from Build Versions > M (Api-Level 23)")
                     }
 
-                //This code snippet makes sure that the soft keyboard gets closed
-                val imm =
-                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                imm?.hideSoftInputFromWindow(requireView().windowToken, 0)
+                hideKeyboard()
 
                 // show Ad if activated
                 /*
@@ -574,6 +570,8 @@ class IcalEditFragment : Fragment() {
                     it.dtstartTimezone
                 )
             )
+
+
 
             icalEditViewModel.updateVisibility()
 
@@ -2099,5 +2097,16 @@ class IcalEditFragment : Fragment() {
                 }
             }
         }
+    }
+
+    /**
+     * This function makes sure that the soft keyboard gets closed
+     */
+    private fun hideKeyboard() {
+
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(requireView().windowToken, 0)
+
     }
 }
