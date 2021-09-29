@@ -52,8 +52,6 @@ class IcalEditViewModel(
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
 
     var recurrenceList = mutableListOf<Long>()
-    var isRecurException = false
-    var recurExceptionOriginalId: Long? = null
 
     var returnVJournalItemId: MutableLiveData<Long> =
         MutableLiveData<Long>().apply { postValue(0L) }
@@ -368,18 +366,18 @@ class IcalEditViewModel(
             if(recurrenceList.size > 0)
                 ICalObject.recreateRecurring(insertedOrUpdatedItemId, recurrenceList, database, this)
 
-            if(isRecurException && recurExceptionOriginalId != null) {
+            if(iCalObjectUpdated.value?.recurOriginalIcalObjectId != null && iCalObjectUpdated.value?.isRecurLinkedInstance == false) {
                 viewModelScope.launch(Dispatchers.IO) {
                     val exDates = mutableListOf<String>()
-                    database.getRecurExceptions(recurExceptionOriginalId!!)?.split(",")?.let {
+                    database.getRecurExceptions(iCalObjectUpdated.value?.recurOriginalIcalObjectId!!)?.split(",")?.let {
                         exDates.addAll(it)
                     }
-                    if (iCalObjectUpdated.value?.component == Component.VJOURNAL.name)
+                    if (iCalObjectUpdated.value?.component == Component.VJOURNAL.name && !exDates.contains(iCalObjectUpdated.value!!.dtstart.toString()))
                         exDates.add(iCalObjectUpdated.value!!.dtstart.toString())
-                    else if (iCalObjectUpdated.value?.component == Component.VTODO.name)
+                    else if (iCalObjectUpdated.value?.component == Component.VTODO.name && exDates.contains(iCalObjectUpdated.value!!.due.toString()))
                         exDates.add(iCalObjectUpdated.value!!.due.toString())
                     database.setRecurExceptions(
-                        recurExceptionOriginalId!!,
+                        iCalObjectUpdated.value?.recurOriginalIcalObjectId!!,
                         exDates.joinToString(",")
                     )
                 }

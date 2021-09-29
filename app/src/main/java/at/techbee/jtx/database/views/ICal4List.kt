@@ -52,7 +52,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "main_icalobject.$COLUMN_DELETED, " +
             "CASE WHEN main_icalobject.$COLUMN_RRULE IS NULL THEN 0 ELSE 1 END as isRecurringOriginal, " +
             "CASE WHEN main_icalobject.$COLUMN_RECUR_ORIGINALICALOBJECTID IS NULL THEN 0 ELSE 1 END as isRecurringInstance, " +
-            "CASE WHEN (SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject WHERE sub_icalobject.$COLUMN_EXDATE LIKE '%' || main_icalobject.$COLUMN_DTSTART || '%' OR sub_icalobject.$COLUMN_EXDATE LIKE '%' || main_icalobject.$COLUMN_DUE || '%') > 0 THEN 1 ELSE 0 END as isRecurringException, " +
+            "main_icalobject.$COLUMN_RECUR_ISLINKEDINSTANCE, " +
             "(SELECT group_concat($TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT, \", \") FROM $TABLE_NAME_CATEGORY WHERE main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID GROUP BY $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = \'TODO\' AND sub_icalobject.$COLUMN_ID = main_icalobject.$COLUMN_ID ) as numSubtasks, " +
             "(SELECT count(*) FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAttachments, " +
@@ -103,7 +103,7 @@ data class ICal4List(
 
     @ColumnInfo var isRecurringOriginal: Boolean,
     @ColumnInfo var isRecurringInstance: Boolean,
-    @ColumnInfo var isRecurringException: Boolean,
+    @ColumnInfo(name = COLUMN_RECUR_ISLINKEDINSTANCE) var isLinkedRecurringInstance: Boolean,
 
     @ColumnInfo var categories: String?,
     @ColumnInfo var numSubtasks: Int,

@@ -230,13 +230,13 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
 
             recurrenceVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.rrule != null || item?.property?.recurOriginalIcalObjectId != null)
+                return@map (item?.property?.rrule != null || (item?.property?.recurOriginalIcalObjectId != null && item.property.isRecurLinkedInstance))
             }
             recurrenceItemsVisible = Transformations.map(icalEntity) { item ->
                 return@map (item?.property?.rrule != null)
             }
             recurrenceGoToOriginalVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.recurOriginalIcalObjectId != null)
+                return@map (item?.property?.recurOriginalIcalObjectId != null && item.property.isRecurLinkedInstance)
             }
         }
 

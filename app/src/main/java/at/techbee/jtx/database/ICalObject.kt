@@ -12,6 +12,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.os.Parcelable
 import android.provider.BaseColumns
+import android.util.Log
 import androidx.room.*
 import at.techbee.jtx.R
 import kotlinx.coroutines.CoroutineScope
@@ -22,6 +23,7 @@ import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.DateTime
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import net.fortuna.ical4j.model.property.DtStart
+import java.lang.ClassCastException
 import java.util.*
 import kotlin.IllegalArgumentException
 
@@ -286,6 +288,12 @@ const val COLUMN_RECURID = "recurid"
  */
 const val COLUMN_RECUR_ORIGINALICALOBJECTID = "recur_original_icalobjectid"
 
+/**
+ * Marks recurring instances that have not been changed. Those must be excluded from the sync as they are still instances of the original item.
+ * Type: [Boolean]
+ */
+const val COLUMN_RECUR_ISLINKEDINSTANCE = "recur_islinkedinstance"
+
 
 /**
  * Purpose:  This property specifies a color used for displaying the calendar, event, todo, or journal data.
@@ -409,6 +417,7 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_RDATE)  var rdate: String? = null,     //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.2
     @ColumnInfo(name = COLUMN_RECURID) var recurid: String? = null,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
     @ColumnInfo(name = COLUMN_RECUR_ORIGINALICALOBJECTID) var recurOriginalIcalObjectId: Long? = null,
+    @ColumnInfo(name = COLUMN_RECUR_ISLINKEDINSTANCE) var isRecurLinkedInstance: Boolean = false,
 
     @ColumnInfo(name = COLUMN_COLOR) var color: Int? = null,
 
@@ -523,6 +532,18 @@ data class ICalObject(
                 val original = database.getSync(id) ?: return@launch
                 database.deleteRecurringInstances(id)
 
+                val exceptions = original.property.exdate?.split(",") ?: listOf()
+                val recurrenceWithoutExceptions = mutableListOf<Long>()
+                recurrenceWithoutExceptions.addAll(recurrenceList)
+                exceptions.forEach {
+                    try {
+                        val exceptionId = it.toLong()
+                        recurrenceWithoutExceptions.remove(exceptionId)
+                    } catch (e: ClassCastException) {
+                        Log.w("ClassCastRecurrence", "Class cast to Long for recurrence exceptions failed for $it. \n$e")
+                    }
+                }
+
                 recurrenceList.forEach { recurrenceDate ->
 
                     if((original.property.component == Component.VJOURNAL.name && original.property.dtstart == recurrenceDate)
@@ -544,9 +565,7 @@ data class ICalObject(
                     instance.property.eTag = null
                     instance.property.scheduleTag = null
                     instance.property.dirty = false
-
-
-
+                    instance.property.isRecurLinkedInstance = true
 
                     if(instance.property.component == Component.VJOURNAL.name && instance.property.dtstart != null) {
                         instance.property.recurid = when {

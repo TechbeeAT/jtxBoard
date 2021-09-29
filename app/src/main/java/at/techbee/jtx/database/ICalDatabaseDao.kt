@@ -249,7 +249,7 @@ DELETEs by Object
     /**
      * Delete an iCalObject by the object.
      *
-     * @param ids The list of iCalObjects to be deleted.
+     * @param id The iCalObjects to be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
     fun deleteICalObjectsbyId(id: Long)
@@ -409,7 +409,7 @@ DELETEs by Object
 
     // This query returns all IcalObjects that have a specific ICalObjectId in the field for the OriginalIcalObjectId (ie. all generated items for a recurring entry)
     @Transaction
-    @Query("SELECT * from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECUR_ORIGINALICALOBJECTID = :originalId")
+    @Query("SELECT * from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECUR_ORIGINALICALOBJECTID = :originalId AND $COLUMN_RECUR_ISLINKEDINSTANCE = 1")
     fun getRecurInstances(originalId: Long): LiveData<List<ICalObject?>>
 
     @Transaction
@@ -436,7 +436,7 @@ DELETEs by Object
 
 
     @Transaction
-    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECUR_ORIGINALICALOBJECTID = :id")
+    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECUR_ORIGINALICALOBJECTID = :id AND $COLUMN_RECUR_ISLINKEDINSTANCE = 1")
     fun deleteRecurringInstances(id: Long)
 
 

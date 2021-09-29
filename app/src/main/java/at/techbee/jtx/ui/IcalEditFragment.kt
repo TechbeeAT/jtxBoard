@@ -548,14 +548,11 @@ class IcalEditFragment : Fragment() {
             }       // if unsupported just show whatever is there
 
             // if the item has an original Id, the user chose to unlink the recurring instance from the original, the recurring values need to be deleted
-            if(it.recurOriginalIcalObjectId != null) {
-                icalEditViewModel.recurExceptionOriginalId = it.recurOriginalIcalObjectId
-                it.recurOriginalIcalObjectId = null
-                it.recurid = null
+            if(it.isRecurLinkedInstance) {
                 it.rrule = null
                 it.exdate = null
                 it.rdate = null
-                icalEditViewModel.isRecurException = true
+                it.isRecurLinkedInstance = false    // remove the link
             }
 
             // Set the default value of the Classification Chip

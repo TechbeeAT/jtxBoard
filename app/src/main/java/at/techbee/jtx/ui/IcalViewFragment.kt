@@ -132,7 +132,7 @@ class IcalViewFragment : Fragment() {
 
                 // if the item is an instance of a recurring entry, make sure that the user is aware of this
                 val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
-                if(originalId != null) {
+                if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
 
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))

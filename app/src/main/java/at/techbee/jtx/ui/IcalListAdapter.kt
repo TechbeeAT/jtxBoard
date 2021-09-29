@@ -276,10 +276,10 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             }
 
             //recur icon and text
-            if(iCal4ListItem.property.isRecurringInstance || iCal4ListItem.property.isRecurringOriginal) {
+            if((iCal4ListItem.property.isRecurringOriginal) || (iCal4ListItem.property.isRecurringInstance && iCal4ListItem.property.isLinkedRecurringInstance)) {
                 holder.recurIcon.setImageResource(R.drawable.ic_recurring)
                 holder.recurIcon.visibility = View.VISIBLE
-            } else if (iCal4ListItem.property.isRecurringException) {
+            } else if (iCal4ListItem.property.isRecurringInstance && !iCal4ListItem.property.isLinkedRecurringInstance) {
                 holder.recurIcon.setImageResource(R.drawable.ic_recur_exception)
                 holder.recurIcon.visibility = View.VISIBLE
             }
