@@ -532,15 +532,15 @@ data class ICalObject(
                 val original = database.getSync(id) ?: return@launch
                 database.deleteRecurringInstances(id)
 
-                val exceptions = original.property.exdate?.split(",") ?: listOf()
+                val exceptions = original.property.exdate?.split(",")
                 val recurrenceWithoutExceptions = mutableListOf<Long>()
                 recurrenceWithoutExceptions.addAll(recurrenceList)
-                exceptions.forEach {
+                exceptions?.forEach {
                     try {
                         val exceptionId = it.toLong()
                         recurrenceWithoutExceptions.remove(exceptionId)
-                    } catch (e: ClassCastException) {
-                        Log.w("ClassCastRecurrence", "Class cast to Long for recurrence exceptions failed for $it. \n$e")
+                    } catch (e: NumberFormatException) {
+                        Log.w("NumberFormatException", "Class cast to Long for recurrence exceptions failed for $it. \n$e")
                     }
                 }
 

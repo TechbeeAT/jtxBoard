@@ -577,6 +577,7 @@ class IcalEditFragment : Fragment() {
                 )
             )
 
+            updateRRule()
             icalEditViewModel.updateVisibility()
 
 
