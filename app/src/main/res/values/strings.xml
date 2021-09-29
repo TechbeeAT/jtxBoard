@@ -125,7 +125,8 @@
     <string name="view_comments_header">Comments</string>
     <string name="view_attachments_header">Attachments</string>
     <string name="view_recurrence_header">Recurrence</string>
-    <string name="view_reccurrence_note_to_original">This entry is part of a series. You can edit it and unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore. Otherwise please edit the original event.</string>
+    <string name="view_recurrence_note_to_original_dialog_header">Instance of recurring</string>
+    <string name="view_recurrence_note_to_original">This entry is part of a series. You can edit it and unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore. Otherwise please edit the original event.</string>
     <string name="view_fragment_audio_permission">App Permission</string>
     <string name="view_fragment_audio_permission_message">JTX needs the permission in order to record audio. Please grant the permission to use this feature.</string>
     <string name="view_fragment_audio_dialog_add_audio_note">Add Audio Note</string>

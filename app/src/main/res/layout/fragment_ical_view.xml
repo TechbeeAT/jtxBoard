@@ -623,7 +623,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/view_reccurrence_header"
                     app:layout_constraintTop_toBottomOf="@+id/view_reccurrence_items"
-                    tools:text="@string/view_reccurrence_note_to_original" />
+                    tools:text="@string/view_recurrence_note_to_original" />
 
                 <Button
                     android:id="@+id/view_reccurrence_gotooriginal_button"

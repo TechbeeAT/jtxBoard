@@ -129,9 +129,36 @@ class IcalViewFragment : Fragment() {
         icalViewViewModel.editingClicked.observe(viewLifecycleOwner, {
             if (it) {
                 icalViewViewModel.editingClicked.value = false
-                this.findNavController().navigate(
-                        IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value!!)
-                )
+
+                // if the item is an instance of a recurring entry, make sure that the user is aware of this
+                val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
+                if(originalId != null) {
+
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
+                        .setMessage(getString(R.string.view_recurrence_note_to_original))
+                        .setPositiveButton("Continue") { _, _ ->
+                            this.findNavController().navigate(
+                                IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(
+                                    icalViewViewModel.icalEntity.value!!
+                                )
+                            )
+                        }
+                        .setNegativeButton("Go to Original") { _, _ ->
+                            this.findNavController().navigate(
+                                IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
+                                    originalId
+                                )
+                            )
+                        }
+                        .show()
+                } else {
+                    this.findNavController().navigate(
+                        IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(
+                            icalViewViewModel.icalEntity.value!!
+                        )
+                    )
+                }
             }
         })
 
