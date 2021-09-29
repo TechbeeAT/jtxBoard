@@ -199,7 +199,6 @@ class IcalEditFragment : Fragment() {
         }
 
 
-
         binding.editTimezoneSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -548,6 +547,16 @@ class IcalEditFragment : Fragment() {
                 else -> binding.editStatusChip.text = it.status
             }       // if unsupported just show whatever is there
 
+            // if the item has an original Id, the user chose to unlink the recurring instance from the original, the recurring values need to be deleted
+            if(it.recurOriginalIcalObjectId != null) {
+                icalEditViewModel.recurExceptionOriginalId = it.recurOriginalIcalObjectId
+                it.recurOriginalIcalObjectId = null
+                it.recurid = null
+                it.rrule = null
+                it.exdate = null
+                it.rdate = null
+                icalEditViewModel.isRecurException = true
+            }
 
             // Set the default value of the Classification Chip
             binding.editClassificationChip.text =
@@ -570,8 +579,6 @@ class IcalEditFragment : Fragment() {
                     it.dtstartTimezone
                 )
             )
-
-
 
             icalEditViewModel.updateVisibility()
 

@@ -412,6 +412,15 @@ DELETEs by Object
     @Query("SELECT * from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECUR_ORIGINALICALOBJECTID = :originalId")
     fun getRecurInstances(originalId: Long): LiveData<List<ICalObject?>>
 
+    @Transaction
+    @Query("SELECT $COLUMN_EXDATE from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :originalId")
+    fun getRecurExceptions(originalId: Long): String?
+
+    @Transaction
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_EXDATE = :exceptions, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :originalId")
+    fun setRecurExceptions(originalId: Long, exceptions: String)
+
+
 
 
     /*

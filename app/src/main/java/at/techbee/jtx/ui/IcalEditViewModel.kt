@@ -52,6 +52,8 @@ class IcalEditViewModel(
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
 
     var recurrenceList = mutableListOf<Long>()
+    var isRecurException = false
+    var recurExceptionOriginalId: Long? = null
 
     var returnVJournalItemId: MutableLiveData<Long> =
         MutableLiveData<Long>().apply { postValue(0L) }
@@ -112,10 +114,6 @@ class IcalEditViewModel(
     var recurrenceGeneralVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceWeekdaysVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceDayOfMonthVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-
-
-
-
 
 
 
@@ -316,10 +314,10 @@ class IcalEditViewModel(
                 Log.println(Log.INFO, "Subtask", "${subtask2del.summary} deleted")
             }
         }
-        //deleteOldResources()
 
 
         viewModelScope.launch {
+
 
             insertedOrUpdatedItemId = insertOrUpdateICalObject()
             // insert new Categories
@@ -369,6 +367,23 @@ class IcalEditViewModel(
 
             if(recurrenceList.size > 0)
                 ICalObject.recreateRecurring(insertedOrUpdatedItemId, recurrenceList, database, this)
+
+            if(isRecurException && recurExceptionOriginalId != null) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val exDates = mutableListOf<String>()
+                    database.getRecurExceptions(recurExceptionOriginalId!!)?.split(",")?.let {
+                        exDates.addAll(it)
+                    }
+                    if (iCalObjectUpdated.value?.component == Component.VJOURNAL.name)
+                        exDates.add(iCalObjectUpdated.value!!.dtstart.toString())
+                    else if (iCalObjectUpdated.value?.component == Component.VTODO.name)
+                        exDates.add(iCalObjectUpdated.value!!.due.toString())
+                    database.setRecurExceptions(
+                        recurExceptionOriginalId!!,
+                        exDates.joinToString(",")
+                    )
+                }
+            }
 
             returnVJournalItemId.value = insertedOrUpdatedItemId
         }
