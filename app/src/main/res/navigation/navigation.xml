@@ -88,7 +88,9 @@
             app:destination="@id/icalListFragment" />
         <action
             android:id="@+id/action_icalViewFragment_self"
-            app:destination="@id/icalViewFragment" />
+            app:destination="@id/icalViewFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_right"/>
     </fragment>
     <fragment
         android:id="@+id/icalEditFragment"
