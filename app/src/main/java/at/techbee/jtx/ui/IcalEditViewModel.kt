@@ -422,6 +422,8 @@ class IcalEditViewModel(
                 }
 
                 viewModelScope.launch(Dispatchers.IO) {
+
+                    database.deleteRecurringInstances(id)
                     database.deleteICalObjectsbyId(id)
                 }
             }
