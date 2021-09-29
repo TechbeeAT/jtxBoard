@@ -172,7 +172,13 @@ class IcalListViewModel(
         // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
         queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
 
-        queryString += "ORDER BY $COLUMN_DTSTART DESC, $COLUMN_CREATED DESC "
+        when (searchModule) {
+            Module.JOURNAL.name -> queryString += "ORDER BY $COLUMN_DTSTART ASC, $COLUMN_CREATED DESC "
+            Module.NOTE.name -> queryString += "ORDER BY $COLUMN_LAST_MODIFIED DESC, $COLUMN_CREATED DESC "
+            Module.TODO.name -> queryString += "ORDER BY $COLUMN_DUE ASC, $COLUMN_CREATED DESC "
+        }
+
+
 
         Log.println(Log.INFO, "queryString", queryString)
         Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
