@@ -420,6 +420,13 @@ DELETEs by Object
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_EXDATE = :exceptions, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :originalId")
     fun setRecurExceptions(originalId: Long, exceptions: String)
 
+    @Transaction
+    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RRULE IS NULL AND $COLUMN_RECUR_ISLINKEDINSTANCE = 1 AND $COLUMN_RECUR_ORIGINALICALOBJECTID NOT IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT)")
+    fun removeOrphans()
+
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id AND $COLUMN_RRULE IS NOT NULL")
+    fun getRecurringToPopulate(id: Long): ICalObject?
 
 
 

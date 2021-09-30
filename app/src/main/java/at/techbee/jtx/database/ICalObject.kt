@@ -560,6 +560,9 @@ data class ICalObject(
         values.getAsString(COLUMN_COMPLETED_TIMEZONE)
             ?.let { completedTimezone -> this.completedTimezone = completedTimezone }
         values.getAsString(COLUMN_DURATION)?.let { duration -> this.duration = duration }
+        values.getAsString(COLUMN_RRULE)?.let { rrule -> this.rrule = rrule }
+        values.getAsString(COLUMN_RDATE)?.let { rdate -> this.rdate = rdate }
+        values.getAsString(COLUMN_EXDATE)?.let { exdate -> this.exdate = exdate }
         values.getAsString(COLUMN_UID)?.let { uid -> this.uid = uid }
         values.getAsLong(COLUMN_CREATED)?.let { created -> this.created = created }
         values.getAsLong(COLUMN_DTSTAMP)?.let { dtstamp -> this.dtstamp = dtstamp }
@@ -719,122 +722,116 @@ data class ICalObject(
 
         val recurList = getInstancesFromRrule()
 
-            val original = database.getSync(id) ?: return
-            database.deleteRecurringInstances(id)
+        val original = database.getSync(id) ?: return
+        database.deleteRecurringInstances(id)
 
-            val exceptions = original.property.exdate?.split(",")
-            val recurrenceWithoutExceptions = mutableListOf<Long>()
-            recurrenceWithoutExceptions.addAll(recurList)
-            exceptions?.forEach {
-                try {
-                    val exceptionId = it.toLong()
-                    recurrenceWithoutExceptions.remove(exceptionId)
-                } catch (e: NumberFormatException) {
-                    Log.w("NumberFormatException", "Class cast to Long for recurrence exceptions failed for $it. \n$e")
-                }
-            }
-
-            recurList.forEach { recurrenceDate ->
-
-                if((original.property.component == Component.VJOURNAL.name && original.property.dtstart == recurrenceDate)
-                    || (original.property.component == Component.VTODO.name && original.property.due == recurrenceDate))
-                    return@forEach    // skip entry as it is the original event
-
-                val instance = original.copy()
-                instance.property.id = 0L
-                instance.property.recurOriginalIcalObjectId = id
-                instance.property.uid = generateNewUID()
-                instance.property.dtstamp = System.currentTimeMillis()
-                instance.property.created = System.currentTimeMillis()
-                instance.property.lastModified = System.currentTimeMillis()
-                instance.property.rrule = null
-                instance.property.rdate = null
-                instance.property.exdate = null
-                instance.property.sequence = 0
-                instance.property.fileName = null
-                instance.property.eTag = null
-                instance.property.scheduleTag = null
-                instance.property.dirty = false
-                instance.property.isRecurLinkedInstance = true
-
-                if(instance.property.component == Component.VJOURNAL.name && instance.property.dtstart != null) {
-                    instance.property.recurid = when {
-                        instance.property.dtstartTimezone == "ALLDAY" -> DtStart(Date(instance.property.dtstart!!)).value
-                        instance.property.dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dtstart!!)).value
-                        else -> {
-                            val timezone =
-                                TimeZoneRegistryFactory.getInstance().createRegistry()
-                                    .getTimeZone(instance.property.dtstartTimezone)
-                            val withTimezone =
-                                DtStart(DateTime(instance.property.dtstart!!))
-                            withTimezone.timeZone = timezone
-                            withTimezone.value
-                        }
-                    }
-                } else if(instance.property.component == Component.VTODO.name && instance.property.due != null) {
-                    instance.property.recurid = when {
-                        instance.property.dueTimezone == "ALLDAY" -> DtStart(Date(instance.property.due!!)).value
-                        instance.property.dueTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.due!!)).value
-                        else -> {
-                            val timezone =
-                                TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(instance.property.dueTimezone)
-                            val withTimezone = DtStart(DateTime(instance.property.due!!))
-                            withTimezone.timeZone = timezone
-                            withTimezone.value
-                        }
-                    }
-                }
-                if(instance.property.component == Component.VTODO.name)
-                    instance.property.due = recurrenceDate
-                else if(instance.property.component == Component.VJOURNAL.name)
-                    instance.property.dtstart = recurrenceDate
-
-                val instanceId = database.insertICalObjectSync(instance.property)
-
-                instance.categories?.forEach {
-                    it.categoryId = 0L
-                    it.icalObjectId = instanceId
-                    database.insertCategorySync(it)
-                }
-                instance.comments?.forEach {
-                    it.commentId = 0L
-                    it.icalObjectId = instanceId
-                    database.insertCommentSync(it)
-                }
-                instance.attachments?.forEach {
-                    it.attachmentId = 0L
-                    it.icalObjectId = instanceId
-                    database.insertAttachmentSync(it)
-                }
-                instance.organizer.apply {
-                    this?.organizerId = 0L
-                    this?.icalObjectId = instanceId
-                    this?.let { database.insertOrganizerSync(it) }
-                }
-                instance.attendees?.forEach {
-                    it.attendeeId = 0L
-                    it.icalObjectId = instanceId
-                    database.insertAttendeeSync(it)
-                }
-                instance.resources?.forEach {
-                    it.resourceId = 0L
-                    it.icalObjectId = instanceId
-                    database.insertResourceSync(it)
-                }
-
-                //TODO: How to deal with relatedTo?
-
-                //TODO Check further attributes!
-                //TODO take care of list attributes!
-                //TODO mark recurring events in list
-                //TODO ask user when opening
-                //TODO show recurring in view
-
+        val exceptions = original.property.exdate?.split(",")
+        val recurrenceWithoutExceptions = mutableListOf<Long>()
+        recurrenceWithoutExceptions.addAll(recurList)
+        exceptions?.forEach {
+            try {
+                val exceptionId = it.toLong()
+                recurrenceWithoutExceptions.remove(exceptionId)
+            } catch (e: NumberFormatException) {
+                Log.w("NumberFormatException", "Class cast to Long for recurrence exceptions failed for $it. \n$e")
             }
         }
 
+        recurList.forEach { recurrenceDate ->
 
+            if((original.property.component == Component.VJOURNAL.name && original.property.dtstart == recurrenceDate)
+                || (original.property.component == Component.VTODO.name && original.property.due == recurrenceDate))
+                return@forEach    // skip entry as it is the original event
 
+            val instance = original.copy()
+            instance.property.id = 0L
+            instance.property.recurOriginalIcalObjectId = id
+            instance.property.uid = generateNewUID()
+            instance.property.dtstamp = System.currentTimeMillis()
+            instance.property.created = System.currentTimeMillis()
+            instance.property.lastModified = System.currentTimeMillis()
+            instance.property.rrule = null
+            instance.property.rdate = null
+            instance.property.exdate = null
+            instance.property.sequence = 0
+            instance.property.fileName = null
+            instance.property.eTag = null
+            instance.property.scheduleTag = null
+            instance.property.dirty = false
+            instance.property.isRecurLinkedInstance = true
+
+            if(instance.property.component == Component.VJOURNAL.name && instance.property.dtstart != null) {
+                instance.property.recurid = when {
+                    instance.property.dtstartTimezone == "ALLDAY" -> DtStart(Date(instance.property.dtstart!!)).value
+                    instance.property.dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dtstart!!)).value
+                    else -> {
+                        val timezone =
+                            TimeZoneRegistryFactory.getInstance().createRegistry()
+                                .getTimeZone(instance.property.dtstartTimezone)
+                        val withTimezone =
+                            DtStart(DateTime(instance.property.dtstart!!))
+                        withTimezone.timeZone = timezone
+                        withTimezone.value
+                    }
+                }
+            } else if(instance.property.component == Component.VTODO.name && instance.property.due != null) {
+                instance.property.recurid = when {
+                    instance.property.dueTimezone == "ALLDAY" -> DtStart(Date(instance.property.due!!)).value
+                    instance.property.dueTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.due!!)).value
+                    else -> {
+                        val timezone =
+                            TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(instance.property.dueTimezone)
+                        val withTimezone = DtStart(DateTime(instance.property.due!!))
+                        withTimezone.timeZone = timezone
+                        withTimezone.value
+                    }
+                }
+            }
+            if(instance.property.component == Component.VTODO.name)
+                instance.property.due = recurrenceDate
+            else if(instance.property.component == Component.VJOURNAL.name)
+                instance.property.dtstart = recurrenceDate
+
+            val instanceId = database.insertICalObjectSync(instance.property)
+
+            instance.categories?.forEach {
+                it.categoryId = 0L
+                it.icalObjectId = instanceId
+                database.insertCategorySync(it)
+            }
+            instance.comments?.forEach {
+                it.commentId = 0L
+                it.icalObjectId = instanceId
+                database.insertCommentSync(it)
+            }
+            instance.attachments?.forEach {
+                it.attachmentId = 0L
+                it.icalObjectId = instanceId
+                database.insertAttachmentSync(it)
+            }
+            instance.organizer.apply {
+                this?.organizerId = 0L
+                this?.icalObjectId = instanceId
+                this?.let { database.insertOrganizerSync(it) }
+            }
+            instance.attendees?.forEach {
+                it.attendeeId = 0L
+                it.icalObjectId = instanceId
+                database.insertAttendeeSync(it)
+            }
+            instance.resources?.forEach {
+                it.resourceId = 0L
+                it.icalObjectId = instanceId
+                database.insertResourceSync(it)
+            }
+
+            //TODO: How to deal with relatedTo?
+
+            //TODO Check further attributes!
+            //TODO Check also rdate
+
+        }
+    }
 }
 
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals

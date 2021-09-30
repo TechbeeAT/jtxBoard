@@ -22,6 +22,7 @@ import at.techbee.jtx.database.properties.*
 import java.io.File
 import java.io.IOException
 import android.webkit.MimeTypeMap
+import java.lang.NumberFormatException
 
 
 private const val CODE_ICALOBJECTS_DIR = 1
@@ -165,6 +166,10 @@ class SyncContentProvider : ContentProvider() {
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
 
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_DIR)
+            database.removeOrphans()    // remove orpahns (recurring instances of a deleted original item)
+
+
         return count
     }
 
@@ -218,6 +223,9 @@ class SyncContentProvider : ContentProvider() {
 
         if(sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR)
             storeBinaryAttachmentInDir(id)
+
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true))
+            rebuildRecurring(id)
 
         return ContentUris.withAppendedId(uri, id)
     }
@@ -419,6 +427,19 @@ class SyncContentProvider : ContentProvider() {
         //val count = database.updateRAW(updateQuery)
         database.updateRAW(updateQuery)
         context!!.contentResolver.notifyChange(uri, null)
+
+        // updates on recurring instances through bulk updates should not occur, only updates on single items will update the recurring instances
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) == true || values.containsKey(COLUMN_RDATE) == true || values.containsKey(COLUMN_EXDATE) == true))
+        {
+            try {
+                val id: Long = uri.pathSegments[1].toLong()
+                rebuildRecurring(id)
+            } catch (e: NumberFormatException) {
+                Log.d("pathSegments[1]", "Could not convert path segment to Long. \n$e")
+
+            }
+        }
+
         return 1
     }
 
@@ -478,5 +499,14 @@ class SyncContentProvider : ContentProvider() {
             Log.e("SyncContentProvider", "Failed to access storage\n$e")
         }
     }
+
+
+    private fun rebuildRecurring(id: Long) {
+
+        // rebuild recurring
+        database.getRecurringToPopulate(id)?.recreateRecurring(database)
+
+    }
+
 }
 
