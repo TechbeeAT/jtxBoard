@@ -366,7 +366,10 @@ class IcalEditViewModel(
             }
 
             if(recurrenceList.size > 0)
-                iCalObjectUpdated.value?.recreateRecurring(database, this)
+                launch(Dispatchers.IO) {
+                    iCalObjectUpdated.value?.recreateRecurring(database)
+                }
+
 
             if(iCalObjectUpdated.value?.recurOriginalIcalObjectId != null && iCalObjectUpdated.value?.isRecurLinkedInstance == false) {
                 viewModelScope.launch(Dispatchers.IO) {

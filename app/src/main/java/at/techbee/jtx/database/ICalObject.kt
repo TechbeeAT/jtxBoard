@@ -715,12 +715,11 @@ data class ICalObject(
 
 
 
-    fun recreateRecurring(database: ICalDatabaseDao, scope: CoroutineScope) {
+    fun recreateRecurring(database: ICalDatabaseDao) {
 
         val recurList = getInstancesFromRrule()
 
-        scope.launch(Dispatchers.IO) {
-            val original = database.getSync(id) ?: return@launch
+            val original = database.getSync(id) ?: return
             database.deleteRecurringInstances(id)
 
             val exceptions = original.property.exdate?.split(",")
@@ -833,7 +832,7 @@ data class ICalObject(
 
             }
         }
-    }
+
 
 
 }
