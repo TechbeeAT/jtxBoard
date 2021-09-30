@@ -15,16 +15,17 @@ import android.provider.BaseColumns
 import android.util.Log
 import androidx.room.*
 import at.techbee.jtx.R
+import at.techbee.jtx.convertLongToDateString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
-import net.fortuna.ical4j.model.DateTime
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import net.fortuna.ical4j.model.property.DtStart
-import java.lang.ClassCastException
 import java.util.*
+import java.util.Calendar
+import java.util.TimeZone
 import kotlin.IllegalArgumentException
 
 
@@ -523,126 +524,6 @@ data class ICalObject(
 
             }
         }
-
-
-        fun recreateRecurring(id: Long, recurrenceList: List<Long>, database: ICalDatabaseDao, scope: CoroutineScope) {
-
-
-            scope.launch(Dispatchers.IO) {
-                val original = database.getSync(id) ?: return@launch
-                database.deleteRecurringInstances(id)
-
-                val exceptions = original.property.exdate?.split(",")
-                val recurrenceWithoutExceptions = mutableListOf<Long>()
-                recurrenceWithoutExceptions.addAll(recurrenceList)
-                exceptions?.forEach {
-                    try {
-                        val exceptionId = it.toLong()
-                        recurrenceWithoutExceptions.remove(exceptionId)
-                    } catch (e: NumberFormatException) {
-                        Log.w("NumberFormatException", "Class cast to Long for recurrence exceptions failed for $it. \n$e")
-                    }
-                }
-
-                recurrenceList.forEach { recurrenceDate ->
-
-                    if((original.property.component == Component.VJOURNAL.name && original.property.dtstart == recurrenceDate)
-                        || (original.property.component == Component.VTODO.name && original.property.due == recurrenceDate))
-                            return@forEach    // skip entry as it is the original event
-
-                    val instance = original.copy()
-                    instance.property.id = 0L
-                    instance.property.recurOriginalIcalObjectId = id
-                    instance.property.uid = generateNewUID()
-                    instance.property.dtstamp = System.currentTimeMillis()
-                    instance.property.created = System.currentTimeMillis()
-                    instance.property.lastModified = System.currentTimeMillis()
-                    instance.property.rrule = null
-                    instance.property.rdate = null
-                    instance.property.exdate = null
-                    instance.property.sequence = 0
-                    instance.property.fileName = null
-                    instance.property.eTag = null
-                    instance.property.scheduleTag = null
-                    instance.property.dirty = false
-                    instance.property.isRecurLinkedInstance = true
-
-                    if(instance.property.component == Component.VJOURNAL.name && instance.property.dtstart != null) {
-                        instance.property.recurid = when {
-                            instance.property.dtstartTimezone == "ALLDAY" -> DtStart(Date(instance.property.dtstart!!)).value
-                            instance.property.dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dtstart!!)).value
-                            else -> {
-                                val timezone =
-                                    TimeZoneRegistryFactory.getInstance().createRegistry()
-                                        .getTimeZone(instance.property.dtstartTimezone)
-                                val withTimezone =
-                                    DtStart(DateTime(instance.property.dtstart!!))
-                                withTimezone.timeZone = timezone
-                                withTimezone.value
-                            }
-                        }
-                    } else if(instance.property.component == Component.VTODO.name && instance.property.due != null) {
-                        instance.property.recurid = when {
-                            instance.property.dueTimezone == "ALLDAY" -> DtStart(Date(instance.property.due!!)).value
-                            instance.property.dueTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.due!!)).value
-                            else -> {
-                                val timezone =
-                                    TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(instance.property.dueTimezone)
-                                val withTimezone = DtStart(DateTime(instance.property.due!!))
-                                withTimezone.timeZone = timezone
-                                withTimezone.value
-                            }
-                        }
-                    }
-                    if(instance.property.component == Component.VTODO.name)
-                        instance.property.due = recurrenceDate
-                    else if(instance.property.component == Component.VJOURNAL.name)
-                        instance.property.dtstart = recurrenceDate
-
-                    val instanceId = database.insertICalObjectSync(instance.property)
-
-                    instance.categories?.forEach {
-                        it.categoryId = 0L
-                        it.icalObjectId = instanceId
-                        database.insertCategorySync(it)
-                    }
-                    instance.comments?.forEach {
-                        it.commentId = 0L
-                        it.icalObjectId = instanceId
-                        database.insertCommentSync(it)
-                    }
-                    instance.attachments?.forEach {
-                        it.attachmentId = 0L
-                        it.icalObjectId = instanceId
-                        database.insertAttachmentSync(it)
-                    }
-                    instance.organizer.apply {
-                        this?.organizerId = 0L
-                        this?.icalObjectId = instanceId
-                        this?.let { database.insertOrganizerSync(it) }
-                    }
-                    instance.attendees?.forEach {
-                        it.attendeeId = 0L
-                        it.icalObjectId = instanceId
-                        database.insertAttendeeSync(it)
-                    }
-                    instance.resources?.forEach {
-                        it.resourceId = 0L
-                        it.icalObjectId = instanceId
-                        database.insertResourceSync(it)
-                    }
-
-                    //TODO: How to deal with relatedTo?
-
-                    //TODO Check further attributes!
-                    //TODO take care of list attributes!
-                    //TODO mark recurring events in list
-                    //TODO ask user when opening
-                    //TODO show recurring in view
-
-                }
-            }
-        }
     }
 
 
@@ -735,6 +616,223 @@ data class ICalObject(
         dirty = true
 
         return this
+    }
+
+
+
+    fun getInstancesFromRrule(): List<Long> {
+
+
+
+        val recurList = mutableListOf<Long>()
+
+        try {
+
+            val rRule = Recur(this.rrule)
+
+            val interval = rRule.interval
+            val count = rRule.count
+
+
+            val start = Calendar.getInstance()
+            start.timeInMillis = when(this.component) {
+                Component.VJOURNAL.name -> this.dtstart ?: return emptyList()
+                Component.VTODO.name -> this.due ?: return emptyList()
+                else -> return emptyList()
+            }
+
+            if(this.component == Component.VJOURNAL.name && this.dtstartTimezone != null && this.dtstartTimezone != "ALLDAY")
+                start.timeZone = TimeZone.getTimeZone(this.dtstartTimezone)
+            else if(this.component == Component.VTODO.name && this.dueTimezone != null && this.dueTimezone != "ALLDAY")
+                start.timeZone = TimeZone.getTimeZone(this.dueTimezone)
+            //TODO: Continue here checking the timezone
+
+
+            when (rRule.frequency)
+            {
+                Recur.Frequency.DAILY ->
+                {
+                    for(i in 1..count) {
+                        recurList.add(start.timeInMillis)
+                        Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
+                        start.add(Calendar.DATE, interval)
+                    }
+                }
+                Recur.Frequency.WEEKLY -> {
+
+                    val selectedWeekdays = mutableListOf<Int>()
+
+                    rRule.dayList.forEach { day ->
+                        when(day.day) {
+                            WeekDay.Day.MO -> selectedWeekdays.add(Calendar.MONDAY)
+                            WeekDay.Day.TU -> selectedWeekdays.add(Calendar.TUESDAY)
+                            WeekDay.Day.WE -> selectedWeekdays.add(Calendar.WEDNESDAY)
+                            WeekDay.Day.TH -> selectedWeekdays.add(Calendar.THURSDAY)
+                            WeekDay.Day.FR -> selectedWeekdays.add(Calendar.FRIDAY)
+                            WeekDay.Day.SA -> selectedWeekdays.add(Calendar.SATURDAY)
+                            WeekDay.Day.SU -> selectedWeekdays.add(Calendar.SUNDAY)
+                            else -> Log.w("LoadRRule", "Error on processing day list ($day)")
+                        }
+                    }
+
+                    for(i in 1..count) {
+                        val startWeekloop = Calendar.getInstance().apply { timeInMillis = start.timeInMillis }
+                        for (j in 1..7){
+                            if(startWeekloop.get(Calendar.DAY_OF_WEEK) in selectedWeekdays) {
+                                recurList.add(startWeekloop.timeInMillis)
+                                Log.d("calculatedDay", convertLongToDateString(startWeekloop.timeInMillis))
+                            }
+                            startWeekloop.add(Calendar.DATE, 1)
+                        }
+                        start.add(Calendar.WEEK_OF_YEAR, interval)
+                    }
+                }
+                Recur.Frequency.MONTHLY ->
+                {
+                    for(i in 1..count) {
+                        start.set(Calendar.DAY_OF_MONTH, rRule.monthDayList.get(0)?:1)
+                        recurList.add(start.timeInMillis)
+                        Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
+                        start.add(Calendar.MONTH, interval)
+                    }
+                }
+                Recur.Frequency.YEARLY ->
+                {
+                    for(i in 1..count) {
+                        recurList.add(start.timeInMillis)
+                        Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
+                        start.add(Calendar.YEAR, interval)
+                    }
+                }
+                else -> Log.w("LoadRRule", "Unsupported recurrence frequency found (${rRule.frequency}")
+            }
+        } catch (e: Exception) {
+            Log.w("LoadRRule", "Failed to preset UI according to provided RRule\n$e")
+        }
+
+        return recurList
+    }
+
+
+
+    fun recreateRecurring(database: ICalDatabaseDao, scope: CoroutineScope) {
+
+        val recurList = getInstancesFromRrule()
+
+        scope.launch(Dispatchers.IO) {
+            val original = database.getSync(id) ?: return@launch
+            database.deleteRecurringInstances(id)
+
+            val exceptions = original.property.exdate?.split(",")
+            val recurrenceWithoutExceptions = mutableListOf<Long>()
+            recurrenceWithoutExceptions.addAll(recurList)
+            exceptions?.forEach {
+                try {
+                    val exceptionId = it.toLong()
+                    recurrenceWithoutExceptions.remove(exceptionId)
+                } catch (e: NumberFormatException) {
+                    Log.w("NumberFormatException", "Class cast to Long for recurrence exceptions failed for $it. \n$e")
+                }
+            }
+
+            recurList.forEach { recurrenceDate ->
+
+                if((original.property.component == Component.VJOURNAL.name && original.property.dtstart == recurrenceDate)
+                    || (original.property.component == Component.VTODO.name && original.property.due == recurrenceDate))
+                    return@forEach    // skip entry as it is the original event
+
+                val instance = original.copy()
+                instance.property.id = 0L
+                instance.property.recurOriginalIcalObjectId = id
+                instance.property.uid = generateNewUID()
+                instance.property.dtstamp = System.currentTimeMillis()
+                instance.property.created = System.currentTimeMillis()
+                instance.property.lastModified = System.currentTimeMillis()
+                instance.property.rrule = null
+                instance.property.rdate = null
+                instance.property.exdate = null
+                instance.property.sequence = 0
+                instance.property.fileName = null
+                instance.property.eTag = null
+                instance.property.scheduleTag = null
+                instance.property.dirty = false
+                instance.property.isRecurLinkedInstance = true
+
+                if(instance.property.component == Component.VJOURNAL.name && instance.property.dtstart != null) {
+                    instance.property.recurid = when {
+                        instance.property.dtstartTimezone == "ALLDAY" -> DtStart(Date(instance.property.dtstart!!)).value
+                        instance.property.dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dtstart!!)).value
+                        else -> {
+                            val timezone =
+                                TimeZoneRegistryFactory.getInstance().createRegistry()
+                                    .getTimeZone(instance.property.dtstartTimezone)
+                            val withTimezone =
+                                DtStart(DateTime(instance.property.dtstart!!))
+                            withTimezone.timeZone = timezone
+                            withTimezone.value
+                        }
+                    }
+                } else if(instance.property.component == Component.VTODO.name && instance.property.due != null) {
+                    instance.property.recurid = when {
+                        instance.property.dueTimezone == "ALLDAY" -> DtStart(Date(instance.property.due!!)).value
+                        instance.property.dueTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.due!!)).value
+                        else -> {
+                            val timezone =
+                                TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(instance.property.dueTimezone)
+                            val withTimezone = DtStart(DateTime(instance.property.due!!))
+                            withTimezone.timeZone = timezone
+                            withTimezone.value
+                        }
+                    }
+                }
+                if(instance.property.component == Component.VTODO.name)
+                    instance.property.due = recurrenceDate
+                else if(instance.property.component == Component.VJOURNAL.name)
+                    instance.property.dtstart = recurrenceDate
+
+                val instanceId = database.insertICalObjectSync(instance.property)
+
+                instance.categories?.forEach {
+                    it.categoryId = 0L
+                    it.icalObjectId = instanceId
+                    database.insertCategorySync(it)
+                }
+                instance.comments?.forEach {
+                    it.commentId = 0L
+                    it.icalObjectId = instanceId
+                    database.insertCommentSync(it)
+                }
+                instance.attachments?.forEach {
+                    it.attachmentId = 0L
+                    it.icalObjectId = instanceId
+                    database.insertAttachmentSync(it)
+                }
+                instance.organizer.apply {
+                    this?.organizerId = 0L
+                    this?.icalObjectId = instanceId
+                    this?.let { database.insertOrganizerSync(it) }
+                }
+                instance.attendees?.forEach {
+                    it.attendeeId = 0L
+                    it.icalObjectId = instanceId
+                    database.insertAttendeeSync(it)
+                }
+                instance.resources?.forEach {
+                    it.resourceId = 0L
+                    it.icalObjectId = instanceId
+                    database.insertResourceSync(it)
+                }
+
+                //TODO: How to deal with relatedTo?
+
+                //TODO Check further attributes!
+                //TODO take care of list attributes!
+                //TODO mark recurring events in list
+                //TODO ask user when opening
+                //TODO show recurring in view
+
+            }
+        }
     }
 
 

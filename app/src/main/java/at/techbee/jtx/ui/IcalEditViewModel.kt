@@ -318,6 +318,8 @@ class IcalEditViewModel(
 
 
             insertedOrUpdatedItemId = insertOrUpdateICalObject()
+            iCalObjectUpdated.value!!.id = insertedOrUpdatedItemId
+
             // insert new Categories
             categoryUpdated.forEach { newCategory ->
                 newCategory.icalObjectId = insertedOrUpdatedItemId
@@ -364,7 +366,7 @@ class IcalEditViewModel(
             }
 
             if(recurrenceList.size > 0)
-                ICalObject.recreateRecurring(insertedOrUpdatedItemId, recurrenceList, database, this)
+                iCalObjectUpdated.value?.recreateRecurring(database, this)
 
             if(iCalObjectUpdated.value?.recurOriginalIcalObjectId != null && iCalObjectUpdated.value?.isRecurLinkedInstance == false) {
                 viewModelScope.launch(Dispatchers.IO) {

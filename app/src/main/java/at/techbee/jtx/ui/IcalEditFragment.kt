@@ -1959,7 +1959,6 @@ class IcalEditFragment : Fragment() {
                 if(dayList.isNotEmpty())
                     recurBuilder.dayList(dayList)
             }
-
             RECURRENCE_MODE_MONTH -> {
                 recurBuilder.frequency(Recur.Frequency.MONTHLY)
                 val monthDayList = NumberList()
@@ -1967,7 +1966,7 @@ class IcalEditFragment : Fragment() {
                 recurBuilder.monthDayList(monthDayList)
             }
             RECURRENCE_MODE_YEAR -> {
-                recurBuilder.frequency(Recur.Frequency.MONTHLY)
+                recurBuilder.frequency(Recur.Frequency.YEARLY)
             }
             else -> return
         }
@@ -1977,8 +1976,29 @@ class IcalEditFragment : Fragment() {
 
         Log.d("recur", recur.toString())
 
-        calculateOccurrences()    // this updates icalEditViewModel.recurrenceList
+        //store calculated rRule
+        if(icalEditViewModel.recurrenceChecked.value == true)
+            icalEditViewModel.iCalObjectUpdated.value?.rrule = recur.toString()
+        else
+            icalEditViewModel.iCalObjectUpdated.value?.rrule = null
 
+
+        // update list
+        icalEditViewModel.recurrenceList.clear()
+
+        if (icalEditViewModel.iCalEntity.property.module == Module.NOTE.name) {
+            Toast.makeText(requireContext(),"Recurrence can not be used for notes!",Toast.LENGTH_LONG).show()
+            return
+        } else if(icalEditViewModel.iCalEntity.property.module == Module.JOURNAL.name && icalEditViewModel.iCalEntity.property.dtstart == null) {
+            Toast.makeText(requireContext(),"Recurrence requires a start-date to be set!",Toast.LENGTH_LONG).show()
+            return
+        } else if(icalEditViewModel.iCalEntity.property.module == Module.TODO.name && icalEditViewModel.iCalEntity.property.due == null) {
+            Toast.makeText(requireContext(),"Recurrence requires a due-date to be set!",Toast.LENGTH_LONG).show()
+            return
+        }
+
+        //UpdateUI
+        icalEditViewModel.recurrenceList.addAll(icalEditViewModel.iCalEntity.property.getInstancesFromRrule())
 
         var lastOccurrenceString = convertLongToFullDateString(icalEditViewModel.recurrenceList.lastOrNull())
         if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY")
@@ -1995,114 +2015,8 @@ class IcalEditFragment : Fragment() {
         binding.editFragmentIcalEditRecur?.editRecurLastOccurenceItem?.text = lastOccurrenceString
         binding.editFragmentIcalEditRecur?.editRecurAllOccurencesItems?.text = allOccurrencesString
 
-        if(icalEditViewModel.recurrenceChecked.value == true)
-            icalEditViewModel.iCalObjectUpdated.value?.rrule = recur.toString()
-        else
-            icalEditViewModel.iCalObjectUpdated.value?.rrule = null
     }
 
-    private fun calculateOccurrences() {
-
-        icalEditViewModel.recurrenceList.clear()
-
-        if (icalEditViewModel.iCalEntity.property.module == Module.NOTE.name) {
-            Toast.makeText(requireContext(),"Recurrence can not be used for notes!",Toast.LENGTH_LONG).show()
-            return
-        } else if(icalEditViewModel.iCalEntity.property.module == Module.JOURNAL.name && icalEditViewModel.iCalEntity.property.dtstart == null) {
-            Toast.makeText(requireContext(),"Recurrence requires a start-date to be set!",Toast.LENGTH_LONG).show()
-            return
-        } else if(icalEditViewModel.iCalEntity.property.module == Module.TODO.name && icalEditViewModel.iCalEntity.property.due == null) {
-            Toast.makeText(requireContext(),"Recurrence requires a due-date to be set!",Toast.LENGTH_LONG).show()
-            return
-        }
-
-
-        val interval = binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1
-        val count = binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1
-        val monthDay = binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.value ?: 1
-
-        val selectedWeekdays = mutableListOf<Int>()
-        if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true) ||
-            (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true))
-            selectedWeekdays.add(Calendar.MONDAY)
-        if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true) ||
-            (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true))
-            selectedWeekdays.add(Calendar.TUESDAY)
-        if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true) ||
-            (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true))
-            selectedWeekdays.add(Calendar.WEDNESDAY)
-        if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true) ||
-            (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true))
-            selectedWeekdays.add(Calendar.THURSDAY)
-        if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true) ||
-            (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true))
-            selectedWeekdays.add(Calendar.FRIDAY)
-        if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true) ||
-            (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true))
-            selectedWeekdays.add(Calendar.SATURDAY)
-        if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true) ||
-            (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true))
-            selectedWeekdays.add(Calendar.SUNDAY)
-
-
-        val start = Calendar.getInstance()
-        start.timeInMillis = when(icalEditViewModel.iCalEntity.property.component) {
-            Component.VJOURNAL.name -> icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: return
-            Component.VTODO.name -> icalEditViewModel.iCalObjectUpdated.value?.due ?: return
-            else -> return
-        }
-
-
-        if(icalEditViewModel.iCalEntity.property.component == Component.VJOURNAL.name && icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != null && icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY")
-            start.timeZone = TimeZone.getTimeZone(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)
-        else if(icalEditViewModel.iCalEntity.property.component == Component.VTODO.name && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone != null && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone != "ALLDAY")
-            start.timeZone = TimeZone.getTimeZone(icalEditViewModel.iCalObjectUpdated.value?.dueTimezone)
-//TODO: Continue here checking the timezone
-
-
-        when (binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.selectedItemPosition)
-        {
-            RECURRENCE_MODE_DAY ->
-            {
-                for(i in 1..count) {
-                    icalEditViewModel.recurrenceList.add(start.timeInMillis)
-                    Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
-                    start.add(Calendar.DATE, interval)
-                }
-            }
-            RECURRENCE_MODE_WEEK ->
-            {
-                for(i in 1..count) {
-                    val startWeekloop = Calendar.getInstance().apply { timeInMillis = start.timeInMillis }
-                    for (j in 1..6){
-                        if(startWeekloop.get(Calendar.DAY_OF_WEEK) in selectedWeekdays) {
-                            icalEditViewModel.recurrenceList.add(startWeekloop.timeInMillis)
-                            Log.d("calculatedDay", convertLongToDateString(startWeekloop.timeInMillis))
-                        }
-                        startWeekloop.add(Calendar.DATE, 1)
-                    }
-                    start.add(Calendar.WEEK_OF_YEAR, interval)
-                }
-            }
-            RECURRENCE_MODE_MONTH ->
-            {
-                for(i in 1..count) {
-                    start.set(Calendar.DAY_OF_MONTH, monthDay)
-                    icalEditViewModel.recurrenceList.add(start.timeInMillis)
-                    Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
-                    start.add(Calendar.MONTH, interval)
-                }
-            }
-            RECURRENCE_MODE_YEAR ->
-            {
-                for(i in 1..count) {
-                    icalEditViewModel.recurrenceList.add(start.timeInMillis)
-                    Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
-                    start.add(Calendar.YEAR, interval)
-                }
-            }
-        }
-    }
 
     /**
      * This function makes sure that the soft keyboard gets closed
