@@ -563,6 +563,7 @@ data class ICalObject(
         values.getAsString(COLUMN_RRULE)?.let { rrule -> this.rrule = rrule }
         values.getAsString(COLUMN_RDATE)?.let { rdate -> this.rdate = rdate }
         values.getAsString(COLUMN_EXDATE)?.let { exdate -> this.exdate = exdate }
+        values.getAsString(COLUMN_RECURID)?.let { recurid -> this.recurid = recurid }
         values.getAsString(COLUMN_UID)?.let { uid -> this.uid = uid }
         values.getAsLong(COLUMN_CREATED)?.let { created -> this.created = created }
         values.getAsLong(COLUMN_DTSTAMP)?.let { dtstamp -> this.dtstamp = dtstamp }
@@ -624,8 +625,6 @@ data class ICalObject(
 
 
     fun getInstancesFromRrule(): List<Long> {
-
-
 
         val recurList = mutableListOf<Long>()
 
@@ -713,6 +712,31 @@ data class ICalObject(
             Log.w("LoadRRule", "Failed to preset UI according to provided RRule\n$e")
         }
 
+        //now remove exceptions
+        val exceptions = this.exdate?.split(",")
+        exceptions?.forEach {
+            try {
+                val exception = it.toLong()
+                recurList.remove(exception)
+            } catch (e: NumberFormatException) {
+                Log.w("NumberFormatException", "Class cast to Long for recurrence exceptions failed for $it. \n$e")
+            }
+        }
+
+        //now add additions (this is not in use in jtx, but can theoretically come through the sync
+        val additions = this.rdate?.split(",")
+        additions?.forEach {
+            try {
+                val addition = it.toLong()
+                recurList.remove(addition)
+            } catch (e: NumberFormatException) {
+                Log.w("NumberFormatException", "Class cast to Long for recurrence addition failed for $it. \n$e")
+            }
+        }
+
+
+
+
         return recurList
     }
 
@@ -720,24 +744,11 @@ data class ICalObject(
 
     fun recreateRecurring(database: ICalDatabaseDao) {
 
-        val recurList = getInstancesFromRrule()
-
         val original = database.getSync(id) ?: return
         database.deleteRecurringInstances(id)
 
-        val exceptions = original.property.exdate?.split(",")
-        val recurrenceWithoutExceptions = mutableListOf<Long>()
-        recurrenceWithoutExceptions.addAll(recurList)
-        exceptions?.forEach {
-            try {
-                val exceptionId = it.toLong()
-                recurrenceWithoutExceptions.remove(exceptionId)
-            } catch (e: NumberFormatException) {
-                Log.w("NumberFormatException", "Class cast to Long for recurrence exceptions failed for $it. \n$e")
-            }
-        }
 
-        recurList.forEach { recurrenceDate ->
+        getInstancesFromRrule().forEach { recurrenceDate ->
 
             if((original.property.component == Component.VJOURNAL.name && original.property.dtstart == recurrenceDate)
                 || (original.property.component == Component.VTODO.name && original.property.due == recurrenceDate))
