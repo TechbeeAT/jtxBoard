@@ -34,8 +34,7 @@ import com.google.android.gms.ads.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.gms.ads.rewarded.RewardItem
-
-
+import net.fortuna.ical4j.util.MapTimeZoneCache
 
 
 // this is necessary for the app permission, 100  and 200 ist just a freely chosen value
@@ -79,6 +78,10 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         setToolbarText("Board")
 
         setSupportActionBar(toolbar)
+
+        // necessary for ical4j
+        System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
+
 
         setUpDrawer()
         checkThemeSetting()

@@ -421,6 +421,40 @@ class ICalObjectTest {
     }
 
     @Test
+    fun getInstancesFromRrule_Journal_DAILY_withTimezone() {
+
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622494800000L
+            this.dtstartTimezone = "Europe/Vienna"
+            this.rrule = "FREQ=DAILY;COUNT=4;INTERVAL=4"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(4,recurList.size)
+        assertEquals(1622494800000L, recurList[0])
+        assertEquals(1622840400000L, recurList[1])
+        assertEquals(1623186000000L, recurList[2])
+        assertEquals(1623531600000L, recurList[3])
+    }
+
+    @Test
+    fun getInstancesFromRrule_Journal_DAILY_withAllday() {
+
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622494800000L
+            this.dtstartTimezone = "ALLDAY"
+            this.rrule = "FREQ=DAILY;COUNT=4;INTERVAL=4"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(4,recurList.size)
+        assertEquals(1622494800000L, recurList[0])
+        assertEquals(1622840400000L, recurList[1])
+        assertEquals(1623186000000L, recurList[2])
+        assertEquals(1623531600000L, recurList[3])
+    }
+
+    @Test
     fun getInstancesFromRrule_Todo_DAILY() {
 
         val item = ICalObject.createTodo().apply {
@@ -434,6 +468,7 @@ class ICalObjectTest {
         assertEquals(1622541600000L, recurList[0])
         assertEquals(1622887200000L, recurList[1])
     }
+
 
     @Test
     fun getInstancesFromRrule_unsupported_TodoWithoutDue() {
