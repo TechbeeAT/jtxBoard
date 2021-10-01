@@ -16,9 +16,6 @@ import android.util.Log
 import androidx.room.*
 import at.techbee.jtx.R
 import at.techbee.jtx.convertLongToDateString
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
@@ -629,25 +626,25 @@ data class ICalObject(
         val recurList = mutableListOf<Long>()
 
         try {
-
             val rRule = Recur(this.rrule)
-
-            val interval = rRule.interval
+            val interval = rRule.interval                       //interval and count MUST be present
             val count = rRule.count
 
+            val start = Calendar.getInstance().apply {
+                if(component == Component.VJOURNAL.name && dtstartTimezone?.isNotEmpty() == true && dtstartTimezone != "ALLDAY")
+                    this.timeZone = TimeZone.getTimeZone(dtstartTimezone)
+                else if(component == Component.VTODO.name && dueTimezone?.isNotEmpty() == true && dueTimezone != "ALLDAY")
+                    this.timeZone = TimeZone.getTimeZone(dueTimezone)
+                else
+                    timeZone = TimeZone.getTimeZone("UTC")
+                //TODO: Continue here checking the timezone
 
-            val start = Calendar.getInstance()
-            start.timeInMillis = when(this.component) {
-                Component.VJOURNAL.name -> this.dtstart ?: return emptyList()
-                Component.VTODO.name -> this.due ?: return emptyList()
-                else -> return emptyList()
+                timeInMillis = when(component) {
+                    Component.VJOURNAL.name -> dtstart ?: return emptyList()
+                    Component.VTODO.name -> due ?: return emptyList()
+                    else -> return emptyList()
+                }
             }
-
-            if(this.component == Component.VJOURNAL.name && this.dtstartTimezone != null && this.dtstartTimezone != "ALLDAY")
-                start.timeZone = TimeZone.getTimeZone(this.dtstartTimezone)
-            else if(this.component == Component.VTODO.name && this.dueTimezone != null && this.dueTimezone != "ALLDAY")
-                start.timeZone = TimeZone.getTimeZone(this.dueTimezone)
-            //TODO: Continue here checking the timezone
 
 
             when (rRule.frequency)
@@ -678,8 +675,8 @@ data class ICalObject(
                     }
 
                     for(i in 1..count) {
-                        val startWeekloop = Calendar.getInstance().apply { timeInMillis = start.timeInMillis }
-                        for (j in 1..7){
+                        val startWeekloop = start.clone() as Calendar
+                        for (j in 1..7) {
                             if(startWeekloop.get(Calendar.DAY_OF_WEEK) in selectedWeekdays) {
                                 recurList.add(startWeekloop.timeInMillis)
                                 Log.d("calculatedDay", convertLongToDateString(startWeekloop.timeInMillis))
@@ -692,7 +689,7 @@ data class ICalObject(
                 Recur.Frequency.MONTHLY ->
                 {
                     for(i in 1..count) {
-                        start.set(Calendar.DAY_OF_MONTH, rRule.monthDayList.get(0)?:1)
+                        start.set(Calendar.DAY_OF_MONTH, rRule.monthDayList[0] ?:1)
                         recurList.add(start.timeInMillis)
                         Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
                         start.add(Calendar.MONTH, interval)
@@ -733,9 +730,6 @@ data class ICalObject(
                 Log.w("NumberFormatException", "Class cast to Long for recurrence addition failed for $it. \n$e")
             }
         }
-
-
-
 
         return recurList
     }

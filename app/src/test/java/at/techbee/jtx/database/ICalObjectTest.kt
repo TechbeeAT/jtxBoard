@@ -262,4 +262,128 @@ class ICalObjectTest {
         assertEquals(mockContext.getString(R.string.classification_confidential), Classification.getStringResource(mockContext, Classification.CONFIDENTIAL.name))
     }
 
+    @Test
+    fun getInstancesFromRrule_Journal_YEARLY() {
+
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622494800000L
+            this.rrule = "FREQ=YEARLY;COUNT=3;INTERVAL=2"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(3,recurList.size)
+        assertEquals(1622494800000L, recurList[0])
+        assertEquals(1685566800000L, recurList[1])
+        assertEquals(1748725200000L, recurList[2])
+    }
+
+    @Test
+    fun getInstancesFromRrule_Todo_YEARLY() {
+
+        val item = ICalObject.createTodo().apply {
+            this.dtstart = 1622494801230L
+            this.due = 1622494800000L
+            this.rrule = "FREQ=YEARLY;COUNT=3;INTERVAL=2"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(3,recurList.size)
+        assertEquals(1622494800000L, recurList[0])
+        assertEquals(1685566800000L, recurList[1])
+        assertEquals(1748725200000L, recurList[2])
+    }
+
+
+
+    @Test
+    fun getInstancesFromRrule_Journal_MONTHLY() {
+
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622505600000L
+            this.rrule = "FREQ=MONTHLY;COUNT=3;INTERVAL=1;BYMONTHDAY=5"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(3,recurList.size)
+        assertEquals(1622851200000L, recurList[0])
+        assertEquals(1625443200000L, recurList[1])
+        assertEquals(1628121600000L, recurList[2])
+    }
+
+
+    @Test
+    fun getInstancesFromRrule_TODO_MONTHLY() {
+
+        val item = ICalObject.createTodo().apply {
+            this.dtstart = 1622498402200L
+            this.due = 1622541600000L
+            this.rrule = "FREQ=MONTHLY;COUNT=2;INTERVAL=2;BYMONTHDAY=5"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(2,recurList.size)
+        //assertEquals(1622494800000L, recurList[0])
+        assertEquals(1622887200000L, recurList[0])
+        assertEquals(1628157600000L, recurList[1])
+    }
+
+
+
+    @Test
+    fun getInstancesFromRrule_Journal_WEEKLY() {
+
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622541600000L
+            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=FR,SA,SU"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(6,recurList.size)
+        assertEquals(1622800800000L, recurList[0])
+        assertEquals(1622887200000L, recurList[1])
+        assertEquals(1622973600000L, recurList[2])
+        assertEquals(1624010400000L, recurList[3])
+        assertEquals(1624096800000L, recurList[4])
+        assertEquals(1624183200000L, recurList[5])
+    }
+
+
+
+    @Test
+    fun getInstancesFromRrule_Journal_DAILY() {
+
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622494800000L
+            this.rrule = "FREQ=DAILY;COUNT=4;INTERVAL=4"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(4,recurList.size)
+        assertEquals(1622494800000L, recurList[0])
+        assertEquals(1622840400000L, recurList[1])
+        assertEquals(1623186000000L, recurList[2])
+        assertEquals(1623531600000L, recurList[3])
+    }
+
+    @Test
+    fun getInstancesFromRrule_Todo_DAILY() {
+
+        val item = ICalObject.createTodo().apply {
+            this.dtstart = 1622494801230L
+            this.due = 1622541600000L
+            this.rrule = "FREQ=DAILY;COUNT=2;INTERVAL=4"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(2,recurList.size)
+        assertEquals(1622541600000L, recurList[0])
+        assertEquals(1622887200000L, recurList[1])
+    }
+
+    @Test
+    fun getInstancesFromRrule_unsupported() {
+
+    }
+
+
 }
