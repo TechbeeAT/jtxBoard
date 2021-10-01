@@ -858,6 +858,26 @@ enum class StatusJournal(val stringResource: Int) : Parcelable {
             }
             return null
         }
+
+        fun getListFromStringList(stringList: Set<String>?): MutableList<StatusJournal> {
+            val list = mutableListOf<StatusJournal>()
+            stringList?.forEach { string ->
+                when (string) {
+                    DRAFT.name -> list.add(DRAFT)
+                    FINAL.name -> list.add(FINAL)
+                    CANCELLED.name -> list.add(CANCELLED)
+                }
+            }
+            return list
+        }
+
+        fun getStringSetFromList(list: List<StatusJournal>): Set<String> {
+            val set = mutableListOf<String>()
+            list.forEach {
+                set.add(it.name)
+            }
+            return set.toSet()
+        }
     }
 }
 
@@ -882,6 +902,27 @@ enum class StatusTodo(val stringResource: Int) : Parcelable {
             }
             return null
         }
+
+        fun getListFromStringList(stringList: Set<String>?): MutableList<StatusTodo> {
+            val list = mutableListOf<StatusTodo>()
+            stringList?.forEach { string ->
+                when (string) {
+                    `NEEDS-ACTION`.name -> list.add(`NEEDS-ACTION`)
+                    COMPLETED.name -> list.add(COMPLETED)
+                    `IN-PROCESS`.name -> list.add(`IN-PROCESS`)
+                    CANCELLED.name -> list.add(CANCELLED)
+                }
+            }
+            return list
+        }
+
+        fun getStringSetFromList(list: List<StatusTodo>): Set<String> {
+            val set = mutableListOf<String>()
+            list.forEach {
+                set.add(it.name)
+            }
+            return set.toSet()
+        }
     }
 }
 
@@ -903,6 +944,26 @@ enum class Classification(val stringResource: Int) : Parcelable {
                     return context.getString(it.stringResource)
             }
             return null
+        }
+
+        fun getListFromStringList(stringList: Set<String>?): MutableList<Classification> {
+            val list = mutableListOf<Classification>()
+            stringList?.forEach { string ->
+                when (string) {
+                    PUBLIC.name -> list.add(PUBLIC)
+                    PRIVATE.name -> list.add(PRIVATE)
+                    CONFIDENTIAL.name -> list.add(CONFIDENTIAL)
+                }
+            }
+            return list
+        }
+
+        fun getStringSetFromList(list: List<Classification>): Set<String> {
+            val set = mutableListOf<String>()
+            list.forEach {
+                set.add(it.name)
+            }
+            return set.toSet()
         }
     }
 

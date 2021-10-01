@@ -54,6 +54,8 @@ class IcalListFragment : Fragment() {
     private var gotodateMenuItem: MenuItem? = null
 
     private lateinit var prefs: SharedPreferences
+    private lateinit var arguments: IcalListFragmentArgs
+    private var applyArgs = true
 
 
     companion object {
@@ -64,13 +66,15 @@ class IcalListFragment : Fragment() {
         const val PREFS_CLASSIFICATION = "prefsClassification"
         const val PREFS_STATUS_TODO = "prefsStatusTodo"
         const val PREFS_STATUS_JOURNAL = "prefsStatusJournal"
-    }
 
+        const val TAB_INDEX_JOURNAL = 0
+        const val TAB_INDEX_NOTE = 1
+        const val TAB_INDEX_TODO = 2
+    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-
 
         // Get a reference to the binding object and inflate the fragment views.
         binding = FragmentIcalListBinding.inflate(inflater, container, false)
@@ -82,9 +86,7 @@ class IcalListFragment : Fragment() {
 
         // create the view model through the view model factory
         val viewModelFactory = IcalListViewModelFactory(dataSource, application)
-        icalListViewModel =
-                ViewModelProvider(
-                        this, viewModelFactory).get(IcalListViewModel::class.java)
+        icalListViewModel = ViewModelProvider(this, viewModelFactory).get(IcalListViewModel::class.java)
 
         binding.vJournalListViewModel = icalListViewModel
         binding.lifecycleOwner = this
@@ -111,7 +113,9 @@ class IcalListFragment : Fragment() {
         recyclerView?.adapter = icalListAdapter
 
 
-        val arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
+        arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
+        prefs = requireActivity().getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)!!
+        loadFilterArgsAndPrefs()
 
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
         icalListViewModel.iCal4List.observe(viewLifecycleOwner, {
@@ -125,17 +129,17 @@ class IcalListFragment : Fragment() {
             }
 
             when (icalListViewModel.searchModule) {
-                "NOTE" -> {
-                    gotodateMenuItem?.isVisible = false
-                    //staggeredGridLayoutManager!!.spanCount = 1
-                    binding.fab.setImageResource(R.drawable.ic_add_note)
-                }
-                "JOURNAL" -> {
+                Module.JOURNAL.name -> {
                     gotodateMenuItem?.isVisible = true
                     //staggeredGridLayoutManager!!.spanCount = 1
                     binding.fab.setImageResource(R.drawable.ic_add)
                 }
-                "TODO" -> {
+                Module.NOTE.name -> {
+                    gotodateMenuItem?.isVisible = false
+                    //staggeredGridLayoutManager!!.spanCount = 1
+                    binding.fab.setImageResource(R.drawable.ic_add_note)
+                }
+                Module.TODO.name -> {
                     gotodateMenuItem?.isVisible = false
                     //staggeredGridLayoutManager!!.spanCount = 1
                     binding.fab.setImageResource(R.drawable.ic_todo_add)
@@ -162,47 +166,27 @@ class IcalListFragment : Fragment() {
         icalListViewModel.focusItemId.observe(viewLifecycleOwner, {
 
             val pos = icalListViewModel.getFocusItemPosition()
-            Log.println(Log.INFO, "vJournalListViewModel", "Item Position: $pos")
-
-            //recyclerView?.scrollToPosition(pos)
-            linearLayoutManager!!.scrollToPositionWithOffset(pos, 20)   // offset makes the item always appear 20px from the top
-            //vJournalListViewModel.resetFocusItem()
-            Log.println(Log.INFO, "vJournalListViewModel", "Scrolling now to: $pos")
-
+            linearLayoutManager!!.scrollToPositionWithOffset(pos, 20)   // offset makes the item always appear 20px from the top (instead of recyclerView?.scrollToPosition(pos)   )
         })
-
-
 
         binding.tablayoutJournalnotestodos.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
+
                 binding.listProgressIndicator.visibility = View.VISIBLE
                 icalListViewModel.clearFilter()
                 icalListViewModel.resetFocusItem()
 
                 when (tab?.position) {
-                    0 -> icalListViewModel.searchModule = Module.JOURNAL.name
-                    1 -> icalListViewModel.searchModule = Module.NOTE.name
-                    2 -> icalListViewModel.searchModule = Module.TODO.name
-                    else -> icalListViewModel.searchModule = Module.JOURNAL.name
+                    TAB_INDEX_JOURNAL -> icalListViewModel.searchModule = Module.JOURNAL.name
+                    TAB_INDEX_NOTE -> icalListViewModel.searchModule = Module.NOTE.name
+                    TAB_INDEX_TODO -> icalListViewModel.searchModule = Module.TODO.name
                 }
 
-                // ATTENTION: As the View is recreated on Resume, the arguments are read again, therefore the searchComponent MUST be updated, otherwise the application will crash!
-                getArguments()?.putString("module2show", icalListViewModel.searchModule)
-                prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
-                loadFilters()
-
-                icalListViewModel.updateSearch()
-
+                applyFilters()
             }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // nothing to do
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // nothing to do
-            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) { }    // nothing to do
+            override fun onTabReselected(tab: TabLayout.Tab?) { }      // nothing to do
         })
 
         return binding.root
@@ -211,26 +195,18 @@ class IcalListFragment : Fragment() {
 
     override fun onStart() {
 
-        loadFilters()
-
         // initialize the floating action button only onStart, otherwise the fragment might not be created yet
         binding.fab.setOnClickListener {
 
-            icalListViewModel.resetFocusItem()
-
-            val newICalObject =
-                    when(binding.tablayoutJournalnotestodos.selectedTabPosition) {
-                        0 -> ICalEntity(ICalObject.createJournal())
-                        1 -> ICalEntity(ICalObject.createNote())
-                        2 -> ICalEntity(ICalObject.createTodo())
-                        else -> ICalEntity(ICalObject.createJournal())
-                    }
-            this.findNavController().navigate(
-                    IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
+            when(binding.tablayoutJournalnotestodos.selectedTabPosition) {
+                TAB_INDEX_JOURNAL -> goToEdit(ICalEntity(ICalObject.createJournal()))
+                TAB_INDEX_NOTE -> goToEdit(ICalEntity(ICalObject.createNote()))
+                TAB_INDEX_TODO -> goToEdit(ICalEntity(ICalObject.createTodo()))
+            }
         }
 
         binding.fabFilter.setOnClickListener {
-            if (icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty())
+            if (isFilterActive())
                 resetFilter()
             else
                 goToFilter()
@@ -241,130 +217,56 @@ class IcalListFragment : Fragment() {
 
     override fun onResume() {
 
+        applyFilters()
+
         try {
             val activity = requireActivity() as MainActivity
             activity.setToolbarText("Board")
         } catch (e: ClassCastException) {
-            Log.w("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
+            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
 
         super.onResume()
     }
 
 
-    fun loadFilters() {
+    private fun loadFilterArgsAndPrefs() {
+        // check first if the arguments contain the search-property, if not, check in prefs, if this is also null, return a default value
+        icalListViewModel.searchModule = arguments.module2show ?: prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
+        icalListViewModel.searchCategories = arguments.category2filter?.toMutableList() ?: prefs.getStringSet(PREFS_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
+        icalListViewModel.searchCollection = arguments.collection2filter?.toMutableList() ?: prefs.getStringSet(PREFS_COLLECTION, null)?.toMutableList() ?: mutableListOf()
+        icalListViewModel.searchStatusJournal = arguments.statusJournal2filter?.toMutableList() ?: StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_STATUS_JOURNAL, null))
+        icalListViewModel.searchStatusTodo = arguments.statusTodo2filter?.toMutableList() ?: StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_STATUS_TODO, null))
+        icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null))
 
-        prefs = activity?.getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)!!
-
-        // pass filter arguments to view model
-        val arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
-
-        // set the search values for the selected component and store in shared preferences or retrieve and set component from the shared preferences
-        if (arguments.module2show?.isNotEmpty() == true) {
-            icalListViewModel.searchModule = arguments.module2show!!
-            prefs.edit().putString(PREFS_MODULE, arguments.module2show).apply()
-        } else if (prefs.getString(PREFS_MODULE, null)?.isNotEmpty() == true) {
-            icalListViewModel.searchModule = prefs.getString(PREFS_MODULE, null)!!
+        // activate the right tab according to the searchModule
+        when (icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> binding.tablayoutJournalnotestodos.getTabAt(TAB_INDEX_JOURNAL)?.select()
+            Module.NOTE.name -> binding.tablayoutJournalnotestodos.getTabAt(TAB_INDEX_NOTE)?.select()
+            Module.TODO.name -> binding.tablayoutJournalnotestodos.getTabAt(TAB_INDEX_TODO)?.select()
         }
+    }
 
 
-        // load the shared preferences for the given component
-        /*sharedPref = when ( icalListViewModel.searchComponent) {
-            Component.JOURNAL.name -> activity?.getSharedPreferences(PREFS_JOURNALS, Context.MODE_PRIVATE)!!
-            Component.NOTE.name -> activity?.getSharedPreferences(PREFS_NOTES, Context.MODE_PRIVATE)!!
-            Component.TODO.name -> activity?.getSharedPreferences(PREFS_TODOS, Context.MODE_PRIVATE)!!
-            else -> activity?.getSharedPreferences(PREFS_JOURNALS, Context.MODE_PRIVATE)!!
-        }   */
+    fun applyFilters() {
 
-        // set the search values for categories and store in shared preferences or retrieve and set categories from the shared preferences
-        if (arguments.category2filter?.isNotEmpty() == true) {
-            icalListViewModel.searchCategories = arguments.category2filter!!.toMutableList()
-            prefs.edit().putStringSet(PREFS_CATEGORIES, arguments.category2filter!!.toSet()).apply()
-        } else if (prefs.getStringSet(PREFS_CATEGORIES, null)?.isNotEmpty() == true) {
-            icalListViewModel.searchCategories = prefs.getStringSet(PREFS_CATEGORIES, null)!!.toMutableList()
-        }
-
-        // set the search values for classification and store in shared preferences or retrieve and set classifications from the shared preferences
-        if (arguments.classification2filter?.isNotEmpty() == true) {
-            icalListViewModel.searchClassification = arguments.classification2filter!!.toMutableList()
-
-            val classificationIds = mutableListOf<String>()
-            arguments.classification2filter!!.forEach {
-                classificationIds.add(it.name)
-            }
-            prefs.edit().putStringSet(PREFS_CLASSIFICATION, classificationIds.toSet()).apply()
-        } else if (prefs.getStringSet(PREFS_CLASSIFICATION, null)?.isNotEmpty() == true) {
-            prefs.getStringSet(PREFS_CLASSIFICATION, null)!!.forEach {
-                when (it) {
-                    Classification.PUBLIC.name -> icalListViewModel.searchClassification.add(Classification.PUBLIC)
-                    Classification.CONFIDENTIAL.name -> icalListViewModel.searchClassification.add(Classification.CONFIDENTIAL)
-                    Classification.PRIVATE.name -> icalListViewModel.searchClassification.add(Classification.PRIVATE)
-                }
-            }
-        }
-
-        // set the search values for status (todos) and store in shared preferences or retrieve and set status (todos) from the shared preferences
-        if (arguments.statusTodo2filter?.isNotEmpty() == true) {
-            icalListViewModel.searchStatusTodo = arguments.statusTodo2filter!!.toMutableList()
-
-            val statusTodoIds = mutableListOf<String>()
-            arguments.statusTodo2filter!!.forEach {
-                statusTodoIds.add(it.name)
-            }
-            prefs.edit().putStringSet(PREFS_STATUS_TODO, statusTodoIds.toSet()).apply()
-        } else if (prefs.getStringSet(PREFS_STATUS_TODO, null)?.isNotEmpty() == true) {
-            prefs.getStringSet(PREFS_STATUS_TODO, null)!!.forEach {
-                when (it) {
-                    StatusTodo.`NEEDS-ACTION`.name -> icalListViewModel.searchStatusTodo.add(StatusTodo.`NEEDS-ACTION`)
-                    StatusTodo.`IN-PROCESS`.name -> icalListViewModel.searchStatusTodo.add(StatusTodo.`IN-PROCESS`)
-                    StatusTodo.COMPLETED.name -> icalListViewModel.searchStatusTodo.add(StatusTodo.COMPLETED)
-                    StatusTodo.CANCELLED.name -> icalListViewModel.searchStatusTodo.add(StatusTodo.CANCELLED)
-                }
-            }
-        }
-
-        // set the search values for status (journals) and store in shared preferences or retrieve and set status (journals) from the shared preferences
-        if (arguments.statusJournal2filter?.isNotEmpty() == true) {
-            icalListViewModel.searchStatusJournal = arguments.statusJournal2filter!!.toMutableList()
-
-            val statusJournalIds = mutableListOf<String>()
-            arguments.statusJournal2filter!!.forEach {
-                statusJournalIds.add(it.name)
-            }
-            prefs.edit().putStringSet(PREFS_STATUS_JOURNAL, statusJournalIds.toSet()).apply()
-        } else if (prefs.getStringSet(PREFS_STATUS_JOURNAL, null)?.isNotEmpty() == true) {
-            prefs.getStringSet(PREFS_STATUS_JOURNAL, null)!!.forEach {
-                when (it) {
-                    StatusJournal.DRAFT.name -> icalListViewModel.searchStatusJournal.add(StatusJournal.DRAFT)
-                    StatusJournal.FINAL.name -> icalListViewModel.searchStatusJournal.add(StatusJournal.FINAL)
-                    StatusJournal.CANCELLED.name -> icalListViewModel.searchStatusJournal.add(StatusJournal.CANCELLED)
-                }
-            }
-        }
-
-        // set the search values for collections and store in shared preferences or retrieve and set collections from the shared preferences
-        if (arguments.collection2filter?.isNotEmpty() == true) {
-            icalListViewModel.searchCollection = arguments.collection2filter!!.toMutableList()
-            prefs.edit().putStringSet(PREFS_COLLECTION, arguments.collection2filter!!.toSet()).apply()
-        } else if (prefs.getStringSet(PREFS_COLLECTION, null)?.isNotEmpty() == true) {
-            icalListViewModel.searchCollection = prefs.getStringSet(PREFS_COLLECTION, null)!!.toMutableList()
-        }
-
-        //if(arguments.component2show.isNotEmpty() || arguments.category2filter?.isNotEmpty() == true || arguments.classification2filter?.isNotEmpty() == true || arguments.statusJournal2filter?.isNotEmpty() == true || arguments.statusTodo2filter?.isNotEmpty() == true || arguments.collection2filter?.isNotEmpty() == true)
-            icalListViewModel.updateSearch()   // updateSearch() only if there was at least one filter criteria
+        icalListViewModel.updateSearch()
+        savePrefs()
 
         // Change the filter icon to make clear when a filter is active
         if (icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty())
             binding.fabFilter.setImageResource(R.drawable.ic_filter_delete)
         else
             binding.fabFilter.setImageResource(R.drawable.ic_filter)
+    }
 
-        // activate the right tab according to the searchComponent
-        when (icalListViewModel.searchModule) {
-            "NOTE" -> binding.tablayoutJournalnotestodos.getTabAt(1)?.select()
-            "JOURNAL" -> binding.tablayoutJournalnotestodos.getTabAt(0)?.select()
-            "TODO" -> binding.tablayoutJournalnotestodos.getTabAt(2)?.select()
-        }
+    private fun savePrefs() {
+        prefs.edit().putStringSet(PREFS_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
+        prefs.edit().putStringSet(PREFS_STATUS_JOURNAL, StatusJournal.getStringSetFromList(icalListViewModel.searchStatusJournal)).apply()
+        prefs.edit().putStringSet(PREFS_STATUS_TODO, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
+        prefs.edit().putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
+        prefs.edit().putStringSet(PREFS_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
+        prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
     }
 
 
@@ -372,27 +274,34 @@ class IcalListFragment : Fragment() {
         inflater.inflate(R.menu.menu_ical_list, menu)
         MenuCompat.setGroupDividerEnabled(menu, true)
         optionsMenu = menu
-
-
-        // Tell the variable the menu item to later make it visible or invisible
-        gotodateMenuItem = menu.findItem(R.id.menu_list_gotodate)
+        gotodateMenuItem = menu.findItem(R.id.menu_list_gotodate)         // Tell the variable the menu item to later make it visible or invisible
 
         // don't show the option to clear the filter if no filter was set
-        if (icalListViewModel.searchCategories.isEmpty() && icalListViewModel.searchOrganizer.isEmpty() && icalListViewModel.searchStatusJournal.isEmpty() && icalListViewModel.searchStatusTodo.isEmpty() && icalListViewModel.searchClassification.isEmpty() && icalListViewModel.searchCollection.isEmpty()) {
+        if (!isFilterActive()) {
             optionsMenu.findItem(R.id.menu_list_clearfilter).isVisible = false
             binding.fabFilter.setImageResource(R.drawable.ic_filter)
         }
 
-            // add listener for search!
+        if (icalListViewModel.searchModule == Module.TODO.name) {
+            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts).isVisible = false
+            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final).isVisible = false
+            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vjournal_final).isVisible = false
+        }
+        else {
+            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled).isVisible = false
+            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed).isVisible = false
+            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress).isVisible = false
+        }
+
+
+        // add listener for search!
         val searchMenuItem = menu.findItem(R.id.menu_list_search)
         val searchView = searchMenuItem.actionView as SearchView
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
-            override fun onQueryTextSubmit(query: String): Boolean {
-                // nothing to do as the the search is already updated with the text input
-                return false
-            }
+            // nothing to do as the the search is already updated with the text input
+            override fun onQueryTextSubmit(query: String): Boolean { return false }
 
             override fun onQueryTextChange(query: String): Boolean {
 
@@ -410,106 +319,19 @@ class IcalListFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        if (item.itemId == R.id.menu_list_gotodate) {
-
-            // Create a custom date validator to only enable dates that are in the list
-            val customDateValidator = object: CalendarConstraints.DateValidator {
-                override fun describeContents(): Int {  return 0  }
-                override fun writeToParcel(dest: Parcel?, flags: Int) {  }
-                override fun isValid(date: Long): Boolean {
-
-                    icalListViewModel.iCal4List.value?.forEach {
-                        val itemDateTime = Calendar.getInstance()
-                        itemDateTime.timeInMillis = it.property.dtstart?: System.currentTimeMillis()
-
-                        val dateDateTime = Calendar.getInstance()
-                        dateDateTime.timeInMillis = date
-
-                        if(itemDateTime.get(Calendar.YEAR) == dateDateTime.get(Calendar.YEAR)
-                            && itemDateTime.get(Calendar.MONTH) == dateDateTime.get(Calendar.MONTH)
-                            && itemDateTime.get(Calendar.DAY_OF_MONTH) == dateDateTime.get(Calendar.DAY_OF_MONTH))
-                            return true
-                    }
-                    return false
-                }
-            }
-
-            // Build constraints.
-            val constraintsBuilder =
-                CalendarConstraints.Builder().apply {
-
-                    val startItem = icalListViewModel.iCal4List.value?.lastOrNull()
-                    val endItem = icalListViewModel.iCal4List.value?.firstOrNull()
-
-                    if (startItem?.property?.dtstart != null && endItem?.property?.dtstart != null) {
-                        setStart(startItem.property.dtstart!!)
-                        setEnd(endItem.property.dtstart!!)
-                        setValidator(customDateValidator)
-                    }
-                }
-
-            val datePicker =
-                MaterialDatePicker.Builder.datePicker()
-                    .setTitleText("Select date")
-                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                    .setCalendarConstraints(constraintsBuilder.build())
-                    .build()
-
-            datePicker.addOnPositiveButtonClickListener {
-                // Respond to positive button click.
-
-                // create a Calendar Object out of the selected dates
-                val selectedDate = Calendar.getInstance()
-                selectedDate.timeInMillis = it
-
-                // find the item with the same date
-                val foundItem = icalListViewModel.iCal4List.value?.find { item ->
-                    val cItem = Calendar.getInstance()
-                    cItem.timeInMillis = item.property.dtstart?: 0L
-
-                    // if this condition is true, the item is considered as found
-                    cItem.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR)
-                            && cItem.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH)
-                            && cItem.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)
-                }
-                if (foundItem != null)
-                    icalListViewModel.setFocusItem(foundItem.property.id)
-            }
-
-            datePicker.show(parentFragmentManager, "menu_list_gotodate")
-
-        }
-
-        if (item.itemId == R.id.menu_list_filter) {
-            goToFilter()
-        }
-
-        if (item.itemId == R.id.menu_list_clearfilter) {
-            resetFilter()
-        }
-
-        if (item.itemId == R.id.menu_list_add_journal) {
-            icalListViewModel.resetFocusItem()
-            val newICalObject = ICalEntity(ICalObject.createJournal())
-            this.findNavController().navigate(
-                IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
-        }
-
-        if (item.itemId == R.id.menu_list_add_note) {
-            icalListViewModel.resetFocusItem()
-            val newICalObject = ICalEntity(ICalObject.createNote())
-
-            this.findNavController().navigate(
-                    IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
-        }
-
-        if (item.itemId == R.id.menu_list_add_todo) {
-            icalListViewModel.resetFocusItem()
-
-            val newICalObject = ICalEntity(ICalObject.createTodo())
-
-            this.findNavController().navigate(
-                    IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newICalObject))
+        when (item.itemId) {
+            R.id.menu_list_gotodate -> scrollToDate()
+            R.id.menu_list_filter -> goToFilter()
+            R.id.menu_list_clearfilter -> resetFilter()
+            R.id.menu_list_add_journal -> goToEdit(ICalEntity(ICalObject.createJournal()))
+            R.id.menu_list_add_note -> goToEdit(ICalEntity(ICalObject.createNote()))
+            R.id.menu_list_add_todo -> goToEdit(ICalEntity(ICalObject.createTodo()))
+            R.id.menu_list_quickfilterfilter_vjournal_drafts_final -> this.applyQuickFilterJournal(mutableListOf(StatusJournal.DRAFT, StatusJournal.FINAL))
+            R.id.menu_list_quickfilterfilter_vjournal_drafts -> this.applyQuickFilterJournal(mutableListOf(StatusJournal.DRAFT))
+            R.id.menu_list_quickfilterfilter_vjournal_final -> this.applyQuickFilterJournal(mutableListOf(StatusJournal.FINAL))
+            R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled -> applyQuickFilterTodo(mutableListOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.`IN-PROCESS`, StatusTodo.COMPLETED))
+            R.id.menu_list_quickfilterfilter_vtodo_open_inprogress -> applyQuickFilterTodo(mutableListOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.`IN-PROCESS`))
+            R.id.menu_list_quickfilterfilter_vtodo_completed -> applyQuickFilterTodo(mutableListOf(StatusTodo.COMPLETED))
         }
 
         return super.onOptionsItemSelected(item)
@@ -523,7 +345,7 @@ class IcalListFragment : Fragment() {
         icalListViewModel.resetFocusItem()
         icalListViewModel.clearFilter()
         prefs.edit().clear().apply()
-        arguments?.clear()
+        applyArgs = true
     }
 
     private fun goToFilter() {
@@ -539,8 +361,112 @@ class IcalListFragment : Fragment() {
                 this.collection2preselect = icalListViewModel.searchCollection.toTypedArray()
                 this.module2preselect = icalListViewModel.searchModule
             })
-
     }
+
+    private fun goToEdit(iCalObject: ICalEntity) {
+
+        icalListViewModel.resetFocusItem()
+        this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(iCalObject))
+    }
+
+    private fun applyQuickFilterJournal(statusList: MutableList<StatusJournal>) {
+
+        binding.listProgressIndicator.visibility = View.VISIBLE
+        icalListViewModel.clearFilter()
+        icalListViewModel.resetFocusItem()
+        icalListViewModel.searchStatusJournal = statusList
+        applyFilters()
+    }
+
+    private fun applyQuickFilterTodo(statusList: MutableList<StatusTodo>) {
+
+        binding.listProgressIndicator.visibility = View.VISIBLE
+        icalListViewModel.clearFilter()
+        icalListViewModel.resetFocusItem()
+        icalListViewModel.searchStatusTodo = statusList
+        applyFilters()
+    }
+
+
+
+    private fun scrollToDate() {
+
+        // Create a custom date validator to only enable dates that are in the list
+        val customDateValidator = object : CalendarConstraints.DateValidator {
+            override fun describeContents(): Int {
+                return 0
+            }
+
+            override fun writeToParcel(dest: Parcel?, flags: Int) {}
+            override fun isValid(date: Long): Boolean {
+
+                icalListViewModel.iCal4List.value?.forEach {
+                    val itemDateTime = Calendar.getInstance()
+                    itemDateTime.timeInMillis =
+                        it.property.dtstart ?: System.currentTimeMillis()
+
+                    val dateDateTime = Calendar.getInstance()
+                    dateDateTime.timeInMillis = date
+
+                    if (itemDateTime.get(Calendar.YEAR) == dateDateTime.get(Calendar.YEAR)
+                        && itemDateTime.get(Calendar.MONTH) == dateDateTime.get(Calendar.MONTH)
+                        && itemDateTime.get(Calendar.DAY_OF_MONTH) == dateDateTime.get(
+                            Calendar.DAY_OF_MONTH
+                        )
+                    )
+                        return true
+                }
+                return false
+            }
+        }
+
+        // Build constraints.
+        val constraintsBuilder =
+            CalendarConstraints.Builder().apply {
+
+                val startItem = icalListViewModel.iCal4List.value?.lastOrNull()
+                val endItem = icalListViewModel.iCal4List.value?.firstOrNull()
+
+                if (startItem?.property?.dtstart != null && endItem?.property?.dtstart != null) {
+                    setStart(startItem.property.dtstart!!)
+                    setEnd(endItem.property.dtstart!!)
+                    setValidator(customDateValidator)
+                }
+            }
+
+        val datePicker =
+            MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .setCalendarConstraints(constraintsBuilder.build())
+                .build()
+
+        datePicker.addOnPositiveButtonClickListener {
+            // Respond to positive button click.
+
+            // create a Calendar Object out of the selected dates
+            val selectedDate = Calendar.getInstance()
+            selectedDate.timeInMillis = it
+
+            // find the item with the same date
+            val foundItem = icalListViewModel.iCal4List.value?.find { item ->
+                val cItem = Calendar.getInstance()
+                cItem.timeInMillis = item.property.dtstart ?: 0L
+
+                // if this condition is true, the item is considered as found
+                cItem.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR)
+                        && cItem.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH)
+                        && cItem.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)
+            }
+            if (foundItem != null)
+                icalListViewModel.setFocusItem(foundItem.property.id)
+        }
+
+        datePicker.show(parentFragmentManager, "menu_list_gotodate")
+    }
+
+
+    private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
 
 /*
     private fun doFilesCheck() {
@@ -586,29 +512,3 @@ class IcalListFragment : Fragment() {
 
  */
 }
-
-
-
-/*
-        searchView.setOnMenuItem
-
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-                android.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                //
-                return false
-            }
-            override fun onQueryTextChange(newText: String?): Boolean {
-                //
-                return false
-            }
-        })
-
-                searchMenuItem.setOnMenuItemClickListener(object: SearchView.OnQueryTextListener   {
-
-        })
-
- */
-
-

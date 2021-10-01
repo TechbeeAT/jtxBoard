@@ -89,9 +89,8 @@ class IcalListViewModel(
                 }
             }
         }
+        focusItemId.value = 0L                  // if the list is empty, the focus item would be set to 0L
 
-        // if the list is empty, the focus item would be set to 0L
-        focusItemId.value = 0L
 
     }
 

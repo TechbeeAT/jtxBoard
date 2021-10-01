@@ -36,6 +36,37 @@
             android:title="@string/menu_list_clearfilter"
             app:showAsAction="never" />
     </group>
+
+    <group android:id="@+id/menugroup_quickfilter_vjournal" >
+        <item
+            android:id="@+id/menu_list_quickfilterfilter_vjournal_drafts_final"
+            android:title="@string/menu_list_quickfilterfilter_vjournal_drafts_final"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_list_quickfilterfilter_vjournal_drafts"
+            android:title="@string/menu_list_quickfilterfilter_vjournal_drafts"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_list_quickfilterfilter_vjournal_final"
+            android:title="@string/menu_list_quickfilterfilter_vjournal_final"
+            app:showAsAction="never" />
+    </group>
+
+    <group android:id="@+id/menugroup_quickfilter_vtodo" >
+        <item
+            android:id="@+id/menu_list_quickfilterfilter_vtodo_open_inprogress"
+            android:title="@string/menu_list_quickfilterfilter_vtodo_open_inprogress"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_list_quickfilterfilter_vtodo_exclude_cancelled"
+            android:title="@string/menu_list_quickfilterfilter_vtodo_exclude_cancelled"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_list_quickfilterfilter_vtodo_completed"
+            android:title="@string/menu_list_quickfilterfilter_vtodo_completed"
+            app:showAsAction="never" />
+    </group>
+
     <group android:id="@+id/menu_list_menugroup_add_item" >
         <item
             android:id="@+id/menu_list_add_journal"
