@@ -30,6 +30,7 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.FragmentIcalListBinding
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import java.lang.ClassCastException
 import java.util.*
@@ -141,6 +142,16 @@ class IcalListFragment : Fragment() {
                 }
             }
             binding.listProgressIndicator.visibility = View.GONE
+
+            if(icalListViewModel.searchModule == Module.TODO.name) {
+                icalListViewModel.iCal4List.value?.forEach {
+                    if((it.property.status == StatusTodo.`IN-PROCESS`.name || it.property.status == StatusTodo.`NEEDS-ACTION`.name)
+                        && it.property.due != null && it.property.due!! < System.currentTimeMillis()) {
+                        Snackbar.make(requireView(), R.string.list_snackbar_overdue_tasks_in_past, Snackbar.LENGTH_LONG).show()
+                        return@forEach
+                    }
+                }
+            }
         })
 
         // This observer is needed in order to make sure that the Subtasks are retrieved!
