@@ -73,7 +73,27 @@ class IcalListViewModel(
         return iCal4List.value?.indexOf(focusItem) ?: -1
     }
 
-    fun resetFocusItem() { focusItemId.value = 0L }
+    fun resetFocusItem() {
+
+        if(searchModule == Module.NOTE.name) {               // Notes have no default focus item (list scrolls to top by default)
+            focusItemId.value = 0L
+            return
+        } else {
+            iCal4List.value?.forEach {
+                if(it.property.component == Component.VJOURNAL.name && it.property.dtstart?:0L > System.currentTimeMillis()) {
+                    focusItemId.value = it.property.id
+                    return                                    // return when the first item is found that is in the future (focus item stays set on this one)
+                } else if(it.property.component == Component.VTODO.name && it.property.due?:0L > System.currentTimeMillis()) {
+                    focusItemId.value = it.property.id
+                    return                                    // return when the first item is found that is in the future (focus item stays set on this one)
+                }
+            }
+        }
+
+        // if the list is empty, the focus item would be set to 0L
+        focusItemId.value = 0L
+
+    }
 
     private fun constructQuery(): SimpleSQLiteQuery {
 
@@ -173,9 +193,9 @@ class IcalListViewModel(
         queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
 
         when (searchModule) {
-            Module.JOURNAL.name -> queryString += "ORDER BY $COLUMN_DTSTART ASC, $COLUMN_CREATED DESC "
-            Module.NOTE.name -> queryString += "ORDER BY $COLUMN_LAST_MODIFIED DESC, $COLUMN_CREATED DESC "
-            Module.TODO.name -> queryString += "ORDER BY $COLUMN_DUE ASC, $COLUMN_CREATED DESC "
+            Module.JOURNAL.name -> queryString += "ORDER BY $COLUMN_DTSTART ASC, $COLUMN_CREATED ASC "
+            Module.NOTE.name -> queryString += "ORDER BY $COLUMN_LAST_MODIFIED DESC, $COLUMN_CREATED ASC "
+            Module.TODO.name -> queryString += "ORDER BY $COLUMN_DUE ASC, $COLUMN_CREATED ASC "
         }
 
 

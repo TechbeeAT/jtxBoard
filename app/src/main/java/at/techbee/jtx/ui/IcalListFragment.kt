@@ -119,6 +119,8 @@ class IcalListFragment : Fragment() {
             if (arguments.item2focus != 0L && icalListViewModel.iCal4List.value?.size!! > 0) {
                 //Log.println(Log.INFO, "vJournalListFragment", arguments.vJournalItemId.toString())
                 icalListViewModel.setFocusItem(arguments.item2focus)
+            } else {
+                icalListViewModel.resetFocusItem()      // this also finds the closest item to the current date
             }
 
             when (icalListViewModel.searchModule) {
