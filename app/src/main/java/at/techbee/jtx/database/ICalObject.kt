@@ -725,12 +725,11 @@ data class ICalObject(
         additions?.forEach {
             try {
                 val addition = it.toLong()
-                recurList.remove(addition)
+                recurList.add(addition)
             } catch (e: NumberFormatException) {
                 Log.w("NumberFormatException", "Class cast to Long for recurrence addition failed for $it. \n$e")
             }
         }
-
         return recurList
     }
 

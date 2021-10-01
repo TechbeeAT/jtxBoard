@@ -348,6 +348,61 @@ class ICalObjectTest {
     }
 
 
+    @Test
+    fun getInstancesFromRrule_Journal_WEEKLY_withExceptions() {
+
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622541600000L
+            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=FR,SA,SU"
+            this.exdate = "1622973600000,1624096800000"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(4,recurList.size)
+        assertEquals(1622800800000L, recurList[0])
+        assertEquals(1622887200000L, recurList[1])
+        assertEquals(1624010400000L, recurList[2])
+        assertEquals(1624183200000L, recurList[3])
+    }
+
+    @Test
+    fun getInstancesFromRrule_Journal_WEEKLY_withExceptions_andAdditions() {
+
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622541600000L
+            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=FR,SA,SU"
+            this.exdate = "1622973600000,1624096800000"
+            this.rdate = "1651410000000,1654088400000"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(6,recurList.size)
+        assertEquals(1622800800000L, recurList[0])
+        assertEquals(1622887200000L, recurList[1])
+        assertEquals(1624010400000L, recurList[2])
+        assertEquals(1624183200000L, recurList[3])
+        assertEquals(1651410000000L, recurList[4])
+        assertEquals(1654088400000L, recurList[5])
+    }
+
+
+
+    @Test
+    fun getInstancesFromRrule_Todo_WEEKLY() {
+
+        val item = ICalObject.createTodo().apply {
+            this.dtstart = 1622541600000L
+            this.due = 1641045600000L
+            this.rrule = "FREQ=WEEKLY;COUNT=3;INTERVAL=1;BYDAY=MO"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(3,recurList.size)
+        assertEquals(1641218400000L, recurList[0])
+        assertEquals(1641823200000L, recurList[1])
+        assertEquals(1642428000000L, recurList[2])
+    }
+
 
     @Test
     fun getInstancesFromRrule_Journal_DAILY() {
@@ -381,9 +436,40 @@ class ICalObjectTest {
     }
 
     @Test
-    fun getInstancesFromRrule_unsupported() {
+    fun getInstancesFromRrule_unsupported_TodoWithoutDue() {
 
+        val item = ICalObject.createTodo().apply {
+            this.dtstart = 1622494801230L
+            //this.due = 1622541600000L
+            this.rrule = "FREQ=DAILY;COUNT=2;INTERVAL=4"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(0,recurList.size)
     }
 
+    @Test
+    fun getInstancesFromRrule_unsupported_Note() {
 
+        val item = ICalObject.createNote().apply {
+            //this.dtstart = 1622494801230L
+            //this.due = 1622541600000L
+            this.rrule = "FREQ=DAILY;COUNT=2;INTERVAL=4"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(0,recurList.size)
+    }
+
+    @Test
+    fun getInstancesFromRrule_unsupported_faultyRule() {
+
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622494801230L
+            this.rrule = "FREQ=DAILY;COUNT=2;INTERVAL=4;WHATEVER"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(0,recurList.size)
+    }
 }
