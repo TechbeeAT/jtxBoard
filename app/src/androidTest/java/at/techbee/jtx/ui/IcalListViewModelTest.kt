@@ -70,8 +70,8 @@ class IcalListViewModelTest {
 
         icalListViewModel.setFocusItem(id1)
 
-        //sorting is descending, the first inserted item will be at the last position (=2)
-        assertEquals(2, icalListViewModel.getFocusItemPosition())
+        //sorting is descending, the first inserted item will be at the first position (=0)
+        assertEquals(0, icalListViewModel.getFocusItemPosition())
 
     }
 
