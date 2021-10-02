@@ -57,6 +57,8 @@ class IcalListFragment : Fragment() {
     private lateinit var arguments: IcalListFragmentArgs
     private var applyArgs = true
 
+    private var lastScrolledFocusItemId: Long? = null
+
 
     companion object {
         const val PREFS_LIST_VIEW = "sharedPreferencesListView"
@@ -94,10 +96,7 @@ class IcalListFragment : Fragment() {
         // add menu
         setHasOptionsMenu(true)
 
-        //doFilesCheck()
-
-
-        // set up recycler view
+     // set up recycler view
         recyclerView = binding.vjournalListItemsRecyclerView
         linearLayoutManager = LinearLayoutManager(application.applicationContext)
         //staggeredGridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
@@ -115,18 +114,16 @@ class IcalListFragment : Fragment() {
 
         arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
         prefs = requireActivity().getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)!!
+
         loadFilterArgsAndPrefs()
+
 
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
         icalListViewModel.iCal4List.observe(viewLifecycleOwner, {
+
             icalListAdapter!!.notifyDataSetChanged()
 
-            if (arguments.item2focus != 0L && icalListViewModel.iCal4List.value?.size!! > 0) {
-                //Log.println(Log.INFO, "vJournalListFragment", arguments.vJournalItemId.toString())
-                icalListViewModel.setFocusItem(arguments.item2focus)
-            } else {
-                icalListViewModel.resetFocusItem()      // this also finds the closest item to the current date
-            }
+            icalListViewModel.resetFocusItem()              // reset happens only once in a Module, only when the Module get's changed the scrolling would happen again
 
             when (icalListViewModel.searchModule) {
                 Module.JOURNAL.name -> {
@@ -165,8 +162,12 @@ class IcalListFragment : Fragment() {
         // Observe the focus item to scroll automatically to the right position (newly updated or inserted item)
         icalListViewModel.focusItemId.observe(viewLifecycleOwner, {
 
-            val pos = icalListViewModel.getFocusItemPosition()
-            linearLayoutManager!!.scrollToPositionWithOffset(pos, 20)   // offset makes the item always appear 20px from the top (instead of recyclerView?.scrollToPosition(pos)   )
+            // don't scroll if the item is not set or if scrolling was already done for this Module (this avoids jumping around when the live data with ical-entries changes e.g. through updates or the sync)
+            if (it != null && lastScrolledFocusItemId != it) {
+                val pos = icalListViewModel.getFocusItemPosition()
+                linearLayoutManager!!.scrollToPositionWithOffset(pos,20)   // offset makes the item always appear 20px from the top (instead of recyclerView?.scrollToPosition(pos)   )
+                lastScrolledFocusItemId = it
+            }
         })
 
         binding.tablayoutJournalnotestodos.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -175,7 +176,6 @@ class IcalListFragment : Fragment() {
 
                 binding.listProgressIndicator.visibility = View.VISIBLE
                 icalListViewModel.clearFilter()
-                icalListViewModel.resetFocusItem()
 
                 when (tab?.position) {
                     TAB_INDEX_JOURNAL -> icalListViewModel.searchModule = Module.JOURNAL.name
@@ -183,11 +183,18 @@ class IcalListFragment : Fragment() {
                     TAB_INDEX_TODO -> icalListViewModel.searchModule = Module.TODO.name
                 }
 
+                lastScrolledFocusItemId = null
                 applyFilters()
+
             }
             override fun onTabUnselected(tab: TabLayout.Tab?) { }    // nothing to do
-            override fun onTabReselected(tab: TabLayout.Tab?) { }      // nothing to do
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                lastScrolledFocusItemId = null        // makes the view scroll again when the tab is clicked again
+                icalListViewModel.resetFocusItem()
+            }
         })
+
+
 
         return binding.root
     }
@@ -198,10 +205,10 @@ class IcalListFragment : Fragment() {
         // initialize the floating action button only onStart, otherwise the fragment might not be created yet
         binding.fab.setOnClickListener {
 
-            when(binding.tablayoutJournalnotestodos.selectedTabPosition) {
-                TAB_INDEX_JOURNAL -> goToEdit(ICalEntity(ICalObject.createJournal()))
-                TAB_INDEX_NOTE -> goToEdit(ICalEntity(ICalObject.createNote()))
-                TAB_INDEX_TODO -> goToEdit(ICalEntity(ICalObject.createTodo()))
+            when(icalListViewModel.searchModule) {
+                Module.JOURNAL.name -> goToEdit(ICalEntity(ICalObject.createJournal()))
+                Module.NOTE.name -> goToEdit(ICalEntity(ICalObject.createNote()))
+                Module.TODO.name -> goToEdit(ICalEntity(ICalObject.createTodo()))
             }
         }
 
@@ -239,6 +246,8 @@ class IcalListFragment : Fragment() {
         icalListViewModel.searchStatusTodo = arguments.statusTodo2filter?.toMutableList() ?: StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_STATUS_TODO, null))
         icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null))
 
+        icalListViewModel.focusItemId.value = arguments.item2focus    // or null
+
         // activate the right tab according to the searchModule
         when (icalListViewModel.searchModule) {
             Module.JOURNAL.name -> binding.tablayoutJournalnotestodos.getTabAt(TAB_INDEX_JOURNAL)?.select()
@@ -258,6 +267,8 @@ class IcalListFragment : Fragment() {
             binding.fabFilter.setImageResource(R.drawable.ic_filter_delete)
         else
             binding.fabFilter.setImageResource(R.drawable.ic_filter)
+
+        icalListViewModel.resetFocusItem()
     }
 
     private fun savePrefs() {
@@ -424,8 +435,8 @@ class IcalListFragment : Fragment() {
         val constraintsBuilder =
             CalendarConstraints.Builder().apply {
 
-                val startItem = icalListViewModel.iCal4List.value?.lastOrNull()
-                val endItem = icalListViewModel.iCal4List.value?.firstOrNull()
+                val startItem = icalListViewModel.iCal4List.value?.firstOrNull()
+                val endItem = icalListViewModel.iCal4List.value?.lastOrNull()
 
                 if (startItem?.property?.dtstart != null && endItem?.property?.dtstart != null) {
                     setStart(startItem.property.dtstart!!)
@@ -459,7 +470,7 @@ class IcalListFragment : Fragment() {
                         && cItem.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)
             }
             if (foundItem != null)
-                icalListViewModel.setFocusItem(foundItem.property.id)
+                icalListViewModel.focusItemId.value = foundItem.property.id
         }
 
         datePicker.show(parentFragmentManager, "menu_list_gotodate")
@@ -468,47 +479,4 @@ class IcalListFragment : Fragment() {
 
     private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
 
-/*
-    private fun doFilesCheck() {
-
-
-        val foundFileContentUris = mutableListOf<Uri>()
-
-
-        val filesPath = File(requireContext().filesDir, ".")
-        filesPath.listFiles().forEach {
-            Log.d("FileInFolder", it.path.toString())
-            val fileContentUri = FileProvider.getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, it)
-            foundFileContentUris.add(fileContentUri)
-            Log.d("FileInFolderCUri", fileContentUri.toString())
-
-        }
-
-        val extFilesPath = File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString())
-        extFilesPath.listFiles().forEach {
-            Log.d("FileInExtFolder", it.path.toString())
-            val fileContentUri = FileProvider.getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, it)
-            foundFileContentUris.add(fileContentUri)
-            Log.d("FileInFolderCUri", fileContentUri.toString())
-        }
-
-        lifecycleScope.launchWhenStarted {
-            val allAttachmentUris = dataSource.getAllAttachmentUris()
-            allAttachmentUris.forEach { attachment2keep ->
-                foundFileContentUris.remove(Uri.parse(attachment2keep))
-            }
-
-            Log.d("remainingItems", foundFileContentUris.toString())
-
-            foundFileContentUris.forEach {
-                requireContext().contentResolver.delete(it, null, null)
-            }
-
-        }
-
-
-    }
-
-
- */
 }

@@ -68,7 +68,7 @@ class IcalListViewModelTest {
         icalListViewModel.searchModule = Module.TODO.name
         icalListViewModel.updateSearch()
 
-        icalListViewModel.setFocusItem(id1)
+        icalListViewModel.focusItemId.value = id1
 
         //sorting is descending, the first inserted item will be at the first position (=0)
         assertEquals(0, icalListViewModel.getFocusItemPosition())

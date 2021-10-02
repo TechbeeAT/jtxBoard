@@ -40,33 +40,11 @@ class IcalListViewModel(
         database.getIcalObjectWithRelatedto(it)
     }
 
-
     // TODO maybe retrieve all subtasks only when subtasks are needed!
     val allSubtasks: LiveData<List<ICal4List?>> = database.getAllSubtasks()
 
-    var focusItemId: MutableLiveData<Long> = MutableLiveData(0L)
+    var focusItemId: MutableLiveData<Long?> = MutableLiveData(null)
 
-
-    init {
-
-        viewModelScope.launch {
-
-            allSubtasks.apply { database.getAllSubtasks() }
-
-            /*
-            for (i in 1..200) {
-                ICalDatabase.populateInitialTestData(database)
-            }
-
-             */
-
-        }
-    }
-
-
-    fun setFocusItem(vJournalItemId: Long) {
-        focusItemId.value = vJournalItemId
-    }
 
     fun getFocusItemPosition(): Int {
         val focusItem = iCal4List.value?.find { focusItemId.value == it.property.id }
@@ -90,7 +68,6 @@ class IcalListViewModel(
             }
         }
         focusItemId.value = 0L                  // if the list is empty, the focus item would be set to 0L
-
 
     }
 
