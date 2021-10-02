@@ -58,6 +58,7 @@ class IcalListFragment : Fragment() {
     private var applyArgs = true
 
     private var lastScrolledFocusItemId: Long? = null
+    private var snackbarDueTasksInPastShown = false
 
 
     companion object {
@@ -147,8 +148,10 @@ class IcalListFragment : Fragment() {
             if(icalListViewModel.searchModule == Module.TODO.name) {
                 icalListViewModel.iCal4List.value?.forEach {
                     if((it.property.status == StatusTodo.`IN-PROCESS`.name || it.property.status == StatusTodo.`NEEDS-ACTION`.name)
-                        && it.property.due != null && it.property.due!! < System.currentTimeMillis()) {
+                        && it.property.due != null && it.property.due!! < System.currentTimeMillis()
+                        && !snackbarDueTasksInPastShown) {
                         Snackbar.make(requireView(), R.string.list_snackbar_overdue_tasks_in_past, Snackbar.LENGTH_LONG).show()
+                        snackbarDueTasksInPastShown = true      // show the snackbar only once to not bother the user all the time
                         return@forEach
                     }
                 }
