@@ -291,8 +291,6 @@ class IcalFilterFragment : Fragment() {
                 this.category2filter = categoriesSelected.toTypedArray()
                 this.module2show = modulePreselected
             }
-
-
         this.findNavController().navigate(direction)
     }
 }

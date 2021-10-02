@@ -9,15 +9,95 @@
 package at.techbee.jtx.database
 
 import android.content.ContentValues
+import android.content.Context
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
-import at.techbee.jtx.R
+import at.techbee.jtx.getOrAwaitValue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
+import net.fortuna.ical4j.util.MapTimeZoneCache
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.junit.Before
+import org.junit.Rule
+import org.junit.runner.RunWith
 import java.util.*
 
+@ExperimentalCoroutinesApi
+@RunWith(AndroidJUnit4::class)
+@SmallTest
 class ICalObjectAndroidTest {
 // Android Test as Content Values need Android libraries to run
+
+
+
+
+    @get:Rule
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    private lateinit var database: ICalDatabaseDao
+    private lateinit var context: Context
+
+    @Before
+    fun createDb() {
+        context = InstrumentationRegistry.getInstrumentation().targetContext
+        database = ICalDatabase.getInMemoryDB(context).iCalDatabaseDao
+
+        database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests"))
+    }
+
+
+    @Test
+    fun recreateRecurring_journal() = runBlockingTest {
+
+        val item = ICalObject.createJournal().apply {
+            // from  fun getInstancesFromRrule_Journal_WEEKLY_withExceptions()
+            this.collectionId = 1L
+            this.dtstart = 1622541600000L
+            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=FR,SA,SU"
+            this.exdate = "1622973600000,1624096800000"
+        }
+
+        val id = database.insertICalObject(item)
+        val savedItem = database.getSync(id)
+        savedItem?.property?.recreateRecurring(database)
+
+        val recurList = database.getRecurInstances(id).getOrAwaitValue()
+        assertEquals(4, recurList.size)
+
+        database.deleteRecurringInstances(id)
+        val recurListEmpty = database.getRecurInstances(id).getOrAwaitValue()
+        assertEquals(0, recurListEmpty.size)
+
+
+    }
+
+    @Test
+    fun recreateRecurring_todo() = runBlockingTest {
+
+
+        val item = ICalObject.createTodo().apply {
+            // from  fun getInstancesFromRrule_Journal_WEEKLY_withExceptions()
+            this.due = 1622541600000L
+            this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=FR,SA,SU"
+            this.exdate = "1622973600000,1624096800000"
+            this.rdate = "1651410000000,1654088400000"
+        }
+
+        val id = database.insertICalObject(item)
+        val savedItem = database.getSync(id)
+        savedItem?.property?.recreateRecurring(database)
+
+        val recurList = database.getRecurInstances(id).getOrAwaitValue()
+        assertEquals(6, recurList.size)
+
+        database.deleteRecurringInstances(id)
+        val recurListEmpty = database.getRecurInstances(id).getOrAwaitValue()
+        assertEquals(0, recurListEmpty.size)
+    }
 
 
     @Test

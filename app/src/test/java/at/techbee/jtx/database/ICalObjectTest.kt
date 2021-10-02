@@ -2,7 +2,6 @@ package at.techbee.jtx.database
 
 import android.content.Context
 import at.techbee.jtx.R
-import net.fortuna.ical4j.util.MapTimeZoneCache
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -225,16 +224,18 @@ class ICalObjectTest {
         assertEquals("20210923", recurId)
     }
 
-    // would use the local timezone and therefore depends on device. This Test is deactivated for now
-    /*
+
     @Test
     fun getRecurId_datetime() {
 
         val sampleDate = 1632474660000L   // 2021-09-24 11:11:00
         val recurId = ICalObject.getRecurId(sampleDate, null)
         assertEquals("20210924T111100", recurId)
-    }       */
+    }
 
+
+    // TODO: Check this test further, it fails because of net.fortuna.ical4j.model.TimeZoneRegistryImpl getTimeZone
+/*
     @Test
     fun getRecurId_datetime_withTimezone() {
 
@@ -245,6 +246,8 @@ class ICalObjectTest {
         val recurId = ICalObject.getRecurId(sampleDate, "Africa/Banjul")
         assertEquals("20210924T091100;TZID=Africa/Abidjan", recurId)
     }
+
+ */
 
 
     @Test
@@ -506,5 +509,51 @@ class ICalObjectTest {
 
         val recurList = item.getInstancesFromRrule()
         assertEquals(0,recurList.size)
+    }
+
+    @Test
+    fun classification_getListFromStringList() {
+
+        val classList = Classification.getListFromStringList(listOf("PRIVATE", "PUBLIC", "CONFIDENTIAL").toSet())
+        assertTrue(classList.contains(Classification.CONFIDENTIAL))
+        assertTrue(classList.contains(Classification.PRIVATE))
+        assertTrue(classList.contains(Classification.PUBLIC))
+    }
+
+    @Test
+    fun statusJournal_getListFromStringList() {
+
+        val statusList = StatusJournal.getListFromStringList(listOf("DRAFT", "FINAL", "CANCELLED").toSet())
+        assertTrue(statusList.contains(StatusJournal.CANCELLED))
+        assertTrue(statusList.contains(StatusJournal.DRAFT))
+        assertTrue(statusList.contains(StatusJournal.FINAL))
+    }
+
+    @Test
+    fun statusTodo_getListFromStringList() {
+
+        val statusList = StatusTodo.getListFromStringList(listOf("CANCELLED", "IN-PROCESS", "COMPLETED", "NEEDS-ACTION").toSet())
+        assertTrue(statusList.contains(StatusTodo.CANCELLED))
+        assertTrue(statusList.contains(StatusTodo.`IN-PROCESS`))
+        assertTrue(statusList.contains(StatusTodo.COMPLETED))
+        assertTrue(statusList.contains(StatusTodo.`NEEDS-ACTION`))
+    }
+
+    @Test
+    fun classification_getStringSetFromList() {
+        val classifications = listOf(Classification.PUBLIC, Classification.PRIVATE, Classification.CONFIDENTIAL)
+        assertEquals(listOf("PUBLIC", "PRIVATE", "CONFIDENTIAL").toSet(), Classification.getStringSetFromList(classifications))
+    }
+
+    @Test
+    fun statusJournal_getStringSetFromList() {
+        val statusJournals = listOf(StatusJournal.FINAL, StatusJournal.DRAFT, StatusJournal.CANCELLED)
+        assertEquals(listOf("DRAFT", "FINAL", "CANCELLED").toSet(), StatusJournal.getStringSetFromList(statusJournals))
+    }
+
+    @Test
+    fun statusTodo_getStringSetFromList() {
+        val statusTodos = listOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.COMPLETED, StatusTodo.`IN-PROCESS`, StatusTodo.CANCELLED)
+        assertEquals(listOf("CANCELLED", "IN-PROCESS", "COMPLETED", "NEEDS-ACTION").toSet(), StatusTodo.getStringSetFromList(statusTodos))
     }
 }

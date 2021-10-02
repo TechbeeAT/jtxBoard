@@ -518,7 +518,6 @@ data class ICalObject(
                     withTimezone.timeZone = timezone
                     withTimezone.value + withTimezone.parameters
                 }
-
             }
         }
     }
