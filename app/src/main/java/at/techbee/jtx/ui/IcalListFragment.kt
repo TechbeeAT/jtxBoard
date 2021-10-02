@@ -50,7 +50,7 @@ class IcalListFragment : Fragment() {
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
 
-    private lateinit var optionsMenu: Menu
+    private var optionsMenu: Menu? = null
     private var gotodateMenuItem: MenuItem? = null
 
     private lateinit var prefs: SharedPreferences
@@ -129,20 +129,41 @@ class IcalListFragment : Fragment() {
             when (icalListViewModel.searchModule) {
                 Module.JOURNAL.name -> {
                     gotodateMenuItem?.isVisible = true
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
                     //staggeredGridLayoutManager!!.spanCount = 1
                     binding.fab.setImageResource(R.drawable.ic_add)
                 }
                 Module.NOTE.name -> {
                     gotodateMenuItem?.isVisible = false
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
                     //staggeredGridLayoutManager!!.spanCount = 1
                     binding.fab.setImageResource(R.drawable.ic_add_note)
                 }
                 Module.TODO.name -> {
                     gotodateMenuItem?.isVisible = false
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = false
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = false
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = false
                     //staggeredGridLayoutManager!!.spanCount = 1
                     binding.fab.setImageResource(R.drawable.ic_todo_add)
                 }
             }
+
+
+            // don't show the option to clear the filter if no filter was set
+            if (!isFilterActive()) {
+                optionsMenu?.findItem(R.id.menu_list_clearfilter)?.isVisible = false
+                binding.fabFilter.setImageResource(R.drawable.ic_filter)
+            } else {
+                optionsMenu?.findItem(R.id.menu_list_clearfilter)?.isVisible = true
+                binding.fabFilter.setImageResource(R.drawable.ic_filter_delete)
+            }
+
+
             binding.listProgressIndicator.visibility = View.GONE
 
             if(icalListViewModel.searchModule == Module.TODO.name) {
@@ -264,13 +285,6 @@ class IcalListFragment : Fragment() {
 
         icalListViewModel.updateSearch()
         savePrefs()
-
-        // Change the filter icon to make clear when a filter is active
-        if (icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty())
-            binding.fabFilter.setImageResource(R.drawable.ic_filter_delete)
-        else
-            binding.fabFilter.setImageResource(R.drawable.ic_filter)
-
         icalListViewModel.resetFocusItem()
     }
 
@@ -289,24 +303,6 @@ class IcalListFragment : Fragment() {
         MenuCompat.setGroupDividerEnabled(menu, true)
         optionsMenu = menu
         gotodateMenuItem = menu.findItem(R.id.menu_list_gotodate)         // Tell the variable the menu item to later make it visible or invisible
-
-        // don't show the option to clear the filter if no filter was set
-        if (!isFilterActive()) {
-            optionsMenu.findItem(R.id.menu_list_clearfilter).isVisible = false
-            binding.fabFilter.setImageResource(R.drawable.ic_filter)
-        }
-
-        if (icalListViewModel.searchModule == Module.TODO.name) {
-            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts).isVisible = false
-            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final).isVisible = false
-            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vjournal_final).isVisible = false
-        }
-        else {
-            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled).isVisible = false
-            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed).isVisible = false
-            optionsMenu.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress).isVisible = false
-        }
-
 
         // add listener for search!
         val searchMenuItem = menu.findItem(R.id.menu_list_search)
@@ -354,8 +350,6 @@ class IcalListFragment : Fragment() {
 
     private fun resetFilter() {
 
-        binding.fabFilter.setImageResource(R.drawable.ic_filter)
-        optionsMenu.findItem(R.id.menu_list_clearfilter).isVisible = false
         icalListViewModel.resetFocusItem()
         icalListViewModel.clearFilter()
         prefs.edit().clear().apply()
@@ -478,7 +472,6 @@ class IcalListFragment : Fragment() {
 
         datePicker.show(parentFragmentManager, "menu_list_gotodate")
     }
-
 
     private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
 
