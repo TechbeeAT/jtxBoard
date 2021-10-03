@@ -1989,14 +1989,10 @@ class IcalEditFragment : Fragment() {
         if (icalEditViewModel.iCalEntity.property.module == Module.NOTE.name) {
             Toast.makeText(requireContext(),"Recurrence can not be used for notes!",Toast.LENGTH_LONG).show()
             return
-        } else if(icalEditViewModel.iCalEntity.property.module == Module.JOURNAL.name && icalEditViewModel.iCalEntity.property.dtstart == null) {
+        } else if(icalEditViewModel.iCalEntity.property.dtstart == null) {
             Toast.makeText(requireContext(),"Recurrence requires a start-date to be set!",Toast.LENGTH_LONG).show()
             return
-        } else if(icalEditViewModel.iCalEntity.property.module == Module.TODO.name && icalEditViewModel.iCalEntity.property.due == null) {
-            Toast.makeText(requireContext(),"Recurrence requires a due-date to be set!",Toast.LENGTH_LONG).show()
-            return
         }
-
         //UpdateUI
         icalEditViewModel.recurrenceList.addAll(icalEditViewModel.iCalEntity.property.getInstancesFromRrule())
 

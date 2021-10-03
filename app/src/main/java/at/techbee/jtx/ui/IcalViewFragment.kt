@@ -352,19 +352,10 @@ class IcalViewFragment : Fragment() {
             val recurDates = mutableListOf<String>()
             it.forEach { item ->
                 item?.let {
-
-                    if(it.component == Component.VJOURNAL.name) {
-                        if (it.dtstartTimezone != "ALLDAY")
-                            recurDates.add(convertLongToFullDateString(it.dtstart) + " " + convertLongToTimeString(it.dtstart))
-                        else
-                            recurDates.add(convertLongToFullDateString(it.dtstart))
-                    }
-                    else if(it.component == Component.VTODO.name){
-                        if (it.dueTimezone != "ALLDAY")
-                            recurDates.add(convertLongToFullDateString(it.due) + " " + convertLongToTimeString(it.due))
-                        else
-                            recurDates.add(convertLongToFullDateString(it.due))
-                    }
+                    if (it.dtstartTimezone != "ALLDAY")
+                        recurDates.add(convertLongToFullDateString(it.dtstart) + " " + convertLongToTimeString(it.dtstart))
+                    else
+                        recurDates.add(convertLongToFullDateString(it.dtstart))
                 }
             }
             binding.viewReccurrenceItems?.text = recurDates.joinToString(separator = "\n")

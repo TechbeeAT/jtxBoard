@@ -284,8 +284,8 @@ class ICalObjectTest {
     fun getInstancesFromRrule_Todo_YEARLY() {
 
         val item = ICalObject.createTodo().apply {
-            this.dtstart = 1622494801230L
-            this.due = 1622494800000L
+            this.dtstart = 1622494800000L
+            this.due = 1622494843210L
             this.rrule = "FREQ=YEARLY;COUNT=3;INTERVAL=2"
         }
 
@@ -318,8 +318,8 @@ class ICalObjectTest {
     fun getInstancesFromRrule_TODO_MONTHLY() {
 
         val item = ICalObject.createTodo().apply {
-            this.dtstart = 1622498402200L
-            this.due = 1622541600000L
+            this.dtstart = 1622541600000L
+            this.due = 1622541650000L
             this.rrule = "FREQ=MONTHLY;COUNT=2;INTERVAL=2;BYMONTHDAY=5"
         }
 
@@ -394,8 +394,8 @@ class ICalObjectTest {
     fun getInstancesFromRrule_Todo_WEEKLY() {
 
         val item = ICalObject.createTodo().apply {
-            this.dtstart = 1622541600000L
-            this.due = 1641045600000L
+            this.dtstart = 1641045600000L
+            this.due = 1641045605000L
             this.rrule = "FREQ=WEEKLY;COUNT=3;INTERVAL=1;BYDAY=MO"
         }
 
@@ -461,7 +461,7 @@ class ICalObjectTest {
     fun getInstancesFromRrule_Todo_DAILY() {
 
         val item = ICalObject.createTodo().apply {
-            this.dtstart = 1622494801230L
+            this.dtstart = 1622541600000L
             this.due = 1622541600000L
             this.rrule = "FREQ=DAILY;COUNT=2;INTERVAL=4"
         }
@@ -477,8 +477,8 @@ class ICalObjectTest {
     fun getInstancesFromRrule_unsupported_TodoWithoutDue() {
 
         val item = ICalObject.createTodo().apply {
-            this.dtstart = 1622494801230L
-            //this.due = 1622541600000L
+            //this.dtstart = 1622494801230L
+            this.due = 1622541600000L
             this.rrule = "FREQ=DAILY;COUNT=2;INTERVAL=4"
         }
 

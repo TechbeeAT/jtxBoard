@@ -632,19 +632,13 @@ data class ICalObject(
             val count = rRule.count
 
             val start = Calendar.getInstance().apply {
-                if(component == Component.VJOURNAL.name && dtstartTimezone?.isNotEmpty() == true && dtstartTimezone != "ALLDAY")
+                if(dtstartTimezone?.isNotEmpty() == true && dtstartTimezone != "ALLDAY")
                     this.timeZone = TimeZone.getTimeZone(dtstartTimezone)
-                else if(component == Component.VTODO.name && dueTimezone?.isNotEmpty() == true && dueTimezone != "ALLDAY")
-                    this.timeZone = TimeZone.getTimeZone(dueTimezone)
                 else
                     timeZone = TimeZone.getTimeZone("UTC")
                 //TODO: Continue here checking the timezone
 
-                timeInMillis = when(component) {
-                    Component.VJOURNAL.name -> dtstart ?: return emptyList()
-                    Component.VTODO.name -> due ?: return emptyList()
-                    else -> return emptyList()
-                }
+                timeInMillis = dtstart?: return emptyList()
             }
 
 
@@ -741,11 +735,17 @@ data class ICalObject(
         val original = database.getSync(id) ?: return
         database.deleteRecurringInstances(id)
 
+        if(original.property.dtstart == null)
+            return
+
+        val timeToDue = if(original.property.component == Component.VTODO.name && original.property.due != null)
+            original.property.due!! - original.property.dtstart!!
+        else
+            0L
 
         getInstancesFromRrule().forEach { recurrenceDate ->
 
-            if((original.property.component == Component.VJOURNAL.name && original.property.dtstart == recurrenceDate)
-                || (original.property.component == Component.VTODO.name && original.property.due == recurrenceDate))
+            if(original.property.dtstart == recurrenceDate)
                 return@forEach    // skip entry as it is the original event
 
             val instance = original.copy()
@@ -765,8 +765,7 @@ data class ICalObject(
             instance.property.dirty = false
             instance.property.isRecurLinkedInstance = true
 
-            if(instance.property.component == Component.VJOURNAL.name && instance.property.dtstart != null) {
-                instance.property.recurid = when {
+            instance.property.recurid = when {
                     instance.property.dtstartTimezone == "ALLDAY" -> DtStart(Date(instance.property.dtstart!!)).value
                     instance.property.dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dtstart!!)).value
                     else -> {
@@ -777,25 +776,13 @@ data class ICalObject(
                             DtStart(DateTime(instance.property.dtstart!!))
                         withTimezone.timeZone = timezone
                         withTimezone.value
-                    }
-                }
-            } else if(instance.property.component == Component.VTODO.name && instance.property.due != null) {
-                instance.property.recurid = when {
-                    instance.property.dueTimezone == "ALLDAY" -> DtStart(Date(instance.property.due!!)).value
-                    instance.property.dueTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.due!!)).value
-                    else -> {
-                        val timezone =
-                            TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(instance.property.dueTimezone)
-                        val withTimezone = DtStart(DateTime(instance.property.due!!))
-                        withTimezone.timeZone = timezone
-                        withTimezone.value
-                    }
                 }
             }
-            if(instance.property.component == Component.VTODO.name)
-                instance.property.due = recurrenceDate
-            else if(instance.property.component == Component.VJOURNAL.name)
-                instance.property.dtstart = recurrenceDate
+
+            instance.property.dtstart = recurrenceDate
+
+            if(instance.property.component == Component.VTODO.name && original.property.due != null)
+                instance.property.due = recurrenceDate + timeToDue
 
             val instanceId = database.insertICalObjectSync(instance.property)
 

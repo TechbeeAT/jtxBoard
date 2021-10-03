@@ -17,9 +17,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import net.fortuna.ical4j.util.MapTimeZoneCache
 import org.junit.Test
-
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -31,8 +29,6 @@ import java.util.*
 @SmallTest
 class ICalObjectAndroidTest {
 // Android Test as Content Values need Android libraries to run
-
-
 
 
     @get:Rule
@@ -71,17 +67,15 @@ class ICalObjectAndroidTest {
         database.deleteRecurringInstances(id)
         val recurListEmpty = database.getRecurInstances(id).getOrAwaitValue()
         assertEquals(0, recurListEmpty.size)
-
-
     }
 
     @Test
     fun recreateRecurring_todo() = runBlockingTest {
 
-
         val item = ICalObject.createTodo().apply {
             // from  fun getInstancesFromRrule_Journal_WEEKLY_withExceptions()
-            this.due = 1622541600000L
+            this.dtstart = 1622541600000L
+            this.due = 1622548800000L
             this.rrule = "FREQ=WEEKLY;COUNT=2;INTERVAL=2;BYDAY=FR,SA,SU"
             this.exdate = "1622973600000,1624096800000"
             this.rdate = "1651410000000,1654088400000"
@@ -93,6 +87,9 @@ class ICalObjectAndroidTest {
 
         val recurList = database.getRecurInstances(id).getOrAwaitValue()
         assertEquals(6, recurList.size)
+
+        assertEquals(1622808000000L, recurList[0]?.due)
+        assertEquals(1622894400000L, recurList[1]?.due)
 
         database.deleteRecurringInstances(id)
         val recurListEmpty = database.getRecurInstances(id).getOrAwaitValue()
@@ -181,5 +178,4 @@ class ICalObjectAndroidTest {
         val cvICalObject = ICalObject.fromContentValues(cv)
         assertEquals(sampleICalObject, cvICalObject)
     }
-
 }

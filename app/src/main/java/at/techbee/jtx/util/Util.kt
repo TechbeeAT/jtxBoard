@@ -164,7 +164,10 @@ fun addLongToCSVString(listAsString: String?, value: Long?): String {
     val newStringList = mutableListOf<String>()
     newStringList.add(value.toString())
 
-    return newStringList.joinToString(",")
+    return if(newStringList.isNotEmpty())
+        ""
+    else
+        newStringList.joinToString(",")
 
 }
 
