@@ -12,11 +12,13 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
+import at.techbee.jtx.addLongToCSVString
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
+import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.launch
 
@@ -200,11 +202,20 @@ class IcalListViewModel(
 
     fun updateProgress(itemId: Long, newPercent: Int) {
 
-        viewModelScope.launch {
-            val currentItem = database.getICalObjectById(itemId)?.setUpdatedProgress(newPercent)
-            if(currentItem != null) {
-                database.update(currentItem)
-                //Log.println(Log.INFO, "DB-Update current item", "Update currentItem done")
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val currentItem = database.getICalObjectById(itemId)
+
+            currentItem?.let { icalObject ->
+                if(icalObject.isRecurLinkedInstance) {
+                    currentItem.recurOriginalIcalObjectId?.let { originalId ->
+                        val newExceptionList = addLongToCSVString(database.getRecurExceptions(originalId), currentItem.dtstart)
+                        database.setRecurExceptions(originalId, newExceptionList)
+                        //Toast.makeText(getApplication(), "Recurring item is now an exception.", Toast.LENGTH_LONG)
+                    }
+                }
+                icalObject.setUpdatedProgress(newPercent)
+                database.update(icalObject)
             }
         }
     }

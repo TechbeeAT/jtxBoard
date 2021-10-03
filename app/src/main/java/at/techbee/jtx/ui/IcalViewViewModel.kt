@@ -10,10 +10,12 @@ package at.techbee.jtx.ui
 
 import android.app.Application
 import androidx.lifecycle.*
+import at.techbee.jtx.addLongToCSVString
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4ViewNote
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.*
@@ -61,7 +63,9 @@ class IcalViewViewModel(private val icalItemId: Long,
 
     lateinit var recurrenceVisible: LiveData<Boolean>
     lateinit var recurrenceItemsVisible: LiveData<Boolean>
+    lateinit var recurrenceLinkedVisible: LiveData<Boolean>
     lateinit var recurrenceGoToOriginalVisible: LiveData<Boolean>
+    lateinit var recurrenceIsExceptionVisible: LiveData<Boolean>
 
 
     lateinit var collectionText: LiveData<String?>
@@ -230,13 +234,19 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
 
             recurrenceVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.rrule != null || (item?.property?.recurOriginalIcalObjectId != null && item.property.isRecurLinkedInstance))
+                return@map (item?.property?.rrule != null || item?.property?.recurOriginalIcalObjectId != null)
             }
             recurrenceItemsVisible = Transformations.map(icalEntity) { item ->
                 return@map (item?.property?.rrule != null)
             }
-            recurrenceGoToOriginalVisible = Transformations.map(icalEntity) { item ->
+            recurrenceLinkedVisible = Transformations.map(icalEntity) { item ->
                 return@map (item?.property?.recurOriginalIcalObjectId != null && item.property.isRecurLinkedInstance)
+            }
+            recurrenceGoToOriginalVisible = Transformations.map(icalEntity) { item ->
+                return@map (item?.property?.recurOriginalIcalObjectId != null)
+            }
+            recurrenceIsExceptionVisible = Transformations.map(icalEntity) { item ->
+                return@map (item?.property?.isRecurLinkedInstance == false && item.property.rrule == null)
             }
         }
 
@@ -283,7 +293,16 @@ class IcalViewViewModel(private val icalItemId: Long,
 
     fun updateProgress(item: ICalObject, newPercent: Int) {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            if(item.isRecurLinkedInstance) {
+                item.recurOriginalIcalObjectId?.let { originalId ->
+                    val newExceptionList =
+                        addLongToCSVString(database.getRecurExceptions(originalId), item.dtstart)
+                    database.setRecurExceptions(originalId, newExceptionList)
+                    //Toast.makeText(getApplication(), "Recurring item is now an exception.", Toast.LENGTH_LONG)
+                }
+            }
             database.update(item.setUpdatedProgress(newPercent))
         }
     }

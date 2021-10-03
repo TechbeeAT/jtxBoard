@@ -615,6 +615,8 @@ data class ICalObject(
         sequence++
         dirty = true
 
+        isRecurLinkedInstance = false     // in any case on update of the progress, the item becomes an exception
+
         return this
     }
 

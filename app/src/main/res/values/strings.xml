@@ -134,6 +134,7 @@
     <string name="view_comment_playbutton_content_desc">Play audio comment</string>
     <string name="view_fragment_audio_start_stop_recording_contentdesc">Start/Stop recording</string>
     <string name="view_fragment_audio_start_stop_playback_contentdesc">Play audio comment</string>
+    <string name="view_reccurrence_note_is_exception">This item is an exception to a recurring entry.</string>
 
 
     <string name="edit_attendees_roledialog_chair">Chair</string>

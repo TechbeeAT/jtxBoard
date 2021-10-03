@@ -10,7 +10,9 @@ package at.techbee.jtx
 
 import android.icu.text.MessageFormat
 import android.os.Build
+import android.util.Log
 import androidx.core.util.PatternsCompat
+import java.lang.NumberFormatException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
@@ -151,4 +153,35 @@ fun isLocalizedWeekstartMonday(): Boolean {
             return true
     }
     return false
+}
+
+fun addLongToCSVString(listAsString: String?, value: Long?): String {
+
+    if(listAsString == null || value == null)
+        return value.toString()
+
+    val stringList = listAsString.split(",")
+    val newStringList = mutableListOf<String>()
+    newStringList.add(value.toString())
+
+    return newStringList.joinToString(",")
+
+}
+
+fun getLongListfromCSVString(listAsString: String?): List<Long> {
+
+    if(listAsString == null)
+        return emptyList()
+
+    val stringList = listAsString.split(",")
+    val longList = mutableListOf<Long>()
+
+    stringList.forEach {
+        try {
+            longList.add(it.toLong())
+        } catch(e: NumberFormatException) {
+            Log.w("NumberFormatException", "Failed to convert Long to String ($it)\n$e")
+        }
+    }
+    return longList
 }

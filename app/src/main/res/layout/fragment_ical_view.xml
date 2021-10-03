@@ -619,11 +619,25 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
                     android:autoLink="all"
-                    android:visibility="@{model.recurrenceGoToOriginalVisible ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{model.recurrenceLinkedVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/view_reccurrence_header"
                     app:layout_constraintTop_toBottomOf="@+id/view_reccurrence_items"
-                    tools:text="@string/view_recurrence_note_to_original" />
+                    android:text="@string/view_recurrence_note_to_original" />
+
+                <TextView
+                    android:id="@+id/view_reccurrence_note_is_exception"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:autoLink="all"
+                    android:visibility="@{model.recurrenceIsExceptionVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/view_reccurrence_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_reccurrence_note_to_original"
+                    android:text="@string/view_reccurrence_note_is_exception" />
+
 
                 <Button
                     android:id="@+id/view_reccurrence_gotooriginal_button"
@@ -635,7 +649,7 @@
                     app:icon="@drawable/ic_recurring"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_reccurrence_note_to_original" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_reccurrence_note_is_exception" />
 
 
                 <TextView
