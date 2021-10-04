@@ -23,6 +23,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
@@ -41,12 +42,16 @@ class EspressoTestcase {
     private lateinit var context: Context
     private lateinit var application: Application
 
+    @ExperimentalCoroutinesApi
     private val testDispatcher = TestCoroutineDispatcher()
+
+    @ExperimentalCoroutinesApi
     private val testScope = TestCoroutineScope(testDispatcher)
 
     private val sampleCollection = ICalCollection(collectionId = 1L, displayName = "testcollection automated tests")
 
 
+    @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
