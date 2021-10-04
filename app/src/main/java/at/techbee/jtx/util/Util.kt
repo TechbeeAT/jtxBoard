@@ -155,20 +155,24 @@ fun isLocalizedWeekstartMonday(): Boolean {
     return false
 }
 
-fun addLongToCSVString(listAsString: String?, value: Long?): String {
+fun addLongToCSVString(listAsString: String?, value: Long?): String? {
 
-    if(listAsString == null || value == null)
+    if(value == null)
+        return null
+
+    if(listAsString.isNullOrBlank())
         return value.toString()
 
     val stringList = listAsString.split(",")
     val newStringList = mutableListOf<String>()
-    newStringList.add(value.toString())
+    newStringList.addAll(stringList)
+    if(!newStringList.contains(value.toString()))
+        newStringList.add(value.toString())
 
-    return if(newStringList.isNotEmpty())
-        ""
+    return if(newStringList.isEmpty())
+        null
     else
         newStringList.joinToString(",")
-
 }
 
 fun getLongListfromCSVString(listAsString: String?): List<Long> {

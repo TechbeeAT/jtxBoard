@@ -277,7 +277,7 @@ class IcalViewFragment : Fragment() {
                     binding.viewColorbar.visibility = View.GONE
 
                 it.property.recurOriginalIcalObjectId?.let { origId ->
-                    binding.viewReccurrenceGotooriginalButton?.setOnClickListener { view ->
+                    binding.viewRecurrenceGotooriginalButton?.setOnClickListener { view ->
                         view.findNavController().navigate(
                             IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(origId)
                         )
@@ -358,7 +358,7 @@ class IcalViewFragment : Fragment() {
                         recurDates.add(convertLongToFullDateString(it.dtstart))
                 }
             }
-            binding.viewReccurrenceItems?.text = recurDates.joinToString(separator = "\n")
+            binding.viewRecurrenceItems?.text = recurDates.joinToString(separator = "\n")
         }
 
 

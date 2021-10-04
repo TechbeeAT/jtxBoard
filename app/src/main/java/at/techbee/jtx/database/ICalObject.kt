@@ -16,6 +16,7 @@ import android.util.Log
 import androidx.room.*
 import at.techbee.jtx.R
 import at.techbee.jtx.convertLongToDateString
+import at.techbee.jtx.getLongListfromCSVString
 import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
@@ -705,26 +706,13 @@ data class ICalObject(
         }
 
         //now remove exceptions
-        val exceptions = this.exdate?.split(",")
-        exceptions?.forEach {
-            try {
-                val exception = it.toLong()
-                recurList.remove(exception)
-            } catch (e: NumberFormatException) {
-                Log.w("NumberFormatException", "Class cast to Long for recurrence exceptions failed for $it. \n$e")
-            }
-        }
+        val exceptions = getLongListfromCSVString(this.exdate)
+        recurList.removeAll(exceptions)
 
         //now add additions (this is not in use in jtx, but can theoretically come through the sync
-        val additions = this.rdate?.split(",")
-        additions?.forEach {
-            try {
-                val addition = it.toLong()
-                recurList.add(addition)
-            } catch (e: NumberFormatException) {
-                Log.w("NumberFormatException", "Class cast to Long for recurrence addition failed for $it. \n$e")
-            }
-        }
+        val additions = getLongListfromCSVString(this.rdate)
+        recurList.addAll(additions)
+
         return recurList
     }
 

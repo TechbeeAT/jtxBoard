@@ -247,7 +247,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map (item?.property?.recurOriginalIcalObjectId != null)
             }
             recurrenceIsExceptionVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.isRecurLinkedInstance == false && item.property.rrule == null)
+                return@map (item?.property?.isRecurLinkedInstance == false && item.property.recurOriginalIcalObjectId != null)
             }
         }
 
@@ -306,7 +306,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                     database.setAsRecurException(item.id, System.currentTimeMillis())
                 }
             }
-            Toast.makeText(getApplication(), "Recurring instance is now an exception.", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplication(), "Recurring instance is now an exception.", Toast.LENGTH_SHORT).show()
         }
     }
 }

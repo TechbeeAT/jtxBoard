@@ -311,12 +311,28 @@ class IcalListViewModelTest {
     fun updateProgress() = runBlockingTest {
 
         val id = database.insertICalObject(ICalObject.createTask("Test"))
-        icalListViewModel.updateProgress(id, 50)
+        icalListViewModel.updateProgress(id, 50, false)
         Thread.sleep(100)
         val icalobject = database.getICalObjectById(id)
 
         assertEquals(50, icalobject?.percent)
     }
+
+    @Test
+    fun updateProgress_withUnlink() = runBlockingTest {
+
+        val item = ICalObject.createTask("Test")
+        item.isRecurLinkedInstance = true
+
+        val id = database.insertICalObject(item)
+        icalListViewModel.updateProgress(id, 50, false)
+        Thread.sleep(100)
+        val icalobject = database.getICalObjectById(id)
+
+        assertEquals(50, icalobject?.percent)
+        assertEquals(false, icalobject?.isRecurLinkedInstance)
+    }
+
 
     @Test
     fun checkAllRelatedto() = runBlockingTest {

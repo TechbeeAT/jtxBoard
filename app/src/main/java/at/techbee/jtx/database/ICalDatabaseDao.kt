@@ -418,7 +418,7 @@ DELETEs by Object
 
     @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_EXDATE = :exceptions, $COLUMN_DIRTY = 1, $COLUMN_LAST_MODIFIED = :lastUpdated, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1 WHERE $COLUMN_ID = :originalId")
-    fun setRecurExceptions(originalId: Long, exceptions: String, lastUpdated: Long)
+    fun setRecurExceptions(originalId: Long, exceptions: String?, lastUpdated: Long)
 
     @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_RECUR_ISLINKEDINSTANCE = 0, $COLUMN_DIRTY = 1, $COLUMN_LAST_MODIFIED = :lastUpdated, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1 WHERE $COLUMN_ID = :exceptionItemId")

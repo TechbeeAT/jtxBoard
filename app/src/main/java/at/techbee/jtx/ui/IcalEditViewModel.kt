@@ -12,6 +12,7 @@ import android.app.Application
 import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
+import at.techbee.jtx.addLongToCSVString
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
@@ -373,17 +374,14 @@ class IcalEditViewModel(
 
             if(iCalObjectUpdated.value?.recurOriginalIcalObjectId != null && iCalObjectUpdated.value?.isRecurLinkedInstance == false) {
                 viewModelScope.launch(Dispatchers.IO) {
-                    val exDates = mutableListOf<String>()
-                    database.getRecurExceptions(iCalObjectUpdated.value?.recurOriginalIcalObjectId!!)?.split(",")?.let {
-                        exDates.addAll(it)
-                    }
-                    if (iCalObjectUpdated.value?.component == Component.VJOURNAL.name && !exDates.contains(iCalObjectUpdated.value!!.dtstart.toString()))
-                        exDates.add(iCalObjectUpdated.value!!.dtstart.toString())
-                    else if (iCalObjectUpdated.value?.component == Component.VTODO.name && exDates.contains(iCalObjectUpdated.value!!.due.toString()))
-                        exDates.add(iCalObjectUpdated.value!!.due.toString())
+
+                    val newExceptionList = addLongToCSVString(
+                        database.getRecurExceptions(iCalObjectUpdated.value?.recurOriginalIcalObjectId!!),
+                        iCalObjectUpdated.value!!.dtstart)
+
                     database.setRecurExceptions(
                         iCalObjectUpdated.value?.recurOriginalIcalObjectId!!,
-                        exDates.joinToString(","),
+                        newExceptionList,
                         System.currentTimeMillis()
                     )
                 }

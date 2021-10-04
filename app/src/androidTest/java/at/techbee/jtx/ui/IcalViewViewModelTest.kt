@@ -75,7 +75,7 @@ class IcalViewViewModelTest {
         icalViewViewModel.icalEntity.getOrAwaitValue()
         icalViewViewModel.icalEntity.observeForever {}
 
-        icalViewViewModel.insertRelatedNote("RelatedNote")
+        icalViewViewModel.insertRelated("RelatedNote", null)
         Thread.sleep(100)
 
         val childEntry = database.get(icalViewViewModel.icalEntity.value?.relatedto?.get(0)?.linkedICalObjectId!!)
@@ -98,7 +98,7 @@ class IcalViewViewModelTest {
         icalViewViewModel.icalEntity.getOrAwaitValue()
         icalViewViewModel.icalEntity.observeForever {}
 
-        icalViewViewModel.insertRelatedAudioNote(Attachment(uri = "https://10.0.0.138"))
+        icalViewViewModel.insertRelated(null, Attachment(uri = "https://10.0.0.138"))
         Thread.sleep(100)
 
         val childEntry = database.get(icalViewViewModel.icalEntity.value?.relatedto?.get(0)?.linkedICalObjectId!!)

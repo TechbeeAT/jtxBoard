@@ -10,6 +10,7 @@ package at.techbee.jtx.ui
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.addLongToCSVString
@@ -200,7 +201,7 @@ class IcalListViewModel(
     }
 
 
-    fun updateProgress(itemId: Long, newPercent: Int) {
+    fun updateProgress(itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) {
 
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -211,12 +212,14 @@ class IcalListViewModel(
                     icalObject.recurOriginalIcalObjectId?.let { originalId ->
                         val newExceptionList = addLongToCSVString(database.getRecurExceptions(originalId), currentItem.dtstart)
                         database.setRecurExceptions(originalId, newExceptionList, System.currentTimeMillis())
-                        //Toast.makeText(getApplication(), "Recurring item is now an exception.", Toast.LENGTH_LONG)
                     }
                 }
                 icalObject.setUpdatedProgress(newPercent)
                 database.update(icalObject)
             }
         }
+        if(isLinkedRecurringInstance)
+            Toast.makeText(getApplication(), "Recurring item is now an exception.", Toast.LENGTH_LONG).show()
+
     }
 }

@@ -583,7 +583,7 @@
                     tools:text="John Doe (john.doe@example.com)" />
 
                 <TextView
-                    android:id="@+id/view_reccurrence_header"
+                    android:id="@+id/view_recurrence_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -599,7 +599,7 @@
 
 
                 <TextView
-                    android:id="@+id/view_reccurrence_items"
+                    android:id="@+id/view_recurrence_items"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -607,13 +607,13 @@
                     android:autoLink="all"
                     android:visibility="@{model.recurrenceItemsVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/view_reccurrence_header"
-                    app:layout_constraintTop_toBottomOf="@+id/view_reccurrence_header"
+                    app:layout_constraintStart_toStartOf="@+id/view_recurrence_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_recurrence_header"
                     tools:text="Friday, September 24, 2021 1:34 PM\nSaturday, September 25, 2021 1:34 PM\nSunday, September 26, 2021 1:34 PM"
                     />
 
                 <TextView
-                    android:id="@+id/view_reccurrence_note_to_original"
+                    android:id="@+id/view_recurrence_note_to_original"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -621,12 +621,12 @@
                     android:autoLink="all"
                     android:visibility="@{model.recurrenceLinkedVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/view_reccurrence_header"
-                    app:layout_constraintTop_toBottomOf="@+id/view_reccurrence_items"
+                    app:layout_constraintStart_toStartOf="@+id/view_recurrence_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_recurrence_items"
                     android:text="@string/view_recurrence_note_to_original" />
 
                 <TextView
-                    android:id="@+id/view_reccurrence_note_is_exception"
+                    android:id="@+id/view_recurrence_note_is_exception"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -634,13 +634,13 @@
                     android:autoLink="all"
                     android:visibility="@{model.recurrenceIsExceptionVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/view_reccurrence_header"
-                    app:layout_constraintTop_toBottomOf="@+id/view_reccurrence_note_to_original"
+                    app:layout_constraintStart_toStartOf="@+id/view_recurrence_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_recurrence_note_to_original"
                     android:text="@string/view_reccurrence_note_is_exception" />
 
 
                 <Button
-                    android:id="@+id/view_reccurrence_gotooriginal_button"
+                    android:id="@+id/view_recurrence_gotooriginal_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -649,7 +649,7 @@
                     app:icon="@drawable/ic_recurring"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_reccurrence_note_is_exception" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_recurrence_note_is_exception" />
 
 
                 <TextView
@@ -665,7 +665,7 @@
                     android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_link"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_reccurrence_gotooriginal_button" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_recurrence_gotooriginal_button" />
 
                 <TextView
                     android:id="@+id/view_relatedto"

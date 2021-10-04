@@ -311,7 +311,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
 
                         model.updateProgress(
                             iCal4ListItem.property.id,
-                            holder.progressSlider.value.toInt()
+                            holder.progressSlider.value.toInt(),
+                            iCal4ListItem.property.isLinkedRecurringInstance
                         )
 
                         if (holder.progressSlider.value.toInt() != 100)
@@ -328,7 +329,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
 
                     model.updateProgress(
                         iCal4ListItem.property.id,
-                        holder.progressSlider.value.toInt()
+                        holder.progressSlider.value.toInt(),
+                        iCal4ListItem.property.isLinkedRecurringInstance
                     )
                 }
             }
@@ -488,7 +490,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
 
                 model.updateProgress(
                     subtask.id,
-                    subtaskBinding.listItemSubtaskProgressSlider.value.toInt()
+                    subtaskBinding.listItemSubtaskProgressSlider.value.toInt(),
+                    subtask.isLinkedRecurringInstance
                 )
             }
         })
@@ -503,7 +506,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
 
             model.updateProgress(
                 subtask.id,
-                subtaskBinding.listItemSubtaskProgressSlider.value.toInt()
+                subtaskBinding.listItemSubtaskProgressSlider.value.toInt(),
+                subtask.isLinkedRecurringInstance
             )
         }
 
