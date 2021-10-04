@@ -55,7 +55,6 @@ class IcalListFragment : Fragment() {
 
     private lateinit var prefs: SharedPreferences
     private lateinit var arguments: IcalListFragmentArgs
-    private var applyArgs = true
 
     private var lastScrolledFocusItemId: Long? = null
     private var snackbarDueTasksInPastShown = false
@@ -359,7 +358,6 @@ class IcalListFragment : Fragment() {
         icalListViewModel.resetFocusItem()
         icalListViewModel.clearFilter()
         prefs.edit().clear().apply()
-        applyArgs = true
     }
 
     private fun goToFilter() {
