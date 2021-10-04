@@ -383,7 +383,8 @@ class IcalEditViewModel(
                         exDates.add(iCalObjectUpdated.value!!.due.toString())
                     database.setRecurExceptions(
                         iCalObjectUpdated.value?.recurOriginalIcalObjectId!!,
-                        exDates.joinToString(",")
+                        exDates.joinToString(","),
+                        System.currentTimeMillis()
                     )
                 }
             }

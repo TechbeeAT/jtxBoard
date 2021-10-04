@@ -210,7 +210,7 @@ class IcalListViewModel(
                 if(icalObject.isRecurLinkedInstance) {
                     icalObject.recurOriginalIcalObjectId?.let { originalId ->
                         val newExceptionList = addLongToCSVString(database.getRecurExceptions(originalId), currentItem.dtstart)
-                        database.setRecurExceptions(originalId, newExceptionList)
+                        database.setRecurExceptions(originalId, newExceptionList, System.currentTimeMillis())
                         //Toast.makeText(getApplication(), "Recurring item is now an exception.", Toast.LENGTH_LONG)
                     }
                 }

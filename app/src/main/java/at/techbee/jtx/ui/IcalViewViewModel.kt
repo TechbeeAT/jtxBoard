@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui
 
 import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.*
 import at.techbee.jtx.addLongToCSVString
 import at.techbee.jtx.database.*
@@ -253,7 +254,6 @@ class IcalViewViewModel(private val icalItemId: Long,
         viewModelScope.launch {
             subtasksCountList = database.getSubtasksCount()
         }
-
     }
 
     fun editingClicked() {
@@ -261,49 +261,52 @@ class IcalViewViewModel(private val icalItemId: Long,
     }
 
 
-    fun insertRelatedNote(noteText: String) {
+    fun insertRelated(noteText: String?, attachment: Attachment?) {
+
+        this.icalEntity.value?.property?.let {
+            makeRecurringExceptionIfNecessary(it)
+        }
+
         viewModelScope.launch {
-            val newNote = ICalObject.createNote(noteText)
+            val newNote = ICalObject.createNote()
+            if(noteText != null)
+                newNote.summary = noteText
             newNote.collectionId = icalEntity.value?.ICalCollection?.collectionId ?: 1L
             val newNoteId = database.insertICalObject(newNote)
 
             database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newNote.uid))
 
-            database.updateSetDirty(icalItemId, System.currentTimeMillis())
-        }
-    }
-
-    fun insertRelatedAudioNote(attachment: Attachment) {
-
-        viewModelScope.launch {
-            val newNote = ICalObject.createNote("Audio Comment")
-            newNote.collectionId = icalEntity.value?.ICalCollection?.collectionId ?: 1L
-            val newNoteId = database.insertICalObject(newNote)
-
-            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newNote.uid))
-            attachment.icalObjectId = newNoteId
-            database.insertAttachment(attachment)
+            if(attachment != null) {
+                attachment.icalObjectId = newNoteId
+                database.insertAttachment(attachment)
+            }
 
             database.updateSetDirty(icalItemId, System.currentTimeMillis())
         }
-
     }
-
 
 
     fun updateProgress(item: ICalObject, newPercent: Int) {
 
+        makeRecurringExceptionIfNecessary(item)
         viewModelScope.launch(Dispatchers.IO) {
+            database.update(item.setUpdatedProgress(newPercent))
+        }
+    }
 
-            if(item.isRecurLinkedInstance) {
+    fun makeRecurringExceptionIfNecessary(item: ICalObject) {
+
+        if(item.isRecurLinkedInstance) {
+
+            viewModelScope.launch(Dispatchers.IO) {
                 item.recurOriginalIcalObjectId?.let { originalId ->
                     val newExceptionList =
                         addLongToCSVString(database.getRecurExceptions(originalId), item.dtstart)
-                    database.setRecurExceptions(originalId, newExceptionList)
-                    //Toast.makeText(getApplication(), "Recurring item is now an exception.", Toast.LENGTH_LONG)
+                    database.setRecurExceptions(originalId, newExceptionList, System.currentTimeMillis())
+                    database.setAsRecurException(item.id, System.currentTimeMillis())
                 }
             }
-            database.update(item.setUpdatedProgress(newPercent))
+            Toast.makeText(getApplication(), "Recurring instance is now an exception.", Toast.LENGTH_SHORT)
         }
     }
 }

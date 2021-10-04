@@ -397,15 +397,35 @@ class IcalViewFragment : Fragment() {
             builder.setView(newNote)
 
             builder.setPositiveButton("Save") { _, _ ->
-                icalViewViewModel.insertRelatedNote(newNote.text.toString())
+                icalViewViewModel.insertRelated(newNote.text.toString(), null)
             }
 
             builder.setNegativeButton("Cancel") { _, _ ->
                 // Do nothing, just close the message
             }
+            //builder is shown on positiveButton after unlinking or immediately (after the recur-check)
 
-            builder.show()
+            // if the item is an instance of a recurring entry, make sure that the user is aware of this
+            val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
+            if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
 
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
+                    .setMessage(getString(R.string.view_recurrence_note_to_original))
+                    .setPositiveButton("Continue") { _, _ ->
+                        builder.show()
+                    }
+                    .setNegativeButton("Go to Original") { _, _ ->
+                        this.findNavController().navigate(
+                            IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
+                                originalId
+                            )
+                        )
+                    }
+                    .show()
+            } else {
+                builder.show()
+            }
         }
 
 
@@ -468,50 +488,73 @@ class IcalViewFragment : Fragment() {
                 })
 
 
+                //Prepare the builder to open dialog to record audio
+                val audioRecorderAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(getString(R.string.view_fragment_audio_dialog_add_audio_note))
+                    //.setMessage(getString(R.string.view_fragment_audio_permission_message))
+                    .setView(audioDialogBinding.root)
+                    .setPositiveButton("Save") { _, _ ->
+                        stopRecording()
+                        stopPlaying()
+
+                        if(fileName != null) {
+
+                            try {
+                                val cachedFile = File(fileName.toString())
+                                val newFilename = "${System.currentTimeMillis()}.$audioFileExtension"
+                                val newFile = File(
+                                    Attachment.getAttachmentDirectory(requireContext()),
+                                    newFilename
+                                )
+                                newFile.createNewFile()
+                                newFile.writeBytes(cachedFile.readBytes())
+
+                                val newAttachment = Attachment(
+                                    fmttype = Attachment.FMTTYPE_AUDIO_MP4_AAC,
+                                    uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, newFile).toString(),
+                                    filename = newFilename,
+                                    extension = ".mp4",
+                                    filesize = newFile.length()
+                                )
+                                icalViewViewModel.insertRelated(null, newAttachment)
 
 
-
-                //Open dialog to record audio
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(getString(R.string.view_fragment_audio_dialog_add_audio_note))
-                        //.setMessage(getString(R.string.view_fragment_audio_permission_message))
-                        .setView(audioDialogBinding.root)
-                        .setPositiveButton("Save") { _, _ ->
-                            stopRecording()
-                            stopPlaying()
-
-                            if(fileName != null) {
-
-                                try {
-                                    val cachedFile = File(fileName.toString())
-                                    val newFilename = "${System.currentTimeMillis()}.$audioFileExtension"
-                                    val newFile = File(
-                                        Attachment.getAttachmentDirectory(requireContext()),
-                                        newFilename
-                                    )
-                                    newFile.createNewFile()
-                                    newFile.writeBytes(cachedFile.readBytes())
-
-                                    val newAttachment = Attachment(
-                                        fmttype = Attachment.FMTTYPE_AUDIO_MP4_AAC,
-                                        uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, newFile).toString(),
-                                        filename = newFilename,
-                                        extension = ".mp4",
-                                        filesize = newFile.length()
-                                    )
-                                    icalViewViewModel.insertRelatedAudioNote(newAttachment)
-
-
-                                } catch (e: IOException) {
-                                    Log.e("IOException", "Failed to process file\n$e")
-                                }
+                            } catch (e: IOException) {
+                                Log.e("IOException", "Failed to process file\n$e")
                             }
                         }
-                        .setNegativeButton("Discard") { _, _ ->
-                            stopRecording()
-                            stopPlaying()
+                    }
+                    .setNegativeButton("Discard") { _, _ ->
+                        stopRecording()
+                        stopPlaying()
+                    }
+
+
+
+
+                // if the item is an instance of a recurring entry, make sure that the user is aware of this
+                val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
+                if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
+
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
+                        .setMessage(getString(R.string.view_recurrence_note_to_original))
+                        .setPositiveButton("Continue") { _, _ ->
+                            audioRecorderAlertDialogBuilder.show()
+                        }
+                        .setNegativeButton("Go to Original") { _, _ ->
+                            this.findNavController().navigate(
+                                IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
+                                    originalId
+                                )
+                            )
                         }
                         .show()
+                } else {
+                    audioRecorderAlertDialogBuilder.show()
+                }
+
+
             } else {
                 //request for permission to load contacts
                 MaterialAlertDialogBuilder(requireContext())
@@ -523,7 +566,6 @@ class IcalViewFragment : Fragment() {
                     .setNegativeButton("Cancel") { _, _ -> }
                     .show()
             }
-
         }
 
 
@@ -644,29 +686,6 @@ class IcalViewFragment : Fragment() {
 
  */
 
-/*
-
-            val categoryChip = inflater.inflate(R.layout.fragment_vjournal_item_edit_categories_chip, binding.categoriesChipgroup, false) as Chip
-            categoryChip.text = category.text
-            binding.categoriesChipgroup.addView(categoryChip)
-
-            categoryChip.setOnClickListener {
-                // Responds to chip click
-            }
-
-            categoryChip.setOnCloseIconClickListener { chip ->
-                // Responds to chip's close icon click if one is present
-                // Delete by re-assigning an edited, mutable category list
-                // TODO: Delete the category from the list!!!
-                val currentCategories = vJournalEditViewModel.vCategoryUpdated.removeIf { it.text == category.text}
-                chip.visibility = View.GONE
-            }
-
-            categoryChip.setOnCheckedChangeListener { chip, isChecked ->
-                // Responds to chip checked/unchecked
-            }
-
- */
 
 
 
@@ -680,8 +699,6 @@ class IcalViewFragment : Fragment() {
 
         super.onResume()
     }
-
-
 
 
     private fun addCategoryChip(category: Category) {
