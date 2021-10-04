@@ -32,8 +32,8 @@ class IcalEditViewModel(
 
     companion object {
         const val TAB_GENERAL = 0
-        const val TAB_MORE = 1
-        const val TAB_COMMENTS = 2
+        const val TAB_PEOPLE_RES = 1
+        const val TAB_LOC_COMMENTS = 2
         const val TAB_ATTACHMENTS = 3
         const val TAB_SUBTASKS = 4
         const val TAB_ALARMS = 5
@@ -43,7 +43,6 @@ class IcalEditViewModel(
         const val RECURRENCE_MODE_WEEK = 1
         const val RECURRENCE_MODE_MONTH = 2
         const val RECURRENCE_MODE_YEAR = 3
-
     }
 
     lateinit var allCategories: LiveData<List<String>>
@@ -115,47 +114,40 @@ class IcalEditViewModel(
     var recurrenceDayOfMonthVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
 
-
     var duedateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if (it.due != null)
-            return@map DateFormat.getDateInstance().format(it.due)
-        else
-            return@map null
+        it.due?.let { due ->
+            return@map DateFormat.getDateInstance().format(due)
+         }
     }
 
     var duetimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if (it.due != null)
-            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(it.due)
-        else
-            return@map null
+        it.due?.let { due ->
+            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(due)
+        }
     }
 
     var completeddateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if (it.completed != null)
-            return@map DateFormat.getDateInstance().format(it.completed)
-        else
-            return@map null
+        it.completed?.let { completed ->
+            return@map DateFormat.getDateInstance().format(completed)
+        }
     }
 
     var completedtimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if (it.completed != null)
-            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(it.completed)
-        else
-            return@map null
+        it.completed?.let { completed ->
+            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(completed)
+        }
     }
 
     var starteddateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if (it.dtstart != null)
-            return@map DateFormat.getDateInstance().format(it.dtstart)
-        else
-            return@map null
+        it.dtstart?.let { dtstart ->
+            return@map DateFormat.getDateInstance().format(dtstart)
+        }
     }
 
     var startedtimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        if (it.dtstart != null)
-            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(it.dtstart)
-        else
-            return@map null
+        it.dtstart?.let { dtstart ->
+            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(dtstart)
+        }
     }
 
 
@@ -229,13 +221,13 @@ class IcalEditViewModel(
         timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape) && iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY" ) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
         statusVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
         classificationVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
-        urlVisible.postValue(selectedTab == TAB_MORE || isLandscape)
-        locationVisible.postValue(selectedTab == TAB_MORE || isLandscape)
+        urlVisible.postValue(selectedTab == TAB_LOC_COMMENTS || isLandscape)
+        locationVisible.postValue(selectedTab == TAB_LOC_COMMENTS || isLandscape)
         categoriesVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
-        contactVisible.postValue(selectedTab == TAB_MORE || isLandscape)
-        attendeesVisible.postValue(selectedTab == TAB_MORE || isLandscape)
-        resourcesVisible.postValue(selectedTab == TAB_MORE || isLandscape)
-        commentsVisible.postValue(selectedTab == TAB_COMMENTS || isLandscape)
+        contactVisible.postValue(selectedTab == TAB_PEOPLE_RES || isLandscape)
+        attendeesVisible.postValue(selectedTab == TAB_PEOPLE_RES || isLandscape)
+        resourcesVisible.postValue(selectedTab == TAB_PEOPLE_RES || isLandscape)
+        commentsVisible.postValue(selectedTab == TAB_LOC_COMMENTS || isLandscape)
         attachmentsVisible.postValue(selectedTab == TAB_ATTACHMENTS || isLandscape)
         takePhotoVisible.postValue(selectedTab == TAB_ATTACHMENTS || isLandscape)
         progressVisible.postValue(iCalEntity.property.module == Module.TODO.name && (selectedTab == TAB_GENERAL || isLandscape))
@@ -366,7 +358,7 @@ class IcalEditViewModel(
 
             }
 
-            if(recurrenceList.size > 0)
+            if(recurrenceList.size > 0 || iCalObjectUpdated.value!!.id != 0L)    // recreateRecurring if the recurrenceList is not empty, but also when it is an update, as the recurrence might have been deactivated and it is necessary to delete instances
                 launch(Dispatchers.IO) {
                     iCalObjectUpdated.value?.recreateRecurring(database)
                 }

@@ -57,9 +57,9 @@ import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_WEEK
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_YEAR
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_ALARMS
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_ATTACHMENTS
-import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_COMMENTS
+import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_LOC_COMMENTS
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_GENERAL
-import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_MORE
+import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_PEOPLE_RES
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_RECURRING
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_SUBTASKS
 import at.techbee.jtx.util.*
@@ -383,8 +383,8 @@ class IcalEditFragment : Fragment() {
 
                 when (tab?.position) {
                     TAB_GENERAL -> icalEditViewModel.selectedTab = TAB_GENERAL
-                    TAB_MORE -> icalEditViewModel.selectedTab = TAB_MORE
-                    TAB_COMMENTS -> icalEditViewModel.selectedTab = TAB_COMMENTS
+                    TAB_PEOPLE_RES -> icalEditViewModel.selectedTab = TAB_PEOPLE_RES
+                    TAB_LOC_COMMENTS -> icalEditViewModel.selectedTab = TAB_LOC_COMMENTS
                     TAB_ATTACHMENTS -> icalEditViewModel.selectedTab = TAB_ATTACHMENTS
                     TAB_SUBTASKS -> icalEditViewModel.selectedTab = TAB_SUBTASKS
                     TAB_RECURRING -> icalEditViewModel.selectedTab = TAB_RECURRING
@@ -711,6 +711,7 @@ class IcalEditFragment : Fragment() {
         }
 
         icalEditViewModel.recurrenceChecked.observe(viewLifecycleOwner) {
+            updateRRule()
             icalEditViewModel.updateVisibility()
         }
 
@@ -1237,6 +1238,7 @@ class IcalEditFragment : Fragment() {
                 icalEditViewModel.attendeesError.value = "Please enter a valid E-Mail address"
         }
 
+
         return binding.root
     }
 
@@ -1344,6 +1346,7 @@ class IcalEditFragment : Fragment() {
                     if (!icalEditViewModel.allDayChecked.value!!) {    // let the user set the time only if the allDaySwitch is not set!
                         showTimePicker(it, tag)
                     }
+                    updateRRule()
                 }
                 TAG_PICKER_DUE -> {
                     val due = Calendar.getInstance()
@@ -1383,6 +1386,7 @@ class IcalEditFragment : Fragment() {
                     val dateString = DateFormat.getDateInstance().format(dtstart.time)
                     binding.editTaskDatesFragment?.editStartedDateEdittext?.setText(dateString)
                     icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+                    updateRRule()
                 }
             }
         }
@@ -1923,6 +1927,12 @@ class IcalEditFragment : Fragment() {
 
     private fun updateRRule() {
 
+        if(icalEditViewModel.recurrenceChecked.value == false) {
+            icalEditViewModel.iCalObjectUpdated.value?.rrule = null
+            return
+        }
+
+
         val recurBuilder = Recur.Builder()
         when( binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.selectedItemPosition) {
             RECURRENCE_MODE_DAY ->  {
@@ -2007,6 +2017,8 @@ class IcalEditFragment : Fragment() {
 
         binding.editFragmentIcalEditRecur?.editRecurLastOccurenceItem?.text = lastOccurrenceString
         binding.editFragmentIcalEditRecur?.editRecurAllOccurencesItems?.text = allOccurrencesString
+
+
 
     }
 
