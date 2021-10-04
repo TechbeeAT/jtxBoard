@@ -187,7 +187,9 @@ class IcalListViewModel(
     }
 
     fun updateSearch() {
-        listQuery.postValue(constructQuery())
+        val newQuery = constructQuery()
+        if(listQuery.value != newQuery)
+            listQuery.postValue(newQuery)         // only update if the query was actually changed!
     }
 
     fun clearFilter() {

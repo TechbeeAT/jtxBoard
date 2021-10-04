@@ -124,11 +124,30 @@ class IcalListFragment : Fragment() {
 
             icalListAdapter!!.notifyDataSetChanged()
 
+            binding.fab.setOnClickListener {
+
+                when(icalListViewModel.searchModule) {
+                    Module.JOURNAL.name -> goToEdit(ICalEntity(ICalObject.createJournal()))
+                    Module.NOTE.name -> goToEdit(ICalEntity(ICalObject.createNote()))
+                    Module.TODO.name -> goToEdit(ICalEntity(ICalObject.createTodo()))
+                }
+            }
+
+            binding.fabFilter.setOnClickListener {
+                if (isFilterActive())
+                    resetFilter()
+                else
+                    goToFilter()
+            }
+
             icalListViewModel.resetFocusItem()              // reset happens only once in a Module, only when the Module get's changed the scrolling would happen again
 
             when (icalListViewModel.searchModule) {
                 Module.JOURNAL.name -> {
                     gotodateMenuItem?.isVisible = true
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = true
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = true
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = true
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
@@ -137,6 +156,9 @@ class IcalListFragment : Fragment() {
                 }
                 Module.NOTE.name -> {
                     gotodateMenuItem?.isVisible = false
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = true
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = true
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = true
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
@@ -148,6 +170,9 @@ class IcalListFragment : Fragment() {
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = false
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = false
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = false
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = true
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = true
+                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = true
                     //staggeredGridLayoutManager!!.spanCount = 1
                     binding.fab.setImageResource(R.drawable.ic_todo_add)
                 }
@@ -226,27 +251,6 @@ class IcalListFragment : Fragment() {
     }
 
 
-    override fun onStart() {
-
-        // initialize the floating action button only onStart, otherwise the fragment might not be created yet
-        binding.fab.setOnClickListener {
-
-            when(icalListViewModel.searchModule) {
-                Module.JOURNAL.name -> goToEdit(ICalEntity(ICalObject.createJournal()))
-                Module.NOTE.name -> goToEdit(ICalEntity(ICalObject.createNote()))
-                Module.TODO.name -> goToEdit(ICalEntity(ICalObject.createTodo()))
-            }
-        }
-
-        binding.fabFilter.setOnClickListener {
-            if (isFilterActive())
-                resetFilter()
-            else
-                goToFilter()
-        }
-
-        super.onStart()
-    }
 
     override fun onResume() {
 
