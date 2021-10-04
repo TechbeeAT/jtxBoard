@@ -126,6 +126,7 @@
     <string name="view_comments_header">Comments</string>
     <string name="view_attachments_header">Attachments</string>
     <string name="view_recurrence_header">Recurrence</string>
+    <string name="view_recurrence_go_to_original_button">Go to original</string>
     <string name="view_recurrence_note_to_original_dialog_header">Instance of recurring</string>
     <string name="view_recurrence_note_to_original">This entry is part of a series. Editing this entry will unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore. Otherwise please go to the original event.</string>
     <string name="view_fragment_audio_permission">App Permission</string>
