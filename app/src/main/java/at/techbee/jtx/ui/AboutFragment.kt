@@ -22,6 +22,13 @@ class AboutFragment : Fragment() {
     lateinit var application: Application
     private lateinit var inflater: LayoutInflater
 
+    companion object {
+
+        private const val TAB_POSITION_ABOUT = 0
+        private const val TAB_POSITION_LIBRARIES = 1
+        private const val TAB_POSITION_TRANSLATIONS = 2
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,15 +63,15 @@ class AboutFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
                 when (tab?.position) {
-                    0 -> {
+                    TAB_POSITION_ABOUT -> {
                         binding.fragmentAboutApp.aboutAppScrollview.visibility = View.VISIBLE
                         binding.fragmentAboutLibrariesContainerView.visibility = View.INVISIBLE
                     }
-                    1 -> {
+                    TAB_POSITION_TRANSLATIONS -> {
                         binding.fragmentAboutApp.aboutAppScrollview.visibility = View.INVISIBLE
                         binding.fragmentAboutLibrariesContainerView.visibility = View.INVISIBLE
                     } // TODO: replace with translations
-                    2 -> {
+                    TAB_POSITION_LIBRARIES -> {
                         binding.fragmentAboutApp.aboutAppScrollview.visibility = View.INVISIBLE
                         binding.fragmentAboutLibrariesContainerView.visibility = View.VISIBLE
                     }
