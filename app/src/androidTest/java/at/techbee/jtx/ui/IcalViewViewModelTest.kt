@@ -127,8 +127,8 @@ class IcalViewViewModelTest {
 
         val retrievedObject = database.getICalObjectById(icalViewViewModel.icalEntity.value!!.property.id)
 
-        assertEquals(icalViewViewModel.icalEntity.value!!.property, retrievedObject)
-        //Assert.assertEquals(retrievedObject, preparedEntry)
+        assertNotNull(icalViewViewModel.icalEntity.value!!.property.dtstart)
+        assertEquals(88, icalViewViewModel.icalEntity.value!!.property.percent)
     }
 
     @Test
