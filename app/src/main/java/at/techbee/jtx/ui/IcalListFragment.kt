@@ -189,7 +189,9 @@ class IcalListFragment : Fragment() {
             // don't scroll if the item is not set or if scrolling was already done for this Module (this avoids jumping around when the live data with ical-entries changes e.g. through updates or the sync)
             if (it != null && lastScrolledFocusItemId != it) {
                 val pos = icalListViewModel.getFocusItemPosition()
-                linearLayoutManager!!.scrollToPositionWithOffset(pos,20)   // offset makes the item always appear 20px from the top (instead of recyclerView?.scrollToPosition(pos)   )
+                linearLayoutManager!!.scrollToPositionWithOffset(pos,0)   // offset was necessary for descending sorting, this was changed... offset makes the item always appear 20px from the top (instead of recyclerView?.scrollToPosition(pos)   )
+                //linearLayoutManager!!.smoothScrollToPosition(pos)
+                //TODO: Try smoothScrollToPosition again as now the items are sorted ascending
                 lastScrolledFocusItemId = it
             }
         })
