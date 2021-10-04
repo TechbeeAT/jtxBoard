@@ -428,19 +428,17 @@ class IcalEditFragment : Fragment() {
                 builder.setMessage("Are you sure you want to delete \"${icalEditViewModel.iCalObjectUpdated.value?.summary}\"?")
                 builder.setPositiveButton("Delete") { _, _ ->
 
-                    val direction =
-                        IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
-                    direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
 
                     hideKeyboard()
 
                     val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
                     icalEditViewModel.delete()
-                    Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG)
-                        .show()
+                    Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG).show()
 
                     context?.let { context -> Attachment.scheduleCleanupJob(context) }
 
+                    val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
+                    direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
                     this.findNavController().navigate(direction)
                 }
                 /*
@@ -458,12 +456,11 @@ class IcalEditFragment : Fragment() {
                         icalEditViewModel.iCalObjectUpdated.value!!.status =
                             StatusJournal.CANCELLED.name
 
-                    icalEditViewModel.savingClicked()
-
                     val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
                     Toast.makeText(context, "\"$summary\" marked as Cancelled.", Toast.LENGTH_LONG)
                         .show()
 
+                    icalEditViewModel.savingClicked()
                 }
 
                 builder.show()
