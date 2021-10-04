@@ -40,6 +40,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var lastModifiedFormatted: LiveData<String>
     lateinit var completedFormatted: LiveData<String>
     lateinit var startedFormatted: LiveData<String>
+    lateinit var dueFormatted: LiveData<String>
 
 
     lateinit var progressIndicatorVisible: LiveData<Boolean>
@@ -61,6 +62,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var subtasksVisible: LiveData<Boolean>
     lateinit var completedVisible: LiveData<Boolean>
     lateinit var startedVisible: LiveData<Boolean>
+    lateinit var dueVisible: LiveData<Boolean>
 
     lateinit var recurrenceVisible: LiveData<Boolean>
     lateinit var recurrenceItemsVisible: LiveData<Boolean>
@@ -176,9 +178,21 @@ class IcalViewViewModel(private val icalItemId: Long,
                     val formattedTime = if (item.property.dtstartTimezone != "ALLDAY")
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.dtstart!!))
                     else ""
-                    return@map "Started: $formattedDate $formattedTime"
+                    return@map "Planned start: $formattedDate $formattedTime"
                 } else
                     return@map ""
+            }
+
+            dueFormatted = Transformations.map(icalEntity) { item ->
+
+                item?.property?.due?.let { due ->
+                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(due))
+                    val formattedTime =
+                        if (item.property.dueTimezone != "ALLDAY")
+                            DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(due))
+                        else ""
+                    return@map "Due: $formattedDate $formattedTime"
+                }
             }
 
             collectionText = Transformations.map(icalEntity) { item ->
@@ -232,6 +246,9 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
             startedVisible = Transformations.map(icalEntity) { item ->
                 return@map (item?.property?.dtstart != null && item.property.component == Component.VTODO.name)
+            }
+            dueVisible = Transformations.map(icalEntity) { item ->
+                return@map (item?.property?.due != null && item.property.component == Component.VTODO.name)
             }
 
             recurrenceVisible = Transformations.map(icalEntity) { item ->
