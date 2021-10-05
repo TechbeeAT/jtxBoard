@@ -408,6 +408,11 @@ class IcalEditFragment : Fragment() {
 
         icalEditViewModel.savingClicked.observe(viewLifecycleOwner, {
             if (it == true) {
+
+                // do some validation first
+                if(!isDataValid())
+                    return@observe
+
                 icalEditViewModel.iCalObjectUpdated.value!!.percent =
                     binding.editProgressSlider.value.toInt()
                 prefs.edit().putLong(
@@ -2019,6 +2024,43 @@ class IcalEditFragment : Fragment() {
         binding.editFragmentIcalEditRecur?.editRecurAllOccurencesItems?.text = allOccurrencesString
 
 
+
+    }
+
+    private fun isDataValid(): Boolean {
+
+        var isValid = true
+        var validationError = ""
+
+        if(icalEditViewModel.iCalObjectUpdated.value?.summary == null && icalEditViewModel.iCalObjectUpdated.value?.description == null)
+            validationError += resources.getString(R.string.edit_validation_errors_summary_or_description_necessary) + "\n"
+        if(icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && icalEditViewModel.iCalObjectUpdated.value?.due != null && icalEditViewModel.iCalObjectUpdated.value?.due!! < icalEditViewModel.iCalObjectUpdated.value?.dtstart!!)
+            validationError += resources.getString(R.string.edit_validation_errors_dialog_due_date_before_dtstart) + "\n"
+
+        if(binding.editCategoriesAddAutocomplete.text.isNotEmpty())
+            validationError += resources.getString(R.string.edit_validation_errors_category_not_confirmed) + "\n"
+        if(binding.editAttendeesAddAutocomplete.text.isNotEmpty())
+            validationError += resources.getString(R.string.edit_validation_errors_attendee_not_confirmed) + "\n"
+        if(binding.editResourcesAddAutocomplete?.text?.isNotEmpty() == true)
+            validationError += resources.getString(R.string.edit_validation_errors_resource_not_confirmed) + "\n"
+        if(binding.editCommentAddEdittext.text?.isNotEmpty() == true)
+            validationError += resources.getString(R.string.edit_validation_errors_comment_not_confirmed) + "\n"
+        if(binding.editSubtasksAddEdittext.text?.isNotEmpty() == true)
+            validationError += resources.getString(R.string.edit_validation_errors_subtask_not_confirmed) + "\n"
+
+        if(validationError.isNotEmpty()) {
+            isValid = false
+
+            validationError = resources.getString(R.string.edit_validation_errors_detected) + "\n\n" + validationError
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.edit_validation_errors_dialog_header)
+                .setMessage(validationError)
+                .setPositiveButton(R.string.ok) { _, _ ->   }
+                .show()
+        }
+
+        return isValid
 
     }
 

@@ -175,7 +175,16 @@
     <string name="edit_recur_x_day_of_the_month">day of the month</string>
     <string name="edit_recur_x_times">times</string>
 
+    <string name="edit_validation_errors_detected">Please correct the following validation error(s):</string>
+    <string name="edit_validation_errors_dialog_header">Validation errors occurred</string>
 
+    <string name="edit_validation_errors_summary_or_description_necessary">A summary or description should be provided.</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">The Due date cannot be before the Start date.</string>
+    <string name="edit_validation_errors_category_not_confirmed">A category was entered but not confirmed. Please confirm or delete.</string>
+    <string name="edit_validation_errors_comment_not_confirmed">A comment was entered but not confirmed. Please confirm or delete.</string>
+    <string name="edit_validation_errors_resource_not_confirmed">A resource was entered but not confirmed. Please confirm or delete.</string>
+    <string name="edit_validation_errors_attendee_not_confirmed">An attendee was entered but not confirmed. Please confirm or delete.</string>
+    <string name="edit_validation_errors_subtask_not_confirmed">A subtask was entered but not confirmed. Please confirm or delete.</string>
 
 
 

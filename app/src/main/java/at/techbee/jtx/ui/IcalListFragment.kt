@@ -217,7 +217,7 @@ class IcalListFragment : Fragment() {
                 val pos = icalListViewModel.getFocusItemPosition()
                 if(pos>0) {
                     linearLayoutManager!!.scrollToPositionWithOffset(pos,0)   // offset was necessary for descending sorting, this was changed... offset makes the item always appear 20px from the top (instead of recyclerView?.scrollToPosition(pos)   )
-                    //linearLayoutManager!!.smoothScrollToPosition(pos)
+                    //linearLayoutManager!!.smoothScrollToPosition(recyclerView, RecyclerView.State(), pos)
                     //TODO: Try smoothScrollToPosition again as now the items are sorted ascending
                     lastScrolledFocusItemId = it
                 }
