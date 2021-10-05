@@ -87,7 +87,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="88dp"
             app:srcCompat="@drawable/ic_filter"
-            android:contentDescription="@string/list_filter" />
+            android:contentDescription="@string/menu_list_filter" />
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

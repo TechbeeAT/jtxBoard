@@ -187,7 +187,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
-                    android:contentDescription="@string/edit_timezone"
+                    android:contentDescription="@string/edit_timezone_content_desc"
                     android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="@+id/edit_timezone_spinner"
                     app:layout_constraintStart_toEndOf="@+id/edit_all_day_switch"

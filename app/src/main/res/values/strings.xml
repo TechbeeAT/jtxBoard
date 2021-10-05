@@ -22,7 +22,7 @@
     <!-- Global Dialog Strings -->
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
-    <string name="number_percent">%1$s \%</string>
+    <string name="number_percent" translatable="false">%1$s \%</string>
 
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">Draft</string>
@@ -56,9 +56,6 @@
     <string name="attendee_role_optional_participant">Optional participant</string>
     <string name="attendee_role_non_participant">Non-participant / Info</string>
 
-
-    <!-- Toast to play after Clear button has been pressed -->
-    <string name="cleared_message">All your data is gone forever.</string>
 
     <!-- Navigation Drawer  -->
     <string name="drawer_main_header_app_icon">App Icon</string>
@@ -101,21 +98,7 @@
     <string name="list_snackbar_overdue_tasks_in_past">Overdue tasks detected, scroll up to review.</string>
 
 
-    <!-- fragment_ical_edit -->
-    <string name="edit_summary_hint">Summary</string>
-    <string name="edit_add_category_hint">Add category</string>
-    <string name="edit_description_hint">Description</string>
-    <string name="edit_attendees_hint">Attendees</string>
-    <string name="edit_resources_hint">Resources</string>
-    <string name="edit_organizer_hint">Organizer</string>
-    <string name="edit_contact_hint">Contact information</string>
-    <string name="edit_comment_hint">Add comment</string>
-    <string name="edit_attachment_button_text">Add attachment</string>
-    <string name="edit_take_picture_button_text">Take picture</string>
-    <string name="edit_relatedto_hint">Related to …</string>
-    <string name="edit_url_hint">URL</string>
-    <string name="edit_location_hint">Location</string>
-    <string name="edit_fab_save_contentDescription">Save</string>
+    <!-- fragment_ical_view -->
     <string name="view_url_header">URL</string>
     <string name="view_location_header">Location</string>
     <string name="view_attendees_header">Attendees</string>
@@ -136,13 +119,33 @@
     <string name="view_fragment_audio_start_stop_recording_contentdesc">Start/Stop recording</string>
     <string name="view_fragment_audio_start_stop_playback_contentdesc">Play audio comment</string>
     <string name="view_reccurrence_note_is_exception">This item is an exception to a recurring entry.</string>
+    <string name="view_feedback_linked_notes">Feedback / Linked Notes</string>
+    <string name="view_add_note">Add note</string>
+    <string name="view_add_audio_note">Add audio</string>
+    <string name="view_fab_edit_entry_contentDesc">Edit entry</string>
+    <string name="view_subtasks_header">Subtasks</string>
+    <string name="view_progress_label">Progress</string>
 
-
+    <!-- fragment_ical_edit -->
+    <string name="edit_summary_hint">Summary</string>
+    <string name="edit_add_category_hint">Add category</string>
+    <string name="edit_description_hint">Description</string>
+    <string name="edit_attendees_hint">Attendees</string>
+    <string name="edit_resources_hint">Resources</string>
+    <string name="edit_organizer_hint">Organizer</string>
+    <string name="edit_contact_hint">Contact information</string>
+    <string name="edit_comment_hint">Add comment</string>
+    <string name="edit_attachment_button_text">Add attachment</string>
+    <string name="edit_take_picture_button_text">Take picture</string>
+    <string name="edit_relatedto_hint">Related to …</string>
+    <string name="edit_url_hint">URL</string>
+    <string name="edit_location_hint">Location</string>
+    <string name="edit_fab_save_contentDescription">Save</string>
     <string name="edit_attendees_roledialog_chair">Chair</string>
     <string name="edit_attendees_roledialog_required">Required</string>
     <string name="edit_attendees_roledialog_optional">Optional</string>
     <string name="edit_attendees_roledialog_nonparticipant">Info / Non-participant</string>
-
+    <string name="edit_timezone_content_desc">Timezone</string>
     <string name="edit_due_date_hint">Due date</string>
     <string name="edit_due_time_hint">Due time</string>
     <string name="edit_completed_date_hint">Completed date</string>
@@ -185,8 +188,8 @@
     <string name="edit_validation_errors_resource_not_confirmed">A resource was entered but not confirmed. Please confirm or delete.</string>
     <string name="edit_validation_errors_attendee_not_confirmed">An attendee was entered but not confirmed. Please confirm or delete.</string>
     <string name="edit_validation_errors_subtask_not_confirmed">A subtask was entered but not confirmed. Please confirm or delete.</string>
-
-
+    <string name="edit_fragment_app_permission">App Permission</string>
+    <string name="edit_fragment_app_permission_message">JTX can propose Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
 
     <string-array name="edit_recur_day_week_month_year">
         <item>Day(s)</item>
@@ -196,23 +199,12 @@
     </string-array>
 
 
-    <string name="edit_fragment_app_permission">App Permission</string>
-    <string name="edit_fragment_app_permission_message">JTX can propose Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
-
-
     <!-- fragment_ical_filter -->
     <string name="filter_collection">Collection</string>
     <string name="filter_status">Status</string>
     <string name="filter_classification">Classification</string>
     <string name="filter_category">Category</string>
     <string name="filter_fab_apply_filter_contentdescription">Apply filter</string>
-
-    <string name="view_feedback_linked_notes">Feedback / Linked Notes</string>
-    <string name="view_add_note">Add note</string>
-    <string name="view_add_audio_note">Add audio</string>
-    <string name="view_fab_edit_entry_contentDesc">Edit entry</string>
-    <string name="view_subtasks_header">Subtasks</string>
-    <string name="view_progress_label">Progress</string>
 
     <!-- fragment_about -->
     <string name="about_tabitem_jtx" translatable="false">JTX app</string>
@@ -225,7 +217,6 @@
 
 
     <!-- menus -->
-
     <string name="menu_edit_delete">delete</string>
     <string name="menu_filter_reset">Reset</string>
     <string name="menu_filter_apply">Apply</string>
@@ -247,9 +238,6 @@
     <string name="menu_view_copy_as_journal">Copy as Journal</string>
     <string name="menu_view_copy_as_todo">Copy as Todo</string>
     <string name="menu_view_copy_as_note">Copy as Note</string>
-    <string name="edit_timezone">Timezone</string>
-    <string name="list_filter">Filter</string>
-
 
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">Todo Due Reminder</string>
@@ -270,7 +258,6 @@
     <string name="settings_show_progress_in_list">Show progress in list</string>
     <string name="settings_app">App Settings</string>
     <string name="settings_select_mimetype_for_audio">Select Mimetype for audio notes</string>
-
     <string name="settings_accept_ads_title">Support app by showing ads</string>
     <string name="settings_accept_ads_summary">As an alternative to ads you can buy the ad-free option</string>
     <string name="settings_show_user_consent_title">Show User Consent (GDPR)</string>
