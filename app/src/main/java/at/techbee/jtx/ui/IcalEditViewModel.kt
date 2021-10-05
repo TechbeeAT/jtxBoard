@@ -410,47 +410,15 @@ class IcalEditViewModel(
 
 
     fun delete() {
-        deleteItemWithChildren(iCalObjectUpdated.value!!.id)
-    }
-
-    /**
-     * this function takes a parent [id], the function recursively calls itself and deletes all items and linked children (for local collections)
-     * or updates the linked children and marks them as deleted.
-     */
-    private fun deleteItemWithChildren(id: Long) {
-
-        when {
-            iCalObjectUpdated.value!!.id == 0L -> return // do nothing, the item was never saved in DB
-            iCalEntity.ICalCollection?.collectionId == 1L -> {        // call the function again to recursively delete all children, then delete the item
-                val children =
-                    allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
-                children?.forEach {
-                    it.linkedICalObjectId?.let { linkedICalObjectId ->
-                        deleteItemWithChildren(linkedICalObjectId)
-                    }
-                }
-
-                viewModelScope.launch(Dispatchers.IO) {
-
-                    database.deleteRecurringInstances(id)
-                    database.deleteICalObjectsbyId(id)
-                }
-            }
-            else -> {                                                 // call the function again to recursively delete all children, then mark the item as deleted
-                val children =
-                    allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
-                children?.forEach {
-                    it.linkedICalObjectId?.let { linkedICalObjectId ->
-                        deleteItemWithChildren(linkedICalObjectId)
-                    }
-                }
-
-                viewModelScope.launch {
-                    database.updateDeleted(listOf(id), System.currentTimeMillis())
-                }
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            ICalObject.deleteItemWithChildren(
+                iCalObjectUpdated.value!!.id,
+                iCalObjectUpdated.value!!.collectionId,
+                database
+            )
         }
     }
+
 
     /**
      * @param [id] the id of the item for which the collection needs to be updated
@@ -477,7 +445,7 @@ class IcalEditViewModel(
                 )
             }
         }
-        deleteItemWithChildren(id)                                         // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+        ICalObject.deleteItemWithChildren(id, iCalEntity.ICalCollection!!.collectionId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
         return newParentId
     }
 

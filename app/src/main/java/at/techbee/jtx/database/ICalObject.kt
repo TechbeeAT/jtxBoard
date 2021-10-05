@@ -521,6 +521,30 @@ data class ICalObject(
                 }
             }
         }
+
+
+        /**
+         * this function takes a parent [id], the function recursively calls itself and deletes all items and linked children (for local collections)
+         * or updates the linked children and marks them as deleted.
+         */
+        suspend fun deleteItemWithChildren(id: Long, collectionId: Long, database: ICalDatabaseDao) {
+
+            if (id == 0L)
+                return // do nothing, the item was never saved in DB
+
+            val children = database.getRelatedChildren(id)
+            children.forEach {
+                it?.id?.let { child ->
+                    deleteItemWithChildren(child, collectionId, database)    // call the function again to recursively delete all children, then delete the item
+                }
+            }
+
+            database.deleteRecurringInstances(id)      // recurring instances are always physically deleted
+            if(collectionId == 1L)      // Elements in local collection are physically deleted
+                database.deleteICalObjectsbyId(id)
+             else
+                database.updateDeleted(listOf(id), System.currentTimeMillis())
+        }
     }
 
 

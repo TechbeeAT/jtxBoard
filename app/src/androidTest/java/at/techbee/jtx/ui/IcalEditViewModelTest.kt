@@ -466,7 +466,7 @@ class IcalEditViewModelTest {
         val icalEditViewModelParent4UpdateCollection = IcalEditViewModel(retrievedParent, database, application)
         Thread.sleep(200)
         icalEditViewModelParent4UpdateCollection.iCalObjectUpdated.getOrAwaitValue(5)
-        icalEditViewModelParent4UpdateCollection.iCalObjectUpdated.value?.collectionId = 3
+        icalEditViewModelParent4UpdateCollection.iCalObjectUpdated.value?.collectionId = 3L
         icalEditViewModelParent4UpdateCollection.allRelatedto.getOrAwaitValue()
         Thread.sleep(200)
 

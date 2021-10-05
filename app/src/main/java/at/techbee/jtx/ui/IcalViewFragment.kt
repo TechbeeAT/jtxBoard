@@ -939,6 +939,29 @@ class IcalViewFragment : Fragment() {
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
                 )
             }
+
+            R.id.menu_view_delete_item -> {
+
+                    // show Alert Dialog before the item gets really deleted
+                    val builder = AlertDialog.Builder(requireContext())
+                    builder.setTitle("Delete \"${icalViewViewModel.icalEntity.value!!.property.summary}\"")
+                    builder.setMessage("Are you sure you want to delete \"${icalViewViewModel.icalEntity.value!!.property.summary}\"?")
+                    builder.setPositiveButton("Delete") { _, _ ->
+
+                        val summary = icalViewViewModel.icalEntity.value!!.property.summary
+
+                        val direction = IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment()
+                        direction.module2show = icalViewViewModel.icalEntity.value?.property?.module
+                        icalViewViewModel.delete(icalViewViewModel.icalEntity.value?.property!!)
+
+                        Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG).show()
+
+                        context?.let { context -> Attachment.scheduleCleanupJob(context) }
+                        this.findNavController().navigate(direction)
+                    }
+                builder.setNeutralButton("Cancel") { _, _ -> }
+                builder.show()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

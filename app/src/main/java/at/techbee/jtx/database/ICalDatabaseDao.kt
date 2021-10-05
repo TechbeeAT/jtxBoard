@@ -407,6 +407,12 @@ DELETEs by Object
     @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey and icalobject.component = 'VTODO'")
     fun getRelatedTodos(parentKey: Long): LiveData<List<ICalObject?>>
 
+    // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
+    @Transaction
+    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey")
+    suspend fun getRelatedChildren(parentKey: Long): List<ICalObject?>
+
+
     // This query returns all IcalObjects that have a specific ICalObjectId in the field for the OriginalIcalObjectId (ie. all generated items for a recurring entry)
     @Transaction
     @Query("SELECT * from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECUR_ORIGINALICALOBJECTID = :originalId AND $COLUMN_RECUR_ISLINKEDINSTANCE = 1")

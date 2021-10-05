@@ -14,6 +14,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
+import at.techbee.jtx.database.properties.Relatedto
+import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -43,6 +45,8 @@ class ICalObjectAndroidTest {
         database = ICalDatabase.getInMemoryDB(context).iCalDatabaseDao
 
         database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests"))
+        database.insertCollectionSync(ICalCollection(collectionId = 2L, accountType = "remote", accountName = "remote", displayName = "testcollection automated tests"))
+
     }
 
 
@@ -177,5 +181,74 @@ class ICalObjectAndroidTest {
 
         val cvICalObject = ICalObject.fromContentValues(cv)
         assertEquals(sampleICalObject, cvICalObject)
+    }
+
+    @Test
+    fun deleteItemWithChildren_LocalCollection() = runBlockingTest{
+        val idParent = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 1L })
+        val idChild1 = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 1L })
+        val idChild2 = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 1L })
+        val idChild3 = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 1L })
+
+        database.insertRelatedto(Relatedto().apply {
+            icalObjectId = idParent
+            linkedICalObjectId = idChild1
+            reltype = Reltype.CHILD.name
+        })
+        database.insertRelatedto(Relatedto().apply {
+            icalObjectId = idParent
+            linkedICalObjectId = idChild2
+            reltype = Reltype.CHILD.name
+        })
+        database.insertRelatedto(Relatedto().apply {
+            icalObjectId = idChild1
+            linkedICalObjectId = idChild3
+            reltype = Reltype.CHILD.name
+        })
+
+        //make sure everything was correctly inserted
+        assertEquals(3,database.getAllRelatedto().getOrAwaitValue().size)
+
+        ICalObject.deleteItemWithChildren(idParent, 1L, database)
+
+        assertEquals(0,database.getAllRelatedto().getOrAwaitValue().size)
+        assertEquals(null, database.getSync(idParent))
+        assertEquals(null, database.getSync(idChild1))
+        assertEquals(null, database.getSync(idChild2))
+        assertEquals(null, database.getSync(idChild3))
+    }
+
+    @Test
+    fun deleteItemWithChildren_RemoteCollection() = runBlockingTest {
+        val idParent = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 2L })
+        val idChild1 = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 2L })
+        val idChild2 = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 2L })
+        val idChild3 = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 2L })
+
+        database.insertRelatedto(Relatedto().apply {
+            icalObjectId = idParent
+            linkedICalObjectId = idChild1
+            reltype = Reltype.CHILD.name
+        })
+        database.insertRelatedto(Relatedto().apply {
+            icalObjectId = idParent
+            linkedICalObjectId = idChild2
+            reltype = Reltype.CHILD.name
+        })
+        database.insertRelatedto(Relatedto().apply {
+            icalObjectId = idChild1
+            linkedICalObjectId = idChild3
+            reltype = Reltype.CHILD.name
+        })
+
+        //make sure everything was correctly inserted
+        assertEquals(3,database.getAllRelatedto().getOrAwaitValue().size)
+
+        ICalObject.deleteItemWithChildren(idParent, 2L, database)
+
+        assertTrue(database.getSync(idParent)?.property?.deleted!!)
+        assertTrue(database.getSync(idChild1)?.property?.deleted!!)
+        assertTrue(database.getSync(idChild2)?.property?.deleted!!)
+        assertTrue(database.getSync(idChild3)?.property?.deleted!!)
     }
 }

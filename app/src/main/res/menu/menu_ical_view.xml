@@ -10,6 +10,8 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group android:id="@+id/menugroup_view_share" >
+
     <item
         android:id="@+id/menu_view_share_text"
         android:icon="@drawable/ic_send"
@@ -22,21 +24,30 @@
         android:title="@string/menu_view_share_ics"
         app:showAsAction="ifRoom" />
 
+    </group>
+
+    <group android:id="@+id/menugroup_view_copy" >
     <item
         android:id="@+id/menu_view_copy_as_journal"
         android:title="@string/menu_view_copy_as_journal"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_view_copy_as_note"
         android:title="@string/menu_view_copy_as_note"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_view_copy_as_todo"
         android:title="@string/menu_view_copy_as_todo"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
+    </group>
 
-
+    <group android:id="@+id/menugroup_view_delete" >
+    <item
+        android:id="@+id/menu_view_delete_item"
+        android:title="@string/menu_view_delete_item"
+        app:showAsAction="never" />
+    </group>
 
 </menu>

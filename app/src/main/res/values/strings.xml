@@ -238,6 +238,8 @@
     <string name="menu_view_copy_as_journal">Copy as Journal</string>
     <string name="menu_view_copy_as_todo">Copy as Todo</string>
     <string name="menu_view_copy_as_note">Copy as Note</string>
+    <string name="menu_view_delete_item">Delete</string>
+
 
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">Todo Due Reminder</string>
