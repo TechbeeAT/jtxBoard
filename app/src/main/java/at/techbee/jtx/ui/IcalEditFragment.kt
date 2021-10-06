@@ -429,16 +429,15 @@ class IcalEditFragment : Fragment() {
 
                 // show Alert Dialog before the item gets really deleted
                 val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Delete \"${icalEditViewModel.iCalObjectUpdated.value?.summary}\"")
-                builder.setMessage("Are you sure you want to delete \"${icalEditViewModel.iCalObjectUpdated.value?.summary}\"?")
-                builder.setPositiveButton("Delete") { _, _ ->
-
+                builder.setTitle(getString(R.string.edit_dialog_sure_to_delete_title, icalEditViewModel.iCalObjectUpdated.value?.summary))
+                builder.setMessage(getString(R.string.edit_dialog_sure_to_delete_message, icalEditViewModel.iCalObjectUpdated.value?.summary))
+                builder.setPositiveButton(R.string.delete) { _, _ ->
 
                     hideKeyboard()
 
                     val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
                     icalEditViewModel.delete()
-                    Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, getString(R.string.edit_toast_deleted_successfully, summary), Toast.LENGTH_LONG).show()
 
                     context?.let { context -> Attachment.scheduleCleanupJob(context) }
 
@@ -462,7 +461,7 @@ class IcalEditFragment : Fragment() {
                             StatusJournal.CANCELLED.name
 
                     val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
-                    Toast.makeText(context, "\"$summary\" marked as Cancelled.", Toast.LENGTH_LONG)
+                    Toast.makeText(context, getString(R.string.edit_toast_marked_as_cancelled, summary), Toast.LENGTH_LONG)
                         .show()
 
                     icalEditViewModel.savingClicked()

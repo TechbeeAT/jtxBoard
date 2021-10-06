@@ -392,7 +392,7 @@ class IcalViewFragment : Fragment() {
             newNote.maxLines = 8
 
             val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Add feedback / note")
+            builder.setTitle(R.string.view_dialog_add_note)
             builder.setIcon(R.drawable.ic_comment_add)
             builder.setView(newNote)
 
@@ -530,8 +530,6 @@ class IcalViewFragment : Fragment() {
                     }
 
 
-
-
                 // if the item is an instance of a recurring entry, make sure that the user is aware of this
                 val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
                 if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
@@ -590,104 +588,6 @@ class IcalViewFragment : Fragment() {
                 icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, resetProgress)
             }
         }
-
-
-
-/*
-        binding.attendeeAddButton.setOnClickListener{
-
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Set Attendees")
-            builder.setIcon(R.drawable.ic_attendee)
-
-            val dialog = inflater.inflate(R.layout.fragment_vjournal_item_dialog_attendee, null)
-            val editText = dialog.findViewById<AutoCompleteTextView>(R.id.attendee_add_autocompletetextview)
-            val attendeesAddChipgroup = dialog.findViewById<ChipGroup>(R.id.attendees_add_chipgroup)
-            editText.setAdapter(loadContacts())
-
-            builder.setView(dialog)
-
-
-            builder.setPositiveButton("Save") { _, _ ->
-                //vJournalItemViewModel.upsertComment(VComment(journalLinkId = vJournalItemViewModel.vJournal.value!!.vAttendee., text = editText.text.toString()))
-            }
-            builder.setNegativeButton("Cancel") { _, _ ->
-                // Do nothing, just close the message
-            }
-
-            if (!vJournalItemViewModel.vJournal.value!!.vAttendee.isNullOrEmpty())
-            {
-                builder.setNeutralButton("Delete") { _, _ ->
-                    // Do nothing, just close the message
-                }
-            }
-
-            builder.show()
-
-
-            editText.setOnItemClickListener(AdapterView.OnItemClickListener { parent, arg1, pos, id ->
-                val item: String = parent.getItemAtPosition(pos) as String
-                Log.println(Log.INFO, "AutoCompleteValues", "Position: $pos, Id: $id, String: $item")
-
-
-                val attendeeChip = inflater.inflate(R.layout.fragment_vjournal_item_chip_person, attendeesAddChipgroup, false) as Chip
-                attendeeChip.text = editText.text
-                attendeesAddChipgroup.addView(attendeeChip)
-
-
-                attendeeChip.setOnCloseIconClickListener { chip ->
-                    // Responds to chip's close icon click if one is present
-                    // Delete by re-assigning an edited, mutable category list
-                    // TODO: Delete the category from the list!!!
-                    //val currentCategories = vJournalEditViewModel.vCategoryUpdated.removeIf { it.text == category.text}
-                    chip.visibility = View.GONE
-                }
-
-                editText.text.clear()
-            })
-
-
-            // Transform the category input into a chip when the Done button in the keyboard is clicked
-            editText.setOnEditorActionListener { v, actionId, event ->
-                return@setOnEditorActionListener when (actionId) {
-                    EditorInfo.IME_ACTION_DONE -> {
-                        //vJournalEditViewModel.vCategoryUpdated.add(VCategory(text = binding.categoriesAdd.editText?.text.toString()))
-                        //addChips(listOf(VCategory(text = binding.categoriesAdd.editText?.text.toString())))
-
-                        val attendeeChip = inflater.inflate(R.layout.fragment_vjournal_item_chip_person, attendeesAddChipgroup, false) as Chip
-                        attendeeChip.text = editText.text
-                        attendeesAddChipgroup.addView(attendeeChip)
-
-
-                        attendeeChip.setOnCloseIconClickListener { chip ->
-                            // Responds to chip's close icon click if one is present
-                            // Delete by re-assigning an edited, mutable category list
-                            // TODO: Delete the category from the list!!!
-                            //val currentCategories = vJournalEditViewModel.vCategoryUpdated.removeIf { it.text == category.text}
-                            chip.visibility = View.GONE
-                        }
-
-
-
-                        editText.text.clear()
-
-
-                        // TODO: SAVE added categories!!!
-                        //vJournalItemEditViewModel.vJournalItemUpdated.value!!.vCategory?.plus(category)
-                        // .add(category))
-
-                        true
-                    }
-                    else -> false
-                }
-            }
-
-
-
- */
-
-
-
 
         return binding.root
     }
@@ -813,7 +713,7 @@ class IcalViewFragment : Fragment() {
 
                 val categories: MutableList<String> = mutableListOf()
                 icalViewViewModel.icalEntity.value!!.categories?.forEach { categories.add(it.text) }
-                shareText += "Categories/Labels: ${categories.joinToString(separator=", ")}"
+                shareText += "# ${categories.joinToString(separator=", ")}"
 
                 val attendees: MutableList<String> = mutableListOf()
                 icalViewViewModel.icalEntity.value!!.attendees?.forEach { attendees.add(it.caladdress) }
@@ -944,9 +844,9 @@ class IcalViewFragment : Fragment() {
 
                     // show Alert Dialog before the item gets really deleted
                     val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("Delete \"${icalViewViewModel.icalEntity.value!!.property.summary}\"")
-                    builder.setMessage("Are you sure you want to delete \"${icalViewViewModel.icalEntity.value!!.property.summary}\"?")
-                    builder.setPositiveButton("Delete") { _, _ ->
+                    builder.setTitle(getString(R.string.view_dialog_sure_to_delete_title, icalViewViewModel.icalEntity.value!!.property.summary))
+                    builder.setMessage(getString(R.string.view_dialog_sure_to_delete_message, icalViewViewModel.icalEntity.value!!.property.summary))
+                    builder.setPositiveButton(R.string.delete) { _, _ ->
 
                         val summary = icalViewViewModel.icalEntity.value!!.property.summary
 
@@ -954,12 +854,12 @@ class IcalViewFragment : Fragment() {
                         direction.module2show = icalViewViewModel.icalEntity.value?.property?.module
                         icalViewViewModel.delete(icalViewViewModel.icalEntity.value?.property!!)
 
-                        Toast.makeText(context, "\"$summary\" successfully deleted.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, getString(R.string.view_toast_deleted_successfully, summary), Toast.LENGTH_LONG).show()
 
                         context?.let { context -> Attachment.scheduleCleanupJob(context) }
                         this.findNavController().navigate(direction)
                     }
-                builder.setNeutralButton("Cancel") { _, _ -> }
+                builder.setNeutralButton(R.string.cancel) { _, _ -> }
                 builder.show()
             }
         }

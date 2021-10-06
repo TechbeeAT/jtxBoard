@@ -13,6 +13,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
+import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
@@ -212,7 +213,7 @@ class IcalListViewModel(
 
         }
         if(isLinkedRecurringInstance)
-            Toast.makeText(getApplication(), "Recurring item is now an exception.", Toast.LENGTH_LONG).show()
+            Toast.makeText(getApplication(), R.string.list_toast_item_is_now_recu_exception, Toast.LENGTH_LONG).show()
 
     }
 }

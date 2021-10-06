@@ -22,6 +22,7 @@
     <!-- Global Dialog Strings -->
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="delete">Delete</string>
     <string name="number_percent" translatable="false">%1$s \%</string>
 
     <!-- Strings for values in properties of an ICalObject -->
@@ -96,7 +97,10 @@
     <string name="list_num_attachments_contentdesc">Number of attachments</string>
     <string name="list_num_comments_contentdesc">Number of comments</string>
     <string name="list_snackbar_overdue_tasks_in_past">Overdue tasks detected, scroll up to review.</string>
-
+    <string name="list_toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
+    <string name="view_toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
+    <string name="list_error_no_app_found_to_open_file">No app was found to open this file.</string>
+    <string name="list_error_on_retrieving_file">Failed to retrieve file.</string>
 
     <!-- fragment_ical_view -->
     <string name="view_url_header">URL</string>
@@ -125,6 +129,11 @@
     <string name="view_fab_edit_entry_contentDesc">Edit entry</string>
     <string name="view_subtasks_header">Subtasks</string>
     <string name="view_progress_label">Progress</string>
+    <string name="view_dialog_sure_to_delete_title">Delete \"%1$s\"?</string>
+    <string name="view_dialog_sure_to_delete_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="view_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
+    <string name="view_dialog_add_note">Add note</string>
+
 
     <!-- fragment_ical_edit -->
     <string name="edit_summary_hint">Summary</string>
@@ -178,6 +187,12 @@
     <string name="edit_recur_x_day_of_the_month">day of the month</string>
     <string name="edit_recur_x_times">times</string>
 
+    <string name="edit_dialog_sure_to_delete_title">Delete \"%1$s\"?</string>
+    <string name="edit_dialog_sure_to_delete_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="edit_dialog_mark_as_cancelled">Mark as cancelled</string>
+    <string name="edit_toast_marked_as_cancelled">\"%1$s\" marked as cancelled</string>
+    <string name="edit_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
+
     <string name="edit_validation_errors_detected">Please correct the following validation error(s):</string>
     <string name="edit_validation_errors_dialog_header">Validation errors occurred</string>
 
@@ -217,7 +232,7 @@
 
 
     <!-- menus -->
-    <string name="menu_edit_delete">delete</string>
+    <string name="menu_edit_delete">Delete</string>
     <string name="menu_filter_reset">Reset</string>
     <string name="menu_filter_apply">Apply</string>
     <string name="menu_list_search">Search</string>

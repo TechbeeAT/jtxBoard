@@ -558,13 +558,13 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
 
                     } catch (e: IOException) {
                         Log.i("fileprovider", "Failed to retrieve file\n$e")
-                        Toast.makeText(context, "Failed to retrieve file.", Toast.LENGTH_LONG)
+                        Toast.makeText(context, R.string.list_error_on_retrieving_file, Toast.LENGTH_LONG)
                             .show()
                     } catch (e: ActivityNotFoundException) {
                         Log.i("ActivityNotFound", "No activity found to open file\n$e")
                         Toast.makeText(
                             context,
-                            "No app was found to open this file.",
+                            R.string.list_error_no_app_found_to_open_file,
                             Toast.LENGTH_LONG
                         ).show()
                     }

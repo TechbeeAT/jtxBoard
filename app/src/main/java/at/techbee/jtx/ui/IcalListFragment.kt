@@ -248,8 +248,6 @@ class IcalListFragment : Fragment() {
             }
         })
 
-
-
         return binding.root
     }
 

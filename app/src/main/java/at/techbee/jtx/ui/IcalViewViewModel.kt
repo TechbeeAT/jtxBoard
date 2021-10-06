@@ -11,7 +11,7 @@ package at.techbee.jtx.ui
 import android.app.Application
 import android.widget.Toast
 import androidx.lifecycle.*
-import at.techbee.jtx.addLongToCSVString
+import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
@@ -322,7 +322,7 @@ class IcalViewViewModel(private val icalItemId: Long,
             viewModelScope.launch(Dispatchers.IO) {
                 ICalObject.makeRecurringException(item, database)
             }
-            Toast.makeText(getApplication(), "Recurring instance is now an exception.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(getApplication(), R.string.view_toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
         }
     }
 
