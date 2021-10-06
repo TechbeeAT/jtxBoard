@@ -435,8 +435,11 @@ data class ICalObject(
 
 
 ) : Parcelable {
+
+
     companion object Factory {
 
+        const val TZ_ALLDAY = "ALLDAY"
 
         fun createJournal(): ICalObject = ICalObject(
             component = Component.VJOURNAL.name,
@@ -467,7 +470,7 @@ data class ICalObject(
             status = StatusTodo.`NEEDS-ACTION`.name,
             percent = 0,
             priority = 0,
-            dueTimezone = "ALLDAY",
+            dueTimezone = TZ_ALLDAY,
             dirty = true
         )
 
@@ -478,7 +481,7 @@ data class ICalObject(
             status = StatusTodo.`NEEDS-ACTION`.name,
             percent = 0,
             priority = 0,
-            dueTimezone = "ALLDAY",
+            dueTimezone = TZ_ALLDAY,
             dirty = true
         )
 
@@ -511,7 +514,7 @@ data class ICalObject(
                 return null
 
             return when {
-                dtstartTimezone == "ALLDAY" -> DtStart(Date(dtstart)).value
+                dtstartTimezone == ICalObject.TZ_ALLDAY -> DtStart(Date(dtstart)).value
                 dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(dtstart)).value
                 else -> {
                     val timezone = TimeZoneRegistryFactory.getInstance().createRegistry()
@@ -680,7 +683,7 @@ data class ICalObject(
             val count = rRule.count
 
             val start = Calendar.getInstance().apply {
-                if(dtstartTimezone?.isNotEmpty() == true && dtstartTimezone != "ALLDAY")
+                if(dtstartTimezone?.isNotEmpty() == true && dtstartTimezone != TZ_ALLDAY)
                     this.timeZone = TimeZone.getTimeZone(dtstartTimezone)
                 else
                     timeZone = TimeZone.getTimeZone("UTC")
@@ -801,7 +804,7 @@ data class ICalObject(
             instance.property.isRecurLinkedInstance = true
 
             instance.property.recurid = when {
-                    instance.property.dtstartTimezone == "ALLDAY" -> DtStart(Date(instance.property.dtstart!!)).value
+                    instance.property.dtstartTimezone == TZ_ALLDAY -> DtStart(Date(instance.property.dtstart!!)).value
                     instance.property.dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(instance.property.dtstart!!)).value
                     else -> {
                         val timezone =

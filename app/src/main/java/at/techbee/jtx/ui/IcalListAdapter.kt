@@ -153,7 +153,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                 holder.dtstartMonth.text = convertLongToMonthString(iCal4ListItem.property.dtstart)
                 holder.dtstartYear.text = convertLongToYearString(iCal4ListItem.property.dtstart)
 
-                if (iCal4ListItem.property.dtstartTimezone == "ALLDAY") {
+                if (iCal4ListItem.property.dtstartTimezone == ICalObject.TZ_ALLDAY) {
                     holder.dtstartTime.visibility = View.GONE
                 } else {
                     holder.dtstartTime.text = convertLongToTimeString(iCal4ListItem.property.dtstart)
@@ -161,7 +161,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                 }
 
                 //set the timezone (if applicable)
-                if (iCal4ListItem.property.dtstartTimezone == "ALLDAY" || iCal4ListItem.property.dtstartTimezone.isNullOrEmpty() || TimeZone.getTimeZone(iCal4ListItem.property.dtstartTimezone).getDisplayName(true, TimeZone.SHORT) == null) {
+                if (iCal4ListItem.property.dtstartTimezone == ICalObject.TZ_ALLDAY || iCal4ListItem.property.dtstartTimezone.isNullOrEmpty() || TimeZone.getTimeZone(iCal4ListItem.property.dtstartTimezone).getDisplayName(true, TimeZone.SHORT) == null) {
                     holder.dtstartTimeZone.visibility = View.GONE
                 } else {
                     holder.dtstartTimeZone.text = TimeZone.getTimeZone(iCal4ListItem.property.dtstartTimezone).getDisplayName(true, TimeZone.SHORT)
@@ -198,7 +198,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             else {
                 holder.due.visibility = View.VISIBLE
                 var millisLeft = iCal4ListItem.property.due!! - System.currentTimeMillis()
-                if (iCal4ListItem.property.dueTimezone == "ALLDAY")
+                if (iCal4ListItem.property.dueTimezone == ICalObject.TZ_ALLDAY)
                     millisLeft =
                         millisLeft + TimeUnit.DAYS.toMillis(1) - 1        // if it's due on the same day, then add 1 day minus 1 millisecond to consider the end of the day
                 val daysLeft =
@@ -209,11 +209,11 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                 when {
                     millisLeft < 0L -> holder.due.text =
                         context.getString(R.string.list_due_overdue)
-                    millisLeft >= 0L && daysLeft == 0L && iCal4ListItem.property.dueTimezone == "ALLDAY" -> holder.due.text =
+                    millisLeft >= 0L && daysLeft == 0L && iCal4ListItem.property.dueTimezone == ICalObject.TZ_ALLDAY -> holder.due.text =
                         context.getString(R.string.list_due_today)
-                    millisLeft >= 0L && daysLeft == 1L && iCal4ListItem.property.dueTimezone == "ALLDAY" -> holder.due.text =
+                    millisLeft >= 0L && daysLeft == 1L && iCal4ListItem.property.dueTimezone == ICalObject.TZ_ALLDAY -> holder.due.text =
                         context.getString(R.string.list_due_tomorrow)
-                    millisLeft >= 0L && daysLeft <= 1L && iCal4ListItem.property.dueTimezone != "ALLDAY" -> holder.due.text =
+                    millisLeft >= 0L && daysLeft <= 1L && iCal4ListItem.property.dueTimezone != ICalObject.TZ_ALLDAY -> holder.due.text =
                         context.getString(R.string.list_due_inXhours, hoursLeft)
                     millisLeft >= 0L && daysLeft >= 2L -> holder.due.text =
                         context.getString(R.string.list_due_inXdays, daysLeft)

@@ -591,7 +591,7 @@ class IcalEditFragment : Fragment() {
                 return@observe
 
             if (it) {
-                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = "ALLDAY"
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ICalObject.TZ_ALLDAY
 
                 // make sure that the time gets reset to 0
                 val c = Calendar.getInstance()
@@ -613,7 +613,7 @@ class IcalEditFragment : Fragment() {
                 return@observe
 
             if (!it) {
-                icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = "ALLDAY"
+                icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = ICalObject.TZ_ALLDAY
 
                 // make sure that the time gets reset to 0
                 val c = Calendar.getInstance()
@@ -626,14 +626,14 @@ class IcalEditFragment : Fragment() {
                 binding.editTaskDatesFragment?.editDuetimezoneSpinner?.setSelection(0)
 
                 // dtstart and due MUST both be either both ALLDAY or both with times
-                if (icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone != "ALLDAY")
+                if (icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone != ICalObject.TZ_ALLDAY)
                     icalEditViewModel.addStartedTimeChecked.postValue(false)
 
             } else {
                 icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = ""
 
                 // dtstart and due MUST both be either both ALLDAY or both with times
-                if (icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone == "ALLDAY")
+                if (icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone == ICalObject.TZ_ALLDAY)
                     icalEditViewModel.addStartedTimeChecked.postValue(true)
             }
 
@@ -647,7 +647,7 @@ class IcalEditFragment : Fragment() {
                 return@observe
 
             if (!it) {
-                icalEditViewModel.iCalObjectUpdated.value!!.completedTimezone = "ALLDAY"
+                icalEditViewModel.iCalObjectUpdated.value!!.completedTimezone = ICalObject.TZ_ALLDAY
 
                 // make sure that the time gets reset to 0
                 val c = Calendar.getInstance()
@@ -672,7 +672,7 @@ class IcalEditFragment : Fragment() {
                 return@observe
 
             if (!it) {
-                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = "ALLDAY"
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ICalObject.TZ_ALLDAY
 
                 // make sure that the time gets reset to 0
                 val c = Calendar.getInstance()
@@ -685,14 +685,14 @@ class IcalEditFragment : Fragment() {
                 binding.editTaskDatesFragment?.editStartedtimezoneSpinner?.setSelection(0)
 
                 // dtstart and due MUST both be either both ALLDAY or both with times
-                if (icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone != "ALLDAY")
+                if (icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone != ICalObject.TZ_ALLDAY)
                     icalEditViewModel.addDueTimeChecked.postValue(false)
 
             } else {
                 icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ""
 
                 // dtstart and due MUST both be either both ALLDAY or both with times
-                if (icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone == "ALLDAY")
+                if (icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone == ICalObject.TZ_ALLDAY)
                     icalEditViewModel.addDueTimeChecked.postValue(true)
             }
 
@@ -2008,13 +2008,13 @@ class IcalEditFragment : Fragment() {
         icalEditViewModel.recurrenceList.addAll(icalEditViewModel.iCalEntity.property.getInstancesFromRrule())
 
         var lastOccurrenceString = convertLongToFullDateString(icalEditViewModel.recurrenceList.lastOrNull())
-        if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY")
+        if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
             lastOccurrenceString += " " + convertLongToTimeString(icalEditViewModel.recurrenceList.lastOrNull())
 
         var allOccurrencesString = ""
         icalEditViewModel.recurrenceList.forEach {
             allOccurrencesString += convertLongToFullDateString(it)
-            if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != "ALLDAY")
+            if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
                 allOccurrencesString += " " + convertLongToTimeString(it)
             allOccurrencesString += "\n"
         }

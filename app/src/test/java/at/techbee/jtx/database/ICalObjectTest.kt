@@ -182,7 +182,7 @@ class ICalObjectTest {
             status = StatusTodo.`NEEDS-ACTION`.name,
             percent = 0,
             priority = 0,
-            dueTimezone = "ALLDAY",
+            dueTimezone = ICalObject.TZ_ALLDAY,
             dirty = true,
             // dates and uid must be set explicitely to make the objects equal
             dtstart = factoryObject.dtstart,
@@ -204,7 +204,7 @@ class ICalObjectTest {
             status = StatusTodo.`NEEDS-ACTION`.name,
             percent = 0,
             priority = 0,
-            dueTimezone = "ALLDAY",
+            dueTimezone = ICalObject.TZ_ALLDAY,
             dirty = true,
             summary = "Task Summary",
             // dates and uid must be set explicitely to make the objects equal
@@ -220,7 +220,7 @@ class ICalObjectTest {
     @Test
     fun getRecurId_date() {
         val sampleDate = 1632434400000L   // 2021-09-24
-        val recurId = ICalObject.getRecurId(sampleDate, "ALLDAY")
+        val recurId = ICalObject.getRecurId(sampleDate, ICalObject.TZ_ALLDAY)
         assertEquals("20210923", recurId)
     }
 
@@ -445,7 +445,7 @@ class ICalObjectTest {
 
         val item = ICalObject.createJournal().apply {
             this.dtstart = 1622494800000L
-            this.dtstartTimezone = "ALLDAY"
+            this.dtstartTimezone = ICalObject.TZ_ALLDAY
             this.rrule = "FREQ=DAILY;COUNT=4;INTERVAL=4"
         }
 

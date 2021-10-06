@@ -203,7 +203,7 @@ data class ICalEntity(
 
             dtstart?.let {
                 when {
-                    dtstartTimezone == "ALLDAY" -> props += DtStart(Date(it))
+                    dtstartTimezone == ICalObject.TZ_ALLDAY -> props += DtStart(Date(it))
                     dtstartTimezone.isNullOrEmpty() -> props += DtStart(DateTime(it))
                     else -> {
                         val timezone = TimeZoneRegistryFactory.getInstance().createRegistry()
@@ -219,7 +219,7 @@ data class ICalEntity(
             if (component == Component.VTODO.name) {
                 dtend?.let {
                     when {
-                        dtendTimezone == "ALLDAY" -> props += DtEnd(Date(it))
+                        dtendTimezone == ICalObject.TZ_ALLDAY -> props += DtEnd(Date(it))
                         dtendTimezone.isNullOrEmpty() -> props += DtEnd(DateTime(it))
                         else -> {
                             val timezone = TimeZoneRegistryFactory.getInstance().createRegistry()
@@ -242,7 +242,7 @@ data class ICalEntity(
 
                 due?.let {
                     when {
-                        dueTimezone == "ALLDAY" -> props += Due(Date(it))
+                        dueTimezone == ICalObject.TZ_ALLDAY -> props += Due(Date(it))
                         dueTimezone.isNullOrEmpty() -> props += Due(DateTime(it))
                         else -> {
                             val timezone = TimeZoneRegistryFactory.getInstance().createRegistry()

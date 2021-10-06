@@ -129,11 +129,11 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
 
             timeVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null && item.property.dtstartTimezone != "ALLDAY"           // true if component == JOURNAL and it is not an All Day Event
+                return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null && item.property.dtstartTimezone != ICalObject.TZ_ALLDAY          // true if component == JOURNAL and it is not an All Day Event
             }
 
             timezoneVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null && !(item.property.dtstartTimezone == "ALLDAY" || item.property.dtstartTimezone.isNullOrEmpty())           // true if component == JOURNAL and it is not an All Day Event
+                return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null && !(item.property.dtstartTimezone == ICalObject.TZ_ALLDAY || item.property.dtstartTimezone.isNullOrEmpty())           // true if component == JOURNAL and it is not an All Day Event
             }
 
             dtstartFormatted = Transformations.map(icalEntity) { item ->
@@ -165,7 +165,7 @@ class IcalViewViewModel(private val icalItemId: Long,
             completedFormatted = Transformations.map(icalEntity) { item ->
                 if (item?.property?.completed != null) {
                     val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.property.completed!!))
-                    val formattedTime = if (item.property.completedTimezone != "ALLDAY")
+                    val formattedTime = if (item.property.completedTimezone != ICalObject.TZ_ALLDAY)
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.completed!!))
                     else ""
                     return@map "Completed: $formattedDate $formattedTime"
@@ -176,7 +176,7 @@ class IcalViewViewModel(private val icalItemId: Long,
             startedFormatted = Transformations.map(icalEntity) { item ->
                 if (item?.property?.dtstart != null) {
                     val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.property.dtstart!!))
-                    val formattedTime = if (item.property.dtstartTimezone != "ALLDAY")
+                    val formattedTime = if (item.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.dtstart!!))
                     else ""
                     return@map "Planned start: $formattedDate $formattedTime"
@@ -189,7 +189,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                 item?.property?.due?.let { due ->
                     val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(due))
                     val formattedTime =
-                        if (item.property.dueTimezone != "ALLDAY")
+                        if (item.property.dueTimezone != ICalObject.TZ_ALLDAY)
                             DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(due))
                         else ""
                     return@map "Due: $formattedDate $formattedTime"

@@ -48,6 +48,8 @@ object JtxContract {
     @Suppress("unused")
     object JtxICalObject {
 
+
+
         /** The name of the the content URI for IcalObjects.
          * This is a general purpose table containing general columns
          * for Journals, Notes and Todos */
@@ -55,6 +57,9 @@ object JtxContract {
 
         /** The content uri of the ICalObject table */
         val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+
+        /** Constant to define all day values (for dtstart, due, completed timezone fields */
+        const val TZ_ALLDAY = "ALLDAY"
 
 
         /** The name of the ID column.

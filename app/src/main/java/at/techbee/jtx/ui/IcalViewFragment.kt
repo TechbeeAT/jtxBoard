@@ -352,7 +352,7 @@ class IcalViewFragment : Fragment() {
             val recurDates = mutableListOf<String>()
             it.forEach { item ->
                 item?.let {
-                    if (it.dtstartTimezone != "ALLDAY")
+                    if (it.dtstartTimezone != ICalObject.TZ_ALLDAY)
                         recurDates.add(convertLongToFullDateString(it.dtstart) + " " + convertLongToTimeString(it.dtstart))
                     else
                         recurDates.add(convertLongToFullDateString(it.dtstart))
