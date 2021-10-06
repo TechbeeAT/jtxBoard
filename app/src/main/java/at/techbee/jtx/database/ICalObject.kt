@@ -15,6 +15,7 @@ import android.provider.BaseColumns
 import android.util.Log
 import androidx.room.*
 import at.techbee.jtx.R
+import at.techbee.jtx.addLongToCSVString
 import at.techbee.jtx.convertLongToDateString
 import at.techbee.jtx.getLongListfromCSVString
 import kotlinx.parcelize.Parcelize
@@ -540,10 +541,32 @@ data class ICalObject(
             }
 
             database.deleteRecurringInstances(id)      // recurring instances are always physically deleted
-            if(collectionId == 1L)      // Elements in local collection are physically deleted
-                database.deleteICalObjectsbyId(id)
-             else
-                database.updateDeleted(listOf(id), System.currentTimeMillis())
+            val item = database.getSync(id)!!
+            when {
+                item.property.isRecurLinkedInstance -> {
+                    makeRecurringException(item.property, database)   // if the current item
+                    database.deleteICalObjectsbyId(id)
+                }
+                collectionId == 1L      // Elements in local collection are physically deleted
+                -> database.deleteICalObjectsbyId(id)
+                else -> database.updateToDeleted(id, System.currentTimeMillis())
+            }
+        }
+
+        fun makeRecurringException(item: ICalObject, database: ICalDatabaseDao) {
+            if(item.isRecurLinkedInstance) {
+
+                item.recurOriginalIcalObjectId?.let { originalId ->
+                    val newExceptionList =
+                        addLongToCSVString(database.getRecurExceptions(originalId), item.dtstart)
+                    database.setRecurExceptions(
+                        originalId,
+                        newExceptionList,
+                        System.currentTimeMillis()
+                    )
+                    database.setAsRecurException(item.id, System.currentTimeMillis())
+                }
+            }
         }
     }
 

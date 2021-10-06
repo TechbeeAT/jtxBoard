@@ -319,14 +319,8 @@ class IcalViewViewModel(private val icalItemId: Long,
     fun makeRecurringExceptionIfNecessary(item: ICalObject) {
 
         if(item.isRecurLinkedInstance) {
-
             viewModelScope.launch(Dispatchers.IO) {
-                item.recurOriginalIcalObjectId?.let { originalId ->
-                    val newExceptionList =
-                        addLongToCSVString(database.getRecurExceptions(originalId), item.dtstart)
-                    database.setRecurExceptions(originalId, newExceptionList, System.currentTimeMillis())
-                    database.setAsRecurException(item.id, System.currentTimeMillis())
-                }
+                ICalObject.makeRecurringException(item, database)
             }
             Toast.makeText(getApplication(), "Recurring instance is now an exception.", Toast.LENGTH_SHORT).show()
         }

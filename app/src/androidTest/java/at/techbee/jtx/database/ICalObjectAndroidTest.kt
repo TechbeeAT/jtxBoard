@@ -251,4 +251,37 @@ class ICalObjectAndroidTest {
         assertTrue(database.getSync(idChild2)?.property?.deleted!!)
         assertTrue(database.getSync(idChild3)?.property?.deleted!!)
     }
+
+
+    @Test
+    fun deleteItemWithChildren_RecurringInstance_Local() = runBlockingTest {
+        //Local or remote should not make a difference, the recurring instance must be deleted anyway
+        val idParent = database.insertICalObject(ICalObject.createJournal().apply {
+            this.collectionId = 1L
+            this.isRecurLinkedInstance = true
+        })
+        // a recurring instance cannot have children
+        //make sure everything was correctly inserted
+
+        assertNotNull(database.getSync(idParent)?.property)
+        ICalObject.deleteItemWithChildren(idParent, 1L, database)
+        assertNull(database.getSync(idParent)?.property)
+    }
+
+    @Test
+    fun deleteItemWithChildren_RecurringInstance_Remote() = runBlockingTest {
+        //Local or remote should not make a difference, the recurring instance must be deleted anyway
+        val idParent = database.insertICalObject(ICalObject.createJournal().apply {
+            this.collectionId = 2L
+            this.isRecurLinkedInstance = true
+        })
+        // a recurring instance cannot have children
+        //make sure everything was correctly inserted
+
+        assertNotNull(database.getSync(idParent)?.property)
+        ICalObject.deleteItemWithChildren(idParent, 2L, database)
+        assertNull(database.getSync(idParent)?.property)
+    }
+
+
 }

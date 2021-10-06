@@ -205,20 +205,12 @@ class IcalListViewModel(
 
     fun updateProgress(itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) {
 
-
         viewModelScope.launch(Dispatchers.IO) {
             val currentItem = database.getICalObjectById(itemId)
+            ICalObject.makeRecurringException(currentItem!!, database)
+            val item = database.getSync(itemId)!!.property
+            database.update(item.setUpdatedProgress(newPercent))
 
-            currentItem?.let { icalObject ->
-                if(icalObject.isRecurLinkedInstance) {
-                    icalObject.recurOriginalIcalObjectId?.let { originalId ->
-                        val newExceptionList = addLongToCSVString(database.getRecurExceptions(originalId), currentItem.dtstart)
-                        database.setRecurExceptions(originalId, newExceptionList, System.currentTimeMillis())
-                    }
-                }
-                icalObject.setUpdatedProgress(newPercent)
-                database.update(icalObject)
-            }
         }
         if(isLinkedRecurringInstance)
             Toast.makeText(getApplication(), "Recurring item is now an exception.", Toast.LENGTH_LONG).show()
