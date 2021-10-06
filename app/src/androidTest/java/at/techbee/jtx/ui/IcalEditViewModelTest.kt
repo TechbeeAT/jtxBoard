@@ -13,7 +13,6 @@ import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.*
-
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -104,7 +103,6 @@ class IcalEditViewModelTest {
         assertFalse(icalEditViewModel.contactVisible.value!!)
         assertFalse(icalEditViewModel.attendeesVisible.value!!)
         assertFalse(icalEditViewModel.commentsVisible.value!!)
-
         assertFalse(icalEditViewModel.attachmentsVisible.value!!)
         assertFalse(icalEditViewModel.takePhotoVisible.value!!)
         assertFalse(icalEditViewModel.progressVisible.value!!)
@@ -578,8 +576,5 @@ class IcalEditViewModelTest {
         assertEquals(3L, child2InNewCollection?.property?.collectionId)
         assertEquals(3L, child1x1InNewCollection?.property?.collectionId)
         assertEquals(3L, child1x2InNewCollection?.property?.collectionId)
-
     }
-
-
 }

@@ -13,7 +13,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
-import at.techbee.jtx.addLongToCSVString
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
