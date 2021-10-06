@@ -284,4 +284,59 @@ class ICalObjectAndroidTest {
     }
 
 
+    @Test
+    fun makeRecurringException_Test() = runBlockingTest {
+
+        val idParent =
+            database.insertICalObject(ICalObject.createJournal().apply {
+                this.collectionId = 2L
+            this.rrule = "FREQ=DAILY;COUNT=5;INTERVAL=1"})
+        val parent = database.getICalObjectById(idParent)
+        parent!!.recreateRecurring(database)
+
+        val instances = database.getRecurInstances(idParent).getOrAwaitValue()
+
+        //make sure instances are there as expected
+        assertEquals(4, instances.size)
+
+        ICalObject.makeRecurringException(instances[0]!!, database)
+        ICalObject.makeRecurringException(instances[1]!!, database)
+
+        val parentAfterUpdate = database.getICalObjectById(idParent)
+        val instance0 = database.getICalObjectById(instances[0]!!.id)
+        val instance1 = database.getICalObjectById(instances[1]!!.id)
+        val instance2 = database.getICalObjectById(instances[2]!!.id)
+        val instance3 = database.getICalObjectById(instances[3]!!.id)
+
+        assertEquals("${instance0!!.dtstart},${instance1!!.dtstart}", parentAfterUpdate!!.exdate)
+        assertEquals(false, instance0.isRecurLinkedInstance)
+        assertEquals(false, instance1.isRecurLinkedInstance)
+        assertEquals(true, instance2!!.isRecurLinkedInstance)
+        assertEquals(true, instance3!!.isRecurLinkedInstance)
+    }
+
+
+    @Test
+    fun makeRecurringException_Test2() = runBlockingTest {
+
+        val idParent =
+            database.insertICalObject(ICalObject.createJournal().apply {
+                this.collectionId = 2L
+                this.rrule = null})
+        val parent = database.getICalObjectById(idParent)
+        parent!!.recreateRecurring(database)
+
+        val instances = database.getRecurInstances(idParent).getOrAwaitValue()
+
+        //make sure no instances were inserted are there as expected
+        assertEquals(0, instances.size)
+
+        //nothing should happen here
+        ICalObject.makeRecurringException(parent, database)
+
+        val parentAfterUpdate = database.getICalObjectById(idParent)
+
+        assertNull(parentAfterUpdate!!.exdate)
+        assertFalse(parentAfterUpdate.isRecurLinkedInstance)
+    }
 }
