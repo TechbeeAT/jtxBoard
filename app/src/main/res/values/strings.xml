@@ -159,10 +159,10 @@
     <string name="edit_due_time_hint">Due time</string>
     <string name="edit_completed_date_hint">Completed date</string>
     <string name="edit_completed_time_hint">Completed time</string>
-    <string name="edit_started_date_hint">Started date</string>
-    <string name="edit_started_time_hint">Started time</string>
+    <string name="edit_started_date_hint">Start date</string>
+    <string name="edit_started_time_hint">Start time</string>
     <string name="edit_add_time_switch">Add time</string>
-    <string name="edit_show_started_completed_switch">Edit started/completed</string>
+    <string name="edit_show_started_completed_switch">Edit start/completed</string>
     <string name="edit_progress">Progress</string>
     <string name="edit_subtasks_header">Subtasks</string>
     <string name="edit_subtasks_add_hint">Subtask</string>
@@ -171,7 +171,7 @@
     <string name="edit_url_header">URL</string>
     <string name="edit_location_header">Location</string>
     <string name="edit_due_header">Due</string>
-    <string name="edit_started_header">Started</string>
+    <string name="edit_started_header">Start</string>
     <string name="edit_completed_header">Completed</string>
     <string name="edit_categories_header">Categories</string>
     <string name="edit_attendees_header">Attendees</string>
@@ -203,6 +203,9 @@
     <string name="edit_validation_errors_resource_not_confirmed">A resource was entered but not confirmed. Please confirm or delete.</string>
     <string name="edit_validation_errors_attendee_not_confirmed">An attendee was entered but not confirmed. Please confirm or delete.</string>
     <string name="edit_validation_errors_subtask_not_confirmed">A subtask was entered but not confirmed. Please confirm or delete.</string>
+    <string name="edit_validation_errors_start_time_not_set">A start date was set but no time entered. Please deactivate the "Add time" switch or add a time.</string>
+    <string name="edit_validation_errors_due_time_not_set">A due date was set but no time entered. Please deactivate the "Add time" switch or add a time.</string>
+    <string name="edit_validation_errors_completed_time_not_set">A completed date was set but no time entered. Please deactivate the "Add time" switch or add a time.</string>
     <string name="edit_fragment_app_permission">App Permission</string>
     <string name="edit_fragment_app_permission_message">JTX can propose Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
 

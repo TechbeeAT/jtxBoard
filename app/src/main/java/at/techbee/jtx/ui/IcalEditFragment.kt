@@ -607,100 +607,41 @@ class IcalEditFragment : Fragment() {
             icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
         }
 
-        icalEditViewModel.addDueTimeChecked.observe(viewLifecycleOwner) {
+
+        icalEditViewModel.addStartedAndDueTimeChecked.observe(viewLifecycleOwner) {
 
             if (icalEditViewModel.iCalObjectUpdated.value == null)     // don't do anything if the object was not initialized yet
                 return@observe
 
             if (!it) {
                 icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = ICalObject.TZ_ALLDAY
-
-                // make sure that the time gets reset to 0
-                val c = Calendar.getInstance()
-                c.timeInMillis =
-                    icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis()
-                c.set(Calendar.HOUR_OF_DAY, 0)
-                c.set(Calendar.MINUTE, 0)
-                icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
-                binding.editTaskDatesFragment?.editDueTimeEdittext?.text?.clear()
-                binding.editTaskDatesFragment?.editDuetimezoneSpinner?.setSelection(0)
-
-                // dtstart and due MUST both be either both ALLDAY or both with times
-                if (icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                    icalEditViewModel.addStartedTimeChecked.postValue(false)
-
-            } else {
-                icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = ""
-
-                // dtstart and due MUST both be either both ALLDAY or both with times
-                if (icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone == ICalObject.TZ_ALLDAY)
-                    icalEditViewModel.addStartedTimeChecked.postValue(true)
-            }
-
-            icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
-        }
-
-
-        icalEditViewModel.addCompletedTimeChecked.observe(viewLifecycleOwner) {
-
-            if (icalEditViewModel.iCalObjectUpdated.value == null)     // don't do anything if the object was not initialized yet
-                return@observe
-
-            if (!it) {
-                icalEditViewModel.iCalObjectUpdated.value!!.completedTimezone = ICalObject.TZ_ALLDAY
-
-                // make sure that the time gets reset to 0
-                val c = Calendar.getInstance()
-                c.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.completed
-                    ?: System.currentTimeMillis()
-                c.set(Calendar.HOUR_OF_DAY, 0)
-                c.set(Calendar.MINUTE, 0)
-                icalEditViewModel.iCalObjectUpdated.value!!.completed = c.timeInMillis
-                binding.editTaskDatesFragment?.editCompletedTimeEdittext?.text?.clear()
-                binding.editTaskDatesFragment?.editCompletedtimezoneSpinner?.setSelection(0)
-
-            } else {
-                icalEditViewModel.iCalObjectUpdated.value!!.completedTimezone = ""
-            }
-
-            icalEditViewModel.updateVisibility()                 // Update visibility of Elements
-        }
-
-        icalEditViewModel.addStartedTimeChecked.observe(viewLifecycleOwner) {
-
-            if (icalEditViewModel.iCalObjectUpdated.value == null)     // don't do anything if the object was not initialized yet
-                return@observe
-
-            if (!it) {
                 icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ICalObject.TZ_ALLDAY
 
                 // make sure that the time gets reset to 0
-                val c = Calendar.getInstance()
-                c.timeInMillis =
+                val due = Calendar.getInstance()
+                due.timeInMillis =
+                    icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis()
+                due.set(Calendar.HOUR_OF_DAY, 0)
+                due.set(Calendar.MINUTE, 0)
+                icalEditViewModel.iCalObjectUpdated.value!!.due = due.timeInMillis
+                binding.editTaskDatesFragment?.editDueTimeEdittext?.text?.clear()
+                binding.editTaskDatesFragment?.editDuetimezoneSpinner?.setSelection(0)
+
+                // make sure that the time gets reset to 0
+                val start = Calendar.getInstance()
+                start.timeInMillis =
                     icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis()
-                c.set(Calendar.HOUR_OF_DAY, 0)
-                c.set(Calendar.MINUTE, 0)
-                icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
+                start.set(Calendar.HOUR_OF_DAY, 0)
+                start.set(Calendar.MINUTE, 0)
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstart = start.timeInMillis
                 binding.editTaskDatesFragment?.editStartedTimeEdittext?.text?.clear()
                 binding.editTaskDatesFragment?.editStartedtimezoneSpinner?.setSelection(0)
 
-                // dtstart and due MUST both be either both ALLDAY or both with times
-                if (icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone != ICalObject.TZ_ALLDAY)
-                    icalEditViewModel.addDueTimeChecked.postValue(false)
-
             } else {
-                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = ""
-
-                // dtstart and due MUST both be either both ALLDAY or both with times
-                if (icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone == ICalObject.TZ_ALLDAY)
-                    icalEditViewModel.addDueTimeChecked.postValue(true)
+                icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = null
+                icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = null
             }
-
-            icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change
-        }
-
-        icalEditViewModel.showStartedCompletedChecked.observe(viewLifecycleOwner) {
-            icalEditViewModel.updateVisibility()
+            icalEditViewModel.updateVisibility()                 // Update visibility of Elements on Change of showAll
         }
 
 
@@ -2046,6 +1987,14 @@ class IcalEditFragment : Fragment() {
             validationError += resources.getString(R.string.edit_validation_errors_comment_not_confirmed) + "\n"
         if(binding.editSubtasksAddEdittext.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_subtask_not_confirmed) + "\n"
+
+        if(binding.editTaskDatesFragment?.editDueTimeEdittext?.text.isNullOrBlank() && binding.editTaskDatesFragment?.editDueAddtimeSwitch?.isActivated == false)
+            validationError += resources.getString(R.string.edit_validation_errors_due_time_not_set) + "\n"
+        if(binding.editTaskDatesFragment?.editStartedTimeEdittext?.text.isNullOrBlank() && binding.editTaskDatesFragment?.editStartedAddtimeSwitch?.isActivated == false)
+            validationError += resources.getString(R.string.edit_validation_errors_start_time_not_set) + "\n"
+/*        if(binding.editCompletedTimeEdittext?.text.isNullOrBlank() && binding.editCompletedAddtimeSwitch?.isActivated == false)
+            validationError += resources.getString(R.string.edit_validation_errors_completed_time_not_set) + "\n"
+ */
 
         if(validationError.isNotEmpty()) {
             isValid = false

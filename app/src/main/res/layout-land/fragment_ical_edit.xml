@@ -309,7 +309,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:checked="@={model.addDueTimeChecked}"
+                android:checked="@={model.addStartedAndDueTimeChecked}"
                 android:text="@string/edit_add_time_switch"
                 android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@+id/edit_duetimezone_spinner"
@@ -593,7 +593,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:checked="@={model.addStartedTimeChecked}"
+                android:checked="@={model.addStartedAndDueTimeChecked}"
                 android:text="@string/edit_add_time_switch"
                 android:visibility="@{model.starteddateVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@+id/edit_startedtimezone_spinner"
@@ -660,51 +660,6 @@
                     android:text="@{model.completedtimeFormated}" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-
-            <ImageView
-                android:id="@+id/edit_completedtimezone_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_completedtimezone_spinner"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/edit_completedtimezone_spinner"
-                app:srcCompat="@drawable/ic_timezone"
-                tools:ignore="ContentDescription" />
-
-
-            <Spinner
-                android:id="@+id/edit_completedtimezone_spinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:entries="@{model.possibleTimezones}"
-                android:spinnerMode="dialog"
-                android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toStartOf="@id/edit_completed_addtime_switch"
-                app:layout_constraintStart_toEndOf="@id/edit_completedtimezone_icon"
-                app:layout_constraintTop_toBottomOf="@+id/edit_completed_date" />
-
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/edit_completed_addtime_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:checked="@={model.addCompletedTimeChecked}"
-                android:text="@string/edit_add_time_switch"
-                android:visibility="@{model.completeddateVisible ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_completedtimezone_spinner"
-                app:layout_constraintEnd_toEndOf="@id/edit_description_edit"
-                app:layout_constraintTop_toTopOf="@+id/edit_completedtimezone_spinner"
-                app:switchPadding="8dp" />
-
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/edit_url_edit"
