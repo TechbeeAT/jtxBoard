@@ -20,109 +20,18 @@
         android:layout_height="match_parent">
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_due_date"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_due_date_hint"
-            android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
-            app:endIconContentDescription="Set due date"
-            app:endIconDrawable="@drawable/ic_date"
-            app:endIconMode="custom"
-            app:helperText="Set due date"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toStartOf="@id/edit_due_time"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_started_addtime_switch">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_due_date_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:enabled="true"
-                android:focusable="false"
-                android:inputType="date"
-                android:text="@{model.duedateFormated}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_due_time"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_due_time_hint"
-            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
-            app:endIconContentDescription="Set due time"
-            app:endIconDrawable="@drawable/ic_time"
-            app:endIconMode="custom"
-            app:helperText="Set due time"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/edit_due_date"
-            app:layout_constraintTop_toTopOf="@+id/edit_due_date">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_due_time_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:enabled="true"
-                android:focusable="false"
-                android:inputType="time"
-                android:text="@{model.duetimeFormated}" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <ImageView
-            android:id="@+id/edit_duetimezone_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_duetimezone_spinner"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_duetimezone_spinner"
-            app:srcCompat="@drawable/ic_timezone"
-            tools:ignore="ContentDescription" />
-
-
-        <Spinner
-            android:id="@+id/edit_duetimezone_spinner"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:entries="@{model.possibleTimezones}"
-            android:spinnerMode="dialog"
-            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_due_addtime_switch"
-            app:layout_constraintEnd_toStartOf="@id/edit_due_addtime_switch"
-            app:layout_constraintStart_toEndOf="@id/edit_duetimezone_icon"
-            app:layout_constraintTop_toTopOf="@+id/edit_due_addtime_switch" />
-
-
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/edit_due_addtime_switch"
+            android:id="@+id/edit_task_addStartedAndDueTime_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:checked="@={model.addStartedAndDueTimeChecked}"
             android:text="@string/edit_add_time_switch"
-            android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.addStartedAndDueTimeVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_due_date"
+            app:layout_constraintTop_toTopOf="parent"
             app:switchPadding="8dp" />
-
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_started_date"
@@ -141,7 +50,7 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toStartOf="@id/edit_started_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/edit_task_addStartedAndDueTime_switch">
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -190,10 +99,10 @@
             android:id="@+id/edit_startedtimezone_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_startedtimezone_spinner"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/edit_startedtimezone_spinner"
             app:layout_constraintTop_toTopOf="@+id/edit_startedtimezone_spinner"
             app:srcCompat="@drawable/ic_timezone"
             tools:ignore="ContentDescription" />
@@ -201,31 +110,102 @@
 
         <Spinner
             android:id="@+id/edit_startedtimezone_spinner"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
             android:entries="@{model.possibleTimezones}"
             android:spinnerMode="dialog"
             android:visibility="@{model.startedtimeVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_started_addtime_switch"
-            app:layout_constraintEnd_toStartOf="@id/edit_started_addtime_switch"
-            app:layout_constraintStart_toEndOf="@id/edit_startedtimezone_icon"
-            app:layout_constraintTop_toTopOf="@+id/edit_started_addtime_switch" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_started_date" />
 
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/edit_started_addtime_switch"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_due_date"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:checked="@={model.addStartedAndDueTimeChecked}"
-            android:text="@string/edit_add_time_switch"
-            android:visibility="@{model.starteddateVisible ? View.VISIBLE : View.GONE}"
+            android:hint="@string/edit_due_date_hint"
+            android:visibility="@{model.duedateVisible ? View.VISIBLE : View.GONE}"
+            app:endIconContentDescription="Set due date"
+            app:endIconDrawable="@drawable/ic_date"
+            app:endIconMode="custom"
+            app:helperText="Set due date"
+            app:helperTextEnabled="true"
+            app:layout_constraintEnd_toStartOf="@id/edit_due_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_startedtimezone_spinner">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_due_date_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:focusable="false"
+                android:inputType="date"
+                android:text="@{model.duedateFormated}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_due_time"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="@string/edit_due_time_hint"
+            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
+            app:endIconContentDescription="Set due time"
+            app:endIconDrawable="@drawable/ic_time"
+            app:endIconMode="custom"
+            app:helperText="Set due time"
+            app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_started_date"
-            app:switchPadding="8dp" />
+            app:layout_constraintStart_toEndOf="@id/edit_due_date"
+            app:layout_constraintTop_toTopOf="@+id/edit_due_date">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_due_time_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:focusable="false"
+                android:inputType="time"
+                android:text="@{model.duetimeFormated}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <ImageView
+            android:id="@+id/edit_duetimezone_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_duetimezone_spinner"
+            app:layout_constraintEnd_toStartOf="@+id/edit_duetimezone_spinner"
+            app:layout_constraintTop_toTopOf="@+id/edit_duetimezone_spinner"
+            app:srcCompat="@drawable/ic_timezone"
+            tools:ignore="ContentDescription" />
+
+
+        <Spinner
+            android:id="@+id/edit_duetimezone_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:entries="@{model.possibleTimezones}"
+            android:spinnerMode="dialog"
+            android:visibility="@{model.duetimeVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_due_date" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -245,7 +225,7 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toStartOf="@id/edit_completed_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_due_addtime_switch">
+            app:layout_constraintTop_toBottomOf="@+id/edit_duetimezone_spinner">
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -294,10 +274,10 @@
             android:id="@+id/edit_completedtimezone_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_completedtimezone_spinner"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/edit_completedtimezone_spinner"
             app:layout_constraintTop_toTopOf="@+id/edit_completedtimezone_spinner"
             app:srcCompat="@drawable/ic_timezone"
             tools:ignore="ContentDescription" />
@@ -313,8 +293,6 @@
             android:spinnerMode="dialog"
             android:visibility="@{model.completedtimeVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@id/edit_duetimezone_spinner"
             app:layout_constraintTop_toBottomOf="@+id/edit_completed_date" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
