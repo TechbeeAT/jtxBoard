@@ -11,6 +11,7 @@ package at.techbee.jtx.ui
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -21,6 +22,7 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.databinding.FragmentIcalFilterBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import java.lang.ClassCastException
 import java.util.*
 
 
@@ -180,8 +182,12 @@ class IcalFilterFragment : Fragment() {
 
     override fun onResume() {
 
-        val activity = requireActivity() as MainActivity
-        activity.setToolbarText("Filter")
+        try {
+            val activity = requireActivity() as MainActivity
+            activity.setToolbarText(getString(R.string.toolbar_text_filter))
+        } catch (e: ClassCastException) {
+            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
+        }
 
         super.onResume()
     }

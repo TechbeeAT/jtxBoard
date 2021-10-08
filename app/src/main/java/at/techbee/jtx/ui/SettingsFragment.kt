@@ -8,6 +8,7 @@ import androidx.preference.*
 import at.techbee.jtx.AdLoader
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
+import java.lang.ClassCastException
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -65,9 +66,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onResume() {
 
-        val activity = requireActivity() as MainActivity
-        activity.setToolbarText("Settings")
-
+        try {
+            val activity = requireActivity() as MainActivity
+            activity.setToolbarText(getString(R.string.toolbar_text_settings))
+        } catch (e: ClassCastException) {
+            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
+        }
         super.onResume()
     }
 

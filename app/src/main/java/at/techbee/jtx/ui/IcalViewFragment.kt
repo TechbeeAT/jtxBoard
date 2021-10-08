@@ -47,6 +47,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
 import java.io.*
+import java.lang.ClassCastException
 
 
 class IcalViewFragment : Fragment() {
@@ -594,8 +595,12 @@ class IcalViewFragment : Fragment() {
 
     override fun onResume() {
 
-        val activity = requireActivity() as MainActivity
-        activity.setToolbarText("View")
+        try {
+            val activity = requireActivity() as MainActivity
+            activity.setToolbarText(getString(R.string.toolbar_text_view))
+        } catch (e: ClassCastException) {
+            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
+        }
 
         super.onResume()
     }

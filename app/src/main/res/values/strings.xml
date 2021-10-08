@@ -19,11 +19,19 @@
     </array>
 
 
-    <!-- Global Dialog Strings -->
+    <!-- Global Strings -->
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
     <string name="number_percent" translatable="false">%1$s \%</string>
+
+    <string name="toolbar_text_board" translatable="false">Board</string>
+    <string name="toolbar_text_view" translatable="false">View</string>
+    <string name="toolbar_text_edit" translatable="false">Edit</string>
+    <string name="toolbar_text_filter" translatable="false">Filter</string>
+    <string name="toolbar_text_settings" translatable="false">Settings</string>
+    <string name="toolbar_text_about" translatable="false">About</string>
+
 
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">Draft</string>

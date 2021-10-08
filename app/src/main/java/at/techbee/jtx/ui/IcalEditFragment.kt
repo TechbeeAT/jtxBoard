@@ -76,6 +76,7 @@ import net.fortuna.ical4j.model.WeekDayList
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.lang.ClassCastException
 import java.text.DateFormat
 import java.util.*
 
@@ -1190,8 +1191,12 @@ class IcalEditFragment : Fragment() {
 
     override fun onResume() {
 
-        val activity = requireActivity() as MainActivity
-        activity.setToolbarText("Edit")
+        try {
+            val activity = requireActivity() as MainActivity
+            activity.setToolbarText(getString(R.string.toolbar_text_edit))
+        } catch (e: ClassCastException) {
+            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
+        }
 
         icalEditViewModel.isLandscape =
             resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
