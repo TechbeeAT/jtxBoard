@@ -378,8 +378,6 @@ class IcalListFragment : Fragment() {
     }
 
     private fun goToEdit(iCalObject: ICalEntity) {
-
-        icalListViewModel.resetFocusItem()
         this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(iCalObject))
     }
 
