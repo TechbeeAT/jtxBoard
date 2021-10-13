@@ -157,7 +157,7 @@ class IcalEditViewModel(
     var addStartedAndDueTimeChecked: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && (iCalEntity.property.dueTimezone != ICalObject.TZ_ALLDAY || iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY))
     var recurrenceChecked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>(iCalEntity.property.rrule?.isNotEmpty())
+        MutableLiveData<Boolean>(iCalEntity.property.rrule?.isNotBlank())
     //todo make test, pre-fill
     var recurrenceMode: MutableLiveData<Int> = MutableLiveData<Int>(
         try {

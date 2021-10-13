@@ -1878,8 +1878,17 @@ class IcalEditFragment : Fragment() {
 
     private fun updateRRule() {
 
-        if(icalEditViewModel.recurrenceChecked.value == false) {
+        // the RRule might need to be deleted if the switch was deactivated
+        if(icalEditViewModel.recurrenceChecked.value == null || icalEditViewModel.recurrenceChecked.value == false) {
             icalEditViewModel.iCalObjectUpdated.value?.rrule = null
+            return
+        }
+
+        if (icalEditViewModel.iCalEntity.property.module == Module.NOTE.name) {
+            Toast.makeText(requireContext(), R.string.edit_recur_toast_notes_cannot_use_recur,Toast.LENGTH_LONG).show()
+            return
+        } else if(icalEditViewModel.iCalEntity.property.dtstart == null) {
+            Toast.makeText(requireContext(), R.string.edit_recur_toast_requires_start_date,Toast.LENGTH_LONG).show()
             return
         }
 
@@ -1944,13 +1953,6 @@ class IcalEditFragment : Fragment() {
         // update list
         icalEditViewModel.recurrenceList.clear()
 
-        if (icalEditViewModel.iCalEntity.property.module == Module.NOTE.name) {
-            Toast.makeText(requireContext(),"Recurrence can not be used for notes!",Toast.LENGTH_LONG).show()
-            return
-        } else if(icalEditViewModel.iCalEntity.property.dtstart == null) {
-            Toast.makeText(requireContext(),"Recurrence requires a start-date to be set!",Toast.LENGTH_LONG).show()
-            return
-        }
         //UpdateUI
         icalEditViewModel.recurrenceList.addAll(icalEditViewModel.iCalEntity.property.getInstancesFromRrule())
 
