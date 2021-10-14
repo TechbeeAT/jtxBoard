@@ -40,12 +40,12 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/ic_attendee"  />
+                android:icon="@drawable/ic_tab_contact_attendees_resources"  />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/ic_comments" />
+                android:icon="@drawable/ic_tab_location_comment_link" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
