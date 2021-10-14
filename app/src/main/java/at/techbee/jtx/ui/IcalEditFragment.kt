@@ -207,6 +207,19 @@ class IcalEditFragment : Fragment() {
         binding.icalEditTabs?.removeTabAt(TAB_ALARMS)
 
 
+        val textInputEditTextFocusChangeListener = View.OnFocusChangeListener { _, isFocussed ->
+           if(isFocussed)
+               binding.editFabSave.visibility = View.GONE
+            else
+               binding.editFabSave.visibility = View.VISIBLE
+        }
+
+        binding.editCategoriesAddAutocomplete.onFocusChangeListener = textInputEditTextFocusChangeListener
+        binding.editCommentAddEdittext.onFocusChangeListener = textInputEditTextFocusChangeListener
+        binding.editResourcesAddAutocomplete?.onFocusChangeListener = textInputEditTextFocusChangeListener
+        binding.editContactAddAutocomplete.onFocusChangeListener = textInputEditTextFocusChangeListener
+
+
         binding.editTimezoneSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -1639,8 +1652,9 @@ class IcalEditFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_edit_delete) {
-            icalEditViewModel.deleteClicked()
+        when(item.itemId) {
+            R.id.menu_edit_delete -> icalEditViewModel.deleteClicked()
+            R.id.menu_edit_save -> icalEditViewModel.savingClicked()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -2045,6 +2059,6 @@ class IcalEditFragment : Fragment() {
         val imm =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.hideSoftInputFromWindow(requireView().windowToken, 0)
-
     }
+
 }
