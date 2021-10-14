@@ -199,6 +199,13 @@ class IcalEditFragment : Fragment() {
                 .forEach { statusItems = statusItems.plus(getString(it.stringResource)) }
         }
 
+        //Don't show the recurring tab for Notes
+        if(icalEditViewModel.iCalEntity.property.module == Module.NOTE.name && binding.icalEditTabs?.tabCount?:0 >= TAB_RECURRING)
+            binding.icalEditTabs?.removeTabAt(TAB_RECURRING)
+
+        // Until implemented remove the tab for alarms
+        binding.icalEditTabs?.removeTabAt(TAB_ALARMS)
+
 
         binding.editTimezoneSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
