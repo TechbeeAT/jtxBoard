@@ -27,9 +27,9 @@ class IcalViewViewModel(private val icalItemId: Long,
                         application: Application) : AndroidViewModel(application) {
 
     lateinit var icalEntity: LiveData<ICalEntity?>
-    lateinit var categories: LiveData<List<Category>>
-    lateinit var resources: LiveData<List<Resource>>
-    lateinit var attendees: LiveData<List<Attendee>>
+    lateinit var categories: LiveData<List<Category>?>
+    lateinit var resources: LiveData<List<Resource>?>
+    lateinit var attendees: LiveData<List<Attendee>?>
     lateinit var relatedNotes: LiveData<List<ICal4ViewNote?>>
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
     lateinit var recurInstances: LiveData<List<ICalObject?>>
@@ -70,10 +70,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var recurrenceGoToOriginalVisible: LiveData<Boolean>
     lateinit var recurrenceIsExceptionVisible: LiveData<Boolean>
 
-
     lateinit var collectionText: LiveData<String?>
-
-
 
     lateinit var subtasksCountList: LiveData<List<SubtaskCount>>
 
@@ -137,12 +134,11 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
 
             dtstartFormatted = Transformations.map(icalEntity) { item ->
-                if (item!!.property.dtstart != null) {
-                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.property.dtstart!!))
-                    val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.dtstart!!))
-                    return@map "$formattedDate $formattedTime"
-                } else
-                    return@map ""
+                item?.property?.dtstart?.let {
+                        val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(it))
+                        val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(it))
+                        return@map "$formattedDate $formattedTime"
+                }
             }
 
             dtstartTimezone = Transformations.map(icalEntity) { item ->
@@ -155,33 +151,31 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
 
             createdFormatted = Transformations.map(icalEntity) { item ->
-                item!!.property.let { Date(it.created).toString() }
+                item?.property?.let { Date(it.created).toString() }
             }
 
             lastModifiedFormatted = Transformations.map(icalEntity) { item ->
-                item!!.property.let { Date(it.lastModified).toString() }
+                item?.property?.let { Date(it.lastModified).toString() }
             }
 
             completedFormatted = Transformations.map(icalEntity) { item ->
-                if (item?.property?.completed != null) {
-                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.property.completed!!))
+                item?.property?.completed?.let {
+                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(it))
                     val formattedTime = if (item.property.completedTimezone != ICalObject.TZ_ALLDAY)
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.completed!!))
-                    else ""
+                        else ""
                     return@map "Completed: $formattedDate $formattedTime"
-                } else
-                    return@map ""
+                }
             }
 
             startedFormatted = Transformations.map(icalEntity) { item ->
-                if (item?.property?.dtstart != null) {
-                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(item.property.dtstart!!))
+                item?.property?.dtstart?.let {
+                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(it))
                     val formattedTime = if (item.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                        DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.dtstart!!))
-                    else ""
+                        DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(it))
+                        else ""
                     return@map "Planned start: $formattedDate $formattedTime"
-                } else
-                    return@map ""
+                }
             }
 
             dueFormatted = Transformations.map(icalEntity) { item ->

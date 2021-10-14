@@ -165,7 +165,13 @@ class IcalViewFragment : Fragment() {
 
         icalViewViewModel.icalEntity.observe(viewLifecycleOwner, {
 
-            it?.let {
+            if(it == null) {
+                Toast.makeText(context, R.string.view_toast_entry_does_not_exist_anymore, Toast.LENGTH_LONG).show()
+                view?.findNavController()?.navigate(IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment())
+                return@observe   // just make sure that nothing else happens
+            }
+
+            it.let {
                 when (it.property.component) {
                     Component.VTODO.name -> {
                         binding.viewStatusChip.text =
@@ -365,21 +371,21 @@ class IcalViewFragment : Fragment() {
 
         icalViewViewModel.categories.observe(viewLifecycleOwner, {
             binding.viewCategoriesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
-            it.forEach { category ->
+            it?.forEach { category ->
                 addCategoryChip(category)
             }
         })
 
         icalViewViewModel.resources.observe(viewLifecycleOwner, {
             binding.viewResourcesChipgroup?.removeAllViews()      // remove all views if something has changed to rebuild from scratch
-            it.forEach { resource ->
+            it?.forEach { resource ->
                 addResourceChip(resource)
             }
         })
 
         icalViewViewModel.attendees.observe(viewLifecycleOwner, {
             binding.viewAttendeeChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
-            it.forEach { attendee ->
+            it?.forEach { attendee ->
                 addAttendeeChip(attendee)
             }
         })
