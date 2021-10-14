@@ -16,6 +16,7 @@ import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -30,7 +31,6 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.FragmentIcalListBinding
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import java.lang.ClassCastException
 import java.util.*
@@ -57,7 +57,7 @@ class IcalListFragment : Fragment() {
     private lateinit var arguments: IcalListFragmentArgs
 
     private var lastScrolledFocusItemId: Long? = null
-    private var snackbarDueTasksInPastShown = false
+    private var toastDueTasksInPastShown = false
 
 
     companion object {
@@ -194,9 +194,9 @@ class IcalListFragment : Fragment() {
                 icalListViewModel.iCal4List.value?.forEach {
                     if((it.property.status == StatusTodo.`IN-PROCESS`.name || it.property.status == StatusTodo.`NEEDS-ACTION`.name)
                         && it.property.due != null && it.property.due!! < System.currentTimeMillis()
-                        && !snackbarDueTasksInPastShown) {
-                        Snackbar.make(requireView(), R.string.list_snackbar_overdue_tasks_in_past, Snackbar.LENGTH_LONG).show()
-                        snackbarDueTasksInPastShown = true      // show the snackbar only once to not bother the user all the time
+                        && !toastDueTasksInPastShown) {
+                        Toast.makeText(context, R.string.list_snackbar_overdue_tasks_in_past, Toast.LENGTH_SHORT).show()
+                        toastDueTasksInPastShown = true      // show the snackbar only once to not bother the user all the time
                         return@forEach
                     }
                 }
