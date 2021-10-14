@@ -20,8 +20,8 @@ import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import kotlinx.coroutines.Dispatchers
-
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 class IcalListViewModel(
@@ -60,11 +60,17 @@ class IcalListViewModel(
             focusItemId.value = 0L
             return
         } else {
+            val today = Calendar.getInstance().apply {
+                this.set(Calendar.HOUR, 0)
+                this.set(Calendar.MINUTE, 0)
+                this.set(Calendar.SECOND, 0)
+                this.set(Calendar.MILLISECOND, 0)
+            }.timeInMillis
             iCal4List.value?.forEach {
-                if(it.property.component == Component.VJOURNAL.name && it.property.dtstart?:0L > System.currentTimeMillis()) {
+                if(it.property.component == Component.VJOURNAL.name && it.property.dtstart?:0L >= today) {
                     focusItemId.value = it.property.id
                     return                                    // return when the first item is found that is in the future (focus item stays set on this one)
-                } else if(it.property.component == Component.VTODO.name && it.property.due?:0L > System.currentTimeMillis()) {
+                } else if(it.property.component == Component.VTODO.name && it.property.due?:0L > today) {
                     focusItemId.value = it.property.id
                     return                                    // return when the first item is found that is in the future (focus item stays set on this one)
                 }
