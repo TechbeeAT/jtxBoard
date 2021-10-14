@@ -104,6 +104,10 @@
         <argument
             android:name="icalentity"
             app:argType="at.techbee.jtx.database.relations.ICalEntity" />
+        <action
+            android:id="@+id/action_icalEditFragment_to_icalViewFragment"
+            app:destination="@id/icalViewFragment"
+            app:popUpTo="@id/icalListFragment" />
     </fragment>
     <fragment
         android:id="@+id/icalFilterFragment"
