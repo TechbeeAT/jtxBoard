@@ -203,8 +203,9 @@ class IcalEditFragment : Fragment() {
         if(icalEditViewModel.iCalEntity.property.module == Module.NOTE.name && binding.icalEditTabs?.tabCount?:0 >= TAB_RECURRING)
             binding.icalEditTabs?.getTabAt(TAB_RECURRING)?.view?.visibility = View.GONE
 
-        // Until implemented remove the tab for alarms
+        // Until implemented remove the tab for alarms and attachments
         binding.icalEditTabs?.getTabAt(TAB_ALARMS)?.view?.visibility = View.GONE
+        binding.icalEditTabs?.getTabAt(TAB_ATTACHMENTS)?.view?.visibility = View.GONE
 
 
         val textInputEditTextFocusChangeListener = View.OnFocusChangeListener { _, isFocussed ->
