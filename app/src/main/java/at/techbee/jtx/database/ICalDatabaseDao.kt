@@ -37,8 +37,18 @@ SELECTs (global selects without parameter)
      * @return a list of [Category.text] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT DISTINCT text FROM category ORDER BY text ASC")
+    @Query("SELECT DISTINCT text FROM $TABLE_NAME_CATEGORY ORDER BY text ASC")
     fun getAllCategories(): LiveData<List<String>>
+
+    /**
+     * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
+     *
+     * @return a list of [Category.text] as LiveData<List<String>>
+     */
+    @Transaction
+    @Query("SELECT DISTINCT text FROM $TABLE_NAME_RESOURCE ORDER BY text ASC")
+    fun getAllResources(): LiveData<List<String>>
+
 
     /**
      * Retrieve an list of all Attachment Uris
@@ -258,6 +268,57 @@ DELETEs by Object
 
 
     /**
+     * Delete all categories with a specific icalobjectid.
+     *
+     * @param [icalobjectid] of the icalObject that should be deleted.
+     */
+    @Query("DELETE FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :icalobjectId")
+    fun deleteCategories(icalobjectId: Long)
+
+    /**
+     * Delete all comment with a specific icalobjectid.
+     *
+     * @param [icalobjectid] of the icalObject that should be deleted.
+     */
+    @Query("DELETE FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID = :icalobjectId")
+    fun deleteComments(icalobjectId: Long)
+
+
+    /**
+     * Delete all attachments with a specific icalobjectid.
+     *
+     * @param [icalobjectid] of the icalObject that should be deleted.
+     */
+    @Query("DELETE FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = :icalobjectId")
+    fun deleteAttachments(icalobjectId: Long)
+
+    /**
+     * Delete all relatedto with a specific icalobjectid.
+     *
+     * @param [icalobjectid] of the icalObject that should be deleted.
+     */
+    @Query("DELETE FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectId")
+    fun deleteRelatedtos(icalobjectId: Long)
+
+    /**
+     * Delete all attendees with a specific icalobjectid.
+     *
+     * @param [icalobjectid] of the icalObject that should be deleted.
+     */
+    @Query("DELETE FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID = :icalobjectId")
+    fun deleteAttendees(icalobjectId: Long)
+
+    /**
+     * Delete all attendees with a specific icalobjectid.
+     *
+     * @param [icalobjectid] of the icalObject that should be deleted.
+     */
+    @Query("DELETE FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = :icalobjectId")
+    fun deleteResources(icalobjectId: Long)
+
+
+
+    /**
      * Delete a category by the object.
      *
      * @param category The object of the category that should be deleted.
@@ -304,6 +365,7 @@ DELETEs by Object
      */
     @Delete
     fun deleteResource(resource: Resource)
+
 
 
     /**

@@ -46,6 +46,7 @@ class IcalEditViewModel(
     }
 
     lateinit var allCategories: LiveData<List<String>>
+    lateinit var allResources: LiveData<List<String>>
     lateinit var allCollections: LiveData<List<ICalCollection>>
     lateinit var allRelatedto: LiveData<List<Relatedto>>
 
@@ -63,18 +64,12 @@ class IcalEditViewModel(
     var iCalObjectUpdated: MutableLiveData<ICalObject> =
         MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property) }
 
-    var categoryUpdated: MutableList<Category> = mutableListOf(Category())
-    var commentUpdated: MutableList<Comment> = mutableListOf(Comment())
-    var attachmentUpdated: MutableList<Attachment> = mutableListOf(Attachment())
-    var attendeeUpdated: MutableList<Attendee> = mutableListOf(Attendee())
-    var resourceUpdated: MutableList<Resource> = mutableListOf(Resource())
+    var categoryUpdated: MutableList<Category> = mutableListOf()
+    var commentUpdated: MutableList<Comment> = mutableListOf()
+    var attachmentUpdated: MutableList<Attachment> = mutableListOf()
+    var attendeeUpdated: MutableList<Attendee> = mutableListOf()
+    var resourceUpdated: MutableList<Resource> = mutableListOf()
     var subtaskUpdated: MutableList<ICalObject> = mutableListOf()
-
-    var categoryDeleted: MutableList<Category> = mutableListOf(Category())
-    var commentDeleted: MutableList<Comment> = mutableListOf(Comment())
-    var attachmentDeleted: MutableList<Attachment> = mutableListOf(Attachment())
-    var attendeeDeleted: MutableList<Attendee> = mutableListOf(Attendee())
-    var resourceDeleted: MutableList<Resource> = mutableListOf(Resource())
     var subtaskDeleted: MutableList<ICalObject> = mutableListOf()
 
 
@@ -194,6 +189,7 @@ class IcalEditViewModel(
             relatedSubtasks = database.getRelatedTodos(iCalEntity.property.id)
 
             allCategories = database.getAllCategories()
+            allResources = database.getAllResources()
             allCollections = when (iCalEntity.property.component) {
                 Component.VTODO.name -> database.getAllVTODOCollections()
                 Component.VJOURNAL.name -> database.getAllVJOURNALCollections()
@@ -262,122 +258,106 @@ class IcalEditViewModel(
         if (iCalObjectUpdated.value!!.collectionId != 1L)
             iCalObjectUpdated.value!!.dirty = true
 
-        commentUpdated.removeAll(commentDeleted)    // make sure to not accidentially upsert a comment that was deleted
-        categoryUpdated.removeAll(categoryDeleted)  // make sure to not accidentially upsert a category that was deleted
-        attachmentUpdated.removeAll(attachmentDeleted)  // make sure to not accidentially upsert a category that was deleted
-        attendeeUpdated.removeAll(attendeeDeleted)  // make sure to not accidentially upsert a attendee that was deleted
-        subtaskUpdated.removeAll(subtaskDeleted)
-        resourceUpdated.removeAll(resourceDeleted)
-
-        // make sure to delete all rows of items, that were deleted for this ICalObject
-        viewModelScope.launch(Dispatchers.IO) {
-
-            categoryDeleted.forEach { cat2del ->
-                database.deleteCategory(cat2del)
-                Log.println(Log.INFO, "Category", "${cat2del.text} deleted")
-            }
-            commentDeleted.forEach { com2del ->
-                database.deleteComment(com2del)
-                Log.println(Log.INFO, "Comment", "${com2del.text} deleted")
-            }
-            attachmentDeleted.forEach { att2del ->
-                database.deleteAttachment(att2del)
-                Log.println(Log.INFO, "Attachment", "Attachment deleted")
-            }
-            attendeeDeleted.forEach { att2del ->
-                database.deleteAttendee(att2del)
-                Log.println(Log.INFO, "Attendee", "${att2del.caladdress} deleted")
-            }
-            resourceDeleted.forEach { res ->
-                database.deleteResource(res)
-                Log.println(Log.INFO, "Resource", "{${res.text} deleted")
-            }
-            subtaskDeleted.forEach { subtask2del ->
-                viewModelScope.launch(Dispatchers.IO) {
-                    database.deleteRelatedChildren(subtask2del.id)       // Also Child-Elements of Child-Elements need to be deleted!
-                    database.delete(subtask2del)
-                    database.deleteRelatedto(iCalObjectUpdated.value!!.id, subtask2del.id)
-                }
-                Log.println(Log.INFO, "Subtask", "${subtask2del.summary} deleted")
-            }
-        }
-
-
         viewModelScope.launch {
-
 
             insertedOrUpdatedItemId = insertOrUpdateICalObject()
             iCalObjectUpdated.value!!.id = insertedOrUpdatedItemId
 
-            // insert new Categories
-            categoryUpdated.forEach { newCategory ->
-                newCategory.icalObjectId = insertedOrUpdatedItemId
-                database.insertCategory(newCategory)
-            }
-            commentUpdated.forEach { newComment ->
-                newComment.icalObjectId =
-                    insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
-                database.insertComment(newComment)
-            }
-            attachmentUpdated.forEach { newAttachment ->
-                newAttachment.icalObjectId =
-                    insertedOrUpdatedItemId                    //Update the foreign key for newly added attachments
-                database.insertAttachment(newAttachment)
-            }
-            attendeeUpdated.forEach { newAttendee ->
-                newAttendee.icalObjectId = insertedOrUpdatedItemId
-                database.insertAttendee(newAttendee)
-            }
-            resourceUpdated.forEach { newResource ->
-                newResource.icalObjectId = insertedOrUpdatedItemId
-                database.insertResource(newResource)
-            }
-            subtaskUpdated.forEach { subtask ->
-                subtask.sequence++
-                subtask.lastModified = System.currentTimeMillis()
-                subtask.dirty = true
-                subtask.collectionId = iCalObjectUpdated.value?.collectionId!!
-                subtask.id = database.insertSubtask(subtask)
-                Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
 
+            // do the rest in a background thread
+            viewModelScope.launch(Dispatchers.IO) {
 
-                // Only insert if the relation doesn't exist already, otherwise there's nothing to do
-                if (iCalEntity.relatedto?.find { it.icalObjectId == insertedOrUpdatedItemId && it.linkedICalObjectId == subtask.id } == null)
-                    database.insertRelatedto(
-                        Relatedto(
-                            icalObjectId = insertedOrUpdatedItemId,
-                            linkedICalObjectId = subtask.id,
-                            reltype = "CHILD",
-                            text = subtask.uid
+                // delete the list attributes, then insert again the once that are still in the list (or were added)
+                database.deleteCategories(insertedOrUpdatedItemId)
+                database.deleteComments(insertedOrUpdatedItemId)
+                database.deleteAttachments(insertedOrUpdatedItemId)
+                database.deleteAttendees(insertedOrUpdatedItemId)
+                database.deleteResources(insertedOrUpdatedItemId)
+
+                subtaskDeleted.forEach { subtask2del ->
+                    viewModelScope.launch(Dispatchers.IO) {
+                        database.deleteRelatedChildren(subtask2del.id)       // Also Child-Elements of Child-Elements need to be deleted!
+                        database.delete(subtask2del)
+                        database.deleteRelatedto(
+                            iCalObjectUpdated.value!!.id,
+                            subtask2del.id
                         )
-                    )
+                    }
+                    Log.println(Log.INFO, "Subtask", "${subtask2del.summary} deleted")
 
-            }
-
-            if(recurrenceList.size > 0 || iCalObjectUpdated.value!!.id != 0L)    // recreateRecurring if the recurrenceList is not empty, but also when it is an update, as the recurrence might have been deactivated and it is necessary to delete instances
-                launch(Dispatchers.IO) {
-                    iCalObjectUpdated.value?.recreateRecurring(database)
                 }
 
+                // now insert or update the item and take care of all attributes
+                // insert new Categories
+                categoryUpdated.forEach { newCategory ->
+                    newCategory.icalObjectId = insertedOrUpdatedItemId
+                    database.insertCategory(newCategory)
+                }
+                commentUpdated.forEach { newComment ->
+                    newComment.icalObjectId =
+                        insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
+                    database.insertComment(newComment)
+                }
+                attachmentUpdated.forEach { newAttachment ->
+                    newAttachment.icalObjectId =
+                        insertedOrUpdatedItemId                    //Update the foreign key for newly added attachments
+                    database.insertAttachment(newAttachment)
+                }
+                attendeeUpdated.forEach { newAttendee ->
+                    newAttendee.icalObjectId = insertedOrUpdatedItemId
+                    database.insertAttendee(newAttendee)
+                }
+                resourceUpdated.forEach { newResource ->
+                    newResource.icalObjectId = insertedOrUpdatedItemId
+                    database.insertResource(newResource)
+                }
+                subtaskUpdated.forEach { subtask ->
+                    subtask.sequence++
+                    subtask.lastModified = System.currentTimeMillis()
+                    subtask.dirty = true
+                    subtask.collectionId = iCalObjectUpdated.value?.collectionId!!
+                    subtask.id = database.insertSubtask(subtask)
+                    Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
 
-            if(iCalObjectUpdated.value?.recurOriginalIcalObjectId != null && iCalObjectUpdated.value?.isRecurLinkedInstance == false) {
-                viewModelScope.launch(Dispatchers.IO) {
 
-                    val newExceptionList = addLongToCSVString(
-                        database.getRecurExceptions(iCalObjectUpdated.value?.recurOriginalIcalObjectId!!),
-                        iCalObjectUpdated.value!!.dtstart)
+                    // Only insert if the relation doesn't exist already, otherwise there's nothing to do
+                    if (iCalEntity.relatedto?.find { it.icalObjectId == insertedOrUpdatedItemId && it.linkedICalObjectId == subtask.id } == null)
+                        database.insertRelatedto(
+                            Relatedto(
+                                icalObjectId = insertedOrUpdatedItemId,
+                                linkedICalObjectId = subtask.id,
+                                reltype = "CHILD",
+                                text = subtask.uid
+                            )
+                        )
 
-                    database.setRecurExceptions(
-                        iCalObjectUpdated.value?.recurOriginalIcalObjectId!!,
-                        newExceptionList,
-                        System.currentTimeMillis()
-                    )
+                }
+
+                if (recurrenceList.size > 0 || iCalObjectUpdated.value!!.id != 0L)    // recreateRecurring if the recurrenceList is not empty, but also when it is an update, as the recurrence might have been deactivated and it is necessary to delete instances
+                    launch(Dispatchers.IO) {
+                        iCalObjectUpdated.value?.recreateRecurring(database)
+                    }
+
+
+                if (iCalObjectUpdated.value?.recurOriginalIcalObjectId != null && iCalObjectUpdated.value?.isRecurLinkedInstance == false) {
+                    viewModelScope.launch(Dispatchers.IO) {
+
+                        val newExceptionList = addLongToCSVString(
+                            database.getRecurExceptions(iCalObjectUpdated.value?.recurOriginalIcalObjectId!!),
+                            iCalObjectUpdated.value!!.dtstart
+                        )
+
+                        database.setRecurExceptions(
+                            iCalObjectUpdated.value?.recurOriginalIcalObjectId!!,
+                            newExceptionList,
+                            System.currentTimeMillis()
+                        )
+                    }
                 }
             }
 
             returnVJournalItemId.value = insertedOrUpdatedItemId
         }
-
     }
 
     private suspend fun insertOrUpdateICalObject(): Long {

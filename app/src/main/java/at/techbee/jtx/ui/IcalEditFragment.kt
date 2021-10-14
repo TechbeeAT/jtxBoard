@@ -667,43 +667,38 @@ class IcalEditFragment : Fragment() {
 
 
         icalEditViewModel.iCalEntity.comments?.forEach { singleComment ->
-            addCommentView(singleComment)
-
-            // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
-            if (icalEditViewModel.iCalEntity.property.id == 0L)
+            if(!icalEditViewModel.commentUpdated.contains(singleComment)) {
                 icalEditViewModel.commentUpdated.add(singleComment)
+                addCommentView(singleComment)
+            }
         }
 
         icalEditViewModel.iCalEntity.attachments?.forEach { singleAttachment ->
-            addAttachmentView(singleAttachment)
-
-            // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
-            if (icalEditViewModel.iCalEntity.property.id == 0L)
+            if(!icalEditViewModel.attachmentUpdated.contains(singleAttachment)) {
                 icalEditViewModel.attachmentUpdated.add(singleAttachment)
+                addAttachmentView(singleAttachment)
+            }
         }
 
         icalEditViewModel.iCalEntity.categories?.forEach { singleCategory ->
-            addCategoryChip(singleCategory)
-
-            // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
-            if (icalEditViewModel.iCalEntity.property.id == 0L)
+            if(!icalEditViewModel.categoryUpdated.contains(singleCategory)) {
                 icalEditViewModel.categoryUpdated.add(singleCategory)
+                addCategoryChip(singleCategory)
+            }
         }
 
         icalEditViewModel.iCalEntity.attendees?.forEach { singleAttendee ->
-            addAttendeeChip(singleAttendee)
-
-            // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
-            if (icalEditViewModel.iCalEntity.property.id == 0L)
+            if(!icalEditViewModel.attendeeUpdated.contains(singleAttendee)) {
                 icalEditViewModel.attendeeUpdated.add(singleAttendee)
+                addAttendeeChip(singleAttendee)
+            }
         }
 
         icalEditViewModel.iCalEntity.resources?.forEach { singleResource ->
-            addResourceChip(singleResource)
-
-            // also insert the item into list for updated elements if the item is new (ie. a copy of another item)
-            if (icalEditViewModel.iCalEntity.property.id == 0L)
+            if(!icalEditViewModel.resourceUpdated.contains(singleResource)) {
                 icalEditViewModel.resourceUpdated.add(singleResource)
+                addResourceChip(singleResource)
+            }
         }
 
 
@@ -717,6 +712,19 @@ class IcalEditFragment : Fragment() {
                     icalEditViewModel.allCategories.value!!
                 )
                 binding.editCategoriesAddAutocomplete.setAdapter(arrayAdapter)
+            }
+        })
+
+        // Set up items to suggest for resources
+        icalEditViewModel.allResources.observe(viewLifecycleOwner, {
+            // Create the adapter and set it to the AutoCompleteTextView
+            if (icalEditViewModel.allResources.value != null) {
+                val arrayAdapter = ArrayAdapter(
+                    application.applicationContext,
+                    android.R.layout.simple_list_item_1,
+                    icalEditViewModel.allResources.value!!
+                )
+                binding.editResourcesAddAutocomplete?.setAdapter(arrayAdapter)
             }
         })
 
@@ -923,88 +931,61 @@ class IcalEditFragment : Fragment() {
 
 
         // Transform the category input into a chip when the Add-Button is clicked
-        // If the user entered multiple categories separated by comma, the values will be split in multiple categories
-
         binding.editCategoriesAdd.setEndIconOnClickListener {
-            // Respond to end icon presses
-            icalEditViewModel.categoryUpdated.add(Category(text = binding.editCategoriesAdd.editText?.text.toString()))
-            addCategoryChip(Category(text = binding.editCategoriesAdd.editText?.text.toString()))
-            binding.editCategoriesAdd.editText?.text?.clear()
-
+            addNewCategory()
         }
 
         // Transform the category input into a chip when the Done button in the keyboard is clicked
         binding.editCategoriesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    icalEditViewModel.categoryUpdated.add(Category(text = binding.editCategoriesAdd.editText?.text.toString()))
-                    addCategoryChip(Category(text = binding.editCategoriesAdd.editText?.text.toString()))
-                    binding.editCategoriesAdd.editText?.text?.clear()
-
+                    addNewCategory()
                     true
                 }
                 else -> false
             }
         }
 
+        binding.editCategoriesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
+            binding.editCategoriesAddAutocomplete.setText(binding.editCategoriesAddAutocomplete.adapter?.getItem(i).toString())
+            addNewCategory()
+        }
+
 
         binding.editResourcesAdd?.setEndIconOnClickListener {
-            // Respond to end icon presses
-            icalEditViewModel.resourceUpdated.add(Resource(text = binding.editResourcesAdd?.editText?.text.toString()))
-            addResourceChip(Resource(text = binding.editResourcesAdd?.editText?.text.toString()))
-            binding.editResourcesAdd?.editText?.text?.clear()
+            addNewResource()
         }
 
         // Transform the resource input into a chip when the Done button in the keyboard is clicked
         binding.editResourcesAdd?.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    icalEditViewModel.resourceUpdated.add(Resource(text = binding.editResourcesAdd?.editText?.text.toString()))
-                    addResourceChip(Resource(text = binding.editResourcesAdd?.editText?.text.toString()))
-                    binding.editResourcesAdd?.editText?.text?.clear()
+                    addNewResource()
                     true
                 }
                 else -> false
             }
         }
 
+        binding.editResourcesAddAutocomplete?.setOnItemClickListener { _, _, i, _ ->
+            binding.editResourcesAddAutocomplete?.setText(binding.editResourcesAddAutocomplete?.adapter?.getItem(i).toString())
+            addNewResource()
+        }
+
         binding.editAttendeesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
-            //TODO
-            val newAttendee = binding.editAttendeesAddAutocomplete.adapter.getItem(i).toString()
-            addAttendeeChip(Attendee(caladdress = newAttendee))
-            icalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
-            binding.editAttendeesAddAutocomplete.text.clear()
+            binding.editAttendeesAddAutocomplete.setText(binding.editAttendeesAddAutocomplete.adapter.getItem(i).toString())
+            addNewAttendee()
         }
 
         binding.editAttendeesAdd.setEndIconOnClickListener {
-
-            if ((!binding.editAttendeesAdd.editText?.text.isNullOrEmpty() && !isValidEmail(binding.editAttendeesAdd.editText?.text.toString())))
-                icalEditViewModel.attendeesError.value = "Please enter a valid email-address"
-            else {
-                val newAttendee = binding.editAttendeesAdd.editText?.text.toString()
-                addAttendeeChip(Attendee(caladdress = newAttendee))
-                icalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
-                binding.editAttendeesAddAutocomplete.text.clear()
-            }
+            addNewAttendee()
         }
 
         // Transform the category input into a chip when the Done button in the keyboard is clicked
         binding.editAttendeesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    if ((!binding.editAttendeesAdd.editText?.text.isNullOrEmpty() && !isValidEmail(
-                            binding.editAttendeesAdd.editText?.text.toString()
-                        ))
-                    )
-                        icalEditViewModel.attendeesError.value =
-                            "Please enter a valid email-address"
-                    else {
-                        val newAttendee = binding.editAttendeesAdd.editText?.text.toString()
-                        addAttendeeChip(Attendee(caladdress = newAttendee))
-                        icalEditViewModel.attendeeUpdated.add(Attendee(caladdress = newAttendee))
-                        binding.editAttendeesAddAutocomplete.text.clear()
-                    }
-
+                    addNewAttendee()
                     true
                 }
                 else -> false
@@ -1366,7 +1347,7 @@ class IcalEditFragment : Fragment() {
         }
 
         categoryChip.setOnCloseIconClickListener { chip ->
-            icalEditViewModel.categoryDeleted.add(category)  // add the category to the list for categories to be deleted
+            icalEditViewModel.categoryUpdated.remove(category)  // add the category to the list for categories to be deleted
             chip.visibility = View.GONE
         }
 
@@ -1393,7 +1374,7 @@ class IcalEditFragment : Fragment() {
         resourceChip.setOnClickListener {   }
 
         resourceChip.setOnCloseIconClickListener { chip ->
-            icalEditViewModel.resourceDeleted.add(resource)  // add the category to the list for categories to be deleted
+            icalEditViewModel.resourceUpdated.remove(resource)  // add the category to the list for categories to be deleted
             chip.visibility = View.GONE
         }
 
@@ -1449,7 +1430,7 @@ class IcalEditFragment : Fragment() {
         }
 
         attendeeChip.setOnCloseIconClickListener { chip ->
-            icalEditViewModel.attendeeDeleted.add(attendee)  // add the category to the list for categories to be deleted
+            icalEditViewModel.attendeeUpdated.remove(attendee)  // add the category to the list for categories to be deleted
             chip.visibility = View.GONE
         }
     }
@@ -1491,7 +1472,7 @@ class IcalEditFragment : Fragment() {
             }
 
             builder.setNeutralButton("Delete") { _, _ ->
-                icalEditViewModel.commentDeleted.add(comment)
+                icalEditViewModel.commentUpdated.remove(comment)
                 bindingComment.root.visibility = View.GONE
             }
             builder.show()
@@ -1550,7 +1531,7 @@ class IcalEditFragment : Fragment() {
 
         // delete the attachment on click on the X
         bindingAttachment.editAttachmentDelete.setOnClickListener {
-            icalEditViewModel.attachmentDeleted.add(attachment)
+            icalEditViewModel.attachmentUpdated.remove(attachment)
             bindingAttachment.root.visibility = View.GONE
         }
     }
@@ -1970,10 +1951,38 @@ class IcalEditFragment : Fragment() {
 
         binding.editFragmentIcalEditRecur?.editRecurLastOccurenceItem?.text = lastOccurrenceString
         binding.editFragmentIcalEditRecur?.editRecurAllOccurencesItems?.text = allOccurrencesString
-
-
-
     }
+
+
+    private fun addNewCategory() {
+        val newCat = Category(text = binding.editCategoriesAdd.editText?.text.toString())
+        if (!icalEditViewModel.categoryUpdated.contains(newCat)) {
+            icalEditViewModel.categoryUpdated.add(newCat)
+            addCategoryChip(newCat)
+        }
+        binding.editCategoriesAdd.editText?.text?.clear()
+    }
+
+    private fun addNewResource() {
+        val newRes = Resource(text = binding.editResourcesAdd?.editText?.text.toString())
+        if(!icalEditViewModel.resourceUpdated.contains(newRes)) {
+            icalEditViewModel.resourceUpdated.add(newRes)
+            addResourceChip(newRes)
+        }
+        binding.editResourcesAdd?.editText?.text?.clear()
+    }
+
+    private fun addNewAttendee() {
+        val newAtt = Attendee(caladdress = binding.editAttendeesAdd.editText?.text.toString())
+        if ((newAtt.caladdress.isNotEmpty() && !isValidEmail(newAtt.caladdress)))
+            icalEditViewModel.attendeesError.value = "Please enter a valid email-address"
+        else if (!icalEditViewModel.attendeeUpdated.contains(newAtt)) {
+            addAttendeeChip(newAtt)
+            icalEditViewModel.attendeeUpdated.add(newAtt)
+            binding.editAttendeesAddAutocomplete.text.clear()
+        }
+    }
+
 
     private fun isDataValid(): Boolean {
 

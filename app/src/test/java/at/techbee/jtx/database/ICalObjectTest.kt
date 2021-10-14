@@ -107,6 +107,7 @@ class ICalObjectTest {
             dirty = true,
             // dates and uid must be set explicitely to make the objects equal
             dtstart = factoryObject.dtstart,
+            dtstartTimezone = ICalObject.TZ_ALLDAY,
             created = factoryObject.created,
             lastModified = factoryObject.lastModified,
             dtstamp = factoryObject.dtstamp,
@@ -187,6 +188,7 @@ class ICalObjectTest {
             dirty = true,
             // dates and uid must be set explicitely to make the objects equal
             dtstart = factoryObject.dtstart,
+            dtstartTimezone = ICalObject.TZ_ALLDAY,
             created = factoryObject.created,
             lastModified = factoryObject.lastModified,
             dtstamp = factoryObject.dtstamp,
@@ -210,6 +212,7 @@ class ICalObjectTest {
             summary = "Task Summary",
             // dates and uid must be set explicitely to make the objects equal
             dtstart = factoryObject.dtstart,
+            dtstartTimezone = ICalObject.TZ_ALLDAY,
             created = factoryObject.created,
             lastModified = factoryObject.lastModified,
             dtstamp = factoryObject.dtstamp,

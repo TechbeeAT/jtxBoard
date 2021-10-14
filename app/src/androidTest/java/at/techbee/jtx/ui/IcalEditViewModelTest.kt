@@ -198,11 +198,11 @@ class IcalEditViewModelTest {
         icalEditViewModel.subtaskUpdated.add(sampleSubtask2)
         icalEditViewModel.subtaskUpdated.add(sampleSubtask3)
 
-        icalEditViewModel.categoryDeleted.add(sampleCategory1)
-        icalEditViewModel.attachmentDeleted.add(sampleAttachment1)
-        icalEditViewModel.attendeeDeleted.add(sampleAttendee1)
-        icalEditViewModel.resourceDeleted.add(sampleResource1)
-        icalEditViewModel.commentDeleted.add(sampleComment1)
+        icalEditViewModel.categoryUpdated.remove(sampleCategory1)
+        icalEditViewModel.attachmentUpdated.remove(sampleAttachment1)
+        icalEditViewModel.attendeeUpdated.remove(sampleAttendee1)
+        icalEditViewModel.resourceUpdated.remove(sampleResource1)
+        icalEditViewModel.commentUpdated.remove(sampleComment1)
         icalEditViewModel.subtaskDeleted.add(sampleSubtask1)
 
         icalEditViewModel.update()

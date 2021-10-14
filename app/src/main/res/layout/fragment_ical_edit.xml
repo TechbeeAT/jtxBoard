@@ -583,7 +583,9 @@
                         android:layout_height="wrap_content"
                         android:imeOptions="actionDone"
                         android:inputType="textCapSentences|textEmailAddress|textShortMessage"
-                        android:text="@={model.iCalObjectUpdated.contact}" />
+                        android:text="@={model.iCalObjectUpdated.contact}"
+                        android:popupBackground="@color/design_default_color_surface"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -647,8 +649,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionDone"
-                        android:inputType="textShortMessage|textCapSentences"
-                        android:singleLine="false" />
+                        android:inputType="textCapSentences"
+                        android:singleLine="false"
+                        android:popupBackground="@color/design_default_color_surface"
+                        />
 
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -715,7 +719,9 @@
                         android:afterTextChanged="@{model::clearUrlError}"
                         android:imeOptions="actionDone"
                         android:inputType="textEmailAddress"
-                        android:singleLine="false" />
+                        android:singleLine="false"
+                        android:popupBackground="@color/design_default_color_surface"
+                        />
 
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -780,7 +786,9 @@
                         android:layout_height="wrap_content"
                         android:imeOptions="actionDone"
                         android:inputType="textCapWords"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:popupBackground="@color/design_default_color_surface"
+                        />
 
 
                 </com.google.android.material.textfield.TextInputLayout>
