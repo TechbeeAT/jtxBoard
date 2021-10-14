@@ -199,6 +199,7 @@ data class Attendee (
 }
 
 /** This enum class defines the possible values for the attribute [Attendee.cutype]  */
+@Suppress("unused")
 enum class Cutype  {
 
         INDIVIDUAL, GROUP, RESOURCE, ROOM, UNKNOWN

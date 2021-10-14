@@ -503,7 +503,7 @@ data class ICalObject(
                 return null
 
             return when {
-                dtstartTimezone == ICalObject.TZ_ALLDAY -> DtStart(Date(dtstart)).value
+                dtstartTimezone == TZ_ALLDAY -> DtStart(Date(dtstart)).value
                 dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(dtstart)).value
                 else -> {
                     val timezone = TimeZoneRegistryFactory.getInstance().createRegistry()

@@ -114,6 +114,7 @@ data class Relatedto (
         }
 }
 
+@Suppress("unused")
 /** This enum class defines the possible values for the attribute [Relatedto.reltype]  */
 enum class Reltype {
         PARENT, CHILD, SIBLING
