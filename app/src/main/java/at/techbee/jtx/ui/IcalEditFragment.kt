@@ -201,10 +201,10 @@ class IcalEditFragment : Fragment() {
 
         //Don't show the recurring tab for Notes
         if(icalEditViewModel.iCalEntity.property.module == Module.NOTE.name && binding.icalEditTabs?.tabCount?:0 >= TAB_RECURRING)
-            binding.icalEditTabs?.removeTabAt(TAB_RECURRING)
+            binding.icalEditTabs?.getTabAt(TAB_RECURRING)?.view?.visibility = View.GONE
 
         // Until implemented remove the tab for alarms
-        binding.icalEditTabs?.removeTabAt(TAB_ALARMS)
+        binding.icalEditTabs?.getTabAt(TAB_ALARMS)?.view?.visibility = View.GONE
 
 
         val textInputEditTextFocusChangeListener = View.OnFocusChangeListener { _, isFocussed ->
