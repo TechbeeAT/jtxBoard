@@ -163,6 +163,8 @@
         tools:layout="@layout/fragment_about"/>
     <action android:id="@+id/action_global_aboutFragment"
         app:destination="@id/aboutFragment"/>
+    <action android:id="@+id/action_global_icalListFragment"
+        app:destination="@id/icalListFragment"/>
 
 
 </navigation>

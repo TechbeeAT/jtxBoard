@@ -71,6 +71,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_board">Board</string>
     <string name="navigation_drawer_about">About / License</string>
     <string name="navigation_drawer_subtitle">Journals, Notes and Tasks for Android</string>
     <string name="navigation_drawer_beta_feedback">Beta feedback</string>

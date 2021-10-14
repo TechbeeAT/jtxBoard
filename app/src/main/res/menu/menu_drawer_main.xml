@@ -11,6 +11,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
+    <item
+        android:id="@+id/nav_board"
+        android:icon="@drawable/ic_jtx"
+        android:title="@string/navigation_drawer_board"
+        />
 
     <item
         android:id="@+id/nav_about"

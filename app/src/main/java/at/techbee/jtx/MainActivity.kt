@@ -177,6 +177,10 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
             // Handle menu item selected
             when (menuItem.itemId) {
 
+                R.id.nav_board ->
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_icalListFragment)
+
                 R.id.nav_about ->
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_aboutFragment)
