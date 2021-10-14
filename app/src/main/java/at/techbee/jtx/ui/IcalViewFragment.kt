@@ -355,10 +355,10 @@ class IcalViewFragment : Fragment() {
             }
         }
 
-        icalViewViewModel.recurInstances.observe(viewLifecycleOwner) {
+        icalViewViewModel.recurInstances.observe(viewLifecycleOwner) { instanceList ->
             val recurDates = mutableListOf<String>()
-            it.forEach { item ->
-                item?.let {
+            instanceList.forEach { instance ->
+                instance?.let {
                     if (it.dtstartTimezone != ICalObject.TZ_ALLDAY)
                         recurDates.add(convertLongToFullDateString(it.dtstart) + " " + convertLongToTimeString(it.dtstart))
                     else
