@@ -491,7 +491,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:afterTextChanged="@{model::clearUrlError}"
+                        android:afterTextChanged="@{() -> model.clearUrlError()}"
                         android:inputType="textUri"
                         android:text="@={model.iCalObjectUpdated.url}" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -716,7 +716,7 @@
                         android:id="@+id/edit_attendees_add_autocomplete"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:afterTextChanged="@{model::clearUrlError}"
+                        android:afterTextChanged="@{() -> model.clearAttendeeError()}"
                         android:imeOptions="actionDone"
                         android:inputType="textEmailAddress"
                         android:singleLine="false"

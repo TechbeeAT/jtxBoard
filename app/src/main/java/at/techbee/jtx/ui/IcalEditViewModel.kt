@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui
 
 import android.app.Application
-import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
 import at.techbee.jtx.addLongToCSVString
@@ -174,7 +173,7 @@ class IcalEditViewModel(
 
 
     val urlError = MutableLiveData<String?>()
-    val attendeesError = MutableLiveData<String>()
+    val attendeesError = MutableLiveData<String?>()
 
     var isLandscape = false
     var selectedTab = TAB_GENERAL
@@ -496,14 +495,12 @@ class IcalEditViewModel(
         }
 
 
-    fun clearUrlError(s: Editable) {
+    fun clearUrlError() {
         urlError.value = null
+    }
+
+    fun clearAttendeeError() {
+        attendeesError.value = null
     }
 }
 
-/*
-fun clearAttendeeError(s: Editable) {
-    attendeesError.value = null
-}
-
- */
