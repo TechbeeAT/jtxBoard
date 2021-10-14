@@ -74,9 +74,7 @@ class IcalViewViewModel(private val icalItemId: Long,
 
     lateinit var subtasksCountList: LiveData<List<SubtaskCount>>
 
-
     var editingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
-    var deleteClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
 
 
     init {
@@ -272,10 +270,6 @@ class IcalViewViewModel(private val icalItemId: Long,
         editingClicked.value = true
     }
 
-    fun deleteClicked() {
-        deleteClicked.value = true
-    }
-
 
     fun insertRelated(noteText: String?, attachment: Attachment?) {
 
@@ -310,7 +304,7 @@ class IcalViewViewModel(private val icalItemId: Long,
         }
     }
 
-    fun makeRecurringExceptionIfNecessary(item: ICalObject) {
+    private fun makeRecurringExceptionIfNecessary(item: ICalObject) {
 
         if(item.isRecurLinkedInstance) {
             viewModelScope.launch(Dispatchers.IO) {
