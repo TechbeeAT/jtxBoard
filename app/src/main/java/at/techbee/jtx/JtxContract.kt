@@ -368,6 +368,13 @@ object JtxContract {
          */
         const val FLAGS = "flags"
 
+        /**
+         * Purpose:  To specify other properties for the ICalObject.
+         * This is especially used for additional attributes relevant for the synchronization
+         * Type: [String]
+         */
+        const val OTHER = "other"
+
 
 
 

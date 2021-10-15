@@ -420,7 +420,9 @@ class IcalEditViewModel(
                 )
             }
         }
-        ICalObject.deleteItemWithChildren(id, iCalEntity.ICalCollection!!.collectionId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+        viewModelScope.launch(Dispatchers.IO) {
+            ICalObject.deleteItemWithChildren(id, iCalEntity.ICalCollection!!.collectionId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+        }
         return newParentId
     }
 
