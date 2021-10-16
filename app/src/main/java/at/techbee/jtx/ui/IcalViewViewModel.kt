@@ -317,7 +317,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     fun delete(item: ICalObject) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            ICalObject.deleteItemWithChildren(item.id, item.collectionId, database)
+            ICalObject.deleteItemWithChildren(item.id, database)
         }
     }
 }

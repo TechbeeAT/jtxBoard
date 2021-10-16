@@ -6,8 +6,6 @@ import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -42,6 +40,7 @@ class IcalViewFragmentTest {
     private val sampleDate = 1632636027826L     //  Sun Sep 26 2021 06:00:27
     private val sampleCollection = ICalCollection(collectionId = 1L, displayName = "testcollection automated tests")
     private val sampleJournal = ICalObject(collectionId = 1L, module = Module.JOURNAL.name, component = Component.VJOURNAL.name, summary = "Journal4Test", description = "Description4JournalTest", dtstart = sampleDate, status = StatusJournal.FINAL.name, classification = Classification.PUBLIC.name)
+    private val sampleJournal2 = ICalObject(collectionId = 1L, module = Module.JOURNAL.name, component = Component.VJOURNAL.name, summary = "Journal4ExtendedTest", description = "Description4ExtendedJournalTest", dtstart = sampleDate, status = StatusJournal.FINAL.name, classification = Classification.PUBLIC.name)
     private val sampleNote = ICalObject(collectionId = 1L, module = Module.NOTE.name, component = Component.VJOURNAL.name, summary = "Note4Test", description = "Description4NoteTest", dtstart = sampleDate)
     private val sampleTodo = ICalObject(collectionId = 1L, module = Module.TODO.name, component = Component.VTODO.name, summary = "Todo4Test", description = "Description4TodoTest", dtstart = sampleDate)
 
@@ -70,28 +69,14 @@ class IcalViewFragmentTest {
             sampleJournal.id = database.insertICalObjectSync(sampleJournal)
             sampleNote.id = database.insertICalObjectSync(sampleNote)
             sampleTodo.id = database.insertICalObjectSync(sampleTodo)
-/*
+            sampleJournal2.id = database.insertICalObject(sampleJournal2)
+
             //Attendees
-            database.insertAttendee(Attendee(icalObjectId = journalId, caladdress = "contact@techbee.at"))
-            database.insertAttendee(Attendee(icalObjectId = noteId, caladdress = "contact@techbee.at"))
-            database.insertAttendee(Attendee(icalObjectId = taskId, caladdress = "contact@techbee.at"))
-
+            database.insertAttendee(Attendee(icalObjectId = sampleJournal2.id, caladdress = "contact@techbee.at"))
             //Attachments
-            database.insertAttachment(Attachment(icalObjectId = journalId, uri = "https://techbee.at"))
-            database.insertAttachment(Attachment(icalObjectId = journalId, uri = "https://jtx.techbee.at"))
-            database.insertAttachment(Attachment(icalObjectId = noteId, uri = "https://techbee.at"))
-            database.insertAttachment(Attachment(icalObjectId = taskId, uri = "https://techbee.at"))
-
+            database.insertAttachment(Attachment(icalObjectId = sampleJournal2.id, uri = "https://techbee.at"))
             //Comments
-            database.insertComment(Comment(icalObjectId = journalId, text = "my comment"))
-            database.insertComment(Comment(icalObjectId = journalId, text = "my comment2"))
-            database.insertComment(Comment(icalObjectId = journalId, text = "my comment3"))
-            database.insertComment(Comment(icalObjectId = noteId, text = "my comment"))
-            database.insertComment(Comment(icalObjectId = taskId, text = "my comment"))
-
-            //ICalDatabase.getInstance(context).populateTestData()
-
- */
+            database.insertComment(Comment(icalObjectId = sampleJournal2.id, text = "my comment"))
         }
     }
 
@@ -107,7 +92,8 @@ class IcalViewFragmentTest {
 
         val fragmentArgs = Bundle()
         fragmentArgs.putLong("item2show", sampleJournal.id)
-        val scenario = launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+        //val scenario =
+        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
         onView(withText(sampleJournal.summary)).check(matches(isDisplayed()))
         onView(withText(sampleJournal.description)).check(matches(isDisplayed()))
         onView(withId(R.id.view_add_audio_note)).check(matches(isDisplayed()))
@@ -118,66 +104,55 @@ class IcalViewFragmentTest {
         onView(withId(R.id.view_collection)).check(matches(isDisplayed()))
         onView(withId(R.id.view_created)).check(matches(isDisplayed()))
         onView(withId(R.id.view_lastModified)).check(matches(isDisplayed()))
-
-
-
-
-        /*
-        onView(withText(sampleJournal.description)).check(matches(isDisplayed()))
-        onView(withText(convertLongToDayString(sampleJournal.dtstart))).check(matches(isDisplayed()))
-        onView(withText(convertLongToMonthString(sampleJournal.dtstart))).check(matches(isDisplayed()))
-        onView(withText(convertLongToYearString(sampleJournal.dtstart))).check(matches(isDisplayed()))
-        onView(withText(convertLongToTimeString(sampleJournal.dtstart))).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_status)).check(matches(withText(R.string.journal_status_final)))
-        onView(withId(R.id.list_item_classification)).check(matches(withText(R.string.classification_public)))
-        onView(withId(R.id.list_item_num_attendees_icon)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_num_attendees_text)).check(matches(withText("1")))
-        onView(withId(R.id.list_item_num_attachments_icon)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_num_attachments_text)).check(matches(withText("2")))
-        onView(withId(R.id.list_item_num_comments_icon)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_num_comments_text)).check(matches(withText("3")))
-         */
     }
 
     @Test
     fun note_is_displayed()  {
 
-        //val fragmentArgs = Bundle()
-        val scenario = launchFragmentInContainer<IcalListFragment>(Bundle(), R.style.AppTheme, Lifecycle.State.RESUMED)
-        onView(withText(R.string.list_tabitem_notes)).perform(click())
+        val fragmentArgs = Bundle()
+        fragmentArgs.putLong("item2show", sampleNote.id)
+        //val scenario =
+        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
         onView(withText(sampleNote.summary)).check(matches(isDisplayed()))
         onView(withText(sampleNote.description)).check(matches(isDisplayed()))
 
-        onView(withText(convertLongToDayString(sampleJournal.dtstart))).check(doesNotExist())
-        onView(withText(convertLongToMonthString(sampleJournal.dtstart))).check(doesNotExist())
-        onView(withText(convertLongToYearString(sampleJournal.dtstart))).check(doesNotExist())
-        onView(withText(convertLongToTimeString(sampleJournal.dtstart))).check(doesNotExist())
-
-        onView(withId(R.id.list_item_status)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_classification)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        /*
-        onView(withId(R.id.list_item_num_attendees_icon)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_num_attendees_text)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_num_attachments_icon)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_num_attachments_text)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_num_comments_icon)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_num_comments_text)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-
-         */
+        onView(withId(R.id.view_status_chip)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        onView(withId(R.id.view_classification_chip)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
-    @Test
+    //@Test
     fun task_is_displayed()  {
 
-        //val fragmentArgs = Bundle()
-        val scenario = launchFragmentInContainer<IcalListFragment>(Bundle(), R.style.AppTheme, Lifecycle.State.RESUMED)
-        onView(withText(R.string.list_tabitem_todos)).perform(click())
+        val fragmentArgs = Bundle()
+        fragmentArgs.putLong("item2show", sampleTodo.id)
+        //val scenario =
+        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
         onView(withText(sampleTodo.summary)).check(matches(isDisplayed()))
         onView(withText(sampleTodo.description)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_progress_label)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_progress_checkbox)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_progress_slider)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_progress_percent)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_checkbox)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_indicator)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_label)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_percent)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_slider)).check(matches(isDisplayed()))
+    }
 
+
+    //@Test
+    fun journal_extended_everything_is_displayed()  {
+
+        val fragmentArgs = Bundle()
+        fragmentArgs.putLong("item2show", sampleJournal2.id)
+        //val scenario =
+        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+        onView(withText(sampleJournal2.summary)).check(matches(isDisplayed()))
+        onView(withText(sampleJournal2.description)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_add_audio_note)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_add_note)).check(matches(isDisplayed()))
+        onView(withText(R.string.view_feedback_linked_notes)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_classification_chip)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_status_chip)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_collection)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_created)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_lastModified)).check(matches(isDisplayed()))
     }
 }

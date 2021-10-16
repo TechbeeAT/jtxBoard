@@ -369,12 +369,20 @@ class IcalEditViewModel(
             }
             iCalEntity.ICalCollection!!.collectionId != iCalObjectUpdated.value!!.collectionId -> {
 
+                val oldId = iCalEntity.property.id
+
                 val newId = updateCollectionWithChildren(iCalObjectUpdated.value!!.id, null)
+
+                // possible changes must still be updated
                 iCalObjectUpdated.value!!.id = newId
                 database.update(iCalObjectUpdated.value!!)
-                return newId
-                // TODO mark the main element as deleted or delete it, make sure all children are deleted/marked as deleted
 
+                // once the newId is there, the local entries can be deleted (or marked as deleted)
+                viewModelScope.launch(Dispatchers.IO) {
+                    ICalObject.deleteItemWithChildren(oldId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+                }
+
+                return newId
             }
             else -> {
                 database.update(iCalObjectUpdated.value!!)
@@ -388,7 +396,6 @@ class IcalEditViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             ICalObject.deleteItemWithChildren(
                 iCalObjectUpdated.value!!.id,
-                iCalObjectUpdated.value!!.collectionId,
                 database
             )
         }
@@ -419,9 +426,6 @@ class IcalEditViewModel(
                     newParentId
                 )
             }
-        }
-        viewModelScope.launch(Dispatchers.IO) {
-            ICalObject.deleteItemWithChildren(id, iCalEntity.ICalCollection!!.collectionId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
         }
         return newParentId
     }

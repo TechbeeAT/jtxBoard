@@ -207,7 +207,7 @@ class ICalObjectAndroidTest {
         //make sure everything was correctly inserted
         assertEquals(3,database.getAllRelatedto().getOrAwaitValue().size)
 
-        ICalObject.deleteItemWithChildren(idParent, 1L, database)
+        ICalObject.deleteItemWithChildren(idParent, database)
 
         assertEquals(0,database.getAllRelatedto().getOrAwaitValue().size)
         assertEquals(null, database.getSync(idParent))
@@ -242,7 +242,7 @@ class ICalObjectAndroidTest {
         //make sure everything was correctly inserted
         assertEquals(3,database.getAllRelatedto().getOrAwaitValue().size)
 
-        ICalObject.deleteItemWithChildren(idParent, 2L, database)
+        ICalObject.deleteItemWithChildren(idParent, database)
 
         assertTrue(database.getSync(idParent)?.property?.deleted!!)
         assertTrue(database.getSync(idChild1)?.property?.deleted!!)
@@ -262,7 +262,7 @@ class ICalObjectAndroidTest {
         //make sure everything was correctly inserted
 
         assertNotNull(database.getSync(idParent)?.property)
-        ICalObject.deleteItemWithChildren(idParent, 1L, database)
+        ICalObject.deleteItemWithChildren(idParent, database)
         assertNull(database.getSync(idParent)?.property)
     }
 
@@ -277,7 +277,7 @@ class ICalObjectAndroidTest {
         //make sure everything was correctly inserted
 
         assertNotNull(database.getSync(idParent)?.property)
-        ICalObject.deleteItemWithChildren(idParent, 2L, database)
+        ICalObject.deleteItemWithChildren(idParent, database)
         assertNull(database.getSync(idParent)?.property)
     }
 
