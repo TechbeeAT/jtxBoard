@@ -132,7 +132,6 @@ class ICalObjectAndroidTest {
             lastModified = System.currentTimeMillis(),
             sequence = 0,
             color = 0,
-            other = "Other",
             collectionId = 1L,
             dirty = true,
             deleted = false,
@@ -169,7 +168,6 @@ class ICalObjectAndroidTest {
             put(COLUMN_LAST_MODIFIED, sampleICalObject.lastModified)
             put(COLUMN_SEQUENCE, sampleICalObject.sequence)
             put(COLUMN_COLOR, sampleICalObject.color)
-            put(COLUMN_OTHER, sampleICalObject.other)
             put(COLUMN_ICALOBJECT_COLLECTIONID, sampleICalObject.collectionId)
             put(COLUMN_DIRTY, sampleICalObject.dirty)
             put(COLUMN_DELETED, sampleICalObject.deleted)
