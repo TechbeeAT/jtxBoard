@@ -445,6 +445,109 @@ class SyncContentProviderTest {
     }
 
 
+    @Test
+    fun alarm_insert_find_update_delete()  {
+
+        // INSERT
+        val values = ContentValues().apply {
+            put(JtxContract.JtxAlarm.ICALOBJECT_ID, defaultICalObjectId)
+            put(JtxContract.JtxAlarm.ALARM_VALUE, "BEGIN:VALARM\n" +
+                    "TRIGGER;VALUE=DATE-TIME:19970317T133000Z\n" +
+                    "REPEAT:4\n" +
+                    "DURATION:PT15M\n" +
+                    "ACTION:AUDIO\n" +
+                    "ATTACH;FMTTYPE=audio/basic:ftp://example.com/pub/\n" +
+                    " sounds/bell-01.aud\n" +
+                    "END:VALARM")
+        }
+        val uriAlarm = JtxContract.JtxAlarm.CONTENT_URI.asSyncAdapter(defaultTestAccount)
+        val newAlarm = mContentResolver?.insert(uriAlarm, values)
+        assertNotNull(newAlarm)
+
+        //QUERY
+        mContentResolver?.query(newAlarm!!, arrayOf(JtxContract.JtxAlarm.ID), null, null, null).use {
+            assertEquals(1, it!!.count)             // inserted object was found
+        }
+
+        // UPDATE
+        val updatedValues = ContentValues()
+        updatedValues.put(JtxContract.JtxAlarm.ALARM_VALUE, "BEGIN:VALARM\n" +
+                "TRIGGER;VALUE=DATE-TIME:19970317T133000Z\n" +
+                "REPEAT:5\n" +
+                "DURATION:PT15M\n" +
+                "ACTION:AUDIO\n" +
+                "ATTACH;FMTTYPE=audio/basic:ftp://example.com/pub/\n" +
+                " sounds/bell-01.aud\n" +
+                "END:VALARM")
+        val countUpdated = mContentResolver?.update(newAlarm!!, updatedValues, null, null)
+        assertEquals(countUpdated, 1)
+
+        // QUERY the updated value
+        mContentResolver?.query(newAlarm!!, arrayOf(JtxContract.JtxAlarm.ID, JtxContract.JtxAlarm.ALARM_VALUE), "${JtxContract.JtxAlarm.ALARM_VALUE} = ?", arrayOf("BEGIN:VALARM\n" +
+                "TRIGGER;VALUE=DATE-TIME:19970317T133000Z\n" +
+                "REPEAT:5\n" +
+                "DURATION:PT15M\n" +
+                "ACTION:AUDIO\n" +
+                "ATTACH;FMTTYPE=audio/basic:ftp://example.com/pub/\n" +
+                " sounds/bell-01.aud\n" +
+                "END:VALARM"), null).use {
+            assertEquals(1, it!!.count)             // inserted object was found
+        }
+
+        //delete
+        val countDel: Int? = mContentResolver?.delete(newAlarm!!, null, null)
+        assertNotNull(countDel)
+        assertEquals(1,countDel)
+        //Log.println(Log.INFO, "icalObject_insert_find_delete", "Assert successful, DB has ${cursor?.count} entries, deleted entries: $countDel")
+
+        //find
+        mContentResolver?.query(newAlarm!!, arrayOf(JtxContract.JtxAlarm.ID), null, null, null).use {
+            assertEquals(0, it!!.count)             // inserted object was found
+        }
+    }
+
+
+
+    @Test
+    fun unknown_insert_find_update_delete()  {
+
+        // INSERT
+        val values = ContentValues().apply {
+            put(JtxContract.JtxUnknown.ICALOBJECT_ID, defaultICalObjectId)
+            put(JtxContract.JtxUnknown.UNKNOWN_VALUE, "[\"X-UNKNOWN\",\"PropValue\",{\"X-PARAM1\":\"value1\",\"X-PARAM2\":\"value2\"}]")
+        }
+        val uriUknown = JtxContract.JtxUnknown.CONTENT_URI.asSyncAdapter(defaultTestAccount)
+        val newUnknown = mContentResolver?.insert(uriUknown, values)
+        assertNotNull(newUnknown)
+
+        //QUERY
+        mContentResolver?.query(newUnknown!!, arrayOf(JtxContract.JtxUnknown.ID), null, null, null).use {
+            assertEquals(1, it!!.count)             // inserted object was found
+        }
+
+        // UPDATE
+        val updatedValues = ContentValues()
+        updatedValues.put(JtxContract.JtxUnknown.UNKNOWN_VALUE, "[\"X-UNKNOWN\",\"PropValue\",{\"X-PARAM1\":\"value1\",\"X-PARAM2\":\"value3\"}]")
+        val countUpdated = mContentResolver?.update(newUnknown!!, updatedValues, null, null)
+        assertEquals(countUpdated, 1)
+
+        // QUERY the updated value
+        mContentResolver?.query(newUnknown!!, arrayOf(JtxContract.JtxUnknown.ID, JtxContract.JtxUnknown.UNKNOWN_VALUE), "${JtxContract.JtxUnknown.UNKNOWN_VALUE} = ?", arrayOf("[\"X-UNKNOWN\",\"PropValue\",{\"X-PARAM1\":\"value1\",\"X-PARAM2\":\"value3\"}]"), null).use {
+            assertEquals(1, it!!.count)             // inserted object was found
+        }
+
+        //delete
+        val countDel: Int? = mContentResolver?.delete(newUnknown!!, null, null)
+        assertNotNull(countDel)
+        assertEquals(1,countDel)
+        //Log.println(Log.INFO, "icalObject_insert_find_delete", "Assert successful, DB has ${cursor?.count} entries, deleted entries: $countDel")
+
+        //find
+        mContentResolver?.query(newUnknown!!, arrayOf(JtxContract.JtxUnknown.ID), null, null, null).use {
+            assertEquals(0, it!!.count)             // inserted object was found
+        }
+    }
+
 
     @Test
     fun collection_insert_find_update_delete()  {
