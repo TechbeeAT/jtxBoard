@@ -37,6 +37,8 @@ import java.util.*
     Organizer::class,
     Relatedto::class,
     Resource::class,
+    Alarm::class,
+    Unknown::class,
     Attachment::class],
         views = [
             ICal4List::class,

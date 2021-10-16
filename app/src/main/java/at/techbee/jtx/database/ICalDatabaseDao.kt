@@ -239,6 +239,12 @@ INSERTs (Synchronously)
     fun insertAttachmentSync(attachment: Attachment): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAlarmSync(alarm: Alarm): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertUnknownSync(unknown: Unknown): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCollectionSync(ICalCollection: ICalCollection): Long
 
 

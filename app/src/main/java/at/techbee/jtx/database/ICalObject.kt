@@ -303,12 +303,6 @@ const val COLUMN_RECUR_ISLINKEDINSTANCE = "recur_islinkedinstance"
 const val COLUMN_COLOR = "color"
 
 
-/**
- * Purpose:  To specify other properties for the ICalObject.
- * This is especially used for additional attributes relevant for the synchronization
- * Type: [String]
- */
-const val COLUMN_OTHER = "other"
 
 /**
  * Purpose:  This column is the foreign key to the [TABLE_NAME_COLLECTION].
@@ -420,8 +414,6 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_RECUR_ISLINKEDINSTANCE) var isRecurLinkedInstance: Boolean = false,
 
     @ColumnInfo(name = COLUMN_COLOR) var color: Int? = null,
-
-    @ColumnInfo(name = COLUMN_OTHER) var other: String? = null,
 
     @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long = 1L,
 
@@ -607,7 +599,7 @@ data class ICalObject(
             ?.let { lastModified -> this.lastModified = lastModified }
         values.getAsLong(COLUMN_SEQUENCE)?.let { sequence -> this.sequence = sequence }
         values.getAsInteger(COLUMN_COLOR)?.let { color -> this.color = color }
-        values.getAsString(COLUMN_OTHER)?.let { other -> this.other = other }
+        //values.getAsString(COLUMN_OTHER)?.let { other -> this.other = other }
         values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)
             ?.let { collectionId -> this.collectionId = collectionId }
         values.getAsBoolean(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty }

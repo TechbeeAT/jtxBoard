@@ -975,7 +975,7 @@ object JtxContract {
         const val ICALOBJECT_ID = "icalObjectId"
 
 
-/* The names of all the other columns  */
+        /* The names of all the other columns  */
         /**
          * Purpose:  This property specifies the uri of an attachment.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
@@ -1004,6 +1004,63 @@ object JtxContract {
          */
         const val OTHER = "other"
 
+    }
+
+
+    @Suppress("unused")
+    object JtxAlarm {
+
+        /** The name of the the table for Alarms that are linked to an ICalObject.*/
+        private const val CONTENT_URI_PATH = "alarm"
+
+        /** The content uri of the resources table */
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+
+
+        /** The name of the ID column for attachments.
+         * This is the unique identifier of an Attachment
+         * Type: [Long]*/
+        const val ID = BaseColumns._ID
+
+        /** The name of the Foreign Key Column for IcalObjects.
+         * Type: [Long] */
+        const val ICALOBJECT_ID = "icalObjectId"
+
+
+        /* The names of all the other columns  */
+        /**
+         * Purpose:  This property stores the unknown value as json
+         * Type: [String]
+         */
+        const val ALARM_VALUE = "value"
+    }
+
+    @Suppress("unused")
+    object JtxUnknown {
+
+        /** The name of the the table for Unknown properties that are linked to an ICalObject.*/
+        private const val CONTENT_URI_PATH = "unknown"
+
+        /** The content uri of the resources table */
+        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+
+
+        /** The name of the ID column for attachments.
+         * This is the unique identifier of an Attachment
+         * Type: [Long]*/
+        const val ID = BaseColumns._ID
+
+        /** The name of the Foreign Key Column for IcalObjects.
+         * Type: [Long] */
+        const val ICALOBJECT_ID = "icalObjectId"
+
+
+        /* The names of all the other columns  */
+        /**
+         * Purpose:  This property stores the unknown value as json
+         * Type: [String]
+         */
+        const val UNKNOWN_VALUE = "value"
     }
 }
 
