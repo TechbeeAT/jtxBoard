@@ -31,6 +31,7 @@
     <string name="toolbar_text_filter" translatable="false">Filter</string>
     <string name="toolbar_text_settings" translatable="false">Settings</string>
     <string name="toolbar_text_about" translatable="false">About</string>
+    <string name="toolbar_text_sync" translatable="false">Sync</string>
 
 
     <!-- Strings for values in properties of an ICalObject -->
@@ -72,6 +73,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_board">Board</string>
+    <string name="navigation_drawer_sync">Sync with DAVx⁵</string>
     <string name="navigation_drawer_about">About / License</string>
     <string name="navigation_drawer_subtitle">Journals, Notes and Tasks for Android</string>
     <string name="navigation_drawer_beta_feedback">Beta feedback</string>
@@ -295,5 +297,14 @@
     <string name="settings_accept_ads_summary">As an alternative to ads you can buy the ad-free option</string>
     <string name="settings_show_user_consent_title">Show User Consent (GDPR)</string>
     <string name="settings_show_user_consent_summary">Show User Consent for Ad Settings</string>
+
+
+    <string name="sync_with_davx5_heading">Sync with DAVx5</string>
+    <string name="sync_basic_info">jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx5. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data.</string>
+    <string name="sync_congratulations">Congratulations! :-)</string>
+    <string name="sync_davx5_installed_but_no_collections_found">We have detected DAVx5 on your phone. If you haven\'t set up any accounts yet, please follow the instructions on our website:\n\nhttps://jtx.techbee.at/sync-with-davx5</string>
+    <string name="sync_davx5_installed_with_collections_found">We have detected DAVx5 on your phone. If you have any troubles or doubts, please check out our website first:\n\nhttps://jtx.techbee.at/sync-with-davx5.\n\nThe following accounts and collections are currently synchronised:</string>
+    <string name="sync_check_out_davx5">Check out DAVx5!</string>
+    <string name="sync_davx5_not_found">We have not detected DAVx5 on your phone. Please follow the following link for more information: \n\nhttps://jtx.techbee.at/sync-with-davx5</string>
 
 </resources>

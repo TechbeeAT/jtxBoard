@@ -182,6 +182,10 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_icalListFragment)
 
+                R.id.nav_sync ->
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_syncFragment)
+
                 R.id.nav_about ->
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_aboutFragment)

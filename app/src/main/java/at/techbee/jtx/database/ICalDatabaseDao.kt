@@ -85,7 +85,7 @@ SELECTs (global selects without parameter)
      * @return a list of [Collection] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT * FROM collection ORDER BY _id ASC")
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllCollections(): LiveData<List<ICalCollection>>
 
     /**
@@ -276,7 +276,7 @@ DELETEs by Object
     /**
      * Delete all categories with a specific icalobjectid.
      *
-     * @param [icalobjectid] of the icalObject that should be deleted.
+     * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :icalobjectId")
     fun deleteCategories(icalobjectId: Long)
@@ -284,7 +284,7 @@ DELETEs by Object
     /**
      * Delete all comment with a specific icalobjectid.
      *
-     * @param [icalobjectid] of the icalObject that should be deleted.
+     * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID = :icalobjectId")
     fun deleteComments(icalobjectId: Long)

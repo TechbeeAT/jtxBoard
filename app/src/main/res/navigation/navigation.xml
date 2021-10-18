@@ -165,6 +165,12 @@
         app:destination="@id/aboutFragment"/>
     <action android:id="@+id/action_global_icalListFragment"
         app:destination="@id/icalListFragment"/>
+    <fragment
+        android:id="@+id/syncFragment"
+        android:name="at.techbee.jtx.ui.SyncFragment"
+        android:label="SyncFragment"
+        tools:layout="@layout/fragment_sync"/>
+    <action android:id="@+id/action_global_syncFragment" app:destination="@id/syncFragment"/>
 
 
 </navigation>

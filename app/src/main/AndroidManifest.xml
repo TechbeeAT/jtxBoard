@@ -74,4 +74,9 @@
 
     </application>
 
+    <!-- package visiblity – which apps do we need to see? -->
+    <queries>
+        <package android:name="at.bitfire.davdroid" />
+    </queries>
+
 </manifest>

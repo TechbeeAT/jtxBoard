@@ -17,6 +17,13 @@
         android:title="@string/navigation_drawer_board"
         />
 
+
+    <item
+        android:id="@+id/nav_sync"
+        android:icon="@drawable/davx5"
+        android:title="@string/navigation_drawer_sync"
+        />
+
     <item
         android:id="@+id/nav_about"
         android:icon="@drawable/ic_about"
