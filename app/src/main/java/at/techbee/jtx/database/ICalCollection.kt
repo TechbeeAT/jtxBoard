@@ -128,6 +128,8 @@ data class ICalCollection(
 
                 const val LOCAL_COLLECTION_URL = "https://localhost/"
                 const val LOCAL_COLLECTION_NAME = "LOCAL"
+                const val LOCAL_ACCOUNT_NAME = "LOCAL"
+                const val LOCAL_ACCOUNT_TYPE = "LOCAL"
 
 
                 /**

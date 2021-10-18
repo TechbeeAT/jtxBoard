@@ -367,7 +367,6 @@ data class ICalObject(
 
     @ColumnInfo(name = COLUMN_MODULE) var module: String = Module.NOTE.name,
     @ColumnInfo(name = COLUMN_COMPONENT) var component: String = Component.VJOURNAL.name,
-    //@ColumnInfo(name = COLUMN_COLLECTION) var collection: String = "LOCAL",
     @ColumnInfo(name = COLUMN_SUMMARY) var summary: String? = null,
     @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String? = null,
     @ColumnInfo(name = COLUMN_DTSTART) var dtstart: Long? = null,

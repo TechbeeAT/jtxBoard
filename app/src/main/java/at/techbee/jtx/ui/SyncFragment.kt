@@ -11,6 +11,7 @@ import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.databinding.FragmentSyncBinding
 import android.content.pm.PackageManager
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 
@@ -45,7 +46,7 @@ class SyncFragment : Fragment() {
         collections.observe(viewLifecycleOwner, { collectionList ->
             var collectionsString = ""
             collectionList.forEach {
-                if (it.accountName != "LOCAL")          // only add remote collections
+                if (it.accountName != ICalCollection.LOCAL_ACCOUNT_NAME)          // only add remote collections
                     collectionsString += it.accountName + " (" + it.displayName + ")\n"
             }
 

@@ -22,7 +22,7 @@ class UnknownTest {
             put(COLUMN_UNKNOWN_VALUE, sampleUnknown.value)
         }
 
-        val cvUnknown = Alarm.fromContentValues(cv)
+        val cvUnknown = Unknown.fromContentValues(cv)
         Assert.assertEquals(sampleUnknown, cvUnknown)
     }
 

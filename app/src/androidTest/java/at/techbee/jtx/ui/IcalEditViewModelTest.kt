@@ -68,7 +68,7 @@ class IcalEditViewModelTest {
     fun setUp() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
         database = ICalDatabase.getInMemoryDB(context).iCalDatabaseDao
-        collection1id = database.insertCollectionSync(ICalCollection(displayName = "testcollection_local", accountName = "LOCAL", accountType = "LOCAL"))
+        collection1id = database.insertCollectionSync(ICalCollection(displayName = "testcollection_local", accountName = ICalCollection.LOCAL_ACCOUNT_NAME, accountType = ICalCollection.LOCAL_ACCOUNT_TYPE))
         collection2id = database.insertCollectionSync(ICalCollection(displayName = "testcollection_remote", accountName = "remote", accountType = "remote"))
         collection3id = database.insertCollectionSync(ICalCollection(displayName = "testcollection_remote2", accountName = "remote2", accountType = "remote2"))
         application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
