@@ -120,7 +120,7 @@ class IcalViewFragmentTest {
         onView(withId(R.id.view_classification_chip)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
-    //@Test
+    @Test
     fun task_is_displayed()  {
 
         val fragmentArgs = Bundle()
@@ -137,7 +137,7 @@ class IcalViewFragmentTest {
     }
 
 
-    //@Test
+    @Test
     fun journal_extended_everything_is_displayed()  {
 
         val fragmentArgs = Bundle()

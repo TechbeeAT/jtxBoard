@@ -53,12 +53,12 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
         //const val TRIAL_PERIOD_DAYS = 14L
 
-
     }
 
     private lateinit var toolbar: Toolbar
 
     private var settings: SharedPreferences? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
         //load settings
         settings = PreferenceManager.getDefaultSharedPreferences(this)
-
 
         // Register Notification Channel for Reminders
         createNotificationChannel()
@@ -86,10 +85,18 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         setUpDrawer()
         checkThemeSetting()
 
+
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
         // if trial period ended, then check if ads are accepted, if the
         // app was bought, then skip the Dialog, otherwise show the dialog to let the user choose
+        // This code is put in onResume as the Ad might need to be loaded once isAdShowtime returns true
         val adsAccepted = settings!!.getBoolean(SettingsFragment.ACCEPT_ADS, false)
-        if (!AdLoader.isTrialPeriod(this) && !adsAccepted) {
+        if (AdLoader.isAdShowtime(this) && !adsAccepted) {
 
             // TODO: Check if the user already bought the app. If yes, skip the Dialog Box
 
@@ -111,16 +118,10 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                 }
                 .show()
         }
-        else if (!AdLoader.isTrialPeriod(this) && adsAccepted) {
+        else if (AdLoader.isAdShowtime(this) && adsAccepted) {
             AdLoader.initializeUserConsent(this, applicationContext)
             Log.d("Ads accepted", "Ads accepted, loading consent form if necessary")
         }
-
-    }
-
-
-    override fun onResume() {
-        super.onResume()
 
         // handle the intents for the shortcuts
         when (intent.action) {
@@ -274,7 +275,10 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
     override fun onUserEarnedReward(item: RewardItem) {
         Log.d("onUserEarnedReward", "Ad watched, user earned Reward")
+        AdLoader.processAdReward(this)
+        Toast.makeText(this, "Congrats, you're ad-free for a week now :-)", Toast.LENGTH_SHORT).show()
     }
+
+
+
 }
-
-

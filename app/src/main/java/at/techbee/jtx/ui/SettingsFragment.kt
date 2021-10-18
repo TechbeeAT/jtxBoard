@@ -20,9 +20,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val SHOW_ATTACHMENTS_IN_LIST = "settings_show_attachments_in_list"
         const val SHOW_PROGRESS_IN_LIST = "settings_show_progress_in_list"
         const val ACCEPT_ADS = "settings_accept_ads"
-
-
-
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -58,7 +55,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             return@setOnPreferenceChangeListener true
         }
 
-        if(AdLoader.isTrialPeriod(requireActivity())) {
+        if(AdLoader.isAdShowtime(requireActivity())) {
             preferenceScreen.get<Preference>(ACCEPT_ADS)?.isEnabled = false
             preferenceScreen.get<Preference>(SHOW_USER_CONSENT)?.isEnabled = false
         }

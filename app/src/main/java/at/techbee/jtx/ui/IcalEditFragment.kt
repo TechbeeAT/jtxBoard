@@ -526,13 +526,9 @@ class IcalEditFragment : Fragment() {
                 }
                  */
 
-                // show Ad if activated
-                val mainActivity = activity as MainActivity
-                if (AdLoader.rewardedInterstitialAd != null) {
-                    AdLoader.rewardedInterstitialAd?.show(mainActivity, mainActivity)
-                } else {
-                    Log.d("IcalEditFragment", "The interstitial ad wasn't ready yet.")
-                }
+                // show Ad if necessary
+                AdLoader.showAd(requireActivity())
+
 
                 // return to list view
                 /*

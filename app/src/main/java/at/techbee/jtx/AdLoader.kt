@@ -2,12 +2,13 @@ package at.techbee.jtx
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
 import com.google.android.ump.*
-import java.util.concurrent.TimeUnit
+import java.lang.ClassCastException
 
 class AdLoader {
 
@@ -22,7 +23,7 @@ class AdLoader {
 
          */
 
-        const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/5354046379"  // TEST
+        private const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/5354046379"  // TEST
         //const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL = "ca-app-pub-4426141011962540/9907445574"    // PROD
 
         private var consentInformation: ConsentInformation? = null
@@ -30,8 +31,17 @@ class AdLoader {
         //var mInterstitialAd: InterstitialAd? = null
         var rewardedInterstitialAd: RewardedInterstitialAd? = null
 
+        private var adPrefs: SharedPreferences? = null
+
+        private var nextAdShowtime: Long = 0L
+
+        private const val PREFS_ADS = "sharedPreferencesAds"
+        private const val PREFS_ADS_NEXT_AD = "prefsNextAd"
+        private const val ONE_WEEK_IN_MILLIS = 604800000L
+        //private const val ONE_WEEK_IN_MILLIS = 300000L     // only for testing reduced to 5 min
 
 
+/*
         fun isTrialPeriod(activity: Activity): Boolean {
             val firstInstalled: Long = activity.applicationContext.packageManager.getPackageInfo(
                 activity.applicationContext.packageName,
@@ -43,8 +53,52 @@ class AdLoader {
 
             return System.currentTimeMillis() <= trialEnd
         }
+ */
 
+        fun isAdShowtime(activity: Activity): Boolean {
 
+            if (adPrefs == null)
+                adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
+
+            adPrefs?.let {
+
+                nextAdShowtime = it.getLong(PREFS_ADS_NEXT_AD, 0L)
+                if (nextAdShowtime == 0L)               // initially set the shared preferences to today + one week
+                    it.edit()?.putLong(
+                        PREFS_ADS_NEXT_AD,
+                        System.currentTimeMillis() + ONE_WEEK_IN_MILLIS
+                    )?.apply()
+
+                return System.currentTimeMillis() > nextAdShowtime
+            }
+            return false
+        }
+
+        fun showAd(activity: Activity) {
+
+            try {
+                val mainActivity = activity as MainActivity
+                if (isAdShowtime(activity) && rewardedInterstitialAd != null) {
+                    rewardedInterstitialAd?.show(mainActivity, mainActivity)
+                } else {
+                    Log.d("AdLoader", "The interstitial ad wasn't ready yet.")
+                }
+            } catch (e: ClassCastException) {
+                Log.w("AdLoader", "Class Cast from Activity to MainActivity failed! \n$e")
+            }
+
+        }
+
+        fun processAdReward(activity: Activity) {
+
+            if (adPrefs == null)
+                adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
+
+            adPrefs?.let {
+                nextAdShowtime = System.currentTimeMillis() + ONE_WEEK_IN_MILLIS
+                it.edit()?.putLong(PREFS_ADS_NEXT_AD, nextAdShowtime)?.apply()
+            }
+        }
 
         private fun setUpAds(context: Context) {
 
