@@ -170,6 +170,10 @@
     <string name="edit_attendees_roledialog_optional">Optional</string>
     <string name="edit_attendees_roledialog_nonparticipant">Info / Non-participant</string>
     <string name="edit_timezone_content_desc">Timezone</string>
+    <string name="edit_timezone_start_content_desc">Start Timezone</string>
+    <string name="edit_timezone_due_content_desc">Due Timezone</string>
+    <string name="edit_timezone_completed_content_desc">Completed Timezone</string>
+
     <string name="edit_due_date_hint">Due date</string>
     <string name="edit_due_time_hint">Due time</string>
     <string name="edit_completed_date_hint">Completed date</string>
