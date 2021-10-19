@@ -145,6 +145,9 @@
     <string name="view_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
     <string name="view_dialog_add_note">Add note</string>
     <string name="view_toast_entry_does_not_exist_anymore">The requested entry does not exist (anymore).</string>
+    <string name="view_start_text">Start: %1$s</string>
+    <string name="view_due_text">Due: %1$s</string>
+    <string name="view_completed_text">Completed: %1$s</string>
 
 
     <!-- fragment_ical_edit -->

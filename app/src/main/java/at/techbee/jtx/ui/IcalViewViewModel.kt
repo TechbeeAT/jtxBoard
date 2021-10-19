@@ -162,7 +162,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                     val formattedTime = if (item.property.completedTimezone != ICalObject.TZ_ALLDAY)
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.completed!!))
                         else ""
-                    return@map "Completed: $formattedDate $formattedTime"
+                    return@map application.resources.getString(R.string.view_completed_text, "$formattedDate $formattedTime")
                 }
             }
 
@@ -172,7 +172,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                     val formattedTime = if (item.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(it))
                         else ""
-                    return@map "Planned start: $formattedDate $formattedTime"
+                    return@map application.resources.getString(R.string.view_start_text, "$formattedDate $formattedTime")
                 }
             }
 
@@ -184,7 +184,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                         if (item.property.dueTimezone != ICalObject.TZ_ALLDAY)
                             DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(due))
                         else ""
-                    return@map "Due: $formattedDate $formattedTime"
+                    return@map application.resources.getString(R.string.view_due_text, "$formattedDate $formattedTime")
                 }
             }
 
