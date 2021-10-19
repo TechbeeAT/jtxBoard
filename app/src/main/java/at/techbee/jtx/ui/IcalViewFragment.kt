@@ -11,9 +11,7 @@ package at.techbee.jtx.ui
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Application
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
@@ -870,57 +868,61 @@ class IcalViewFragment : Fragment() {
         }, 0)
     }
 
-    private fun getIcalEntityCopy(module: Module): ICalEntity {
+    private fun getIcalEntityCopy(newModule: Module): ICalEntity {
 
         val icalEntityCopy = icalViewViewModel.icalEntity.value!!
         icalEntityCopy.property.id = 0L
+        icalEntityCopy.property.module = newModule.name
+        icalEntityCopy.property.dtstamp = System.currentTimeMillis()
+        icalEntityCopy.property.created = System.currentTimeMillis()
+        icalEntityCopy.property.lastModified = System.currentTimeMillis()
+        icalEntityCopy.property.dtend = null
+        icalEntityCopy.property.dtendTimezone = null
+        icalEntityCopy.property.recurOriginalIcalObjectId = null
+        icalEntityCopy.property.isRecurLinkedInstance = false
+        icalEntityCopy.property.exdate = null
+        icalEntityCopy.property.rdate = null
 
-        when (module) {
-            Module.JOURNAL -> {
-                icalEntityCopy.property.component = Component.VJOURNAL.name
-                icalEntityCopy.property.module = Module.JOURNAL.name
-                icalEntityCopy.property.completed = null
-                icalEntityCopy.property.completedTimezone = null
-                if (icalEntityCopy.property.dtstart == null)
-                    icalEntityCopy.property.dtstart = System.currentTimeMillis()
-                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
-                icalEntityCopy.property.dtend = null
-                icalEntityCopy.property.dtendTimezone = null
-                icalEntityCopy.property.due = null
-                icalEntityCopy.property.dueTimezone = null
-                icalEntityCopy.property.duration = null
-                icalEntityCopy.property.priority = null
 
-                TODO("Make sure that the status is set properly!")
+        if (newModule == Module.JOURNAL || newModule == Module.NOTE) {
+            icalEntityCopy.property.component = Component.VJOURNAL.name
+            icalEntityCopy.property.completed = null
+            icalEntityCopy.property.completedTimezone = null
+            if (icalEntityCopy.property.dtstart == null)
+                icalEntityCopy.property.dtstart = System.currentTimeMillis()
 
-            }
-            Module.NOTE -> {
-                icalEntityCopy.property.component = Component.VJOURNAL.name
-                icalEntityCopy.property.module = Module.NOTE.name
-                icalEntityCopy.property.completed = null
-                icalEntityCopy.property.completedTimezone = null
+            icalEntityCopy.property.due = null
+            icalEntityCopy.property.dueTimezone = null
+            icalEntityCopy.property.duration = null
+            icalEntityCopy.property.priority = null
+
+            if(icalEntityCopy.property.status == StatusTodo.CANCELLED.name || icalEntityCopy.property.status == StatusTodo.`IN-PROCESS`.name || icalEntityCopy.property.status == StatusTodo.COMPLETED.name || icalEntityCopy.property.status == StatusTodo.`NEEDS-ACTION`.name)
+                icalEntityCopy.property.status = StatusJournal.FINAL.name
+            // else just take the copy as it was already a Journal/Note
+
+            if(icalEntityCopy.property.status == StatusTodo.CANCELLED.name || icalEntityCopy.property.status == StatusTodo.`IN-PROCESS`.name || icalEntityCopy.property.status == StatusTodo.COMPLETED.name || icalEntityCopy.property.status == StatusTodo.`NEEDS-ACTION`.name)
+                icalEntityCopy.property.status = StatusJournal.FINAL.name
+            // else just take the copy as it was already a Journal/Note
+
+            // only if it is a note we have to handle dtstart additionally, the rest is handled the same way for notes and journals
+            if(newModule == Module.NOTE) {
                 icalEntityCopy.property.dtstart = null
                 icalEntityCopy.property.dtstartTimezone = null
-                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
-                icalEntityCopy.property.dtend = null
-                icalEntityCopy.property.dtendTimezone = null
-                icalEntityCopy.property.due = null
-                icalEntityCopy.property.dueTimezone = null
-                icalEntityCopy.property.duration = null
-                icalEntityCopy.property.priority = null
-
-                TODO("Make sure that the status is set properly!")
-
             }
-            Module.TODO -> {
-                icalEntityCopy.property.component = Component.VTODO.name
-                icalEntityCopy.property.module = Module.TODO.name
-                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
 
-                TODO("Make sure that the status is set properly!")
+
+        } else if (newModule == Module.TODO) {
+            icalEntityCopy.property.component = Component.VTODO.name
+            icalEntityCopy.property.module = Module.TODO.name
+
+            when (icalEntityCopy.property.percent) {
+                in 1..99 -> icalEntityCopy.property.status = StatusTodo.`IN-PROCESS`.name
+                100 -> icalEntityCopy.property.status = StatusTodo.COMPLETED.name
+                else -> icalEntityCopy.property.status = StatusTodo.`NEEDS-ACTION`.name
             }
         }
 
+        // reset the ids of all list properties to make sure that they get inserted as new ones
         icalEntityCopy.attachments?.forEach { it.attachmentId = 0L }
         icalEntityCopy.attendees?.forEach { it.attendeeId = 0L }
         icalEntityCopy.categories?.forEach { it.categoryId = 0L }
