@@ -69,8 +69,7 @@
 
 
     <!-- Navigation Drawer  -->
-    <string name="drawer_main_header_app_icon">App Icon</string>
-
+    <string name="navigation_drawer_header_app_icon">App Icon</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_board">Board</string>
@@ -109,8 +108,6 @@
     <string name="list_num_attachments_contentdesc">Number of attachments</string>
     <string name="list_num_comments_contentdesc">Number of comments</string>
     <string name="list_snackbar_overdue_tasks_in_past">Overdue tasks detected, scroll up to review.</string>
-    <string name="list_toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
-    <string name="view_toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
 
 
     <!-- fragment_ical_view -->
@@ -318,5 +315,8 @@
 
     <string name="attachment_error_on_retrieving_file">Failed to retrieve file.</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">No app was found to open this file/URL.</string>
+
+    <string name="toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
+
 
 </resources>

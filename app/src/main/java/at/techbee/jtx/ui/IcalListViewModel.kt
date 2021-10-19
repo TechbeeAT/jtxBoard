@@ -214,7 +214,7 @@ class IcalListViewModel(
 
         }
         if(isLinkedRecurringInstance)
-            Toast.makeText(getApplication(), R.string.list_toast_item_is_now_recu_exception, Toast.LENGTH_LONG).show()
+            Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_LONG).show()
 
     }
 }

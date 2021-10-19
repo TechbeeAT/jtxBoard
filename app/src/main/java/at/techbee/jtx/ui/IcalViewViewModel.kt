@@ -310,7 +310,7 @@ class IcalViewViewModel(private val icalItemId: Long,
             viewModelScope.launch(Dispatchers.IO) {
                 ICalObject.makeRecurringException(item, database)
             }
-            Toast.makeText(getApplication(), R.string.view_toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+            Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
         }
     }
 
