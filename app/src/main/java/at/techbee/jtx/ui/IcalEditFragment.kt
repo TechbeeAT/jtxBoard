@@ -2028,9 +2028,9 @@ class IcalEditFragment : Fragment() {
         if(binding.editSubtasksAddEdittext.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_subtask_not_confirmed) + "\n"
 
-        if(binding.editTaskDatesFragment?.editDueDateEdittext?.text?.isNotEmpty() == true && binding.editTaskDatesFragment?.editDueTimeEdittext?.text.isNullOrBlank() && binding.editTaskDatesFragment?.editTaskAddStartedAndDueTimeSwitch?.isActivated == false)
+        if(binding.editTaskDatesFragment?.editDueDateEdittext?.text?.isNotEmpty() == true && binding.editTaskDatesFragment?.editDueTimeEdittext?.text.isNullOrBlank() && binding.editTaskDatesFragment?.editTaskAddStartedAndDueTimeSwitch?.isActivated == true)
             validationError += resources.getString(R.string.edit_validation_errors_due_time_not_set) + "\n"
-        if(binding.editTaskDatesFragment?.editStartedDateEdittext?.text?.isNotEmpty() == true && binding.editTaskDatesFragment?.editStartedTimeEdittext?.text.isNullOrBlank() && binding.editTaskDatesFragment?.editTaskAddStartedAndDueTimeSwitch?.isActivated == false)
+        if(binding.editTaskDatesFragment?.editStartedDateEdittext?.text?.isNotEmpty() == true && binding.editTaskDatesFragment?.editStartedTimeEdittext?.text.isNullOrBlank() && binding.editTaskDatesFragment?.editTaskAddStartedAndDueTimeSwitch?.isActivated == true)
             validationError += resources.getString(R.string.edit_validation_errors_start_time_not_set) + "\n"
 /*        if(binding.editCompletedTimeEdittext?.text.isNullOrBlank() && binding.editCompletedAddtimeSwitch?.isActivated == false)
             validationError += resources.getString(R.string.edit_validation_errors_completed_time_not_set) + "\n"
