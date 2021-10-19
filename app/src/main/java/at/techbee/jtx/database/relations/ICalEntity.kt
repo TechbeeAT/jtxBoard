@@ -68,6 +68,12 @@ data class ICalEntity(
     @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Attachment::class)
     var attachments: List<Attachment>? = null,
 
+    @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Alarm::class)
+    var alarm: List<Alarm>? = null,
+
+    @Relation(parentColumn = COLUMN_ID, entityColumn = "icalObjectId", entity = Unknown::class)
+    var unknown: List<Unknown>? = null,
+
 
     @Relation(
         parentColumn = COLUMN_ICALOBJECT_COLLECTIONID,

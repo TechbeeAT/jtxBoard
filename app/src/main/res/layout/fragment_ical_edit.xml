@@ -877,82 +877,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edit_resources_add" />
 
-                <TextView
-                    android:id="@+id/edit_attachments_header"
-                    android:layout_width="wrap_content"
+
+                <include
+                    android:id="@+id/edit_fragment_ical_edit_attachment"
+                    layout="@layout/fragment_ical_edit_attachment"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:drawablePadding="8dp"
-                    android:text="@string/view_attachments_header"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"
                     android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
-                    app:drawableStartCompat="@drawable/ic_attachment"
+                    app:model="@{model}"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edit_comment_add" />
-
-
-                <LinearLayout
-                    android:id="@+id/edit_attachments_linearlayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:divider="?android:dividerHorizontal"
-                    android:orientation="vertical"
-                    android:showDividers="middle"
-                    android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_attachments_header">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:clickable="true"
-                        android:focusable="true">
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                </LinearLayout>
-
-
-                <Button
-                    android:id="@+id/button_attachment_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/edit_attachment_button_text"
-                    android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
-                    app:icon="@drawable/ic_attachment_add"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_attachments_linearlayout" />
-
-
-                <Button
-                    android:id="@+id/button_take_picture"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="64dp"
-                    android:layout_weight="1"
-                    android:text="@string/edit_take_picture_button_text"
-                    android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
-                    app:icon="@drawable/ic_photo_add"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/button_attachment_add" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

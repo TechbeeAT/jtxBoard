@@ -20,6 +20,7 @@
 
 
     <!-- Global Strings -->
+    <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
@@ -110,8 +111,7 @@
     <string name="list_snackbar_overdue_tasks_in_past">Overdue tasks detected, scroll up to review.</string>
     <string name="list_toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
     <string name="view_toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
-    <string name="list_error_no_app_found_to_open_file">No app was found to open this file.</string>
-    <string name="list_error_on_retrieving_file">Failed to retrieve file.</string>
+
 
     <!-- fragment_ical_view -->
     <string name="view_url_header">URL</string>
@@ -161,6 +161,7 @@
     <string name="edit_comment_hint">Add comment</string>
     <string name="edit_attachment_button_text">Add attachment</string>
     <string name="edit_take_picture_button_text">Take picture</string>
+    <string name="edit_add_link_button_text">Add attachment link</string>
     <string name="edit_relatedto_hint">Related to …</string>
     <string name="edit_url_hint">URL</string>
     <string name="edit_location_hint">Location</string>
@@ -198,6 +199,7 @@
     <string name="edit_recurrence_header">Recurrence</string>
     <string name="edit_all_day">All day</string>
     <string name="edit_attachment_delete_attachment">Delete attachment</string>
+    <string name="edit_attachment_add_link_dialog">Add attachment link</string>
     <string name="edit_recur_last_occurrence">Last occurrence</string>
     <string name="edit_recur_all_occurrences">All occurrences</string>
     <string name="edit_recur_repeat_every_x">Repeat every</string>
@@ -313,5 +315,8 @@
     <string name="sync_davx5_installed_with_collections_found">We have detected DAVx5 on your phone. If you have any troubles or doubts, please check out our website first:\n\nhttps://jtx.techbee.at/sync-with-davx5.\n\nThe following accounts and collections are currently synchronised:</string>
     <string name="sync_check_out_davx5">Check out DAVx5!</string>
     <string name="sync_davx5_not_found">We have not detected DAVx5 on your phone. Please follow the following link for more information: \n\nhttps://jtx.techbee.at/sync-with-davx5</string>
+
+    <string name="attachment_error_on_retrieving_file">Failed to retrieve file.</string>
+    <string name="attachment_error_no_app_found_to_open_file_or_uri">No app was found to open this file/URL.</string>
 
 </resources>

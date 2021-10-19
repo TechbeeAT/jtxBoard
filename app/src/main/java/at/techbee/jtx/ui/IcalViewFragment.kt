@@ -41,6 +41,7 @@ import androidx.preference.PreferenceManager
 import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -212,30 +213,9 @@ class IcalViewFragment : Fragment() {
 
                     //open the attachment on click
                     attachmentBinding.viewAttachmentCardview.setOnClickListener {
-
-                        try {
-                            val intent = Intent()
-                            intent.action = Intent.ACTION_VIEW
-                            intent.setDataAndType(Uri.parse(attachment.uri), attachment.fmttype)
-                            intent.flags = FLAG_GRANT_READ_URI_PERMISSION
-                            startActivity(intent)
-
-                        } catch (e: IOException) {
-                            Log.i("fileprovider", "Failed to retrieve file\n$e")
-                            Toast.makeText(
-                                requireContext(),
-                                "Failed to retrieve file.",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        } catch (e: ActivityNotFoundException) {
-                            Log.i("ActivityNotFound", "No activity found to open file\n$e")
-                            Toast.makeText(
-                                requireContext(),
-                                "No app was found to open this file.",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
+                        attachment.openFile(requireContext())
                     }
+
                     if (attachment.filename!!.isNotEmpty())
                         attachmentBinding.viewAttachmentTextview.text = attachment.filename
                     else
@@ -773,83 +753,17 @@ class IcalViewFragment : Fragment() {
                 Log.d("shareIntent", shareText)
                 startActivity(Intent(shareIntent))
             }
-            R.id.menu_view_copy_as_journal -> {
-                val icalEntityCopy = icalViewViewModel.icalEntity.value!!
-                icalEntityCopy.property.id = 0L
-                icalEntityCopy.property.component = Component.VJOURNAL.name
-                icalEntityCopy.property.module = Module.JOURNAL.name
-                icalEntityCopy.property.completed = null
-                icalEntityCopy.property.completedTimezone = null
-                if(icalEntityCopy.property.dtstart == null)
-                    icalEntityCopy.property.dtstart = System.currentTimeMillis()
-                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
-                icalEntityCopy.property.dtend = null
-                icalEntityCopy.property.dtendTimezone = null
-                icalEntityCopy.property.due = null
-                icalEntityCopy.property.dueTimezone = null
-                icalEntityCopy.property.duration = null
-                icalEntityCopy.property.priority = null
-
-                icalEntityCopy.attachments?.forEach { it.attachmentId = 0L }
-                icalEntityCopy.attendees?.forEach { it.attendeeId = 0L }
-                icalEntityCopy.categories?.forEach { it.categoryId = 0L }
-                icalEntityCopy.comments?.forEach { it.commentId = 0L }
-                icalEntityCopy.organizer?.organizerId = 0L
-                icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
-                icalEntityCopy.resources?.forEach { it.resourceId = 0L }
-
-                this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
+            R.id.menu_view_copy_as_journal -> this.findNavController().navigate(
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(getIcalEntityCopy(Module.JOURNAL))
                 )
-            }
-            R.id.menu_view_copy_as_note -> {
-                val icalEntityCopy = icalViewViewModel.icalEntity.value!!
-                icalEntityCopy.property.id = 0L
-                icalEntityCopy.property.component = Component.VJOURNAL.name
-                icalEntityCopy.property.module = Module.NOTE.name
-                icalEntityCopy.property.completed = null
-                icalEntityCopy.property.completedTimezone = null
-                icalEntityCopy.property.dtstart = null
-                icalEntityCopy.property.dtstartTimezone = null
-                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
-                icalEntityCopy.property.dtend = null
-                icalEntityCopy.property.dtendTimezone = null
-                icalEntityCopy.property.due = null
-                icalEntityCopy.property.dueTimezone = null
-                icalEntityCopy.property.duration = null
-                icalEntityCopy.property.priority = null
 
-                icalEntityCopy.attachments?.forEach { it.attachmentId = 0L }
-                icalEntityCopy.attendees?.forEach { it.attendeeId = 0L }
-                icalEntityCopy.categories?.forEach { it.categoryId = 0L }
-                icalEntityCopy.comments?.forEach { it.commentId = 0L }
-                icalEntityCopy.organizer?.organizerId = 0L
-                icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
-                icalEntityCopy.resources?.forEach { it.resourceId = 0L }
-
-                this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
+            R.id.menu_view_copy_as_note -> this.findNavController().navigate(
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(getIcalEntityCopy(Module.NOTE))
                 )
-            }
-            R.id.menu_view_copy_as_todo -> {
-                val icalEntityCopy = icalViewViewModel.icalEntity.value!!
-                icalEntityCopy.property.id = 0L
-                icalEntityCopy.property.component = Component.VTODO.name
-                icalEntityCopy.property.module = Module.TODO.name
-                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
 
-                icalEntityCopy.attachments?.forEach { it.attachmentId = 0L }
-                icalEntityCopy.attendees?.forEach { it.attendeeId = 0L }
-                icalEntityCopy.categories?.forEach { it.categoryId = 0L }
-                icalEntityCopy.comments?.forEach { it.commentId = 0L }
-                icalEntityCopy.organizer?.organizerId = 0L
-                icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
-                icalEntityCopy.resources?.forEach { it.resourceId = 0L }
-
-                this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalEntityCopy)
+            R.id.menu_view_copy_as_todo -> this.findNavController().navigate(
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(getIcalEntityCopy(Module.TODO))
                 )
-            }
 
             R.id.menu_view_delete_item -> {
 
@@ -954,6 +868,70 @@ class IcalViewFragment : Fragment() {
                 }
             }
         }, 0)
+    }
+
+    private fun getIcalEntityCopy(module: Module): ICalEntity {
+
+        val icalEntityCopy = icalViewViewModel.icalEntity.value!!
+        icalEntityCopy.property.id = 0L
+
+        when (module) {
+            Module.JOURNAL -> {
+                icalEntityCopy.property.component = Component.VJOURNAL.name
+                icalEntityCopy.property.module = Module.JOURNAL.name
+                icalEntityCopy.property.completed = null
+                icalEntityCopy.property.completedTimezone = null
+                if (icalEntityCopy.property.dtstart == null)
+                    icalEntityCopy.property.dtstart = System.currentTimeMillis()
+                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
+                icalEntityCopy.property.dtend = null
+                icalEntityCopy.property.dtendTimezone = null
+                icalEntityCopy.property.due = null
+                icalEntityCopy.property.dueTimezone = null
+                icalEntityCopy.property.duration = null
+                icalEntityCopy.property.priority = null
+
+                TODO("Make sure that the status is set properly!")
+
+            }
+            Module.NOTE -> {
+                icalEntityCopy.property.component = Component.VJOURNAL.name
+                icalEntityCopy.property.module = Module.NOTE.name
+                icalEntityCopy.property.completed = null
+                icalEntityCopy.property.completedTimezone = null
+                icalEntityCopy.property.dtstart = null
+                icalEntityCopy.property.dtstartTimezone = null
+                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
+                icalEntityCopy.property.dtend = null
+                icalEntityCopy.property.dtendTimezone = null
+                icalEntityCopy.property.due = null
+                icalEntityCopy.property.dueTimezone = null
+                icalEntityCopy.property.duration = null
+                icalEntityCopy.property.priority = null
+
+                TODO("Make sure that the status is set properly!")
+
+            }
+            Module.TODO -> {
+                icalEntityCopy.property.component = Component.VTODO.name
+                icalEntityCopy.property.module = Module.TODO.name
+                icalEntityCopy.property.dtstamp = System.currentTimeMillis()
+
+                TODO("Make sure that the status is set properly!")
+            }
+        }
+
+        icalEntityCopy.attachments?.forEach { it.attachmentId = 0L }
+        icalEntityCopy.attendees?.forEach { it.attendeeId = 0L }
+        icalEntityCopy.categories?.forEach { it.categoryId = 0L }
+        icalEntityCopy.comments?.forEach { it.commentId = 0L }
+        icalEntityCopy.organizer?.organizerId = 0L
+        icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
+        icalEntityCopy.resources?.forEach { it.resourceId = 0L }
+        icalEntityCopy.alarm?.forEach { it.alarmId = 0L }
+        icalEntityCopy.unknown?.forEach { it.unknownId = 0L }
+
+        return icalEntityCopy
     }
 }
 

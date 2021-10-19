@@ -8,21 +8,26 @@
 
 package at.techbee.jtx.database.properties
 
+import android.content.ActivityNotFoundException
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.room.*
 import androidx.work.*
 import at.techbee.jtx.FileCleanupJob
+import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
 import kotlinx.parcelize.Parcelize
 import java.io.File
+import java.io.IOException
 
 
 /** The name of the the table for Attachments that are linked to an ICalObject.
@@ -222,6 +227,51 @@ data class Attachment (
         return this
     }
 
+    fun openFile(context: Context) {
+
+        val uri = Uri.parse(this.uri) ?: return
+
+        if(uri.toString().startsWith("content://", true)) {
+
+            try {
+                val intent = Intent()
+                intent.action = Intent.ACTION_VIEW
+                intent.setDataAndType(Uri.parse(this.uri), this.fmttype)
+                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(intent)
+
+            } catch (e: IOException) {
+                Log.i("fileprovider", "Failed to retrieve file\n$e")
+                Toast.makeText(
+                    context,
+                    context.getText(R.string.attachment_error_on_retrieving_file),
+                    Toast.LENGTH_LONG
+                ).show()
+            } catch (e: ActivityNotFoundException) {
+                Log.i("ActivityNotFound", "No activity found to open file\n$e")
+                Toast.makeText(
+                    context,
+                    context.getText(R.string.attachment_error_no_app_found_to_open_file_or_uri),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        } else {
+            try {
+                //TODO: Improve the handling here, the uri might be without https:// then the call would fail
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.data = uri
+                context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Log.i("ActivityNotFound", "No activity found to open file\n$e")
+                Toast.makeText(
+                    context,
+                    context.getText(R.string.attachment_error_no_app_found_to_open_file_or_uri),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
 }
 
 

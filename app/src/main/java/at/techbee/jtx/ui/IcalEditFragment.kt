@@ -29,6 +29,7 @@ import android.util.Size
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.webkit.MimeTypeMap
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -47,10 +48,7 @@ import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
-import at.techbee.jtx.databinding.FragmentIcalEditAttachmentBinding
-import at.techbee.jtx.databinding.FragmentIcalEditBinding
-import at.techbee.jtx.databinding.FragmentIcalEditCommentBinding
-import at.techbee.jtx.databinding.FragmentIcalEditSubtaskBinding
+import at.techbee.jtx.databinding.*
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_DAY
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_MONTH
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_WEEK
@@ -205,7 +203,7 @@ class IcalEditFragment : Fragment() {
 
         // Until implemented remove the tab for alarms and attachments
         binding.icalEditTabs?.getTabAt(TAB_ALARMS)?.view?.visibility = View.GONE
-        binding.icalEditTabs?.getTabAt(TAB_ATTACHMENTS)?.view?.visibility = View.GONE
+        //binding.icalEditTabs?.getTabAt(TAB_ATTACHMENTS)?.view?.visibility = View.GONE
 
 
         val textInputEditTextFocusChangeListener = View.OnFocusChangeListener { _, isFocussed ->
@@ -1042,7 +1040,7 @@ class IcalEditFragment : Fragment() {
         }
 
 
-        binding.buttonAttachmentAdd.setOnClickListener {
+        binding.editFragmentIcalEditAttachment?.buttonAttachmentAdd?.setOnClickListener {
             var chooseFile = Intent(Intent.ACTION_GET_CONTENT)
             chooseFile.type = "*/*"
             chooseFile = Intent.createChooser(chooseFile, "Choose a file")
@@ -1057,9 +1055,9 @@ class IcalEditFragment : Fragment() {
 
         // don't show the button if the device does not have a camera
         if (!requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY))
-            binding.buttonTakePicture.visibility = View.GONE
+            binding.editFragmentIcalEditAttachment?.buttonAttachmentTakePicture?.visibility = View.GONE
 
-        binding.buttonTakePicture.setOnClickListener {
+        binding.editFragmentIcalEditAttachment?.buttonAttachmentTakePicture?.setOnClickListener {
 
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
@@ -1084,6 +1082,52 @@ class IcalEditFragment : Fragment() {
             }
         }
 
+        binding.editFragmentIcalEditAttachment?.buttonAttachmentAddLink?.setOnClickListener {
+
+            val newLinkAttachmentEditText = TextInputEditText(requireContext())
+            newLinkAttachmentEditText.inputType = InputType.TYPE_TEXT_VARIATION_URI
+            newLinkAttachmentEditText.isSingleLine = true
+
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle(R.string.edit_attachment_add_link_dialog)
+            builder.setIcon(R.drawable.ic_link)
+            builder.setView(newLinkAttachmentEditText)
+            builder.setPositiveButton(R.string.save) { _, _ ->
+
+                if(isValidURL(newLinkAttachmentEditText.text.toString())) {
+
+                    val uri = Uri.parse(newLinkAttachmentEditText.text.toString())
+
+                    if(uri != null) {
+                        val filename = uri.lastPathSegment
+                        val extension = filename?.substringAfterLast('.', "")
+
+                        val newAttachment = Attachment(
+                            //fmttype = mimeType,
+                            uri = uri.toString(),
+                            filename = uri.toString(),
+                            extension = extension,
+                            fmttype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                        )
+
+                        icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
+                        addAttachmentView(newAttachment)      // add the new attachment
+                        return@setPositiveButton
+                    }
+                }
+
+                // only reached when attachment could not be added
+                Toast.makeText(context, "Invalid URL, please provide a valid URL to add a linked attachment.", Toast.LENGTH_LONG).show()
+
+            }
+
+            builder.setNegativeButton(R.string.cancel) { _, _ ->
+                // Do nothing, just close the message
+            }
+
+            builder.show()
+
+        }
 
         binding.editSubtasksAdd.setEndIconOnClickListener {
             // Respond to end icon presses
@@ -1505,8 +1549,8 @@ class IcalEditFragment : Fragment() {
     private fun addAttachmentView(attachment: Attachment) {
 
         val bindingAttachment =
-            FragmentIcalEditAttachmentBinding.inflate(inflater, container, false)
-        bindingAttachment.editAttachmentTextview.text = "${attachment.filename}"
+            FragmentIcalEditAttachmentItemBinding.inflate(inflater, container, false)
+        bindingAttachment.editAttachmentItemTextview.text = "${attachment.filename}"
 
         var thumbUri: Uri? = null
 
@@ -1515,10 +1559,8 @@ class IcalEditFragment : Fragment() {
             thumbUri = Uri.parse(attachment.uri)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val thumbBitmap =
-                    context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
-                bindingAttachment.editAttachmentPictureThumbnail.setImageBitmap(thumbBitmap)
-                bindingAttachment.editAttachmentPictureThumbnail.visibility = View.VISIBLE
+                val thumbBitmap = context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
+                bindingAttachment.editAttachmentItemPictureThumbnail.setImageBitmap(thumbBitmap)
             }
 
 
@@ -1549,10 +1591,10 @@ class IcalEditFragment : Fragment() {
 
 
 
-        binding.editAttachmentsLinearlayout.addView(bindingAttachment.root)
+        binding.editFragmentIcalEditAttachment?.editAttachmentsLinearlayout?.addView(bindingAttachment.root)
 
         // delete the attachment on click on the X
-        bindingAttachment.editAttachmentDelete.setOnClickListener {
+        bindingAttachment.editAttachmentItemDelete.setOnClickListener {
             icalEditViewModel.attachmentUpdated.remove(attachment)
             bindingAttachment.root.visibility = View.GONE
         }

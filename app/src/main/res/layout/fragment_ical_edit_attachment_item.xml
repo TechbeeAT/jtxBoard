@@ -8,59 +8,59 @@
   ~ http://www.gnu.org/licenses/gpl.html
   -->
 
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list_item_attachment_cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:checkable="true"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:checkable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/list_item_attachment_picture_thumbnail"
+            android:id="@+id/edit_attachment_item_picture_thumbnail"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:visibility="visible"
+            android:src="@drawable/ic_file_attachment"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription"
-            android:src="@drawable/ic_file_attachment"
-            tools:visibility="visible" />
+            tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/list_item_attachment_textview"
+            android:id="@+id/edit_attachment_item_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
             android:ellipsize="middle"
             android:singleLine="true"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_attachment_filesize"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_attachment_picture_thumbnail"
-            app:layout_constraintStart_toEndOf="@+id/list_item_attachment_picture_thumbnail"
-            app:layout_constraintTop_toTopOf="@+id/list_item_attachment_picture_thumbnail"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_attachment_item_picture_thumbnail"
+            app:layout_constraintEnd_toStartOf="@+id/edit_attachment_item_delete"
+            app:layout_constraintStart_toEndOf="@+id/edit_attachment_item_picture_thumbnail"
+            app:layout_constraintTop_toTopOf="@+id/edit_attachment_item_picture_thumbnail"
             tools:text="Attachment.pdf" />
 
-        <TextView
-            android:id="@+id/list_item_attachment_filesize"
+        <ImageView
+            android:id="@+id/edit_attachment_item_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_attachment_textview"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_attachment_item_textview"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/list_item_attachment_textview"
-            tools:text="800 KB" />
+            app:layout_constraintTop_toTopOf="@+id/edit_attachment_item_textview"
+            app:srcCompat="@drawable/ic_attachment_delete"
+            android:contentDescription="@string/edit_attachment_delete_attachment" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1048,7 +1048,7 @@
 
 
             <Button
-                android:id="@+id/button_take_picture"
+                android:id="@+id/button_attachment_take_picture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/edit_take_picture_button_text"
