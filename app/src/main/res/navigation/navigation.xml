@@ -171,6 +171,12 @@
         android:label="SyncFragment"
         tools:layout="@layout/fragment_sync"/>
     <action android:id="@+id/action_global_syncFragment" app:destination="@id/syncFragment"/>
+    <fragment
+        android:id="@+id/donateFragment"
+        android:name="at.techbee.jtx.ui.DonateFragment"
+        android:label="DonateFragment"
+        tools:layout="@layout/fragment_donate"/>
+    <action android:id="@+id/action_global_donateFragment" app:destination="@id/donateFragment"/>
 
 
 </navigation>

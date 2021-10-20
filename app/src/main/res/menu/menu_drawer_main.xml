@@ -30,6 +30,11 @@
         android:title="@string/navigation_drawer_about"
         />
 
+    <item
+        android:id="@+id/nav_donate"
+        android:icon="@drawable/ic_money"
+        android:title="@string/navigation_drawer_donate" />
+
 
 <item
     android:id="@+id/nav_beta_feedback"
@@ -72,11 +77,7 @@
             android:id="@+id/nav_forums"
             android:icon="@drawable/ic_forum_dark"
             android:title="@string/navigation_drawer_forums"/>
-        <item
-            android:id="@+id/nav_donate"
-            android:icon="@drawable/ic_money"
-            android:title="@string/navigation_drawer_donate"
-            android:visible="false"/>
+
         <item
             android:id="@+id/nav_privacy"
             android:icon="@drawable/ic_cloud_off_dark"

@@ -33,6 +33,7 @@
     <string name="toolbar_text_settings" translatable="false">Settings</string>
     <string name="toolbar_text_about" translatable="false">About</string>
     <string name="toolbar_text_sync" translatable="false">Sync</string>
+    <string name="toolbar_text_donate" translatable="false">Donate</string>
 
 
     <!-- Strings for values in properties of an ICalObject -->
@@ -317,6 +318,10 @@
     <string name="attachment_error_no_app_found_to_open_file_or_uri">No app was found to open this file/URL.</string>
 
     <string name="toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
+    <string name="donate_header_text">The development of an app is a complex topic and development, maintenance and support is hard work. So if you like this app and if you would like to ensure continuous development, please consider donating a smaller or a larger amount :-)</string>
+    <string name="donate_thank_you">Thank you!</string>
+    <string name="donate_donate_with">Donate with</string>
+    <string name="donate_other_donation_methods">or if you would like to consier any other donation method, please check our website:</string>
 
 
 </resources>

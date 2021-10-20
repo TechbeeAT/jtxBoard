@@ -190,6 +190,11 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_aboutFragment)
 
+                R.id.nav_donate ->
+                    //if (BuildConfig.FLAVOR != App.FLAVOR_GOOGLE_PLAY)
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_donateFragment)
+
                 R.id.nav_app_settings ->
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_settingsFragment)
@@ -209,9 +214,6 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                 R.id.nav_forums ->
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
 
-                R.id.nav_donate ->
-                    //if (BuildConfig.FLAVOR != App.FLAVOR_GOOGLE_PLAY)
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
 
                 R.id.nav_privacy ->
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
