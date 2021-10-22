@@ -11,6 +11,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="at.techbee.jtx">
 
+    <uses-permission
+        android:name="android.permission.GET_ACCOUNTS"
+        android:maxSdkVersion="22" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 

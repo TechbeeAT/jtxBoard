@@ -89,24 +89,33 @@ SELECTs (global selects without parameter)
     fun getAllCollections(): LiveData<List<ICalCollection>>
 
     /**
-     * Retrieve an list of all DISTINCT Collections ([Collection])
+     * Retrieve an list of all DISTINCT Collections ([ICalCollection])
      * that support VTODO as a LiveData-List
      *
      * @return a list of VTODO-[Collection] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT * FROM collection WHERE supportsVTODO = 1 ORDER BY _id ASC")
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVTODO = 1 ORDER BY _id ASC")
     fun getAllVTODOCollections(): LiveData<List<ICalCollection>>
 
     /**
-     * Retrieve an list of all DISTINCT Collections ([Collection])
+     * Retrieve an list of all DISTINCT Collections ([ICalCollection])
      * that support VJOURNAL as a LiveData-List
      *
      * @return a list of VJOURNAL-[Collection] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT * FROM collection WHERE supportsVJOURNAL = 1 ORDER BY _id ASC")
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVJOURNAL = 1 ORDER BY _id ASC")
     fun getAllVJOURNALCollections(): LiveData<List<ICalCollection>>
+
+    /**
+     * Retrieve an list of all remote collections ([ICalCollection])
+     *
+     * @return a list of [ICalCollection] as LiveData<List<ICalCollection>>
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN (\'LOCAL\')")
+    fun getAllRemoteCollections(): LiveData<List<ICalCollection>>
 
 
 
@@ -269,6 +278,14 @@ DELETEs by Object
      */
     @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
     fun deleteICalObjectsbyId(id: Long)
+
+    /**
+     * Delete an ICalCollection by the id.
+     *
+     * @param id The ICalCollection to be deleted.
+     */
+    @Query("DELETE FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ID = :id")
+    fun deleteICalCollectionbyId(id: Long)
 
 
 

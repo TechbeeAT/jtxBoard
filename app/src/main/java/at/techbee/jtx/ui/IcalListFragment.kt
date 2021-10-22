@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui
 
 
+import android.accounts.AccountManager
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -58,6 +59,7 @@ class IcalListFragment : Fragment() {
 
     private var lastScrolledFocusItemId: Long? = null
     private var toastDueTasksInPastShown = false
+
 
 
     companion object {
@@ -222,6 +224,13 @@ class IcalListFragment : Fragment() {
                     lastScrolledFocusItemId = it
                 }
             }
+        })
+
+        // observe to make sure that it gets updated
+        icalListViewModel.allRemoteCollections.observe(viewLifecycleOwner, {
+            // check if any accounts were removed, retrieve all DAVx5 Accounts
+            val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
+            icalListViewModel.removeDeletedAccounts(accounts)
         })
 
         binding.tablayoutJournalnotestodos.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -478,5 +487,6 @@ class IcalListFragment : Fragment() {
     }
 
     private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
+
 
 }

@@ -131,6 +131,8 @@ data class ICalCollection(
                 const val LOCAL_ACCOUNT_NAME = "LOCAL"
                 const val LOCAL_ACCOUNT_TYPE = "LOCAL"
 
+                const val DAVX5_ACCOUNT_TYPE = "bitfire.at.davdroid"
+
 
                 /**
                  * Create a new [ICalCollection] from the specified [ContentValues].

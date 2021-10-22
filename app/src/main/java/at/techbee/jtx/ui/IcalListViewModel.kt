@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui
 
+import android.accounts.Account
 import android.app.Application
 import android.util.Log
 import android.widget.Toast
@@ -47,6 +48,8 @@ class IcalListViewModel(
     val allSubtasks: LiveData<List<ICal4List?>> = database.getAllSubtasks()
 
     var focusItemId: MutableLiveData<Long?> = MutableLiveData(null)
+
+    val allRemoteCollections = database.getAllRemoteCollections()
 
 
     fun getFocusItemPosition(): Int {
@@ -216,5 +219,24 @@ class IcalListViewModel(
         if(isLinkedRecurringInstance)
             Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_LONG).show()
 
+    }
+
+    fun removeDeletedAccounts(allDavx5Accounts: Array<Account>) {
+
+        Log.d("checkForDeletedAccounts", "Found accounts: $allDavx5Accounts")
+        allRemoteCollections.value?.forEach { collection ->
+
+            val found = allDavx5Accounts.find { account ->
+                collection.accountName == account.name && collection.accountType == account.type
+            }
+
+            // if the collection cannot be found in the list of accounts, then it was deleted, delete it also in jtx
+            if (found == null) {
+                Log.d("checkForDeletedAccounts", "Account ${collection.accountName} / ${collection.accountType} not found, deleting...")
+                viewModelScope.launch(Dispatchers.IO) {
+                    database.deleteICalCollectionbyId(collection.collectionId)
+                }
+            }
+        }
     }
 }
