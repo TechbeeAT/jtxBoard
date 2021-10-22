@@ -1,6 +1,7 @@
 package at.techbee.jtx.ui
 
 import android.app.Application
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,9 +12,10 @@ import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.databinding.FragmentSyncBinding
 import android.content.pm.PackageManager
-import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
+import android.content.Intent
+import android.net.Uri
 
 
 class SyncFragment : Fragment() {
@@ -22,6 +24,8 @@ class SyncFragment : Fragment() {
     lateinit var application: Application
     private lateinit var inflater: LayoutInflater
     private lateinit var dataSource: ICalDatabaseDao
+
+    var collectionsString = ""
 
 
     companion object {
@@ -41,49 +45,34 @@ class SyncFragment : Fragment() {
         this.application = requireNotNull(this.activity).application
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-        val collections = dataSource.getAllCollections()
+        val remoteCollections = dataSource.getAllRemoteCollections()
 
-        collections.observe(viewLifecycleOwner, { collectionList ->
-            var collectionsString = ""
+        remoteCollections.observe(viewLifecycleOwner, { collectionList ->
+
             collectionList.forEach {
-                if (it.accountName != ICalCollection.LOCAL_ACCOUNT_NAME)          // only add remote collections
-                    collectionsString += it.accountName + " (" + it.displayName + ")\n"
+                collectionsString += it.accountName + " (" + it.displayName + ")\n"
             }
 
+            updateUI()
 
-            if(isDAVx5Available() && collectionsString.isNotBlank()) {
-                binding.syncPleaseInstall.visibility = View.GONE
-                binding.syncPleaseInstallText.visibility = View.GONE
-                binding.syncCongratulations.visibility = View.VISIBLE
-
-                if(collectionsString.isNotBlank()) {
-                    // DAVx5 is installed and collections were found
-                    binding.syncCongratulationsTextNoCollections.visibility = View.GONE
-                    binding.syncCongratulationsTextWithCollections.visibility = View.VISIBLE
-                    binding.syncCongratulationsSynchedCollections.visibility = View.VISIBLE
-                    binding.syncCongratulationsSynchedCollections.text = collectionsString
-                } else {
-                    // DAVx5 is installed but no remote collections were found
-                    binding.syncCongratulationsTextNoCollections.visibility = View.VISIBLE
-                    binding.syncCongratulationsTextWithCollections.visibility = View.GONE
-                    binding.syncCongratulationsSynchedCollections.visibility = View.GONE
-                }
-
-            } else {
-                // DAVx5 is not installed, show messages for user to install
-                binding.syncPleaseInstall.visibility = View.VISIBLE
-                binding.syncPleaseInstallText.visibility = View.VISIBLE
-
-                binding.syncCongratulations.visibility = View.GONE
-                binding.syncCongratulationsSynchedCollections.visibility = View.GONE
-                binding.syncCongratulationsTextNoCollections.visibility = View.GONE
-                binding.syncCongratulationsTextWithCollections.visibility = View.GONE
-            }
         })
 
+        binding.syncButtonAddAccount.setOnClickListener {
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.setClassName(
+                "at.bitfire.davdroid",
+                "at.bitfire.davdroid.ui.setup.LoginActivity"
+            )
+            startActivity(intent)
+        }
 
-
-
+        binding.syncButtonPlaystore.setOnClickListener {
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$DAVX5_PACKAGE_NAME")))
+            } catch (anfe: ActivityNotFoundException) {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$DAVX5_PACKAGE_NAME")))
+            }
+        }
         return binding.root
     }
 
@@ -97,9 +86,61 @@ class SyncFragment : Fragment() {
             //This error will always happen for fragment testing, as the cast to Main Activity cannot be successful
         }
 
+        updateUI()
+
         super.onResume()
     }
 
+    /**
+     * This function updates the UI and sets the elements to Visible or Gone depending on what is needed:
+     * 1. DAVx5 is not installed
+     * 2. DAVx5 is installed but no remote collections are synced
+     * 3. DAVx5 is installed and remote collections were found
+     */
+    private fun updateUI() {
+
+        if(isDAVx5Available()) {
+            binding.syncPleaseInstall.visibility = View.GONE
+            binding.syncPleaseInstallText.visibility = View.GONE
+            binding.syncButtonPlaystore.visibility = View.GONE
+            binding.syncFurtherInfoDavx5.visibility = View.GONE
+            binding.syncLinkDavx5.visibility = View.GONE
+            binding.syncCongratulations.visibility = View.VISIBLE
+            binding.syncButtonAddAccount.visibility = View.VISIBLE
+
+            if(collectionsString.isNotBlank()) {
+                // DAVx5 is installed and collections were found
+                binding.syncCongratulationsTextNoCollections.visibility = View.GONE
+                binding.syncCongratulationsTextWithCollections.visibility = View.VISIBLE
+                binding.syncCongratulationsSynchedCollections.visibility = View.VISIBLE
+                binding.syncCongratulationsSynchedCollections.text = collectionsString
+            } else {
+                // DAVx5 is installed but no remote collections were found
+                binding.syncCongratulationsTextNoCollections.visibility = View.VISIBLE
+                binding.syncCongratulationsTextWithCollections.visibility = View.GONE
+                binding.syncCongratulationsSynchedCollections.visibility = View.GONE
+            }
+        } else {
+            // DAVx5 is not installed, show messages for user to install
+            binding.syncPleaseInstall.visibility = View.VISIBLE
+            binding.syncPleaseInstallText.visibility = View.VISIBLE
+            binding.syncButtonPlaystore.visibility = View.VISIBLE
+            binding.syncFurtherInfoDavx5.visibility = View.VISIBLE
+            binding.syncLinkDavx5.visibility = View.VISIBLE
+
+            binding.syncCongratulations.visibility = View.GONE
+            binding.syncCongratulationsSynchedCollections.visibility = View.GONE
+            binding.syncCongratulationsTextNoCollections.visibility = View.GONE
+            binding.syncCongratulationsTextWithCollections.visibility = View.GONE
+            binding.syncButtonAddAccount.visibility = View.GONE
+        }
+
+    }
+
+    /**
+     * This function checks if DAVx5 is installed through the package manager
+     * @return true if DAVx5 was found, else false
+     */
     private fun isDAVx5Available(): Boolean {
         return try {
             activity?.packageManager?.getApplicationInfo(DAVX5_PACKAGE_NAME, 0)
