@@ -93,7 +93,7 @@ class ICalDatabaseDaoTest {
         preparedResource.resourceId = database.insertResource(preparedResource)
         preparedRelatedto.relatedtoId = database.insertRelatedto(preparedRelatedto)
 
-        val preparedIcalEntity = ICalEntity(preparedICalObject, listOf(preparedComment), listOf(preparedCategory), listOf(preparedAttendee), preparedOrganizer, listOf(preparedRelatedto), listOf(preparedResource), listOf(preparedAttachment))
+        val preparedIcalEntity = ICalEntity(preparedICalObject, listOf(preparedComment), listOf(preparedCategory), listOf(preparedAttendee), preparedOrganizer, listOf(preparedRelatedto), listOf(preparedResource), listOf(preparedAttachment), listOf(), listOf())
         preparedIcalEntity.ICalCollection = database.getCollectionByIdSync(1L)
 
         val retrievedEntry = database.get(preparedICalObject.id).getOrAwaitValue()
