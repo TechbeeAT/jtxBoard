@@ -39,10 +39,29 @@ class IcalViewFragmentTest {
 
     private val sampleDate = 1632636027826L     //  Sun Sep 26 2021 06:00:27
     private val sampleCollection = ICalCollection(collectionId = 1L, displayName = "testcollection automated tests")
-    private val sampleJournal = ICalObject(collectionId = 1L, module = Module.JOURNAL.name, component = Component.VJOURNAL.name, summary = "Journal4Test", description = "Description4JournalTest", dtstart = sampleDate, status = StatusJournal.FINAL.name, classification = Classification.PUBLIC.name)
-    private val sampleJournal2 = ICalObject(collectionId = 1L, module = Module.JOURNAL.name, component = Component.VJOURNAL.name, summary = "Journal4ExtendedTest", description = "Description4ExtendedJournalTest", dtstart = sampleDate, status = StatusJournal.FINAL.name, classification = Classification.PUBLIC.name)
-    private val sampleNote = ICalObject(collectionId = 1L, module = Module.NOTE.name, component = Component.VJOURNAL.name, summary = "Note4Test", description = "Description4NoteTest", dtstart = sampleDate)
-    private val sampleTodo = ICalObject(collectionId = 1L, module = Module.TODO.name, component = Component.VTODO.name, summary = "Todo4Test", description = "Description4TodoTest", dtstart = sampleDate)
+    private val sampleJournal = ICalObject.createJournal().apply {
+        collectionId = 1L
+        summary = "Journal4Test"
+        description = "Description4JournalTest"
+        dtstart = sampleDate
+    }
+    private val sampleJournal2 = ICalObject.createJournal().apply {
+        collectionId = 1L
+        summary = "Journal4TestExtended"
+        description = "Description4JournalTestExtended"
+        dtstart = sampleDate
+    }
+    private val sampleNote = ICalObject.createNote("Note4Test").apply {
+        collectionId = 1L
+        description = "Description4NoteTest"
+        dtstart = sampleDate
+    }
+    private val sampleTodo = ICalObject.createTodo().apply {
+        collectionId = 1L
+        summary = "Todo4Test"
+        description = "Description4TodoTest"
+        dtstart = sampleDate
+    }
 
     /*
     database.insertAttendee(Attendee(caladdress = "${UUID.randomUUID()}@test.de", icalObjectId = newEntry))
@@ -53,14 +72,13 @@ class IcalViewFragmentTest {
     database.insertOrganizer(Organizer(caladdress = "organizer", icalObjectId = newEntry))
      */
 
-
+    @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
         ICalDatabase.switchToInMemory(context)
         database = ICalDatabase.getInstance(context).iCalDatabaseDao     // should be in-memory db now
-        application =
-            InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
+        application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
 
 
         //insert sample entries
@@ -69,7 +87,7 @@ class IcalViewFragmentTest {
             sampleJournal.id = database.insertICalObjectSync(sampleJournal)
             sampleNote.id = database.insertICalObjectSync(sampleNote)
             sampleTodo.id = database.insertICalObjectSync(sampleTodo)
-            sampleJournal2.id = database.insertICalObject(sampleJournal2)
+            sampleJournal2.id = database.insertICalObjectSync(sampleJournal2)
 
             //Attendees
             database.insertAttendee(Attendee(icalObjectId = sampleJournal2.id, caladdress = "contact@techbee.at"))
@@ -130,7 +148,6 @@ class IcalViewFragmentTest {
         onView(withText(sampleTodo.summary)).check(matches(isDisplayed()))
         onView(withText(sampleTodo.description)).check(matches(isDisplayed()))
         onView(withId(R.id.view_progress_checkbox)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_indicator)).check(matches(isDisplayed()))
         onView(withId(R.id.view_progress_label)).check(matches(isDisplayed()))
         onView(withId(R.id.view_progress_percent)).check(matches(isDisplayed()))
         onView(withId(R.id.view_progress_slider)).check(matches(isDisplayed()))

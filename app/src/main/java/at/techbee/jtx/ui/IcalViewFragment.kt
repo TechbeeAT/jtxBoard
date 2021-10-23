@@ -214,7 +214,7 @@ class IcalViewFragment : Fragment() {
                         attachment.openFile(requireContext())
                     }
 
-                    if (attachment.filename!!.isNotEmpty())
+                    if (attachment.filename?.isNotEmpty() == true)
                         attachmentBinding.viewAttachmentTextview.text = attachment.filename
                     else
                         attachmentBinding.viewAttachmentTextview.text = attachment.fmttype
