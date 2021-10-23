@@ -146,6 +146,9 @@
     <string name="view_start_text">Start: %1$s</string>
     <string name="view_due_text">Due: %1$s</string>
     <string name="view_completed_text">Completed: %1$s</string>
+    <string name="view_created_text">Created: %1$s</string>
+    <string name="view_last_modified_text">Last modified: %1$s</string>
+
 
 
     <!-- fragment_ical_edit -->

@@ -149,11 +149,15 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
 
             createdFormatted = Transformations.map(icalEntity) { item ->
-                item?.property?.let { Date(it.created).toString() }
+                item?.property?.let {
+                    application.resources.getString(R.string.view_created_text, Date(it.created))
+                }
             }
 
             lastModifiedFormatted = Transformations.map(icalEntity) { item ->
-                item?.property?.let { Date(it.lastModified).toString() }
+                item?.property?.let {
+                    application.resources.getString(R.string.view_last_modified_text, Date(it.lastModified))
+                }
             }
 
             completedFormatted = Transformations.map(icalEntity) { item ->

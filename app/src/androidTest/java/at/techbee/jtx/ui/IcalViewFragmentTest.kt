@@ -23,6 +23,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -114,6 +115,23 @@ class IcalViewFragmentTest {
         launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
         onView(withText(sampleJournal.summary)).check(matches(isDisplayed()))
         onView(withText(sampleJournal.description)).check(matches(isDisplayed()))
+
+        val expectedDay = convertLongToDayString(sampleJournal.dtstart)
+        val expectedMonth = convertLongToMonthString(sampleJournal.dtstart)
+        val expectedYear = convertLongToYearString(sampleJournal.dtstart)
+        val expectedTime = convertLongToTimeString(sampleJournal.dtstart)
+
+        onView(withId(R.id.view_dtstart_day)).check(matches(withText(expectedDay)))
+        onView(withId(R.id.view_dtstart_month)).check(matches(withText(expectedMonth)))
+        onView(withId(R.id.view_dtstart_year)).check(matches(withText(expectedYear)))
+        onView(withId(R.id.view_dtstart_time)).check(matches(withText(expectedTime)))
+
+        val expectedCreated = application.resources.getString(R.string.view_created_text, Date(sampleJournal.created))
+        val expectedLastModified = application.resources.getString(R.string.view_last_modified_text, Date(sampleJournal.lastModified))
+
+        onView(withId(R.id.view_created)).check(matches(withText(expectedCreated)))
+        onView(withId(R.id.view_lastModified)).check(matches(withText(expectedLastModified)))
+
         onView(withId(R.id.view_add_audio_note)).check(matches(isDisplayed()))
         onView(withId(R.id.view_add_note)).check(matches(isDisplayed()))
         onView(withText(R.string.view_feedback_linked_notes)).check(matches(isDisplayed()))
