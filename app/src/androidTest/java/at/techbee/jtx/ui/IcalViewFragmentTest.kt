@@ -19,6 +19,7 @@ import at.techbee.jtx.database.properties.Comment
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -113,6 +114,10 @@ class IcalViewFragmentTest {
         fragmentArgs.putLong("item2show", sampleJournal.id)
         //val scenario =
         launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+
+        val collectionString = sampleCollection.displayName + " (" + sampleCollection.accountName + ")"
+        onView(allOf(withId(R.id.view_collection), withText(collectionString))).check(matches(isDisplayed()))
+        //onView(withText(sampleCollection.displayName)).check(matches(isDisplayed()))
         onView(withText(sampleJournal.summary)).check(matches(isDisplayed()))
         onView(withText(sampleJournal.description)).check(matches(isDisplayed()))
 
@@ -137,9 +142,6 @@ class IcalViewFragmentTest {
         onView(withText(R.string.view_feedback_linked_notes)).check(matches(isDisplayed()))
         onView(withId(R.id.view_classification_chip)).check(matches(isDisplayed()))
         onView(withId(R.id.view_status_chip)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_collection)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_created)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_lastModified)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -172,22 +174,4 @@ class IcalViewFragmentTest {
     }
 
 
-    @Test
-    fun journal_extended_everything_is_displayed()  {
-
-        val fragmentArgs = Bundle()
-        fragmentArgs.putLong("item2show", sampleJournal2.id)
-        //val scenario =
-        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
-        onView(withText(sampleJournal2.summary)).check(matches(isDisplayed()))
-        onView(withText(sampleJournal2.description)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_add_audio_note)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_add_note)).check(matches(isDisplayed()))
-        onView(withText(R.string.view_feedback_linked_notes)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_classification_chip)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_status_chip)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_collection)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_created)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_lastModified)).check(matches(isDisplayed()))
-    }
 }
