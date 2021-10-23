@@ -16,6 +16,7 @@ import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 
 
 class SyncFragment : Fragment() {
@@ -63,7 +64,12 @@ class SyncFragment : Fragment() {
                 "at.bitfire.davdroid",
                 "at.bitfire.davdroid.ui.setup.LoginActivity"
             )
-            startActivity(intent)
+            try {
+                startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG)
+                Log.w("SyncFragment", "DAVx5 should be there but opening the Activity failed. \n$e")
+            }
         }
 
         binding.syncButtonPlaystore.setOnClickListener {

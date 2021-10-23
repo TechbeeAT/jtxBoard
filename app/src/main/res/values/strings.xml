@@ -317,7 +317,9 @@
     <string name="sync_check_out_davx5">Check out DAVx⁵!</string>
     <string name="sync_davx5_not_found">We have not detected DAVx⁵ on your phone.\nFor more information about the Sync please see: \n\nhttps://jtx.techbee.at/sync-with-davx5\n\nor get DAVx⁵ on</string>
     <string name="sync_furhter_info_davx5">For more specific information and further download options check out</string>
-    <string name="sync_button_add_account_in_davx5">Add account in DAVx5</string>
+    <string name="sync_button_add_account_in_davx5">Add account in DAVx⁵</string>
+    <string name="sync_toast_intent_open_davx5_failed">Failed opening DAVx⁵, please open the app manually.</string>
+
 
 
     <string name="attachment_error_on_retrieving_file">Failed to retrieve file.</string>
