@@ -67,7 +67,7 @@ class SyncFragment : Fragment() {
             try {
                 startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG)
+                Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
                 Log.w("SyncFragment", "DAVx5 should be there but opening the Activity failed. \n$e")
             }
         }
