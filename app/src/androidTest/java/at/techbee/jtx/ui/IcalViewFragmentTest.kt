@@ -46,12 +46,6 @@ class IcalViewFragmentTest {
         //contact = "patrick@techbee.at"
         dtstart = sampleDate
     }
-    private val sampleJournal2 = ICalObject.createJournal().apply {
-        collectionId = 1L
-        summary = "Journal4TestExtended"
-        description = "Description4JournalTestExtended"
-        dtstart = sampleDate
-    }
     private val sampleNote = ICalObject.createNote("Note4Test").apply {
         collectionId = 1L
         description = "Description4NoteTest"
