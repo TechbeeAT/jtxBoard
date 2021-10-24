@@ -15,6 +15,7 @@ import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Attendee
+import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Comment
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -65,12 +66,13 @@ class IcalViewFragmentTest {
         dtstart = sampleDate
     }
 
-    /*
-    database.insertAttendee(Attendee(caladdress = "${UUID.randomUUID()}@test.de", icalObjectId = newEntry))
-    database.insertCategory(Category(text = UUID.randomUUID().toString(), icalObjectId = newEntry))
-    database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
+    private val sampleAttendee = Attendee(icalObjectId = sampleJournal.id, caladdress = "contact@techbee.at")
+    private val sampleAttachment = Attachment(icalObjectId = sampleJournal.id, uri = "https://techbee.at", filename = "test.pdf")
+    private val sampleComment = Comment(icalObjectId = sampleJournal.id, text = "my comment")
+    private val sampleCategory1 = Category(text = "cat1")
+    private val sampleCategory2 = Category(text = "cat2")
 
-    database.insertComment(Comment(text = "comment", icalObjectId = newEntry))
+    /*
     database.insertOrganizer(Organizer(caladdress = "organizer", icalObjectId = newEntry))
      */
 
@@ -89,14 +91,18 @@ class IcalViewFragmentTest {
             sampleJournal.id = database.insertICalObjectSync(sampleJournal)
             sampleNote.id = database.insertICalObjectSync(sampleNote)
             sampleTodo.id = database.insertICalObjectSync(sampleTodo)
-            sampleJournal2.id = database.insertICalObjectSync(sampleJournal2)
 
-            //Attendees
-            database.insertAttendee(Attendee(icalObjectId = sampleJournal2.id, caladdress = "contact@techbee.at"))
-            //Attachments
-            database.insertAttachment(Attachment(icalObjectId = sampleJournal2.id, uri = "https://techbee.at"))
-            //Comments
-            database.insertComment(Comment(icalObjectId = sampleJournal2.id, text = "my comment"))
+            sampleAttendee.icalObjectId = sampleJournal.id
+            sampleAttachment.icalObjectId = sampleJournal.id
+            sampleComment.icalObjectId = sampleJournal.id
+            sampleCategory1.icalObjectId = sampleJournal.id
+            sampleCategory2.icalObjectId = sampleJournal.id
+
+            database.insertAttendeeSync(sampleAttendee)
+            database.insertAttachmentSync(sampleAttachment)
+            database.insertCommentSync(sampleComment)
+            database.insertCategorySync(sampleCategory1)
+            database.insertCategorySync(sampleCategory2)
         }
     }
 
@@ -118,8 +124,8 @@ class IcalViewFragmentTest {
         val collectionString = sampleCollection.displayName + " (" + sampleCollection.accountName + ")"
         onView(allOf(withId(R.id.view_collection), withText(collectionString))).check(matches(isDisplayed()))
         //onView(withText(sampleCollection.displayName)).check(matches(isDisplayed()))
-        onView(withText(sampleJournal.summary)).check(matches(isDisplayed()))
-        onView(withText(sampleJournal.description)).check(matches(isDisplayed()))
+        onView(allOf(withId(R.id.view_summary),withText(sampleJournal.summary))).check(matches(isDisplayed()))
+        onView(allOf(withId(R.id.view_description),withText(sampleJournal.description))).check(matches(isDisplayed()))
 
         val expectedDay = convertLongToDayString(sampleJournal.dtstart)
         val expectedMonth = convertLongToMonthString(sampleJournal.dtstart)
@@ -142,6 +148,18 @@ class IcalViewFragmentTest {
         onView(withText(R.string.view_feedback_linked_notes)).check(matches(isDisplayed()))
         onView(withId(R.id.view_classification_chip)).check(matches(isDisplayed()))
         onView(withId(R.id.view_status_chip)).check(matches(isDisplayed()))
+
+        onView(withText(sampleCategory1.text)).check(matches(isDisplayed()))
+        onView(withText(sampleCategory2.text)).check(matches(isDisplayed()))
+
+        onView(withText(R.string.view_attendees_header)).check(matches(isDisplayed()))
+        onView(withText(sampleAttendee.caladdress)).check(matches(isDisplayed()))
+
+        onView(withText(R.string.view_comments_header)).check(matches(isDisplayed()))
+        onView(withText(sampleComment.text)).check(matches(isDisplayed()))
+
+        onView(withText(R.string.view_attachments_header)).check(matches(isDisplayed()))
+        onView(withText(sampleAttachment.filename)).check(matches(isDisplayed()))
     }
 
     @Test
