@@ -43,6 +43,7 @@ class IcalViewFragmentTest {
         collectionId = 1L
         summary = "Journal4Test"
         description = "Description4JournalTest"
+        //contact = "patrick@techbee.at"
         dtstart = sampleDate
     }
     private val sampleJournal2 = ICalObject.createJournal().apply {
@@ -69,10 +70,8 @@ class IcalViewFragmentTest {
     private val sampleCategory1 = Category(text = "cat1")
     private val sampleCategory2 = Category(text = "cat2")
     private val sampleOrganizer = Organizer(caladdress = "orga")
+    private val sampleResource = Resource(text = "Projector")
 
-    /*
-    database.insertOrganizer(Organizer(caladdress = "organizer", icalObjectId = newEntry))
-     */
 
     @ExperimentalCoroutinesApi
     @Before
@@ -96,6 +95,7 @@ class IcalViewFragmentTest {
             sampleCategory1.icalObjectId = sampleJournal.id
             sampleCategory2.icalObjectId = sampleJournal.id
             sampleOrganizer.icalObjectId = sampleJournal.id
+            sampleResource.icalObjectId = sampleJournal.id
 
             database.insertAttendeeSync(sampleAttendee)
             database.insertAttachmentSync(sampleAttachment)
@@ -103,6 +103,7 @@ class IcalViewFragmentTest {
             database.insertCategorySync(sampleCategory1)
             database.insertCategorySync(sampleCategory2)
             database.insertOrganizerSync(sampleOrganizer)
+            database.insertResourceSync(sampleResource)
         }
     }
 
@@ -163,6 +164,10 @@ class IcalViewFragmentTest {
 
         onView(withText(R.string.view_organizer_header)).check(matches(isDisplayed()))
         onView(withText(sampleOrganizer.caladdress)).check(matches(isDisplayed()))
+
+        //onView(withText(R.string.view_contact_header)).check(matches(isDisplayed()))
+        //onView(withText(sampleJournal.contact)).check(matches(isDisplayed()))
+
     }
 
     @Test
