@@ -101,7 +101,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:autoLink="web"
-                android:text="https://jtx.techbee.at/app/contribute"
+                android:text="https://jtx.techbee.at/app/donate"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:textStyle="bold"
