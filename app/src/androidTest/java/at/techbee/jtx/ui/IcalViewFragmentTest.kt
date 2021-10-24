@@ -13,10 +13,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.*
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.properties.Attendee
-import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.properties.Comment
+import at.techbee.jtx.database.properties.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
@@ -71,6 +68,7 @@ class IcalViewFragmentTest {
     private val sampleComment = Comment(icalObjectId = sampleJournal.id, text = "my comment")
     private val sampleCategory1 = Category(text = "cat1")
     private val sampleCategory2 = Category(text = "cat2")
+    private val sampleOrganizer = Organizer(caladdress = "orga")
 
     /*
     database.insertOrganizer(Organizer(caladdress = "organizer", icalObjectId = newEntry))
@@ -97,12 +95,14 @@ class IcalViewFragmentTest {
             sampleComment.icalObjectId = sampleJournal.id
             sampleCategory1.icalObjectId = sampleJournal.id
             sampleCategory2.icalObjectId = sampleJournal.id
+            sampleOrganizer.icalObjectId = sampleJournal.id
 
             database.insertAttendeeSync(sampleAttendee)
             database.insertAttachmentSync(sampleAttachment)
             database.insertCommentSync(sampleComment)
             database.insertCategorySync(sampleCategory1)
             database.insertCategorySync(sampleCategory2)
+            database.insertOrganizerSync(sampleOrganizer)
         }
     }
 
@@ -160,6 +160,9 @@ class IcalViewFragmentTest {
 
         onView(withText(R.string.view_attachments_header)).check(matches(isDisplayed()))
         onView(withText(sampleAttachment.filename)).check(matches(isDisplayed()))
+
+        onView(withText(R.string.view_organizer_header)).check(matches(isDisplayed()))
+        onView(withText(sampleOrganizer.caladdress)).check(matches(isDisplayed()))
     }
 
     @Test
