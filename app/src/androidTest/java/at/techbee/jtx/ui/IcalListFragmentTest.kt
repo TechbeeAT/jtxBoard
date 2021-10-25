@@ -45,15 +45,6 @@ class IcalListFragmentTest {
     private val sampleNote = ICalObject(collectionId = 1L, module = Module.NOTE.name, component = Component.VJOURNAL.name, summary = "Note4Test", description = "Description4NoteTest", dtstart = sampleDate)
     private val sampleTodo = ICalObject(collectionId = 1L, module = Module.TODO.name, component = Component.VTODO.name, summary = "Todo4Test", description = "Description4TodoTest", dtstart = sampleDate)
 
-    /*
-    database.insertAttendee(Attendee(caladdress = "${UUID.randomUUID()}@test.de", icalObjectId = newEntry))
-    database.insertCategory(Category(text = UUID.randomUUID().toString(), icalObjectId = newEntry))
-    database.insertCategory(Category(text = "cat", icalObjectId = newEntry))
-
-    database.insertComment(Comment(text = "comment", icalObjectId = newEntry))
-    database.insertOrganizer(Organizer(caladdress = "organizer", icalObjectId = newEntry))
-     */
-
 
     @Before
     fun setup() {
@@ -89,10 +80,6 @@ class IcalListFragmentTest {
             database.insertComment(Comment(icalObjectId = noteId, text = "my comment"))
             database.insertComment(Comment(icalObjectId = taskId, text = "my comment"))
 
-
-
-
-            //ICalDatabase.getInstance(context).populateTestData()
         }
     }
 
@@ -106,8 +93,7 @@ class IcalListFragmentTest {
     @Test
     fun journal_is_displayed()  {
 
-        //val fragmentArgs = Bundle()
-        val scenario = launchFragmentInContainer<IcalListFragment>(Bundle(), R.style.AppTheme, Lifecycle.State.RESUMED)
+        launchFragmentInContainer<IcalListFragment>(Bundle(), R.style.AppTheme, Lifecycle.State.RESUMED)
         onView(withText(R.string.list_tabitem_journals)).perform(click())
         onView(withText(sampleJournal.summary)).check(matches(isDisplayed()))
         onView(withText(sampleJournal.description)).check(matches(isDisplayed()))
@@ -129,8 +115,7 @@ class IcalListFragmentTest {
     @Test
     fun note_is_displayed()  {
 
-        //val fragmentArgs = Bundle()
-        val scenario = launchFragmentInContainer<IcalListFragment>(Bundle(), R.style.AppTheme, Lifecycle.State.RESUMED)
+        launchFragmentInContainer<IcalListFragment>(Bundle(), R.style.AppTheme, Lifecycle.State.RESUMED)
         onView(withText(R.string.list_tabitem_notes)).perform(click())
         onView(withText(sampleNote.summary)).check(matches(isDisplayed()))
         onView(withText(sampleNote.description)).check(matches(isDisplayed()))
@@ -142,22 +127,12 @@ class IcalListFragmentTest {
 
         onView(withId(R.id.list_item_status)).check(matches(withEffectiveVisibility(Visibility.GONE)))
         onView(withId(R.id.list_item_classification)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        /*
-        onView(withId(R.id.list_item_num_attendees_icon)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_num_attendees_text)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_num_attachments_icon)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_num_attachments_text)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_num_comments_icon)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_num_comments_text)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-
-         */
     }
 
     @Test
     fun task_is_displayed()  {
 
-        //val fragmentArgs = Bundle()
-        val scenario = launchFragmentInContainer<IcalListFragment>(Bundle(), R.style.AppTheme, Lifecycle.State.RESUMED)
+        launchFragmentInContainer<IcalListFragment>(Bundle(), R.style.AppTheme, Lifecycle.State.RESUMED)
         onView(withText(R.string.list_tabitem_todos)).perform(click())
         onView(withText(sampleTodo.summary)).check(matches(isDisplayed()))
         onView(withText(sampleTodo.description)).check(matches(isDisplayed()))
@@ -165,6 +140,5 @@ class IcalListFragmentTest {
         onView(withId(R.id.list_item_progress_checkbox)).check(matches(isDisplayed()))
         onView(withId(R.id.list_item_progress_slider)).check(matches(isDisplayed()))
         onView(withId(R.id.list_item_progress_percent)).check(matches(isDisplayed()))
-
     }
 }

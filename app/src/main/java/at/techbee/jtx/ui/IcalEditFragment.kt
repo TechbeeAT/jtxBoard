@@ -81,12 +81,12 @@ import java.util.*
 
 class IcalEditFragment : Fragment() {
 
-    private lateinit var binding: FragmentIcalEditBinding
+    lateinit var binding: FragmentIcalEditBinding
 
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
     private lateinit var viewModelFactory: IcalEditViewModelFactory
-    private lateinit var icalEditViewModel: IcalEditViewModel
+    lateinit var icalEditViewModel: IcalEditViewModel
     private lateinit var inflater: LayoutInflater
     private var container: ViewGroup? = null
 
