@@ -4,22 +4,27 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.fragment.app.testing.withFragment
 import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
+import com.google.android.material.slider.Slider
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
@@ -37,24 +42,34 @@ class IcalViewFragmentTest {
     private val testDispatcher = TestCoroutineDispatcher()
     private val testScope = TestCoroutineScope(testDispatcher)
 
+    @get: Rule
+    var testRule = activityScenarioRule<MainActivity>()
+
     private val sampleDate = 1632636027826L     //  Sun Sep 26 2021 06:00:27
     private val sampleCollection = ICalCollection(collectionId = 1L, displayName = "testcollection automated tests")
     private val sampleJournal = ICalObject.createJournal().apply {
-        collectionId = 1L
+        collectionId = sampleCollection.collectionId
         summary = "Journal4Test"
         description = "Description4JournalTest"
         //contact = "patrick@techbee.at"
         dtstart = sampleDate
     }
     private val sampleNote = ICalObject.createNote("Note4Test").apply {
-        collectionId = 1L
+        collectionId = sampleCollection.collectionId
         description = "Description4NoteTest"
         dtstart = sampleDate
     }
     private val sampleTodo = ICalObject.createTodo().apply {
-        collectionId = 1L
+        collectionId = sampleCollection.collectionId
         summary = "Todo4Test"
         description = "Description4TodoTest"
+        dtstart = sampleDate
+    }
+
+    private val sampleSubtask = ICalObject.createTodo().apply {
+        collectionId = sampleCollection.collectionId
+        summary = "Subtask"
+        description = "Subtask Description"
         dtstart = sampleDate
     }
 
@@ -98,6 +113,9 @@ class IcalViewFragmentTest {
             database.insertCategorySync(sampleCategory2)
             database.insertOrganizerSync(sampleOrganizer)
             database.insertResourceSync(sampleResource)
+
+            sampleSubtask.id = database.insertICalObjectSync(sampleSubtask)
+            database.insertRelatedtoSync(Relatedto(icalObjectId = sampleTodo.id, linkedICalObjectId = sampleSubtask.id, reltype = Reltype.CHILD.name, text = sampleSubtask.uid))
         }
     }
 
@@ -183,15 +201,94 @@ class IcalViewFragmentTest {
 
         val fragmentArgs = Bundle()
         fragmentArgs.putLong("item2show", sampleTodo.id)
-        //val scenario =
-        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+        val scenario = launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
         onView(withText(sampleTodo.summary)).check(matches(isDisplayed()))
         onView(withText(sampleTodo.description)).check(matches(isDisplayed()))
         onView(withId(R.id.view_progress_checkbox)).check(matches(isDisplayed()))
         onView(withId(R.id.view_progress_label)).check(matches(isDisplayed()))
         onView(withId(R.id.view_progress_percent)).check(matches(isDisplayed()))
         onView(withId(R.id.view_progress_slider)).check(matches(isDisplayed()))
+        onView(withText(R.string.todo_status_needsaction)).check(matches(isDisplayed()))
+        onView(withText(R.string.classification_public)).check(matches(isDisplayed()))
+
+        val priorities = context.resources.getStringArray(R.array.priority)
+        onView(withText(priorities[0])).check(matches(isDisplayed()))
+
+
+        onView(withText(sampleSubtask.summary)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_subtask_progress_checkbox)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_subtask_progress_percent)).check(matches(withText("0 %")))
+
+        onView(withId(R.id.view_subtask_progress_slider)).check(matches(isDisplayed()))
+        scenario.withFragment {
+            val slider = this.activity?.findViewById<Slider>(R.id.view_subtask_progress_slider)
+            assertEquals(0F, slider?.value)
+        }
     }
 
+    @Test
+    fun task_update_progress_to_in_process()  {
+
+        val fragmentArgs = Bundle()
+        fragmentArgs.putLong("item2show", sampleTodo.id)
+        val scenario = launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+        onView(withText(sampleTodo.summary)).check(matches(isDisplayed()))
+        onView(withText(sampleTodo.description)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_checkbox)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_label)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_percent)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_slider)).check(matches(isDisplayed()))
+        onView(withText(R.string.todo_status_needsaction)).check(matches(isDisplayed()))
+
+        scenario.withFragment {
+            this.binding.viewProgressSlider.value = 50F
+            //the update would be done by the touch listener, this is a bit problematic in espresso, no proper solution was found yet, so we call the method of the listener manually:
+            this.icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, binding.viewProgressSlider.value.toInt())
+
+            // wait for update to be done or until timeout is reached
+            val timeout = 2000
+            var timer = 0
+            while (icalViewViewModel.icalEntity.value!!.property.percent!! != 50 || timer < timeout) {
+                timer += 50
+                Thread.sleep(50)
+            }
+        }
+
+        onView(withId(R.id.view_progress_percent)).check(matches(withText("50 %")))
+        onView(withText(R.string.todo_status_inprocess)).check(matches(isDisplayed()))
+    }
+
+
+    @Test
+    fun task_update_progress_to_completed()  {
+
+        val fragmentArgs = Bundle()
+        fragmentArgs.putLong("item2show", sampleTodo.id)
+        val scenario = launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+        onView(withText(sampleTodo.summary)).check(matches(isDisplayed()))
+        onView(withText(sampleTodo.description)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_checkbox)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_label)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_percent)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_progress_slider)).check(matches(isDisplayed()))
+        onView(withText(R.string.todo_status_needsaction)).check(matches(isDisplayed()))
+
+        scenario.withFragment {
+            this.binding.viewProgressSlider.value = 100F
+            //the update would be done by the touch listener, this is a bit problematic in espresso, no proper solution was found yet, so we call the method of the listener manually:
+            this.icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, binding.viewProgressSlider.value.toInt())
+
+            // wait for update to be done or until timeout is reached
+            val timeout = 2000
+            var timer = 0
+            while (icalViewViewModel.icalEntity.value!!.property.percent!! != 100 || timer < timeout) {
+                timer += 50
+                Thread.sleep(50)
+            }
+        }
+
+        onView(withId(R.id.view_progress_percent)).check(matches(withText("100 %")))
+        onView(withText(R.string.todo_status_completed)).check(matches(isDisplayed()))
+    }
 
 }
