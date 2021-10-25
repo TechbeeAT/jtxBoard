@@ -1263,7 +1263,7 @@ class IcalEditFragment : Fragment() {
             MaterialTimePicker.Builder()
                 .setHour(dtstartTime.get(Calendar.HOUR))
                 .setMinute(dtstartTime.get(Calendar.MINUTE))
-                .setTitleText("Select time")
+                .setTitleText(R.string.edit_datepicker_dialog_select_time)
                 .build()
 
         timePicker.addOnPositiveButtonClickListener {
@@ -1324,7 +1324,7 @@ class IcalEditFragment : Fragment() {
 
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select date")
+                .setTitleText(R.string.edit_datepicker_dialog_select_date)
                 .setSelection(fieldValue)
                 .build()
 
