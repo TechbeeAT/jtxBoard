@@ -22,7 +22,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
 import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.Matchers
+import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -299,8 +299,7 @@ class IcalViewFragmentTest {
 
         val fragmentArgs = Bundle()
         fragmentArgs.putLong("item2show", sampleJournal.id)
-        val scenario = launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme_Base, Lifecycle.State.RESUMED)
-        scenario.recreate()
+        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
         val noteText = "TestText"
 
@@ -310,5 +309,44 @@ class IcalViewFragmentTest {
         onView (withId(R.id.view_view_addnote_dialog_edittext)).perform(typeText(noteText))
         onView (withText(R.string.save)).perform(click())
         onView (withText(noteText)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun journal_add_audio_note() {
+
+        val fragmentArgs = Bundle()
+        fragmentArgs.putLong("item2show", sampleNote.id)
+        launchFragmentInContainer<IcalViewFragment>(
+            fragmentArgs,
+            R.style.AppTheme,
+            Lifecycle.State.RESUMED
+        )
+
+        onView(
+            allOf(
+                withId(R.id.view_add_audio_note),
+                withText(R.string.view_add_audio_note)
+            )
+        ).check(matches(isDisplayed()))
+        onView(withId(R.id.view_add_audio_note)).perform(scrollTo(), click())
+
+        onView(withId(R.id.view_audio_dialog_startrecording_fab)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_audio_dialog_startplaying_fab)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_audio_dialog_progressbar)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.view_audio_dialog_startrecording_fab)).check(matches(isEnabled()))
+        onView(withId(R.id.view_audio_dialog_startplaying_fab)).check(matches(not(isEnabled())))   // initially the playback button must be disabled
+
+        onView(withId(R.id.view_audio_dialog_startrecording_fab)).perform(click())  // start recording
+        Thread.sleep(100)
+        onView(withId(R.id.view_audio_dialog_startrecording_fab)).perform(click())  // stop recording
+
+        onView(withId(R.id.view_audio_dialog_startplaying_fab)).check(matches(isEnabled()))  // fab should be enabled now
+        //onView(withId(R.id.view_audio_dialog_startplaying_fab)).perform(click())  // start playback
+        //Thread.sleep(200)
+        // TODO: Find a way to check if the slider value got updated correctly on playback
+
+        onView (withText(R.string.save)).perform(click())
+        onView (withId(R.id.view_comment_playbutton)).check(matches(isDisplayed()))
     }
 }
