@@ -142,6 +142,7 @@
     <string name="view_dialog_sure_to_delete_message">Are you sure you want to delete \"%1$s\"?</string>
     <string name="view_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
     <string name="view_dialog_add_note">Add note</string>
+    <string name="view_dialog_add_note_dialog_hint">Add your note here</string>
     <string name="view_toast_entry_does_not_exist_anymore">The requested entry does not exist (anymore).</string>
     <string name="view_start_text">Start: %1$s</string>
     <string name="view_due_text">Due: %1$s</string>

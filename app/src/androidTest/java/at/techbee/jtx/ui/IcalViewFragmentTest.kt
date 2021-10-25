@@ -7,6 +7,7 @@ import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.fragment.app.testing.withFragment
 import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.activityScenarioRule
@@ -21,6 +22,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -291,4 +293,22 @@ class IcalViewFragmentTest {
         onView(withText(R.string.todo_status_completed)).check(matches(isDisplayed()))
     }
 
+
+    @Test
+    fun journal_add_note() {
+
+        val fragmentArgs = Bundle()
+        fragmentArgs.putLong("item2show", sampleJournal.id)
+        val scenario = launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme_Base, Lifecycle.State.RESUMED)
+        scenario.recreate()
+
+        val noteText = "TestText"
+
+        onView(allOf(withId(R.id.view_add_note), withText(R.string.view_add_note))).check(matches(isDisplayed()))
+        onView(allOf(withId(R.id.view_add_audio_note), withText(R.string.view_add_audio_note))).check(matches(isDisplayed()))
+        onView(withId(R.id.view_add_note)).perform(scrollTo(), click())
+        onView (withId(R.id.view_view_addnote_dialog_edittext)).perform(typeText(noteText))
+        onView (withText(R.string.save)).perform(click())
+        onView (withText(noteText)).check(matches(isDisplayed()))
+    }
 }

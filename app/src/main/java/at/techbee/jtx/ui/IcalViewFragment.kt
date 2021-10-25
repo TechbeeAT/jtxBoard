@@ -21,7 +21,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.InputType
 import android.util.Log
 import android.util.Size
 import android.view.*
@@ -44,7 +43,6 @@ import at.techbee.jtx.databinding.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
-import com.google.android.material.textfield.TextInputEditText
 import java.io.*
 import java.lang.ClassCastException
 
@@ -121,8 +119,6 @@ class IcalViewFragment : Fragment() {
 
         binding.model = icalViewViewModel
         binding.lifecycleOwner = this
-
-
 
 
         // set up observers
@@ -371,18 +367,15 @@ class IcalViewFragment : Fragment() {
 
         binding.viewAddNote.setOnClickListener {
 
-            val newNote = TextInputEditText(requireContext())
-            newNote.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-            newNote.isSingleLine = false
-            newNote.maxLines = 8
+            val addnoteDialogBinding = FragmentIcalViewAddnoteDialogBinding.inflate(inflater)
 
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.view_dialog_add_note)
             builder.setIcon(R.drawable.ic_comment_add)
-            builder.setView(newNote)
+            builder.setView(addnoteDialogBinding.root)
 
             builder.setPositiveButton("Save") { _, _ ->
-                icalViewViewModel.insertRelated(newNote.text.toString(), null)
+                icalViewViewModel.insertRelated(addnoteDialogBinding.viewViewAddnoteDialogEdittext.text.toString(), null)
             }
 
             builder.setNegativeButton("Cancel") { _, _ ->
@@ -410,6 +403,7 @@ class IcalViewFragment : Fragment() {
                     .show()
             } else {
                 builder.show()
+                addnoteDialogBinding.viewViewAddnoteDialogEdittext.requestFocus()
             }
         }
 
