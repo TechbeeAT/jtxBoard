@@ -67,7 +67,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4426141011962540~6112820234"/>
+            android:value="ca-app-pub-4426141011962540~8189162465"/>
 
         <!-- Delay app measurement until MobileAds.initialize() is called. -->
         <meta-data

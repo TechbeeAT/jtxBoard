@@ -31,7 +31,6 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.SettingsFragment
 import com.google.android.gms.ads.*
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.gms.ads.rewarded.RewardItem
 import net.fortuna.ical4j.util.MapTimeZoneCache
@@ -92,36 +91,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     override fun onResume() {
         super.onResume()
 
-        // if trial period ended, then check if ads are accepted, if the
-        // app was bought, then skip the Dialog, otherwise show the dialog to let the user choose
-        // This code is put in onResume as the Ad might need to be loaded once isAdShowtime returns true
-        val adsAccepted = settings!!.getBoolean(SettingsFragment.ACCEPT_ADS, false)
-        if (AdLoader.isAdShowtime(this) && !adsAccepted) {
-
-            // TODO: Check if the user already bought the app. If yes, skip the Dialog Box
-
-            //MaterialAlertDialogBuilder(applicationContext, R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog_Centered)
-            MaterialAlertDialogBuilder(this)
-                .setTitle(resources.getString(R.string.list_dialog_contribution_title))
-                .setMessage(resources.getString(R.string.list_dialog_contribution_message))
-                .setNegativeButton(resources.getString(R.string.list_dialog_contribution_buyadfree)) { _, _ ->
-                    // Respond to negative button press
-                    settings!!.edit().putBoolean(SettingsFragment.ACCEPT_ADS, false).apply()
-                    Toast.makeText(this, "Start the Intent for the play store", Toast.LENGTH_LONG).show()
-                    //TODO: open in app-buying for ad-free option
-                }
-                .setPositiveButton(resources.getString(R.string.list_dialog_contribution_acceptads)) { _, _ ->
-                    // Respond to positive button press
-                    // Ads are accepted, load user consent
-                    settings!!.edit().putBoolean(SettingsFragment.ACCEPT_ADS, true).apply()
-                    AdLoader.initializeUserConsent(this, applicationContext)
-                }
-                .show()
-        }
-        else if (AdLoader.isAdShowtime(this) && adsAccepted) {
-            AdLoader.initializeUserConsent(this, applicationContext)
-            Log.d("Ads accepted", "Ads accepted, loading consent form if necessary")
-        }
+        AdLoader.initializeUserConsent(this, applicationContext)
 
         // handle the intents for the shortcuts
         when (intent.action) {
@@ -194,6 +164,11 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                     //if (BuildConfig.FLAVOR != App.FLAVOR_GOOGLE_PLAY)
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_donateFragment)
+
+                R.id.nav_adinfo ->
+                    //if (BuildConfig.FLAVOR != App.FLAVOR_GOOGLE_PLAY)
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_adInfoFragment)
 
                 R.id.nav_app_settings ->
                     findNavController(R.id.nav_host_fragment)

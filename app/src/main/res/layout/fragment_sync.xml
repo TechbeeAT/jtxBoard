@@ -25,11 +25,11 @@
 
         <TextView
             android:id="@+id/sync_basic_info"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:text="@string/sync_with_davx5_heading"
             android:textAlignment="center"
             android:textSize="20sp"
@@ -41,11 +41,11 @@
 
         <TextView
             android:id="@+id/sync_basic_info_text"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:text="@string/sync_basic_info"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,11 +55,11 @@
 
         <TextView
             android:id="@+id/sync_congratulations"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:text="@string/sync_congratulations"
             android:textAlignment="center"
             android:textSize="20sp"
@@ -70,11 +70,11 @@
 
         <TextView
             android:id="@+id/sync_congratulations_text_no_collections"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:autoLink="web"
             android:text="@string/sync_davx5_installed_but_no_collections_found"
             android:textAlignment="center"
@@ -85,11 +85,11 @@
 
         <TextView
             android:id="@+id/sync_congratulations_text_with_collections"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:autoLink="web"
             android:text="@string/sync_davx5_installed_with_collections_found"
             android:textAlignment="center"
@@ -100,11 +100,11 @@
 
         <TextView
             android:id="@+id/sync_congratulations_synched_collections"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:autoLink="web"
             android:text=""
             android:textAlignment="center"
@@ -128,11 +128,11 @@
 
         <TextView
             android:id="@+id/sync_please_install"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:text="@string/sync_check_out_davx5"
             android:textAlignment="center"
             android:textSize="20sp"
@@ -143,11 +143,11 @@
 
         <TextView
             android:id="@+id/sync_please_install_text"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:autoLink="web"
             android:text="@string/sync_davx5_not_found"
             android:textAlignment="center"
@@ -173,11 +173,11 @@
 
         <TextView
             android:id="@+id/sync_further_info_davx5"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:autoLink="web"
             android:text="@string/sync_furhter_info_davx5"

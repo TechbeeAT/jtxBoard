@@ -35,6 +35,11 @@
         android:icon="@drawable/ic_money"
         android:title="@string/navigation_drawer_donate" />
 
+    <item
+        android:id="@+id/nav_adinfo"
+        android:icon="@drawable/ic_adinfo"
+        android:title="@string/navigation_drawer_adinfo" />
+
 
 <item
     android:id="@+id/nav_beta_feedback"

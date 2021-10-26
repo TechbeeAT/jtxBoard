@@ -24,9 +24,9 @@ class AdLoader {
          */
 
         private const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/5354046379"  // TEST
-        //const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL = "ca-app-pub-4426141011962540/9907445574"    // PROD
+        //const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL = "ca-app-pub-4426141011962540/2723893422"    // PROD
 
-        private var consentInformation: ConsentInformation? = null
+        var consentInformation: ConsentInformation? = null
         private var consentForm: ConsentForm? = null
         //var mInterstitialAd: InterstitialAd? = null
         var rewardedInterstitialAd: RewardedInterstitialAd? = null
@@ -199,7 +199,6 @@ class AdLoader {
         }
 
 
-
         fun initializeUserConsent(activity: Activity, context: Context) {
 
             val debugSettings = ConsentDebugSettings.Builder(context)
@@ -234,7 +233,6 @@ class AdLoader {
 
         private fun loadForm(activity: Activity, context: Context, consentInformation: ConsentInformation) {
 
-            //consentInformation.reset()
             if (consentInformation.consentStatus == ConsentInformation.ConsentStatus.REQUIRED || consentInformation.consentStatus == ConsentInformation.ConsentStatus.UNKNOWN) {
 
                 UserMessagingPlatform.loadConsentForm(
@@ -250,7 +248,7 @@ class AdLoader {
                     }
                 ) {
                     // Handle the error
-                    Log.d("consentForm", "Failed loading consent form")
+                    //Log.d("consentForm", "Failed loading consent form")
                     Log.d("consentForm", it.message)
                 }
             } else {
@@ -260,22 +258,10 @@ class AdLoader {
 
         fun resetUserConsent(activity: Activity, context: Context) {
 
-            // just show the message, the consentInformation is already loaded
-            UserMessagingPlatform.loadConsentForm(
-                context,
-                { consentForm ->
-                    consentForm.show(activity) {
-                        //Handle dismissal by reloading form
-                        loadForm(activity, context, consentInformation!!)
-                    }
-                    Companion.consentForm = consentForm
-                }
-            ) {
-                // Handle the error
-                Log.d("consentForm", "Failed loading consent form")
-                Log.d("consentForm", it.message)
+            consentForm?.show(activity) {
+                //Handle dismissal by reloading form
+                loadForm(activity, context, consentInformation!!)
             }
-
         }
     }
 }
