@@ -581,6 +581,137 @@ class IcalEditFragmentTest {
         }
     }
 
-    //TODO: Add Test for Recurrence
+    @Test
+    fun journal_check_recurrence() {
 
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleJournalEntity)
+        }
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+
+        //switch tab
+        scenario.onFragment {
+            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_RECURRING))
+        }
+
+        onView(withText(R.string.edit_recurrence_header)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_switch)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.edit_recur_every_x)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_every_x_numberPicker)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_days_months_spinner)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_weekday)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_weekly_on_chipgroup_weekdays)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month_numberPicker)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_x_day_of_the_month)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_until_x_occurences_picker)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_until_occurences)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_last_occurence)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_last_occurence_item)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_all_occurences)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(not(isDisplayed())))
+
+        onView(withId(R.id.edit_recur_switch)).perform(click())
+
+        // spinner is set to day, check visibilities
+        onView(withId(R.id.edit_recur_every_x)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_every_x_numberPicker)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_days_months_spinner)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_on_weekday)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_weekly_on_chipgroup_weekdays)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month_numberPicker)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_x_day_of_the_month)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_until_x_occurences_picker)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_until_occurences)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_last_occurence)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_last_occurence_item)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_all_occurences)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(isDisplayed()))
+
+        val recurOptions = context.resources.getStringArray(R.array.edit_recur_day_week_month_year)
+        val recurWeek = recurOptions[1]
+        val recurMonth = recurOptions[2]
+        val recurYear = recurOptions[3]
+
+        // switch the spinner to Week
+        onView(withId(R.id.edit_recur_days_months_spinner)).perform(click())
+        onView(withText(recurWeek)).perform(click())
+
+        // spinner is set to week, check visibilities
+        onView(withId(R.id.edit_recur_every_x)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_every_x_numberPicker)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_days_months_spinner)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_on_weekday)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_weekly_on_chipgroup_weekdays)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month_numberPicker)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_x_day_of_the_month)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_until_x_occurences_picker)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_until_occurences)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_last_occurence)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_last_occurence_item)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_all_occurences)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(isDisplayed()))
+
+        // switch the spinner to month
+        onView(withId(R.id.edit_recur_days_months_spinner)).perform(click())
+        onView(withText(recurMonth)).perform(click())
+
+        // spinner is set to month, check visibilities
+        onView(withId(R.id.edit_recur_every_x)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_every_x_numberPicker)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_days_months_spinner)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_on_weekday)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_weekly_on_chipgroup_weekdays)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month_numberPicker)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_x_day_of_the_month)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_until_x_occurences_picker)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_until_occurences)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_last_occurence)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_last_occurence_item)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_all_occurences)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(isDisplayed()))
+
+        // switch the spinner to year
+        onView(withId(R.id.edit_recur_days_months_spinner)).perform(click())
+        onView(withText(recurYear)).perform(click())
+
+        // spinner is set to year, check visibilities
+        onView(withId(R.id.edit_recur_every_x)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_every_x_numberPicker)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_days_months_spinner)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_on_weekday)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_weekly_on_chipgroup_weekdays)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month_numberPicker)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_x_day_of_the_month)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_until_x_occurences_picker)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_until_occurences)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_last_occurence)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_last_occurence_item)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_all_occurences)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(isDisplayed()))
+
+
+        // turn switch off again and check if empty like initially
+        onView(withId(R.id.edit_recur_switch)).perform(click())
+
+        onView(withId(R.id.edit_recur_every_x)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_every_x_numberPicker)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_days_months_spinner)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_weekday)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_weekly_on_chipgroup_weekdays)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_on_the_x_day_of_month_numberPicker)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_x_day_of_the_month)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_until_x_occurences_picker)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_until_occurences)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_last_occurence)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_last_occurence_item)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_all_occurences)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(not(isDisplayed())))
+    }
 }

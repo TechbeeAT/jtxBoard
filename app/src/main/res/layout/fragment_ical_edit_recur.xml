@@ -37,11 +37,11 @@
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/edit_recur_switch"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
-            android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
             android:checked="@={model.recurrenceChecked}"
+            android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_recur_header"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
