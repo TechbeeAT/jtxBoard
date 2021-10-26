@@ -361,12 +361,12 @@ class IcalEditFragmentTest {
         onView(withId(R.id.material_timepicker_ok_button)).perform(click())
 
         scenario.onFragment {
-            assertEquals(true, it.binding.editStartedDateEdittext?.text?.isNotEmpty())
-            assertEquals(true, it.binding.editStartedTimeEdittext?.text?.isNotEmpty())
-            assertEquals(true, it.binding.editDueDateEdittext?.text?.isNotEmpty())
-            assertEquals(true, it.binding.editDueTimeEdittext?.text?.isNotEmpty())
-            assertEquals(true, it.binding.editCompletedDateEdittext?.text?.isNotEmpty())
-            assertEquals(true, it.binding.editCompletedTimeEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment?.editStartedDateEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment?.editStartedTimeEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment?.editDueDateEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment?.editDueTimeEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment?.editCompletedDateEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment?.editCompletedTimeEdittext?.text?.isNotEmpty())
         }
     }
 
@@ -572,9 +572,9 @@ class IcalEditFragmentTest {
         onView(withText(R.string.save)).perform(click())
         onView(withText(attachmentLink)).check(matches(isDisplayed()))
 
-        scenario.onFragment {
+        scenario.onFragment { fragment ->
             assertNotNull(
-                it.icalEditViewModel.attachmentUpdated.find {
+                fragment.icalEditViewModel.attachmentUpdated.find {
                     it.uri == attachmentLink
                 }
             )
