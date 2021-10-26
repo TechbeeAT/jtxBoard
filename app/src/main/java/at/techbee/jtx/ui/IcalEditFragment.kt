@@ -1084,19 +1084,17 @@ class IcalEditFragment : Fragment() {
 
         binding.editFragmentIcalEditAttachment?.buttonAttachmentAddLink?.setOnClickListener {
 
-            val newLinkAttachmentEditText = TextInputEditText(requireContext())
-            newLinkAttachmentEditText.inputType = InputType.TYPE_TEXT_VARIATION_URI
-            newLinkAttachmentEditText.isSingleLine = true
+            val addlinkBindingDialog = FragmentIcalEditAttachmentAddlinkDialogBinding.inflate(inflater)
 
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.edit_attachment_add_link_dialog)
             builder.setIcon(R.drawable.ic_link)
-            builder.setView(newLinkAttachmentEditText)
+            builder.setView(addlinkBindingDialog.root)
             builder.setPositiveButton(R.string.save) { _, _ ->
 
-                if(isValidURL(newLinkAttachmentEditText.text.toString())) {
+                if(isValidURL(addlinkBindingDialog.editAttachmentAddDialogEdittext.text.toString())) {
 
-                    val uri = Uri.parse(newLinkAttachmentEditText.text.toString())
+                    val uri = Uri.parse(addlinkBindingDialog.editAttachmentAddDialogEdittext.text.toString())
 
                     if(uri != null) {
                         val filename = uri.lastPathSegment
@@ -1125,8 +1123,8 @@ class IcalEditFragment : Fragment() {
                 // Do nothing, just close the message
             }
 
+            addlinkBindingDialog.editAttachmentAddDialogEdittext.requestFocusFromTouch()
             builder.show()
-
         }
 
         binding.editSubtasksAdd.setEndIconOnClickListener {

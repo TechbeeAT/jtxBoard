@@ -331,32 +331,43 @@ class IcalEditFragmentTest {
         val fragmentArgs = Bundle().apply {
             putParcelable("icalentity", sampleTodoEntity)
         }
-        launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
-        onView(withId(R.id.edit_task_addStartedAndDueTime_switch)).perform(scrollTo(), click())
         // after click (to activate) all the time elements must be visible
+        onView(withId(R.id.edit_task_addStartedAndDueTime_switch)).perform(scrollTo(), click())
 
-        //TODO: Continue here to check if the timepickers are opening
-        /*
-        onView(withId(R.id.edit_started_date)).perform(scrollTo())
-        onView(withId(R.id.edit_started_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_started_time)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_startedtimezone_spinner)).perform(scrollTo())
-//        onView(withId(R.id.edit_startedtimezone_icon)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_startedtimezone_spinner)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_started_date)).perform(scrollTo(), click())
+        onView(withText(R.string.edit_datepicker_dialog_select_date)).check(matches(isDisplayed()))
+        onView(withId(R.id.confirm_button)).perform(click())
 
-        onView(withId(R.id.edit_due_date)).perform(scrollTo())
-        onView(withId(R.id.edit_due_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_due_time)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_duetimezone_spinner)).perform(scrollTo())
-//        onView(withId(R.id.edit_duetimezone_icon)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_duetimezone_spinner)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_started_time)).perform(scrollTo(), click())
+        onView(withText(R.string.edit_datepicker_dialog_select_time)).check(matches(isDisplayed()))
+        onView(withId(R.id.material_timepicker_ok_button)).perform(click())
 
-        onView(withId(R.id.edit_completed_date)).perform(scrollTo())
-        onView(withId(R.id.edit_completed_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_completed_time)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_due_date)).perform(scrollTo(), click())
+        onView(withText(R.string.edit_datepicker_dialog_select_date)).check(matches(isDisplayed()))
+        onView(withId(R.id.confirm_button)).perform(click())
 
-         */
+        onView(withId(R.id.edit_due_time)).perform(scrollTo(), click())
+        onView(withText(R.string.edit_datepicker_dialog_select_time)).check(matches(isDisplayed()))
+        onView(withId(R.id.material_timepicker_ok_button)).perform(click())
+
+        onView(withId(R.id.edit_completed_date)).perform(scrollTo(), click())
+        onView(withText(R.string.edit_datepicker_dialog_select_date)).check(matches(isDisplayed()))
+        onView(withId(R.id.confirm_button)).perform(click())
+
+        onView(withId(R.id.edit_completed_time)).perform(scrollTo(), click())
+        onView(withText(R.string.edit_datepicker_dialog_select_time)).check(matches(isDisplayed()))
+        onView(withId(R.id.material_timepicker_ok_button)).perform(click())
+
+        scenario.onFragment {
+            assertEquals(true, it.binding.editStartedDateEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editStartedTimeEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editDueDateEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editDueTimeEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editCompletedDateEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editCompletedTimeEdittext?.text?.isNotEmpty())
+        }
     }
 
 
@@ -541,178 +552,35 @@ class IcalEditFragmentTest {
         onView(withText(newSubtask)).check(matches(isDisplayed()))           // new resource should be visible as a chip
     }
 
-    //TODO: Add Test for Recurrence
-    //TODO: Add Test for Attachment
-    //TODO: Add Test for Note (if fields are correctly hidden)
-    //TODO: Add Test for Task (if fields are correctly displayed)
-
-
-    /*
     @Test
-    fun note_is_displayed()  {
+    fun journal_add_attachment_link() {
 
-        val fragmentArgs = Bundle()
-        fragmentArgs.putLong("item2show", sampleNote.id)
-        //val scenario =
-        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
-        onView(withText(sampleNote.summary)).check(matches(isDisplayed()))
-        onView(withText(sampleNote.description)).check(matches(isDisplayed()))
-
-        onView(withId(R.id.view_status_chip)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        onView(withId(R.id.view_classification_chip)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
-
-    @Test
-    fun task_is_displayed()  {
-
-        val fragmentArgs = Bundle()
-        fragmentArgs.putLong("item2show", sampleTodo.id)
-        val scenario = launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
-        onView(withText(sampleTodo.summary)).check(matches(isDisplayed()))
-        onView(withText(sampleTodo.description)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_checkbox)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_label)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_percent)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_slider)).check(matches(isDisplayed()))
-        onView(withText(R.string.todo_status_needsaction)).check(matches(isDisplayed()))
-        onView(withText(R.string.classification_public)).check(matches(isDisplayed()))
-
-        val priorities = context.resources.getStringArray(R.array.priority)
-        onView(withText(priorities[0])).check(matches(isDisplayed()))
-
-
-        onView(withText(sampleSubtask.summary)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_subtask_progress_checkbox)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_subtask_progress_percent)).check(matches(withText("0 %")))
-
-        onView(withId(R.id.view_subtask_progress_slider)).check(matches(isDisplayed()))
-        scenario.withFragment {
-            val slider = this.activity?.findViewById<Slider>(R.id.view_subtask_progress_slider)
-            assertEquals(0F, slider?.value)
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleJournalEntity)
         }
-    }
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
-    @Test
-    fun task_update_progress_to_in_process()  {
+        val attachmentLink = "https://jtx.techbee.at/test.pdf"
 
-        val fragmentArgs = Bundle()
-        fragmentArgs.putLong("item2show", sampleTodo.id)
-        val scenario = launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
-        onView(withText(sampleTodo.summary)).check(matches(isDisplayed()))
-        onView(withText(sampleTodo.description)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_checkbox)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_label)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_percent)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_slider)).check(matches(isDisplayed()))
-        onView(withText(R.string.todo_status_needsaction)).check(matches(isDisplayed()))
-
-        scenario.withFragment {
-            this.binding.viewProgressSlider.value = 50F
-            //the update would be done by the touch listener, this is a bit problematic in espresso, no proper solution was found yet, so we call the method of the listener manually:
-            this.icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, binding.viewProgressSlider.value.toInt())
-
-            // wait for update to be done or until timeout is reached
-            val timeout = 2000
-            var timer = 0
-            while (icalViewViewModel.icalEntity.value!!.property.percent!! != 50 || timer < timeout) {
-                timer += 50
-                Thread.sleep(50)
-            }
+        //switch tab
+        scenario.onFragment {
+            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_ATTACHMENTS))
         }
 
-        onView(withId(R.id.view_progress_percent)).check(matches(withText("50 %")))
-        onView(withText(R.string.todo_status_inprocess)).check(matches(isDisplayed()))
-    }
+        onView(allOf(withId(R.id.button_attachment_add_link), withText(R.string.edit_add_link_button_text))).perform(scrollTo(), click())
+        onView(withId(R.id.edit_attachment_add_dialog_edittext)).perform(typeText(attachmentLink))
+        onView(withText(R.string.save)).perform(click())
+        onView(withText(attachmentLink)).check(matches(isDisplayed()))
 
-
-    @Test
-    fun task_update_progress_to_completed()  {
-
-        val fragmentArgs = Bundle()
-        fragmentArgs.putLong("item2show", sampleTodo.id)
-        val scenario = launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
-        onView(withText(sampleTodo.summary)).check(matches(isDisplayed()))
-        onView(withText(sampleTodo.description)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_checkbox)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_label)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_percent)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_progress_slider)).check(matches(isDisplayed()))
-        onView(withText(R.string.todo_status_needsaction)).check(matches(isDisplayed()))
-
-        scenario.withFragment {
-            this.binding.viewProgressSlider.value = 100F
-            //the update would be done by the touch listener, this is a bit problematic in espresso, no proper solution was found yet, so we call the method of the listener manually:
-            this.icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, binding.viewProgressSlider.value.toInt())
-
-            // wait for update to be done or until timeout is reached
-            val timeout = 2000
-            var timer = 0
-            while (icalViewViewModel.icalEntity.value!!.property.percent!! != 100 || timer < timeout) {
-                timer += 50
-                Thread.sleep(50)
-            }
-        }
-
-        onView(withId(R.id.view_progress_percent)).check(matches(withText("100 %")))
-        onView(withText(R.string.todo_status_completed)).check(matches(isDisplayed()))
-    }
-
-
-    @Test
-    fun journal_add_note() {
-
-        val fragmentArgs = Bundle()
-        fragmentArgs.putLong("item2show", sampleJournal.id)
-        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
-
-        val noteText = "TestText"
-
-        onView(allOf(withId(R.id.view_add_note), withText(R.string.view_add_note))).check(matches(isDisplayed()))
-        onView(allOf(withId(R.id.view_add_audio_note), withText(R.string.view_add_audio_note))).check(matches(isDisplayed()))
-        onView(withId(R.id.view_add_note)).perform(scrollTo(), click())
-        onView (withId(R.id.view_view_addnote_dialog_edittext)).perform(typeText(noteText))
-        onView (withText(R.string.save)).perform(click())
-        onView (withText(noteText)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun journal_add_audio_note() {
-
-        val fragmentArgs = Bundle()
-        fragmentArgs.putLong("item2show", sampleNote.id)
-        launchFragmentInContainer<IcalViewFragment>(
-            fragmentArgs,
-            R.style.AppTheme,
-            Lifecycle.State.RESUMED
-        )
-
-        onView(
-            allOf(
-                withId(R.id.view_add_audio_note),
-                withText(R.string.view_add_audio_note)
+        scenario.onFragment {
+            assertNotNull(
+                it.icalEditViewModel.attachmentUpdated.find {
+                    it.uri == attachmentLink
+                }
             )
-        ).check(matches(isDisplayed()))
-        onView(withId(R.id.view_add_audio_note)).perform(scrollTo(), click())
-
-        onView(withId(R.id.view_audio_dialog_startrecording_fab)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_audio_dialog_startplaying_fab)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_audio_dialog_progressbar)).check(matches(isDisplayed()))
-
-        onView(withId(R.id.view_audio_dialog_startrecording_fab)).check(matches(isEnabled()))
-        onView(withId(R.id.view_audio_dialog_startplaying_fab)).check(matches(not(isEnabled())))   // initially the playback button must be disabled
-
-        onView(withId(R.id.view_audio_dialog_startrecording_fab)).perform(click())  // start recording
-        Thread.sleep(100)
-        onView(withId(R.id.view_audio_dialog_startrecording_fab)).perform(click())  // stop recording
-
-        onView(withId(R.id.view_audio_dialog_startplaying_fab)).check(matches(isEnabled()))  // fab should be enabled now
-        //onView(withId(R.id.view_audio_dialog_startplaying_fab)).perform(click())  // start playback
-        //Thread.sleep(200)
-        // TODO: Find a way to check if the slider value got updated correctly on playback
-
-        onView (withText(R.string.save)).perform(click())
-        onView (withId(R.id.view_comment_playbutton)).check(matches(isDisplayed()))
+        }
     }
 
-     */
+    //TODO: Add Test for Recurrence
+
 }

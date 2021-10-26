@@ -176,6 +176,8 @@
     <string name="edit_timezone_start_content_desc">Start Timezone</string>
     <string name="edit_timezone_due_content_desc">Due Timezone</string>
     <string name="edit_timezone_completed_content_desc">Completed Timezone</string>
+    <string name="edit_attachment_add_dialog_hint">Add your attachment-url (https://…)</string>
+
 
     <string name="edit_due_date_hint">Due date</string>
     <string name="edit_due_time_hint">Due time</string>
