@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import at.techbee.jtx.BuildConfig.FLAVOR
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
@@ -55,7 +56,7 @@ class AdLoader {
         }
  */
 
-        fun isAdShowtime(activity: Activity): Boolean {
+        private fun isAdShowtime(activity: Activity): Boolean {
 
             if (adPrefs == null)
                 adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
@@ -75,6 +76,7 @@ class AdLoader {
         }
 
         fun showAd(activity: Activity) {
+
 
             try {
                 val mainActivity = activity as MainActivity
@@ -232,6 +234,10 @@ class AdLoader {
         }
 
         private fun loadForm(activity: Activity, context: Context, consentInformation: ConsentInformation) {
+
+            // don't continue if the flavor is adfree (ose)
+            if(FLAVOR == MainActivity.BUILD_FLAVOR_OSE)
+                return
 
             if (consentInformation.consentStatus == ConsentInformation.ConsentStatus.REQUIRED || consentInformation.consentStatus == ConsentInformation.ConsentStatus.UNKNOWN) {
 

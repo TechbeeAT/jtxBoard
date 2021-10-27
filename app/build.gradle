@@ -55,6 +55,24 @@ android {
         exclude 'META-INF/*.md'
     }
 
+    flavorDimensions 'version'
+    productFlavors {
+        googleplay {
+            dimension 'version'
+            //applicationIdSuffix '.googleplay'
+            versionNameSuffix '-googleplay'
+        }
+        ose {
+            dimension 'version'
+            //applicationIdSuffix '.adpowered'
+            versionNameSuffix '-ose'
+        }
+        alphatest {
+            dimension 'version'
+            //applicationIdSuffix '.testing'
+            versionNameSuffix '-alphatest'
+        }
+    }
 }
 
 aboutLibraries {
@@ -103,16 +121,12 @@ dependencies {
 
     implementation "androidx.preference:preference-ktx:1.1.1"
 
-    // Admob
+    // Admob & Google Consent for Admob
     implementation 'com.google.android.gms:play-services-ads:20.4.0'
-
-    // Google Consent for Admob
     implementation 'com.google.android.ump:user-messaging-platform:2.0.0'
 
     // Workmanager support
     implementation("androidx.work:work-runtime-ktx:$version_work")
-
-
 
 
     androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.3'
@@ -149,7 +163,6 @@ dependencies {
     debugImplementation("androidx.test:runner:1.4.0")
 
  */
-
 
 
     // Testing for Workmanager

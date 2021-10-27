@@ -20,7 +20,7 @@ buildscript {
 
     ext {
         version_core = "1.6.0"
-        version_coroutine = "1.4.1"
+        version_coroutine = "1.5.2"
         version_constraint_layout = "2.1.1"
         version_gradle = '7.0.3'
         version_kotlin = "1.5.31"

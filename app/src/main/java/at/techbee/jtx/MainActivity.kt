@@ -52,6 +52,9 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
         //const val TRIAL_PERIOD_DAYS = 14L
 
+        const val BUILD_FLAVOR_ALPHA = "alpha"
+        const val BUILD_FLAVOR_OSE = "ose"
+        const val BUILD_FLAVOR_GOOGLEPLAY = "googleplay"
     }
 
     private lateinit var toolbar: Toolbar
@@ -80,7 +83,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         // necessary for ical4j
         System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
 
-
+        adaptMenuToBuildFlavor()
         setUpDrawer()
         checkThemeSetting()
 
@@ -120,6 +123,16 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                     )
             }
         }
+    }
+
+    private fun adaptMenuToBuildFlavor() {
+        val navView: NavigationView = findViewById(R.id.nav_view)
+
+        if(BuildConfig.FLAVOR != BUILD_FLAVOR_OSE)
+            navView.menu.findItem(R.id.nav_donate).isVisible = false     // show the donate fragment only for the OSE-edition
+
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_OSE || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA)
+            navView.menu.findItem(R.id.nav_adinfo).isVisible = false     // hide the adinfo fragment for the OSE-edition
 
     }
 

@@ -92,7 +92,6 @@ class IcalListFragment : Fragment() {
         val viewModelFactory = IcalListViewModelFactory(dataSource, application)
         icalListViewModel = ViewModelProvider(this, viewModelFactory).get(IcalListViewModel::class.java)
 
-        binding.vJournalListViewModel = icalListViewModel
         binding.lifecycleOwner = this
 
         // add menu
