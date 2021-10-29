@@ -34,6 +34,8 @@ buildscript {
         version_appcompat_v7 = "27.1.1"
         version_work = "2.7.0"
         version_fragment = "1.4.0-alpha09"
+        version_billing = "4.0.0"
+
     }
 
     repositories {

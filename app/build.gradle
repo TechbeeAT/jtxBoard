@@ -37,8 +37,15 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
+            shrinkResources = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        // uncomment to test minifyEnabled without signing the package
+        debug {
+            //minifyEnabled = true
+            //shrinkResources = true
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -73,6 +80,15 @@ android {
             versionNameSuffix '-alphatest'
         }
     }
+
+    // the flavor alphatest should not be used for the build type release, we filter this here
+    variantFilter { variant ->
+        if (variant.flavors*.name.contains("alphatest") && variant.buildType.name == "release") {
+            // Gradle ignores any variants that satisfy the conditions above.
+            setIgnore(true)
+        }
+    }
+
 }
 
 aboutLibraries {
@@ -121,9 +137,11 @@ dependencies {
 
     implementation "androidx.preference:preference-ktx:1.1.1"
 
-    // Admob & Google Consent for Admob
-    implementation 'com.google.android.gms:play-services-ads:20.4.0'
-    implementation 'com.google.android.ump:user-messaging-platform:2.0.0'
+    // Admob & Google Consent for Admob & Google billing
+    implementation "com.google.android.gms:play-services-ads:20.4.0"
+    implementation "com.google.android.ump:user-messaging-platform:2.0.0"
+    implementation "com.android.billingclient:billing-ktx:$version_billing"
+
 
     // Workmanager support
     implementation("androidx.work:work-runtime-ktx:$version_work")
