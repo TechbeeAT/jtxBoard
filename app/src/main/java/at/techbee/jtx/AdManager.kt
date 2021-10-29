@@ -11,7 +11,7 @@ import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoa
 import com.google.android.ump.*
 import java.lang.ClassCastException
 
-class AdLoader {
+class AdManager {
 
     companion object {
 

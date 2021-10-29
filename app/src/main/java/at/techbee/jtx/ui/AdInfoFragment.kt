@@ -12,7 +12,7 @@ import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import android.content.Intent
 import android.net.Uri
-import at.techbee.jtx.AdLoader
+import at.techbee.jtx.AdManager
 import at.techbee.jtx.databinding.FragmentAdinfoBinding
 import com.google.android.ump.ConsentInformation
 
@@ -42,13 +42,13 @@ class AdInfoFragment : Fragment() {
 
 
         // TODO: currently the adinfoButtonUserconsent is set to invisible because the GDPR message is not shown on click, this needs further investigation
-        if (AdLoader.consentInformation?.consentStatus == ConsentInformation.ConsentStatus.NOT_REQUIRED || AdLoader.consentInformation?.consentStatus == ConsentInformation.ConsentStatus.UNKNOWN) {
+        if (AdManager.consentInformation?.consentStatus == ConsentInformation.ConsentStatus.NOT_REQUIRED || AdManager.consentInformation?.consentStatus == ConsentInformation.ConsentStatus.UNKNOWN) {
             // the user is in a country, where the consent is not required or the initial user consent is still unknown (it must be chosen before the first ad if necessary!). Don't show the button.
             binding.adinfoButtonUserconsent.visibility = View.GONE
         } else {
             // the user is in a country where the consent is required, consent status is obtained or required
             binding.adinfoButtonUserconsent.setOnClickListener {
-                AdLoader.resetUserConsent(requireActivity(), requireContext())
+                AdManager.resetUserConsent(requireActivity(), requireContext())
             }
         }
 

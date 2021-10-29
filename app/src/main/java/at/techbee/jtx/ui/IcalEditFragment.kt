@@ -525,7 +525,7 @@ class IcalEditFragment : Fragment() {
                  */
 
                 // show Ad if necessary
-                AdLoader.showAd(requireActivity())
+                AdManager.showAd(requireActivity())
 
 
                 // return to list view

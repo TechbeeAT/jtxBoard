@@ -98,25 +98,25 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
 
 
-        if(AdLoader.isAdFlavor()) {
+        if(AdManager.isAdFlavor()) {
             // This code is put in onResume as the Ad might need to be loaded once isAdShowtime returns true
 
             // initialised as true, this should be overwritten by the billing client. But to be sure to not show any ads to users who have bought the app, it's better to initialise with true
             var isPaid = false
             if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY) {
-                BillingLoader.initialise(this)
+                BillingManager.initialise(this)
                 // TODO Check if the user already bought the app. If yes, skip the Dialog Box
             }
 
 
-            if (AdLoader.isAdShowtime(this) && !AdLoader.isAdsAccepted(this) && !isPaid) {
+            if (AdManager.isAdShowtime(this) && !AdManager.isAdsAccepted(this) && !isPaid) {
 
                 MaterialAlertDialogBuilder(this)
                     .setTitle(resources.getString(R.string.list_dialog_contribution_title))
                     .setMessage(resources.getString(R.string.list_dialog_contribution_message))
                     .setNegativeButton(resources.getString(R.string.list_dialog_contribution_buyadfree)) { _, _ ->
                         // Respond to negative button press
-                        AdLoader.setAdsAccepted(false, this)
+                        AdManager.setAdsAccepted(false, this)
                         Toast.makeText(
                             this,
                             "Start the Intent for the play store",
@@ -127,12 +127,12 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                     .setPositiveButton(resources.getString(R.string.list_dialog_contribution_acceptads)) { _, _ ->
                         // Respond to positive button press
                         // Ads are accepted, load user consent
-                        AdLoader.setAdsAccepted(true, this)
-                        AdLoader.initializeUserConsent(this, applicationContext)
+                        AdManager.setAdsAccepted(true, this)
+                        AdManager.initializeUserConsent(this, applicationContext)
                     }
                     .show()
-            } else if (AdLoader.isAdShowtime(this) && AdLoader.isAdsAccepted(this) && !isPaid) {
-                AdLoader.initializeUserConsent(this, applicationContext)
+            } else if (AdManager.isAdShowtime(this) && AdManager.isAdsAccepted(this) && !isPaid) {
+                AdManager.initializeUserConsent(this, applicationContext)
                 Log.d("Ads accepted", "Ads accepted, loading consent form if necessary")
             }
         }
@@ -311,7 +311,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
     override fun onUserEarnedReward(item: RewardItem) {
         Log.d("onUserEarnedReward", "Ad watched, user earned Reward")
-        AdLoader.processAdReward(this)
+        AdManager.processAdReward(this)
         Toast.makeText(this, "Congrats, you're ad-free for a week now :-)", Toast.LENGTH_SHORT).show()
     }
 
