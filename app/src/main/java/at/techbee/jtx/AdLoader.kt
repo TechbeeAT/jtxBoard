@@ -35,11 +35,13 @@ class AdLoader {
         private var adPrefs: SharedPreferences? = null
 
         private var nextAdShowtime: Long = 0L
+        private var adsAccepted: Boolean = false
 
         private const val PREFS_ADS = "sharedPreferencesAds"
         private const val PREFS_ADS_NEXT_AD = "prefsNextAd"
-        private const val ONE_WEEK_IN_MILLIS = 604800000L
-        //private const val ONE_WEEK_IN_MILLIS = 300000L     // only for testing reduced to 5 min
+        private const val PREFS_ADS_ACCEPTED = "adsAccepted"
+        //private const val ONE_WEEK_IN_MILLIS = 604800000L
+        private const val ONE_WEEK_IN_MILLIS = 300000L     // TODO: RESET! only for testing reduced to 5 min
 
 
 /*
@@ -56,7 +58,7 @@ class AdLoader {
         }
  */
 
-        private fun isAdShowtime(activity: Activity): Boolean {
+        fun isAdShowtime(activity: Activity): Boolean {
 
             if (adPrefs == null)
                 adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
@@ -203,16 +205,18 @@ class AdLoader {
 
         fun initializeUserConsent(activity: Activity, context: Context) {
 
+            /*
             val debugSettings = ConsentDebugSettings.Builder(context)
                 .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
                 //.addTestDeviceHashedId("TEST-DEVICE-HASHED-ID")
                 .build()
+             */
 
 
             // Set tag for underage of consent. false means users are not underage.
             val params = ConsentRequestParameters.Builder()
                 .setTagForUnderAgeOfConsent(false)
-                .setConsentDebugSettings(debugSettings)      // only for testing, TODO: remove for production!
+                //.setConsentDebugSettings(debugSettings)      // only for testing, TODO: remove for production!
                 .build()
 
             val consentInformation = UserMessagingPlatform.getConsentInformation(context)
@@ -269,5 +273,34 @@ class AdLoader {
                 loadForm(activity, context, consentInformation!!)
             }
         }
+
+
+
+        fun isAdsAccepted(activity: Activity): Boolean {
+
+            if (adPrefs == null)
+                adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
+
+            adPrefs?.let {
+                adsAccepted = it.getBoolean(PREFS_ADS_ACCEPTED, false)
+            }
+            return adsAccepted
+        }
+
+        fun setAdsAccepted(isAccepted: Boolean, activity: Activity) {
+
+            if (adPrefs == null)
+                adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
+
+            adPrefs?.edit()?.putBoolean(PREFS_ADS_ACCEPTED, isAccepted)?.apply()
+        }
+
+        fun isAdFlavor(): Boolean = when(BuildConfig.FLAVOR) {
+            MainActivity.BUILD_FLAVOR_GOOGLEPLAY -> true
+            MainActivity.BUILD_FLAVOR_OSE -> false
+            MainActivity.BUILD_FLAVOR_ALPHA -> true
+            else -> true
+        }
+
     }
 }

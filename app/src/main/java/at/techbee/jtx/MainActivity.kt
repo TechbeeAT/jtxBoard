@@ -33,6 +33,7 @@ import at.techbee.jtx.ui.SettingsFragment
 import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import net.fortuna.ical4j.util.MapTimeZoneCache
 
 
@@ -94,7 +95,48 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     override fun onResume() {
         super.onResume()
 
-        AdLoader.initializeUserConsent(this, applicationContext)
+
+
+
+        if(AdLoader.isAdFlavor()) {
+            // This code is put in onResume as the Ad might need to be loaded once isAdShowtime returns true
+
+            // initialised as true, this should be overwritten by the billing client. But to be sure to not show any ads to users who have bought the app, it's better to initialise with true
+            var isPaid = false
+            if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY) {
+                BillingLoader.initialise(this)
+                // TODO Check if the user already bought the app. If yes, skip the Dialog Box
+            }
+
+
+            if (AdLoader.isAdShowtime(this) && !AdLoader.isAdsAccepted(this) && !isPaid) {
+
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(resources.getString(R.string.list_dialog_contribution_title))
+                    .setMessage(resources.getString(R.string.list_dialog_contribution_message))
+                    .setNegativeButton(resources.getString(R.string.list_dialog_contribution_buyadfree)) { _, _ ->
+                        // Respond to negative button press
+                        AdLoader.setAdsAccepted(false, this)
+                        Toast.makeText(
+                            this,
+                            "Start the Intent for the play store",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        //TODO: open in app-buying for ad-free option
+                    }
+                    .setPositiveButton(resources.getString(R.string.list_dialog_contribution_acceptads)) { _, _ ->
+                        // Respond to positive button press
+                        // Ads are accepted, load user consent
+                        AdLoader.setAdsAccepted(true, this)
+                        AdLoader.initializeUserConsent(this, applicationContext)
+                    }
+                    .show()
+            } else if (AdLoader.isAdShowtime(this) && AdLoader.isAdsAccepted(this) && !isPaid) {
+                AdLoader.initializeUserConsent(this, applicationContext)
+                Log.d("Ads accepted", "Ads accepted, loading consent form if necessary")
+            }
+        }
+
 
         // handle the intents for the shortcuts
         when (intent.action) {
