@@ -258,7 +258,7 @@ class IcalViewFragment : Fragment() {
                     binding.viewColorbar.visibility = View.GONE
 
                 it.property.recurOriginalIcalObjectId?.let { origId ->
-                    binding.viewRecurrenceGotooriginalButton?.setOnClickListener { view ->
+                    binding.viewRecurrenceGotooriginalButton.setOnClickListener { view ->
                         view.findNavController().navigate(
                             IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(origId)
                         )
@@ -339,7 +339,7 @@ class IcalViewFragment : Fragment() {
                         recurDates.add(convertLongToFullDateString(it.dtstart))
                 }
             }
-            binding.viewRecurrenceItems?.text = recurDates.joinToString(separator = "\n")
+            binding.viewRecurrenceItems.text = recurDates.joinToString(separator = "\n")
         }
 
 
@@ -351,7 +351,7 @@ class IcalViewFragment : Fragment() {
         })
 
         icalViewViewModel.resources.observe(viewLifecycleOwner, {
-            binding.viewResourcesChipgroup?.removeAllViews()      // remove all views if something has changed to rebuild from scratch
+            binding.viewResourcesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
             it?.forEach { resource ->
                 addResourceChip(resource)
             }
@@ -609,7 +609,7 @@ class IcalViewFragment : Fragment() {
 
         val resourceChip = inflater.inflate(R.layout.fragment_ical_view_resources_chip, binding.viewResourcesChipgroup, false) as Chip
         resourceChip.text = resource.text
-        binding.viewResourcesChipgroup?.addView(resourceChip)
+        binding.viewResourcesChipgroup.addView(resourceChip)
     }
 
 

@@ -15,7 +15,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -198,12 +197,12 @@ class IcalEditFragment : Fragment() {
         }
 
         //Don't show the recurring tab for Notes
-        if(icalEditViewModel.iCalEntity.property.module == Module.NOTE.name && binding.icalEditTabs?.tabCount?:0 >= TAB_RECURRING)
-            binding.icalEditTabs?.getTabAt(TAB_RECURRING)?.view?.visibility = View.GONE
+        if(icalEditViewModel.iCalEntity.property.module == Module.NOTE.name && binding.icalEditTabs.tabCount >= TAB_RECURRING)
+            binding.icalEditTabs.getTabAt(TAB_RECURRING)?.view?.visibility = View.GONE
 
         // Until implemented remove the tab for alarms and attachments
-        binding.icalEditTabs?.getTabAt(TAB_ALARMS)?.view?.visibility = View.GONE
-        //binding.icalEditTabs?.getTabAt(TAB_ATTACHMENTS)?.view?.visibility = View.GONE
+        binding.icalEditTabs.getTabAt(TAB_ALARMS)?.view?.visibility = View.GONE
+        //binding.icalEditTabs.getTabAt(TAB_ATTACHMENTS).view.visibility = View.GONE
 
 
         val textInputEditTextFocusChangeListener = View.OnFocusChangeListener { _, isFocussed ->
@@ -215,7 +214,7 @@ class IcalEditFragment : Fragment() {
 
         binding.editCategoriesAddAutocomplete.onFocusChangeListener = textInputEditTextFocusChangeListener
         binding.editCommentAddEdittext.onFocusChangeListener = textInputEditTextFocusChangeListener
-        binding.editResourcesAddAutocomplete?.onFocusChangeListener = textInputEditTextFocusChangeListener
+        binding.editResourcesAddAutocomplete.onFocusChangeListener = textInputEditTextFocusChangeListener
         binding.editContactAddAutocomplete.onFocusChangeListener = textInputEditTextFocusChangeListener
 
 
@@ -233,7 +232,7 @@ class IcalEditFragment : Fragment() {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
             }
-        binding.editTaskDatesFragment?.editStartedtimezoneSpinner?.onItemSelectedListener =
+        binding.editTaskDatesFragment.editStartedtimezoneSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -242,12 +241,12 @@ class IcalEditFragment : Fragment() {
                     id: Long
                 ) {
                     icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone =
-                        binding.editTaskDatesFragment?.editStartedtimezoneSpinner?.getItemAtPosition(position).toString()
+                        binding.editTaskDatesFragment.editStartedtimezoneSpinner.getItemAtPosition(position).toString()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
             }
-        binding.editTaskDatesFragment?.editDuetimezoneSpinner?.onItemSelectedListener =
+        binding.editTaskDatesFragment.editDuetimezoneSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -256,13 +255,13 @@ class IcalEditFragment : Fragment() {
                     id: Long
                 ) {
                     icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone =
-                        binding.editTaskDatesFragment?.editDuetimezoneSpinner?.getItemAtPosition(position).toString()
+                        binding.editTaskDatesFragment.editDuetimezoneSpinner.getItemAtPosition(position).toString()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
             }
 
-        binding.editTaskDatesFragment?.editCompletedtimezoneSpinner?.onItemSelectedListener =
+        binding.editTaskDatesFragment.editCompletedtimezoneSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -271,7 +270,7 @@ class IcalEditFragment : Fragment() {
                     id: Long
                 ) {
                     icalEditViewModel.iCalObjectUpdated.value!!.completedTimezone =
-                        binding.editTaskDatesFragment?.editCompletedtimezoneSpinner?.getItemAtPosition(position).toString()
+                        binding.editTaskDatesFragment.editCompletedtimezoneSpinner.getItemAtPosition(position).toString()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
@@ -281,7 +280,7 @@ class IcalEditFragment : Fragment() {
             object : AdapterView.OnItemSelectedListener {
 
                 override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
-                    icalEditViewModel.iCalObjectUpdated.value!!.collectionId =
+                    icalEditViewModel.iCalObjectUpdated.value?.collectionId =
                         icalEditViewModel.allCollections.value?.get(pos)?.collectionId ?: 1L
                 }
 
@@ -289,38 +288,38 @@ class IcalEditFragment : Fragment() {
             }
 
         val weekdays = getLocalizedWeekdays()
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.text = weekdays[0]
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.text = weekdays[1]
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.text = weekdays[2]
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.text = weekdays[3]
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.text = weekdays[4]
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.text = weekdays[5]
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.text = weekdays[6]
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.setOnCheckedChangeListener { _, _ -> updateRRule() }
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.text = weekdays[0]
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.text = weekdays[1]
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.text = weekdays[2]
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.text = weekdays[3]
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.text = weekdays[4]
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.text = weekdays[5]
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.text = weekdays[6]
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.setOnCheckedChangeListener { _, _ -> updateRRule() }
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.setOnCheckedChangeListener { _, _ -> updateRRule() }
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.setOnCheckedChangeListener { _, _ -> updateRRule() }
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.setOnCheckedChangeListener { _, _ -> updateRRule() }
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.setOnCheckedChangeListener { _, _ -> updateRRule() }
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.setOnCheckedChangeListener { _, _ -> updateRRule() }
+        binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.setOnCheckedChangeListener { _, _ -> updateRRule() }
 
-        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.wrapSelectorWheel = false
-        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.minValue = 1
-        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.maxValue = 31
-        binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.setOnValueChangedListener { _, _, _ -> updateRRule() }
+        binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.wrapSelectorWheel = false
+        binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.minValue = 1
+        binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.maxValue = 31
+        binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.setOnValueChangedListener { _, _, _ -> updateRRule() }
 
-        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.wrapSelectorWheel = false
-        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.minValue = 1
-        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.maxValue = 100
-        binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.setOnValueChangedListener { _, _, _ -> updateRRule() }
+        binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.wrapSelectorWheel = false
+        binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.minValue = 1
+        binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.maxValue = 100
+        binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.setOnValueChangedListener { _, _, _ -> updateRRule() }
 
-        binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.wrapSelectorWheel = false
-        binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.minValue = 1
-        binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.maxValue = 31
-        binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.setOnValueChangedListener { _, _, _ -> updateRRule() }
+        binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.wrapSelectorWheel = false
+        binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.minValue = 1
+        binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.maxValue = 31
+        binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.setOnValueChangedListener { _, _, _ -> updateRRule() }
 
 
-        binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.onItemSelectedListener =
+        binding.editFragmentIcalEditRecur.editRecurDaysMonthsSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -340,7 +339,7 @@ class IcalEditFragment : Fragment() {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
             }
-        binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.setSelection(
+        binding.editFragmentIcalEditRecur.editRecurDaysMonthsSpinner.setSelection(
             when(icalEditViewModel.recurrenceMode.value) {
                 RECURRENCE_MODE_DAY -> 0
                 RECURRENCE_MODE_WEEK -> 1
@@ -354,10 +353,10 @@ class IcalEditFragment : Fragment() {
 
             try {
 
-                binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value =
+                binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.value =
                     Recur(icalEditViewModel.iCalEntity.property.rrule).interval
 
-                binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value =
+                binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.value =
                     Recur(icalEditViewModel.iCalEntity.property.rrule).count
 
 
@@ -365,25 +364,25 @@ class IcalEditFragment : Fragment() {
                 if (icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_WEEK) {
                     Recur(icalEditViewModel.iCalEntity.property.rrule).dayList.forEach {
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.MO) || (!isLocalizedWeekstartMonday() && it == WeekDay.SU))
-                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked =
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isChecked =
                                 true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.TU) || (!isLocalizedWeekstartMonday() && it == WeekDay.MO))
-                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked =
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isChecked =
                                 true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.WE) || (!isLocalizedWeekstartMonday() && it == WeekDay.TU))
-                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked =
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isChecked =
                                 true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.TH) || (!isLocalizedWeekstartMonday() && it == WeekDay.WE))
-                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked =
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isChecked =
                                 true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.FR) || (!isLocalizedWeekstartMonday() && it == WeekDay.TH))
-                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked =
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isChecked =
                                 true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.SA) || (!isLocalizedWeekstartMonday() && it == WeekDay.FR))
-                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked =
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isChecked =
                                 true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.SU) || (!isLocalizedWeekstartMonday() && it == WeekDay.SA))
-                            binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked =
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isChecked =
                                 true
                     }
                 }
@@ -391,14 +390,14 @@ class IcalEditFragment : Fragment() {
                 //pre-select the day of the month according to the rrule
                 if (icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_MONTH && Recur(icalEditViewModel.iCalEntity.property.rrule).monthDayList.size > 0) {
                     val selectedMonth = Recur(icalEditViewModel.iCalEntity.property.rrule).monthDayList[0]
-                    binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.value = selectedMonth
+                    binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.value = selectedMonth
                 }
             } catch (e: Exception) {
                 Log.w("LoadRRule", "Failed to preset UI according to provided RRule\n$e")
             }
         }
 
-        binding.icalEditTabs?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.icalEditTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
@@ -410,7 +409,7 @@ class IcalEditFragment : Fragment() {
                     TAB_SUBTASKS -> icalEditViewModel.selectedTab = TAB_SUBTASKS
                     TAB_RECURRING -> icalEditViewModel.selectedTab = TAB_RECURRING
                     TAB_ALARMS -> icalEditViewModel.selectedTab = TAB_ALARMS
-                    else -> TAB_GENERAL
+                    else -> icalEditViewModel.selectedTab = TAB_GENERAL
                 }
                 hideKeyboard()
                 icalEditViewModel.updateVisibility()
@@ -584,17 +583,17 @@ class IcalEditFragment : Fragment() {
                     ?: it.classification       // if unsupported just show whatever is there
 
             binding.editTimezoneSpinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(it.dtstartTimezone))
-            binding.editTaskDatesFragment?.editCompletedtimezoneSpinner?.setSelection(
+            binding.editTaskDatesFragment.editCompletedtimezoneSpinner.setSelection(
                 icalEditViewModel.possibleTimezones.indexOf(
                     it.completedTimezone
                 )
             )
-            binding.editTaskDatesFragment?.editDuetimezoneSpinner?.setSelection(
+            binding.editTaskDatesFragment.editDuetimezoneSpinner.setSelection(
                 icalEditViewModel.possibleTimezones.indexOf(
                     it.dueTimezone
                 )
             )
-            binding.editTaskDatesFragment?.editStartedtimezoneSpinner?.setSelection(
+            binding.editTaskDatesFragment.editStartedtimezoneSpinner.setSelection(
                 icalEditViewModel.possibleTimezones.indexOf(
                     it.dtstartTimezone
                 )
@@ -646,8 +645,8 @@ class IcalEditFragment : Fragment() {
                 due.set(Calendar.HOUR_OF_DAY, 0)
                 due.set(Calendar.MINUTE, 0)
                 icalEditViewModel.iCalObjectUpdated.value!!.due = due.timeInMillis
-                binding.editTaskDatesFragment?.editDueTimeEdittext?.text?.clear()
-                binding.editTaskDatesFragment?.editDuetimezoneSpinner?.setSelection(0)
+                binding.editTaskDatesFragment.editDueTimeEdittext.text?.clear()
+                binding.editTaskDatesFragment.editDuetimezoneSpinner.setSelection(0)
 
                 // make sure that the time gets reset to 0
                 val start = Calendar.getInstance()
@@ -656,8 +655,8 @@ class IcalEditFragment : Fragment() {
                 start.set(Calendar.HOUR_OF_DAY, 0)
                 start.set(Calendar.MINUTE, 0)
                 icalEditViewModel.iCalObjectUpdated.value!!.dtstart = start.timeInMillis
-                binding.editTaskDatesFragment?.editStartedTimeEdittext?.text?.clear()
-                binding.editTaskDatesFragment?.editStartedtimezoneSpinner?.setSelection(0)
+                binding.editTaskDatesFragment.editStartedTimeEdittext.text?.clear()
+                binding.editTaskDatesFragment.editStartedtimezoneSpinner.setSelection(0)
 
             } else {
                 icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = null
@@ -744,7 +743,7 @@ class IcalEditFragment : Fragment() {
                     android.R.layout.simple_list_item_1,
                     icalEditViewModel.allResources.value!!
                 )
-                binding.editResourcesAddAutocomplete?.setAdapter(arrayAdapter)
+                binding.editResourcesAddAutocomplete.setAdapter(arrayAdapter)
             }
         })
 
@@ -818,83 +817,83 @@ class IcalEditFragment : Fragment() {
             )
         }
 
-        binding.editTaskDatesFragment?.editDueDate?.setEndIconOnClickListener {
+        binding.editTaskDatesFragment.editDueDate.setEndIconOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis(),
                 TAG_PICKER_DUE
             )
         }
 
-        binding.editTaskDatesFragment?.editDueDateEdittext?.setOnClickListener {
+        binding.editTaskDatesFragment.editDueDateEdittext.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis(),
                 TAG_PICKER_DUE
             )
         }
 
-        binding.editTaskDatesFragment?.editDueTime?.setEndIconOnClickListener {
+        binding.editTaskDatesFragment.editDueTime.setEndIconOnClickListener {
             showTimePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis(),
                 TAG_PICKER_DUE
             )
         }
 
-        binding.editTaskDatesFragment?.editDueTimeEdittext?.setOnClickListener {
+        binding.editTaskDatesFragment.editDueTimeEdittext.setOnClickListener {
             showTimePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis(),
                 TAG_PICKER_DUE
             )
         }
 
-        binding.editTaskDatesFragment?.editCompletedDate?.setEndIconOnClickListener {
+        binding.editTaskDatesFragment.editCompletedDate.setEndIconOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.completed ?: System.currentTimeMillis(),
                 TAG_PICKER_COMPLETED
             )
         }
 
-        binding.editTaskDatesFragment?.editCompletedDateEdittext?.setOnClickListener {
+        binding.editTaskDatesFragment.editCompletedDateEdittext.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.completed ?: System.currentTimeMillis(),
                 TAG_PICKER_COMPLETED
             )
         }
-        binding.editTaskDatesFragment?.editCompletedTime?.setEndIconOnClickListener {
+        binding.editTaskDatesFragment.editCompletedTime.setEndIconOnClickListener {
             showTimePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.completed ?: System.currentTimeMillis(),
                 TAG_PICKER_COMPLETED
             )
         }
 
-        binding.editTaskDatesFragment?.editCompletedTimeEdittext?.setOnClickListener {
+        binding.editTaskDatesFragment.editCompletedTimeEdittext.setOnClickListener {
             showTimePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.completed ?: System.currentTimeMillis(),
                 TAG_PICKER_COMPLETED
             )
         }
 
-        binding.editTaskDatesFragment?.editStartedDate?.setEndIconOnClickListener {
+        binding.editTaskDatesFragment.editStartedDate.setEndIconOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
                 TAG_PICKER_STARTED
             )
         }
 
-        binding.editTaskDatesFragment?.editStartedDateEdittext?.setOnClickListener {
+        binding.editTaskDatesFragment.editStartedDateEdittext.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
                 TAG_PICKER_STARTED
             )
         }
 
-        binding.editTaskDatesFragment?.editStartedTime?.setEndIconOnClickListener {
+        binding.editTaskDatesFragment.editStartedTime.setEndIconOnClickListener {
             showTimePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
                 TAG_PICKER_STARTED
             )
         }
 
-        binding.editTaskDatesFragment?.editStartedTimeEdittext?.setOnClickListener {
+        binding.editTaskDatesFragment.editStartedTimeEdittext.setOnClickListener {
             showTimePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
                 TAG_PICKER_STARTED
@@ -972,12 +971,12 @@ class IcalEditFragment : Fragment() {
         }
 
 
-        binding.editResourcesAdd?.setEndIconOnClickListener {
+        binding.editResourcesAdd.setEndIconOnClickListener {
             addNewResource()
         }
 
         // Transform the resource input into a chip when the Done button in the keyboard is clicked
-        binding.editResourcesAdd?.editText?.setOnEditorActionListener { _, actionId, _ ->
+        binding.editResourcesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     addNewResource()
@@ -987,8 +986,8 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-        binding.editResourcesAddAutocomplete?.setOnItemClickListener { _, _, i, _ ->
-            binding.editResourcesAddAutocomplete?.setText(binding.editResourcesAddAutocomplete?.adapter?.getItem(i).toString())
+        binding.editResourcesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
+            binding.editResourcesAddAutocomplete.setText(binding.editResourcesAddAutocomplete.adapter?.getItem(i).toString())
             addNewResource()
         }
 
@@ -1040,7 +1039,7 @@ class IcalEditFragment : Fragment() {
         }
 
 
-        binding.editFragmentIcalEditAttachment?.buttonAttachmentAdd?.setOnClickListener {
+        binding.editFragmentIcalEditAttachment.buttonAttachmentAdd.setOnClickListener {
             var chooseFile = Intent(Intent.ACTION_GET_CONTENT)
             chooseFile.type = "*/*"
             chooseFile = Intent.createChooser(chooseFile, "Choose a file")
@@ -1055,9 +1054,9 @@ class IcalEditFragment : Fragment() {
 
         // don't show the button if the device does not have a camera
         if (!requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY))
-            binding.editFragmentIcalEditAttachment?.buttonAttachmentTakePicture?.visibility = View.GONE
+            binding.editFragmentIcalEditAttachment.buttonAttachmentTakePicture.visibility = View.GONE
 
-        binding.editFragmentIcalEditAttachment?.buttonAttachmentTakePicture?.setOnClickListener {
+        binding.editFragmentIcalEditAttachment.buttonAttachmentTakePicture.setOnClickListener {
 
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
@@ -1082,7 +1081,7 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-        binding.editFragmentIcalEditAttachment?.buttonAttachmentAddLink?.setOnClickListener {
+        binding.editFragmentIcalEditAttachment.buttonAttachmentAddLink.setOnClickListener {
 
             val addlinkBindingDialog = FragmentIcalEditAttachmentAddlinkDialogBinding.inflate(inflater)
 
@@ -1243,8 +1242,10 @@ class IcalEditFragment : Fragment() {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
 
+        /*
         icalEditViewModel.isLandscape =
             resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+         */
         icalEditViewModel.updateVisibility()
 
 
@@ -1285,7 +1286,7 @@ class IcalEditFragment : Fragment() {
                     due.set(Calendar.MINUTE, timePicker.minute)
 
                     val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(due.time)
-                    binding.editTaskDatesFragment?.editDueTimeEdittext?.setText(timeString)
+                    binding.editTaskDatesFragment.editDueTimeEdittext.setText(timeString)
                     icalEditViewModel.iCalObjectUpdated.value!!.due = due.timeInMillis
                 }
                 TAG_PICKER_COMPLETED -> {
@@ -1297,7 +1298,7 @@ class IcalEditFragment : Fragment() {
 
                     val timeString =
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(completed.time)
-                    binding.editTaskDatesFragment?.editCompletedTimeEdittext?.setText(timeString)
+                    binding.editTaskDatesFragment.editCompletedTimeEdittext.setText(timeString)
                     icalEditViewModel.iCalObjectUpdated.value!!.completed = completed.timeInMillis
                 }
                 TAG_PICKER_STARTED -> {
@@ -1309,7 +1310,7 @@ class IcalEditFragment : Fragment() {
 
                     val timeString =
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(dtstart.time)
-                    binding.editTaskDatesFragment?.editStartedTimeEdittext?.setText(timeString)
+                    binding.editTaskDatesFragment.editStartedTimeEdittext.setText(timeString)
                     icalEditViewModel.iCalObjectUpdated.value!!.dtstart = dtstart.timeInMillis
                 }
             }
@@ -1354,7 +1355,7 @@ class IcalEditFragment : Fragment() {
                     due.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
 
                     val dateString = DateFormat.getDateInstance().format(due.time)
-                    binding.editTaskDatesFragment?.editDueDateEdittext?.setText(dateString)
+                    binding.editTaskDatesFragment.editDueDateEdittext.setText(dateString)
                     icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
                 }
                 TAG_PICKER_COMPLETED -> {
@@ -1367,7 +1368,7 @@ class IcalEditFragment : Fragment() {
                     completed.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
 
                     val dateString = DateFormat.getDateInstance().format(completed.time)
-                    binding.editTaskDatesFragment?.editCompletedDateEdittext?.setText(dateString)
+                    binding.editTaskDatesFragment.editCompletedDateEdittext.setText(dateString)
                     icalEditViewModel.iCalObjectUpdated.value!!.completed = c.timeInMillis
                 }
                 TAG_PICKER_STARTED -> {
@@ -1380,7 +1381,7 @@ class IcalEditFragment : Fragment() {
                     dtstart.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
 
                     val dateString = DateFormat.getDateInstance().format(dtstart.time)
-                    binding.editTaskDatesFragment?.editStartedDateEdittext?.setText(dateString)
+                    binding.editTaskDatesFragment.editStartedDateEdittext.setText(dateString)
                     icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
                     updateRRule()
                 }
@@ -1432,7 +1433,7 @@ class IcalEditFragment : Fragment() {
             false
         ) as Chip
         resourceChip.text = resource.text
-        binding.editResourcesChipgroup?.addView(resourceChip)
+        binding.editResourcesChipgroup.addView(resourceChip)
         //displayedCategoryChips.add(resource)
 
         resourceChip.setOnClickListener {   }
@@ -1589,7 +1590,7 @@ class IcalEditFragment : Fragment() {
 
 
 
-        binding.editFragmentIcalEditAttachment?.editAttachmentsLinearlayout?.addView(bindingAttachment.root)
+        binding.editFragmentIcalEditAttachment.editAttachmentsLinearlayout.addView(bindingAttachment.root)
 
         // delete the attachment on click on the X
         bindingAttachment.editAttachmentItemDelete.setOnClickListener {
@@ -1938,33 +1939,33 @@ class IcalEditFragment : Fragment() {
 
 
         val recurBuilder = Recur.Builder()
-        when( binding.editFragmentIcalEditRecur?.editRecurDaysMonthsSpinner?.selectedItemPosition) {
+        when( binding.editFragmentIcalEditRecur.editRecurDaysMonthsSpinner.selectedItemPosition) {
             RECURRENCE_MODE_DAY ->  {
                 recurBuilder.frequency(Recur.Frequency.DAILY)
             }
             RECURRENCE_MODE_WEEK -> {
                 recurBuilder.frequency(Recur.Frequency.WEEKLY)
                 val dayList = WeekDayList()
-                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true) ||
-                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true))
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isChecked) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isChecked))
                     dayList.add(WeekDay.MO)
-                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip1?.isChecked == true) ||
-                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true))
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isChecked) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isChecked))
                     dayList.add(WeekDay.TU)
-                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip2?.isChecked == true) ||
-                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true))
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isChecked) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isChecked))
                     dayList.add(WeekDay.WE)
-                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip3?.isChecked == true) ||
-                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true))
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isChecked) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isChecked))
                     dayList.add(WeekDay.TH)
-                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip4?.isChecked == true) ||
-                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true))
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isChecked) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isChecked))
                     dayList.add(WeekDay.FR)
-                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip5?.isChecked == true) ||
-                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true))
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isChecked) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isChecked))
                     dayList.add(WeekDay.SA)
-                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip6?.isChecked == true) ||
-                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur?.editRecurWeekdayChip0?.isChecked == true))
+                if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isChecked) ||
+                    (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isChecked))
                     dayList.add(WeekDay.SU)
 
                 if(dayList.isNotEmpty())
@@ -1973,7 +1974,7 @@ class IcalEditFragment : Fragment() {
             RECURRENCE_MODE_MONTH -> {
                 recurBuilder.frequency(Recur.Frequency.MONTHLY)
                 val monthDayList = NumberList()
-                monthDayList.add(binding.editFragmentIcalEditRecur?.editRecurOnTheXDayOfMonthNumberPicker?.value ?: 1)
+                monthDayList.add(binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.value)
                 recurBuilder.monthDayList(monthDayList)
             }
             RECURRENCE_MODE_YEAR -> {
@@ -1981,8 +1982,8 @@ class IcalEditFragment : Fragment() {
             }
             else -> return
         }
-        recurBuilder.interval(binding.editFragmentIcalEditRecur?.editRecurEveryXNumberPicker?.value ?: 1)
-        recurBuilder.count(binding.editFragmentIcalEditRecur?.editRecurUntilXOccurencesPicker?.value ?: 1)
+        recurBuilder.interval(binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.value)
+        recurBuilder.count(binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.value)
         val recur = recurBuilder.build()
 
         Log.d("recur", recur.toString())
@@ -2012,8 +2013,8 @@ class IcalEditFragment : Fragment() {
             allOccurrencesString += "\n"
         }
 
-        binding.editFragmentIcalEditRecur?.editRecurLastOccurenceItem?.text = lastOccurrenceString
-        binding.editFragmentIcalEditRecur?.editRecurAllOccurencesItems?.text = allOccurrencesString
+        binding.editFragmentIcalEditRecur.editRecurLastOccurenceItem.text = lastOccurrenceString
+        binding.editFragmentIcalEditRecur.editRecurAllOccurencesItems.text = allOccurrencesString
     }
 
 
@@ -2027,12 +2028,12 @@ class IcalEditFragment : Fragment() {
     }
 
     private fun addNewResource() {
-        val newRes = Resource(text = binding.editResourcesAdd?.editText?.text.toString())
+        val newRes = Resource(text = binding.editResourcesAdd.editText?.text.toString())
         if(!icalEditViewModel.resourceUpdated.contains(newRes)) {
             icalEditViewModel.resourceUpdated.add(newRes)
             addResourceChip(newRes)
         }
-        binding.editResourcesAdd?.editText?.text?.clear()
+        binding.editResourcesAdd.editText?.text?.clear()
     }
 
     private fun addNewAttendee() {
@@ -2061,16 +2062,16 @@ class IcalEditFragment : Fragment() {
             validationError += resources.getString(R.string.edit_validation_errors_category_not_confirmed) + "\n"
         if(binding.editAttendeesAddAutocomplete.text.isNotEmpty())
             validationError += resources.getString(R.string.edit_validation_errors_attendee_not_confirmed) + "\n"
-        if(binding.editResourcesAddAutocomplete?.text?.isNotEmpty() == true)
+        if(binding.editResourcesAddAutocomplete.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_resource_not_confirmed) + "\n"
         if(binding.editCommentAddEdittext.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_comment_not_confirmed) + "\n"
         if(binding.editSubtasksAddEdittext.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_subtask_not_confirmed) + "\n"
 
-        if(binding.editTaskDatesFragment?.editDueDateEdittext?.text?.isNotEmpty() == true && binding.editTaskDatesFragment?.editDueTimeEdittext?.text.isNullOrBlank() && binding.editTaskDatesFragment?.editTaskAddStartedAndDueTimeSwitch?.isActivated == true)
+        if(binding.editTaskDatesFragment.editDueDateEdittext.text?.isNotEmpty() == true && binding.editTaskDatesFragment.editDueTimeEdittext.text.isNullOrBlank() && binding.editTaskDatesFragment.editTaskAddStartedAndDueTimeSwitch.isActivated)
             validationError += resources.getString(R.string.edit_validation_errors_due_time_not_set) + "\n"
-        if(binding.editTaskDatesFragment?.editStartedDateEdittext?.text?.isNotEmpty() == true && binding.editTaskDatesFragment?.editStartedTimeEdittext?.text.isNullOrBlank() && binding.editTaskDatesFragment?.editTaskAddStartedAndDueTimeSwitch?.isActivated == true)
+        if(binding.editTaskDatesFragment.editStartedDateEdittext.text?.isNotEmpty() == true && binding.editTaskDatesFragment.editStartedTimeEdittext.text.isNullOrBlank() && binding.editTaskDatesFragment.editTaskAddStartedAndDueTimeSwitch.isActivated)
             validationError += resources.getString(R.string.edit_validation_errors_start_time_not_set) + "\n"
 /*        if(binding.editCompletedTimeEdittext?.text.isNullOrBlank() && binding.editCompletedAddtimeSwitch?.isActivated == false)
             validationError += resources.getString(R.string.edit_validation_errors_completed_time_not_set) + "\n"

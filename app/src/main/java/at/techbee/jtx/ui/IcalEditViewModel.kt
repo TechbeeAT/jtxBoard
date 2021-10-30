@@ -175,7 +175,6 @@ class IcalEditViewModel(
     val urlError = MutableLiveData<String?>()
     val attendeesError = MutableLiveData<String?>()
 
-    var isLandscape = false
     var selectedTab = TAB_GENERAL
 
 
@@ -202,35 +201,35 @@ class IcalEditViewModel(
 
     fun updateVisibility() {
 
-        collectionVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
-        summaryVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
-        descriptionVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
-        dateVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape))
-        timeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape) && iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY ) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
-        alldayVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape))
-        timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL || isLandscape) && iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY ) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
-        statusVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
-        classificationVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
-        urlVisible.postValue(selectedTab == TAB_LOC_COMMENTS || isLandscape)
-        locationVisible.postValue(selectedTab == TAB_LOC_COMMENTS || isLandscape)
-        categoriesVisible.postValue(selectedTab == TAB_GENERAL || isLandscape)
-        contactVisible.postValue(selectedTab == TAB_PEOPLE_RES || isLandscape)
-        attendeesVisible.postValue(selectedTab == TAB_PEOPLE_RES || isLandscape)
-        resourcesVisible.postValue(selectedTab == TAB_PEOPLE_RES || isLandscape)
-        commentsVisible.postValue(selectedTab == TAB_LOC_COMMENTS || isLandscape)
-        attachmentsVisible.postValue(selectedTab == TAB_ATTACHMENTS || isLandscape)
-        takePhotoVisible.postValue(selectedTab == TAB_ATTACHMENTS || isLandscape)
-        progressVisible.postValue(iCalEntity.property.module == Module.TODO.name && (selectedTab == TAB_GENERAL || isLandscape))
-        priorityVisible.postValue(iCalEntity.property.module == Module.TODO.name && (selectedTab == TAB_GENERAL || isLandscape))
-        subtasksVisible.postValue(selectedTab == TAB_SUBTASKS || isLandscape)
-        duedateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
-        duetimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dueTimezone != ICalObject.TZ_ALLDAY)
-        completeddateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
-        completedtimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.completedTimezone != ICalObject.TZ_ALLDAY)
-        starteddateVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
-        startedtimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
-        addStartedAndDueTimeVisible.postValue((selectedTab == TAB_GENERAL || isLandscape) && iCalEntity.property.module == Module.TODO.name)
-        recurrenceVisible.postValue((selectedTab == TAB_RECURRING || isLandscape))
+        collectionVisible.postValue(selectedTab == TAB_GENERAL)
+        summaryVisible.postValue(selectedTab == TAB_GENERAL)
+        descriptionVisible.postValue(selectedTab == TAB_GENERAL)
+        dateVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL))
+        timeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL) && iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY ) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
+        alldayVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL))
+        timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL) && iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY ) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
+        statusVisible.postValue(selectedTab == TAB_GENERAL)
+        classificationVisible.postValue(selectedTab == TAB_GENERAL)
+        urlVisible.postValue(selectedTab == TAB_LOC_COMMENTS)
+        locationVisible.postValue(selectedTab == TAB_LOC_COMMENTS)
+        categoriesVisible.postValue(selectedTab == TAB_GENERAL)
+        contactVisible.postValue(selectedTab == TAB_PEOPLE_RES)
+        attendeesVisible.postValue(selectedTab == TAB_PEOPLE_RES)
+        resourcesVisible.postValue(selectedTab == TAB_PEOPLE_RES)
+        commentsVisible.postValue(selectedTab == TAB_LOC_COMMENTS)
+        attachmentsVisible.postValue(selectedTab == TAB_ATTACHMENTS)
+        takePhotoVisible.postValue(selectedTab == TAB_ATTACHMENTS)
+        progressVisible.postValue(iCalEntity.property.module == Module.TODO.name && (selectedTab == TAB_GENERAL))
+        priorityVisible.postValue(iCalEntity.property.module == Module.TODO.name && (selectedTab == TAB_GENERAL))
+        subtasksVisible.postValue(selectedTab == TAB_SUBTASKS)
+        duedateVisible.postValue((selectedTab == TAB_GENERAL) && iCalEntity.property.module == Module.TODO.name)
+        duetimeVisible.postValue((selectedTab == TAB_GENERAL) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dueTimezone != ICalObject.TZ_ALLDAY)
+        completeddateVisible.postValue((selectedTab == TAB_GENERAL) && iCalEntity.property.module == Module.TODO.name)
+        completedtimeVisible.postValue((selectedTab == TAB_GENERAL) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.completedTimezone != ICalObject.TZ_ALLDAY)
+        starteddateVisible.postValue((selectedTab == TAB_GENERAL) && iCalEntity.property.module == Module.TODO.name)
+        startedtimeVisible.postValue((selectedTab == TAB_GENERAL) && iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
+        addStartedAndDueTimeVisible.postValue((selectedTab == TAB_GENERAL) && iCalEntity.property.module == Module.TODO.name)
+        recurrenceVisible.postValue((selectedTab == TAB_RECURRING))
         recurrenceGeneralVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false))
         recurrenceWeekdaysVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_WEEK))
         recurrenceDayOfMonthVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_MONTH))
