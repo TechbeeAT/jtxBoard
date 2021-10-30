@@ -759,8 +759,11 @@ class IcalEditFragment : Fragment() {
         icalEditViewModel.allRelatedto.observe(viewLifecycleOwner, {
 
             // if the current item can be found as linkedICalObjectId and the reltype is CHILD, then it must be a child and changing the collection is not allowed
-            if (icalEditViewModel.iCalObjectUpdated.value?.id != 0L && it?.find { rel -> rel.linkedICalObjectId == icalEditViewModel.iCalObjectUpdated.value?.id && rel.reltype == Reltype.CHILD.name } != null)
+            // also making it recurring is not allowed
+            if (icalEditViewModel.iCalObjectUpdated.value?.id != 0L && it?.find { rel -> rel.linkedICalObjectId == icalEditViewModel.iCalObjectUpdated.value?.id && rel.reltype == Reltype.CHILD.name } != null) {
                 binding.editCollectionSpinner.isEnabled = false
+                binding.editFragmentIcalEditRecur.editRecurSwitch.isEnabled = false
+            }
         })
 
         icalEditViewModel.allCollections.observe(viewLifecycleOwner, {
