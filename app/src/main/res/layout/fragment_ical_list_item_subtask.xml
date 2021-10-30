@@ -41,7 +41,7 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:stepSize="1.0"
+            android:stepSize="5.0"
             android:valueFrom="0.0"
             android:valueTo="100.0"
             app:layout_constraintBottom_toBottomOf="@+id/list_item_subtask_textview"

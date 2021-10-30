@@ -346,7 +346,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:stepSize="1.0"
+            android:stepSize="5.0"
             android:valueFrom="0.0"
             android:valueTo="100.0"
             app:layout_constraintEnd_toStartOf="@+id/list_item_progress_percent"
