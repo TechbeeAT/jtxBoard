@@ -477,7 +477,7 @@ class IcalEditFragment : Fragment() {
 
                  */
 
-                builder.setNeutralButton("Mark as cancelled") { _, _ ->
+                builder.setNeutralButton(R.string.edit_dialog_mark_as_cancelled) { _, _ ->
                     if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name)
                         icalEditViewModel.iCalObjectUpdated.value!!.status =
                             StatusTodo.CANCELLED.name
