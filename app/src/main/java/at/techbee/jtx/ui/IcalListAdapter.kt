@@ -9,9 +9,7 @@
 package at.techbee.jtx.ui
 
 import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Paint
 import android.net.Uri
@@ -36,7 +34,6 @@ import at.techbee.jtx.databinding.FragmentIcalListItemSubtaskBinding
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
 import java.io.FileNotFoundException
-import java.io.IOException
 import java.lang.IllegalArgumentException
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -132,9 +129,9 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
 
             // strikethrough the summary if the item is cancelled
             if(iCal4ListItem.property.status == StatusJournal.CANCELLED.name || iCal4ListItem.property.status == StatusTodo.CANCELLED.name) {
-                holder.summary.setPaintFlags(holder.summary.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
+                holder.summary.paintFlags = holder.summary.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             } else {
-                holder.summary.setPaintFlags(holder.summary.getPaintFlags() and Paint.STRIKE_THRU_TEXT_FLAG.inv())
+                holder.summary.paintFlags = holder.summary.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
 
             //show the classification  only for Journals and only if it is PRIVATE or CONFIDENTIAL
