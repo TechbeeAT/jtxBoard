@@ -51,6 +51,7 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.databinding.*
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_DAY
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_MONTH
+import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_UNSUPPORTED
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_WEEK
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_YEAR
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_ALARMS
@@ -354,47 +355,69 @@ class IcalEditFragment : Fragment() {
 
             try {
 
+                val recur = Recur(icalEditViewModel.iCalEntity.property.rrule)
+
+                if(recur.interval == -1 || recur.count == -1)
+                    throw Exception("Interval or count not set")
+
+                if(icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_UNSUPPORTED)
+                    throw Exception("Unsupported recurrence mode detected")
+
+                if(recur.until != null)
+                    throw Exception("Until value is currently not supported")
+
+                if(recur.experimentalValues.isNotEmpty() || recur.hourList.isNotEmpty() || recur.minuteList.isNotEmpty() || recur.monthList.isNotEmpty() || recur.secondList.isNotEmpty() || recur.setPosList.isNotEmpty() || recur.skip != null || recur.weekNoList.isNotEmpty() || recur.weekStartDay != null || recur.yearDayList.isNotEmpty())
+                    throw Exception("Unsupported values detected")
+
                 binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.value =
-                    Recur(icalEditViewModel.iCalEntity.property.rrule).interval
+                    recur.interval
 
                 binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.value =
-                    Recur(icalEditViewModel.iCalEntity.property.rrule).count
+                    recur.count
 
 
                 //pre-check the weekday-chips according to the rrule
                 if (icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_WEEK) {
-                    Recur(icalEditViewModel.iCalEntity.property.rrule).dayList.forEach {
+                    if(recur.dayList.size < 1)
+                        throw Exception("Recurrence mode Weekly but no weekdays were set")
+                    recur.dayList.forEach {
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.MO) || (!isLocalizedWeekstartMonday() && it == WeekDay.SU))
-                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isChecked =
-                                true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isChecked = true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.TU) || (!isLocalizedWeekstartMonday() && it == WeekDay.MO))
-                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isChecked =
-                                true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isChecked = true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.WE) || (!isLocalizedWeekstartMonday() && it == WeekDay.TU))
-                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isChecked =
-                                true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isChecked = true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.TH) || (!isLocalizedWeekstartMonday() && it == WeekDay.WE))
-                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isChecked =
-                                true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isChecked = true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.FR) || (!isLocalizedWeekstartMonday() && it == WeekDay.TH))
-                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isChecked =
-                                true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isChecked = true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.SA) || (!isLocalizedWeekstartMonday() && it == WeekDay.FR))
-                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isChecked =
-                                true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isChecked = true
                         if ((isLocalizedWeekstartMonday() && it == WeekDay.SU) || (!isLocalizedWeekstartMonday() && it == WeekDay.SA))
-                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isChecked =
-                                true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isChecked = true
                     }
                 }
 
                 //pre-select the day of the month according to the rrule
-                if (icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_MONTH && Recur(icalEditViewModel.iCalEntity.property.rrule).monthDayList.size > 0) {
+                if (icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_MONTH) {
+                    if(recur.monthDayList.size != 1)
+                        throw Exception("Recurrence mode Monthly but no day or multiple days were set")
                     val selectedMonth = Recur(icalEditViewModel.iCalEntity.property.rrule).monthDayList[0]
                     binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.value = selectedMonth
                 }
             } catch (e: Exception) {
                 Log.w("LoadRRule", "Failed to preset UI according to provided RRule\n$e")
+
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(getString(R.string.edit_fragment_recur_unknown_rrule_dialog_title))
+                    .setMessage(getString(R.string.edit_fragment_recur_unknown_rrule_dialog_message))
+                    .setPositiveButton(R.string.ok) { _, _ ->
+                        icalEditViewModel.iCalObjectUpdated.value?.rrule = null
+                        icalEditViewModel.iCalObjectUpdated.value?.rdate = null
+                        icalEditViewModel.iCalObjectUpdated.value?.exdate = null
+                        binding.editFragmentIcalEditRecur.editRecurSwitch.isChecked = false
+                    }
+                    .show()
             }
         }
 
@@ -1992,6 +2015,83 @@ class IcalEditFragment : Fragment() {
                 if((isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isChecked) ||
                     (!isLocalizedWeekstartMonday() && binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isChecked))
                     dayList.add(WeekDay.SU)
+
+                // the day of dtstart must be checked and should not be unchecked!
+                val dtstartCal = Calendar.getInstance().apply {
+                    timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis()
+                }
+                when (dtstartCal.get(Calendar.DAY_OF_WEEK)) {
+                    Calendar.MONDAY -> {
+                        dayList.add(WeekDay.MO)
+                        if(isLocalizedWeekstartMonday()) {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isEnabled = false
+                        } else {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isEnabled = false
+                        }
+                    }
+                    Calendar.TUESDAY -> {
+                        dayList.add(WeekDay.TU)
+                        if(isLocalizedWeekstartMonday()) {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isEnabled = false
+                        } else {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isEnabled = false
+                        }
+                    }
+                    Calendar.WEDNESDAY -> {
+                        dayList.add(WeekDay.WE)
+                        if(isLocalizedWeekstartMonday()) {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isEnabled = false
+                        } else {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isEnabled = false
+                        }
+                    }
+                    Calendar.THURSDAY -> {
+                        dayList.add(WeekDay.TH)
+                        if(isLocalizedWeekstartMonday()) {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isEnabled = false
+                        } else {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isEnabled = false
+                        }
+                    }
+                    Calendar.FRIDAY -> {
+                        dayList.add(WeekDay.FR)
+                        if(isLocalizedWeekstartMonday()) {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isEnabled = false
+                        } else {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isEnabled = false
+                        }
+                    }
+                    Calendar.SATURDAY -> {
+                        dayList.add(WeekDay.SA)
+                        if(isLocalizedWeekstartMonday()) {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isEnabled = false
+                        } else {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isEnabled = false
+                        }
+                    }
+                    Calendar.SUNDAY -> {
+                        dayList.add(WeekDay.SU)
+                        if(isLocalizedWeekstartMonday()) {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isEnabled = false
+                        } else {
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isChecked = true
+                            binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isEnabled = false
+                        }
+                    }
+                }
 
                 if(dayList.isNotEmpty())
                     recurBuilder.dayList(dayList)

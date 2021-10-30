@@ -38,6 +38,7 @@ class IcalEditViewModel(
         const val TAB_ALARMS = 5
         const val TAB_RECURRING = 6
 
+        const val RECURRENCE_MODE_UNSUPPORTED = -1
         const val RECURRENCE_MODE_DAY = 0
         const val RECURRENCE_MODE_WEEK = 1
         const val RECURRENCE_MODE_MONTH = 2
@@ -163,7 +164,7 @@ class IcalEditViewModel(
                     Recur.Frequency.MONTHLY -> RECURRENCE_MODE_MONTH
                     Recur.Frequency.WEEKLY -> RECURRENCE_MODE_WEEK
                     Recur.Frequency.DAILY -> RECURRENCE_MODE_DAY
-                    else -> RECURRENCE_MODE_DAY
+                    else -> RECURRENCE_MODE_UNSUPPORTED
                 }
             }
         } catch (e: Exception) {

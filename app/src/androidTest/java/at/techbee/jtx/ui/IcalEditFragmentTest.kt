@@ -175,7 +175,7 @@ class IcalEditFragmentTest {
 
         //switch to tab contact, attendees, resources
         scenario.onFragment {
-            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_PEOPLE_RES))
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_PEOPLE_RES))
         }
         onView(withText(sampleJournalEntity.property.contact)).check(matches(isDisplayed()))
         onView(withText(sampleJournalEntity.attendees?.get(0)?.caladdress)).check(matches(isDisplayed()))
@@ -185,7 +185,7 @@ class IcalEditFragmentTest {
 
         //switch to tab url, location, comments
         scenario.onFragment {
-            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_LOC_COMMENTS))
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_LOC_COMMENTS))
         }
         onView(withText(sampleJournalEntity.property.url)).check(matches(isDisplayed()))
         onView(withText(sampleJournalEntity.property.location)).check(matches(isDisplayed()))
@@ -194,19 +194,19 @@ class IcalEditFragmentTest {
 
         //switch to tab attachments
         scenario.onFragment {
-            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_ATTACHMENTS))
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_ATTACHMENTS))
         }
         onView(withText(sampleJournalEntity.attachments?.get(0)?.filename)).check(matches(isDisplayed()))
 
         //switch to tab attachments
         scenario.onFragment {
-            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_ATTACHMENTS))
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_ATTACHMENTS))
         }
         onView(withText(sampleJournalEntity.attachments?.get(0)?.filename)).check(matches(isDisplayed()))
 
         //switch to tab subtasks
         scenario.onFragment {
-            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_SUBTASKS))
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_SUBTASKS))
         }
         onView(withText(sampleSubtask.summary)).check(matches(isDisplayed()))
     }
@@ -361,12 +361,12 @@ class IcalEditFragmentTest {
         onView(withId(R.id.material_timepicker_ok_button)).perform(click())
 
         scenario.onFragment {
-            assertEquals(true, it.binding.editTaskDatesFragment?.editStartedDateEdittext?.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment?.editStartedTimeEdittext?.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment?.editDueDateEdittext?.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment?.editDueTimeEdittext?.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment?.editCompletedDateEdittext?.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment?.editCompletedTimeEdittext?.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editStartedDateEdittext.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editStartedTimeEdittext.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editDueDateEdittext.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editDueTimeEdittext.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editCompletedDateEdittext.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editCompletedTimeEdittext.text?.isNotEmpty())
         }
     }
 
@@ -453,7 +453,7 @@ class IcalEditFragmentTest {
 
         //switch tab
         scenario.onFragment {
-            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_PEOPLE_RES))
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_PEOPLE_RES))
         }
 
         val newAttendee = "espressoattendee@techbee.at"
@@ -479,7 +479,7 @@ class IcalEditFragmentTest {
 
         //switch tab
         scenario.onFragment {
-            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_PEOPLE_RES))
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_PEOPLE_RES))
         }
 
         val newResource = "lots of coffee"
@@ -488,7 +488,7 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_resources_add_autocomplete)).perform(pressImeActionButton())
 
         scenario.onFragment {
-            assertTrue(it.binding.editResourcesAddAutocomplete?.text.isNullOrBlank())    // make sure that the edittext got cleared
+            assertTrue(it.binding.editResourcesAddAutocomplete.text.isNullOrBlank())    // make sure that the edittext got cleared
             assertTrue(it.icalEditViewModel.resourceUpdated.contains(Resource(text = newResource)))
         }
 
@@ -507,7 +507,7 @@ class IcalEditFragmentTest {
 
         //switch tab
         scenario.onFragment {
-            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_LOC_COMMENTS))
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_LOC_COMMENTS))
         }
 
         val newComment = "maybe that was one espresso too much :-P"
@@ -534,7 +534,7 @@ class IcalEditFragmentTest {
 
         //switch tab
         scenario.onFragment {
-            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_SUBTASKS))
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_SUBTASKS))
         }
 
         val newSubtask = "get decaf coffee^^"
@@ -564,7 +564,7 @@ class IcalEditFragmentTest {
 
         //switch tab
         scenario.onFragment {
-            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_ATTACHMENTS))
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_ATTACHMENTS))
         }
 
         onView(allOf(withId(R.id.button_attachment_add_link), withText(R.string.edit_add_link_button_text))).perform(scrollTo(), click())
@@ -591,7 +591,7 @@ class IcalEditFragmentTest {
 
         //switch tab
         scenario.onFragment {
-            it.binding.icalEditTabs?.selectTab(it.binding.icalEditTabs?.getTabAt(IcalEditViewModel.TAB_RECURRING))
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_RECURRING))
         }
 
         onView(withText(R.string.edit_recurrence_header)).check(matches(isDisplayed()))
