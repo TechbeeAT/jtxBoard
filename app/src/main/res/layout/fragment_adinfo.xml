@@ -67,21 +67,76 @@
                 app:layout_constraintTop_toBottomOf="@+id/adinfo_button_userconsent" />
 
 
-            <ImageButton
-                android:id="@+id/adinfo_button_playstore"
-                android:layout_width="200dp"
-                android:layout_height="70dp"
-                android:layout_marginStart="16dp"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/adinfo_card_purchase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:contentDescription="Google Play"
-                android:padding="16dp"
-                android:scaleType="fitCenter"
+                android:checkable="false"
+                android:clickable="false"
+                android:focusable="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/adinfo_adfree_text"
-                app:srcCompat="@drawable/ic_google_play"
-                tools:ignore="ContentDescription,HardcodedText" />
+                app:layout_constraintTop_toBottomOf="@id/adinfo_adfree_text">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/adinfo_card_purchase_logo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        app:layout_constraintBottom_toBottomOf="@+id/adinfo_card_purchase_description"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/adinfo_card_purchase_header"
+                        app:srcCompat="@mipmap/ic_launcher"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/adinfo_card_purchase_header"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/adinfo_adfree_purchase_header"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/adinfo_card_purchase_price"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/adinfo_card_purchase_logo"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/adinfo_card_purchase_description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="@string/adinfo_adfree_purchase_description"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/adinfo_card_purchase_price"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/adinfo_card_purchase_header"
+                        app:layout_constraintTop_toBottomOf="@+id/adinfo_card_purchase_header" />
+
+                    <TextView
+                        android:id="@+id/adinfo_card_purchase_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/adinfo_card_purchase_header"
+                        tools:text="€ X,XX" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
 
             <TextView
                 android:id="@+id/adinfo_adfree_further_download_options"
@@ -96,23 +151,22 @@
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/adinfo_button_playstore" />
+                app:layout_constraintTop_toBottomOf="@+id/adinfo_card_purchase" />
 
 
             <TextView
                 android:id="@+id/adinfo_adfree_download_link"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:autoLink="web"
-                android:text="https://jtx.techbee.at/#Download"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:gravity="center"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:text="https://jtx.techbee.at/#Download"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

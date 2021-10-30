@@ -1,6 +1,8 @@
 package at.techbee.jtx
 
+import android.app.Activity
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LifecycleObserver
 import com.android.billingclient.api.*
 import kotlinx.coroutines.*
@@ -14,10 +16,7 @@ class BillingManager :
 
         private const val IN_APP_PRODUCT_ADFREE = "adfree"
 
-
-        var adfreePrice: String? = null
-        var adfreeTitle: String? = null
-        var adfreeDesc: String? = null
+        var adfreeSkuDetails: SkuDetails? = null
 
 
         private val purchasesUpdatedListener =
@@ -27,10 +26,10 @@ class BillingManager :
 
 
 
-        fun initialise(activity: MainActivity) {
+        fun initialise(activity: Activity) {
 
             // initialisation is done already, just return and do nothing
-            if(billingClient != null && adfreePrice != null && adfreeTitle != null && adfreeDesc != null)
+            if(billingClient != null && adfreeSkuDetails != null)
                 return
 
             billingClient = BillingClient.newBuilder(activity)
@@ -78,15 +77,28 @@ class BillingManager :
                 Log.d("Billing Client", "Querying products")
                 val queryResult = billingClient?.querySkuDetails(params)
                 queryResult?.skuDetailsList?.forEach {
-                    adfreePrice = it.price
-                    adfreeTitle = it.title
-                    adfreeDesc = it.description
+                    adfreeSkuDetails = it
                 }
             }
 
 
 
             // Process the result.
+        }
+
+
+        fun launchBillingFlow(activity: Activity) {
+
+            if(billingClient != null && adfreeSkuDetails != null) {
+                // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
+                val flowParams = BillingFlowParams.newBuilder()
+                    .setSkuDetails(adfreeSkuDetails!!)
+                    .build()
+                val responseCode = billingClient?.launchBillingFlow(activity, flowParams)?.responseCode
+            } else {
+                Toast.makeText(activity, "Ooops, something went wrong there. Please check your internet connection or try again later!", Toast.LENGTH_LONG).show()
+                this.initialise(activity)
+            }
         }
     }
 

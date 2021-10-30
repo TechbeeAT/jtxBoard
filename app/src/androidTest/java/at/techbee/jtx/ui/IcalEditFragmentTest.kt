@@ -714,4 +714,7 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_recur_all_occurences)).check(matches(not(isDisplayed())))
         onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(not(isDisplayed())))
     }
+
+
+    // TODO continue with more checks on recurrence
 }

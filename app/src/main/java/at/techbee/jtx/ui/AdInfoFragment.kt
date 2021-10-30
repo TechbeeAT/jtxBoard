@@ -1,7 +1,6 @@
 package at.techbee.jtx.ui
 
 import android.app.Application
-import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,9 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
-import android.content.Intent
-import android.net.Uri
 import at.techbee.jtx.AdManager
+import at.techbee.jtx.BillingManager
 import at.techbee.jtx.databinding.FragmentAdinfoBinding
 import com.google.android.ump.ConsentInformation
 
@@ -23,12 +21,6 @@ class AdInfoFragment : Fragment() {
     lateinit var application: Application
     private lateinit var inflater: LayoutInflater
 
-
-    companion object {
-
-        private const val JTX_ADFREE_PACKAGE_NAME = "TODO"  //TODO: Add correct package name when ready!
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,15 +45,14 @@ class AdInfoFragment : Fragment() {
         }
 
 
-
-
-        binding.adinfoButtonPlaystore.setOnClickListener {
-            try {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$JTX_ADFREE_PACKAGE_NAME")))
-            } catch (anfe: ActivityNotFoundException) {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$JTX_ADFREE_PACKAGE_NAME")))
-            }
+        BillingManager.adfreeSkuDetails?.price?.let {
+            binding.adinfoCardPurchasePrice.text = it
         }
+
+        binding.adinfoCardPurchase.setOnClickListener {
+            BillingManager.launchBillingFlow(requireActivity())
+        }
+
         return binding.root
     }
 

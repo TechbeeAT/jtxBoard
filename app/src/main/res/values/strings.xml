@@ -347,6 +347,9 @@
 
     <string name="adinfo_text">The development of an app is a complex topic and development, maintenance and support is hard work. Your version of jtx Board is free and financed by ads. This means that once per week you will get a rewarded interstitial ad (usually a video) on saving an entry. If you watch the video until the end (or until you can skip the ad) you will be ad-free for another week.</string>
     <string name="adinfo_adfree_text">If you prefer having no ads, please consider the ad-free option of this app. You can find the ad-free option on the Google Play Store:</string>
+    <string name="adinfo_adfree_purchase_header">Upgrade to jtx Board Ad-free</string>
+    <string name="adinfo_adfree_purchase_description">Thank you for considering the ad-free upgrade of jtx Board. This upgrade removes the recurring ads from this app.</string>
+
     <string name="adinfo_adfree_furtherdownloadoptions">For further download options please visit</string>
     <string name="adinfo_show_user_consent">Show user consent</string>
 
