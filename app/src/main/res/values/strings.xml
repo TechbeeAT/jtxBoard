@@ -29,6 +29,9 @@
     <string name="toolbar_text_board" translatable="false">Board</string>
     <string name="toolbar_text_view" translatable="false">View</string>
     <string name="toolbar_text_edit" translatable="false">Edit</string>
+    <string name="toolbar_text_edit_journal" translatable="false">Journal</string>
+    <string name="toolbar_text_edit_note" translatable="false">Note</string>
+    <string name="toolbar_text_edit_todo" translatable="false">Task</string>
     <string name="toolbar_text_filter" translatable="false">Filter</string>
     <string name="toolbar_text_settings" translatable="false">Settings</string>
     <string name="toolbar_text_about" translatable="false">About</string>

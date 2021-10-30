@@ -37,6 +37,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDeepLinkBuilder
@@ -425,6 +426,10 @@ class IcalEditFragment : Fragment() {
             }
         })
 
+        binding.editSummaryEditTextinputfield.addTextChangedListener {
+            updateToolbarText()
+        }
+
 
         icalEditViewModel.savingClicked.observe(viewLifecycleOwner, {
             if (it == true) {
@@ -544,6 +549,9 @@ class IcalEditFragment : Fragment() {
 
 
         icalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {
+
+            updateToolbarText()
+
             //TODO: Check if this can be done without observer (with livedata directly)
             binding.editDtstartDay.text = convertLongToDayString(it.dtstart)
             binding.editDtstartMonth.text = convertLongToMonthString(it.dtstart)
@@ -1235,12 +1243,7 @@ class IcalEditFragment : Fragment() {
 
     override fun onResume() {
 
-        try {
-            val activity = requireActivity() as MainActivity
-            activity.setToolbarText(getString(R.string.toolbar_text_edit))
-        } catch (e: ClassCastException) {
-            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
-        }
+        updateToolbarText()
 
         /*
         icalEditViewModel.isLandscape =
@@ -1250,6 +1253,25 @@ class IcalEditFragment : Fragment() {
 
 
         super.onResume()
+    }
+
+    private fun updateToolbarText() {
+        try {
+            val activity = requireActivity() as MainActivity
+            var toolbarText = getString(R.string.toolbar_text_edit)
+            toolbarText += when(icalEditViewModel.iCalObjectUpdated.value?.module) {
+                Module.JOURNAL.name -> " - " + getString(R.string.toolbar_text_edit_journal)
+                Module.NOTE.name -> " - " + getString(R.string.toolbar_text_edit_note)
+                Module.TODO.name -> " - " + getString(R.string.toolbar_text_edit_todo)
+                else -> null
+            }
+            if(binding.editSummaryEditTextinputfield.text?.isNotBlank() == true)
+                toolbarText += ": " + binding.editSummaryEditTextinputfield.text
+
+            activity.setToolbarText(toolbarText)
+        } catch (e: ClassCastException) {
+            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
+        }
     }
 
 
