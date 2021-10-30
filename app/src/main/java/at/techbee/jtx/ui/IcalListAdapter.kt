@@ -13,6 +13,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -85,8 +86,6 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             return
 
         val dtstartVisibility = if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
-        val statusVisibility = if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
-        val classificationVisibility = if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
         val progressVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
         val subtaskExpandVisibility = if (model.searchModule == Module.TODO.name && settingShowSubtasks) View.VISIBLE else View.GONE
         val priorityVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
@@ -99,10 +98,6 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         holder.dtstartYear.visibility = dtstartVisibility
         holder.dtstartTime.visibility = dtstartVisibility
         holder.dtstartTimeZone.visibility = dtstartVisibility
-        holder.status.visibility = statusVisibility
-        holder.statusIcon.visibility = statusVisibility
-        holder.classification.visibility = classificationVisibility
-        holder.classificationIcon.visibility = classificationVisibility
         holder.progressLabel.visibility = progressVisibility
         holder.progressSlider.visibility = progressVisibility
         holder.progressPercent.visibility = progressVisibility
@@ -125,6 +120,32 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                 holder.description.text = iCal4ListItem.property.description
                 holder.description.visibility = View.VISIBLE
             }
+
+            //show the status only for Journals and only if it is DRAFT or CANCELLED
+            if(model.searchModule == Module.JOURNAL.name && (iCal4ListItem.property.status == StatusJournal.DRAFT.name || iCal4ListItem.property.status == StatusJournal.CANCELLED.name)) {
+                holder.status.visibility = View.VISIBLE
+                holder.statusIcon.visibility = View.VISIBLE
+            } else {
+                holder.status.visibility = View.GONE
+                holder.statusIcon.visibility = View.GONE
+            }
+
+            // strikethrough the summary if the item is cancelled
+            if(iCal4ListItem.property.status == StatusJournal.CANCELLED.name || iCal4ListItem.property.status == StatusTodo.CANCELLED.name) {
+                holder.summary.setPaintFlags(holder.summary.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
+            } else {
+                holder.summary.setPaintFlags(holder.summary.getPaintFlags() and Paint.STRIKE_THRU_TEXT_FLAG.inv())
+            }
+
+            //show the classification  only for Journals and only if it is PRIVATE or CONFIDENTIAL
+            if(model.searchModule == Module.JOURNAL.name && (iCal4ListItem.property.classification == Classification.PRIVATE.name || iCal4ListItem.property.classification == Classification.CONFIDENTIAL.name)) {
+                holder.classification.visibility = View.VISIBLE
+                holder.classificationIcon.visibility = View.VISIBLE
+            } else {
+                holder.classification.visibility = View.GONE
+                holder.classificationIcon.visibility = View.GONE
+            }
+
 
             if (iCal4ListItem.property.categories.isNullOrEmpty()) {
                 holder.categories.visibility = View.GONE
