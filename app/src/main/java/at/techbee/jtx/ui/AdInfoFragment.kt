@@ -45,13 +45,18 @@ class AdInfoFragment : Fragment() {
         }
 
 
-        BillingManager.adfreeSkuDetails?.price?.let {
-            binding.adinfoCardPurchasePrice.text = it
-        }
+        BillingManager.adfreeSkuDetails?.price?.let { binding.adinfoCardPurchasePrice.text = it }
 
         binding.adinfoCardPurchase.setOnClickListener {
-            BillingManager.launchBillingFlow(requireActivity())
+            BillingManager.launchBillingFlow(requireActivity(), BillingManager.adfreeSkuDetails)
         }
+
+        BillingManager.adfreeSubSkuDetails?.price?.let {   binding.adinfoCardSubscribePrice.text = it      }
+
+        binding.adinfoCardSubscribe.setOnClickListener {
+            BillingManager.launchBillingFlow(requireActivity(), BillingManager.adfreeSubSkuDetails)
+        }
+
 
         return binding.root
     }

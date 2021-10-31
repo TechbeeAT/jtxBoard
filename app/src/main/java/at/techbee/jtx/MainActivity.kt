@@ -97,45 +97,43 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
 
 
+        // This code is put in onResume as the Ad might need to be loaded once isAdShowtime returns true
 
-        if(AdManager.isAdFlavor()) {
-            // This code is put in onResume as the Ad might need to be loaded once isAdShowtime returns true
-
-            // initialised as true, this should be overwritten by the billing client. But to be sure to not show any ads to users who have bought the app, it's better to initialise with true
-            var isPaid = false
-            if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY) {
-                BillingManager.initialise(this)
-                // TODO Check if the user already bought the app. If yes, skip the Dialog Box
-            }
-
-
-            if (AdManager.isAdShowtime(this) && !AdManager.isAdsAccepted(this) && !isPaid) {
-
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(resources.getString(R.string.list_dialog_contribution_title))
-                    .setMessage(resources.getString(R.string.list_dialog_contribution_message))
-                    .setNegativeButton(resources.getString(R.string.list_dialog_contribution_buyadfree)) { _, _ ->
-                        // Respond to negative button press
-                        AdManager.setAdsAccepted(false, this)
-                        Toast.makeText(
-                            this,
-                            "Start the Intent for the play store",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        //TODO: open in app-buying for ad-free option
-                    }
-                    .setPositiveButton(resources.getString(R.string.list_dialog_contribution_acceptads)) { _, _ ->
-                        // Respond to positive button press
-                        // Ads are accepted, load user consent
-                        AdManager.setAdsAccepted(true, this)
-                        AdManager.initializeUserConsent(this, applicationContext)
-                    }
-                    .show()
-            } else if (AdManager.isAdShowtime(this) && AdManager.isAdsAccepted(this) && !isPaid) {
-                AdManager.initializeUserConsent(this, applicationContext)
-                Log.d("Ads accepted", "Ads accepted, loading consent form if necessary")
-            }
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY) {
+            BillingManager.initialise(this)
+            // TODO Check if the user already bought the app. If yes, skip the Dialog Box
         }
+
+        // check if ads should be shown, if ads were not accepted yet, if it's the google play flavor and the upgrade was not purchased yet (or if it's the alpha flavor)
+        if (AdManager.isAdShowtime(this)
+            && !AdManager.isAdsAccepted(this)
+            && ((BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isPurchased())
+                    || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA)) {
+
+            MaterialAlertDialogBuilder(this)
+                .setTitle(resources.getString(R.string.list_dialog_contribution_title))
+                .setMessage(resources.getString(R.string.list_dialog_contribution_message))
+                .setNegativeButton(resources.getString(R.string.list_dialog_contribution_buyadfree)) { _, _ ->
+                    // Respond to negative button press
+                    AdManager.setAdsAccepted(false, this)
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_adInfoFragment)
+                }
+                .setPositiveButton(resources.getString(R.string.list_dialog_contribution_acceptads)) { _, _ ->
+                    // Respond to positive button press
+                    // Ads are accepted, load user consent
+                    AdManager.setAdsAccepted(true, this)
+                    AdManager.initializeUserConsent(this, applicationContext)
+                }
+                .show()
+        } else if (AdManager.isAdShowtime(this)
+            && AdManager.isAdsAccepted(this)
+            && ((BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isPurchased())
+                    || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA)) {
+            AdManager.initializeUserConsent(this, applicationContext)
+            Log.d("Ads accepted", "Ads accepted, loading consent form if necessary")
+        }
+
 
 
         // handle the intents for the shortcuts
@@ -216,12 +214,10 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                         .navigate(R.id.action_global_aboutFragment)
 
                 R.id.nav_donate ->
-                    //if (BuildConfig.FLAVOR != App.FLAVOR_GOOGLE_PLAY)
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_donateFragment)
 
                 R.id.nav_adinfo ->
-                    //if (BuildConfig.FLAVOR != App.FLAVOR_GOOGLE_PLAY)
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_adInfoFragment)
 

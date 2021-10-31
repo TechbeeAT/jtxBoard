@@ -294,13 +294,5 @@ class AdManager {
 
             adPrefs?.edit()?.putBoolean(PREFS_ADS_ACCEPTED, isAccepted)?.apply()
         }
-
-        fun isAdFlavor(): Boolean = when(BuildConfig.FLAVOR) {
-            MainActivity.BUILD_FLAVOR_GOOGLEPLAY -> true
-            MainActivity.BUILD_FLAVOR_OSE -> false
-            MainActivity.BUILD_FLAVOR_ALPHA -> true
-            else -> true
-        }
-
     }
 }

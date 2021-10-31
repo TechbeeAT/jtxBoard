@@ -107,7 +107,7 @@
     <string name="list_progress">Progress</string>
     <string name="list_expand">Expand</string>
     <string name="list_dialog_contribution_title">Select your contribution form</string>
-    <string name="list_dialog_contribution_message">Please choose your contribution to this app: Accept ads or buy the ad-free option from the store. If you are unsure, check the ad-option, you can still change your mind and buy the ad-free option later!</string>
+    <string name="list_dialog_contribution_message">Please choose your contribution to this app: Accept ads or buy the ad-free upgrade. If you are unsure, check the ad-option, you can still change your mind and buy the ad-free option later from the menu!</string>
     <string name="list_dialog_contribution_acceptads">Accept ads</string>
     <string name="list_dialog_contribution_buyadfree">Buy ad-free</string>
     <string name="list_num_attendees_contentdesc">Number of attendees</string>
@@ -346,9 +346,13 @@
     <string name="donate_other_donation_methods">If you would like to consier any other donation method, please check our website:</string>
 
     <string name="adinfo_text">The development of an app is a complex topic and development, maintenance and support is hard work. Your version of jtx Board is free and financed by ads. This means that once per week you will get a rewarded interstitial ad (usually a video) on saving an entry. If you watch the video until the end (or until you can skip the ad) you will be ad-free for another week.</string>
-    <string name="adinfo_adfree_text">If you prefer having no ads, please consider the ad-free option of this app. You can find the ad-free option on the Google Play Store:</string>
+    <string name="adinfo_adfree_text">If you prefer having no ads, please consider the following upgrades:</string>
     <string name="adinfo_adfree_purchase_header">Upgrade to jtx Board Ad-free</string>
     <string name="adinfo_adfree_purchase_description">Thank you for considering the ad-free upgrade of jtx Board. This upgrade removes the recurring ads from this app.</string>
+    <string name="adinfo_adfree_subscribe_header">Upgrade to jtx Board Ad-free Subscription</string>
+    <string name="adinfo_adfree_subscribe_description">The subscription removes the recurring ads from this app and additionally you support the continuous development of this app.</string>
+    <string name="adinfo_adfree_subscribe_yearly">Yearly</string>
+
 
     <string name="adinfo_adfree_furtherdownloadoptions">For further download options please visit</string>
     <string name="adinfo_show_user_consent">Show user consent</string>

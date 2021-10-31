@@ -138,6 +138,89 @@
             </com.google.android.material.card.MaterialCardView>
 
 
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/adinfo_card_subscribe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_marginTop="16dp"
+                android:checkable="false"
+                android:clickable="false"
+                android:focusable="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/adinfo_card_purchase">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/adinfo_card_subscribe_logo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        app:layout_constraintBottom_toBottomOf="@+id/adinfo_card_subscribe_description"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/adinfo_card_subscribe_header"
+                        app:srcCompat="@mipmap/ic_launcher"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/adinfo_card_subscribe_header"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/adinfo_adfree_subscribe_header"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/adinfo_card_subscribe_price"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/adinfo_card_subscribe_logo"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/adinfo_card_subscribe_description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="@string/adinfo_adfree_subscribe_description"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/adinfo_card_subscribe_price"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/adinfo_card_subscribe_header"
+                        app:layout_constraintTop_toBottomOf="@+id/adinfo_card_subscribe_header" />
+
+                    <TextView
+                        android:id="@+id/adinfo_card_subscribe_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/adinfo_card_subscribe_header"
+                        tools:text="€ X,XX" />
+
+                    <TextView
+                        android:id="@+id/adinfo_card_subscribe_period"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:textAlignment="textEnd"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/adinfo_card_subscribe_price"
+                        app:layout_constraintTop_toBottomOf="@+id/adinfo_card_subscribe_price"
+                        android:text="@string/adinfo_adfree_subscribe_yearly" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
             <TextView
                 android:id="@+id/adinfo_adfree_further_download_options"
                 android:layout_width="0dp"
@@ -151,7 +234,7 @@
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/adinfo_card_purchase" />
+                app:layout_constraintTop_toBottomOf="@+id/adinfo_card_subscribe" />
 
 
             <TextView
