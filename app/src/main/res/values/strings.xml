@@ -349,8 +349,12 @@
     <string name="adinfo_adfree_text">If you prefer having no ads, please consider the following upgrades:</string>
     <string name="adinfo_adfree_purchase_header">Upgrade to jtx Board Ad-free</string>
     <string name="adinfo_adfree_purchase_description">Thank you for considering the ad-free upgrade of jtx Board. This upgrade removes the recurring ads from this app.</string>
+    <string name="adinfo_adfree_purchase_header_thankyou">Thank you for buying jtx Board Ad-free</string>
+    <string name="adinfo_adfree_purchase_description_thankyou">Ads are now removed from the app. If you like this app and you would like to support the continuous development, please also consider the subscription.</string>
     <string name="adinfo_adfree_subscribe_header">Upgrade to jtx Board Ad-free Subscription</string>
     <string name="adinfo_adfree_subscribe_description">The subscription removes the recurring ads from this app and additionally you support the continuous development of this app.</string>
+    <string name="adinfo_adfree_subscribe_header_thankyou">Thank you for buying the jtx Board Ad-free Subscription</string>
+    <string name="adinfo_adfree_subscribe_description_thankyou">Ads are now removed from the ad and upcoming features will automatically be enabled. Your subscription is a major contribution to keeping this project running!</string>
     <string name="adinfo_adfree_subscribe_yearly">Yearly</string>
 
 

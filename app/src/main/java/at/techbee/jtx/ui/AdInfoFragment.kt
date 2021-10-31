@@ -44,14 +44,27 @@ class AdInfoFragment : Fragment() {
             }
         }
 
+        if(BillingManager.isAdfreePurchased()) {      // change text if item was already bought
+            binding.adinfoCardPurchaseHeader.text = getText(R.string.adinfo_adfree_purchase_header_thankyou)
+            binding.adinfoCardPurchaseDescription.text = getText(R.string.adinfo_adfree_purchase_description_thankyou)
+            binding.adinfoCardPurchasePrice.visibility = View.GONE
+        } else {
+            BillingManager.adfreeSkuDetails?.price?.let { binding.adinfoCardPurchasePrice.text = it }
+        }
 
-        BillingManager.adfreeSkuDetails?.price?.let { binding.adinfoCardPurchasePrice.text = it }
+        if(BillingManager.isSubscriptionPurchased()) {      // change text if item was already bought
+            binding.adinfoCardSubscribeHeader.text = getText(R.string.adinfo_adfree_subscribe_header_thankyou)
+            binding.adinfoCardSubscribeDescription.text = getText(R.string.adinfo_adfree_subscribe_description_thankyou)
+            binding.adinfoCardSubscribePrice.visibility = View.GONE
+        } else {
+            BillingManager.adfreeSubSkuDetails?.price?.let {   binding.adinfoCardSubscribePrice.text = it      }
+        }
+
 
         binding.adinfoCardPurchase.setOnClickListener {
             BillingManager.launchBillingFlow(requireActivity(), BillingManager.adfreeSkuDetails)
         }
 
-        BillingManager.adfreeSubSkuDetails?.price?.let {   binding.adinfoCardSubscribePrice.text = it      }
 
         binding.adinfoCardSubscribe.setOnClickListener {
             BillingManager.launchBillingFlow(requireActivity(), BillingManager.adfreeSubSkuDetails)

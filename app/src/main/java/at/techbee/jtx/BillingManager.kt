@@ -203,10 +203,8 @@ class BillingManager :
         /**
          * @return true if either the one-time item got the status PURCHASED or the subscription got the status PURCHASED, otherwise false
          */
-        fun isPurchased(): Boolean {
-            val purchaseState = billingPrefs?.getString(PREFS_BILLING_ADFREE_PURCHASE_STATE, Purchase.PurchaseState.UNSPECIFIED_STATE.toString())
-            val subscriptionState = billingPrefs?.getString(PREFS_BILLING_ADFREESUB_PURCHASE_STATE, Purchase.PurchaseState.UNSPECIFIED_STATE.toString())
-            return purchaseState == Purchase.PurchaseState.PURCHASED.toString() || subscriptionState == Purchase.PurchaseState.PURCHASED.toString()    // true if purchased
-        }
+        fun isPurchased(): Boolean = isAdfreePurchased() || isSubscriptionPurchased()
+        fun isAdfreePurchased(): Boolean = billingPrefs?.getString(PREFS_BILLING_ADFREE_PURCHASE_STATE, Purchase.PurchaseState.UNSPECIFIED_STATE.toString()) == Purchase.PurchaseState.PURCHASED.toString()
+        fun isSubscriptionPurchased(): Boolean = billingPrefs?.getString(PREFS_BILLING_ADFREESUB_PURCHASE_STATE, Purchase.PurchaseState.UNSPECIFIED_STATE.toString()) == Purchase.PurchaseState.PURCHASED.toString()
     }
 }
