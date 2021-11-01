@@ -9,7 +9,10 @@
 <resources>
 
     <!-- App title and fragment titles -->
-    <string name="app_name">jtxBoard</string>
+    <string name="app_name">jtx Board</string>
+    <string name="app_permission_label">jtx Board sync Journals, Notes &amp; Tasks</string>
+    <string name="app_permission_desc">sync jtx Board content with other applications like DAVx⁵</string>
+
 
     <!-- Possible audio formats for settings -->
     <array name="settings_audio_formats">
