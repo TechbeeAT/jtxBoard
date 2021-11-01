@@ -15,7 +15,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val ENFORCE_DARK_THEME = "settings_enfore_dark_theme"
         const val SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_in_list"
         const val SHOW_ATTACHMENTS_IN_LIST = "settings_show_attachments_in_list"
-        const val SHOW_PROGRESS_IN_LIST = "settings_show_progress_in_list"
+        const val SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST = "settings_show_progress_for_maintasks_in_list"
+        const val SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST = "settings_show_progress_for_subtasks_in_list"
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

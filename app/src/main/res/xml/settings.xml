@@ -35,9 +35,15 @@
             app:useSimpleSummaryProvider="true"/>
 
         <SwitchPreference
-            app:key="settings_show_progress_in_list"
+            app:key="settings_show_progress_for_maintasks_in_list"
             app:defaultValue="true"
-            app:title="@string/settings_show_progress_in_list"
+            app:title="@string/settings_show_progress_for_maintasks_in_list"
+            app:useSimpleSummaryProvider="true"/>
+
+        <SwitchPreference
+            app:key="settings_show_progress_for_subtasks_in_list"
+            app:defaultValue="true"
+            app:title="@string/settings_show_progress_for_subtasks_in_list"
             app:useSimpleSummaryProvider="true"/>
 
 

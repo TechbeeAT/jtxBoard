@@ -45,7 +45,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
     private lateinit var settings: SharedPreferences
     private var settingShowSubtasks = true
     private var settingShowAttachments = true
-    private var settingShowProgress = true
+    private var settingShowProgressSubtasks = true
+    private var settingShowProgressMaintasks = false
     private var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = model.iCal4List
     private var allSubtasks: LiveData<List<ICal4List?>> = model.allSubtasks
 
@@ -56,7 +57,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         settings = PreferenceManager.getDefaultSharedPreferences(context)
         settingShowSubtasks = settings.getBoolean(SettingsFragment.SHOW_SUBTASKS_IN_LIST, true)
         settingShowAttachments = settings.getBoolean(SettingsFragment.SHOW_ATTACHMENTS_IN_LIST, true)
-        settingShowProgress = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_IN_LIST, true)
+        settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false)
+        settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true)
 
         val itemHolder = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_ical_list_item, parent, false)
@@ -83,7 +85,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             return
 
         val dtstartVisibility = if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
-        val progressVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
+        val progressVisibility = if (model.searchModule == Module.TODO.name && settingShowProgressMaintasks) View.VISIBLE else View.GONE
+        val progressTopVisibility = if (model.searchModule == Module.TODO.name && !settingShowProgressMaintasks) View.VISIBLE else View.GONE
         val subtaskExpandVisibility = if (model.searchModule == Module.TODO.name && settingShowSubtasks) View.VISIBLE else View.GONE
         val priorityVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
         val dueVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
@@ -99,6 +102,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         holder.progressSlider.visibility = progressVisibility
         holder.progressPercent.visibility = progressVisibility
         holder.progressCheckbox.visibility = progressVisibility
+        holder.progressCheckboxTop.visibility = progressTopVisibility
         holder.priorityIcon.visibility = priorityVisibility
         holder.priority.visibility = priorityVisibility
         holder.due.visibility = dueVisibility
@@ -194,6 +198,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             /* START handle subtasks */
             holder.progressSlider.value = iCal4ListItem.property.percent?.toFloat() ?: 0F
             holder.progressCheckbox.isChecked = iCal4ListItem.property.percent == 100
+            holder.progressCheckboxTop.isChecked = iCal4ListItem.property.percent == 100
+
             if (iCal4ListItem.relatedto?.isNotEmpty() == true && iCal4ListItem.property.component == Component.VTODO.name && settingShowSubtasks) {   // TODO: also tasks with a subnote would be shown here, they should also be excluded!
                 holder.expandSubtasks.visibility = View.VISIBLE
             } else {
@@ -239,8 +245,11 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                 }
             }
 
+            /*
             if (iCal4ListItem.property.percent == 100)
                 holder.progressCheckbox.isActivated = true
+
+             */
             /* END handle subtasks */
 
 
@@ -351,6 +360,19 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
                         iCal4ListItem.property.isLinkedRecurringInstance
                     )
                 }
+
+                holder.progressCheckboxTop.setOnCheckedChangeListener { _, checked ->
+                    if (checked)
+                        holder.progressSlider.value = 100F
+                    else
+                        holder.progressSlider.value = 0F
+
+                    model.updateProgress(
+                        iCal4ListItem.property.id,
+                        holder.progressSlider.value.toInt(),
+                        iCal4ListItem.property.isLinkedRecurringInstance
+                    )
+                }
             }
 
             val itemSubtasks =
@@ -420,6 +442,8 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
 
         var summary: TextView = itemView.findViewById(R.id.list_item_summary)
         var description: TextView = itemView.findViewById(R.id.list_item_description)
+        var progressCheckboxTop: CheckBox = itemView.findViewById(R.id.list_item_progress_checkbox_top)
+
 
         var categories: TextView = itemView.findViewById(R.id.list_item_categories)
         var status: TextView = itemView.findViewById(R.id.list_item_status)
@@ -536,7 +560,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             )
         }
 
-        if(settingShowProgress) {
+        if(settingShowProgressSubtasks) {
             subtaskBinding.listItemSubtaskProgressSlider.visibility = View.VISIBLE
             subtaskBinding.listItemSubtaskProgressPercent.visibility = View.VISIBLE
         } else {
