@@ -38,8 +38,11 @@ class IcalListViewModel(
     var searchClassification: MutableList<Classification> = mutableListOf()
     var searchCollection: MutableList<String> = mutableListOf()
 
+    var searchSettingShowSubtasksOfVJOURNALs: Boolean = false
 
-    var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
+
+    //var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
+    var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
     var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQuery) {
         database.getIcalObjectWithRelatedto(it)
     }
@@ -173,7 +176,16 @@ class IcalListViewModel(
         }
 
         // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
-        queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
+        //queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
+        when {
+            (searchModule == Module.JOURNAL.name || searchModule == Module.NOTE.name) ->
+                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfVJOURNAL = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfVTODO = 0 "
+            (searchModule == Module.TODO.name && !searchSettingShowSubtasksOfVJOURNALs) ->
+                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfVJOURNAL = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfVTODO = 0 "
+            // to make it clearer, if all Subtasks should be shown, then we don't need an additional condition
+            (searchModule == Module.TODO.name && searchSettingShowSubtasksOfVJOURNALs) ->
+                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfVTODO = 0 "
+        }
 
         when (searchModule) {
             Module.JOURNAL.name -> queryString += "ORDER BY $COLUMN_DTSTART ASC, $COLUMN_CREATED ASC "

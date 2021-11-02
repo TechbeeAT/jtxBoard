@@ -23,6 +23,7 @@ import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import at.techbee.jtx.MainActivity
@@ -53,6 +54,8 @@ class IcalListFragment : Fragment() {
 
     private var optionsMenu: Menu? = null
     private var gotodateMenuItem: MenuItem? = null
+
+    private var settings: SharedPreferences? = null
 
     private lateinit var prefs: SharedPreferences
     private lateinit var arguments: IcalListFragmentArgs
@@ -97,7 +100,10 @@ class IcalListFragment : Fragment() {
         // add menu
         setHasOptionsMenu(true)
 
-     // set up recycler view
+        settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
+
+
+        // set up recycler view
         recyclerView = binding.vjournalListItemsRecyclerView
         linearLayoutManager = LinearLayoutManager(application.applicationContext)
         //staggeredGridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
@@ -263,6 +269,7 @@ class IcalListFragment : Fragment() {
 
     override fun onResume() {
 
+        icalListViewModel.searchSettingShowSubtasksOfVJOURNALs = settings?.getBoolean("settings_show_subtasks_of_VJOURNALs_in_tasklist", false) ?: false
         applyFilters()
 
         try {

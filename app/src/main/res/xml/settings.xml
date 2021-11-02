@@ -46,7 +46,11 @@
             app:title="@string/settings_show_progress_for_subtasks_in_list"
             app:useSimpleSummaryProvider="true"/>
 
-
+        <SwitchPreference
+            app:key="settings_show_subtasks_of_VJOURNALs_in_tasklist"
+            app:defaultValue="false"
+            app:title="@string/settings_show_subtasks_of_VJOURNALs_in_tasklist"
+            app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>
 
