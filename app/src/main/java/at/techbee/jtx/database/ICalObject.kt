@@ -282,6 +282,13 @@ const val COLUMN_EXDATE = "exdate"
 const val COLUMN_RECURID = "recurid"
 
 /**
+ * Purpose:  This property is used to return status code information
+related to the processing of an associated iCalendar object.  The
+value type for this property is TEXT.
+ */
+const val COLUMN_RSTATUS = "rstatus"
+
+/**
  * Stores the reference to the original event from which the recurring event was derived.
  * This value is NULL for the orignal event.
  * Type: [Long]
@@ -411,6 +418,8 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_RECURID) var recurid: String? = null,                          //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5
     @ColumnInfo(name = COLUMN_RECUR_ORIGINALICALOBJECTID) var recurOriginalIcalObjectId: Long? = null,
     @ColumnInfo(name = COLUMN_RECUR_ISLINKEDINSTANCE) var isRecurLinkedInstance: Boolean = false,
+
+    @ColumnInfo(name = COLUMN_RSTATUS) var rstatus: String? = null,
 
     @ColumnInfo(name = COLUMN_COLOR) var color: Int? = null,
 
@@ -590,6 +599,7 @@ data class ICalObject(
         values.getAsString(COLUMN_RDATE)?.let { rdate -> this.rdate = rdate }
         values.getAsString(COLUMN_EXDATE)?.let { exdate -> this.exdate = exdate }
         values.getAsString(COLUMN_RECURID)?.let { recurid -> this.recurid = recurid }
+        values.getAsString(COLUMN_RSTATUS)?.let { rstatus -> this.rstatus = rstatus }
         values.getAsString(COLUMN_UID)?.let { uid -> this.uid = uid }
         values.getAsLong(COLUMN_CREATED)?.let { created -> this.created = created }
         values.getAsLong(COLUMN_DTSTAMP)?.let { dtstamp -> this.dtstamp = dtstamp }

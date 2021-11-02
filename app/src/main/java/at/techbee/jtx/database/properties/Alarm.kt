@@ -23,6 +23,15 @@ const val COLUMN_ALARM_ID = BaseColumns._ID
 /** The name of the Foreign Key Column for IcalObjects.
  * Type: [Long] */
 const val COLUMN_ALARM_ICALOBJECT_ID = "icalObjectId"
+const val COLUMN_ALARM_ACTION = "action"
+const val COLUMN_ALARM_DESCRIPTION = "description"
+const val COLUMN_ALARM_TRIGGER = "trigger"
+const val COLUMN_ALARM_SUMMARY = "summary"
+const val COLUMN_ALARM_ATTENDEE = "attendee"
+const val COLUMN_ALARM_DURATION = "duration"
+const val COLUMN_ALARM_REPEAT = "repeat"
+const val COLUMN_ALARM_ATTACH = "attach"
+const val COLUMN_ALARM_OTHER = "other"
 
 
 /* The names of all the other columns  */
@@ -46,7 +55,15 @@ data class Alarm (
     var alarmId: Long = 0L,
 
     @ColumnInfo(index = true, name = COLUMN_ALARM_ICALOBJECT_ID)var icalObjectId: Long = 0L,
-    @ColumnInfo(name = COLUMN_ALARM_VALUE)            var value: String? = null
+    @ColumnInfo(index = true, name = COLUMN_ALARM_ACTION) var action: String? = null,
+    @ColumnInfo(index = true, name = COLUMN_ALARM_DESCRIPTION) var description: String? = null,
+    @ColumnInfo(index = true, name = COLUMN_ALARM_TRIGGER) var trigger: String? = null,
+    @ColumnInfo(index = true, name = COLUMN_ALARM_SUMMARY) var summary: String? = null,
+    @ColumnInfo(index = true, name = COLUMN_ALARM_ATTENDEE)var attendee: String? = null,
+    @ColumnInfo(index = true, name = COLUMN_ALARM_DURATION) var duration: String? = null,
+    @ColumnInfo(index = true, name = COLUMN_ALARM_REPEAT) var repeat: String? = null,
+    @ColumnInfo(index = true, name = COLUMN_ALARM_ATTACH) var attach: String? = null,
+    @ColumnInfo(index = true, name = COLUMN_ALARM_OTHER) var other: String? = null,
 ): Parcelable
 
 
@@ -73,8 +90,16 @@ data class Alarm (
 
     fun applyContentValues(values: ContentValues): Alarm {
 
-        values.getAsLong(COLUMN_UNKNOWN_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
-        values.getAsString(COLUMN_UNKNOWN_VALUE)?.let { value -> this.value = value }
+        values.getAsLong(COLUMN_ALARM_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
+        values.getAsString(COLUMN_ALARM_ACTION)?.let { action -> this.action = action }
+        values.getAsString(COLUMN_ALARM_DESCRIPTION)?.let { desc -> this.description = desc }
+        values.getAsString(COLUMN_ALARM_TRIGGER)?.let { trigger -> this.trigger = trigger }
+        values.getAsString(COLUMN_ALARM_SUMMARY)?.let { summary -> this.summary = summary }
+        values.getAsString(COLUMN_ALARM_ATTENDEE)?.let { attendee -> this.attendee = attendee }
+        values.getAsString(COLUMN_ALARM_DURATION)?.let { duration -> this.duration = duration }
+        values.getAsString(COLUMN_ALARM_REPEAT)?.let { repeat -> this.repeat = repeat }
+        values.getAsString(COLUMN_ALARM_ATTACH)?.let { attach -> this.attach = attach }
+        values.getAsString(COLUMN_ALARM_OTHER)?.let { other -> this.other = other }
         return this
     }
 }

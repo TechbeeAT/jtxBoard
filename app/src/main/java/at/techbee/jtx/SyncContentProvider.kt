@@ -38,8 +38,6 @@ private const val CODE_ATTACHMENT_DIR = 10
 private const val CODE_ALARM_DIR = 11
 private const val CODE_UNKNOWN_DIR = 12
 
-
-
 private const val CODE_ICALOBJECT_ITEM = 101
 private const val CODE_ATTENDEE_ITEM = 102
 private const val CODE_CATEGORY_ITEM = 103
@@ -52,8 +50,6 @@ private const val CODE_COLLECTION_ITEM = 109
 private const val CODE_ATTACHMENT_ITEM = 110
 private const val CODE_ALARM_ITEM = 111
 private const val CODE_UNKNOWN_ITEM = 112
-
-
 
 
 const val SYNC_PROVIDER_AUTHORITY = "at.techbee.jtx.provider"
@@ -461,7 +457,7 @@ class SyncContentProvider : ContentProvider() {
         context!!.contentResolver.notifyChange(uri, null)
 
         // updates on recurring instances through bulk updates should not occur, only updates on single items will update the recurring instances
-        if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) == true || values.containsKey(COLUMN_RDATE) == true || values.containsKey(COLUMN_EXDATE) == true))
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) || values.containsKey(COLUMN_RDATE) || values.containsKey(COLUMN_EXDATE)))
         {
             try {
                 val id: Long = uri.pathSegments[1].toLong()
