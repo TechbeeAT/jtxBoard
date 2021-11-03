@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content">
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/collection_filter_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                     app:srcCompat="@drawable/ic_status"
                     tools:ignore="ContentDescription" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/status_filter_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -126,7 +126,7 @@
                     app:srcCompat="@drawable/ic_classification"
                     tools:ignore="ContentDescription" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/classification_filter_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
                     app:srcCompat="@drawable/ic_category"
                     tools:ignore="ContentDescription" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/category_filter_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -23,7 +23,7 @@
             app:srcCompat="@drawable/ic_davx5_icon_green_bg_without_shadow"
             tools:ignore="ContentDescription" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/sync_basic_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             app:layout_constraintTop_toBottomOf="@+id/sync_davx5_logo" />
 
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/sync_basic_info_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
             app:layout_constraintTop_toBottomOf="@+id/sync_basic_info" />
 
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/sync_congratulations"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sync_basic_info_text" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/sync_congratulations_text_no_collections"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
             app:layout_constraintTop_toBottomOf="@+id/sync_congratulations" />
 
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/sync_congratulations_text_with_collections"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
             app:layout_constraintTop_toBottomOf="@+id/sync_congratulations_text_no_collections" />
 
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/sync_congratulations_synched_collections"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
             tools:text="Account1 (Collection1)\nAccount1 (Collection2)\nAccount2 (Collection1)" />
 
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/sync_button_add_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -126,7 +126,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sync_congratulations_synched_collections" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/sync_please_install"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sync_button_add_account" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/sync_please_install_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -171,7 +171,7 @@
             app:srcCompat="@drawable/ic_google_play"
             tools:ignore="ContentDescription,HardcodedText" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/sync_further_info_davx5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -186,7 +186,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sync_button_playstore" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/sync_link_davx5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

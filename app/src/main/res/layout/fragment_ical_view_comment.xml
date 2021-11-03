@@ -37,7 +37,7 @@
             tools:visibility="visible"
             android:contentDescription="@string/view_comment_playbutton_content_desc" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/view_comment_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

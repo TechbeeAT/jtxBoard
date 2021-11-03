@@ -19,7 +19,7 @@
         android:layout_height="match_parent">
 
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/edit_attachments_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
     </LinearLayout>
 
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_attachment_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             app:layout_constraintTop_toBottomOf="@id/edit_attachments_linearlayout" />
 
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_attachment_take_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button_attachment_add" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_attachment_add_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

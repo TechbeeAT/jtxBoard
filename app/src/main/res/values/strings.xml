@@ -29,12 +29,15 @@
     <string name="delete">Delete</string>
     <string name="number_percent" translatable="false">%1$s \%</string>
 
-    <string name="toolbar_text_board" translatable="false">Board</string>
+    <string name="toolbar_text_jtx_board" translatable="false">jtx Board</string>
+    <string name="toolbar_text_jtx_board_journals_overview">Journals overview</string>
+    <string name="toolbar_text_jtx_board_notes_overview">Notes overview</string>
+    <string name="toolbar_text_jtx_board_tasks_overview">Tasks overview</string>
     <string name="toolbar_text_view" translatable="false">View</string>
     <string name="toolbar_text_edit" translatable="false">Edit</string>
-    <string name="toolbar_text_edit_journal" translatable="false">Journal</string>
-    <string name="toolbar_text_edit_note" translatable="false">Note</string>
-    <string name="toolbar_text_edit_todo" translatable="false">Task</string>
+    <string name="toolbar_text_journal" translatable="false">Journal</string>
+    <string name="toolbar_text_note" translatable="false">Note</string>
+    <string name="toolbar_text_todo" translatable="false">Task</string>
     <string name="toolbar_text_filter" translatable="false">Filter</string>
     <string name="toolbar_text_settings" translatable="false">Settings</string>
     <string name="toolbar_text_about" translatable="false">About</string>

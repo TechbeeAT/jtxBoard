@@ -36,7 +36,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/edit_attachment_item_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

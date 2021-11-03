@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
         // Set up the toolbar with the navigation drawer
         toolbar = findViewById(R.id.topAppBar)
-        setToolbarText("Board")
+        setToolbarTitle("Board", null)
 
         setSupportActionBar(toolbar)
 
@@ -298,9 +298,12 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     }
 
 
-    fun setToolbarText(text: String) {
-        toolbar.title = text
+    fun setToolbarTitle(title: String, subtitle: String?) {
+        toolbar.title = title
+        toolbar.subtitle = subtitle
+
     }
+
 
 
     override fun onUserEarnedReward(item: RewardItem) {

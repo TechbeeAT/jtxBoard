@@ -184,7 +184,7 @@ class IcalFilterFragment : Fragment() {
 
         try {
             val activity = requireActivity() as MainActivity
-            activity.setToolbarText(getString(R.string.toolbar_text_filter))
+            activity.setToolbarTitle(getString(R.string.toolbar_text_filter), null)
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }

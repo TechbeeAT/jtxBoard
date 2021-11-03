@@ -23,46 +23,43 @@
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"/>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/about_app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/app_name"
             android:textAlignment="center"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:text="@string/app_name" />
+            android:textSize="24sp" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/about_app_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:layout_marginTop="4dp"
-            style="@style/TextAppearance.MaterialComponents.Subtitle2"
             tools:text="Version 1.0 (1)" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/about_app_build_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="16dp"
             android:textAlignment="center"
-            style="@style/TextAppearance.MaterialComponents.Subtitle2"
             tools:text="Compiled on May 30, 2021" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/about_app_copyright"
-            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:autoLink="web"
             android:text="@string/about_app_copyright"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/about_app_techbee_logo"
-            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="300dp"
             android:layout_height="200dp"
             android:layout_marginBottom="16dp"
@@ -71,9 +68,8 @@
             app:srcCompat="@drawable/logo_techbee"
             tools:ignore="ContentDescription" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/about_app_techbee_link"
-            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
@@ -83,13 +79,13 @@
             android:text="@string/about_app_techbee_link"
             android:textSize="20sp" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/about_app_warranty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"/>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/about_app_pixels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -101,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/about_app_license_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

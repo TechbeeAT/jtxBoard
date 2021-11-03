@@ -166,6 +166,8 @@ class IcalViewFragment : Fragment() {
                 return@observe   // just make sure that nothing else happens
             }
 
+            updateToolbarText()
+
             it.let {
                 when (it.property.component) {
                     Component.VTODO.name -> {
@@ -573,15 +575,29 @@ class IcalViewFragment : Fragment() {
 
     override fun onResume() {
 
+        updateToolbarText()
+        super.onResume()
+    }
+
+
+
+    private fun updateToolbarText() {
         try {
             val activity = requireActivity() as MainActivity
-            activity.setToolbarText(getString(R.string.toolbar_text_view))
+            var toolbarText = getString(R.string.toolbar_text_view)
+            toolbarText += when(icalViewViewModel.icalEntity.value?.property?.module) {
+                Module.JOURNAL.name -> " - " + getString(R.string.toolbar_text_journal)
+                Module.NOTE.name -> " - " + getString(R.string.toolbar_text_note)
+                Module.TODO.name -> " - " + getString(R.string.toolbar_text_todo)
+                else -> ""
+            }
+
+            activity.setToolbarTitle(toolbarText, icalViewViewModel.icalEntity.value?.property?.summary )
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
-
-        super.onResume()
     }
+
 
 
     private fun addCategoryChip(category: Category) {

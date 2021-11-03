@@ -1286,15 +1286,13 @@ class IcalEditFragment : Fragment() {
             val activity = requireActivity() as MainActivity
             var toolbarText = getString(R.string.toolbar_text_edit)
             toolbarText += when(icalEditViewModel.iCalObjectUpdated.value?.module) {
-                Module.JOURNAL.name -> " - " + getString(R.string.toolbar_text_edit_journal)
-                Module.NOTE.name -> " - " + getString(R.string.toolbar_text_edit_note)
-                Module.TODO.name -> " - " + getString(R.string.toolbar_text_edit_todo)
-                else -> null
+                Module.JOURNAL.name -> " - " + getString(R.string.toolbar_text_journal)
+                Module.NOTE.name -> " - " + getString(R.string.toolbar_text_note)
+                Module.TODO.name -> " - " + getString(R.string.toolbar_text_todo)
+                else -> ""
             }
-            if(binding.editSummaryEditTextinputfield.text?.isNotBlank() == true)
-                toolbarText += ": " + binding.editSummaryEditTextinputfield.text
 
-            activity.setToolbarText(toolbarText)
+            activity.setToolbarTitle(toolbarText, binding.editSummaryEditTextinputfield.text.toString() )
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }

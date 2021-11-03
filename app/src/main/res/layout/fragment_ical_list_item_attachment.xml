@@ -36,7 +36,7 @@
             android:src="@drawable/ic_file_attachment"
             tools:visibility="visible" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_attachment_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             app:layout_constraintTop_toTopOf="@+id/list_item_attachment_picture_thumbnail"
             tools:text="Attachment.pdf" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_attachment_filesize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -78,7 +78,7 @@ class AdInfoFragment : Fragment() {
 
         try {
             val activity = requireActivity() as MainActivity
-            activity.setToolbarText(getString(R.string.toolbar_text_adinfo))
+            activity.setToolbarTitle(getString(R.string.toolbar_text_adinfo), null)
         } catch(e: Exception) {
             Log.d("Cast not successful", e.toString())
             //This error will always happen for fragment testing, as the cast to Main Activity cannot be successful

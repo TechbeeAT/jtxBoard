@@ -26,7 +26,7 @@
         app:srcCompat="@drawable/ic_attendee_reqparticipant"
         tools:ignore="ContentDescription" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/edit_attendees_roledialog_chair_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         app:srcCompat="@drawable/ic_attendee_reqparticipant"
         tools:ignore="ContentDescription" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/edit_attendees_roledialog_required_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
         app:srcCompat="@drawable/ic_attendee_optparticipant"
         tools:ignore="ContentDescription" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/edit_attendees_roledialog_optional_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
         app:srcCompat="@drawable/ic_attendee_nonparticipant"
         tools:ignore="ContentDescription" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/edit_attendees_roledialog_nonparticipant_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -271,16 +271,26 @@ class IcalListFragment : Fragment() {
 
         icalListViewModel.searchSettingShowSubtasksOfVJOURNALs = settings?.getBoolean("settings_show_subtasks_of_VJOURNALs_in_tasklist", false) ?: false
         applyFilters()
+        super.onResume()
+    }
 
+    private fun updateToolbarText() {
         try {
             val activity = requireActivity() as MainActivity
-            activity.setToolbarText(getString(R.string.toolbar_text_board))
+            val toolbarText = getString(R.string.toolbar_text_jtx_board)
+            val toolbarSubtitle = when(icalListViewModel.searchModule) {
+                Module.JOURNAL.name -> getString(R.string.toolbar_text_jtx_board_journals_overview)
+                Module.NOTE.name -> getString(R.string.toolbar_text_jtx_board_notes_overview)
+                Module.TODO.name -> getString(R.string.toolbar_text_jtx_board_tasks_overview)
+                else -> null
+            }
+
+            activity.setToolbarTitle(toolbarText, toolbarSubtitle )
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
-
-        super.onResume()
     }
+
 
 
     private fun loadFilterArgsAndPrefs() {
@@ -305,6 +315,7 @@ class IcalListFragment : Fragment() {
 
     fun applyFilters() {
 
+        updateToolbarText()
         icalListViewModel.updateSearch()
         savePrefs()
         icalListViewModel.resetFocusItem()

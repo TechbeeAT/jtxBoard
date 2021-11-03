@@ -64,7 +64,7 @@
                     tools:tint="#BC0D0D" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_dtstart_day"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="31" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_dtstart_month"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/view_dtstart_day"
                     tools:text="December" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_dtstart_year"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
                     app:layout_constraintBottom_toTopOf="@id/view_dtstart_time"
                     tools:text="2020" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_dtstart_time"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
                     app:layout_constraintVertical_bias="0.0"
                     tools:text="13:30" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_dtstart_timezone"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -138,7 +138,7 @@
                     tools:text="GMT+02:00" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_collection"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -193,7 +193,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/view_summary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -206,7 +206,7 @@
                             tools:text="Summary ... Lorem ipsum dolor sit amet" />
 
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/view_description"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -221,7 +221,7 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_progress_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -250,7 +250,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/view_card_view" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_progress_percent"
                     android:layout_width="45dp"
                     android:layout_height="wrap_content"
@@ -264,7 +264,7 @@
                     tools:text="100 %" />
 
 
-                <CheckBox
+                <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/view_progress_checkbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -274,7 +274,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_due"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -289,7 +289,7 @@
 
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_started"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -303,7 +303,7 @@
                     tools:text="Started: February 5, 2021" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_completed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -317,7 +317,7 @@
                     tools:text="Completed: March 1, 2021" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_subtasks_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -373,7 +373,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/view_status_chip"
-                        style="@style/Widget.MaterialComponents.Chip.Entry"
+                        style="@style/Widget.Material3.Chip.Assist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -387,7 +387,7 @@
                     <com.google.android.material.chip.Chip
 
                         android:id="@+id/view_priority_chip"
-                        style="@style/Widget.MaterialComponents.Chip.Entry"
+                        style="@style/Widget.Material3.Chip.Assist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -401,7 +401,7 @@
                     <com.google.android.material.chip.Chip
 
                         android:id="@+id/view_classification_chip"
-                        style="@style/Widget.MaterialComponents.Chip.Entry"
+                        style="@style/Widget.Material3.Chip.Assist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -415,7 +415,7 @@
                 </com.google.android.material.chip.ChipGroup>
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_url_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -430,7 +430,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_spc_chipgroup" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_url"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -445,7 +445,7 @@
                     tools:text="https://www.bitfire.at/" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_location_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -460,7 +460,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_url" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_location"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -475,7 +475,7 @@
                     tools:text="Office 1020 Vienna" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_attendee_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -507,7 +507,7 @@
 
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_resources_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -538,7 +538,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/view_resources_header" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_organizer_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -553,7 +553,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_resources_chipgroup" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_organizer"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -568,7 +568,7 @@
                     tools:text="patrick.doe@example.com" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_contact_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -583,7 +583,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_organizer" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_contact"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -597,7 +597,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/view_contact_header"
                     tools:text="John Doe (john.doe@example.com)" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_recurrence_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -613,7 +613,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/view_contact" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_recurrence_items"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -627,7 +627,7 @@
                     tools:text="Friday, September 24, 2021 1:34 PM\nSaturday, September 25, 2021 1:34 PM\nSunday, September 26, 2021 1:34 PM"
                     />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_recurrence_note_to_original"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -640,7 +640,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/view_recurrence_items"
                     android:text="@string/view_recurrence_note_to_original" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_recurrence_note_is_exception"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -654,7 +654,7 @@
                     android:text="@string/view_reccurrence_note_is_exception" />
 
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/view_recurrence_gotooriginal_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -667,7 +667,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/view_recurrence_note_is_exception" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_relatedto_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -682,7 +682,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_recurrence_gotooriginal_button" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_relatedto"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -695,7 +695,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/view_relatedto_header"
                     tools:text="https://example.com/remote.php/dav/calendars/johndoe/personal/097E4865-D073-4279-806C-3E2B3250C947.ics" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_comments_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -729,7 +729,7 @@
                 </LinearLayout>
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_attachments_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -763,7 +763,7 @@
                 </LinearLayout>
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_feedback_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -794,7 +794,7 @@
 
                 </LinearLayout>
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/view_add_note"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -806,7 +806,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/view_add_audio_note"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -820,7 +820,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_created"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -835,7 +835,7 @@
                     tools:text="Created: Sun Dec 20 20:38:30 GMT+01:00 2020" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_lastModified"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

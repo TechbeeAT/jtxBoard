@@ -26,7 +26,7 @@
             app:srcCompat="@drawable/bg_donate"
             tools:ignore="ContentDescription" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/donate_header_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/donate_header_icon" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/donate_thank_you"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/donate_header_text" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/donate_donate_with"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
             app:srcCompat="@drawable/paypal"
             tools:ignore="HardcodedText" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/donate_other_donation_methods"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/donate_button_paypal" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/donate_other_website"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -18,7 +18,7 @@
     android:focusable="true"
     android:checkable="true">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/edit_comment_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

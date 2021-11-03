@@ -84,7 +84,7 @@
                 tools:context=".ui.IcalEditFragment">
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_dtstart_day"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                     app:layout_constraintTop_toTopOf="@+id/edit_collection_spinner"
                     tools:text="31" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_dtstart_month"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_day"
                     tools:text="December" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_dtstart_year"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_month"
                     tools:text="2020" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_dtstart_time"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -218,7 +218,9 @@
                     android:id="@+id/edit_summary_edit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:hint="@string/edit_summary_hint"
                     android:visibility="@{model.summaryVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -261,7 +263,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_progress_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -290,7 +292,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/edit_description_edit" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_progress_percent"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
@@ -303,7 +305,7 @@
                     tools:text="100 %" />
 
 
-                <CheckBox
+                <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/edit_progress_checkbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -314,7 +316,7 @@
                     app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_subtasks_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -361,7 +363,6 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_subtasks_add"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -398,7 +399,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/edit_status_chip"
-                        style="@style/Widget.MaterialComponents.Chip.Entry"
+                        style="@style/Widget.Material3.Chip.Assist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -412,7 +413,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/edit_priority_chip"
-                        style="@style/Widget.MaterialComponents.Chip.Entry"
+                        style="@style/Widget.Material3.Chip.Assist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -426,7 +427,7 @@
                     <com.google.android.material.chip.Chip
 
                         android:id="@+id/edit_classification_chip"
-                        style="@style/Widget.MaterialComponents.Chip.Entry"
+                        style="@style/Widget.Material3.Chip.Assist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -451,7 +452,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/edit_spc_chipgroup"
                     app:model="@{model}" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_url_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -469,7 +470,6 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_url_edit"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -497,7 +497,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_location_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -515,7 +515,6 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_location_edit"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -541,7 +540,7 @@
 
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_contact_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -559,7 +558,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_contact_edit"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -577,7 +576,7 @@
                     app:startIconDrawable="@drawable/ic_contact">
 
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/edit_contact_add_autocomplete"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -589,7 +588,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_categories_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -624,7 +623,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_categories_add"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -644,7 +643,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/edit_categories_chipgroup">
 
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/edit_categories_add_autocomplete"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -658,7 +657,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_attendees_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -691,7 +690,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_attendees_add"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -712,7 +711,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/edit_attendees_chipgroup">
 
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/edit_attendees_add_autocomplete"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -727,7 +726,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_resources_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -760,7 +759,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_resources_add"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -780,7 +779,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/edit_resources_chipgroup">
 
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/edit_resources_add_autocomplete"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -794,7 +793,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_comments_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -839,7 +838,6 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_comment_add"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"

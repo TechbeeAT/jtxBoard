@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_subtask_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
             app:layout_constraintTop_toTopOf="@+id/list_item_subtask_textview" />
 
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_subtask_progress_percent"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             tools:text="100 %" />
 
 
-        <CheckBox
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/list_item_subtask_progress_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

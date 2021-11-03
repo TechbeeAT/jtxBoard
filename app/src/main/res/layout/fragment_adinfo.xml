@@ -27,7 +27,7 @@
                 app:srcCompat="@drawable/bg_adfree"
                 tools:ignore="ContentDescription"/>
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/adinfo_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/adinfo_icon" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/adinfo_button_userconsent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/adinfo_text" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/adinfo_adfree_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                         app:srcCompat="@mipmap/ic_launcher"
                         tools:ignore="ContentDescription" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/adinfo_card_purchase_header"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                         app:layout_constraintStart_toEndOf="@+id/adinfo_card_purchase_logo"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/adinfo_card_purchase_description"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
                         app:layout_constraintStart_toStartOf="@+id/adinfo_card_purchase_header"
                         app:layout_constraintTop_toBottomOf="@+id/adinfo_card_purchase_header" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/adinfo_card_purchase_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
                         app:srcCompat="@mipmap/ic_launcher"
                         tools:ignore="ContentDescription" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/adinfo_card_subscribe_header"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -182,7 +182,7 @@
                         app:layout_constraintStart_toEndOf="@+id/adinfo_card_subscribe_logo"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/adinfo_card_subscribe_description"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -196,7 +196,7 @@
                         app:layout_constraintStart_toStartOf="@+id/adinfo_card_subscribe_header"
                         app:layout_constraintTop_toBottomOf="@+id/adinfo_card_subscribe_header" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/adinfo_card_subscribe_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -206,7 +206,7 @@
                         app:layout_constraintTop_toTopOf="@+id/adinfo_card_subscribe_header"
                         tools:text="€ X,XX" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/adinfo_card_subscribe_period"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -12,7 +12,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
-    style="@style/Widget.MaterialComponents.Chip.Entry"
+    style="@style/Widget.Material3.Chip.Input"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:checkable="false"
