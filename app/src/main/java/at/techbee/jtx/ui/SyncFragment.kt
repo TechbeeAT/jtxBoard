@@ -50,6 +50,7 @@ class SyncFragment : Fragment() {
 
         remoteCollections.observe(viewLifecycleOwner, { collectionList ->
 
+            collectionsString = ""   // reset the string before the observer rebuilds the collections
             collectionList.forEach {
                 collectionsString += it.accountName + " (" + it.displayName + ")\n"
             }
