@@ -32,6 +32,9 @@
         <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Filled</item>
         <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.FilledBox.Dense</item>
 
+        <!-- custom font -->
+        <item name="fontFamily">@font/montserrat_alternates</item>
+
     </style>
 
 </resources>
