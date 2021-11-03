@@ -87,7 +87,6 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         val dtstartVisibility = if (model.searchModule == Module.JOURNAL.name) View.VISIBLE else View.GONE
         val progressVisibility = if (model.searchModule == Module.TODO.name && settingShowProgressMaintasks) View.VISIBLE else View.GONE
         val progressTopVisibility = if (model.searchModule == Module.TODO.name && !settingShowProgressMaintasks) View.VISIBLE else View.GONE
-        val subtaskExpandVisibility = if (model.searchModule == Module.TODO.name && settingShowSubtasks) View.VISIBLE else View.GONE
         val priorityVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
         val dueVisibility = if (model.searchModule == Module.TODO.name) View.VISIBLE else View.GONE
         val subtasksVisibility = if (settingShowSubtasks)  View.VISIBLE else View.GONE
@@ -106,7 +105,6 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
         holder.priorityIcon.visibility = priorityVisibility
         holder.priority.visibility = priorityVisibility
         holder.due.visibility = dueVisibility
-        holder.expandSubtasks.visibility = subtaskExpandVisibility
         holder.subtasksLinearLayout.visibility = subtasksVisibility
 
 
@@ -200,11 +198,11 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             holder.progressCheckbox.isChecked = iCal4ListItem.property.percent == 100
             holder.progressCheckboxTop.isChecked = iCal4ListItem.property.percent == 100
 
-            if (iCal4ListItem.relatedto?.isNotEmpty() == true && iCal4ListItem.property.component == Component.VTODO.name && settingShowSubtasks) {   // TODO: also tasks with a subnote would be shown here, they should also be excluded!
+            if (model.searchModule == Module.TODO.name && settingShowSubtasks && iCal4ListItem.property.numSubtasks > 0)
                 holder.expandSubtasks.visibility = View.VISIBLE
-            } else {
+            else
                 holder.expandSubtasks.visibility = View.INVISIBLE
-            }
+
 
             //holder.subtasksLinearLayout.visibility = View.VISIBLE
             holder.progressPercent.text = "${iCal4ListItem.property.percent?:0} %"
