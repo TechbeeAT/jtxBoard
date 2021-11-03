@@ -198,7 +198,7 @@ class IcalListAdapter(var context: Context, var model: IcalListViewModel) :
             holder.progressCheckbox.isChecked = iCal4ListItem.property.percent == 100
             holder.progressCheckboxTop.isChecked = iCal4ListItem.property.percent == 100
 
-            if (model.searchModule == Module.TODO.name && settingShowSubtasks && iCal4ListItem.property.numSubtasks > 0)
+            if (model.searchModule == Module.TODO.name && settingShowSubtasks && settingShowProgressMaintasks && iCal4ListItem.property.numSubtasks > 0)
                 holder.expandSubtasks.visibility = View.VISIBLE
             else
                 holder.expandSubtasks.visibility = View.INVISIBLE
