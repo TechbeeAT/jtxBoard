@@ -38,18 +38,21 @@
             app:key="settings_show_progress_for_maintasks_in_list"
             app:defaultValue="true"
             app:title="@string/settings_show_progress_for_maintasks_in_list"
+            app:icon="@drawable/ic_progress_task"
             app:useSimpleSummaryProvider="true"/>
 
         <SwitchPreference
             app:key="settings_show_progress_for_subtasks_in_list"
             app:defaultValue="true"
             app:title="@string/settings_show_progress_for_subtasks_in_list"
+            app:icon="@drawable/ic_progress_subtask"
             app:useSimpleSummaryProvider="true"/>
 
         <SwitchPreference
             app:key="settings_show_subtasks_of_VJOURNALs_in_tasklist"
             app:defaultValue="false"
             app:title="@string/settings_show_subtasks_of_VJOURNALs_in_tasklist"
+            app:icon="@drawable/ic_subtasks"
             app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>
