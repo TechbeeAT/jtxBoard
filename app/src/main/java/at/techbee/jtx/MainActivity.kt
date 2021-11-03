@@ -95,11 +95,9 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     override fun onResume() {
         super.onResume()
 
-
-
         // This code is put in onResume as the Ad might need to be loaded once isAdShowtime returns true
 
-        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY) {
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA) {
             BillingManager.initialise(this)
             // TODO Check if the user already bought the app. If yes, skip the Dialog Box
         }
@@ -168,7 +166,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     private fun adaptMenuToBuildFlavor() {
         val navView: NavigationView = findViewById(R.id.nav_view)
 
-        if(BuildConfig.FLAVOR != BUILD_FLAVOR_OSE)
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_OSE || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA)
             navView.menu.findItem(R.id.nav_donate).isVisible = false     // show the donate fragment only for the OSE-edition
 
         if(BuildConfig.FLAVOR == BUILD_FLAVOR_OSE || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA)

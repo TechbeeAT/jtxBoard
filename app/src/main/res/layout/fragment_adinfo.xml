@@ -16,16 +16,16 @@
 
             <ImageView
                 android:id="@+id/adinfo_icon"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="fill_parent"
+                android:layout_height="120dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_adinfo"
-                tools:ignore="ContentDescription" />
+                app:srcCompat="@drawable/bg_adfree"
+                tools:ignore="ContentDescription"/>
 
             <TextView
                 android:id="@+id/adinfo_text"
@@ -219,41 +219,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-
-            <TextView
-                android:id="@+id/adinfo_adfree_further_download_options"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:text="@string/adinfo_adfree_furtherdownloadoptions"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/adinfo_card_subscribe" />
-
-
-            <TextView
-                android:id="@+id/adinfo_adfree_download_link"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:autoLink="web"
-                android:gravity="center"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:text="https://jtx.techbee.at/#Download"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/adinfo_adfree_further_download_options"
-                tools:ignore="HardcodedText" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

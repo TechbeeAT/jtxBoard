@@ -308,6 +308,14 @@ class IcalListFragment : Fragment() {
         icalListViewModel.updateSearch()
         savePrefs()
         icalListViewModel.resetFocusItem()
+
+        //change background
+        when (icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> binding.listBackground.setImageResource(R.drawable.bg_journals)
+            Module.NOTE.name -> binding.listBackground.setImageResource(R.drawable.bg_notes)
+            Module.TODO.name -> binding.listBackground.setImageResource(R.drawable.bg_todos)
+            else -> binding.listBackground.setImageResource(R.drawable.bg_journals)
+        }
     }
 
     private fun savePrefs() {

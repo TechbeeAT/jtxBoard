@@ -8,7 +8,8 @@
   ~ http://www.gnu.org/licenses/gpl.html
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -18,6 +19,15 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/list_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.2"
+                android:padding="24dp"
+                app:srcCompat="@drawable/bg_journals"
+                tools:ignore="ContentDescription" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tablayout_journalnotestodos"
