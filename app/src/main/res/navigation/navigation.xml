@@ -154,15 +154,19 @@
         android:name="at.techbee.jtx.ui.SettingsFragment"
         android:label="SettingsFragment"/>
     <!--Global action-->
-    <action android:id="@+id/action_global_settingsFragment"
-        app:destination="@id/settingsFragment"/>
+    <action
+        android:id="@+id/action_global_settingsFragment"
+        app:destination="@id/settingsFragment"
+        app:popUpTo="@id/icalListFragment" />
     <fragment
         android:id="@+id/aboutFragment"
         android:name="at.techbee.jtx.ui.AboutFragment"
         android:label="AboutFragment"
         tools:layout="@layout/fragment_about"/>
-    <action android:id="@+id/action_global_aboutFragment"
-        app:destination="@id/aboutFragment"/>
+    <action
+        android:id="@+id/action_global_aboutFragment"
+        app:destination="@id/aboutFragment"
+        app:popUpTo="@id/icalListFragment" />
     <action android:id="@+id/action_global_icalListFragment"
         app:destination="@id/icalListFragment"/>
     <fragment
@@ -170,19 +174,28 @@
         android:name="at.techbee.jtx.ui.SyncFragment"
         android:label="SyncFragment"
         tools:layout="@layout/fragment_sync"/>
-    <action android:id="@+id/action_global_syncFragment" app:destination="@id/syncFragment"/>
+    <action
+        android:id="@+id/action_global_syncFragment"
+        app:destination="@id/syncFragment"
+        app:popUpTo="@id/icalListFragment" />
     <fragment
         android:id="@+id/donateFragment"
         android:name="at.techbee.jtx.ui.DonateFragment"
         android:label="DonateFragment"
         tools:layout="@layout/fragment_donate"/>
-    <action android:id="@+id/action_global_donateFragment" app:destination="@id/donateFragment"/>
+    <action
+        android:id="@+id/action_global_donateFragment"
+        app:destination="@id/donateFragment"
+        app:popUpTo="@id/icalListFragment" />
     <fragment
         android:id="@+id/adInfoFragment"
         android:name="at.techbee.jtx.ui.AdInfoFragment"
         android:label="AdInfoFragment"
         tools:layout="@layout/fragment_adinfo"/>
-    <action android:id="@+id/action_global_adInfoFragment" app:destination="@id/adInfoFragment"/>
+    <action
+        android:id="@+id/action_global_adInfoFragment"
+        app:destination="@id/adInfoFragment"
+        app:popUpTo="@id/icalListFragment" />
 
 
 </navigation>
