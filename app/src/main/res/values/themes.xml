@@ -29,12 +29,9 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
 
         <!-- make the elevated style the default card style -->
-        <item name="materialCardViewStyle">@style/Widget.App.CardView</item>
+        <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Filled</item>
         <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.FilledBox.Dense</item>
 
-    </style>
-
-    <style name="Widget.App.CardView" parent="Widget.Material3.CardView.Filled">
     </style>
 
 </resources>
