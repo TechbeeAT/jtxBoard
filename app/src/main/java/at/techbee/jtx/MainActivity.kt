@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     private fun adaptMenuToBuildFlavor() {
         val navView: NavigationView = findViewById(R.id.nav_view)
 
-        if(BuildConfig.FLAVOR == BUILD_FLAVOR_OSE || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA)
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
             navView.menu.findItem(R.id.nav_donate).isVisible = false     // show the donate fragment only for the OSE-edition
 
         if(BuildConfig.FLAVOR == BUILD_FLAVOR_OSE || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA)
