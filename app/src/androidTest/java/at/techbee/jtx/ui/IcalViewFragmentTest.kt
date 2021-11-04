@@ -49,11 +49,10 @@ class IcalViewFragmentTest {
 
     private val sampleDate = 1632636027826L     //  Sun Sep 26 2021 06:00:27
     private val sampleCollection = ICalCollection(collectionId = 1L, displayName = "testcollection automated tests")
-    private val sampleJournal = ICalObject.createJournal().apply {
+    private val sampleJour = ICalObject.createJournal().apply {
         collectionId = sampleCollection.collectionId
         summary = "Journal4Test"
         description = "Description4JournalTest"
-        //contact = "patrick@techbee.at"
         dtstart = sampleDate
     }
     private val sampleNote = ICalObject.createNote("Note4Test").apply {
@@ -75,9 +74,9 @@ class IcalViewFragmentTest {
         dtstart = sampleDate
     }
 
-    private val sampleAttendee = Attendee(icalObjectId = sampleJournal.id, caladdress = "contact@techbee.at")
-    private val sampleAttachment = Attachment(icalObjectId = sampleJournal.id, uri = "https://techbee.at", filename = "test.pdf")
-    private val sampleComment = Comment(icalObjectId = sampleJournal.id, text = "my comment")
+    private val sampleAttendee = Attendee(icalObjectId = sampleJour.id, caladdress = "contact@techbee.at")
+    private val sampleAttachment = Attachment(icalObjectId = sampleJour.id, uri = "https://techbee.at", filename = "test.pdf")
+    private val sampleComment = Comment(icalObjectId = sampleJour.id, text = "my comment")
     private val sampleCategory1 = Category(text = "cat1")
     private val sampleCategory2 = Category(text = "cat2")
     private val sampleOrganizer = Organizer(caladdress = "orga")
@@ -96,17 +95,17 @@ class IcalViewFragmentTest {
         //insert sample entries
         testScope.launch(TestCoroutineDispatcher()) {
             database.insertCollectionSync(sampleCollection)
-            sampleJournal.id = database.insertICalObjectSync(sampleJournal)
+            sampleJour.id = database.insertICalObjectSync(sampleJour)
             sampleNote.id = database.insertICalObjectSync(sampleNote)
             sampleTodo.id = database.insertICalObjectSync(sampleTodo)
 
-            sampleAttendee.icalObjectId = sampleJournal.id
-            sampleAttachment.icalObjectId = sampleJournal.id
-            sampleComment.icalObjectId = sampleJournal.id
-            sampleCategory1.icalObjectId = sampleJournal.id
-            sampleCategory2.icalObjectId = sampleJournal.id
-            sampleOrganizer.icalObjectId = sampleJournal.id
-            sampleResource.icalObjectId = sampleJournal.id
+            sampleAttendee.icalObjectId = sampleJour.id
+            sampleAttachment.icalObjectId = sampleJour.id
+            sampleComment.icalObjectId = sampleJour.id
+            sampleCategory1.icalObjectId = sampleJour.id
+            sampleCategory2.icalObjectId = sampleJour.id
+            sampleOrganizer.icalObjectId = sampleJour.id
+            sampleResource.icalObjectId = sampleJour.id
 
             database.insertAttendeeSync(sampleAttendee)
             database.insertAttachmentSync(sampleAttachment)
@@ -132,35 +131,35 @@ class IcalViewFragmentTest {
     fun journal_everything_is_displayed()  {
 
         val fragmentArgs = Bundle()
-        fragmentArgs.putLong("item2show", sampleJournal.id)
+        fragmentArgs.putLong("item2show", sampleJour.id)
         //val scenario =
         launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
         val collectionString = sampleCollection.displayName + " (" + sampleCollection.accountName + ")"
         onView(allOf(withId(R.id.view_collection), withText(collectionString))).check(matches(isDisplayed()))
         //onView(withText(sampleCollection.displayName)).check(matches(isDisplayed()))
-        onView(allOf(withId(R.id.view_summary),withText(sampleJournal.summary))).check(matches(isDisplayed()))
-        onView(allOf(withId(R.id.view_description),withText(sampleJournal.description))).check(matches(isDisplayed()))
+        onView(allOf(withId(R.id.view_summary),withText(sampleJour.summary))).check(matches(isDisplayed()))
+        onView(allOf(withId(R.id.view_description),withText(sampleJour.description))).check(matches(isDisplayed()))
 
-        val expectedDay = convertLongToDayString(sampleJournal.dtstart)
-        val expectedMonth = convertLongToMonthString(sampleJournal.dtstart)
-        val expectedYear = convertLongToYearString(sampleJournal.dtstart)
-        val expectedTime = convertLongToTimeString(sampleJournal.dtstart)
+        val expectedDay = convertLongToDayString(sampleJour.dtstart)
+        val expectedMonth = convertLongToMonthString(sampleJour.dtstart)
+        val expectedYear = convertLongToYearString(sampleJour.dtstart)
+        val expectedTime = convertLongToTimeString(sampleJour.dtstart)
 
         onView(withId(R.id.view_dtstart_day)).check(matches(withText(expectedDay)))
         onView(withId(R.id.view_dtstart_month)).check(matches(withText(expectedMonth)))
         onView(withId(R.id.view_dtstart_year)).check(matches(withText(expectedYear)))
         onView(withId(R.id.view_dtstart_time)).check(matches(withText(expectedTime)))
 
-        val expectedCreated = application.resources.getString(R.string.view_created_text, Date(sampleJournal.created))
-        val expectedLastModified = application.resources.getString(R.string.view_last_modified_text, Date(sampleJournal.lastModified))
+        val expectedCreated = application.resources.getString(R.string.view_created_text, Date(sampleJour.created))
+        val expectedLastModified = application.resources.getString(R.string.view_last_modified_text, Date(sampleJour.lastModified))
 
         onView(withId(R.id.view_created)).check(matches(withText(expectedCreated)))
         onView(withId(R.id.view_lastModified)).check(matches(withText(expectedLastModified)))
 
-        onView(withId(R.id.view_add_audio_note)).check(matches(isDisplayed()))
-        onView(withId(R.id.view_add_note)).check(matches(isDisplayed()))
-        onView(withText(R.string.view_feedback_linked_notes)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_add_audio_note)).check(matches(withText(R.string.view_add_audio_note)))
+        onView(withId(R.id.view_add_note)).check(matches(withText(R.string.view_add_note)))
+        onView(withText(R.string.view_feedback_linked_notes)).check(matches(withText(R.string.view_feedback_linked_notes)))
         onView(withId(R.id.view_classification_chip)).check(matches(isDisplayed()))
         onView(withId(R.id.view_status_chip)).check(matches(isDisplayed()))
 

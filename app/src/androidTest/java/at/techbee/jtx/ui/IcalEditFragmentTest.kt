@@ -189,20 +189,15 @@ class IcalEditFragmentTest {
         }
         onView(withText(sampleJournalEntity.property.url)).check(matches(isDisplayed()))
         onView(withText(sampleJournalEntity.property.location)).check(matches(isDisplayed()))
-        onView(withText(sampleJournalEntity.comments?.get(0)?.text)).check(matches(isDisplayed()))
-        onView(withText(sampleJournalEntity.comments?.get(1)?.text)).check(matches(isDisplayed()))
+        onView(withText(sampleJournalEntity.comments!![0].text)).check(matches(withText(sampleComment1.text)))
+        onView(withText(sampleJournalEntity.comments!![1].text)).check(matches(withText(sampleComment2.text)))
 
         //switch to tab attachments
         scenario.onFragment {
             it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_ATTACHMENTS))
         }
-        onView(withText(sampleJournalEntity.attachments?.get(0)?.filename)).check(matches(isDisplayed()))
 
-        //switch to tab attachments
-        scenario.onFragment {
-            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_ATTACHMENTS))
-        }
-        onView(withText(sampleJournalEntity.attachments?.get(0)?.filename)).check(matches(isDisplayed()))
+        onView(withText(sampleJournalEntity.attachments!![0].filename)).check(matches(isDisplayed()))
 
         //switch to tab subtasks
         scenario.onFragment {
