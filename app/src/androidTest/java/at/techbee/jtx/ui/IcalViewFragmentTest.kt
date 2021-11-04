@@ -54,6 +54,7 @@ class IcalViewFragmentTest {
         summary = "Journal4Test"
         description = "Description4JournalTest"
         dtstart = sampleDate
+        contact = "info@techbee.at"
     }
     private val sampleNote = ICalObject.createNote("Note4Test").apply {
         collectionId = sampleCollection.collectionId
@@ -128,7 +129,7 @@ class IcalViewFragmentTest {
 
 
     @Test
-    fun journal_everything_is_displayed()  {
+    fun journal_everything_is_displayed_part1()  {
 
         val fragmentArgs = Bundle()
         fragmentArgs.putLong("item2show", sampleJour.id)
@@ -156,31 +157,45 @@ class IcalViewFragmentTest {
 
         onView(withId(R.id.view_created)).check(matches(withText(expectedCreated)))
         onView(withId(R.id.view_lastModified)).check(matches(withText(expectedLastModified)))
+    }
+
+
+    @Test
+    fun journal_everything_is_displayed_part2()  {
+
+        val fragmentArgs = Bundle()
+        fragmentArgs.putLong("item2show", sampleJour.id)
+        //val scenario =
+        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
         onView(withId(R.id.view_add_audio_note)).check(matches(withText(R.string.view_add_audio_note)))
         onView(withId(R.id.view_add_note)).check(matches(withText(R.string.view_add_note)))
         onView(withText(R.string.view_feedback_linked_notes)).check(matches(withText(R.string.view_feedback_linked_notes)))
         onView(withId(R.id.view_classification_chip)).check(matches(isDisplayed()))
         onView(withId(R.id.view_status_chip)).check(matches(isDisplayed()))
+    }
 
-        onView(withText(sampleCategory1.text)).check(matches(isDisplayed()))
-        onView(withText(sampleCategory2.text)).check(matches(isDisplayed()))
+    @Test
+    fun journal_everything_is_displayed_part3()  {
 
-        onView(withText(R.string.view_attendees_header)).check(matches(isDisplayed()))
-        onView(withText(sampleAttendee.caladdress)).check(matches(isDisplayed()))
+        val fragmentArgs = Bundle()
+        fragmentArgs.putLong("item2show", sampleJour.id)
+        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+
+        onView(withId(R.id.view_attendee_header)).check(matches(withText(R.string.view_attendees_header)))
+        //onView(withText(sampleAttendee.caladdress)).check(matches(isDisplayed()))
 
         onView(withText(R.string.view_comments_header)).check(matches(isDisplayed()))
-        onView(withText(sampleComment.text)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_comment_textview)).check(matches(withText(sampleComment.text)))
 
         onView(withText(R.string.view_attachments_header)).check(matches(isDisplayed()))
-        onView(withText(sampleAttachment.filename)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_attachment_textview)).check(matches(withText(sampleAttachment.filename)))
 
-        onView(withText(R.string.view_organizer_header)).check(matches(isDisplayed()))
-        onView(withText(sampleOrganizer.caladdress)).check(matches(isDisplayed()))
+        onView(withId(R.id.view_organizer_header)).check(matches(withText(R.string.view_organizer_header)))
+        onView(withId(R.id.view_organizer)).check(matches(withText(sampleOrganizer.caladdress)))
 
-        //onView(withText(R.string.view_contact_header)).check(matches(isDisplayed()))
-        //onView(withText(sampleJournal.contact)).check(matches(isDisplayed()))
-
+        onView(withId(R.id.view_contact_header)).check(matches(withText(R.string.view_contact_header)))
+        onView(withId(R.id.view_contact)).check(matches(withText(sampleJour.contact)))
     }
 
     @Test

@@ -147,13 +147,13 @@ class IcalEditFragmentTest {
 
 
     @Test
-    fun journal_everything_is_prefilled()  {
+    fun journal_everything_is_prefilled_tab_general()  {
 
 
         val fragmentArgs = Bundle().apply {
             putParcelable("icalentity", sampleJournalEntity )
         }
-        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+        launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
         onView(withText(sampleJournalEntity.property.summary)).check(matches(isDisplayed()))
         onView(withText(sampleJournalEntity.property.description)).check(matches(isDisplayed()))
         onView(withText(convertLongToDayString(sampleJournalEntity.property.dtstart))).check(matches(isDisplayed()))
@@ -173,6 +173,18 @@ class IcalEditFragmentTest {
         onView(withText(sampleJournalEntity.categories?.get(1)?.text)).check(matches(isDisplayed()))
         onView(withText(R.string.classification_public)).check(matches(isDisplayed()))
 
+    }
+
+
+    @Test
+    fun journal_everything_is_prefilled_tab_contact_attendees_resources()  {
+
+
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleJournalEntity )
+        }
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+
         //switch to tab contact, attendees, resources
         scenario.onFragment {
             it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_PEOPLE_RES))
@@ -181,7 +193,16 @@ class IcalEditFragmentTest {
         onView(withText(sampleJournalEntity.attendees?.get(0)?.caladdress)).check(matches(isDisplayed()))
         onView(withText(sampleJournalEntity.attendees?.get(1)?.caladdress)).check(matches(isDisplayed()))
         onView(withText(sampleJournalEntity.resources?.get(0)?.text)).check(matches(isDisplayed()))
+    }
 
+
+    @Test
+    fun journal_everything_is_prefilled_tab_url_loc_comments()  {
+
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleJournalEntity )
+        }
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
         //switch to tab url, location, comments
         scenario.onFragment {
@@ -191,20 +212,43 @@ class IcalEditFragmentTest {
         onView(withText(sampleJournalEntity.property.location)).check(matches(isDisplayed()))
         onView(withText(sampleJournalEntity.comments!![0].text)).check(matches(withText(sampleComment1.text)))
         onView(withText(sampleJournalEntity.comments!![1].text)).check(matches(withText(sampleComment2.text)))
+    }
+
+
+
+
+    @Test
+    fun journal_everything_is_prefilled_tab_attachments()  {
+
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleJournalEntity )
+        }
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
         //switch to tab attachments
         scenario.onFragment {
             it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_ATTACHMENTS))
         }
 
-        onView(withText(sampleJournalEntity.attachments!![0].filename)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_attachment_item_textview)).check(matches(withText(sampleJournalEntity.attachments!![0].filename)))
+    }
+
+
+    @Test
+    fun journal_everything_is_prefilled_tab_subtasks()  {
+
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleJournalEntity )
+        }
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
         //switch to tab subtasks
         scenario.onFragment {
             it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_SUBTASKS))
         }
-        onView(withText(sampleSubtask.summary)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_subtask_textview)).check(matches(withText(sampleSubtask.summary)))
     }
+
 
 
     @Test
