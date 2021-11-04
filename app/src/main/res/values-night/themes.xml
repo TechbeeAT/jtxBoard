@@ -28,11 +28,18 @@
         <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_dark_primaryInverse</item>
 
-    <!-- make the elevated style the default card style -->
-    <item name="materialCardViewStyle">@style/Widget.App.CardView</item>
+        <!-- make the elevated style the default card style -->
+        <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Filled</item>
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense</item>
+        <item name="textInputFilledExposedDropdownMenuStyle">@style/jtx.ExposedDropdownMenu</item>
 
-</style>
+        <!-- custom font -->
+        <item name="fontFamily">@font/montserrat_alternates</item>
 
-<style name="Widget.App.CardView" parent="Widget.Material3.CardView.Filled">
-</style>
+
+    </style>
+
+    <style name="jtx.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+    </style>
+
 </resources>

@@ -558,7 +558,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_contact_edit"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    style="@style/jtx.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -623,7 +623,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_categories_add"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    style="@style/jtx.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -690,7 +690,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_attendees_add"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    style="@style/jtx.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -759,7 +759,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_resources_add"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    style="@style/jtx.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
