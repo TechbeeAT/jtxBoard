@@ -22,17 +22,10 @@ class AdinfoFragmentTest {
     fun check_texts() {
         launchFragmentInContainer<AdInfoFragment>(null, R.style.AppTheme, Lifecycle.State.RESUMED)
         onView(withText(R.string.adinfo_text)).check(matches(isDisplayed()))
-        onView(withText(R.string.adinfo_adfree_furtherdownloadoptions)).check(matches(isDisplayed()))
         onView(withText(R.string.adinfo_adfree_text)).check(matches(isDisplayed()))
         onView(withId(R.id.adinfo_card_purchase)).check(matches(isDisplayed()))
         onView(withId(R.id.adinfo_card_subscribe)).check(matches(isDisplayed()))
 
     }
 
-
-    @Test
-    fun open_link() {
-        launchFragmentInContainer<AdInfoFragment>(null, R.style.AppTheme, Lifecycle.State.RESUMED)
-        onView(withId(R.id.adinfo_adfree_download_link)).perform(click())
-    }
 }

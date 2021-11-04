@@ -9,24 +9,34 @@ class AlarmTest {
 // Android Test as Content Values need Android libraries to run
 
 
+
     @Test
     fun createFromContentValues() {
 
         val sampleAlarm = Alarm(
             icalObjectId = 1L,
-            value = "BEGIN:VALARM\n" +
-                    "TRIGGER;VALUE=DATE-TIME:19970317T133000Z\n" +
-                    "REPEAT:4\n" +
-                    "DURATION:PT15M\n" +
-                    "ACTION:AUDIO\n" +
-                    "ATTACH;FMTTYPE=audio/basic:ftp://example.com/pub/\n" +
-                    " sounds/bell-01.aud\n" +
-                    "END:VALARM",
+            action = "AUDIO" ,
+            description = "my description",
+            trigger = "DATE-TIME:19970317T133000Z",
+            summary = "summary",
+            duration = "PT15M",
+            attach = "ftp://example.com/pub/sounds/bell-01.aud",
+            attendee = "info@techbee.at",
+            repeat = "4",
+            other = "other"
         )
 
-        val cv = ContentValues(5).apply {
+        val cv = ContentValues(10).apply {
             put(COLUMN_ALARM_ICALOBJECT_ID, sampleAlarm.icalObjectId)
-            put(COLUMN_ALARM_VALUE, sampleAlarm.value)
+            put(COLUMN_ALARM_DESCRIPTION, sampleAlarm.description)
+            put(COLUMN_ALARM_ACTION, sampleAlarm.action)
+            put(COLUMN_ALARM_TRIGGER, sampleAlarm.trigger)
+            put(COLUMN_ALARM_SUMMARY, sampleAlarm.summary)
+            put(COLUMN_ALARM_DURATION, sampleAlarm.duration)
+            put(COLUMN_ALARM_ATTACH, sampleAlarm.attach)
+            put(COLUMN_ALARM_ATTENDEE, sampleAlarm.attendee)
+            put(COLUMN_ALARM_REPEAT, sampleAlarm.repeat)
+            put(COLUMN_ALARM_OTHER, sampleAlarm.other)
         }
 
         val cvAlarm = Alarm.fromContentValues(cv)
@@ -37,19 +47,7 @@ class AlarmTest {
     fun createFromContentValuesWithoutIcalobjectId() {
 
         val cv = ContentValues(1).apply {
-            put(COLUMN_ALARM_VALUE,  "alarm")
-        }
-
-        val cvAlarm = Alarm.fromContentValues(cv)
-        Assert.assertNull(cvAlarm)
-    }
-
-    @Test
-    fun createFromContentValuesWithoutText() {
-
-
-        val cv = ContentValues(1).apply {
-            put(COLUMN_ALARM_ICALOBJECT_ID, 1L)
+            put(COLUMN_ALARM_SUMMARY,  "alarm")
         }
 
         val cvAlarm = Alarm.fromContentValues(cv)

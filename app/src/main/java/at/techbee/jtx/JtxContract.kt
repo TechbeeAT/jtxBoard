@@ -1026,14 +1026,14 @@ object JtxContract {
          * Type: [Long] */
         const val ICALOBJECT_ID = "icalObjectId"
 
-        const val COLUMN_ALARM_ACTION = "action"
-        const val COLUMN_ALARM_DESCRIPTION = "description"
-        const val COLUMN_ALARM_TRIGGER = "trigger"
-        const val COLUMN_ALARM_SUMMARY = "summary"
-        const val COLUMN_ALARM_ATTENDEE = "attendee"
-        const val COLUMN_ALARM_DURATION = "duration"
-        const val COLUMN_ALARM_REPEAT = "repeat"
-        const val COLUMN_ALARM_ATTACH = "attach"
+        const val ALARM_ACTION = "action"
+        const val ALARM_DESCRIPTION = "description"
+        const val ALARM_TRIGGER = "trigger"
+        const val ALARM_SUMMARY = "summary"
+        const val ALARM_ATTENDEE = "attendee"
+        const val ALARM_DURATION = "duration"
+        const val ALARM_REPEAT = "repeat"
+        const val ALARM_ATTACH = "attach"
 
 
         /* The names of all the other columns  */
@@ -1041,7 +1041,7 @@ object JtxContract {
          * Purpose:  This property stores the unknown value as json
          * Type: [String]
          */
-        const val COLUMN_ALARM_OTHER = "other"
+        const val ALARM_OTHER = "other"
     }
 
     @Suppress("unused")

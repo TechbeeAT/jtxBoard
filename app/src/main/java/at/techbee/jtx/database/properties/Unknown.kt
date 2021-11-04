@@ -65,7 +65,7 @@ data class Unknown (
             if (values == null)
                 return null
 
-            if(values.getAsString(COLUMN_UNKNOWN_VALUE) == null || values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID) == null)
+            if(values.getAsString(COLUMN_UNKNOWN_VALUE) == null || values.getAsLong(COLUMN_UNKNOWN_ICALOBJECT_ID) == null)
                 return null
 
             return Unknown().applyContentValues(values)

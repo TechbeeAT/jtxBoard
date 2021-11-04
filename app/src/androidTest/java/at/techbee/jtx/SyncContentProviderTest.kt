@@ -19,7 +19,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.JtxContract.asSyncAdapter
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.TABLE_NAME_ICALOBJECT
-import at.techbee.jtx.database.properties.Reltype
+import at.techbee.jtx.database.properties.*
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -448,17 +448,31 @@ class SyncContentProviderTest {
     @Test
     fun alarm_insert_find_update_delete()  {
 
+        val sampleAlarm = Alarm(
+            icalObjectId = defaultICalObjectId!!,
+            action = "AUDIO" ,
+            description = "my description",
+            trigger = "DATE-TIME:19970317T133000Z",
+            summary = "summary",
+            duration = "PT15M",
+            attach = "ftp://example.com/pub/sounds/bell-01.aud",
+            attendee = "info@techbee.at",
+            repeat = "4",
+            other = "other"
+        )
+
         // INSERT
         val values = ContentValues().apply {
-            put(JtxContract.JtxAlarm.ICALOBJECT_ID, defaultICalObjectId)
-            put(JtxContract.JtxAlarm.ALARM_VALUE, "BEGIN:VALARM\n" +
-                    "TRIGGER;VALUE=DATE-TIME:19970317T133000Z\n" +
-                    "REPEAT:4\n" +
-                    "DURATION:PT15M\n" +
-                    "ACTION:AUDIO\n" +
-                    "ATTACH;FMTTYPE=audio/basic:ftp://example.com/pub/\n" +
-                    " sounds/bell-01.aud\n" +
-                    "END:VALARM")
+            put(JtxContract.JtxAlarm.ICALOBJECT_ID, sampleAlarm.icalObjectId)
+            put(JtxContract.JtxAlarm.ALARM_DESCRIPTION, sampleAlarm.description)
+            put(JtxContract.JtxAlarm.ALARM_ACTION, sampleAlarm.action)
+            put(JtxContract.JtxAlarm.ALARM_TRIGGER, sampleAlarm.trigger)
+            put(JtxContract.JtxAlarm.ALARM_SUMMARY, sampleAlarm.summary)
+            put(JtxContract.JtxAlarm.ALARM_DURATION, sampleAlarm.duration)
+            put(JtxContract.JtxAlarm.ALARM_ATTACH, sampleAlarm.attach)
+            put(JtxContract.JtxAlarm.ALARM_ATTENDEE, sampleAlarm.attendee)
+            put(JtxContract.JtxAlarm.ALARM_REPEAT, sampleAlarm.repeat)
+            put(JtxContract.JtxAlarm.ALARM_OTHER, sampleAlarm.other)
         }
         val uriAlarm = JtxContract.JtxAlarm.CONTENT_URI.asSyncAdapter(defaultTestAccount)
         val newAlarm = mContentResolver?.insert(uriAlarm, values)
@@ -470,27 +484,14 @@ class SyncContentProviderTest {
         }
 
         // UPDATE
+        sampleAlarm.summary = "New Summary"
         val updatedValues = ContentValues()
-        updatedValues.put(JtxContract.JtxAlarm.ALARM_VALUE, "BEGIN:VALARM\n" +
-                "TRIGGER;VALUE=DATE-TIME:19970317T133000Z\n" +
-                "REPEAT:5\n" +
-                "DURATION:PT15M\n" +
-                "ACTION:AUDIO\n" +
-                "ATTACH;FMTTYPE=audio/basic:ftp://example.com/pub/\n" +
-                " sounds/bell-01.aud\n" +
-                "END:VALARM")
+        updatedValues.put(JtxContract.JtxAlarm.ALARM_SUMMARY, sampleAlarm.summary)
         val countUpdated = mContentResolver?.update(newAlarm!!, updatedValues, null, null)
         assertEquals(countUpdated, 1)
 
         // QUERY the updated value
-        mContentResolver?.query(newAlarm!!, arrayOf(JtxContract.JtxAlarm.ID, JtxContract.JtxAlarm.ALARM_VALUE), "${JtxContract.JtxAlarm.ALARM_VALUE} = ?", arrayOf("BEGIN:VALARM\n" +
-                "TRIGGER;VALUE=DATE-TIME:19970317T133000Z\n" +
-                "REPEAT:5\n" +
-                "DURATION:PT15M\n" +
-                "ACTION:AUDIO\n" +
-                "ATTACH;FMTTYPE=audio/basic:ftp://example.com/pub/\n" +
-                " sounds/bell-01.aud\n" +
-                "END:VALARM"), null).use {
+        mContentResolver?.query(newAlarm!!, arrayOf(JtxContract.JtxAlarm.ID, JtxContract.JtxAlarm.ALARM_SUMMARY), "${JtxContract.JtxAlarm.ALARM_SUMMARY} = ?", arrayOf(sampleAlarm.summary), null).use {
             assertEquals(1, it!!.count)             // inserted object was found
         }
 

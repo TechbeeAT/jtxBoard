@@ -34,13 +34,6 @@ const val COLUMN_ALARM_ATTACH = "attach"
 const val COLUMN_ALARM_OTHER = "other"
 
 
-/* The names of all the other columns  */
-/**
- * Purpose:  This property stores the unknown value as json
- * Type: [String]
- */
-const val COLUMN_ALARM_VALUE = "value"
-
 
 @Parcelize
 @Entity(tableName = TABLE_NAME_ALARM,
@@ -81,7 +74,7 @@ data class Alarm (
             if (values == null)
                 return null
 
-            if(values.getAsString(COLUMN_UNKNOWN_VALUE) == null || values.getAsLong(COLUMN_RESOURCE_ICALOBJECT_ID) == null)
+            if(values.getAsLong(COLUMN_ALARM_ICALOBJECT_ID) == null)
                 return null
 
             return Alarm().applyContentValues(values)

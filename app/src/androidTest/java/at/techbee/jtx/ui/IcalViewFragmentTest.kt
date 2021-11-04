@@ -298,13 +298,16 @@ class IcalViewFragmentTest {
     fun journal_add_note() {
 
         val fragmentArgs = Bundle()
-        fragmentArgs.putLong("item2show", sampleJournal.id)
-        launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+        fragmentArgs.putLong("item2show", sampleNote.id)
+        launchFragmentInContainer<IcalViewFragment>(
+            fragmentArgs,
+            R.style.AppTheme,
+            Lifecycle.State.RESUMED
+        )
 
         val noteText = "TestText"
 
         onView(allOf(withId(R.id.view_add_note), withText(R.string.view_add_note))).check(matches(isDisplayed()))
-        onView(allOf(withId(R.id.view_add_audio_note), withText(R.string.view_add_audio_note))).check(matches(isDisplayed()))
         onView(withId(R.id.view_add_note)).perform(scrollTo(), click())
         onView (withId(R.id.view_view_addnote_dialog_edittext)).perform(typeText(noteText))
         onView (withText(R.string.save)).perform(click())
