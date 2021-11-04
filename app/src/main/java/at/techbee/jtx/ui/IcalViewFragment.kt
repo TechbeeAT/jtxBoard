@@ -842,10 +842,10 @@ class IcalViewFragment : Fragment() {
 
     private fun startPlaying() {
         // initialise the player
-        if(fileName != null) {
+        fileName?.let {  fname ->
             player = MediaPlayer().apply {
                 try {
-                    setDataSource(requireContext(), fileName!!)
+                    setDataSource(requireContext(), fname)
                     //setDataSource(fileName)
                     prepare()
                 } catch (e: IOException) {
