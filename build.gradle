@@ -19,14 +19,14 @@
 buildscript {
 
     ext {
-        version_core = "1.6.0"
+        version_core = "1.7.0"
         version_coroutine = "1.5.2"
         version_constraint_layout = "2.1.1"
         version_gradle = '7.0.3'
         version_kotlin = "1.5.31"
         version_lifecycle_extensions = "2.2.0"
-        version_lifecycle = "2.3.1"
-        version_navigation = '2.4.0-alpha10'
+        version_lifecycle = "2.4.0"
+        version_navigation = '2.4.0-beta01'
         version_room = '2.3.0'
         version_gson = "2.8.6"
         version_material = '1.5.0-alpha05'
