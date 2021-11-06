@@ -134,7 +134,7 @@ const val COLUMN_CONTACT = "contact"
  * This property is split in the fields [COLUMN_GEO_LAT] for the latitude
  * and [COLUMN_GEO_LONG] for the longitude coordinates.
  * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.6]
- * Type: [Float]
+ * Type: [Double]
  */
 const val COLUMN_GEO_LAT = "geolat"
 
@@ -143,7 +143,7 @@ const val COLUMN_GEO_LAT = "geolat"
  * This property is split in the fields [COLUMN_GEO_LAT] for the latitude
  * and [COLUMN_GEO_LONG] for the longitude coordinates.
  * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.6]
- * Type: [Float]
+ * Type: [Double]
  */
 const val COLUMN_GEO_LONG = "geolong"
 
@@ -153,6 +153,13 @@ const val COLUMN_GEO_LONG = "geolong"
  * Type: [String]
  */
 const val COLUMN_LOCATION = "location"
+
+/**
+ * Purpose:  This property defines the alternative representation of the intended venue for the activity defined by a calendar component.
+ * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.7]
+ * Type: [String]
+ */
+const val COLUMN_LOCATION_ALTREP = "locationaltrep"
 
 /**
  * Purpose:  This property is used by an assignee or delegatee of a to-do to convey the percent completion of a to-do to the "Organizer".
@@ -387,9 +394,10 @@ data class ICalObject(
 
     @ColumnInfo(name = COLUMN_URL) var url: String? = null,
     @ColumnInfo(name = COLUMN_CONTACT) var contact: String? = null,
-    @ColumnInfo(name = COLUMN_GEO_LAT) var geoLat: Float? = null,
-    @ColumnInfo(name = COLUMN_GEO_LONG) var geoLong: Float? = null,
+    @ColumnInfo(name = COLUMN_GEO_LAT) var geoLat: Double? = null,
+    @ColumnInfo(name = COLUMN_GEO_LONG) var geoLong: Double? = null,
     @ColumnInfo(name = COLUMN_LOCATION) var location: String? = null,
+    @ColumnInfo(name = COLUMN_LOCATION_ALTREP) var locationAltrep: String? = null,
 
     @ColumnInfo(name = COLUMN_PERCENT) var percent: Int? = null,    // VTODO only!
     @ColumnInfo(name = COLUMN_PRIORITY) var priority: Int? = null,   // VTODO and VEVENT
@@ -583,9 +591,10 @@ data class ICalObject(
             ?.let { classification -> this.classification = classification }
         values.getAsString(COLUMN_URL)?.let { url -> this.url = url }
         values.getAsString(COLUMN_CONTACT)?.let { contact -> this.contact = contact }
-        values.getAsFloat(COLUMN_GEO_LAT)?.let { geoLat -> this.geoLat = geoLat }
-        values.getAsFloat(COLUMN_GEO_LONG)?.let { geoLong -> this.geoLong = geoLong }
+        values.getAsDouble(COLUMN_GEO_LAT)?.let { geoLat -> this.geoLat = geoLat }
+        values.getAsDouble(COLUMN_GEO_LONG)?.let { geoLong -> this.geoLong = geoLong }
         values.getAsString(COLUMN_LOCATION)?.let { location -> this.location = location }
+        values.getAsString(COLUMN_LOCATION_ALTREP)?.let { locationAltrep -> this.locationAltrep = locationAltrep }
         values.getAsInteger(COLUMN_PERCENT)?.let { percent -> this.percent = percent }
         values.getAsInteger(COLUMN_PRIORITY)?.let { priority -> this.priority = priority }
         values.getAsLong(COLUMN_DUE)?.let { due -> this.due = due }

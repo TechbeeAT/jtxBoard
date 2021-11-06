@@ -172,16 +172,23 @@ object JtxContract {
          * This property is split in the fields [GEO_LAT] for the latitude
          * and [GEO_LONG] for the longitude coordinates.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.6]
-         * Type: [Float]
+         * Type: [Double]
          */
         const val GEO_LONG = "geolong"
 
         /**
          * Purpose:  This property defines the intended venue for the activity defined by a calendar component.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.7]
-         * Type: [String]
+         * Type: [Double]
          */
         const val LOCATION = "location"
+
+        /**
+         * Purpose:  This property defines the alternative representation of the intended venue for the activity defined by a calendar component.
+         * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.7]
+         * Type: [String]
+         */
+        const val LOCATION_ALTREP = "locationaltrep"
 
         /**
          * Purpose:  This property is used by an assignee or delegatee of a to-do to convey the percent completion of a to-do to the "Organizer".
