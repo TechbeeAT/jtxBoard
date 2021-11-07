@@ -152,12 +152,6 @@ class IcalListFragment : Fragment() {
                 }
             }
 
-            binding.fabFilter.setOnClickListener {
-                if (isFilterActive())
-                    resetFilter()
-                else
-                    goToFilter()
-            }
 
             icalListViewModel.resetFocusItem()              // reset happens only once in a Module, only when the Module get's changed the scrolling would happen again
 
@@ -200,11 +194,11 @@ class IcalListFragment : Fragment() {
 
             // don't show the option to clear the filter if no filter was set
             if (!isFilterActive()) {
-                optionsMenu?.findItem(R.id.menu_list_clearfilter)?.isVisible = false
-                binding.fabFilter.setImageResource(R.drawable.ic_filter)
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.isVisible = true
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_clearfilter)?.isVisible = false
             } else {
-                optionsMenu?.findItem(R.id.menu_list_clearfilter)?.isVisible = true
-                binding.fabFilter.setImageResource(R.drawable.ic_filter_delete)
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.isVisible = false
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_clearfilter)?.isVisible = true
             }
 
 
@@ -274,6 +268,16 @@ class IcalListFragment : Fragment() {
                 icalListViewModel.resetFocusItem()
             }
         })
+
+        binding.listBottomBar.setOnMenuItemClickListener { menuitem ->
+
+            when (menuitem.itemId) {
+                R.id.menu_list_bottom_filter -> goToFilter()
+                R.id.menu_list_bottom_clearfilter -> resetFilter()
+            }
+            false
+        }
+
 
         return binding.root
     }

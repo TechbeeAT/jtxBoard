@@ -25,14 +25,13 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/menu_ical_list"
-            app:title="@string/toolbar_text_jtx_board"
-            tools:subtitle="Subtitle"
+            style="?attr/appBarLayoutStyle"
             app:navigationIcon="@drawable/ic_baseline_menu_24"
-            />
+            app:title="@string/toolbar_text_jtx_board"
+            tools:subtitle="Subtitle" />
 
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -42,8 +41,8 @@
         android:id="@+id/drawer_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/topAppBarLayout"
         android:layout_above="@id/main_adlinearlayout"
+        android:layout_below="@+id/topAppBarLayout"
         tools:openDrawer="start">
 
 
@@ -57,7 +56,6 @@
             app:layout_scrollFlags="scroll"
             app:navGraph="@navigation/navigation"
             tools:layout="@layout/fragment_ical_list" />
-
 
 
         <com.google.android.material.navigation.NavigationView

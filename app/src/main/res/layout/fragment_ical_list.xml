@@ -16,55 +16,71 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:id="@+id/list_appbarlayout_tabs">
 
-            <ImageView
-                android:id="@+id/list_background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:alpha="0.2"
-                android:padding="24dp"
-                app:srcCompat="@drawable/bg_journals"
-                tools:ignore="ContentDescription" />
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tablayout_journalnotestodos"
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/list_collapsing_toolbar_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabMode="fixed">
+                android:layout_gravity="top"
+                app:layout_scrollFlags="scroll|enterAlways|snap">
 
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/journals_tab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:icon="@drawable/ic_date"
-                    android:text="@string/list_tabitem_journals" />
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tablayout_journalnotestodos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tabMode="fixed">
 
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/notes_tab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:icon="@drawable/ic_note"
-                    android:text="@string/list_tabitem_notes" />
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/journals_tab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:icon="@drawable/ic_date"
+                        android:text="@string/list_tabitem_journals" />
 
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/todos_tab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:icon="@drawable/ic_todo"
-                    android:text="@string/list_tabitem_todos" />
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/notes_tab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:icon="@drawable/ic_note"
+                        android:text="@string/list_tabitem_notes" />
 
-            </com.google.android.material.tabs.TabLayout>
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/todos_tab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:icon="@drawable/ic_todo"
+                        android:text="@string/list_tabitem_todos" />
+
+                </com.google.android.material.tabs.TabLayout>
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <ImageView
+            android:id="@+id/list_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.2"
+            android:padding="24dp"
+            app:srcCompat="@drawable/bg_journals"
+            tools:ignore="ContentDescription" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/list_progress_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tablayout_journalnotestodos"
-                android:indeterminate="true"
-                />
+                android:indeterminate="true" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/vjournal_list_items_recycler_view"
@@ -72,7 +88,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/list_progress_indicator"
                 android:layout_marginEnd="8dp"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager">
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:listitem="@layout/fragment_ical_list_item_journal">
 
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -80,25 +97,23 @@
 
         </RelativeLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_filter"
-            android:layout_width="wrap_content"
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/list_bottom_bar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="88dp"
-            app:srcCompat="@drawable/ic_filter"
-            android:contentDescription="@string/menu_list_filter" />
+            android:layout_gravity="bottom"
+            app:hideOnScroll="true"
+            app:menu="@menu/menu_ical_list_bottombar"
+            />
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
             android:contentDescription="@string/list_fab_add_contentdesc"
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+            app:layout_anchor="@id/list_bottom_bar"
             app:srcCompat="@drawable/ic_add"
             />
 
