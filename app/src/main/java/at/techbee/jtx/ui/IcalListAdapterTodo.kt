@@ -11,10 +11,7 @@ package at.techbee.jtx.ui
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Paint
-import android.net.Uri
-import android.os.Build
 import android.util.Log
-import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,14 +22,10 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import at.techbee.jtx.*
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.databinding.FragmentIcalListItemAttachmentBinding
-import at.techbee.jtx.databinding.FragmentIcalListItemSubtaskBinding
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
-import java.io.FileNotFoundException
 import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit
 
@@ -300,22 +293,10 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 )
             }
 
+            val itemSubtasks = allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id } != null } ?: emptyList()
+            IcalListAdapterHelper.addSubtasksView(model, itemSubtasks, holder.subtasksLinearLayout, context, parent)
 
-            val itemSubtasks =
-                allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id } != null }
-            itemSubtasks?.forEach {
-                addSubtasksView(it, holder)
-            }
-
-
-            if(iCal4ListItem.attachment.isNullOrEmpty()) {
-                holder.attachmentsLinearLayout.visibility = View.GONE
-            } else {
-                holder.attachmentsLinearLayout.visibility = View.VISIBLE
-                addAttachmentView(iCal4ListItem.attachment, holder)
-            }
-
-
+            IcalListAdapterHelper.addAttachmentView(iCal4ListItem.attachment, holder.attachmentsLinearLayout, context, parent)
 
 
             var toggleSubtasksExpanded = true
@@ -323,9 +304,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
             holder.expandSubtasks.setOnClickListener {
 
                 if (!toggleSubtasksExpanded) {
-                    itemSubtasks?.forEach {
-                        addSubtasksView(it, holder)
-                    }
+                    IcalListAdapterHelper.addSubtasksView(model, itemSubtasks, holder.subtasksLinearLayout, context, parent)
                     toggleSubtasksExpanded = true
                     holder.expandSubtasks.setImageResource(R.drawable.ic_collapse)
                 } else {
@@ -339,9 +318,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
             holder.progressLabel.setOnClickListener {
 
                 if (!toggleSubtasksExpanded) {
-                    itemSubtasks?.forEach {
-                        addSubtasksView(it, holder)
-                    }
+                    IcalListAdapterHelper.addSubtasksView(model, itemSubtasks, holder.subtasksLinearLayout, context, parent)
                     toggleSubtasksExpanded = true
                     holder.expandSubtasks.setImageResource(R.drawable.ic_collapse)
                 } else {
@@ -400,148 +377,6 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
         var recurIcon: ImageView = itemView.findViewById(R.id.list_item_todo_recurring_icon)
     }
 
-
-    private fun addSubtasksView(subtask: ICal4List?, holder: TodoItemHolder) {
-
-        if (subtask == null)
-            return
-
-        var resetProgress = subtask.percent
-            ?: 0             // remember progress to be reset if the checkbox is unchecked
-
-        val subtaskBinding = FragmentIcalListItemSubtaskBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-
-        var subtaskSummary = subtask.summary
-        //val subtaskCount = model.subtasksCountList.value?.find { subtask.id == it.icalobjectId}?.count
-        /*if (subtaskCount != null)
-            subtaskSummary += " (+${subtaskCount})" */
-        if (subtask.numSubtasks > 0)
-            subtaskSummary += " (+${subtask.numSubtasks})"
-
-        subtaskBinding.listItemSubtaskTextview.text = subtaskSummary
-        subtaskBinding.listItemSubtaskProgressSlider.value =
-            if (subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
-        subtaskBinding.listItemSubtaskProgressPercent.text =
-            if (subtask.percent?.toFloat() != null) "${subtask.percent!!} %" else "0 %"
-        subtaskBinding.listItemSubtaskProgressCheckbox.isChecked = subtask.percent == 100
-
-        // Instead of implementing here
-        //        subtaskView.subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->  vJournalItemViewModel.updateProgress(subtask, value.toInt())    }
-        //   the approach here is to update only onStopTrackingTouch. The OnCangeListener would update on several times on sliding causing lags and unnecessary updates  */
-
-
-        subtaskBinding.listItemSubtaskProgressSlider.addOnSliderTouchListener(object :
-            Slider.OnSliderTouchListener {
-
-            override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
-            }
-
-            override fun onStopTrackingTouch(slider: Slider) {
-                if (subtaskBinding.listItemSubtaskProgressSlider.value < 100)
-                    resetProgress = subtask.percent ?: 0
-
-                model.updateProgress(
-                    subtask.id,
-                    subtaskBinding.listItemSubtaskProgressSlider.value.toInt(),
-                    subtask.isLinkedRecurringInstance
-                )
-            }
-        })
-
-
-        subtaskBinding.listItemSubtaskProgressCheckbox.setOnCheckedChangeListener { _, checked ->
-
-            if (checked)
-                subtaskBinding.listItemSubtaskProgressSlider.value = 100F
-            else
-                subtaskBinding.listItemSubtaskProgressSlider.value = resetProgress.toFloat()
-
-            model.updateProgress(
-                subtask.id,
-                subtaskBinding.listItemSubtaskProgressSlider.value.toInt(),
-                subtask.isLinkedRecurringInstance
-            )
-        }
-
-        subtaskBinding.root.setOnClickListener {
-            holder.listItemCardView.findNavController().navigate(
-                IcalListFragmentDirections.actionIcalListFragmentToIcalViewFragment()
-                    .setItem2show(subtask.id)
-            )
-        }
-
-        if(settingShowProgressSubtasks) {
-            subtaskBinding.listItemSubtaskProgressSlider.visibility = View.VISIBLE
-            subtaskBinding.listItemSubtaskProgressPercent.visibility = View.VISIBLE
-        } else {
-            subtaskBinding.listItemSubtaskProgressSlider.visibility = View.GONE
-            subtaskBinding.listItemSubtaskProgressPercent.visibility = View.GONE
-        }
-
-        holder.subtasksLinearLayout.addView(subtaskBinding.root)
-    }
-
-
-
-    private fun addAttachmentView(attachments: List<Attachment>?, holder: TodoItemHolder) {
-
-        holder.attachmentsLinearLayout.removeAllViews()
-
-        if(settingShowAttachments) {
-
-            attachments?.forEach { attachment ->
-
-                val attachmentBinding = FragmentIcalListItemAttachmentBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-
-                //open the attachment on click
-                attachmentBinding.listItemAttachmentCardview.setOnClickListener {
-                    attachment.openFile(context)
-                }
-
-
-                when {
-                    attachment.filename?.isNotEmpty() == true -> attachmentBinding.listItemAttachmentTextview.text = attachment.filename
-                    attachment.fmttype?.isNotEmpty() == true -> attachmentBinding.listItemAttachmentTextview.text = attachment.fmttype
-                    else -> attachmentBinding.listItemAttachmentTextview.text = ""
-                }
-
-                if (attachment.filesize == null)
-                    attachmentBinding.listItemAttachmentFilesize.visibility = View.GONE
-                else
-                    attachmentBinding.listItemAttachmentFilesize.text = getAttachmentSizeString(attachment.filesize?:0L)
-
-                // load thumbnail if possible
-
-                try {
-                    val thumbSize = Size(50, 50)
-                    val thumbUri = Uri.parse(attachment.uri)
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        val thumbBitmap =
-                            context.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
-                        attachmentBinding.listItemAttachmentPictureThumbnail.setImageBitmap(
-                            thumbBitmap
-                        )
-                        attachmentBinding.listItemAttachmentPictureThumbnail.visibility =
-                            View.VISIBLE
-                    }
-                } catch (e: FileNotFoundException) {
-                    Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
-                }
-
-
-                holder.attachmentsLinearLayout.addView(attachmentBinding.root)
-            }
-        }
-    }
 }
 
 
