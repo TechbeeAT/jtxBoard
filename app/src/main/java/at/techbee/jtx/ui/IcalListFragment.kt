@@ -44,7 +44,10 @@ class IcalListFragment : Fragment() {
     private var linearLayoutManager: LinearLayoutManager? = null
     //private var staggeredGridLayoutManager: StaggeredGridLayoutManager? = null
 
-    private var icalListAdapter: IcalListAdapter? = null
+    //private var icalListAdapter: IcalListAdapter? = null
+    private var journalListAdapter: IcalListAdapterJournal? = null
+    private var noteListAdapter: IcalListAdapterNote? = null
+    private var todoListAdapter: IcalListAdapterTodo? = null
 
     private lateinit var icalListViewModel: IcalListViewModel
 
@@ -113,10 +116,18 @@ class IcalListFragment : Fragment() {
         recyclerView?.setHasFixedSize(false)
 
         // create adapter and provide data
-        //vJournalListAdapter = VJournalListAdapter(application.applicationContext, vJournalListViewModel.vjournalList, vJournalListViewModel.vjournaListCount)
-        icalListAdapter = IcalListAdapter(application.applicationContext, icalListViewModel)
+        //icalListAdapter = IcalListAdapter(application.applicationContext, icalListViewModel)
+        journalListAdapter = IcalListAdapterJournal(requireContext(), icalListViewModel)
+        noteListAdapter = IcalListAdapterNote(requireContext(), icalListViewModel)
+        todoListAdapter = IcalListAdapterTodo(requireContext(), icalListViewModel)
 
-        recyclerView?.adapter = icalListAdapter
+        when(icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> recyclerView?.adapter = journalListAdapter
+            Module.NOTE.name -> recyclerView?.adapter = noteListAdapter
+            Module.TODO.name -> recyclerView?.adapter = todoListAdapter
+        }
+
+        //recyclerView?.adapter = icalListAdapter
 
 
         arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
@@ -128,7 +139,9 @@ class IcalListFragment : Fragment() {
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
         icalListViewModel.iCal4List.observe(viewLifecycleOwner, {
 
-            icalListAdapter!!.notifyDataSetChanged()
+            //icalListAdapter!!.notifyDataSetChanged()
+            recyclerView?.adapter?.notifyDataSetChanged()
+
 
             binding.fab.setOnClickListener {
 
@@ -319,6 +332,12 @@ class IcalListFragment : Fragment() {
         icalListViewModel.updateSearch()
         savePrefs()
         icalListViewModel.resetFocusItem()
+
+        when(icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> recyclerView?.adapter = journalListAdapter
+            Module.NOTE.name -> recyclerView?.adapter = noteListAdapter
+            Module.TODO.name -> recyclerView?.adapter = todoListAdapter
+        }
 
         //change background
         when (icalListViewModel.searchModule) {
