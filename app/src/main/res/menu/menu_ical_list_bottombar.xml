@@ -12,15 +12,30 @@
     >
     <group android:id="@+id/menugroup_filter" >
         <item
+            android:id="@+id/menu_list_bottom_add_journal"
+            android:icon="@drawable/ic_add"
+            android:title="@string/menu_list_add_journal"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/menu_list_bottom_add_note"
+            android:icon="@drawable/ic_add_note"
+            android:title="@string/menu_list_add_note"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/menu_list_bottom_add_todo"
+            android:icon="@drawable/ic_todo_add"
+            android:title="@string/menu_list_add_todo"
+            app:showAsAction="ifRoom" />
+        <item
             android:id="@+id/menu_list_bottom_filter"
             android:icon="@drawable/ic_filter"
             android:title="@string/menu_list_filter"
-            app:showAsAction="always" />
+            app:showAsAction="ifRoom" />
         <item
             android:id="@+id/menu_list_bottom_clearfilter"
             android:title="@string/menu_list_clearfilter"
             android:icon="@drawable/ic_filter_delete"
-            app:showAsAction="always" />
+            app:showAsAction="ifRoom" />
     </group>
 
 </menu>

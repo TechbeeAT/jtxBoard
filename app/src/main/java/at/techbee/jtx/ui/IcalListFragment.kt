@@ -164,7 +164,11 @@ class IcalListFragment : Fragment() {
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
-                    //staggeredGridLayoutManager!!.spanCount = 1
+
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = false
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = true
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = true
+
                     binding.fab.setImageResource(R.drawable.ic_add)
                 }
                 Module.NOTE.name -> {
@@ -175,7 +179,11 @@ class IcalListFragment : Fragment() {
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
-                    //staggeredGridLayoutManager!!.spanCount = 1
+
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = true
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = false
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = true
+
                     binding.fab.setImageResource(R.drawable.ic_add_note)
                 }
                 Module.TODO.name -> {
@@ -186,7 +194,11 @@ class IcalListFragment : Fragment() {
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = true
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = true
                     optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = true
-                    //staggeredGridLayoutManager!!.spanCount = 1
+
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = true
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = true
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = false
+
                     binding.fab.setImageResource(R.drawable.ic_todo_add)
                 }
             }
@@ -274,6 +286,9 @@ class IcalListFragment : Fragment() {
             when (menuitem.itemId) {
                 R.id.menu_list_bottom_filter -> goToFilter()
                 R.id.menu_list_bottom_clearfilter -> resetFilter()
+                R.id.menu_list_bottom_add_journal -> goToEdit(ICalEntity(ICalObject.createJournal()))
+                R.id.menu_list_bottom_add_note -> goToEdit(ICalEntity(ICalObject.createNote()))
+                R.id.menu_list_bottom_add_todo -> goToEdit(ICalEntity(ICalObject.createTodo()))
             }
             false
         }
