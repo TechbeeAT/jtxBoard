@@ -38,7 +38,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/square_box"
             tools:ignore="ContentDescription"
-            tools:tint="#BC0D0D" />
+            tools:tint="#FFF"
+            app:tint="?attr/colorSurfaceVariant" />
 
 
         <ImageView

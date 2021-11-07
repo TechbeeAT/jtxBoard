@@ -119,15 +119,11 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 try {
                     holder.colorBar.setColorFilter(iCal4ListItem.property.color!!)
                 } catch (e: IllegalArgumentException) {
-                    Log.println(
-                        Log.INFO,
-                        "Invalid color",
-                        "Invalid Color cannot be parsed: ${iCal4ListItem.property.color}"
-                    )
-                    holder.colorBar.visibility = View.GONE
+                    Log.i("Invalid color","Invalid Color cannot be parsed: ${iCal4ListItem.property.color}")
+                    holder.colorBar.visibility = View.INVISIBLE
                 }
             } else
-                holder.colorBar.visibility = View.GONE
+                holder.colorBar.visibility = View.INVISIBLE
 
 
             /* START handle subtasks */
