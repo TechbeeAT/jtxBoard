@@ -1,5 +1,6 @@
 package at.techbee.jtx.ui
 
+import android.Manifest
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.GrantPermissionRule
 import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
@@ -45,6 +47,12 @@ class IcalEditFragmentTest {
 
     @get: Rule
     var testRule = activityScenarioRule<MainActivity>()
+
+    @get:Rule
+    val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+        Manifest.permission.READ_CONTACTS
+    )!!
+
 
     private val sampleDate = 1632636027826L     //  Sun Sep 26 2021 06:00:27
     private val sampleCollection = ICalCollection(collectionId = 1L, displayName = "testcollection automated tests")
