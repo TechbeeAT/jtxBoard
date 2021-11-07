@@ -13,7 +13,6 @@ import org.junit.Before
 
 import org.junit.Test
 import java.io.ByteArrayOutputStream
-import java.io.OutputStream
 import java.io.StringReader
 
 class ICalEntityAndroidTest {
@@ -39,7 +38,7 @@ class ICalEntityAndroidTest {
                 summary = "Almost all fields",
                 description = "This is the description",
                 dtstart = 1631404800000,
-                dtstartTimezone = "Africa/Asmara",
+                dtstartTimezone = null,
                 dtend = null,
                 dtendTimezone = null,
                 status = StatusJournal.FINAL.name,
