@@ -229,9 +229,6 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                 R.id.nav_website ->
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://jtx.techbee.at")))
 
-                R.id.nav_manual ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://jtx.techbee.at")))
-
                 R.id.nav_faq ->
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://jtx.techbee.at")))
 
