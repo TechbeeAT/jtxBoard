@@ -28,7 +28,7 @@ stages:
 lintDebug:
   stage: build
   script:
-  - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+  - ./gradlew -Pci --console=plain :app:lintAlphatestDebug -PbuildDir=lint
 
 assembleDebug:
   stage: build
@@ -41,4 +41,4 @@ assembleDebug:
 debugTests:
   stage: test
   script:
-  - ./gradlew -Pci --console=plain :app:testDebug
+  - ./gradlew -Pci --console=plain :app:testAlphatestDebug
