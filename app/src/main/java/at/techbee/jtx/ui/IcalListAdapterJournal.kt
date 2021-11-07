@@ -129,11 +129,7 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
                 try {
                     holder.colorBar.setColorFilter(iCal4ListItem.property.color!!)
                 } catch (e: IllegalArgumentException) {
-                    Log.println(
-                        Log.INFO,
-                        "Invalid color",
-                        "Invalid Color cannot be parsed: ${iCal4ListItem.property.color}"
-                    )
+                    Log.i("Invalid color", "Invalid Color cannot be parsed: ${iCal4ListItem.property.color}")
                     holder.colorBar.visibility = View.GONE
                 }
             } else
@@ -236,10 +232,8 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
 
         }
 
-        //TODO: Check the impact of this setting!
-        // Trying out if this solves the weird behaviour that sometimes fields in the cardview are just missing
-        // Scrolling is actually not so smooth, but it looks like the weird behaviour is not there anymore...
-        holder.setIsRecyclable(true)
+        //scrolling is much smoother when isRecyclable is set to false
+        holder.setIsRecyclable(false)
 
     }
 

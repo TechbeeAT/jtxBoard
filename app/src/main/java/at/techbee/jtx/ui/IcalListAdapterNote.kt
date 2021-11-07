@@ -183,10 +183,8 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
             IcalListAdapterHelper.addAttachmentView(iCal4ListItem.attachment, holder.attachmentsLinearLayout, context, parent)
         }
 
-        //TODO: Check the impact of this setting!
-        // Trying out if this solves the weird behaviour that sometimes fields in the cardview are just missing
-        // Scrolling is actually not so smooth, but it looks like the weird behaviour is not there anymore...
-        holder.setIsRecyclable(true)
+        //scrolling is much smoother when isRecyclable is set to false
+        holder.setIsRecyclable(false)
     }
 
 
