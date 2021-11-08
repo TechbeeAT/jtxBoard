@@ -570,6 +570,17 @@ class IcalViewFragment : Fragment() {
             }
         }
 
+
+        binding.viewBottomBar.setOnMenuItemClickListener { menuItem ->
+            when(menuItem.itemId) {
+                R.id.menu_view_bottom_copy -> this.findNavController().navigate(
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(getIcalEntityCopy())
+                )
+                R.id.menu_view_bottom_delete -> deleteItem()
+            }
+            false
+        }
+
         return binding.root
     }
 
@@ -771,28 +782,7 @@ class IcalViewFragment : Fragment() {
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(getIcalEntityCopy(Module.TODO))
                 )
 
-            R.id.menu_view_delete_item -> {
-
-                    // show Alert Dialog before the item gets really deleted
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle(getString(R.string.view_dialog_sure_to_delete_title, icalViewViewModel.icalEntity.value!!.property.summary))
-                    builder.setMessage(getString(R.string.view_dialog_sure_to_delete_message, icalViewViewModel.icalEntity.value!!.property.summary))
-                    builder.setPositiveButton(R.string.delete) { _, _ ->
-
-                        val summary = icalViewViewModel.icalEntity.value!!.property.summary
-
-                        val direction = IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment()
-                        direction.module2show = icalViewViewModel.icalEntity.value?.property?.module
-                        icalViewViewModel.delete(icalViewViewModel.icalEntity.value?.property!!)
-
-                        Toast.makeText(context, getString(R.string.view_toast_deleted_successfully, summary), Toast.LENGTH_LONG).show()
-
-                        context?.let { context -> Attachment.scheduleCleanupJob(context) }
-                        this.findNavController().navigate(direction)
-                    }
-                builder.setNeutralButton(R.string.cancel) { _, _ -> }
-                builder.show()
-            }
+            R.id.menu_view_delete_item -> deleteItem()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -874,6 +864,40 @@ class IcalViewFragment : Fragment() {
                 }
             }
         }, 0)
+    }
+
+    private fun deleteItem() {
+
+        // show Alert Dialog before the item gets really deleted
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(getString(R.string.view_dialog_sure_to_delete_title, icalViewViewModel.icalEntity.value!!.property.summary))
+        builder.setMessage(getString(R.string.view_dialog_sure_to_delete_message, icalViewViewModel.icalEntity.value!!.property.summary))
+        builder.setPositiveButton(R.string.delete) { _, _ ->
+
+            val summary = icalViewViewModel.icalEntity.value!!.property.summary
+
+            val direction = IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment()
+            direction.module2show = icalViewViewModel.icalEntity.value?.property?.module
+            icalViewViewModel.delete(icalViewViewModel.icalEntity.value?.property!!)
+
+            Toast.makeText(context, getString(R.string.view_toast_deleted_successfully, summary), Toast.LENGTH_LONG).show()
+
+            Attachment.scheduleCleanupJob(requireContext())
+            this.findNavController().navigate(direction)
+        }
+        builder.setNeutralButton(R.string.cancel) { _, _ -> }
+        builder.show()
+    }
+
+
+
+    private fun getIcalEntityCopy(): ICalEntity {
+        return when (icalViewViewModel.icalEntity.value?.property?.module) {
+            Module.JOURNAL.name -> getIcalEntityCopy(Module.JOURNAL)
+            Module.NOTE.name -> getIcalEntityCopy(Module.NOTE)
+            Module.TODO.name -> getIcalEntityCopy(Module.TODO)
+            else -> getIcalEntityCopy(Module.JOURNAL)
+        }
     }
 
     private fun getIcalEntityCopy(newModule: Module): ICalEntity {

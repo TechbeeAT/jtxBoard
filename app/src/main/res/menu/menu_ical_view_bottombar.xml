@@ -12,6 +12,11 @@
     >
     <group android:id="@+id/menugroup_view_bottom" >
         <item
+            android:id="@+id/menu_view_bottom_copy"
+            android:icon="@drawable/ic_copy"
+            android:title="@string/menu_view_copy_item"
+            app:showAsAction="ifRoom" />
+        <item
             android:id="@+id/menu_view_bottom_delete"
             android:icon="@drawable/ic_delete"
             android:title="@string/menu_view_delete_item"
