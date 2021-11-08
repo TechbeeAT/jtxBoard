@@ -464,47 +464,11 @@ class IcalEditFragment : Fragment() {
         icalEditViewModel.deleteClicked.observe(viewLifecycleOwner, {
             if (it == true) {
 
-                // show Alert Dialog before the item gets really deleted
-                val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle(getString(R.string.edit_dialog_sure_to_delete_title, icalEditViewModel.iCalObjectUpdated.value?.summary))
-                builder.setMessage(getString(R.string.edit_dialog_sure_to_delete_message, icalEditViewModel.iCalObjectUpdated.value?.summary))
-                builder.setPositiveButton(R.string.delete) { _, _ ->
+                if(icalEditViewModel.iCalObjectUpdated.value?.id == 0L)
+                    showDiscardMessage()
+                else
+                    showDeleteMessage()
 
-                    hideKeyboard()
-
-                    val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
-                    icalEditViewModel.delete()
-                    Toast.makeText(context, getString(R.string.edit_toast_deleted_successfully, summary), Toast.LENGTH_LONG).show()
-
-                    context?.let { context -> Attachment.scheduleCleanupJob(context) }
-
-                    val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
-                    direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
-                    this.findNavController().navigate(direction)
-                }
-                /*
-                builder.setNegativeButton("Cancel") { _, _ ->
-                    // Do nothing, just close the message
-                }
-
-                 */
-
-                builder.setNeutralButton(R.string.edit_dialog_mark_as_cancelled) { _, _ ->
-                    if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name)
-                        icalEditViewModel.iCalObjectUpdated.value!!.status =
-                            StatusTodo.CANCELLED.name
-                    else
-                        icalEditViewModel.iCalObjectUpdated.value!!.status =
-                            StatusJournal.CANCELLED.name
-
-                    val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
-                    Toast.makeText(context, getString(R.string.edit_toast_marked_as_cancelled, summary), Toast.LENGTH_LONG)
-                        .show()
-
-                    icalEditViewModel.savingClicked()
-                }
-
-                builder.show()
             }
         })
 
@@ -1260,6 +1224,13 @@ class IcalEditFragment : Fragment() {
                 icalEditViewModel.attendeesError.value = "Please enter a valid E-Mail address"
         }
 
+        binding.editBottomBar.setOnMenuItemClickListener { menuItem ->
+            when(menuItem.itemId) {
+                R.id.menu_edit_bottom_delete -> icalEditViewModel.deleteClicked()
+            }
+            true
+        }
+
 
         return binding.root
     }
@@ -1461,6 +1432,50 @@ class IcalEditFragment : Fragment() {
 
         datePicker.show(parentFragmentManager, tag)
 
+    }
+
+    private fun showDiscardMessage() {
+
+        // show Alert Dialog before the item gets really deleted
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(getString(R.string.edit_dialog_sure_to_discard_title, icalEditViewModel.iCalObjectUpdated.value?.summary))
+        builder.setMessage(getString(R.string.edit_dialog_sure_to_discard_message, icalEditViewModel.iCalObjectUpdated.value?.summary))
+        builder.setPositiveButton(R.string.discard) { _, _ ->
+
+            hideKeyboard()
+            context?.let { context -> Attachment.scheduleCleanupJob(context) }
+
+            val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
+            direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
+            this.findNavController().navigate(direction)
+        }
+        builder.setNegativeButton(R.string.cancel) { _, _ ->  }   // Do nothing, just close the message
+        builder.show()
+
+    }
+
+    private fun showDeleteMessage() {
+
+        // show Alert Dialog before the item gets really deleted
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(getString(R.string.edit_dialog_sure_to_delete_title, icalEditViewModel.iCalObjectUpdated.value?.summary))
+        builder.setMessage(getString(R.string.edit_dialog_sure_to_delete_message, icalEditViewModel.iCalObjectUpdated.value?.summary))
+        builder.setPositiveButton(R.string.delete) { _, _ ->
+
+            hideKeyboard()
+
+            val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
+            icalEditViewModel.delete()
+            Toast.makeText(context, getString(R.string.edit_toast_deleted_successfully, summary), Toast.LENGTH_LONG).show()
+
+            context?.let { context -> Attachment.scheduleCleanupJob(context) }
+
+            val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
+            direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
+            this.findNavController().navigate(direction)
+        }
+        builder.setNegativeButton(R.string.cancel) { _, _ ->  }   // Do nothing, just close the message
+        builder.show()
     }
 
 

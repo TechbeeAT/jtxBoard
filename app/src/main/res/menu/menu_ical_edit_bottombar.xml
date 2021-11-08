@@ -12,7 +12,7 @@
     >
     <group android:id="@+id/menugroup_view_bottom" >
         <item
-            android:id="@+id/menu_edit_bottom_discard"
+            android:id="@+id/menu_edit_bottom_delete"
             android:icon="@drawable/ic_delete"
             android:title="@string/menu_edit_delete"
             app:showAsAction="always" />
