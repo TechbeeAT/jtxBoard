@@ -19,6 +19,17 @@
     android:clickable="true"
     android:focusable="true">
 
+    <ImageView
+        android:id="@+id/list_item_journal_colorbar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_card_colored_edge"
+        app:tint="?attr/colorSurfaceVariant"
+        tools:ignore="ContentDescription"
+        tools:tint="#FFF" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,29 +37,13 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
-        <ImageView
-            android:id="@+id/list_item_journal_colorbar"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/square_box"
-            tools:ignore="ContentDescription"
-            tools:tint="#FFF"
-            app:tint="?attr/colorSurfaceVariant" />
-
 
         <ImageView
             android:id="@+id/list_item_journal_recurring_icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/list_item_journal_summary"
-            app:layout_constraintTop_toTopOf="@+id/list_item_journal_colorbar"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_recurring"
             tools:ignore="ContentDescription" />
 

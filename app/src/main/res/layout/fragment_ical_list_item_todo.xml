@@ -19,6 +19,17 @@
     android:clickable="true"
     android:focusable="true">
 
+    <ImageView
+        android:id="@+id/list_item_todo_colorbar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_card_colored_edge"
+        app:tint="?attr/colorSurfaceVariant"
+        tools:ignore="ContentDescription"
+        tools:tint="#FFF" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,20 +37,6 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
-        <ImageView
-            android:id="@+id/list_item_todo_colorbar"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/square_box"
-            tools:ignore="ContentDescription"
-            tools:tint="#FFF"
-            app:tint="?attr/colorSurfaceVariant" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_todo_due"
@@ -49,7 +46,7 @@
             android:textSize="12sp"
             android:textStyle="bold|italic"
             app:layout_constraintStart_toStartOf="@+id/list_item_todo_summary"
-            app:layout_constraintTop_toTopOf="@+id/list_item_todo_colorbar"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Due in 365 days" />
 
 
@@ -60,7 +57,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/list_item_todo_colorbar"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_recurring"
             tools:ignore="ContentDescription" />
 
