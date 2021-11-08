@@ -290,6 +290,9 @@
     <string name="menu_list_add_journal">Add Journal</string>
     <string name="menu_list_add_note">Add Note</string>
     <string name="menu_list_add_todo">Add Todo</string>
+    <string name="menu_list_todo_show_completed">Show completed</string>
+    <string name="menu_list_todo_hide_completed">Hide completed</string>
+
     <string name="menu_list_quickfilterfilter_vjournal_drafts_final">Show Drafts + Final</string>
     <string name="menu_list_quickfilterfilter_vjournal_drafts">Show drafts only</string>
     <string name="menu_list_quickfilterfilter_vjournal_final">Show final only</string>

@@ -168,6 +168,8 @@ class IcalListFragment : Fragment() {
                     binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = false
                     binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = true
                     binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = true
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = false
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
 
                     binding.fab.setImageResource(R.drawable.ic_add)
                 }
@@ -183,6 +185,8 @@ class IcalListFragment : Fragment() {
                     binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = true
                     binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = false
                     binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = true
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = false
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
 
                     binding.fab.setImageResource(R.drawable.ic_add_note)
                 }
@@ -199,10 +203,17 @@ class IcalListFragment : Fragment() {
                     binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = true
                     binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = false
 
+                    if(isHideCompletedTasksFilterActive()) {
+                        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = true
+                        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
+                    } else {
+                        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = false
+                        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = true
+                    }
+
                     binding.fab.setImageResource(R.drawable.ic_todo_add)
                 }
             }
-
 
             // don't show the option to clear the filter if no filter was set
             if (!isFilterActive()) {
@@ -289,11 +300,11 @@ class IcalListFragment : Fragment() {
                 R.id.menu_list_bottom_add_journal -> goToEdit(ICalEntity(ICalObject.createJournal()))
                 R.id.menu_list_bottom_add_note -> goToEdit(ICalEntity(ICalObject.createNote()))
                 R.id.menu_list_bottom_add_todo -> goToEdit(ICalEntity(ICalObject.createTodo()))
+                R.id.menu_list_bottom_hide_completed_tasks -> applyQuickFilterTodo(mutableListOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.`IN-PROCESS`))
+                R.id.menu_list_bottom_show_completed_tasks -> applyQuickFilterTodo(mutableListOf())
             }
             false
         }
-
-
         return binding.root
     }
 
@@ -465,11 +476,16 @@ class IcalListFragment : Fragment() {
     private fun applyQuickFilterTodo(statusList: MutableList<StatusTodo>) {
 
         binding.listProgressIndicator.visibility = View.VISIBLE
-        icalListViewModel.clearFilter()
+        //icalListViewModel.clearFilter()
         icalListViewModel.resetFocusItem()
         icalListViewModel.searchStatusTodo = statusList
         applyFilters()
     }
+
+    /**
+     * Returns true if the Filter for Status Todos "In process" and "Needs action" is active
+     */
+    private fun isHideCompletedTasksFilterActive() = icalListViewModel.searchStatusTodo.size == 2 && icalListViewModel.searchStatusTodo.containsAll(listOf(StatusTodo.`IN-PROCESS`, StatusTodo.`NEEDS-ACTION`))
 
 
 
