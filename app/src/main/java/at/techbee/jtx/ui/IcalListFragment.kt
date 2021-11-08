@@ -142,7 +142,6 @@ class IcalListFragment : Fragment() {
             //icalListAdapter!!.notifyDataSetChanged()
             recyclerView?.adapter?.notifyDataSetChanged()
 
-
             binding.fab.setOnClickListener {
 
                 when(icalListViewModel.searchModule) {
@@ -358,6 +357,7 @@ class IcalListFragment : Fragment() {
 
     fun applyFilters() {
 
+        binding.listProgressIndicator.visibility = View.VISIBLE
         updateToolbarText()
         icalListViewModel.updateSearch()
         savePrefs()
@@ -466,7 +466,6 @@ class IcalListFragment : Fragment() {
 
     private fun applyQuickFilterJournal(statusList: MutableList<StatusJournal>) {
 
-        binding.listProgressIndicator.visibility = View.VISIBLE
         icalListViewModel.clearFilter()
         icalListViewModel.resetFocusItem()
         icalListViewModel.searchStatusJournal = statusList
@@ -475,8 +474,6 @@ class IcalListFragment : Fragment() {
 
     private fun applyQuickFilterTodo(statusList: MutableList<StatusTodo>) {
 
-        binding.listProgressIndicator.visibility = View.VISIBLE
-        //icalListViewModel.clearFilter()
         icalListViewModel.resetFocusItem()
         icalListViewModel.searchStatusTodo = statusList
         applyFilters()
