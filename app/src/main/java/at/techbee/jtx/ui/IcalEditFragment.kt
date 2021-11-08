@@ -272,6 +272,7 @@ class IcalEditFragment : Fragment() {
                 override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
                     icalEditViewModel.iCalObjectUpdated.value?.collectionId =
                         icalEditViewModel.allCollections.value?.get(pos)?.collectionId ?: 1L
+                    updateCollectionColor()
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -621,7 +622,8 @@ class IcalEditFragment : Fragment() {
             updateRRule()
             icalEditViewModel.updateVisibility()
 
-
+            // update color for collection if possible
+            updateCollectionColor()
         }
 
 
@@ -782,6 +784,10 @@ class IcalEditFragment : Fragment() {
             if (it.isNullOrEmpty())
                 return@observe
 
+            // do not update anything about the collections anymore, as the user might have changed the selection and interference must be avoided!
+            if(icalEditViewModel.iCalObjectUpdated.value?.collectionId != null && icalEditViewModel.iCalObjectUpdated.value?.collectionId != icalEditViewModel.iCalEntity.property.collectionId)
+                return@observe
+
             // set up the adapter for the organizer spinner
             val spinner: Spinner = binding.editCollectionSpinner
             val allCollectionNames: MutableList<String> = mutableListOf()
@@ -808,6 +814,9 @@ class IcalEditFragment : Fragment() {
                 icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection)  ?: 0
             }
             binding.editCollectionSpinner.setSelection(selectedCollectionPos)
+
+            //as loading the collections might take longer than loading the icalObject, we additionally set the color here
+            updateCollectionColor()
         })
 
 
@@ -1283,6 +1292,26 @@ class IcalEditFragment : Fragment() {
             activity.setToolbarTitle(toolbarText, binding.editSummaryEditTextinputfield.text.toString() )
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
+        }
+    }
+
+    /**
+     * This function updates the color of the colored edge with the color of the selected collection
+     */
+    private fun updateCollectionColor() {
+        val selectedCollection = icalEditViewModel.allCollections.value?.find { collection ->
+            collection.collectionId == icalEditViewModel.iCalObjectUpdated.value?.collectionId
+        }
+        if(selectedCollection?.color != null) {
+            try {
+                binding.editColorbar.visibility = View.VISIBLE
+                binding.editColorbar.setColorFilter(selectedCollection.color!!)
+            } catch (e: IllegalArgumentException) {
+                Log.i("Invalid color","Invalid Color cannot be parsed: ${selectedCollection.color}")
+                binding.editColorbar.visibility = View.INVISIBLE
+            }
+        } else {
+            binding.editColorbar.visibility = View.INVISIBLE
         }
     }
 
