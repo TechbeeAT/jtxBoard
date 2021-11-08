@@ -39,6 +39,21 @@
         android:paddingBottom="8dp">
 
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/list_item_note_categories"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Category1, Category2" />
+
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_note_summary"
@@ -54,7 +69,7 @@
             app:layout_constraintBottom_toTopOf="@id/list_item_note_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/list_item_note_categories"
             app:layout_constraintVertical_bias="0.0"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Summary ... Lorem ipsum dolor sit amet" />
@@ -141,7 +156,7 @@
             android:layout_marginEnd="4dp"
             android:contentDescription="@string/list_num_attendees_contentdesc"
             app:layout_constraintEnd_toStartOf="@+id/list_item_note_num_attendees_text"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_note_classification"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_note_subtasks_linearlayout"
             app:srcCompat="@drawable/ic_attendee"
             app:tint="@android:color/darker_gray" />
 
@@ -166,7 +181,7 @@
             android:layout_marginEnd="4dp"
             android:contentDescription="@string/list_num_attachments_contentdesc"
             app:layout_constraintEnd_toStartOf="@+id/list_item_note_num_attachments_text"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_note_classification"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_note_subtasks_linearlayout"
             app:srcCompat="@drawable/ic_attachment"
             app:tint="@android:color/darker_gray" />
 
@@ -191,7 +206,7 @@
             android:layout_marginEnd="4dp"
             android:contentDescription="@string/list_num_comments_contentdesc"
             app:layout_constraintEnd_toStartOf="@+id/list_item_note_num_comments_text"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_note_classification"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_note_subtasks_linearlayout"
             app:srcCompat="@drawable/ic_comments"
             app:tint="@android:color/darker_gray" />
 
@@ -210,26 +225,6 @@
 
 
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/list_item_note_categories"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAlignment="textEnd"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_item_note_classification"
-            tools:text="Category1, Category2" />
-
-
-
         <LinearLayout
             android:id="@+id/list_item_note_subtasks_linearlayout"
             android:layout_width="match_parent"
@@ -242,7 +237,8 @@
             android:showDividers="middle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_note_categories" />
+            app:layout_constraintTop_toBottomOf="@id/list_item_note_classification"
+            />
 
 
 

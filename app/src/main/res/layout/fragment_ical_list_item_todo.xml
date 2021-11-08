@@ -39,14 +39,33 @@
 
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/list_item_todo_categories"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toStartOf="@id/list_item_todo_due"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/list_item_todo_summary_barrier"
+            tools:text="Category1, Category2" />
+
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_todo_due"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:textSize="12sp"
             android:textStyle="bold|italic"
-            app:layout_constraintStart_toStartOf="@+id/list_item_todo_summary"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_todo_recurring_icon"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/list_item_todo_summary_barrier"
             tools:text="Due in 365 days" />
 
 
@@ -54,13 +73,19 @@
             android:id="@+id/list_item_todo_recurring_icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_recurring"
             tools:ignore="ContentDescription" />
 
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/list_item_todo_summary_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            tools:layout_editor_absoluteY="376dp" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_todo_summary"
@@ -76,7 +101,7 @@
             app:layout_constraintBottom_toTopOf="@id/list_item_todo_description"
             app:layout_constraintEnd_toStartOf="@id/list_item_todo_progress_checkbox_top"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_todo_due"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_todo_summary_barrier"
             app:layout_constraintVertical_bias="0.0"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Summary ... Lorem ipsum dolor sit amet" />
@@ -239,13 +264,13 @@
             style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="32dp"
             android:stepSize="1.0"
             android:valueFrom="0.0"
             android:valueTo="100.0"
             app:layout_constraintEnd_toStartOf="@+id/list_item_todo_progress_percent"
             app:layout_constraintStart_toEndOf="@+id/list_item_todo_expand"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_todo_categories" />
+            app:layout_constraintTop_toBottomOf="@+id/list_item_todo_priority" />
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -281,26 +306,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/list_item_todo_progress_slider" />
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/list_item_todo_categories"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAlignment="textEnd"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_item_todo_priority"
-            tools:text="Category1, Category2" />
-
 
         <ImageView
             android:id="@+id/list_item_todo_expand"
