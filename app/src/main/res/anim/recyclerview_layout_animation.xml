@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layoutAnimation xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:delay="15%"
+    android:animationOrder="normal"
+    android:animation="@anim/recycler_item_fade_in"
+    >
+
+</layoutAnimation>

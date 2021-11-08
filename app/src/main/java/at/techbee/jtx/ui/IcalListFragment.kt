@@ -141,6 +141,7 @@ class IcalListFragment : Fragment() {
 
             //icalListAdapter!!.notifyDataSetChanged()
             recyclerView?.adapter?.notifyDataSetChanged()
+            recyclerView?.scheduleLayoutAnimation()
 
             binding.fab.setOnClickListener {
 
