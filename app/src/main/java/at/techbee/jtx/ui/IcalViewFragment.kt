@@ -584,14 +584,12 @@ class IcalViewFragment : Fragment() {
     private fun updateToolbarText() {
         try {
             val activity = requireActivity() as MainActivity
-            var toolbarText = getString(R.string.toolbar_text_view)
-            toolbarText += when(icalViewViewModel.icalEntity.value?.property?.module) {
-                Module.JOURNAL.name -> " - " + getString(R.string.toolbar_text_journal)
-                Module.NOTE.name -> " - " + getString(R.string.toolbar_text_note)
-                Module.TODO.name -> " - " + getString(R.string.toolbar_text_todo)
+            val toolbarText = when(icalViewViewModel.icalEntity.value?.property?.module) {
+                Module.JOURNAL.name -> getString(R.string.toolbar_text_view_journal_details)
+                Module.NOTE.name -> getString(R.string.toolbar_text_view_note_details)
+                Module.TODO.name -> getString(R.string.toolbar_text_view_task_details)
                 else -> ""
             }
-
             activity.setToolbarTitle(toolbarText, icalViewViewModel.icalEntity.value?.property?.summary )
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")

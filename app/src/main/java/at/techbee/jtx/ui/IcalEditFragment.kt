@@ -1281,12 +1281,20 @@ class IcalEditFragment : Fragment() {
     private fun updateToolbarText() {
         try {
             val activity = requireActivity() as MainActivity
-            var toolbarText = getString(R.string.toolbar_text_edit)
-            toolbarText += when(icalEditViewModel.iCalObjectUpdated.value?.module) {
-                Module.JOURNAL.name -> " - " + getString(R.string.toolbar_text_journal)
-                Module.NOTE.name -> " - " + getString(R.string.toolbar_text_note)
-                Module.TODO.name -> " - " + getString(R.string.toolbar_text_todo)
-                else -> ""
+            val toolbarText = if(icalEditViewModel.iCalEntity.property.id == 0L) {
+                when (icalEditViewModel.iCalObjectUpdated.value?.module) {
+                    Module.JOURNAL.name -> getString(R.string.toolbar_text_add_journal)
+                    Module.NOTE.name -> getString(R.string.toolbar_text_add_note)
+                    Module.TODO.name -> getString(R.string.toolbar_text_add_task)
+                    else -> ""
+                }
+            } else {
+                when (icalEditViewModel.iCalObjectUpdated.value?.module) {
+                    Module.JOURNAL.name -> getString(R.string.toolbar_text_edit_journal)
+                    Module.NOTE.name -> getString(R.string.toolbar_text_edit_note)
+                    Module.TODO.name -> getString(R.string.toolbar_text_edit_task)
+                    else -> ""
+                }
             }
 
             activity.setToolbarTitle(toolbarText, binding.editSummaryEditTextinputfield.text.toString() )
