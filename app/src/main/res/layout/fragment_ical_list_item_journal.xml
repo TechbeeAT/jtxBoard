@@ -162,7 +162,6 @@
             app:layout_constraintEnd_toStartOf="@+id/list_item_journal_status"
             app:layout_constraintTop_toTopOf="@+id/list_item_journal_status"
             app:srcCompat="@drawable/ic_status"
-            app:tint="@android:color/darker_gray"
             tools:ignore="ContentDescription" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -170,7 +169,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:textColor="@android:color/darker_gray"
             app:layout_constraintBottom_toBottomOf="@+id/list_item_journal_classification"
             app:layout_constraintEnd_toStartOf="@+id/list_item_journal_classification_icon"
             app:layout_constraintTop_toTopOf="@+id/list_item_journal_classification"
@@ -186,7 +184,6 @@
             app:layout_constraintEnd_toStartOf="@+id/list_item_journal_classification"
             app:layout_constraintTop_toTopOf="@+id/list_item_journal_classification"
             app:srcCompat="@drawable/ic_classification"
-            app:tint="@android:color/darker_gray"
             tools:ignore="ContentDescription" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -195,7 +192,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:textColor="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/list_item_journal_attachments"
             tools:text="Public" />
@@ -223,15 +219,13 @@
             android:contentDescription="@string/list_num_attendees_contentdesc"
             app:layout_constraintEnd_toStartOf="@+id/list_item_journal_num_attendees_text"
             app:layout_constraintTop_toBottomOf="@+id/list_item_journal_classification"
-            app:srcCompat="@drawable/ic_attendee"
-            app:tint="@android:color/darker_gray" />
+            app:srcCompat="@drawable/ic_attendee"  />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_journal_num_attendees_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:textColor="@android:color/darker_gray"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/list_item_journal_num_attendees_icon"
@@ -248,15 +242,13 @@
             android:contentDescription="@string/list_num_attachments_contentdesc"
             app:layout_constraintEnd_toStartOf="@+id/list_item_journal_num_attachments_text"
             app:layout_constraintTop_toBottomOf="@+id/list_item_journal_classification"
-            app:srcCompat="@drawable/ic_attachment"
-            app:tint="@android:color/darker_gray" />
+            app:srcCompat="@drawable/ic_attachment" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_journal_num_attachments_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:textColor="@android:color/darker_gray"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/list_item_journal_num_attachments_icon"
@@ -273,15 +265,13 @@
             android:contentDescription="@string/list_num_comments_contentdesc"
             app:layout_constraintEnd_toStartOf="@+id/list_item_journal_num_comments_text"
             app:layout_constraintTop_toBottomOf="@+id/list_item_journal_classification"
-            app:srcCompat="@drawable/ic_comments"
-            app:tint="@android:color/darker_gray" />
+            app:srcCompat="@drawable/ic_comments" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_journal_num_comments_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:textColor="@android:color/darker_gray"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/list_item_journal_num_comments_icon"
@@ -301,14 +291,12 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textAlignment="textEnd"
-            android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/list_item_journal_classification"
             tools:text="Category1, Category2" />
-
 
 
         <LinearLayout
@@ -325,8 +313,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/list_item_journal_categories" />
 
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </com.google.android.material.card.MaterialCardView>

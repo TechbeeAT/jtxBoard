@@ -280,6 +280,7 @@
                     android:layout_marginStart="8dp"
                     android:text="@string/edit_progress"
                     android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                    android:labelFor="@id/edit_progress_slider"
                     app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
