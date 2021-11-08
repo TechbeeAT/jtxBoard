@@ -207,18 +207,6 @@ class IcalEditFragment : Fragment() {
         //binding.icalEditTabs.getTabAt(TAB_ATTACHMENTS).view.visibility = View.GONE
 
 
-        val textInputEditTextFocusChangeListener = View.OnFocusChangeListener { _, isFocussed ->
-           if(isFocussed)
-               binding.editFabSave.visibility = View.GONE
-            else
-               binding.editFabSave.visibility = View.VISIBLE
-        }
-
-        binding.editCategoriesAddAutocomplete.onFocusChangeListener = textInputEditTextFocusChangeListener
-        binding.editCommentAddEdittext.onFocusChangeListener = textInputEditTextFocusChangeListener
-        binding.editResourcesAddAutocomplete.onFocusChangeListener = textInputEditTextFocusChangeListener
-        binding.editContactAddAutocomplete.onFocusChangeListener = textInputEditTextFocusChangeListener
-
 
         binding.editTimezoneSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {

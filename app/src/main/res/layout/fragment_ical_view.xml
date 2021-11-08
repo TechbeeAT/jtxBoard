@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -853,21 +853,28 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+        </androidx.core.widget.NestedScrollView>
 
-        </ScrollView>
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/view_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:hideOnScroll="true"
+            app:menu="@menu/menu_ical_view_bottombar" />
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/view_fab_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
             android:contentDescription="@string/view_fab_edit_entry_contentDesc"
             android:onClick="@{() -> model.editingClicked()}"
-            app:srcCompat="@drawable/ic_edit" />
+            app:srcCompat="@drawable/ic_edit"
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+            app:layout_anchor="@id/view_bottom_bar"
+            />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

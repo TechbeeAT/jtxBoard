@@ -70,7 +70,7 @@
 
         </com.google.android.material.tabs.TabLayout>
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
@@ -892,19 +892,30 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
+
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/edit_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:hideOnScroll="true"
+            app:menu="@menu/menu_ical_edit_bottombar" />
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_fab_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
             android:onClick="@{() -> model.savingClicked()}"
             app:srcCompat="@drawable/ic_save"
-            android:contentDescription="@string/edit_fab_save_contentDescription" />
+            android:contentDescription="@string/edit_fab_save_contentDescription"
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+            app:layout_anchor="@id/edit_bottom_bar"
+            />
+
+
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
