@@ -27,66 +27,86 @@
         android:layout_height="match_parent">
 
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/ical_edit_tabs"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/edit_appbarlayout_tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:fitsSystemWindows="true">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/edit_collapsing_toolbar_tabs"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/ic_date"  />
+                android:layout_gravity="top"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
+                android:fitsSystemWindows="true">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_tab_contact_attendees_resources"  />
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/ical_edit_tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tabMode="fixed">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_tab_location_comment_link" />
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_date" />
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_attachment" />
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_tab_contact_attendees_resources" />
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_todo" />
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_tab_location_comment_link" />
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_alarm" />
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_attachment" />
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_recurring" />
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_todo" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_alarm" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_recurring" />
 
 
-        </com.google.android.material.tabs.TabLayout>
+                </com.google.android.material.tabs.TabLayout>
+
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
-            android:clipToPadding="false"
-            android:paddingBottom="70dp">
+            android:layout_gravity="fill">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/ical_edit_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:context=".ui.IcalEditFragment">
+                tools:context=".ui.IcalEditFragment"
+                android:paddingTop="50dp"
+                >
 
                 <ImageView
                     android:id="@+id/edit_colorbar"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
+                    android:layout_marginTop="8dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_card_colored_edge"
@@ -213,10 +233,10 @@
                     android:spinnerMode="dialog"
                     android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="@+id/edit_all_day_switch"
+                    app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/edit_timezone_icon"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_all_day_switch"
-                    app:layout_constraintBottom_toTopOf="@id/edit_top_barrier" />
+                    app:layout_constraintTop_toBottomOf="@+id/edit_all_day_switch" />
 
                 <androidx.constraintlayout.widget.Barrier
                     android:id="@+id/edit_top_barrier"
@@ -278,9 +298,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:labelFor="@id/edit_progress_slider"
                     android:text="@string/edit_progress"
                     android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                    android:labelFor="@id/edit_progress_slider"
                     app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
@@ -550,7 +570,6 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_contact_header"
                     android:layout_width="wrap_content"
@@ -593,9 +612,8 @@
                         android:layout_height="wrap_content"
                         android:imeOptions="actionDone"
                         android:inputType="textCapSentences|textEmailAddress|textShortMessage"
-                        android:text="@={model.iCalObjectUpdated.contact}"
                         android:popupBackground="@color/design_default_color_surface"
-                        />
+                        android:text="@={model.iCalObjectUpdated.contact}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -660,9 +678,8 @@
                         android:layout_height="wrap_content"
                         android:imeOptions="actionDone"
                         android:inputType="textCapSentences"
-                        android:singleLine="false"
                         android:popupBackground="@color/design_default_color_surface"
-                        />
+                        android:singleLine="false" />
 
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -729,9 +746,8 @@
                         android:afterTextChanged="@{() -> model.clearAttendeeError()}"
                         android:imeOptions="actionDone"
                         android:inputType="textEmailAddress"
-                        android:singleLine="false"
                         android:popupBackground="@color/design_default_color_surface"
-                        />
+                        android:singleLine="false" />
 
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -796,9 +812,8 @@
                         android:layout_height="wrap_content"
                         android:imeOptions="actionDone"
                         android:inputType="textCapWords"
-                        android:singleLine="true"
                         android:popupBackground="@color/design_default_color_surface"
-                        />
+                        android:singleLine="true" />
 
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -881,10 +896,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:model="@{model}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_resources_add" />
+                    app:layout_constraintTop_toBottomOf="@id/edit_resources_add"
+                    app:model="@{model}" />
 
 
                 <include
@@ -894,10 +909,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
-                    app:model="@{model}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_comment_add" />
+                    app:layout_constraintTop_toBottomOf="@id/edit_comment_add"
+                    app:model="@{model}" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -919,17 +934,12 @@
             android:id="@+id/edit_fab_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> model.savingClicked()}"
-            app:srcCompat="@drawable/ic_save"
             android:contentDescription="@string/edit_fab_save_contentDescription"
-            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+            android:onClick="@{() -> model.savingClicked()}"
             app:layout_anchor="@id/edit_bottom_bar"
-            />
-
-
-
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+            app:srcCompat="@drawable/ic_save" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 
 </layout>
