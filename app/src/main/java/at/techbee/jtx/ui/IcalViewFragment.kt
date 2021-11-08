@@ -254,10 +254,10 @@ class IcalViewFragment : Fragment() {
                             "Invalid color",
                             "Invalid Color cannot be parsed: ${it.ICalCollection?.color}"
                         )
-                        binding.viewColorbar.visibility = View.GONE
+                        binding.viewColorbar.visibility = View.INVISIBLE
                     }
                 } else
-                    binding.viewColorbar.visibility = View.GONE
+                    binding.viewColorbar.visibility = View.INVISIBLE
 
                 it.property.recurOriginalIcalObjectId?.let { origId ->
                     binding.viewRecurrenceGotooriginalButton.setOnClickListener { view ->
