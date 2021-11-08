@@ -101,14 +101,14 @@ class IcalListFragmentTest {
         onView(withText(convertLongToMonthString(sampleJournal.dtstart))).check(matches(isDisplayed()))
         onView(withText(convertLongToYearString(sampleJournal.dtstart))).check(matches(isDisplayed()))
         onView(withText(convertLongToTimeString(sampleJournal.dtstart))).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_status)).check(matches(withText(R.string.journal_status_final)))
-        onView(withId(R.id.list_item_classification)).check(matches(withText(R.string.classification_public)))
-        onView(withId(R.id.list_item_num_attendees_icon)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_num_attendees_text)).check(matches(withText("1")))
-        onView(withId(R.id.list_item_num_attachments_icon)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_num_attachments_text)).check(matches(withText("2")))
-        onView(withId(R.id.list_item_num_comments_icon)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_num_comments_text)).check(matches(withText("3")))
+        onView(withId(R.id.list_item_journal_status)).check(matches(withText(R.string.journal_status_final)))
+        onView(withId(R.id.list_item_journal_classification)).check(matches(withText(R.string.classification_public)))
+        onView(withId(R.id.list_item_journal_num_attendees_icon)).check(matches(isDisplayed()))
+        onView(withId(R.id.list_item_journal_num_attendees_text)).check(matches(withText("1")))
+        onView(withId(R.id.list_item_journal_num_attachments_icon)).check(matches(isDisplayed()))
+        onView(withId(R.id.list_item_journal_num_attachments_text)).check(matches(withText("2")))
+        onView(withId(R.id.list_item_journal_num_comments_icon)).check(matches(isDisplayed()))
+        onView(withId(R.id.list_item_journal_num_comments_text)).check(matches(withText("3")))
 
     }
 
@@ -125,8 +125,8 @@ class IcalListFragmentTest {
         onView(withText(convertLongToYearString(sampleJournal.dtstart))).check(doesNotExist())
         onView(withText(convertLongToTimeString(sampleJournal.dtstart))).check(doesNotExist())
 
-        onView(withId(R.id.list_item_status)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.list_item_classification)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+        onView(withId(R.id.list_item_note_status)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+        onView(withId(R.id.list_item_note_classification)).check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 
     @Test
@@ -136,9 +136,9 @@ class IcalListFragmentTest {
         onView(withText(R.string.list_tabitem_todos)).perform(click())
         onView(withText(sampleTodo.summary)).check(matches(isDisplayed()))
         onView(withText(sampleTodo.description)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_progress_label)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_progress_checkbox)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_progress_slider)).check(matches(isDisplayed()))
-        onView(withId(R.id.list_item_progress_percent)).check(matches(isDisplayed()))
+        onView(withId(R.id.list_item_todo_progress_label)).check(matches(isDisplayed()))
+        onView(withId(R.id.list_item_todo_progress_checkbox)).check(matches(isDisplayed()))
+        onView(withId(R.id.list_item_todo_progress_slider)).check(matches(isDisplayed()))
+        onView(withId(R.id.list_item_todo_progress_percent)).check(matches(isDisplayed()))
     }
 }

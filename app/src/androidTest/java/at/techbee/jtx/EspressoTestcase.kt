@@ -97,7 +97,7 @@ class EspressoTestcase {
         onView(withId(R.id.fab)).perform(click())
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)        // only from S it seems like the app permission dialog makes an issue here
             onView(withText(R.string.edit_fragment_app_permission_message)).perform(pressBack())
-        onView(withId(R.id.edit_summary_edit_textinputfield)).perform(typeText("Espresso Journal"))
+        onView(withId(R.id.edit_summary_edit_textinputfield)).perform(typeText("Espresso Journal"), closeSoftKeyboard())
         onView(withId(R.id.edit_fab_save)).perform(click())
         onView(withText("Espresso Journal"))
     }
@@ -109,7 +109,7 @@ class EspressoTestcase {
         onView(withId(R.id.fab)).perform(click())
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)        // only from S it seems like the app permission dialog makes an issue here
             onView(withText(R.string.edit_fragment_app_permission_message)).perform(pressBack())
-        onView(withId(R.id.edit_summary_edit_textinputfield)).perform(typeText("Espresso Note"))
+        onView(withId(R.id.edit_summary_edit_textinputfield)).perform(typeText("Espresso Note"), closeSoftKeyboard())
         onView(withId(R.id.edit_fab_save)).perform(click())
         onView(withText("Espresso Note"))
     }
@@ -121,7 +121,7 @@ class EspressoTestcase {
         onView(withId(R.id.fab)).perform(click())
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)        // only from S it seems like the app permission dialog makes an issue here
             onView(withText(R.string.edit_fragment_app_permission_message)).perform(pressBack())
-        onView(withId(R.id.edit_summary_edit_textinputfield)).perform(typeText("Espresso Todo"))
+        onView(withId(R.id.edit_summary_edit_textinputfield)).perform(typeText("Espresso Todo"), closeSoftKeyboard())
         onView(withId(R.id.edit_fab_save)).perform(click())
         onView(withText("Espresso Todo"))
     }
