@@ -83,6 +83,16 @@
                 android:layout_height="wrap_content"
                 tools:context=".ui.IcalEditFragment">
 
+                <ImageView
+                    android:id="@+id/edit_colorbar"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_card_colored_edge"
+                    tools:ignore="ContentDescription"
+                    tools:tint="#BC0D0D" />
+
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/edit_dtstart_day"
@@ -94,7 +104,7 @@
                     android:textStyle="bold"
                     android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/edit_collection_spinner"
+                    app:layout_constraintTop_toBottomOf="@id/edit_collection_spinner"
                     tools:text="31" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -120,9 +130,11 @@
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
                     app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_month"
+                    app:layout_constraintVertical_bias="0.0"
                     tools:text="2020" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -147,7 +159,7 @@
                     android:layout_marginStart="8dp"
                     android:visibility="@{model.collectionVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="@+id/edit_collection_spinner"
-                    app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/edit_collection_spinner"
                     app:srcCompat="@drawable/ic_collection"
                     tools:ignore="ContentDescription" />
@@ -173,31 +185,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:checked="@={model.allDayChecked}"
                     android:text="@string/edit_all_day"
                     android:visibility="@{model.alldayVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
                     app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_collection_spinner"
+                    app:layout_constraintTop_toTopOf="@+id/edit_dtstart_day"
                     app:switchPadding="8dp" />
 
                 <ImageView
                     android:id="@+id/edit_timezone_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
                     android:contentDescription="@string/edit_timezone_content_desc"
                     android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="@+id/edit_timezone_spinner"
-                    app:layout_constraintStart_toEndOf="@+id/edit_all_day_switch"
+                    app:layout_constraintStart_toStartOf="@+id/edit_all_day_switch"
                     app:layout_constraintTop_toTopOf="@+id/edit_timezone_spinner"
                     app:srcCompat="@drawable/ic_timezone" />
 
                 <Spinner
                     android:id="@+id/edit_timezone_spinner"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="50dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:entries="@{model.possibleTimezones}"
@@ -206,7 +215,8 @@
                     app:layout_constraintBottom_toBottomOf="@+id/edit_all_day_switch"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/edit_timezone_icon"
-                    app:layout_constraintTop_toTopOf="@+id/edit_all_day_switch" />
+                    app:layout_constraintTop_toBottomOf="@+id/edit_all_day_switch"
+                    app:layout_constraintBottom_toTopOf="@id/edit_top_barrier" />
 
                 <androidx.constraintlayout.widget.Barrier
                     android:id="@+id/edit_top_barrier"

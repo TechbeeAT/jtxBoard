@@ -51,17 +51,28 @@
 
                 <ImageView
                     android:id="@+id/view_colorbar"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_card_colored_edge"
+                    tools:ignore="ContentDescription"
+                    tools:tint="#BC0D0D" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/view_collection"
                     android:layout_width="0dp"
-                    android:layout_height="2dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:drawablePadding="4dp"
+                    android:text="@{model.collectionText}"
+                    app:drawableStartCompat="@drawable/ic_collection"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_progress_indicator"
-                    app:srcCompat="@drawable/square_box"
-                    tools:ignore="ContentDescription"
-                    tools:tint="#BC0D0D" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Collection" />
 
 
                 <com.google.android.material.textview.MaterialTextView
@@ -69,14 +80,13 @@
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:text="@{UtilKt.convertLongToDayString(model.icalEntity.property.dtstart)}"
                     android:textAlignment="center"
                     android:textSize="36sp"
                     android:textStyle="bold"
                     android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_collection"
                     tools:text="31" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -138,21 +148,6 @@
                     tools:text="GMT+02:00" />
 
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/view_collection"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:drawablePadding="4dp"
-                    android:text="@{model.collectionText}"
-                    app:drawableStartCompat="@drawable/ic_collection"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
-                    app:layout_constraintTop_toBottomOf="@+id/view_colorbar"
-                    tools:text="Collection" />
-
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/view_categories_chipgroup"
                     android:layout_width="0dp"
@@ -164,8 +159,8 @@
                     app:chipSpacingVertical="0dp"
                     app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/view_collection"
-                    app:layout_constraintTop_toBottomOf="@+id/view_collection"
+                    app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
+                    app:layout_constraintTop_toTopOf="@id/view_dtstart_day"
                     app:layout_constraintVertical_bias="0.0" />
 
 
