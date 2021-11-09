@@ -208,14 +208,20 @@ class IcalListViewModel(
             listQuery.postValue(newQuery)         // only update if the query was actually changed!
     }
 
-    fun clearFilter() {
+
+    /**
+     * Clears all search criteria
+     * @param updateSearch if true, the search is updated immediately, if false, only the search criteria is cleared
+     */
+    fun clearFilter(updateSearch: Boolean) {
         searchCategories.clear()
         searchOrganizer.clear()
         searchStatusJournal.clear()
         searchStatusTodo.clear()
         searchClassification.clear()
         searchCollection.clear()
-        updateSearch()
+        if(updateSearch)
+            updateSearch()
     }
 
 

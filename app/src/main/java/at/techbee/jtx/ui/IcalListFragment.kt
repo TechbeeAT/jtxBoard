@@ -273,7 +273,7 @@ class IcalListFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
                 binding.listProgressIndicator.visibility = View.VISIBLE
-                icalListViewModel.clearFilter()
+                resetFilter(false)
 
                 when (tab?.position) {
                     TAB_INDEX_JOURNAL -> icalListViewModel.searchModule = Module.JOURNAL.name
@@ -282,6 +282,7 @@ class IcalListFragment : Fragment() {
                 }
 
                 lastScrolledFocusItemId = null
+
                 applyFilters()
 
             }
@@ -296,7 +297,7 @@ class IcalListFragment : Fragment() {
 
             when (menuitem.itemId) {
                 R.id.menu_list_bottom_filter -> goToFilter()
-                R.id.menu_list_bottom_clearfilter -> resetFilter()
+                R.id.menu_list_bottom_clearfilter -> resetFilter(true)
                 R.id.menu_list_bottom_add_journal -> goToEdit(ICalEntity(ICalObject.createJournal()))
                 R.id.menu_list_bottom_add_note -> goToEdit(ICalEntity(ICalObject.createNote()))
                 R.id.menu_list_bottom_add_todo -> goToEdit(ICalEntity(ICalObject.createTodo()))
@@ -423,7 +424,7 @@ class IcalListFragment : Fragment() {
         when (item.itemId) {
             R.id.menu_list_gotodate -> scrollToDate()
             R.id.menu_list_filter -> goToFilter()
-            R.id.menu_list_clearfilter -> resetFilter()
+            R.id.menu_list_clearfilter -> resetFilter(true)
             R.id.menu_list_add_journal -> goToEdit(ICalEntity(ICalObject.createJournal()))
             R.id.menu_list_add_note -> goToEdit(ICalEntity(ICalObject.createNote()))
             R.id.menu_list_add_todo -> goToEdit(ICalEntity(ICalObject.createTodo()))
@@ -439,10 +440,16 @@ class IcalListFragment : Fragment() {
     }
 
 
-    private fun resetFilter() {
+    /**
+     * Resets the focus item
+     * Clears all filter criteria
+     * Clears the preferences with the saved search criteria
+     * @param updateSearch true if the reset should also trigger the search, false if the search update is triggered after by another step
+     */
+    private fun resetFilter(updateSearch: Boolean) {
 
         icalListViewModel.resetFocusItem()
-        icalListViewModel.clearFilter()
+        icalListViewModel.clearFilter(updateSearch)
         prefs.edit().clear().apply()
     }
 
@@ -467,8 +474,7 @@ class IcalListFragment : Fragment() {
 
     private fun applyQuickFilterJournal(statusList: MutableList<StatusJournal>) {
 
-        icalListViewModel.clearFilter()
-        icalListViewModel.resetFocusItem()
+        resetFilter(false)
         icalListViewModel.searchStatusJournal = statusList
         applyFilters()
     }
