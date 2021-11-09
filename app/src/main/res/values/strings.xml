@@ -125,7 +125,6 @@
     <string name="list_num_attendees_contentdesc">Number of attendees</string>
     <string name="list_num_attachments_contentdesc">Number of attachments</string>
     <string name="list_num_comments_contentdesc">Number of comments</string>
-    <string name="list_snackbar_overdue_tasks_in_past">Overdue tasks detected, scroll up to review.</string>
 
 
     <!-- fragment_ical_view -->

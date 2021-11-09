@@ -17,7 +17,6 @@ import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -64,7 +63,6 @@ class IcalListFragment : Fragment() {
     private lateinit var arguments: IcalListFragmentArgs
 
     private var lastScrolledFocusItemId: Long? = null
-    private var toastDueTasksInPastShown = false
 
     var lastSearchModule = ""
     var lastIcal4ListHash = 0
@@ -155,93 +153,10 @@ class IcalListFragment : Fragment() {
                 recyclerView?.scheduleLayoutAnimation()
             lastSearchModule = icalListViewModel.searchModule               // remember the last list size and search module
 
+            updateMenuVisibilities()
+
+            //TODO: Check if this is still ok here!
             icalListViewModel.resetFocusItem()              // reset happens only once in a Module, only when the Module get's changed the scrolling would happen again
-
-            when (icalListViewModel.searchModule) {
-                Module.JOURNAL.name -> {
-                    gotodateMenuItem?.isVisible = true
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = true
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = true
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = true
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
-
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = false
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = true
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = true
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = false
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
-
-                    binding.fab.setImageResource(R.drawable.ic_add)
-                    binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createJournal())) }
-                }
-                Module.NOTE.name -> {
-                    gotodateMenuItem?.isVisible = false
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = true
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = true
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = true
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
-
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = true
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = false
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = true
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = false
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
-
-                    binding.fab.setImageResource(R.drawable.ic_add_note)
-                    binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createNote())) }
-                }
-                Module.TODO.name -> {
-                    gotodateMenuItem?.isVisible = false
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = false
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = false
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = false
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = true
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = true
-                    optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = true
-
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = true
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = true
-                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = false
-
-                    if(isHideCompletedTasksFilterActive()) {
-                        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = true
-                        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
-                    } else {
-                        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = false
-                        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = true
-                    }
-
-                    binding.fab.setImageResource(R.drawable.ic_todo_add)
-                    binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createTodo())) }
-                }
-            }
-
-            // don't show the option to clear the filter if no filter was set
-            if (!isFilterActive()) {
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.isVisible = true
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_clearfilter)?.isVisible = false
-            } else {
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.isVisible = false
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_clearfilter)?.isVisible = true
-            }
-
-
-            if(icalListViewModel.searchModule == Module.TODO.name) {
-                icalListViewModel.iCal4List.value?.forEach {
-                    if((it.property.status == StatusTodo.`IN-PROCESS`.name || it.property.status == StatusTodo.`NEEDS-ACTION`.name)
-                        && it.property.due != null && it.property.due!! < System.currentTimeMillis()
-                        && !toastDueTasksInPastShown) {
-                        Toast.makeText(context, R.string.list_snackbar_overdue_tasks_in_past, Toast.LENGTH_SHORT).show()
-                        toastDueTasksInPastShown = true      // show the snackbar only once to not bother the user all the time
-                        return@forEach
-                    }
-                }
-            }
-
             icalListViewModel.focusItemId.value = arguments.item2focus
         })
 
@@ -318,6 +233,7 @@ class IcalListFragment : Fragment() {
 
         icalListViewModel.searchSettingShowSubtasksOfVJOURNALs = settings?.getBoolean("settings_show_subtasks_of_VJOURNALs_in_tasklist", false) ?: false
         applyFilters()
+        updateMenuVisibilities()
         super.onResume()
     }
 
@@ -336,6 +252,86 @@ class IcalListFragment : Fragment() {
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
+    }
+
+
+    /**
+     * This function hides/shows the relevant menu entries for the active module.
+     */
+    private fun updateMenuVisibilities() {
+
+        when (icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> {
+                gotodateMenuItem?.isVisible = true
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = true
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = true
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = true
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
+
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = false
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = true
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = true
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = false
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
+
+                binding.fab.setImageResource(R.drawable.ic_add)
+                binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createJournal())) }
+            }
+            Module.NOTE.name -> {
+                gotodateMenuItem?.isVisible = false
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = true
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = true
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = true
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
+
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = true
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = false
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = true
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = false
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
+
+                binding.fab.setImageResource(R.drawable.ic_add_note)
+                binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createNote())) }
+            }
+            Module.TODO.name -> {
+                gotodateMenuItem?.isVisible = false
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = false
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = false
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = false
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = true
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = true
+                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = true
+
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = true
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = true
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = false
+
+                if(isHideCompletedTasksFilterActive()) {
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = true
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
+                } else {
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = false
+                    binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = true
+                }
+
+                binding.fab.setImageResource(R.drawable.ic_todo_add)
+                binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createTodo())) }
+            }
+        }
+
+        // don't show the option to clear the filter if no filter was set
+        if (!isFilterActive()) {
+            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.isVisible = true
+            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_clearfilter)?.isVisible = false
+        } else {
+            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.isVisible = false
+            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_clearfilter)?.isVisible = true
+        }
+
     }
 
 
