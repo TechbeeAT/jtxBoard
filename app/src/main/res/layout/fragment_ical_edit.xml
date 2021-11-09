@@ -14,7 +14,9 @@
 
 
     <data>
+
         <import type="android.view.View" />
+
         <import type="at.techbee.jtx.UtilKt" />
 
         <variable
@@ -27,883 +29,901 @@
         android:layout_height="match_parent">
 
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/ical_edit_tabs"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/edit_appbarlayout_tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="top">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_date"  />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_tab_contact_attendees_resources"  />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_tab_location_comment_link" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_attachment" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_todo" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_alarm" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_recurring" />
-
-
-        </com.google.android.material.tabs.TabLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
-            android:clipToPadding="false"
-            android:paddingBottom="70dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/ical_edit_view"
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/edit_collapsing_toolbar_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:context=".ui.IcalEditFragment">
+                android:layout_gravity="top"
+                app:layout_scrollFlags="scroll|enterAlways|snap">
 
-                <ImageView
-                    android:id="@+id/edit_colorbar"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_card_colored_edge"
-                    tools:ignore="ContentDescription"
-                    tools:tint="#BC0D0D" />
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_dtstart_day"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{UtilKt.convertLongToDayString(model.iCalObjectUpdated.dtstart)}"
-                    android:textAlignment="center"
-                    android:textSize="36sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_collection_spinner"
-                    tools:text="31" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_dtstart_month"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{UtilKt.convertLongToMonthString(model.iCalObjectUpdated.dtstart)}"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_day"
-                    tools:text="December" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_dtstart_year"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{UtilKt.convertLongToYearString(model.iCalObjectUpdated.dtstart)}"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
-                    app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_month"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:text="2020" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_dtstart_time"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{UtilKt.convertLongToTimeString(model.iCalObjectUpdated.dtstart)}"
-                    android:textAlignment="center"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
-                    app:layout_constraintStart_toStartOf="@+id/edit_dtstart_day"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_year"
-                    tools:text="13:30" />
-
-
-                <ImageView
-                    android:id="@+id/edit_collection_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:visibility="@{model.collectionVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit_collection_spinner"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/edit_collection_spinner"
-                    app:srcCompat="@drawable/ic_collection"
-                    tools:ignore="ContentDescription" />
-
-                <Spinner
-                    android:id="@+id/edit_collection_spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:drawableStart="@drawable/ic_collection"
-                    android:drawablePadding="4dp"
-                    android:visibility="@{model.collectionVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/edit_collection_icon"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Collection" />
-
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/edit_all_day_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:checked="@={model.allDayChecked}"
-                    android:text="@string/edit_all_day"
-                    android:visibility="@{model.alldayVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
-                    app:layout_constraintTop_toTopOf="@+id/edit_dtstart_day"
-                    app:switchPadding="8dp" />
-
-                <ImageView
-                    android:id="@+id/edit_timezone_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/edit_timezone_content_desc"
-                    android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit_timezone_spinner"
-                    app:layout_constraintStart_toStartOf="@+id/edit_all_day_switch"
-                    app:layout_constraintTop_toTopOf="@+id/edit_timezone_spinner"
-                    app:srcCompat="@drawable/ic_timezone" />
-
-                <Spinner
-                    android:id="@+id/edit_timezone_spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:entries="@{model.possibleTimezones}"
-                    android:spinnerMode="dialog"
-                    android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit_all_day_switch"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/edit_timezone_icon"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_all_day_switch"
-                    app:layout_constraintBottom_toTopOf="@id/edit_top_barrier" />
-
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/edit_top_barrier"
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/ical_edit_tabs"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="top" />
+                    android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_summary_edit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/edit_summary_hint"
-                    android:visibility="@{model.summaryVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_top_barrier">
-
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_summary_edit_textinputfield"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textShortMessage|textCapSentences"
-                        android:text="@={model.iCalObjectUpdated.summary}"
-                        android:textStyle="bold"
-                        tools:text="Summary ... Lorem ipsum dolor sit amet" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_description_edit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/edit_description_hint"
-                    android:visibility="@{model.descriptionVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="@+id/edit_summary_edit"
-                    app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
-                    app:layout_constraintStart_toStartOf="@+id/edit_summary_edit"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_summary_edit">
-
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textWebEditText|textMultiLine|textCapSentences"
-                        android:maxLines="8"
-                        android:minLines="3"
-                        android:text="@={model.iCalObjectUpdated.description}"
-                        tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_progress_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/edit_progress"
-                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                    android:labelFor="@id/edit_progress_slider"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
-
-                <com.google.android.material.slider.Slider
-                    android:id="@+id/edit_progress_slider"
-                    style="@style/Widget.AppCompat.SeekBar.Discrete"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:stepSize="1.0"
-                    android:value="@{model.iCalObjectUpdated.percent}"
-                    android:valueFrom="0.0"
-                    android:valueTo="100.0"
-                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toStartOf="@id/edit_progress_percent"
-                    app:layout_constraintStart_toEndOf="@+id/edit_progress_label"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_description_edit" />
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_progress_percent"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:textAlignment="viewEnd"
-                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
-                    app:layout_constraintEnd_toStartOf="@+id/edit_progress_checkbox"
-                    app:layout_constraintTop_toTopOf="@+id/edit_progress_slider"
-                    tools:text="100 %" />
-
-
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/edit_progress_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="@{model.iCalObjectUpdated.percent == 100}"
-                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_subtasks_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:drawablePadding="8dp"
-                    android:text="@string/edit_subtasks_header"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                    app:drawableStartCompat="@drawable/ic_todo"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_progress_slider" />
-
-
-                <LinearLayout
-                    android:id="@+id/edit_subtasks_linearlayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:divider="?android:dividerHorizontal"
-                    android:orientation="vertical"
-                    android:showDividers="middle"
-                    android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_subtasks_header">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:clickable="true"
-                        android:focusable="true">
-
-
-                    </com.google.android.material.card.MaterialCardView>
-
-
-                </LinearLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_subtasks_add"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/edit_subtasks_add_hint"
-                    android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                    app:endIconContentDescription="Add subtask"
-                    app:endIconDrawable="@drawable/ic_todo_add"
-                    app:endIconMode="custom"
-                    app:helperText="Add a subtask"
-                    app:helperTextEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_subtasks_linearlayout">
-
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_subtasks_add_edittext"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:imeOptions="actionDone"
-                        android:inputType="textCapSentences" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/edit_spc_chipgroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_subtasks_add">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/edit_status_chip"
-                        style="@style/Widget.Material3.Chip.Assist"
+                    <com.google.android.material.tabs.TabItem
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_date" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_tab_contact_attendees_resources" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_tab_location_comment_link" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_attachment" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_todo" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_alarm" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_recurring" />
+
+
+                </com.google.android.material.tabs.TabLayout>
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingBottom="70dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/ical_edit_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:context=".ui.IcalEditFragment">
+
+                    <ImageView
+                        android:id="@+id/edit_colorbar"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_card_colored_edge"
+                        tools:ignore="ContentDescription"
+                        tools:tint="#BC0D0D" />
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_dtstart_day"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:text="@{UtilKt.convertLongToDayString(model.iCalObjectUpdated.dtstart)}"
+                        android:textAlignment="center"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_collection_spinner"
+                        tools:text="31" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_dtstart_month"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:text="@{UtilKt.convertLongToMonthString(model.iCalObjectUpdated.dtstart)}"
+                        android:textAlignment="center"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_day"
+                        tools:text="December" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_dtstart_year"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:text="@{UtilKt.convertLongToYearString(model.iCalObjectUpdated.dtstart)}"
+                        android:textAlignment="center"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
+                        app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_month"
+                        app:layout_constraintVertical_bias="0.0"
+                        tools:text="2020" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_dtstart_time"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:text="@{UtilKt.convertLongToTimeString(model.iCalObjectUpdated.dtstart)}"
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
+                        app:layout_constraintStart_toStartOf="@+id/edit_dtstart_day"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_year"
+                        tools:text="13:30" />
+
+
+                    <ImageView
+                        android:id="@+id/edit_collection_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:visibility="@{model.collectionVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@+id/edit_collection_spinner"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/edit_collection_spinner"
+                        app:srcCompat="@drawable/ic_collection"
+                        tools:ignore="ContentDescription" />
+
+                    <Spinner
+                        android:id="@+id/edit_collection_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:drawableStart="@drawable/ic_collection"
+                        android:drawablePadding="4dp"
+                        android:visibility="@{model.collectionVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/edit_collection_icon"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Collection" />
+
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/edit_all_day_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:checked="@={model.allDayChecked}"
+                        android:text="@string/edit_all_day"
+                        android:visibility="@{model.alldayVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
+                        app:layout_constraintTop_toTopOf="@+id/edit_dtstart_day"
+                        app:switchPadding="8dp" />
+
+                    <ImageView
+                        android:id="@+id/edit_timezone_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/edit_timezone_content_desc"
+                        android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@+id/edit_timezone_spinner"
+                        app:layout_constraintStart_toStartOf="@+id/edit_all_day_switch"
+                        app:layout_constraintTop_toTopOf="@+id/edit_timezone_spinner"
+                        app:srcCompat="@drawable/ic_timezone" />
+
+                    <Spinner
+                        android:id="@+id/edit_timezone_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:entries="@{model.possibleTimezones}"
+                        android:spinnerMode="dialog"
+                        android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@+id/edit_all_day_switch"
+                        app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/edit_timezone_icon"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_all_day_switch" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/edit_top_barrier"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="top" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edit_summary_edit"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:checkable="false"
-                        android:visibility="@{model.statusVisible ? View.VISIBLE : View.GONE}"
-                        app:chipIcon="@drawable/ic_status"
-                        app:chipIconVisible="true"
-                        app:closeIconVisible="false"
-                        tools:text="Medium" />
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/edit_summary_hint"
+                        android:visibility="@{model.summaryVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_top_barrier">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/edit_priority_chip"
-                        style="@style/Widget.Material3.Chip.Assist"
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_summary_edit_textinputfield"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textShortMessage|textCapSentences"
+                            android:text="@={model.iCalObjectUpdated.summary}"
+                            android:textStyle="bold"
+                            tools:text="Summary ... Lorem ipsum dolor sit amet" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edit_description_edit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:hint="@string/edit_description_hint"
+                        android:visibility="@{model.descriptionVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="@+id/edit_summary_edit"
+                        app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
+                        app:layout_constraintStart_toStartOf="@+id/edit_summary_edit"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_summary_edit">
+
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textWebEditText|textMultiLine|textCapSentences"
+                            android:maxLines="8"
+                            android:minLines="3"
+                            android:text="@={model.iCalObjectUpdated.description}"
+                            tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_progress_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:checkable="false"
-                        android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
-                        app:chipIcon="@drawable/ic_priority"
-                        app:chipIconVisible="true"
-                        app:closeIconVisible="false"
-                        tools:text="Final" />
+                        android:labelFor="@id/edit_progress_slider"
+                        android:text="@string/edit_progress"
+                        android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
 
-                    <com.google.android.material.chip.Chip
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/edit_progress_slider"
+                        style="@style/Widget.AppCompat.SeekBar.Discrete"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:stepSize="1.0"
+                        android:value="@{model.iCalObjectUpdated.percent}"
+                        android:valueFrom="0.0"
+                        android:valueTo="100.0"
+                        android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toStartOf="@id/edit_progress_percent"
+                        app:layout_constraintStart_toEndOf="@+id/edit_progress_label"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_description_edit" />
 
-                        android:id="@+id/edit_classification_chip"
-                        style="@style/Widget.Material3.Chip.Assist"
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_progress_percent"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:textAlignment="viewEnd"
+                        android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
+                        app:layout_constraintEnd_toStartOf="@+id/edit_progress_checkbox"
+                        app:layout_constraintTop_toTopOf="@+id/edit_progress_slider"
+                        tools:text="100 %" />
+
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/edit_progress_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="@{model.iCalObjectUpdated.percent == 100}"
+                        android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@+id/edit_progress_slider"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/edit_progress_slider" />
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_subtasks_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:checkable="false"
-                        android:visibility="@{model.classificationVisible ? View.VISIBLE : View.GONE}"
-                        app:chipIcon="@drawable/ic_classification"
-                        app:chipIconVisible="true"
-                        app:closeIconVisible="false"
-                        tools:text="Public" />
-
-                </com.google.android.material.chip.ChipGroup>
-
-
-                <include
-                    android:id="@+id/edit_task_dates_fragment"
-                    layout="@layout/fragment_ical_edit_task_dates"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_spc_chipgroup"
-                    app:model="@{model}" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_url_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:drawablePadding="8dp"
-                    android:text="@string/edit_url_header"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
-                    app:drawableStartCompat="@drawable/ic_link"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_task_dates_fragment" />
+                        android:layout_marginTop="16dp"
+                        android:drawablePadding="8dp"
+                        android:text="@string/edit_subtasks_header"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+                        app:drawableStartCompat="@drawable/ic_todo"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_progress_slider" />
 
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_url_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/edit_url_hint"
-                    android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
-                    app:endIconMode="clear_text"
-                    app:error="@{model.urlError}"
-                    app:errorEnabled="true"
-                    app:helperText="URL related to this entry"
-                    app:helperTextEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_url_header"
-                    app:startIconDrawable="@drawable/ic_link">
-
-
-                    <com.google.android.material.textfield.TextInputEditText
+                    <LinearLayout
+                        android:id="@+id/edit_subtasks_linearlayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:afterTextChanged="@{() -> model.clearUrlError()}"
-                        android:inputType="textUri"
-                        android:text="@={model.iCalObjectUpdated.url}" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:divider="?android:dividerHorizontal"
+                        android:orientation="vertical"
+                        android:showDividers="middle"
+                        android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_subtasks_header">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true">
 
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_location_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:drawablePadding="8dp"
-                    android:text="@string/edit_location_header"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
-                    app:drawableStartCompat="@drawable/ic_location"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_url_edit" />
+                        </com.google.android.material.card.MaterialCardView>
 
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_location_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/edit_location_hint"
-                    android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
-                    app:endIconMode="clear_text"
-                    app:helperText="Location related to this entry"
-                    app:helperTextEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_location_header"
-                    app:startIconDrawable="@drawable/ic_location">
+                    </LinearLayout>
 
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edit_subtasks_add"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPostalAddress"
-                        android:text="@={model.iCalObjectUpdated.location}" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/edit_subtasks_add_hint"
+                        android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+                        app:endIconContentDescription="Add subtask"
+                        app:endIconDrawable="@drawable/ic_todo_add"
+                        app:endIconMode="custom"
+                        app:helperText="Add a subtask"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_subtasks_linearlayout">
 
 
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_contact_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:drawablePadding="8dp"
-                    android:text="@string/edit_contact_header"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
-                    app:drawableStartCompat="@drawable/ic_contact"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_location_edit" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_subtasks_add_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionDone"
+                            android:inputType="textCapSentences" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_contact_edit"
-                    style="@style/jtx.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/edit_contact_hint"
-                    android:labelFor="@id/edit_contact_add_autocomplete"
-                    android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
-                    app:endIconMode="clear_text"
-                    app:helperText="Contact information of the responsible or owner of this entry"
-                    app:helperTextEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_contact_header"
-                    app:startIconDrawable="@drawable/ic_contact">
-
-
-                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        android:id="@+id/edit_contact_add_autocomplete"
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/edit_spc_chipgroup"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionDone"
-                        android:inputType="textCapSentences|textEmailAddress|textShortMessage"
-                        android:text="@={model.iCalObjectUpdated.contact}"
-                        android:popupBackground="@color/design_default_color_surface"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_subtasks_add">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/edit_status_chip"
+                            style="@style/Widget.Material3.Chip.Assist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:checkable="false"
+                            android:visibility="@{model.statusVisible ? View.VISIBLE : View.GONE}"
+                            app:chipIcon="@drawable/ic_status"
+                            app:chipIconVisible="true"
+                            app:closeIconVisible="false"
+                            tools:text="Medium" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/edit_priority_chip"
+                            style="@style/Widget.Material3.Chip.Assist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:checkable="false"
+                            android:visibility="@{model.priorityVisible ? View.VISIBLE : View.GONE}"
+                            app:chipIcon="@drawable/ic_priority"
+                            app:chipIconVisible="true"
+                            app:closeIconVisible="false"
+                            tools:text="Final" />
+
+                        <com.google.android.material.chip.Chip
+
+                            android:id="@+id/edit_classification_chip"
+                            style="@style/Widget.Material3.Chip.Assist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:checkable="false"
+                            android:visibility="@{model.classificationVisible ? View.VISIBLE : View.GONE}"
+                            app:chipIcon="@drawable/ic_classification"
+                            app:chipIconVisible="true"
+                            app:closeIconVisible="false"
+                            tools:text="Public" />
+
+                    </com.google.android.material.chip.ChipGroup>
 
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_categories_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
-                    android:drawablePadding="8dp"
-                    android:text="@string/edit_categories_header"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
-                    app:drawableStartCompat="@drawable/ic_category"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_contact_edit" />
+                    <include
+                        android:id="@+id/edit_task_dates_fragment"
+                        layout="@layout/fragment_ical_edit_task_dates"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_spc_chipgroup"
+                        app:model="@{model}" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_url_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:drawablePadding="8dp"
+                        android:text="@string/edit_url_header"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
+                        app:drawableStartCompat="@drawable/ic_link"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_task_dates_fragment" />
 
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/edit_categories_chipgroup"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
-                    app:chipSpacingHorizontal="8dp"
-                    app:chipSpacingVertical="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_categories_header">
-
-                </com.google.android.material.chip.ChipGroup>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_categories_add"
-                    style="@style/jtx.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/edit_add_category_hint"
-                    android:labelFor="@id/edit_categories_add_autocomplete"
-                    android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
-                    app:endIconContentDescription="Add category"
-                    app:endIconDrawable="@drawable/ic_category_add"
-                    app:endIconMode="custom"
-                    app:errorEnabled="true"
-                    app:helperText="Add a category"
-                    app:helperTextEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_categories_chipgroup">
-
-
-                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        android:id="@+id/edit_categories_add_autocomplete"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edit_url_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionDone"
-                        android:inputType="textCapSentences"
-                        android:singleLine="false"
-                        android:popupBackground="@color/design_default_color_surface"
-                        />
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/edit_url_hint"
+                        android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
+                        app:endIconMode="clear_text"
+                        app:error="@{model.urlError}"
+                        app:errorEnabled="true"
+                        app:helperText="URL related to this entry"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_url_header"
+                        app:startIconDrawable="@drawable/ic_link">
 
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:afterTextChanged="@{() -> model.clearUrlError()}"
+                            android:inputType="textUri"
+                            android:text="@={model.iCalObjectUpdated.url}" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_attendees_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:drawablePadding="8dp"
-                    android:text="@string/edit_attendees_header"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-                    app:drawableStartCompat="@drawable/ic_attendee"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_categories_add" />
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_location_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:drawablePadding="8dp"
+                        android:text="@string/edit_location_header"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
+                        app:drawableStartCompat="@drawable/ic_location"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_url_edit" />
 
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/edit_attendees_chipgroup"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-                    app:chipSpacingHorizontal="8dp"
-                    app:chipSpacingVertical="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_attendees_header" />
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_attendees_add"
-                    style="@style/jtx.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/edit_attendees_hint"
-                    android:labelFor="@id/edit_attendees_add_autocomplete"
-                    android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
-                    app:endIconContentDescription="Add attendee"
-                    app:endIconDrawable="@drawable/ic_attendee_add"
-                    app:endIconMode="custom"
-                    app:error="@{model.attendeesError}"
-                    app:errorEnabled="true"
-                    app:helperText="Add an attendee"
-                    app:helperTextEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_attendees_chipgroup">
-
-
-                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        android:id="@+id/edit_attendees_add_autocomplete"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edit_location_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:afterTextChanged="@{() -> model.clearAttendeeError()}"
-                        android:imeOptions="actionDone"
-                        android:inputType="textEmailAddress"
-                        android:singleLine="false"
-                        android:popupBackground="@color/design_default_color_surface"
-                        />
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/edit_location_hint"
+                        android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
+                        app:endIconMode="clear_text"
+                        app:helperText="Location related to this entry"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_location_header"
+                        app:startIconDrawable="@drawable/ic_location">
 
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPostalAddress"
+                            android:text="@={model.iCalObjectUpdated.location}" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_resources_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:drawablePadding="8dp"
-                    android:text="@string/edit_resources_header"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
-                    app:drawableStartCompat="@drawable/ic_resources"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_attendees_add" />
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_contact_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:drawablePadding="8dp"
+                        android:text="@string/edit_contact_header"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
+                        app:drawableStartCompat="@drawable/ic_contact"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_location_edit" />
 
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/edit_resources_chipgroup"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
-                    app:chipSpacingHorizontal="8dp"
-                    app:chipSpacingVertical="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_resources_header" />
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_resources_add"
-                    style="@style/jtx.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/edit_resources_hint"
-                    android:labelFor="@id/edit_resources_add_autocomplete"
-                    android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
-                    app:endIconContentDescription="Add resource"
-                    app:endIconDrawable="@drawable/ic_resources"
-                    app:endIconMode="custom"
-                    app:errorEnabled="true"
-                    app:helperText="Add a resource"
-                    app:helperTextEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_resources_chipgroup">
-
-
-                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        android:id="@+id/edit_resources_add_autocomplete"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edit_contact_edit"
+                        style="@style/jtx.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionDone"
-                        android:inputType="textCapWords"
-                        android:singleLine="true"
-                        android:popupBackground="@color/design_default_color_surface"
-                        />
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/edit_contact_hint"
+                        android:labelFor="@id/edit_contact_add_autocomplete"
+                        android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
+                        app:endIconMode="clear_text"
+                        app:helperText="Contact information of the responsible or owner of this entry"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_contact_header"
+                        app:startIconDrawable="@drawable/ic_contact">
 
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/edit_contact_add_autocomplete"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionDone"
+                            android:inputType="textCapSentences|textEmailAddress|textShortMessage"
+                            android:popupBackground="@color/design_default_color_surface"
+                            android:text="@={model.iCalObjectUpdated.contact}" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/edit_comments_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:drawablePadding="8dp"
-                    android:text="@string/view_comments_header"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
-                    app:drawableStartCompat="@drawable/ic_comments"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_fragment_ical_edit_recur" />
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_categories_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="24dp"
+                        android:drawablePadding="8dp"
+                        android:text="@string/edit_categories_header"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
+                        app:drawableStartCompat="@drawable/ic_category"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_contact_edit" />
 
 
-                <LinearLayout
-                    android:id="@+id/edit_comments_linearlayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:divider="?android:dividerHorizontal"
-                    android:orientation="vertical"
-                    android:showDividers="middle"
-                    android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_comments_header">
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/edit_categories_chipgroup"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
+                        app:chipSpacingHorizontal="8dp"
+                        app:chipSpacingVertical="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_categories_header">
 
-                    <com.google.android.material.card.MaterialCardView
+                    </com.google.android.material.chip.ChipGroup>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edit_categories_add"
+                        style="@style/jtx.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:clickable="true"
-                        android:focusable="true">
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                </LinearLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_comment_add"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/edit_comment_hint"
-                    android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
-                    app:endIconContentDescription="Add category"
-                    app:endIconDrawable="@drawable/ic_comment_add"
-                    app:endIconMode="custom"
-                    app:helperText="Add a comment"
-                    app:helperTextEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_comments_linearlayout">
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/edit_add_category_hint"
+                        android:labelFor="@id/edit_categories_add_autocomplete"
+                        android:visibility="@{model.categoriesVisible ? View.VISIBLE : View.GONE}"
+                        app:endIconContentDescription="Add category"
+                        app:endIconDrawable="@drawable/ic_category_add"
+                        app:endIconMode="custom"
+                        app:errorEnabled="true"
+                        app:helperText="Add a category"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_categories_chipgroup">
 
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_comment_add_edittext"
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/edit_categories_add_autocomplete"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionDone"
+                            android:inputType="textCapSentences"
+                            android:popupBackground="@color/design_default_color_surface"
+                            android:singleLine="false" />
+
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_attendees_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:drawablePadding="8dp"
+                        android:text="@string/edit_attendees_header"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+                        app:drawableStartCompat="@drawable/ic_attendee"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_categories_add" />
+
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/edit_attendees_chipgroup"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+                        app:chipSpacingHorizontal="8dp"
+                        app:chipSpacingVertical="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_attendees_header" />
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edit_attendees_add"
+                        style="@style/jtx.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionDone"
-                        android:inputType="textWebEmailAddress|textEmailAddress" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/edit_attendees_hint"
+                        android:labelFor="@id/edit_attendees_add_autocomplete"
+                        android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
+                        app:endIconContentDescription="Add attendee"
+                        app:endIconDrawable="@drawable/ic_attendee_add"
+                        app:endIconMode="custom"
+                        app:error="@{model.attendeesError}"
+                        app:errorEnabled="true"
+                        app:helperText="Add an attendee"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_attendees_chipgroup">
 
 
-                <include
-                    android:id="@+id/edit_fragment_ical_edit_recur"
-                    layout="@layout/fragment_ical_edit_recur"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:model="@{model}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_resources_add" />
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/edit_attendees_add_autocomplete"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:afterTextChanged="@{() -> model.clearAttendeeError()}"
+                            android:imeOptions="actionDone"
+                            android:inputType="textEmailAddress"
+                            android:popupBackground="@color/design_default_color_surface"
+                            android:singleLine="false" />
 
 
-                <include
-                    android:id="@+id/edit_fragment_ical_edit_attachment"
-                    layout="@layout/fragment_ical_edit_attachment"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
-                    app:model="@{model}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/edit_comment_add" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_resources_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:drawablePadding="8dp"
+                        android:text="@string/edit_resources_header"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
+                        app:drawableStartCompat="@drawable/ic_resources"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_attendees_add" />
 
 
-        </androidx.core.widget.NestedScrollView>
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/edit_resources_chipgroup"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
+                        app:chipSpacingHorizontal="8dp"
+                        app:chipSpacingVertical="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_resources_header" />
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edit_resources_add"
+                        style="@style/jtx.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/edit_resources_hint"
+                        android:labelFor="@id/edit_resources_add_autocomplete"
+                        android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
+                        app:endIconContentDescription="Add resource"
+                        app:endIconDrawable="@drawable/ic_resources"
+                        app:endIconMode="custom"
+                        app:errorEnabled="true"
+                        app:helperText="Add a resource"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_resources_chipgroup">
+
+
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/edit_resources_add_autocomplete"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionDone"
+                            android:inputType="textCapWords"
+                            android:popupBackground="@color/design_default_color_surface"
+                            android:singleLine="true" />
+
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/edit_comments_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:drawablePadding="8dp"
+                        android:text="@string/view_comments_header"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+                        app:drawableStartCompat="@drawable/ic_comments"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_fragment_ical_edit_recur" />
+
+
+                    <LinearLayout
+                        android:id="@+id/edit_comments_linearlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:divider="?android:dividerHorizontal"
+                        android:orientation="vertical"
+                        android:showDividers="middle"
+                        android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_comments_header">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true">
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edit_comment_add"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/edit_comment_hint"
+                        android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
+                        app:endIconContentDescription="Add category"
+                        app:endIconDrawable="@drawable/ic_comment_add"
+                        app:endIconMode="custom"
+                        app:helperText="Add a comment"
+                        app:helperTextEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_comments_linearlayout">
+
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_comment_add_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionDone"
+                            android:inputType="textWebEmailAddress|textEmailAddress" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <include
+                        android:id="@+id/edit_fragment_ical_edit_recur"
+                        layout="@layout/fragment_ical_edit_recur"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_resources_add"
+                        app:model="@{model}" />
+
+
+                    <include
+                        android:id="@+id/edit_fragment_ical_edit_attachment"
+                        layout="@layout/fragment_ical_edit_attachment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_comment_add"
+                        app:model="@{model}" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.core.widget.NestedScrollView>
+
+        </RelativeLayout>
 
 
         <com.google.android.material.bottomappbar.BottomAppBar
@@ -919,14 +939,11 @@
             android:id="@+id/edit_fab_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> model.savingClicked()}"
-            app:srcCompat="@drawable/ic_save"
             android:contentDescription="@string/edit_fab_save_contentDescription"
-            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+            android:onClick="@{() -> model.savingClicked()}"
             app:layout_anchor="@id/edit_bottom_bar"
-            />
-
-
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+            app:srcCompat="@drawable/ic_save" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
