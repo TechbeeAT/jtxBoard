@@ -72,11 +72,22 @@ class IcalListFragment : Fragment() {
     companion object {
         const val PREFS_LIST_VIEW = "sharedPreferencesListView"
         const val PREFS_MODULE = "prefsModule"
-        const val PREFS_COLLECTION = "prefsCollection"
-        const val PREFS_CATEGORIES = "prefsCategories"
-        const val PREFS_CLASSIFICATION = "prefsClassification"
-        const val PREFS_STATUS_TODO = "prefsStatusTodo"
-        const val PREFS_STATUS_JOURNAL = "prefsStatusJournal"
+
+        //Journal
+        const val PREFS_JOURNAL_COLLECTION = "prefsJournalCollection"
+        const val PREFS_JOURNAL_CATEGORIES = "prefsJournalCategories"
+        const val PREFS_JOURNAL_CLASSIFICATION = "prefsJournalClassification"
+        const val PREFS_JOURNAL_STATUS = "prefsJournalStatus"
+        //Note
+        const val PREFS_NOTE_COLLECTION = "prefsNoteCollection"
+        const val PREFS_NOTE_CATEGORIES = "prefsNoteCategories"
+        const val PREFS_NOTE_CLASSIFICATION = "prefsNoteClassification"
+        const val PREFS_NOTE_STATUS = "prefsNoteStatus"
+        //Todo
+        const val PREFS_TODO_COLLECTION = "prefsTodoCollection"
+        const val PREFS_TODO_CATEGORIES = "prefsTodoCategories"
+        const val PREFS_TODO_CLASSIFICATION = "prefsTodoClassification"
+        const val PREFS_TODO_STATUS = "prefsTodoStatus"
 
         const val TAB_INDEX_JOURNAL = 0
         const val TAB_INDEX_NOTE = 1
@@ -132,7 +143,7 @@ class IcalListFragment : Fragment() {
 
 
         arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
-        prefs = requireActivity().getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)!!
+        prefs = requireActivity().getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)
 
         loadFilterArgsAndPrefs()
 
@@ -191,7 +202,7 @@ class IcalListFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
                 binding.listProgressIndicator.visibility = View.VISIBLE
-                resetFilter(false)
+                //resetFilter(false)
 
                 when (tab?.position) {
                     TAB_INDEX_JOURNAL -> icalListViewModel.searchModule = Module.JOURNAL.name
@@ -199,6 +210,7 @@ class IcalListFragment : Fragment() {
                     TAB_INDEX_TODO -> icalListViewModel.searchModule = Module.TODO.name
                 }
 
+                loadFiltersFromPrefs()
                 lastScrolledFocusItemId = null
 
                 applyFilters()
@@ -335,15 +347,38 @@ class IcalListFragment : Fragment() {
     }
 
 
-
+    /**
+     * This function sets the initial search criteria and retrieves them either from args or from
+     * the preferences. This method should be called on Create to make sure that the
+     * filter criteria in args are correctly loaded. Once this is done, the filter criteria
+     * will be saved in preferences and the args are not necessary anymore. loadFiltersFromPrefs()
+     * should be used then.
+     */
     private fun loadFilterArgsAndPrefs() {
         // check first if the arguments contain the search-property, if not, check in prefs, if this is also null, return a default value
         icalListViewModel.searchModule = arguments.module2show ?: prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
-        icalListViewModel.searchCategories = arguments.category2filter?.toMutableList() ?: prefs.getStringSet(PREFS_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
-        icalListViewModel.searchCollection = arguments.collection2filter?.toMutableList() ?: prefs.getStringSet(PREFS_COLLECTION, null)?.toMutableList() ?: mutableListOf()
-        icalListViewModel.searchStatusJournal = arguments.statusJournal2filter?.toMutableList() ?: StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_STATUS_JOURNAL, null))
-        icalListViewModel.searchStatusTodo = arguments.statusTodo2filter?.toMutableList() ?: StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_STATUS_TODO, null))
-        icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null))
+
+        when(icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> {
+                icalListViewModel.searchCategories = arguments.category2filter?.toMutableList() ?: prefs.getStringSet(PREFS_JOURNAL_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchCollection = arguments.collection2filter?.toMutableList() ?: prefs.getStringSet(PREFS_JOURNAL_COLLECTION, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchStatusJournal = arguments.statusJournal2filter?.toMutableList() ?: StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_STATUS, null))
+                icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_CLASSIFICATION, null))
+            }
+            Module.NOTE.name -> {
+                icalListViewModel.searchCategories = arguments.category2filter?.toMutableList() ?: prefs.getStringSet(PREFS_NOTE_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchCollection = arguments.collection2filter?.toMutableList() ?: prefs.getStringSet(PREFS_NOTE_COLLECTION, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchStatusJournal = arguments.statusJournal2filter?.toMutableList() ?: StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_NOTE_STATUS, null))
+                icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_NOTE_CLASSIFICATION, null))
+
+            }
+            Module.TODO.name -> {
+                icalListViewModel.searchCategories = arguments.category2filter?.toMutableList() ?: prefs.getStringSet(PREFS_TODO_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchCollection = arguments.collection2filter?.toMutableList() ?: prefs.getStringSet(PREFS_TODO_COLLECTION, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchStatusTodo = arguments.statusTodo2filter?.toMutableList() ?: StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_TODO_STATUS, null))
+                icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_TODO_CLASSIFICATION, null))
+            }
+        }
 
         icalListViewModel.focusItemId.value = arguments.item2focus    // or null
 
@@ -352,6 +387,39 @@ class IcalListFragment : Fragment() {
             Module.JOURNAL.name -> binding.tablayoutJournalnotestodos.getTabAt(TAB_INDEX_JOURNAL)?.select()
             Module.NOTE.name -> binding.tablayoutJournalnotestodos.getTabAt(TAB_INDEX_NOTE)?.select()
             Module.TODO.name -> binding.tablayoutJournalnotestodos.getTabAt(TAB_INDEX_TODO)?.select()
+        }
+    }
+
+    /**
+     * This function loads and sets the filter criteria saved in the preferences for the active module.
+     * This makes sure that for each module the last used filter is applied again until the user
+     * deletes them. This method can be called on every tab change (unlike loadFilterArgsAndPrefs() that
+     * also checks if there are filter criteria in the arguments)
+     */
+    private fun loadFiltersFromPrefs() {
+
+        prefs = requireActivity().getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)
+
+        when(icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> {
+                icalListViewModel.searchCategories = prefs.getStringSet(PREFS_JOURNAL_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchCollection = prefs.getStringSet(PREFS_JOURNAL_COLLECTION, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_STATUS, null))
+                icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_CLASSIFICATION, null))
+            }
+            Module.NOTE.name -> {
+                icalListViewModel.searchCategories = prefs.getStringSet(PREFS_NOTE_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchCollection = prefs.getStringSet(PREFS_NOTE_COLLECTION, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_NOTE_STATUS, null))
+                icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(PREFS_NOTE_CLASSIFICATION, null))
+
+            }
+            Module.TODO.name -> {
+                icalListViewModel.searchCategories = prefs.getStringSet(PREFS_TODO_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchCollection = prefs.getStringSet(PREFS_TODO_COLLECTION, null)?.toMutableList() ?: mutableListOf()
+                icalListViewModel.searchStatusTodo = StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_TODO_STATUS, null))
+                icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(PREFS_TODO_CLASSIFICATION, null))
+            }
         }
     }
 
@@ -380,11 +448,26 @@ class IcalListFragment : Fragment() {
     }
 
     private fun savePrefs() {
-        prefs.edit().putStringSet(PREFS_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
-        prefs.edit().putStringSet(PREFS_STATUS_JOURNAL, StatusJournal.getStringSetFromList(icalListViewModel.searchStatusJournal)).apply()
-        prefs.edit().putStringSet(PREFS_STATUS_TODO, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
-        prefs.edit().putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
-        prefs.edit().putStringSet(PREFS_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
+        when (icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> {
+                prefs.edit().putStringSet(PREFS_JOURNAL_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
+                prefs.edit().putStringSet(PREFS_JOURNAL_STATUS, StatusJournal.getStringSetFromList(icalListViewModel.searchStatusJournal)).apply()
+                prefs.edit().putStringSet(PREFS_JOURNAL_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
+                prefs.edit().putStringSet(PREFS_JOURNAL_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
+            }
+            Module.NOTE.name -> {
+                prefs.edit().putStringSet(PREFS_NOTE_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
+                prefs.edit().putStringSet(PREFS_NOTE_STATUS, StatusJournal.getStringSetFromList(icalListViewModel.searchStatusJournal)).apply()
+                prefs.edit().putStringSet(PREFS_NOTE_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
+                prefs.edit().putStringSet(PREFS_NOTE_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
+            }
+            Module.TODO.name -> {
+                prefs.edit().putStringSet(PREFS_TODO_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
+                prefs.edit().putStringSet(PREFS_TODO_STATUS, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
+                prefs.edit().putStringSet(PREFS_TODO_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
+                prefs.edit().putStringSet(PREFS_TODO_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
+            }
+        }
         prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
     }
 
@@ -449,12 +532,33 @@ class IcalListFragment : Fragment() {
 
         icalListViewModel.resetFocusItem()
         icalListViewModel.clearFilter(updateSearch)
-        prefs.edit().clear().apply()
+
+        when (icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> {
+                prefs.edit().remove(PREFS_JOURNAL_COLLECTION).apply()
+                prefs.edit().remove(PREFS_JOURNAL_STATUS).apply()
+                prefs.edit().remove(PREFS_JOURNAL_CLASSIFICATION).apply()
+                prefs.edit().remove(PREFS_JOURNAL_CATEGORIES).apply()
+            }
+            Module.NOTE.name -> {
+                prefs.edit().remove(PREFS_NOTE_COLLECTION).apply()
+                prefs.edit().remove(PREFS_NOTE_STATUS).apply()
+                prefs.edit().remove(PREFS_NOTE_CLASSIFICATION).apply()
+                prefs.edit().remove(PREFS_NOTE_CATEGORIES).apply()
+            }
+            Module.TODO.name -> {
+                prefs.edit().remove(PREFS_TODO_COLLECTION).apply()
+                prefs.edit().remove(PREFS_TODO_STATUS).apply()
+                prefs.edit().remove(PREFS_TODO_CLASSIFICATION).apply()
+                prefs.edit().remove(PREFS_TODO_CATEGORIES).apply()
+            }
+        }
+
+        //prefs.edit().clear().apply()
     }
 
     private fun goToFilter() {
         icalListViewModel.resetFocusItem()
-        prefs.edit().clear().apply()
 
         this.findNavController().navigate(
             IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
@@ -473,7 +577,7 @@ class IcalListFragment : Fragment() {
 
     private fun applyQuickFilterJournal(statusList: MutableList<StatusJournal>) {
 
-        resetFilter(false)
+        //resetFilter(false)
         icalListViewModel.searchStatusJournal = statusList
         applyFilters()
     }
@@ -568,7 +672,7 @@ class IcalListFragment : Fragment() {
         datePicker.show(parentFragmentManager, "menu_list_gotodate")
     }
 
-    private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || icalListViewModel.searchStatusJournal.isNotEmpty() || icalListViewModel.searchStatusTodo.isNotEmpty() || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
+    private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || (icalListViewModel.searchModule == Module.JOURNAL.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.NOTE.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.TODO.name && icalListViewModel.searchStatusTodo.isNotEmpty()) || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
 
 
 }
