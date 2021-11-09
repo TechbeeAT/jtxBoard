@@ -115,6 +115,13 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 holder.categories.visibility = View.VISIBLE
             }
 
+            if (iCal4ListItem.property.collectionDisplayName.isNullOrEmpty()) {
+                holder.collection.visibility = View.GONE
+            } else {
+                holder.collection.text = iCal4ListItem.property.collectionDisplayName
+                holder.collection.visibility = View.VISIBLE
+            }
+
             if (iCal4ListItem.property.color != null) {
                 try {
                     holder.colorBar.setColorFilter(iCal4ListItem.property.color!!)
@@ -343,6 +350,8 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
 
 
         var categories: TextView = itemView.findViewById(R.id.list_item_todo_categories)
+        var collection: TextView = itemView.findViewById(R.id.list_item_todo_collection)
+
         var priority: TextView = itemView.findViewById(R.id.list_item_todo_priority)
         var priorityIcon: ImageView = itemView.findViewById(R.id.list_item_todo_priority_icon)
 

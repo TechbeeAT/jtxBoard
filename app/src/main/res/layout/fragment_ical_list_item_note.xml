@@ -40,19 +40,44 @@
 
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/list_item_note_collection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:maxWidth="150dp"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@id/list_item_note_summary_barrier"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Collection" />
+
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_note_categories"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textAlignment="viewStart"
             android:textSize="12sp"
             android:textStyle="italic"
+            app:layout_constraintBottom_toTopOf="@id/list_item_note_summary_barrier"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/list_item_note_collection"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Category1, Category2" />
+
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/list_item_note_summary_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            tools:layout_editor_absoluteY="376dp" />
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -69,7 +94,7 @@
             app:layout_constraintBottom_toTopOf="@id/list_item_note_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_item_note_categories"
+            app:layout_constraintTop_toBottomOf="@id/list_item_note_summary_barrier"
             app:layout_constraintVertical_bias="0.0"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Summary ... Lorem ipsum dolor sit amet" />

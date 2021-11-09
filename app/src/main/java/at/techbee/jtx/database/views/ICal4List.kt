@@ -49,6 +49,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "main_icalobject.$COLUMN_SEQUENCE, " +
             "CASE WHEN main_icalobject.$COLUMN_COLOR IS NOT NULL THEN main_icalobject.$COLUMN_COLOR ELSE collection.$COLUMN_COLLECTION_COLOR END as color, " +             // take the color of the collection if there is no color given in the item. This is just for displaying in the list view.
             "main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID, " +
+            "collection.$COLUMN_COLLECTION_ACCOUNT_NAME, " +
+            "collection.$COLUMN_COLLECTION_DISPLAYNAME, " +
             "main_icalobject.$COLUMN_DELETED, " +
             "CASE WHEN main_icalobject.$COLUMN_RRULE IS NULL THEN 0 ELSE 1 END as isRecurringOriginal, " +
             "CASE WHEN main_icalobject.$COLUMN_RECURID IS NULL THEN 0 ELSE 1 END as isRecurringInstance, " +
@@ -100,6 +102,8 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_COLOR) var color: Int?,
 
     @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long?,
+    @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME) var accountName: String?,
+    @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME) var collectionDisplayName: String?,
 
     @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean,
 

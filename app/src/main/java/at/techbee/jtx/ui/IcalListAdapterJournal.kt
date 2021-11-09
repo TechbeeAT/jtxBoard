@@ -125,6 +125,14 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
                 holder.categories.visibility = View.VISIBLE
             }
 
+            if (iCal4ListItem.property.collectionDisplayName.isNullOrEmpty()) {
+                holder.collection.visibility = View.GONE
+            } else {
+                holder.collection.text = iCal4ListItem.property.collectionDisplayName
+                holder.collection.visibility = View.VISIBLE
+            }
+
+
             if (iCal4ListItem.property.color != null) {
                 try {
                     holder.colorBar.setColorFilter(iCal4ListItem.property.color!!)
@@ -247,6 +255,8 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
         var description: TextView = itemView.findViewById(R.id.list_item_journal_description)
 
         var categories: TextView = itemView.findViewById(R.id.list_item_journal_categories)
+        var collection: TextView = itemView.findViewById(R.id.list_item_journal_collection)
+
         var status: TextView = itemView.findViewById(R.id.list_item_journal_status)
         var statusIcon: ImageView = itemView.findViewById(R.id.list_item_journal_status_icon)
         var classification: TextView = itemView.findViewById(R.id.list_item_journal_classification)

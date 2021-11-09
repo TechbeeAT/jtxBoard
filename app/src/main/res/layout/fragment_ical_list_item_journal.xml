@@ -38,6 +38,38 @@
         android:paddingBottom="8dp">
 
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/list_item_journal_collection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:maxWidth="150dp"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@id/list_item_journal_summary_barrier"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Collection" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/list_item_journal_categories"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toTopOf="@id/list_item_journal_summary_barrier"
+            app:layout_constraintEnd_toStartOf="@id/list_item_journal_recurring_icon"
+            app:layout_constraintStart_toEndOf="@id/list_item_journal_collection"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Category1, Category2" />
+
         <ImageView
             android:id="@+id/list_item_journal_recurring_icon"
             android:layout_width="18dp"
@@ -46,6 +78,17 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_recurring"
             tools:ignore="ContentDescription" />
+
+
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/list_item_journal_summary_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            tools:layout_editor_absoluteY="376dp" />
+
+
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_journal_dtstart_day"
@@ -56,7 +99,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/list_item_journal_dtstart_month"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/list_item_journal_summary"
+            app:layout_constraintTop_toBottomOf="@id/list_item_journal_summary_barrier"
             app:layout_constraintVertical_bias="0.0"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="31" />
@@ -126,7 +169,7 @@
             app:layout_constraintBottom_toTopOf="@id/list_item_journal_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/list_item_journal_dtstart_day"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_journal_recurring_icon"
+            app:layout_constraintTop_toBottomOf="@id/list_item_journal_summary_barrier"
             app:layout_constraintVertical_bias="0.0"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Summary ... Lorem ipsum dolor sit amet" />
@@ -280,38 +323,19 @@
             tools:text="0" />
 
 
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/list_item_journal_categories"
+        <LinearLayout
+            android:id="@+id/list_item_journal_subtasks_linearlayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAlignment="textEnd"
-            android:textSize="12sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_item_journal_classification"
-            tools:text="Category1, Category2" />
-
-
-        <LinearLayout
-            android:id="@+id/list_item_journal_subtasks_linearlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:divider="?android:dividerHorizontal"
             android:orientation="vertical"
             android:showDividers="middle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_journal_categories" />
+            app:layout_constraintTop_toBottomOf="@id/list_item_journal_classification" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
