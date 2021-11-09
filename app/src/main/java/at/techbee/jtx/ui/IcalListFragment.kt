@@ -66,6 +66,9 @@ class IcalListFragment : Fragment() {
     private var lastScrolledFocusItemId: Long? = null
     private var toastDueTasksInPastShown = false
 
+    var lastSearchModule = ""
+    var lastIcal4ListHash = 0
+
 
 
     companion object {
@@ -139,19 +142,18 @@ class IcalListFragment : Fragment() {
         // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
         icalListViewModel.iCal4List.observe(viewLifecycleOwner, {
 
-            //icalListAdapter!!.notifyDataSetChanged()
+            binding.listProgressIndicator.visibility = View.GONE
+
+            // if the hash is the same as before, the list has not changed and we don't continue (such triggers happen regularly when DAVx5 is doing the sync)
+            if(lastIcal4ListHash == it.hashCode())
+                return@observe
+            lastIcal4ListHash = it.hashCode()
+
             recyclerView?.adapter?.notifyDataSetChanged()
-            recyclerView?.scheduleLayoutAnimation()
 
-            binding.fab.setOnClickListener {
-
-                when(icalListViewModel.searchModule) {
-                    Module.JOURNAL.name -> goToEdit(ICalEntity(ICalObject.createJournal()))
-                    Module.NOTE.name -> goToEdit(ICalEntity(ICalObject.createNote()))
-                    Module.TODO.name -> goToEdit(ICalEntity(ICalObject.createTodo()))
-                }
-            }
-
+            if(lastSearchModule != icalListViewModel.searchModule)          // we do the animation only if the module was changed. Otherwise animation would also be done when e.g. a progress is changed.
+                recyclerView?.scheduleLayoutAnimation()
+            lastSearchModule = icalListViewModel.searchModule               // remember the last list size and search module
 
             icalListViewModel.resetFocusItem()              // reset happens only once in a Module, only when the Module get's changed the scrolling would happen again
 
@@ -172,6 +174,7 @@ class IcalListFragment : Fragment() {
                     binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
 
                     binding.fab.setImageResource(R.drawable.ic_add)
+                    binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createJournal())) }
                 }
                 Module.NOTE.name -> {
                     gotodateMenuItem?.isVisible = false
@@ -189,6 +192,7 @@ class IcalListFragment : Fragment() {
                     binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
 
                     binding.fab.setImageResource(R.drawable.ic_add_note)
+                    binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createNote())) }
                 }
                 Module.TODO.name -> {
                     gotodateMenuItem?.isVisible = false
@@ -212,6 +216,7 @@ class IcalListFragment : Fragment() {
                     }
 
                     binding.fab.setImageResource(R.drawable.ic_todo_add)
+                    binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createTodo())) }
                 }
             }
 
@@ -224,8 +229,6 @@ class IcalListFragment : Fragment() {
                 binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_clearfilter)?.isVisible = true
             }
 
-
-            binding.listProgressIndicator.visibility = View.GONE
 
             if(icalListViewModel.searchModule == Module.TODO.name) {
                 icalListViewModel.iCal4List.value?.forEach {
