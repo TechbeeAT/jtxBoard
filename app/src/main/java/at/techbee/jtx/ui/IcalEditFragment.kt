@@ -179,7 +179,7 @@ class IcalEditFragment : Fragment() {
             ).get(IcalEditViewModel::class.java)
 
         binding.model = icalEditViewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
 
         val priorityItems = resources.getStringArray(R.array.priority)

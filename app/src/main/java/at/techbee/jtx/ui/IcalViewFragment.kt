@@ -118,7 +118,7 @@ class IcalViewFragment : Fragment() {
                         this, viewModelFactory).get(IcalViewViewModel::class.java)
 
         binding.model = icalViewViewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
 
         // set up observers

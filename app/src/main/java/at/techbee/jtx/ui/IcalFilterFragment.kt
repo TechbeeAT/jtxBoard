@@ -76,7 +76,7 @@ class IcalFilterFragment : Fragment() {
             ).get(IcalFilterViewModel::class.java)
 
         binding.model = icalFilterViewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
 
         // get previously selected items from arguments
