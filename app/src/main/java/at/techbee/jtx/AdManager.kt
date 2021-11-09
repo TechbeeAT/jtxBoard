@@ -15,17 +15,10 @@ class AdManager {
 
     companion object {
 
-        /*
-        const val ADMOB_UNIT_ID_BANNER_TEST = "ca-app-pub-3940256099942544/6300978111"    // TEST
-        const val ADMOB_UNIT_ID_BANNER = "ca-app-pub-4426141011962540/8164268500"  // PROD
-
-        const val ADMOB_UNIT_ID_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/1033173712"  // TEST
-        const val ADMOB_UNIT_ID_INTERSTITIAL = "ca-app-pub-4426141011962540/5056134647"    // PROD
-
-         */
-
-        private const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/5354046379"  // TEST
-        //const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL = "ca-app-pub-4426141011962540/2723893422"    // PROD
+        private val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL = if(BuildConfig.DEBUG)
+            "ca-app-pub-3940256099942544/5354046379"  // TEST
+        else
+            "ca-app-pub-4426141011962540/2723893422"    // PROD
 
         var consentInformation: ConsentInformation? = null
         private var consentForm: ConsentForm? = null
@@ -41,7 +34,10 @@ class AdManager {
         private const val PREFS_ADS_NEXT_AD = "prefsNextAd"
         private const val PREFS_ADS_ACCEPTED = "adsAccepted"
         //private const val ONE_WEEK_IN_MILLIS = 604800000L
-        private const val ONE_WEEK_IN_MILLIS = 300000L     // TODO: RESET! only for testing reduced to 5 min
+        private val TIME_TO_NEXT_AD = if(BuildConfig.DEBUG)
+            300000L     // = 5 min for debug pursposes
+        else
+            604800000L  // = one week
 
 
 /*
@@ -69,7 +65,7 @@ class AdManager {
                 if (nextAdShowtime == 0L)               // initially set the shared preferences to today + one week
                     it.edit()?.putLong(
                         PREFS_ADS_NEXT_AD,
-                        System.currentTimeMillis() + ONE_WEEK_IN_MILLIS
+                        System.currentTimeMillis() + TIME_TO_NEXT_AD
                     )?.apply()
 
                 return System.currentTimeMillis() > nextAdShowtime
@@ -99,7 +95,7 @@ class AdManager {
                 adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
 
             adPrefs?.let {
-                nextAdShowtime = System.currentTimeMillis() + ONE_WEEK_IN_MILLIS
+                nextAdShowtime = System.currentTimeMillis() + TIME_TO_NEXT_AD
                 it.edit()?.putLong(PREFS_ADS_NEXT_AD, nextAdShowtime)?.apply()
             }
         }
@@ -173,7 +169,7 @@ class AdManager {
              */
 
             RewardedInterstitialAd.load(context,
-                ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST,
+                ADMOB_UNIT_ID_REWARDED_INTERSTITIAL,
                 AdRequest.Builder().build(), object : RewardedInterstitialAdLoadCallback() {
                     override fun onAdLoaded(ad: RewardedInterstitialAd) {
                         rewardedInterstitialAd = ad
