@@ -167,8 +167,8 @@ class SyncContentProvider : ContentProvider() {
         count = database.deleteRAW(countQuery)
 
         val deleteQuery = SimpleSQLiteQuery(queryString, args.toArray())
-        Log.println(Log.INFO, "SyncContentProvider", "Delete Query prepared: $queryString")
-        Log.println(Log.INFO, "SyncContentProvider", "Delete Query args prepared: ${args.joinToString(separator = ", ")}")
+        //Log.println(Log.INFO, "SyncContentProvider", "Delete Query prepared: $queryString")
+        //Log.println(Log.INFO, "SyncContentProvider", "Delete Query args prepared: ${args.joinToString(separator = ", ")}")
 
         database.deleteRAW(deleteQuery)
         context!!.contentResolver.notifyChange(uri, null)
@@ -183,8 +183,7 @@ class SyncContentProvider : ContentProvider() {
     }
 
     override fun getType(uri: Uri): String? {
-        TODO("Implement this to handle requests for the MIME type of the data" +
-                "at the given URI")
+        throw java.lang.IllegalArgumentException("getType(...) is currently not supported.")
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
@@ -319,8 +318,8 @@ class SyncContentProvider : ContentProvider() {
 
         val query = SimpleSQLiteQuery(queryString, args.toArray())
 
-        Log.println(Log.INFO, "SyncContentProvider", "Query prepared: $queryString")
-        Log.println(Log.INFO, "SyncContentProvider", "Query args prepared: ${args.joinToString(separator = ", ")}")
+        //Log.println(Log.INFO, "SyncContentProvider", "Query prepared: $queryString")
+        //Log.println(Log.INFO, "SyncContentProvider", "Query args prepared: ${args.joinToString(separator = ", ")}")
 
         val result = database.getCursor(query)
 
@@ -446,8 +445,8 @@ class SyncContentProvider : ContentProvider() {
             selectionArgs?.forEach { args.add(it) }          // add all selection args to the args array, no further validation needed here
         }
 
-        Log.println(Log.INFO, "SyncContentProvider", "Update-Query prepared: $queryString")
-        Log.println(Log.INFO, "SyncContentProvider", "Update-Query args prepared: ${args.joinToString(separator = ", ")}")
+        //Log.println(Log.INFO, "SyncContentProvider", "Update-Query prepared: $queryString")
+        //Log.println(Log.INFO, "SyncContentProvider", "Update-Query args prepared: ${args.joinToString(separator = ", ")}")
 
         val updateQuery = SimpleSQLiteQuery(queryString, args.toArray())
 
