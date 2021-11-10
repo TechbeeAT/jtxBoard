@@ -109,37 +109,38 @@ class SyncFragment : Fragment() {
         if(isDAVx5Available()) {
             binding.syncPleaseInstall.visibility = View.GONE
             binding.syncPleaseInstallText.visibility = View.GONE
+            binding.syncPleaseInstallLink.visibility = View.GONE
             binding.syncButtonPlaystore.visibility = View.GONE
-            binding.syncFurtherInfoDavx5.visibility = View.GONE
+            binding.syncOrDownloadOnGooglePlay.visibility = View.GONE
             binding.syncLinkDavx5.visibility = View.GONE
-            binding.syncCongratulations.visibility = View.VISIBLE
-            binding.syncButtonAddAccount.visibility = View.VISIBLE
+            binding.syncFurtherInfoDavx5.visibility = View.GONE
 
             if(collectionsString.isNotBlank()) {
                 // DAVx5 is installed and collections were found
                 binding.syncCongratulationsTextNoCollections.visibility = View.GONE
-                binding.syncCongratulationsTextWithCollections.visibility = View.VISIBLE
-                binding.syncCongratulationsSynchedCollections.visibility = View.VISIBLE
                 binding.syncCongratulationsSynchedCollections.text = collectionsString
+
+                binding.syncCongratulationsTextWithCollections.visibility = View.VISIBLE
+                binding.syncCongratulationsSynchedCollectionsText.visibility = View.VISIBLE
+                binding.syncCongratulationsSynchedCollections.visibility = View.VISIBLE
             } else {
                 // DAVx5 is installed but no remote collections were found
-                binding.syncCongratulationsTextNoCollections.visibility = View.VISIBLE
                 binding.syncCongratulationsTextWithCollections.visibility = View.GONE
+                binding.syncCongratulationsSynchedCollectionsText.visibility = View.GONE
                 binding.syncCongratulationsSynchedCollections.visibility = View.GONE
+
+                binding.syncCongratulationsTextNoCollections.visibility = View.VISIBLE
             }
         } else {
             // DAVx5 is not installed, show messages for user to install
-            binding.syncPleaseInstall.visibility = View.VISIBLE
-            binding.syncPleaseInstallText.visibility = View.VISIBLE
-            binding.syncButtonPlaystore.visibility = View.VISIBLE
-            binding.syncFurtherInfoDavx5.visibility = View.VISIBLE
-            binding.syncLinkDavx5.visibility = View.VISIBLE
 
             binding.syncCongratulations.visibility = View.GONE
             binding.syncCongratulationsSynchedCollections.visibility = View.GONE
             binding.syncCongratulationsTextNoCollections.visibility = View.GONE
             binding.syncCongratulationsTextWithCollections.visibility = View.GONE
+            binding.syncCongratulationsSynchedCollectionsText.visibility = View.GONE
             binding.syncButtonAddAccount.visibility = View.GONE
+
         }
 
     }

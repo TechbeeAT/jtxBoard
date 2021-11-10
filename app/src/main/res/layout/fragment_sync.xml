@@ -75,28 +75,11 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:autoLink="web"
             android:text="@string/sync_davx5_installed_but_no_collections_found"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sync_congratulations" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/sync_congratulations_text_no_coll_web"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:autoLink="web"
-            android:gravity="center"
-            android:text="@string/sync_jtx_sync_website"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sync_congratulations_text_no_collections" />
-
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -106,16 +89,15 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:autoLink="web"
             android:text="@string/sync_davx5_installed_with_collections_found"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sync_congratulations_text_no_coll_web" />
+            app:layout_constraintTop_toBottomOf="@+id/sync_congratulations_text_no_collections" />
 
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/sync_congratulations_text_with_coll_web"
+            android:id="@+id/sync_congratulations_jtx_website"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginStart="16dp"
@@ -138,12 +120,11 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:autoLink="web"
             android:text="@string/sync_davx5_installed_with_collections_synched_collections"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sync_congratulations_text_with_coll_web" />
+            app:layout_constraintTop_toBottomOf="@+id/sync_congratulations_jtx_website" />
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -196,7 +177,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:autoLink="web"
             android:text="@string/sync_davx5_not_found"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
@@ -254,9 +234,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:autoLink="web"
             android:text="@string/sync_furhter_info_davx5"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
