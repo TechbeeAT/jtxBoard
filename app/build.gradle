@@ -21,8 +21,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 4
-        versionName "0.1"
+        versionCode 5
+        versionName "0.1 Lebkuchenherzerl"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
