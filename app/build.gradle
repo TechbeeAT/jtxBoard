@@ -79,6 +79,11 @@ android {
             //applicationIdSuffix '.testing'
             versionNameSuffix '-alphatest'
         }
+        global {
+            dimension 'version'
+            //applicationIdSuffix '.testing'
+            versionNameSuffix '-global'
+        }
     }
 
     // the flavor alphatest should not be used for the build type release, we filter this here

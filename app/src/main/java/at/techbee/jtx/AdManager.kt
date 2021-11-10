@@ -15,10 +15,16 @@ class AdManager {
 
     companion object {
 
+        const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/5354046379"
+        const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_PROD = "ca-app-pub-4426141011962540/2723893422"
+
+        const val ONE_WEEK_IN_MILLIS = 604800000L  // = one week
+        const val FIVE_MIN_IN_MILLIS = 300000L     // = 5 min
+
         private val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL = if(BuildConfig.DEBUG)
-            "ca-app-pub-3940256099942544/5354046379"  // TEST
+            ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST
         else
-            "ca-app-pub-4426141011962540/2723893422"    // PROD
+            ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_PROD
 
         var consentInformation: ConsentInformation? = null
         private var consentForm: ConsentForm? = null
@@ -35,24 +41,11 @@ class AdManager {
         private const val PREFS_ADS_ACCEPTED = "adsAccepted"
         //private const val ONE_WEEK_IN_MILLIS = 604800000L
         private val TIME_TO_NEXT_AD = if(BuildConfig.DEBUG)
-            300000L     // = 5 min for debug pursposes
+            FIVE_MIN_IN_MILLIS
         else
-            604800000L  // = one week
+            ONE_WEEK_IN_MILLIS
 
 
-/*
-        fun isTrialPeriod(activity: Activity): Boolean {
-            val firstInstalled: Long = activity.applicationContext.packageManager.getPackageInfo(
-                activity.applicationContext.packageName,
-                0
-            ).firstInstallTime
-            // TODO come back here
-            //val trialEnd = firstInstalled + TimeUnit.DAYS.toMillis(TRIAL_PERIOD_DAYS)
-            val trialEnd = firstInstalled + TimeUnit.MINUTES.toMillis(5L)    // for testing
-
-            return System.currentTimeMillis() <= trialEnd
-        }
- */
 
         fun isAdShowtime(activity: Activity): Boolean {
 
@@ -100,73 +93,10 @@ class AdManager {
             }
         }
 
+
         private fun setUpAds(context: Context) {
 
-            // TODO: replace adUnitId with production Unit Id
             MobileAds.initialize(context) {}
-
-            /*
-            // Section to retrieve the width of the device to set the adSize
-            val adWidth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                windowManager.currentWindowMetrics.bounds.width() / resources.displayMetrics.density.toInt()
-            } else {
-                val outMetrics = DisplayMetrics()
-                @Suppress("DEPRECATION")
-                val display = windowManager.defaultDisplay
-                @Suppress("DEPRECATION")
-                display.getMetrics(outMetrics)
-                (outMetrics.widthPixels.toFloat() / outMetrics.density).toInt()
-            }
-
-            val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
-
-            // now that the adSize is determined we can place the add
-            val adView = AdView(this)
-            //adView.adSize = AdSize.SMART_BANNER          // adaptive ads replace the smart banner
-            adView.adSize = adSize
-            adView.adUnitId = ADMOB_UNIT_ID_BANNER_TEST
-
-            val adLinearLayout: LinearLayout =
-                findViewById(R.id.main_adlinearlayout)  // add to the linear layout container
-            val adRequest = AdRequest.Builder().build()
-            adView.loadAd(adRequest)
-
-            adLinearLayout.removeAllViews()
-            adLinearLayout.addView(adView)
-
-             */
-
-            // Interstitial Ad Block
-            /*
-            val adRequest = AdRequest.Builder().build()
-
-            InterstitialAd.load(this, ADMOB_UNIT_ID_INTERSTITIAL_TEST, adRequest, object : InterstitialAdLoadCallback() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.d("onAdFailedToLoad", adError.message)
-                    mInterstitialAd = null
-                }
-
-                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    Log.d("onAdLoaded", "Ad was loaded.")
-                    mInterstitialAd = interstitialAd
-                }
-            })
-
-            mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
-                override fun onAdDismissedFullScreenContent() {
-                    Log.d("onAdDismissedFull", "Ad was dismissed.")
-                }
-
-                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                    Log.d("onAdFailedToShow", "Ad failed to show.")
-                }
-
-                override fun onAdShowedFullScreenContent() {
-                    Log.d("onAdShowed", "Ad showed fullscreen content.")
-                    mInterstitialAd = null
-                }
-            }
-             */
 
             RewardedInterstitialAd.load(context,
                 ADMOB_UNIT_ID_REWARDED_INTERSTITIAL,
