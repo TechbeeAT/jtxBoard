@@ -9,10 +9,12 @@
 package at.techbee.jtx.database
 
 import android.content.ContentValues
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.*
 import org.junit.Test
 
 import org.junit.Assert.*
+import java.lang.IllegalArgumentException
 
 class ICalCollectionTest {
 // Android Test as Content Values need Android libraries to run
@@ -62,5 +64,20 @@ class ICalCollectionTest {
 
         val cvICalCollection = ICalCollection.fromContentValues(null)
         assertNull(cvICalCollection)
+    }
+
+
+    @Test(expected = IllegalArgumentException::class)
+    fun createFromContentValuesWithForbiddenType() {
+
+
+        val sampleCollection = ICalCollection(
+            accountType = LOCAL_ACCOUNT_TYPE
+        )
+
+        val cv = ContentValues(13).apply {
+            put(COLUMN_COLLECTION_ACCOUNT_TYPE, sampleCollection.accountType)
+        }
+        ICalCollection.fromContentValues(cv)
     }
 }

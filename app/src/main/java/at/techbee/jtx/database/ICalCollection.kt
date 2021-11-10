@@ -142,11 +142,11 @@ data class ICalCollection(
                  */
                 fun fromContentValues(values: ContentValues?): ICalCollection? {
 
-                        // TODO initialize specific component based on values!
-                        // TODO validate some inputs, especially Int Inputs!
-
                         if (values == null)
                                 return null
+
+                        if(values.getAsString(COLUMN_COLLECTION_ACCOUNT_TYPE) == LOCAL_ACCOUNT_TYPE)
+                                throw IllegalArgumentException("Forbidden account type: $LOCAL_ACCOUNT_TYPE")
 
                         return ICalCollection().applyContentValues(values)
 
