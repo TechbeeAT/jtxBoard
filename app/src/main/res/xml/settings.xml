@@ -36,7 +36,7 @@
 
         <SwitchPreference
             app:key="settings_show_progress_for_maintasks_in_list"
-            app:defaultValue="true"
+            app:defaultValue="false"
             app:title="@string/settings_show_progress_for_maintasks_in_list"
             app:icon="@drawable/ic_progress_task"
             app:useSimpleSummaryProvider="true"/>
