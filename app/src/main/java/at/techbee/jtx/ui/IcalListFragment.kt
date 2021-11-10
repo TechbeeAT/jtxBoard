@@ -28,10 +28,12 @@ import androidx.recyclerview.widget.RecyclerView
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.FragmentIcalListBinding
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import java.lang.ClassCastException
 import java.util.*
@@ -538,6 +540,7 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled -> applyQuickFilterTodo(mutableListOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.`IN-PROCESS`, StatusTodo.COMPLETED))
             R.id.menu_list_quickfilterfilter_vtodo_open_inprogress -> applyQuickFilterTodo(mutableListOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.`IN-PROCESS`))
             R.id.menu_list_quickfilterfilter_vtodo_completed -> applyQuickFilterTodo(mutableListOf(StatusTodo.COMPLETED))
+            R.id.menu_list_delete_visible -> deleteVisible()
         }
 
         return super.onOptionsItemSelected(item)
@@ -696,5 +699,22 @@ class IcalListFragment : Fragment() {
 
     private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || (icalListViewModel.searchModule == Module.JOURNAL.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.NOTE.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.TODO.name && icalListViewModel.searchStatusTodo.isNotEmpty()) || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
 
+    private fun deleteVisible() {
 
+        val itemIds = mutableListOf<Long>()
+        icalListViewModel.iCal4List.value?.forEach {
+            itemIds.add(it.property.id)
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.list_dialog_delete_visible_title))
+            .setMessage(getString(R.string.list_dialog_delete_visible_message, itemIds.size))
+            .setPositiveButton(R.string.delete) { _, _ ->
+                icalListViewModel.delete(itemIds)
+                Attachment.scheduleCleanupJob(requireContext())
+            }
+            .setNeutralButton(R.string.cancel) { _, _ ->  // nothing to do
+            }
+            .show()
+    }
 }

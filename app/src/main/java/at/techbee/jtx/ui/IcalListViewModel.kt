@@ -256,4 +256,13 @@ class IcalListViewModel(
             }
         }
     }
+
+    fun delete(itemIds: List<Long>) {
+
+        itemIds.forEach { id ->
+            viewModelScope.launch(Dispatchers.IO) {
+                ICalObject.deleteItemWithChildren(id, database)
+            }
+        }
+    }
 }

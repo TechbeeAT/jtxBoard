@@ -82,4 +82,11 @@
             app:showAsAction="never" />
     </group>
 
+    <group android:id="@+id/menu_list_menugroup_delete" >
+        <item
+            android:id="@+id/menu_list_delete_visible"
+            android:title="@string/menu_list_delete_visible"
+            app:showAsAction="never" />
+    </group>
+
 </menu>
