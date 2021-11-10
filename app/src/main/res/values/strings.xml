@@ -128,6 +128,7 @@
 
 
     <!-- fragment_ical_view -->
+    <string name="view_readyonly">Read only</string>
     <string name="view_url_header">URL</string>
     <string name="view_location_header">Location</string>
     <string name="view_attendees_header">Attendees</string>
