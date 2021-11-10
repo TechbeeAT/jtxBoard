@@ -112,7 +112,7 @@ class IcalListFragment : Fragment() {
 
         // create the view model through the view model factory
         val viewModelFactory = IcalListViewModelFactory(dataSource, application)
-        icalListViewModel = ViewModelProvider(this, viewModelFactory).get(IcalListViewModel::class.java)
+        icalListViewModel = ViewModelProvider(this, viewModelFactory)[IcalListViewModel::class.java]
 
         binding.lifecycleOwner = viewLifecycleOwner
 

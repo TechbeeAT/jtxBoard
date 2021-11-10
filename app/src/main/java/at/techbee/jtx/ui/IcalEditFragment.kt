@@ -176,7 +176,7 @@ class IcalEditFragment : Fragment() {
         icalEditViewModel =
             ViewModelProvider(
                 this, viewModelFactory
-            ).get(IcalEditViewModel::class.java)
+            )[IcalEditViewModel::class.java]
 
         binding.model = icalEditViewModel
         binding.lifecycleOwner = viewLifecycleOwner

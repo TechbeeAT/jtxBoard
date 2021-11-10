@@ -115,8 +115,8 @@ class IcalViewFragment : Fragment() {
         // set up view model
         viewModelFactory = IcalViewViewModelFactory(arguments.item2show, dataSource, application)
         icalViewViewModel =
-                ViewModelProvider(
-                        this, viewModelFactory).get(IcalViewViewModel::class.java)
+            ViewModelProvider(
+                this, viewModelFactory)[IcalViewViewModel::class.java]
 
         binding.model = icalViewViewModel
         binding.lifecycleOwner = viewLifecycleOwner

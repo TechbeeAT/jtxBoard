@@ -73,7 +73,7 @@ class IcalFilterFragment : Fragment() {
         icalFilterViewModel =
             ViewModelProvider(
                 this, viewModelFactory
-            ).get(IcalFilterViewModel::class.java)
+            )[IcalFilterViewModel::class.java]
 
         binding.model = icalFilterViewModel
         binding.lifecycleOwner = viewLifecycleOwner
