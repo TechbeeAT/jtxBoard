@@ -344,13 +344,17 @@
     <string name="sync_with_davx5_heading">Sync with DAVx⁵</string>
     <string name="sync_basic_info">jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data.</string>
     <string name="sync_congratulations">Congratulations! :-)</string>
-    <string name="sync_davx5_installed_but_no_collections_found">We have detected DAVx⁵ on your phone. If you haven\'t set up any accounts yet, please follow the instructions on our website:\n\nhttps://jtx.techbee.at/sync-with-davx5</string>
-    <string name="sync_davx5_installed_with_collections_found">We have detected DAVx⁵ on your phone. If you have any troubles or doubts, please check out our website first:\n\nhttps://jtx.techbee.at/sync-with-davx5.\n\nThe following accounts (calendars) are currently synchronised:</string>
+    <string name="sync_davx5_installed_but_no_collections_found">We have detected DAVx⁵ on your phone. If you haven\'t set up any accounts yet, please follow the instructions on our website:</string>
+    <string name="sync_davx5_installed_with_collections_found">We have detected DAVx⁵ on your phone. If you have any troubles or doubts, please check out our website first:</string>
+    <string name="sync_davx5_installed_with_collections_synched_collections">The following accounts (calendars) are currently synchronised:</string>
     <string name="sync_check_out_davx5">Check out DAVx⁵!</string>
-    <string name="sync_davx5_not_found">We have not detected DAVx⁵ on your phone.\nFor more information about the Sync please see: \n\nhttps://jtx.techbee.at/sync-with-davx5\n\nor get DAVx⁵ on</string>
+    <string name="sync_davx5_not_found">We have not detected DAVx⁵ on your phone.\nFor more information about the Sync please see:</string>
+    <string name="sync_davx5_get_davx5_on">or get DAVx⁵ on</string>
     <string name="sync_furhter_info_davx5">For more specific information and further download options check out</string>
     <string name="sync_button_add_account_in_davx5">Add account in DAVx⁵</string>
     <string name="sync_toast_intent_open_davx5_failed">Failed opening DAVx⁵, please open the app manually.</string>
+    <string name="sync_with_davx5_website" translatable="false">https://www.davx5.com/</string>
+    <string name="sync_jtx_sync_website" translatable="false">https://jtx.techbee.at/sync-with-davx5</string>
 
 
 
