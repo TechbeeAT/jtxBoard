@@ -85,7 +85,9 @@
             app:popEnterAnim="@anim/slide_in_right" />
         <action
             android:id="@+id/action_icalViewFragment_to_icalListFragment"
-            app:destination="@id/icalListFragment" />
+            app:destination="@id/icalListFragment"
+            app:popUpTo="@id/icalListFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_icalViewFragment_self"
             app:destination="@id/icalViewFragment"
