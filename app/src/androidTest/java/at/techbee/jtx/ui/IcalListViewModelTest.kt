@@ -347,6 +347,29 @@ class IcalListViewModelTest {
         database.insertRelatedto(Relatedto(icalObjectId = parent, linkedICalObjectId = child2, reltype = Reltype.CHILD.name))
 
         assertEquals(2, icalListViewModel.allSubtasks.value?.size)
+    }
 
+    @Test
+    fun deleteVisible() = runBlockingTest {
+
+        icalListViewModel.iCal4List.observeForever {  }
+
+        val id1 = database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, classification = Classification.PUBLIC.name))
+        val id2 = database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  classification = Classification.PUBLIC.name))
+        val id3 = database.insertICalObject(ICalObject(summary="Task2", module = Module.TODO.name, component = Component.VTODO.name, classification = Classification.PRIVATE.name))
+        val id4 = database.insertICalObject(ICalObject(summary="Task3", module = Module.TODO.name, component = Component.VTODO.name, classification = Classification.PRIVATE.name))
+        val id5 = database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name, classification = Classification.CONFIDENTIAL.name))
+
+        icalListViewModel.searchModule = Module.TODO.name
+        icalListViewModel.searchClassification.add(Classification.PUBLIC)
+        icalListViewModel.updateSearch()
+        assertEquals(2, icalListViewModel.iCal4List.value?.size)
+
+        icalListViewModel.delete(listOf(id1, id2))
+        Thread.sleep(100)
+
+        icalListViewModel.searchClassification.clear()
+        icalListViewModel.updateSearch()
+        assertEquals(3, icalListViewModel.iCal4List.value?.size)
     }
 }
