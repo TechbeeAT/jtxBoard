@@ -298,7 +298,7 @@ class IcalListViewModelTest {
 
     @Test
     fun clearFilter() {
-        icalListViewModel.clearFilter(false)
+        icalListViewModel.clearFilter()
         assertEquals(0, icalListViewModel.searchCategories.size)
         assertEquals(0, icalListViewModel.searchOrganizer.size)
         assertEquals(0, icalListViewModel.searchStatusJournal.size)

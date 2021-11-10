@@ -213,15 +213,14 @@ class IcalListViewModel(
      * Clears all search criteria
      * @param updateSearch if true, the search is updated immediately, if false, only the search criteria is cleared
      */
-    fun clearFilter(updateSearch: Boolean) {
+    fun clearFilter() {
         searchCategories.clear()
         searchOrganizer.clear()
         searchStatusJournal.clear()
         searchStatusTodo.clear()
         searchClassification.clear()
         searchCollection.clear()
-        if(updateSearch)
-            updateSearch()
+        updateSearch()
     }
 
 

@@ -21,6 +21,7 @@ import android.widget.*
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.*
+import at.techbee.jtx.database.StatusTodo
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.databinding.FragmentIcalListItemAttachmentBinding
@@ -55,8 +56,11 @@ class IcalListAdapterHelper {
                 if(subtask == null)
                     return@forEach
 
-                var resetProgress = subtask.percent
-                    ?: 0             // remember progress to be reset if the checkbox is unchecked
+                // if there is a search for statusTodo given, then the subtask is only taken if it is in the given status
+                if(model.searchStatusTodo.isNotEmpty() && !model.searchStatusTodo.contains(StatusTodo.getFromString(subtask.status)))
+                    return@forEach
+
+                var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
 
                 val subtaskBinding = FragmentIcalListItemSubtaskBinding.inflate(
                     LayoutInflater.from(context),

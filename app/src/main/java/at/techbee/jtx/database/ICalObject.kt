@@ -947,6 +947,17 @@ enum class StatusTodo(val stringResource: Int) : Parcelable {
             }
             return set.toSet()
         }
+
+        fun getFromString(string: String): StatusTodo? {
+            when (string) {
+                `NEEDS-ACTION`.name -> return `NEEDS-ACTION`
+                COMPLETED.name -> return COMPLETED
+                `IN-PROCESS`.name -> return `IN-PROCESS`
+                CANCELLED.name -> return CANCELLED
+                else -> return null
+            }
+
+        }
     }
 }
 
