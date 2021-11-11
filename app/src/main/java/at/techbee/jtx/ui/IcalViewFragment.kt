@@ -96,7 +96,7 @@ class IcalViewFragment : Fragment() {
         setHasOptionsMenu(true)
 
         settings = PreferenceManager.getDefaultSharedPreferences(context)
-        val settingMimetype = settings.getString("setting_audio_format", Attachment.FMTTYPE_AUDIO_MP4_AAC)!!
+        val settingMimetype = settings.getString("setting_audio_format", Attachment.FMTTYPE_AUDIO_3GPP) ?: Attachment.FMTTYPE_AUDIO_3GPP
         if(settingMimetype == Attachment.FMTTYPE_AUDIO_MP4_AAC) {
             audioFileExtension = "aac"
             audioOutputFormat = MediaRecorder.OutputFormat.MPEG_4
@@ -135,26 +135,26 @@ class IcalViewFragment : Fragment() {
                         .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
                         .setMessage(getString(R.string.view_recurrence_note_to_original))
                         .setPositiveButton("Continue") { _, _ ->
-                            this.findNavController().navigate(
-                                IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(
-                                    icalViewViewModel.icalEntity.value!!
-                                )
+                            icalViewViewModel.icalEntity.value?.let { entity ->
+                                this.findNavController().navigate(
+                                IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(entity)
                             )
+
+                            }
                         }
                         .setNegativeButton("Go to Original") { _, _ ->
                             this.findNavController().navigate(
-                                IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
-                                    originalId
-                                )
+                                IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(originalId)
                             )
                         }
                         .show()
                 } else {
-                    this.findNavController().navigate(
-                        IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(
-                            icalViewViewModel.icalEntity.value!!
+                    icalViewViewModel.icalEntity.value?.let { entity ->
+                        this.findNavController().navigate(
+                            IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(entity)
                         )
-                    )
+                    }
+
                 }
             }
         })
@@ -195,12 +195,12 @@ class IcalViewFragment : Fragment() {
                         ?: it.property.classification
 
                 val priorityArray = resources.getStringArray(R.array.priority)
-                if (icalViewViewModel.icalEntity.value?.property?.priority != null && icalViewViewModel.icalEntity.value!!.property.priority in 0..9)
+                if (icalViewViewModel.icalEntity.value?.property?.priority != null && icalViewViewModel.icalEntity.value?.property?.priority in 0..9)
                     binding.viewPriorityChip.text =
-                        priorityArray[icalViewViewModel.icalEntity.value!!.property.priority!!]
+                        priorityArray[icalViewViewModel.icalEntity.value?.property?.priority?:0]
 
                 binding.viewCommentsLinearlayout.removeAllViews()
-                icalViewViewModel.icalEntity.value!!.comments?.forEach { comment ->
+                icalViewViewModel.icalEntity.value?.comments?.forEach { comment ->
                     val commentBinding =
                         FragmentIcalViewCommentBinding.inflate(inflater, container, false)
                     commentBinding.viewCommentTextview.text = comment.text
@@ -208,7 +208,7 @@ class IcalViewFragment : Fragment() {
                 }
 
                 binding.viewAttachmentsLinearlayout.removeAllViews()
-                icalViewViewModel.icalEntity.value!!.attachments?.forEach { attachment ->
+                icalViewViewModel.icalEntity.value?.attachments?.forEach { attachment ->
                     val attachmentBinding =
                         FragmentIcalViewAttachmentBinding.inflate(inflater, container, false)
 
@@ -510,7 +510,7 @@ class IcalViewFragment : Fragment() {
                             }
                         }
                     }
-                    .setNegativeButton("Discard") { _, _ ->
+                    .setNegativeButton(R.string.discard) { _, _ ->
                         stopRecording()
                         stopPlaying()
                     }
@@ -855,13 +855,13 @@ class IcalViewFragment : Fragment() {
 
     private fun initialiseSeekBar(seekbar: SeekBar) {
 
-        seekbar.max = player!!.duration
+        seekbar.max = player?.duration ?: 0
 
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed(object: Runnable {
             override fun run() {
                 try {
-                    seekbar.progress = player!!.currentPosition
+                    seekbar.progress = player?.currentPosition ?:0
                     handler.postDelayed(this, 10)
                 } catch (e: Exception) {
                     seekbar.progress = 0
@@ -874,11 +874,11 @@ class IcalViewFragment : Fragment() {
 
         // show Alert Dialog before the item gets really deleted
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(getString(R.string.view_dialog_sure_to_delete_title, icalViewViewModel.icalEntity.value!!.property.summary))
-        builder.setMessage(getString(R.string.view_dialog_sure_to_delete_message, icalViewViewModel.icalEntity.value!!.property.summary))
+        builder.setTitle(getString(R.string.view_dialog_sure_to_delete_title, icalViewViewModel.icalEntity.value?.property?.summary ?: ""))
+        builder.setMessage(getString(R.string.view_dialog_sure_to_delete_message, icalViewViewModel.icalEntity.value?.property?.summary ?: ""))
         builder.setPositiveButton(R.string.delete) { _, _ ->
 
-            val summary = icalViewViewModel.icalEntity.value!!.property.summary
+            val summary = icalViewViewModel.icalEntity.value?.property?.summary ?: ""
 
             val direction = IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment()
             direction.module2show = icalViewViewModel.icalEntity.value?.property?.module

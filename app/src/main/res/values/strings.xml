@@ -240,9 +240,9 @@
 
 
     <string name="edit_dialog_sure_to_delete_title">Delete \"%1$s\"?</string>
-    <string name="edit_dialog_sure_to_discard_title">Discard \"%1$s\"?</string>
+    <string name="edit_dialog_sure_to_discard_title">Discard this entry?</string>
     <string name="edit_dialog_sure_to_delete_message">Are you sure you want to delete \"%1$s\"?</string>
-    <string name="edit_dialog_sure_to_discard_message">Are you sure you want to discard \"%1$s\"?</string>
+    <string name="edit_dialog_sure_to_discard_message">Are you sure you want to discard this entry? This entry will not be saved.</string>
     <string name="edit_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
 
     <string name="edit_validation_errors_detected">Please correct the following validation error(s):</string>

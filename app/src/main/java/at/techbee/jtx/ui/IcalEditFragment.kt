@@ -1447,8 +1447,8 @@ class IcalEditFragment : Fragment() {
 
         // show Alert Dialog before the item gets really deleted
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(getString(R.string.edit_dialog_sure_to_discard_title, icalEditViewModel.iCalObjectUpdated.value?.summary))
-        builder.setMessage(getString(R.string.edit_dialog_sure_to_discard_message, icalEditViewModel.iCalObjectUpdated.value?.summary))
+        builder.setTitle(getString(R.string.edit_dialog_sure_to_discard_title))
+        builder.setMessage(getString(R.string.edit_dialog_sure_to_discard_message))
         builder.setPositiveButton(R.string.discard) { _, _ ->
 
             hideKeyboard()
