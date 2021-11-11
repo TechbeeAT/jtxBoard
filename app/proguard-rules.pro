@@ -1,3 +1,29 @@
+# R8 usage for jtx Board:
+#    shrinking        yes (only in release builds)
+#    optimization     yes (on by R8 defaults)
+#    obfuscation      no (open-source)
+
+-dontobfuscate
+-printusage build/reports/r8-usage.txt
+
+# jtx Board
+-keep class at.techbee.jtx.** { *; }       # all jtx Board code is required
+
+
+# ical4j: keep all iCalendar properties/parameters (used via reflection)
+-keep class net.fortuna.ical4j.** { *; }
+
+# we use enum classes (https://www.guardsquare.com/en/products/proguard/manual/examples#enumerations)
+-keepclassmembers,allowoptimization enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# Great resource with explanations:
+# https://medium.com/androiddevelopers/troubleshooting-proguard-issues-on-android-bce9de4f8a74
+
+# Kept for future reference
+
 # Add project specific ProGuard rules here.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
@@ -12,12 +38,12 @@
 #   public *;
 #}
 
+
+
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
--keepattributes SourceFile,LineNumberTable
+#-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
--renamesourcefileattribute SourceFile
-
-
+#-renamesourcefileattribute SourceFile
