@@ -51,7 +51,6 @@ class IcalListFragment : Fragment() {
     private var linearLayoutManager: LinearLayoutManager? = null
     //private var staggeredGridLayoutManager: StaggeredGridLayoutManager? = null
 
-    //private var icalListAdapter: IcalListAdapter? = null
     private var journalListAdapter: IcalListAdapterJournal? = null
     private var noteListAdapter: IcalListAdapterNote? = null
     private var todoListAdapter: IcalListAdapterTodo? = null
@@ -142,7 +141,6 @@ class IcalListFragment : Fragment() {
         recyclerView?.setHasFixedSize(false)
 
         // create adapter and provide data
-        //icalListAdapter = IcalListAdapter(application.applicationContext, icalListViewModel)
         journalListAdapter = IcalListAdapterJournal(requireContext(), icalListViewModel)
         noteListAdapter = IcalListAdapterNote(requireContext(), icalListViewModel)
         todoListAdapter = IcalListAdapterTodo(requireContext(), icalListViewModel)
@@ -152,8 +150,6 @@ class IcalListFragment : Fragment() {
             Module.NOTE.name -> recyclerView?.adapter = noteListAdapter
             Module.TODO.name -> recyclerView?.adapter = todoListAdapter
         }
-
-        //recyclerView?.adapter = icalListAdapter
 
 
         arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
@@ -184,9 +180,9 @@ class IcalListFragment : Fragment() {
 
             updateMenuVisibilities()
 
-            //TODO: Check if this is still ok here!
-            icalListViewModel.resetFocusItem()              // reset happens only once in a Module, only when the Module get's changed the scrolling would happen again
-            icalListViewModel.focusItemId.value = arguments.item2focus
+            if(icalListViewModel.scrollOnceId != null)
+                scrollOnce()
+
         })
 
         // This observer is needed in order to make sure that the Subtasks are retrieved!
@@ -196,27 +192,14 @@ class IcalListFragment : Fragment() {
         })
 
 
-        // Observe the focus item to scroll automatically to the right position (newly updated or inserted item)
-        icalListViewModel.focusItemId.observe(viewLifecycleOwner, {
-
-            // don't scroll if the item is not set or if scrolling was already done for this Module (this avoids jumping around when the live data with ical-entries changes e.g. through updates or the sync)
-            if (it != null && lastScrolledFocusItemId != it) {
-                val pos = icalListViewModel.getFocusItemPosition()
-                if(pos>0) {
-                    linearLayoutManager!!.scrollToPositionWithOffset(pos,0)   // offset was necessary for descending sorting, this was changed... offset makes the item always appear 20px from the top (instead of recyclerView?.scrollToPosition(pos)   )
-                    //linearLayoutManager!!.smoothScrollToPosition(recyclerView, RecyclerView.State(), pos)
-                    //TODO: Try smoothScrollToPosition again as now the items are sorted ascending
-                    lastScrolledFocusItemId = it
-                }
-            }
-        })
-
         // observe to make sure that it gets updated
         icalListViewModel.allRemoteCollections.observe(viewLifecycleOwner, {
             // check if any accounts were removed, retrieve all DAVx5 Accounts
             val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
             icalListViewModel.removeDeletedAccounts(accounts)
         })
+
+
 
         binding.tablayoutJournalnotestodos.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
@@ -238,10 +221,7 @@ class IcalListFragment : Fragment() {
 
             }
             override fun onTabUnselected(tab: TabLayout.Tab?) { }    // nothing to do
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                lastScrolledFocusItemId = null        // makes the view scroll again when the tab is clicked again
-                icalListViewModel.resetFocusItem()
-            }
+            override fun onTabReselected(tab: TabLayout.Tab?) { }
         })
 
         binding.listBottomBar.setOnMenuItemClickListener { menuitem ->
@@ -406,7 +386,7 @@ class IcalListFragment : Fragment() {
             }
         }
 
-        icalListViewModel.focusItemId.value = arguments.item2focus    // or null
+        icalListViewModel.scrollOnceId = arguments.item2focus    // or null
 
         // activate the right tab according to the searchModule
         when (icalListViewModel.searchModule) {
@@ -459,7 +439,6 @@ class IcalListFragment : Fragment() {
         updateToolbarText()
         icalListViewModel.updateSearch()
         savePrefs()
-        icalListViewModel.resetFocusItem()
 
         when(icalListViewModel.searchModule) {
             Module.JOURNAL.name -> recyclerView?.adapter = journalListAdapter
@@ -562,7 +541,6 @@ class IcalListFragment : Fragment() {
      */
     private fun resetFilter() {
 
-        icalListViewModel.resetFocusItem()
         icalListViewModel.clearFilter()
 
         when (icalListViewModel.searchModule) {
@@ -591,7 +569,6 @@ class IcalListFragment : Fragment() {
     }
 
     private fun goToFilter() {
-        icalListViewModel.resetFocusItem()
 
         this.findNavController().navigate(
             IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
@@ -617,7 +594,6 @@ class IcalListFragment : Fragment() {
 
     private fun applyQuickFilterTodo(statusList: MutableList<StatusTodo>) {
 
-        icalListViewModel.resetFocusItem()
         icalListViewModel.searchStatusTodo = statusList
         applyFilters()
     }
@@ -698,12 +674,29 @@ class IcalListFragment : Fragment() {
                         && cItem.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH)
                         && cItem.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)
             }
-            if (foundItem != null)
-                icalListViewModel.focusItemId.value = foundItem.property.id
+            if (foundItem != null) {
+                icalListViewModel.scrollOnceId = foundItem.property.id
+                scrollOnce()
+            }
         }
 
         datePicker.show(parentFragmentManager, "menu_list_gotodate")
     }
+
+    private fun scrollOnce() {
+
+        icalListViewModel.scrollOnceId?.let { scrollOnceId ->
+            val scrollToItem = icalListViewModel.iCal4List.value?.find { listItem -> listItem.property.id == scrollOnceId }
+            val scrollToItemPos = icalListViewModel.iCal4List.value?.indexOf(scrollToItem)
+
+            scrollToItemPos?.let { pos ->
+                linearLayoutManager?.scrollToPositionWithOffset(pos, 0)
+                icalListViewModel.scrollOnceId = null
+            }
+        }
+
+    }
+
 
     private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || (icalListViewModel.searchModule == Module.JOURNAL.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.NOTE.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.TODO.name && icalListViewModel.searchStatusTodo.isNotEmpty()) || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
 

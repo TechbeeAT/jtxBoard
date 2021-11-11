@@ -518,15 +518,15 @@ class IcalEditFragment : Fragment() {
 
 
                 // return to list view
-                /*
                 val direction =
                     IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
                 direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
                 direction.item2focus = it
-                this.findNavController().navigate(direction)
-                 */
+
+                /*  // ALTERNATVE return to view fragment
                 val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalViewFragment()
                 direction.item2show = it
+                 */
                 this.findNavController().navigate(direction)
             }
             icalEditViewModel.savingClicked.value = false

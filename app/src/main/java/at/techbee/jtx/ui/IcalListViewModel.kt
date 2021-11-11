@@ -23,7 +23,6 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
 
 class IcalListViewModel(
@@ -41,50 +40,20 @@ class IcalListViewModel(
 
     var searchSettingShowSubtasksOfVJOURNALs: Boolean = false
 
-
-    //var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>().apply { postValue(constructQuery()) }
     var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
     var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQuery) {
         database.getIcalObjectWithRelatedto(it)
     }
 
-    // TODO maybe retrieve all subtasks only when subtasks are needed!
+        // TODO maybe retrieve all subtasks only when subtasks are needed!
     val allSubtasks: LiveData<List<ICal4List?>> = database.getAllSubtasks()
-
-    var focusItemId: MutableLiveData<Long?> = MutableLiveData(null)
 
     val allRemoteCollections = database.getAllRemoteCollections()
     val allCollections = database.getAllCollections()
 
     var quickInsertedEntity: MutableLiveData<ICalEntity?> = MutableLiveData<ICalEntity?>().apply { postValue(null) }
+    var scrollOnceId: Long? = null
 
-
-
-    fun getFocusItemPosition(): Int {
-        val focusItem = iCal4List.value?.find { focusItemId.value == it.property.id }
-        return iCal4List.value?.indexOf(focusItem) ?: -1
-    }
-
-    fun resetFocusItem() {
-
-        if(searchModule == Module.NOTE.name) {               // Notes have no default focus item (list scrolls to top by default)
-            focusItemId.value = 0L
-            return
-        } else {
-            val today = Calendar.getInstance()
-            iCal4List.value?.forEach {
-                val itemDate = Calendar.getInstance().apply {
-                    timeInMillis = it.property.dtstart?:0L
-                }
-                if(itemDate.get(Calendar.YEAR) >= today.get(Calendar.YEAR) && itemDate.get(Calendar.DAY_OF_YEAR) >= today.get(Calendar.DAY_OF_YEAR)) {
-                    focusItemId.value = it.property.id
-                    return                                    // return when the first item is found that is in the future (focus item stays set on this one)
-                }
-            }
-        }
-        focusItemId.value = 0L                  // if the list is empty, the focus item would be set to 0L
-
-    }
 
 
     private fun constructQuery(): SimpleSQLiteQuery {
@@ -221,7 +190,7 @@ class IcalListViewModel(
 
 
     /**
-     * Clears all search criteria and updates the search
+     * Clears all search criteria (except for module) and updates the search
      */
     fun clearFilter() {
         searchCategories.clear()
@@ -296,6 +265,7 @@ class IcalListViewModel(
                 database.insertCategory(it)
             }
 
+            scrollOnceId = newId
             quickInsertedEntity.postValue(database.getSync(newId))
         }
     }
