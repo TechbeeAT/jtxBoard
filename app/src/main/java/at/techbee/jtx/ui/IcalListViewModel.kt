@@ -18,6 +18,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
+import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +54,10 @@ class IcalListViewModel(
     var focusItemId: MutableLiveData<Long?> = MutableLiveData(null)
 
     val allRemoteCollections = database.getAllRemoteCollections()
+    val allCollections = database.getAllCollections()
+
+    var quickInsertedEntity: MutableLiveData<ICalEntity?> = MutableLiveData<ICalEntity?>().apply { postValue(null) }
+
 
 
     fun getFocusItemPosition(): Int {
@@ -80,6 +85,7 @@ class IcalListViewModel(
         focusItemId.value = 0L                  // if the list is empty, the focus item would be set to 0L
 
     }
+
 
     private fun constructQuery(): SimpleSQLiteQuery {
 
@@ -195,13 +201,18 @@ class IcalListViewModel(
 
 
 
-        Log.println(Log.INFO, "queryString", queryString)
-        Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
+        //Log.println(Log.INFO, "queryString", queryString)
+        //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
 
 
         return SimpleSQLiteQuery(queryString, args.toArray())
     }
 
+    /**
+     * updates the search by constructing a new query and by posting the
+     * new query in the listQuery variable. This can trigger an
+     * observer in the fragment.
+     */
     fun updateSearch() {
         val newQuery = constructQuery()
         if(listQuery.value != newQuery)
@@ -210,8 +221,7 @@ class IcalListViewModel(
 
 
     /**
-     * Clears all search criteria
-     * @param updateSearch if true, the search is updated immediately, if false, only the search criteria is cleared
+     * Clears all search criteria and updates the search
      */
     fun clearFilter() {
         searchCategories.clear()
@@ -238,6 +248,11 @@ class IcalListViewModel(
 
     }
 
+    /**
+     * This function takes a list of Accounts and checks, if there are any collections that are not in the
+     * account list anymore. In this case the collections of the missing account in the list are also
+     * locally deleted.
+     */
     fun removeDeletedAccounts(allDavx5Accounts: Array<Account>) {
 
         Log.d("checkForDeletedAccounts", "Found accounts: $allDavx5Accounts")
@@ -263,6 +278,25 @@ class IcalListViewModel(
             viewModelScope.launch(Dispatchers.IO) {
                 ICalObject.deleteItemWithChildren(id, database)
             }
+        }
+    }
+
+    /**
+     * Inserts a new icalobject with categories
+     * @param icalObject to be inserted
+     * @param categories the list of categories that should be linked to the icalObject
+     */
+    fun insertQuickItem(icalObject: ICalObject, categories: List<Category>) {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val newId = database.insertICalObject(icalObject)
+
+            categories.forEach {
+                it.icalObjectId = newId
+                database.insertCategory(it)
+            }
+
+            quickInsertedEntity.postValue(database.getSync(newId))
         }
     }
 }

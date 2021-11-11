@@ -17,6 +17,8 @@ import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
 import android.view.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -25,18 +27,22 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import at.techbee.jtx.AdManager
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.FragmentIcalListBinding
+import at.techbee.jtx.databinding.FragmentIcalListQuickaddDialogBinding
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import java.lang.ClassCastException
 import java.util.*
+import java.util.regex.Pattern
 
 
 class IcalListFragment : Fragment() {
@@ -74,6 +80,8 @@ class IcalListFragment : Fragment() {
 
     companion object {
         const val PREFS_LIST_VIEW = "sharedPreferencesListView"
+
+        const val PREFS_LAST_USED_COLLECTION = "lastUsedCollection"
         const val PREFS_MODULE = "prefsModule"
 
         //Journal
@@ -241,9 +249,9 @@ class IcalListFragment : Fragment() {
             when (menuitem.itemId) {
                 R.id.menu_list_bottom_filter -> goToFilter()
                 R.id.menu_list_bottom_clearfilter -> resetFilter()
-                R.id.menu_list_bottom_add_journal -> goToEdit(ICalEntity(ICalObject.createJournal()))
-                R.id.menu_list_bottom_add_note -> goToEdit(ICalEntity(ICalObject.createNote()))
-                R.id.menu_list_bottom_add_todo -> goToEdit(ICalEntity(ICalObject.createTodo()))
+                R.id.menu_list_bottom_quick_journal -> showQuickAddDialog()
+                R.id.menu_list_bottom_quick_note -> showQuickAddDialog()
+                R.id.menu_list_bottom_quick_todo -> showQuickAddDialog()
                 R.id.menu_list_bottom_hide_completed_tasks -> applyQuickFilterTodo(mutableListOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.`IN-PROCESS`))
                 R.id.menu_list_bottom_show_completed_tasks -> applyQuickFilterTodo(mutableListOf())
             }
@@ -301,9 +309,9 @@ class IcalListFragment : Fragment() {
                 optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
                 optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
 
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = false
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = true
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = true
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_journal).isVisible = true
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_note).isVisible = false
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_todo).isVisible = false
 
                 binding.fab.setImageResource(R.drawable.ic_add)
                 binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createJournal())) }
@@ -317,9 +325,9 @@ class IcalListFragment : Fragment() {
                 optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
                 optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
 
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = true
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = false
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = true
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_journal).isVisible = false
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_note).isVisible = true
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_todo).isVisible = false
 
                 binding.fab.setImageResource(R.drawable.ic_add_note)
                 binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createNote())) }
@@ -333,9 +341,9 @@ class IcalListFragment : Fragment() {
                 optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = true
                 optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = true
 
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_journal).isVisible = true
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_note).isVisible = true
-                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_add_todo).isVisible = false
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_journal).isVisible = false
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_note).isVisible = false
+                binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_todo).isVisible = true
 
                 binding.fab.setImageResource(R.drawable.ic_todo_add)
                 binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createTodo())) }
@@ -716,5 +724,151 @@ class IcalListFragment : Fragment() {
             .setNeutralButton(R.string.cancel) { _, _ ->  // nothing to do
             }
             .show()
+    }
+
+
+    /**
+     * This function takes care of the dialog to add a quick journal/note/to-do out of a dialog
+     * The user can add a summary/description and select the collection
+     */
+    private fun showQuickAddDialog() {
+
+        /**
+         * PREPARE DIALOG
+         */
+        val quickAddDialogBinding = FragmentIcalListQuickaddDialogBinding.inflate(layoutInflater)
+
+        val title = when(icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> getString(R.string.menu_list_quick_journal)
+            Module.NOTE.name -> getString(R.string.menu_list_quick_note)
+            Module.TODO.name -> getString(R.string.menu_list_quick_todo)
+            else -> ""
+        }
+        var selectedCollectionPos = 0
+
+
+        /**
+         * Add the observer for the collections
+         */
+        icalListViewModel.allCollections.observe(viewLifecycleOwner) {
+
+            if(it.isEmpty())
+                return@observe
+
+            val allCollectionNames: MutableList<String> = mutableListOf()
+            icalListViewModel.allCollections.value?.forEach { collection ->
+                if(collection.displayName?.isNotEmpty() == true && collection.accountName?.isNotEmpty() == true)
+                    allCollectionNames.add(collection.displayName + " (" + collection.accountName + ")")
+                else
+                    allCollectionNames.add(collection.displayName?: "-")
+            }
+            quickAddDialogBinding.listQuickaddDialogCollectionSpinner.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, allCollectionNames)
+
+            // set the default selection for the spinner.
+            val lastUsedCollectionId = prefs.getLong(PREFS_LAST_USED_COLLECTION, 1L)
+            val lastUsedCollection = icalListViewModel.allCollections.value?.find { colllections -> colllections.collectionId == lastUsedCollectionId }
+            selectedCollectionPos = icalListViewModel.allCollections.value?.indexOf(lastUsedCollection) ?: 0
+            quickAddDialogBinding.listQuickaddDialogCollectionSpinner.setSelection(selectedCollectionPos)
+
+
+            quickAddDialogBinding.listQuickaddDialogCollectionSpinner.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+
+                    override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
+
+                        icalListViewModel.allCollections.removeObservers(viewLifecycleOwner)     // remove the observer, the live data must NOT change the data in the background anymore! (esp. the item positions)
+                        selectedCollectionPos = pos
+
+
+                        // update color of colorbar
+                        try {
+                        icalListViewModel.allCollections.value?.get(pos)?.color.let { color ->
+                            if(color == null)
+                                quickAddDialogBinding.listQuickaddDialogColorbar.visibility = View.INVISIBLE
+                            else {quickAddDialogBinding.listQuickaddDialogColorbar.visibility = View.VISIBLE
+                                quickAddDialogBinding.listQuickaddDialogColorbar.setColorFilter(color)
+                            }
+                        }
+                        } catch (e: IllegalArgumentException) {
+                            //Log.i("Invalid color","Invalid Color cannot be parsed: ${color}")
+                            quickAddDialogBinding.listQuickaddDialogColorbar.visibility = View.INVISIBLE
+                        }
+                    }
+
+                    override fun onNothingSelected(p0: AdapterView<*>?) {}
+                }
+        }
+
+
+        /**
+         * Inner function to handle the creation of a new quick-entry
+         */
+        fun createNewQuickEntry() {
+            val text = quickAddDialogBinding.listQuickaddDialogEdittext.text.toString()
+            var summary: String? = null
+            var description: String? = null
+            text.split(System.lineSeparator(), limit = 2).let {
+                if(it.isNotEmpty())
+                    summary = it[0]
+                if(it.size >= 2)
+                    description = it[1]
+            }
+
+            // extract categories (all words that start with #)
+            val categories = mutableListOf<Category>()
+            val matcher = Pattern.compile("#[a-zA-Z0-9]*").matcher(text)
+            while (matcher.find()) {
+                if(matcher.group().length >= 2)    // hashtag should have at least one character
+                    categories.add(Category(text = matcher.group()))
+            }
+            val newIcalObject = when(icalListViewModel.searchModule) {
+                Module.JOURNAL.name -> ICalObject.createJournal()
+                Module.NOTE.name -> ICalObject.createNote(null)
+                Module.TODO.name -> ICalObject.createTask(null)
+                else -> null
+            }
+            newIcalObject?.let {
+                it.summary = summary
+                it.description = description
+                it.collectionId = icalListViewModel.allCollections.value?.get(selectedCollectionPos)?.collectionId ?: 1L
+
+                prefs.edit().putLong(PREFS_LAST_USED_COLLECTION, it.collectionId).apply()       // save last used collection for next time
+
+                icalListViewModel.insertQuickItem(it, categories)
+                AdManager.showAd(requireActivity())     // don't forget to show an ad if applicable ;-)
+            }
+        }
+
+
+        /**
+         * SHOW DIALOG
+         * The result is taken care of in the observer
+         */
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(title)
+            .setIcon(R.drawable.ic_add_quick)
+            .setView(quickAddDialogBinding.root)
+            .setPositiveButton(R.string.save) { _, _ ->
+                createNewQuickEntry()
+                icalListViewModel.quickInsertedEntity.observe(viewLifecycleOwner) { entity ->
+                    if(entity == null)
+                        return@observe
+                    icalListViewModel.quickInsertedEntity.removeObservers(viewLifecycleOwner)
+                    icalListViewModel.quickInsertedEntity.value = null     // invalidate so that on click on back, the value is empty and doesn't create unexpected behaviour!
+                }
+            }
+            .setNegativeButton(R.string.cancel) { _, _ ->  }
+            .setNeutralButton("Save & edit") { _, _ ->
+                createNewQuickEntry()
+                icalListViewModel.quickInsertedEntity.observe(viewLifecycleOwner) {
+                    if (it == null)
+                        return@observe
+                    icalListViewModel.quickInsertedEntity.removeObservers(viewLifecycleOwner)
+                    icalListViewModel.quickInsertedEntity.value = null      // invalidate so that on click on back, the value is empty and doesn't create unexpected behaviour!
+                    this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(it))
+                }
+            }
+            .show()
+
     }
 }

@@ -127,6 +127,8 @@
     <string name="list_num_comments_contentdesc">Number of comments</string>
     <string name="list_dialog_delete_visible_title">Delete all visible?</string>
     <string name="list_dialog_delete_visible_message">This action deletes all visible entries (%1$d). Are you sure that you want to proceed? This operation cannot be undone!</string>
+    <string name="list_quickadd_dialog_summary_description_hint">Summary/Description</string>
+    <string name="list_quickadd_dialog_summary_description_helper">The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category).</string>
 
 
 
@@ -299,6 +301,9 @@
     <string name="menu_list_add_journal">Add Journal</string>
     <string name="menu_list_add_note">Add Note</string>
     <string name="menu_list_add_todo">Add Todo</string>
+    <string name="menu_list_quick_journal">Quick Journal</string>
+    <string name="menu_list_quick_note">Quick Note</string>
+    <string name="menu_list_quick_todo">Quick Todo</string>
     <string name="menu_list_delete_visible">Delete visible</string>
     <string name="menu_list_todo_show_completed">Show completed</string>
     <string name="menu_list_todo_hide_completed">Hide completed</string>
