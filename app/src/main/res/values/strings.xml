@@ -97,7 +97,6 @@
     <string name="navigation_drawer_news_updates">News &amp; updates</string>
     <string name="navigation_drawer_external_links">External links</string>
     <string name="navigation_drawer_website">Web site</string>
-    <string name="navigation_drawer_manual">Manual</string>
     <string name="navigation_drawer_faq">FAQ</string>
     <string name="navigation_drawer_forums">Help / Forums</string>
     <string name="navigation_drawer_donate">Donate</string>
@@ -185,7 +184,6 @@
     <string name="edit_attachment_button_text">Add attachment</string>
     <string name="edit_take_picture_button_text">Take picture</string>
     <string name="edit_add_link_button_text">Add attachment link</string>
-    <string name="edit_relatedto_hint">Related to …</string>
     <string name="edit_url_hint">URL</string>
     <string name="edit_location_hint">Location</string>
     <string name="edit_fab_save_contentDescription">Save</string>
@@ -207,17 +205,12 @@
     <string name="edit_started_date_hint">Start date</string>
     <string name="edit_started_time_hint">Start time</string>
     <string name="edit_add_time_switch">Add time</string>
-    <string name="edit_show_started_completed_switch">Edit start/completed</string>
     <string name="edit_progress">Progress</string>
     <string name="edit_subtasks_header">Subtasks</string>
     <string name="edit_subtasks_add_hint">Subtask</string>
-    <string name="edit_show_all_switch">Show all</string>
     <string name="edit_contact_header">Contact</string>
     <string name="edit_url_header">URL</string>
     <string name="edit_location_header">Location</string>
-    <string name="edit_due_header">Due</string>
-    <string name="edit_started_header">Start</string>
-    <string name="edit_completed_header">Completed</string>
     <string name="edit_categories_header">Categories</string>
     <string name="edit_attendees_header">Attendees</string>
     <string name="edit_resources_header">Resources</string>
@@ -257,7 +250,6 @@
     <string name="edit_validation_errors_subtask_not_confirmed">A subtask was entered but not confirmed. Please confirm or delete.</string>
     <string name="edit_validation_errors_start_time_not_set">A start date was set but no time entered. Please deactivate the "Add time" switch or add a time.</string>
     <string name="edit_validation_errors_due_time_not_set">A due date was set but no time entered. Please deactivate the "Add time" switch or add a time.</string>
-    <string name="edit_validation_errors_completed_time_not_set">A completed date was set but no time entered. Please deactivate the "Add time" switch or add a time.</string>
     <string name="edit_fragment_app_permission">App Permission</string>
     <string name="edit_fragment_app_permission_message">JTX can suggest Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_title">Unsupported recurrence rule detected!</string>
@@ -346,10 +338,6 @@
 
     <string name="settings_app">App Settings</string>
     <string name="settings_select_mimetype_for_audio">Select Mimetype for audio notes</string>
-    <string name="settings_accept_ads_title">Support app by showing ads</string>
-    <string name="settings_accept_ads_summary">As an alternative to ads you can buy the ad-free option</string>
-    <string name="settings_show_user_consent_title">Show User Consent (GDPR)</string>
-    <string name="settings_show_user_consent_summary">Show User Consent for Ad Settings</string>
 
 
     <string name="sync_with_davx5_heading">Sync with DAVx⁵</string>
