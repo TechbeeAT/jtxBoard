@@ -254,6 +254,9 @@ class IcalEditViewModel(
         iCalObjectUpdated.value!!.dtstamp = System.currentTimeMillis()
         iCalObjectUpdated.value!!.sequence++
 
+        if(iCalObjectUpdated.value!!.duration != null)
+            iCalObjectUpdated.value!!.duration = null     // we make sure that the unsupported duration is set to null, the user was warned before
+
         if (iCalObjectUpdated.value!!.collectionId != 1L)
             iCalObjectUpdated.value!!.dirty = true
 

@@ -277,6 +277,16 @@ class IcalEditFragment : Fragment() {
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
             }
 
+        // notify the user if a duration was detected (currently not supported)
+        if(icalEditViewModel.iCalEntity.property.duration?.isNotEmpty() == true) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.edit_fragment_recur_unsupported_duration_dialog_title))
+                .setMessage(getString(R.string.edit_fragment_recur_unsupported_duration_dialog_message))
+                .setPositiveButton(R.string.ok) { _, _ ->  }
+                .show()
+        }
+
+
         val weekdays = getLocalizedWeekdays()
         binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.text = weekdays[0]
         binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.text = weekdays[1]
