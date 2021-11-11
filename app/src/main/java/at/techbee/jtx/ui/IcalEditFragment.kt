@@ -122,7 +122,6 @@ class IcalEditFragment : Fragment() {
     }
 
 
-    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -534,7 +533,7 @@ class IcalEditFragment : Fragment() {
             binding.editDtstartYear.text = convertLongToYearString(it.dtstart)
             binding.editDtstartTime.text = convertLongToTimeString(it.dtstart)
 
-            binding.editProgressPercent.text = "${it.percent ?: 0} %"
+            binding.editProgressPercent.text = String.format("%.0f%%", it.percent?.toFloat() ?: 0F)
 
             // Set the default value of the priority Chip
             when (it.priority) {
@@ -901,7 +900,7 @@ class IcalEditFragment : Fragment() {
         binding.editProgressSlider.addOnChangeListener { _, value, _ ->
             icalEditViewModel.iCalObjectUpdated.value?.percent = value.toInt()
             binding.editProgressCheckbox.isChecked = value == 100F
-            binding.editProgressPercent.text = "${value.toInt()} %"
+            binding.editProgressPercent.text = String.format("%.0f%%", value)   // takes care of localized representation of percentages (with 0 positions after the comma)
             if (value != 100F)
                 restoreProgress = value.toInt()
 
@@ -1694,11 +1693,9 @@ class IcalEditFragment : Fragment() {
 
         val bindingSubtask = FragmentIcalEditSubtaskBinding.inflate(inflater, container, false)
         bindingSubtask.editSubtaskTextview.text = subtask.summary
-        bindingSubtask.editSubtaskProgressSlider.value =
-            if (subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
-        bindingSubtask.editSubtaskProgressPercent.text = if (subtask.percent?.toFloat() != null)
-            "${subtask.percent!!.toInt()} %"
-        else "0"
+        bindingSubtask.editSubtaskProgressSlider.value = subtask.percent?.toFloat() ?: 0F
+        bindingSubtask.editSubtaskProgressPercent.text = String.format("%.0f%%", subtask.percent?.toFloat() ?: 0F)   // takes care of localized representation of percentages (with 0 positions after the comma)
+
 
         bindingSubtask.editSubtaskProgressCheckbox.isChecked = subtask.percent == 100
 
@@ -1717,7 +1714,7 @@ class IcalEditFragment : Fragment() {
             }
 
             bindingSubtask.editSubtaskProgressCheckbox.isChecked = value == 100F
-            bindingSubtask.editSubtaskProgressPercent.text = "${value.toInt()} %"
+            bindingSubtask.editSubtaskProgressPercent.text = String.format("%.0f%%", value)
             if (value != 100F)
                 restoreProgress = value.toInt()
         }

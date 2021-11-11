@@ -28,7 +28,6 @@
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
     <string name="discard">Discard</string>
-    <string name="number_percent" translatable="false">%1$s \%</string>
 
     <string name="toolbar_text_jtx_board" translatable="false">jtx Board</string>
     <string name="toolbar_text_jtx_board_journals_overview">Journals Overview</string>

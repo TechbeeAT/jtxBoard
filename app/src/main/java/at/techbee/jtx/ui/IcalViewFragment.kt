@@ -669,8 +669,8 @@ class IcalViewFragment : Fragment() {
         if (subtaskCount != null)
             subtaskSummary += " (+${subtaskCount})"
         subtaskBinding.viewSubtaskTextview.text = subtaskSummary
-        subtaskBinding.viewSubtaskProgressSlider.value = if(subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
-        subtaskBinding.viewSubtaskProgressPercent.text = if(subtask.percent?.toFloat() != null) "${subtask.percent!!} %" else "0"
+        subtaskBinding.viewSubtaskProgressSlider.value = subtask.percent?.toFloat() ?: 0F
+        subtaskBinding.viewSubtaskProgressPercent.text = String.format("%.0f%%", subtask.percent?.toFloat() ?: 0F)
         subtaskBinding.viewSubtaskProgressCheckbox.isChecked = subtask.percent == 100
 
         // Instead of implementing here

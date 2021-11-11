@@ -76,10 +76,8 @@ class IcalListAdapterHelper {
                     subtaskSummary += " (+${subtask.numSubtasks})"
 
                 subtaskBinding.listItemSubtaskTextview.text = subtaskSummary
-                subtaskBinding.listItemSubtaskProgressSlider.value =
-                    if (subtask.percent?.toFloat() != null) subtask.percent!!.toFloat() else 0F
-                subtaskBinding.listItemSubtaskProgressPercent.text =
-                    if (subtask.percent?.toFloat() != null) "${subtask.percent!!} %" else "0 %"
+                subtaskBinding.listItemSubtaskProgressSlider.value = subtask.percent?.toFloat() ?: 0F
+                subtaskBinding.listItemSubtaskProgressPercent.text = String.format("%.0f%%", subtask.percent?.toFloat() ?: 0F)
                 subtaskBinding.listItemSubtaskProgressCheckbox.isChecked = subtask.percent == 100
 
                 // Instead of implementing here
