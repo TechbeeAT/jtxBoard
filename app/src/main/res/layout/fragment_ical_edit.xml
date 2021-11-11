@@ -117,6 +117,34 @@
                         tools:tint="#BC0D0D" />
 
 
+                    <ImageView
+                        android:id="@+id/edit_collection_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:visibility="@{model.collectionVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@+id/edit_collection_spinner"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/edit_collection_spinner"
+                        app:srcCompat="@drawable/ic_collection"
+                        tools:ignore="ContentDescription" />
+
+                    <Spinner
+                        android:id="@+id/edit_collection_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:drawableStart="@drawable/ic_collection"
+                        android:drawablePadding="4dp"
+                        android:visibility="@{model.collectionVisible ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/edit_collection_icon"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Collection" />
+
+
+
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/edit_dtstart_day"
                         android:layout_width="80dp"
@@ -173,33 +201,6 @@
                         app:layout_constraintStart_toStartOf="@+id/edit_dtstart_day"
                         app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_year"
                         tools:text="13:30" />
-
-
-                    <ImageView
-                        android:id="@+id/edit_collection_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:visibility="@{model.collectionVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintBottom_toBottomOf="@+id/edit_collection_spinner"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/edit_collection_spinner"
-                        app:srcCompat="@drawable/ic_collection"
-                        tools:ignore="ContentDescription" />
-
-                    <Spinner
-                        android:id="@+id/edit_collection_spinner"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:drawableStart="@drawable/ic_collection"
-                        android:drawablePadding="4dp"
-                        android:visibility="@{model.collectionVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edit_collection_icon"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Collection" />
 
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -287,9 +288,12 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textWebEditText|textMultiLine|textCapSentences"
+                            android:inputType="textWebEditText|textMultiLine|textCapSentences|textImeMultiLine"
                             android:maxLines="8"
                             android:minLines="3"
+                            android:overScrollMode="always"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars="vertical"
                             android:text="@={model.iCalObjectUpdated.description}"
                             tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
                     </com.google.android.material.textfield.TextInputLayout>
