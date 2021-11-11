@@ -315,6 +315,11 @@ class IcalEditViewModel(
                     subtask.lastModified = System.currentTimeMillis()
                     subtask.dirty = true
                     subtask.collectionId = iCalObjectUpdated.value?.collectionId!!
+                    when(subtask.percent) {
+                        in 1..99 -> subtask.status = StatusTodo.`IN-PROCESS`.name
+                        100 -> subtask.status = StatusTodo.COMPLETED.name
+                        else -> subtask.status = StatusTodo.`NEEDS-ACTION`.name
+                    }
                     subtask.id = database.insertSubtask(subtask)
                     Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
 
