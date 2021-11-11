@@ -56,33 +56,6 @@ class IcalListViewModelTest {
     }
 
     @Test
-    fun getFocusItemPosition() = runBlockingTest {
-
-        icalListViewModel.iCal4List.observeForever {  }
-
-        val id1 = database.insertICalObject(ICalObject.createTask("Test1"))
-        database.insertICalObject(ICalObject.createTask("Test2"))
-        database.insertICalObject(ICalObject.createTask("Test3"))
-
-        // default search module is for Journals, we change it and update the search
-        icalListViewModel.searchModule = Module.TODO.name
-        icalListViewModel.updateSearch()
-
-        icalListViewModel.focusItemId.value = id1
-
-        //sorting is descending, the first inserted item will be at the first position (=0)
-        assertEquals(0, icalListViewModel.getFocusItemPosition())
-
-    }
-
-    @Test
-    fun resetFocusItem() {
-        icalListViewModel.resetFocusItem()
-        assertEquals(0L, icalListViewModel.focusItemId.value)
-        assertEquals(-1, icalListViewModel.getFocusItemPosition())
-    }
-
-    @Test
     fun updateSearch() {
         // Basic Test
         val searchBefore = icalListViewModel.listQuery.value
