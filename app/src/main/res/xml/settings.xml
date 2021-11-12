@@ -41,6 +41,13 @@
             app:icon="@drawable/ic_progress_task"
             app:useSimpleSummaryProvider="true"/>
 
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="settings_for_subentries"
+        app:title="@string/settings_group_settings_for_subentries"
+        app:initialExpandedChildrenCount="0">
+
         <SwitchPreference
             app:key="settings_show_progress_for_subtasks_in_list"
             app:defaultValue="true"
@@ -49,10 +56,22 @@
             app:useSimpleSummaryProvider="true"/>
 
         <SwitchPreference
-            app:key="settings_show_subtasks_of_VJOURNALs_in_tasklist"
+            app:key="settings_show_subtasks_of_journals_and_todos_in_tasklist"
             app:defaultValue="false"
-            app:title="@string/settings_show_subtasks_of_VJOURNALs_in_tasklist"
+            app:title="@string/settings_show_subtasks_of_journals_and_todos_in_tasklist"
             app:icon="@drawable/ic_subtasks"
+            app:useSimpleSummaryProvider="true"/>
+
+        <SwitchPreference
+            app:key="settings_show_subnotes_of_journals_and_tasks_in_noteslist"
+            app:defaultValue="false"
+            app:title="@string/settings_show_subnotes_of_journals_and_tasks_in_noteslist"
+            app:useSimpleSummaryProvider="true"/>
+
+        <SwitchPreference
+            app:key="settings_show_subjournals_of_notes_and_tasks_in_journallist"
+            app:defaultValue="false"
+            app:title="@string/settings_show_subjournals_of_notes_and_tasks_in_journallist"
             app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>

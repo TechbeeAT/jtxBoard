@@ -38,7 +38,10 @@ class IcalListViewModel(
     var searchClassification: MutableList<Classification> = mutableListOf()
     var searchCollection: MutableList<String> = mutableListOf()
 
-    var searchSettingShowSubtasksOfVJOURNALs: Boolean = false
+    var searchSettingShowAllSubtasksInTasklist: Boolean = false
+    var searchSettingShowAllSubnotesInNoteslist: Boolean = false
+    var searchSettingShowAllSubjournalsinJournallist: Boolean = false
+
 
     var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
     var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQuery) {
@@ -152,15 +155,31 @@ class IcalListViewModel(
 
         // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
         //queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
-        when {
-            (searchModule == Module.JOURNAL.name || searchModule == Module.NOTE.name) ->
-                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfVJOURNAL = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfVTODO = 0 "
-            (searchModule == Module.TODO.name && !searchSettingShowSubtasksOfVJOURNALs) ->
-                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfVJOURNAL = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfVTODO = 0 "
-            // to make it clearer, if all Subtasks should be shown, then we don't need an additional condition
-            (searchModule == Module.TODO.name && searchSettingShowSubtasksOfVJOURNALs) ->
-                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfVTODO = 0 "
+        when (searchModule) {
+            Module.TODO.name -> {
+                // we exclude all Children of Tasks from the List, as they never should appear as main tasks (they will later be added as subtasks in the observer)
+                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
+
+                // if the user did NOT set the option to see all tasks that are subtasks of Notes and Journals, then we exclude them here as well
+                if (!searchSettingShowAllSubtasksInTasklist)
+                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
+
+            }
+            Module.NOTE.name -> {
+                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
+
+                if (!searchSettingShowAllSubnotesInNoteslist)
+                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
+
+            }
+            Module.JOURNAL.name -> {
+                queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 "
+
+                if (!searchSettingShowAllSubjournalsinJournallist)
+                    queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
+            }
         }
+
 
         when (searchModule) {
             Module.JOURNAL.name -> queryString += "ORDER BY $COLUMN_DTSTART ASC, $COLUMN_CREATED ASC "

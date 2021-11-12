@@ -102,6 +102,11 @@ class IcalListFragment : Fragment() {
         //const val PREFS_TODO_STATUS_JOURNAL = "prefsTodoStatusJournal"
         const val PREFS_TODO_STATUS_TODO = "prefsTodoStatusTodo"
 
+        const val SETTINGS_SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_of_journals_and_todos_in_tasklist"
+        const val SETTINGS_SHOW_SUBNOTES_IN_LIST = "settings_show_subnotes_of_journals_and_tasks_in_noteslist"
+        const val SETTINGS_SHOW_SUBJOURNALS_IN_LIST = "settings_show_subjournals_of_notes_and_tasks_in_journallist"
+
+
         const val TAB_INDEX_JOURNAL = 0
         const val TAB_INDEX_NOTE = 1
         const val TAB_INDEX_TODO = 2
@@ -251,7 +256,10 @@ class IcalListFragment : Fragment() {
 
     override fun onResume() {
 
-        icalListViewModel.searchSettingShowSubtasksOfVJOURNALs = settings?.getBoolean("settings_show_subtasks_of_VJOURNALs_in_tasklist", false) ?: false
+        icalListViewModel.searchSettingShowAllSubtasksInTasklist = settings?.getBoolean(SETTINGS_SHOW_SUBTASKS_IN_LIST, false) ?: false
+        icalListViewModel.searchSettingShowAllSubnotesInNoteslist = settings?.getBoolean(SETTINGS_SHOW_SUBNOTES_IN_LIST, false) ?: false
+        icalListViewModel.searchSettingShowAllSubjournalsinJournallist = settings?.getBoolean(SETTINGS_SHOW_SUBJOURNALS_IN_LIST, false) ?: false
+
         applyFilters()
         updateMenuVisibilities()
         super.onResume()
