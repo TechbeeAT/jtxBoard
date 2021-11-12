@@ -162,6 +162,7 @@ class IcalListFragment : Fragment() {
         icalListViewModel.iCal4List.observe(viewLifecycleOwner, {
 
             binding.listProgressIndicator.visibility = View.GONE
+            updateMenuVisibilities()
 
             // if the hash is the same as before, the list has not changed and we don't continue (such triggers happen regularly when DAVx5 is doing the sync)
             // searchStatusTodo needs special handling, if it was changed (although the basic list might be the same), the subtasks might change and they
