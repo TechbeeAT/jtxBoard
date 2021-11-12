@@ -2183,8 +2183,26 @@ class IcalEditFragment : Fragment() {
             allOccurrencesString += "\n"
         }
 
+        var allExceptionsString = ""
+        getLongListfromCSVString(icalEditViewModel.iCalObjectUpdated.value?.exdate).forEach {
+            allExceptionsString += convertLongToFullDateString(it)
+            if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
+                allExceptionsString += " " + convertLongToTimeString(it)
+            allExceptionsString += "\n"
+        }
+
+        var allAdditionsString = ""
+        getLongListfromCSVString(icalEditViewModel.iCalObjectUpdated.value?.rdate).forEach {
+            allAdditionsString += convertLongToFullDateString(it)
+            if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
+                allAdditionsString += " " + convertLongToTimeString(it)
+            allAdditionsString += "\n"
+        }
+
         binding.editFragmentIcalEditRecur.editRecurLastOccurenceItem.text = lastOccurrenceString
         binding.editFragmentIcalEditRecur.editRecurAllOccurencesItems.text = allOccurrencesString
+        binding.editFragmentIcalEditRecur.editRecurExceptionItems.text = allExceptionsString
+        binding.editFragmentIcalEditRecur.editRecurAdditionsItems.text = allAdditionsString
     }
 
 

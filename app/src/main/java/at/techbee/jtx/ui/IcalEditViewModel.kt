@@ -108,6 +108,9 @@ class IcalEditViewModel(
     var recurrenceGeneralVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceWeekdaysVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceDayOfMonthVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var recurrenceExceptionsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var recurrenceAdditionsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+
 
 
     var duedateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
@@ -234,6 +237,8 @@ class IcalEditViewModel(
         recurrenceGeneralVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false))
         recurrenceWeekdaysVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_WEEK))
         recurrenceDayOfMonthVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_MONTH))
+        recurrenceExceptionsVisible.postValue(selectedTab == TAB_RECURRING && iCalEntity.property.exdate?.isNotEmpty() == true)
+        recurrenceAdditionsVisible.postValue(selectedTab == TAB_RECURRING && iCalEntity.property.rdate?.isNotEmpty() == true)
     }
 
     fun savingClicked() {

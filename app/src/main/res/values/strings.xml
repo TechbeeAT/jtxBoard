@@ -220,6 +220,8 @@
     <string name="edit_attachment_add_link_dialog">Add attachment link</string>
     <string name="edit_recur_last_occurrence">Last occurrence</string>
     <string name="edit_recur_all_occurrences">All occurrences</string>
+    <string name="edit_recur_exceptions">Exceptions</string>
+    <string name="edit_recur_additions">Additions</string>
     <string name="edit_recur_repeat_every_x">Repeat every</string>
     <string name="edit_recur_on_weekday">on</string>
     <string name="edit_recur_on_the_x_day_of_month">on the</string>
