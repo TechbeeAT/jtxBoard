@@ -69,6 +69,9 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var recurrenceLinkedVisible: LiveData<Boolean>
     lateinit var recurrenceGoToOriginalVisible: LiveData<Boolean>
     lateinit var recurrenceIsExceptionVisible: LiveData<Boolean>
+    lateinit var recurrenceExceptionsVisible: LiveData<Boolean>
+    lateinit var recurrenceAdditionsVisible: LiveData<Boolean>
+
 
     lateinit var collectionText: LiveData<String?>
 
@@ -262,6 +265,12 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
             recurrenceIsExceptionVisible = Transformations.map(icalEntity) { item ->
                 return@map (item?.property?.isRecurLinkedInstance == false && item.property.recurOriginalIcalObjectId != null)
+            }
+            recurrenceExceptionsVisible = Transformations.map(icalEntity) { item ->
+                return@map (recurrenceVisible.value == true && item?.property?.exdate?.isNotEmpty() == true)
+            }
+            recurrenceAdditionsVisible = Transformations.map(icalEntity) { item ->
+                return@map (recurrenceVisible.value == true && item?.property?.rdate?.isNotEmpty() == true)
             }
         }
 

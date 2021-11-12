@@ -271,6 +271,24 @@ class IcalViewFragment : Fragment() {
                         )
                     }
                 }
+
+                var allExceptionsString = ""
+                getLongListfromCSVString(it.property.exdate).forEach { exdate ->
+                    allExceptionsString += convertLongToFullDateString(exdate)
+                    if(it.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
+                        allExceptionsString += " " + convertLongToTimeString(exdate)
+                    allExceptionsString += "\n"
+                }
+                binding.viewRecurrenceExceptionItems.text = allExceptionsString
+
+                var allAdditionsString = ""
+                getLongListfromCSVString(it.property.rdate).forEach { rdate ->
+                    allAdditionsString += convertLongToFullDateString(rdate)
+                    if(it.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
+                        allAdditionsString += " " + convertLongToTimeString(rdate)
+                    allAdditionsString += "\n"
+                }
+                binding.viewRecurrenceAdditionsItems.text = allAdditionsString
             }
         })
 

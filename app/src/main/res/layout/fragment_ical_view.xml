@@ -620,7 +620,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_contact" />
 
-
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_recurrence_items"
                     android:layout_width="0dp"
@@ -635,6 +634,66 @@
                     tools:text="Friday, September 24, 2021 1:34 PM\nSaturday, September 25, 2021 1:34 PM\nSunday, September 26, 2021 1:34 PM"
                     />
 
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/view_recurrence_exception_header"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"
+                    android:autoLink="all"
+                    android:textStyle="bold|italic"
+                    android:visibility="@{model.recurrenceExceptionsVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/view_recurrence_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_recurrence_items"
+                    android:text="@string/view_recurrence_exceptions" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/view_recurrence_exception_items"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:autoLink="all"
+                    android:visibility="@{model.recurrenceExceptionsVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/view_recurrence_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_recurrence_exception_header"
+                    tools:text="Friday, September 24, 2021 1:34 PM\nSaturday, September 25, 2021 1:34 PM\nSunday, September 26, 2021 1:34 PM"
+                    />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/view_recurrence_additions_header"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"
+                    android:autoLink="all"
+                    android:textStyle="bold|italic"
+                    android:visibility="@{model.recurrenceAdditionsVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/view_recurrence_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_recurrence_exception_items"
+                    android:text="@string/view_recurrence_additions" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/view_recurrence_additions_items"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:autoLink="all"
+                    android:visibility="@{model.recurrenceAdditionsVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/view_recurrence_header"
+                    app:layout_constraintTop_toBottomOf="@+id/view_recurrence_additions_header"
+                    tools:text="Friday, September 24, 2021 1:34 PM\nSaturday, September 25, 2021 1:34 PM\nSunday, September 26, 2021 1:34 PM"
+                    />
+
+
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_recurrence_note_to_original"
                     android:layout_width="0dp"
@@ -645,7 +704,7 @@
                     android:visibility="@{model.recurrenceLinkedVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/view_recurrence_header"
-                    app:layout_constraintTop_toBottomOf="@+id/view_recurrence_items"
+                    app:layout_constraintTop_toBottomOf="@+id/view_recurrence_additions_items"
                     android:text="@string/view_recurrence_note_to_original" />
 
                 <com.google.android.material.textview.MaterialTextView
