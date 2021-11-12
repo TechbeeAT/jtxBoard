@@ -13,8 +13,6 @@
     <item
         android:id="@+id/menu_list_search"
         android:icon="@drawable/ic_search"
-        android:iconTint="#000000"
-        android:queryHint="Search for keyword or #categories"
         android:title="@string/menu_list_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
@@ -22,7 +20,6 @@
     <item
         android:id="@+id/menu_list_gotodate"
         android:icon="@drawable/ic_date"
-        android:iconTint="#000000"
         android:title="@string/menu_list_gotodate"
         app:showAsAction="ifRoom" />
     <group android:id="@+id/menugroup_filter" >
