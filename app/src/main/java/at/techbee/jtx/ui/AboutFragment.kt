@@ -11,6 +11,8 @@ import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.databinding.FragmentAboutBinding
+import at.techbee.jtx.databinding.FragmentAboutJtxBinding
+import at.techbee.jtx.databinding.FragmentAboutThanksBinding
 import com.google.android.material.tabs.TabLayout
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
@@ -27,6 +29,7 @@ class AboutFragment : Fragment() {
         private const val TAB_POSITION_ABOUT = 0
         private const val TAB_POSITION_LIBRARIES = 1
         private const val TAB_POSITION_TRANSLATIONS = 2
+        private const val TAB_POSITION_THANKS = 3
     }
 
     override fun onCreateView(
@@ -39,9 +42,14 @@ class AboutFragment : Fragment() {
         this.binding = FragmentAboutBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
+        val bindingAboutJtx = FragmentAboutJtxBinding.inflate(inflater, container, false)
+        val bindingAboutThanks = FragmentAboutThanksBinding.inflate(inflater, container, false)
+
+
         //val aboutBinding = FragmentAboutBinding.inflate(inflater, container, false)
-        binding.fragmentAboutApp.aboutAppVersion.text = getString(R.string.about_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
-        binding.fragmentAboutApp.aboutAppBuildTime.text = getString(R.string.about_app_build_date, SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime))
+        bindingAboutJtx.aboutAppVersion.text = getString(R.string.about_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+        bindingAboutJtx.aboutAppBuildTime.text = getString(R.string.about_app_build_date, SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime))
+
 
         // get the fragment for the about library
         val aboutLibrariesFragment = LibsBuilder()
@@ -53,32 +61,26 @@ class AboutFragment : Fragment() {
             .withLibraryModification("org_brotli__dec", Libs.LibraryFields.AUTHOR_NAME, "Google")
             .supportFragment()
 
-        // add the about library fragment to the container view
+        // make sure that aboutLibrariesFragment can provide the view
         parentFragmentManager.beginTransaction()
-            .add(binding.fragmentAboutLibrariesContainerView.id, aboutLibrariesFragment)
+            .add(aboutLibrariesFragment, null)
             .commit()
+
+
+        binding.aboutTablayout.getTabAt(TAB_POSITION_TRANSLATIONS)?.view?.visibility = View.GONE
 
         binding.aboutTablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
+                binding.aboutLinearlayout.removeAllViews()
+
                 when (tab?.position) {
-                    TAB_POSITION_ABOUT -> {
-                        binding.fragmentAboutApp.aboutAppScrollview.visibility = View.VISIBLE
-                        binding.fragmentAboutLibrariesContainerView.visibility = View.INVISIBLE
-                    }
-                    TAB_POSITION_TRANSLATIONS -> {
-                        binding.fragmentAboutApp.aboutAppScrollview.visibility = View.INVISIBLE
-                        binding.fragmentAboutLibrariesContainerView.visibility = View.INVISIBLE
-                    } // TODO: replace with translations
-                    TAB_POSITION_LIBRARIES -> {
-                        binding.fragmentAboutApp.aboutAppScrollview.visibility = View.INVISIBLE
-                        binding.fragmentAboutLibrariesContainerView.visibility = View.VISIBLE
-                    }
-                    else -> {
-                        binding.fragmentAboutApp.aboutAppScrollview.visibility = View.INVISIBLE
-                        binding.fragmentAboutLibrariesContainerView.visibility = View.INVISIBLE
-                    }
+                    TAB_POSITION_ABOUT -> binding.aboutLinearlayout.addView(bindingAboutJtx.root)
+                    //TAB_POSITION_TRANSLATIONS -> null // TODO: replace with translations
+                    TAB_POSITION_LIBRARIES -> binding.aboutLinearlayout.addView(aboutLibrariesFragment.requireView())
+                    TAB_POSITION_THANKS -> binding.aboutLinearlayout.addView(bindingAboutThanks.root)
+                    else -> binding.aboutLinearlayout.addView(bindingAboutJtx.root)
                 }
             }
 

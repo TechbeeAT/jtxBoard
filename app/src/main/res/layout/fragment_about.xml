@@ -23,35 +23,34 @@
             android:layout_height="wrap_content"
             android:text="@string/about_tabitem_libraries" />
 
-        <!--
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/about_tabitem_translations" />
-            -->
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_tabitem_thanks" />
+
     </com.google.android.material.tabs.TabLayout>
 
-
-    <include
-        android:id="@+id/fragment_about_app"
-        layout="@layout/fragment_about_jtx"
+    <LinearLayout
+        android:id="@+id/about_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/about_tablayout" />
+        app:layout_constraintTop_toBottomOf="@id/about_tablayout"
+        app:layout_constraintBottom_toBottomOf="parent">
 
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_about_libraries_container_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/about_tablayout" />
+        <include
+            layout="@layout/fragment_about_jtx"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

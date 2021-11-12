@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:id="@+id/about_app_scrollview"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/about_thanks_ffg_logo"
+            android:layout_width="240dp"
+            android:layout_height="128dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/logo_ffg"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/about_thanks_ffg_text"
+            android:layout_width="match_parent"
+            android:padding="8dp"
+            android:layout_height="wrap_content"
+            android:text="@string/about_thanks_ffg"
+            android:textAlignment="center" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/about_thanks_ffg_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            android:text="https://www.ffg.at/"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+</ScrollView>
