@@ -654,10 +654,30 @@ data class ICalObject(
             else -> StatusTodo.`NEEDS-ACTION`.name      // should never happen!
         }
         lastModified = System.currentTimeMillis()
-        if (dtstart == null && percent != null && percent!! > 0)
-            dtstart = System.currentTimeMillis()
-        /* if (dtend == null && percent != null && percent!! == 100)
-            dtend = System.currentTimeMillis() */
+
+        /** We set the dtstart if it was not set yet, but it MUST have the same
+         * format as due (DATE ie. TZ_ALLDAY or DATE-TIME). Additionally the
+         * dtstart date must be BEFORE the due-date
+         */
+        /*
+        if (dtstart == null && percent != null && percent!! > 0) {
+            when {
+                due == null -> {
+                    dtstart = System.currentTimeMillis()
+                    dtstartTimezone = TZ_ALLDAY
+                }
+                due!! <= System.currentTimeMillis() -> {
+                    dtstart = due
+                    dtstartTimezone = dueTimezone
+                }
+                due!! > System.currentTimeMillis() -> {
+                    dtstart = System.currentTimeMillis()
+                    dtstartTimezone = dueTimezone
+                }
+            }
+        }
+         */
+
         if (completed == null && percent != null && percent!! == 100)
             completed = System.currentTimeMillis()
 
