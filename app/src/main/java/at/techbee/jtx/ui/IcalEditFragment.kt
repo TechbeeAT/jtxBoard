@@ -1612,26 +1612,27 @@ class IcalEditFragment : Fragment() {
             updatedText.setText(comment.text)
             updatedText.isSingleLine = false
             updatedText.maxLines = 8
+            updatedText.contentDescription = getString(R.string.edit_comment_add_dialog_hint)
 
             // set up the builder for the AlertDialog
             val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Edit comment")
+            builder.setTitle(R.string.edit_comment_add_dialog_hint)
             builder.setIcon(R.drawable.ic_comment_add)
             builder.setView(updatedText)
 
 
-            builder.setPositiveButton("Save") { _, _ ->
+            builder.setPositiveButton(R.string.save) { _, _ ->
                 // update the comment
                 val updatedComment = comment.copy()
                 updatedComment.text = updatedText.text.toString()
                 icalEditViewModel.commentUpdated.add(updatedComment)
                 bindingComment.editCommentTextview.text = updatedComment.text
             }
-            builder.setNegativeButton("Cancel") { _, _ ->
+            builder.setNegativeButton(R.string.cancel) { _, _ ->
                 // Do nothing, just close the message
             }
 
-            builder.setNeutralButton("Delete") { _, _ ->
+            builder.setNeutralButton(R.string.delete) { _, _ ->
                 icalEditViewModel.commentUpdated.remove(comment)
                 bindingComment.root.visibility = View.GONE
             }
