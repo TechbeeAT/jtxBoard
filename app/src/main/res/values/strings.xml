@@ -286,7 +286,7 @@
     <string name="about_app_build_date">Compiled on %s</string>
     <string name="about_app_copyright" translatable="false">© TECHBEE apps &amp; consulting</string>
     <string name="about_app_techbee_link" translatable="false">https://techbee.at</string>
-    <string name="about_thanks_ffg">Special thanks to FFG for their trust and financial support to realise this project.</string>
+    <string name="about_thanks_ffg">Special thanks to FFG for their trust and financial support to realize this project.</string>
 
 
 

@@ -33,13 +33,6 @@
         <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense</item>
         <item name="textInputFilledExposedDropdownMenuStyle">@style/jtx.ExposedDropdownMenu</item>
 
-        <!-- custom font -->
-        <item name="fontFamily">@font/montserrat_alternates</item>
-
-
-    </style>
-
-    <style name="jtx.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
     </style>
 
 </resources>

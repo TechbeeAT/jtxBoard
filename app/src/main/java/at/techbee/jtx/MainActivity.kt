@@ -77,7 +77,9 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
         // Set up the toolbar with the navigation drawer
         toolbar = findViewById(R.id.topAppBar)
-        setToolbarTitle("Board", null)
+        //setToolbarTitle("Board", null)
+        toolbar.setTitleTextAppearance(this, R.style.jtx_MontserratFont)
+        toolbar.setSubtitleTextAppearance(this, R.style.jtx_MontserratFont)
 
         setSupportActionBar(toolbar)
 

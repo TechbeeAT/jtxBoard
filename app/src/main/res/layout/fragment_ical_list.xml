@@ -34,7 +34,8 @@
                     android:id="@+id/tablayout_journalnotestodos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:tabMode="fixed">
+                    app:tabMode="fixed"
+                    app:tabTextAppearance="@style/jtx.TabLabel">
 
                     <com.google.android.material.tabs.TabItem
                         android:id="@+id/journals_tab"
