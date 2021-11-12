@@ -102,7 +102,8 @@
         <action
             android:id="@+id/action_icalEditFragment_to_icalListFragment"
             app:destination="@id/icalListFragment"
-            app:popUpTo="@id/icalListFragment" />
+            app:popUpTo="@id/icalListFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="icalentity"
             app:argType="at.techbee.jtx.database.relations.ICalEntity" />
@@ -119,7 +120,8 @@
         <action
             android:id="@+id/action_icalFilterFragment_to_icalListFragment"
             app:destination="@id/icalListFragment"
-            app:popUpTo="@id/icalListFragment" />
+            app:popUpTo="@id/icalListFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="category2preselect"
             android:defaultValue="@null"
