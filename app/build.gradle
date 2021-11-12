@@ -64,10 +64,10 @@ android {
 
     flavorDimensions 'version'
     productFlavors {
-        googleplay {
+        gplay {
             dimension 'version'
             //applicationIdSuffix '.googleplay'
-            versionNameSuffix '-googleplay'
+            versionNameSuffix '-gplay'
         }
         ose {
             dimension 'version'

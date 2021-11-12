@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
         const val BUILD_FLAVOR_ALPHA = "alphatest"
         const val BUILD_FLAVOR_OSE = "ose"
-        const val BUILD_FLAVOR_GOOGLEPLAY = "googleplay"
+        const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
         const val BUILD_FLAVOR_GLOBAL = "global"
     }
 
