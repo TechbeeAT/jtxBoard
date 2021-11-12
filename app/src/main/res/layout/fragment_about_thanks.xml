@@ -16,10 +16,13 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/about_thanks_ffg_logo"
-            android:layout_width="240dp"
-            android:layout_height="128dp"
+            android:layout_width="300dp"
+            android:layout_height="145dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="#FFFFFF"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/logo_ffg"/>
+            app:srcCompat="@drawable/logo_ffg" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/about_thanks_ffg_text"
