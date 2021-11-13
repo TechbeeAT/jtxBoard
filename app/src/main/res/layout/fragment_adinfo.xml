@@ -47,8 +47,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                android:text="@string/adinfo_show_user_consent"
-                android:visibility="gone"
+                android:text="@string/adinfo_reset_user_consent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/adinfo_text" />
@@ -78,7 +77,9 @@
                 android:focusable="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/adinfo_adfree_text">
+                app:layout_constraintTop_toBottomOf="@id/adinfo_adfree_text"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -136,7 +137,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>
-
 
 
             <com.google.android.material.card.MaterialCardView

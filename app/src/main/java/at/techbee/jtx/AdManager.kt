@@ -15,11 +15,11 @@ class AdManager {
 
     companion object {
 
-        const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/5354046379"
-        const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_PROD = "ca-app-pub-4426141011962540/2723893422"
+        private const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/5354046379"
+        private const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_PROD = "ca-app-pub-5573084047491645/3240430994"
 
-        const val ONE_WEEK_IN_MILLIS = 604800000L  // = one week
-        const val FIVE_MIN_IN_MILLIS = 300000L     // = 5 min
+        private const val ONE_WEEK_IN_MILLIS = 604800000L  // = one week
+        private const val FIVE_MIN_IN_MILLIS = 300000L     // = 5 min
 
         private val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL = if(BuildConfig.DEBUG)
             ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST
@@ -131,24 +131,23 @@ class AdManager {
 
         fun initializeUserConsent(activity: Activity, context: Context) {
 
-            /*
             val debugSettings = ConsentDebugSettings.Builder(context)
                 .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
                 //.addTestDeviceHashedId("TEST-DEVICE-HASHED-ID")
+                .addTestDeviceHashedId("C4E10B8B06DB3B7287C2097746D070C4")
                 .build()
-             */
-
 
             // Set tag for underage of consent. false means users are not underage.
-            val params = ConsentRequestParameters.Builder()
-                .setTagForUnderAgeOfConsent(false)
-                //.setConsentDebugSettings(debugSettings)      // only for testing, TODO: remove for production!
-                .build()
+            val consentParams = ConsentRequestParameters.Builder().apply {
+                this.setTagForUnderAgeOfConsent(false)
+                if(BuildConfig.DEBUG)
+                    this.setConsentDebugSettings(debugSettings)    // set Geography to EEA for DEBUG builds
+            }.build()
 
             val consentInformation = UserMessagingPlatform.getConsentInformation(context)
             consentInformation.requestConsentInfoUpdate(
                 activity,
-                params,
+                consentParams,
                 {
                     // The consent information state was updated.
                     // You are now ready to check if a form is available.
@@ -192,12 +191,12 @@ class AdManager {
             }
         }
 
+
         fun resetUserConsent(activity: Activity, context: Context) {
 
-            consentForm?.show(activity) {
-                //Handle dismissal by reloading form
-                loadForm(activity, context, consentInformation!!)
-            }
+            // TODO: Not sure if this is correct here. This should be reviewed at again, but for now it is working.
+            consentInformation?.reset()
+            initializeUserConsent(activity, context)
         }
 
 
