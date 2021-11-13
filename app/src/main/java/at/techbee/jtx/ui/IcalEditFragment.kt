@@ -793,28 +793,7 @@ class IcalEditFragment : Fragment() {
         })
 
 
-        binding.editDtstartTime.setOnClickListener {
-            showDatePicker(
-                icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
-                TAG_PICKER_DTSTART
-            )
-        }
-
-        binding.editDtstartYear.setOnClickListener {
-            showDatePicker(
-                icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
-                TAG_PICKER_DTSTART
-            )
-        }
-
-        binding.editDtstartMonth.setOnClickListener {
-            showDatePicker(
-                icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
-                TAG_PICKER_DTSTART
-            )
-        }
-
-        binding.editDtstartDay.setOnClickListener {
+        binding.editDtstartCard.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
                 TAG_PICKER_DTSTART

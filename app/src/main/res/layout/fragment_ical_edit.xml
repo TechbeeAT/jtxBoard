@@ -143,65 +143,79 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Collection" />
 
-
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/edit_dtstart_day"
-                        android:layout_width="80dp"
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/edit_dtstart_card"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{UtilKt.convertLongToDayString(model.iCalObjectUpdated.dtstart)}"
-                        android:textAlignment="center"
-                        android:textSize="36sp"
-                        android:textStyle="bold"
-                        android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/edit_collection_spinner"
-                        tools:text="31" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/edit_dtstart_month"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:text="@{UtilKt.convertLongToMonthString(model.iCalObjectUpdated.dtstart)}"
-                        android:textAlignment="center"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_day"
-                        tools:text="December" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/edit_dtstart_year"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:text="@{UtilKt.convertLongToYearString(model.iCalObjectUpdated.dtstart)}"
-                        android:textAlignment="center"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
+                        android:layout_marginStart="8dp"
                         android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
-                        app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_month"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:text="2020" />
+                        app:layout_constraintTop_toBottomOf="@id/edit_collection_spinner">
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/edit_dtstart_time"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:text="@{UtilKt.convertLongToTimeString(model.iCalObjectUpdated.dtstart)}"
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
-                        app:layout_constraintStart_toStartOf="@+id/edit_dtstart_day"
-                        app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_year"
-                        tools:text="13:30" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:paddingBottom="8dp">
 
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/edit_dtstart_day"
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:text="@{UtilKt.convertLongToDayString(model.iCalObjectUpdated.dtstart)}"
+                                android:textAlignment="center"
+                                android:textSize="36sp"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/edit_collection_spinner"
+                                tools:text="31" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/edit_dtstart_month"
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:text="@{UtilKt.convertLongToMonthString(model.iCalObjectUpdated.dtstart)}"
+                                android:textAlignment="center"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_day"
+                                tools:text="December" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/edit_dtstart_year"
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:text="@{UtilKt.convertLongToYearString(model.iCalObjectUpdated.dtstart)}"
+                                android:textAlignment="center"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
+                                app:layout_constraintEnd_toEndOf="@+id/edit_dtstart_day"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_month"
+                                app:layout_constraintVertical_bias="0.0"
+                                tools:text="2020" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/edit_dtstart_time"
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:text="@{UtilKt.convertLongToTimeString(model.iCalObjectUpdated.dtstart)}"
+                                android:textAlignment="center"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
+                                app:layout_constraintBottom_toTopOf="@id/edit_top_barrier"
+                                app:layout_constraintStart_toStartOf="@+id/edit_dtstart_day"
+                                app:layout_constraintTop_toBottomOf="@+id/edit_dtstart_year"
+                                tools:text="13:30" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/edit_all_day_switch"
@@ -211,8 +225,8 @@
                         android:checked="@={model.allDayChecked}"
                         android:text="@string/edit_all_day"
                         android:visibility="@{model.alldayVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
-                        app:layout_constraintTop_toTopOf="@+id/edit_dtstart_day"
+                        app:layout_constraintStart_toEndOf="@+id/edit_dtstart_card"
+                        app:layout_constraintTop_toTopOf="@+id/edit_dtstart_card"
                         app:switchPadding="8dp" />
 
                     <ImageView
@@ -280,7 +294,7 @@
                         android:hint="@string/edit_description_hint"
                         android:visibility="@{model.descriptionVisible ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@+id/edit_summary_edit"
-                        app:layout_constraintStart_toEndOf="@+id/edit_dtstart_day"
+                        app:layout_constraintStart_toEndOf="@+id/edit_dtstart_card"
                         app:layout_constraintStart_toStartOf="@+id/edit_summary_edit"
                         app:layout_constraintTop_toBottomOf="@+id/edit_summary_edit">
 
