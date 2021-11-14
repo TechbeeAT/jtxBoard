@@ -76,7 +76,7 @@
             android:autoLink="web"
             android:gravity="center_vertical"
             android:minHeight="48dp"
-            android:text="@string/about_app_techbee_link"
+            android:text="@string/link_techbee"
             android:textSize="20sp" />
 
         <com.google.android.material.textview.MaterialTextView

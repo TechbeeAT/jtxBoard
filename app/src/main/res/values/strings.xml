@@ -13,6 +13,18 @@
     <string name="app_permission_label">jtx Board sync Journals, Notes &amp; Tasks</string>
     <string name="app_permission_desc">sync jtx Board content with other applications like DAVx⁵</string>
 
+    <string name="link_techbee" translatable="false">https://techbee.at</string>
+    <string name="link_davx5" translatable="false">https://www.davx5.com/</string>
+    <string name="link_jtx" translatable="false">https://jtx.techbee.at</string>
+    <string name="link_jtx_sync" translatable="false">https://jtx.techbee.at/sync-with-davx5</string>
+    <string name="link_jtx_forums" translatable="false">https://forums.bitfire.at/category/30/jtx-board</string>
+    <string name="link_jtx_faq" translatable="false">https://jtx.techbee.at/faq</string>
+    <string name="link_jtx_privacy_policy" translatable="false">https://jtx.techbee.at/privacy</string>
+    <string name="link_jtx_twitter" translatable="false">https://twitter.com/jtxBoard</string>
+    <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
+    <string name="link_ffg">https://www.ffg.at</string>
+
+
 
     <!-- Possible audio formats for settings -->
     <array name="settings_audio_formats">
@@ -286,9 +298,7 @@
     <string name="about_app_version">Version %1$s (%2$d)</string>
     <string name="about_app_build_date">Compiled on %s</string>
     <string name="about_app_copyright" translatable="false">© TECHBEE apps &amp; consulting</string>
-    <string name="about_app_techbee_link" translatable="false">https://techbee.at</string>
     <string name="about_thanks_ffg">Special thanks to FFG for their trust and financial support to realize this project.</string>
-
 
 
     <!-- menus -->
@@ -364,9 +374,6 @@
     <string name="sync_furhter_info_davx5">For more information about DAVx⁵ please check out</string>
     <string name="sync_button_add_account_in_davx5">Add account in DAVx⁵</string>
     <string name="sync_toast_intent_open_davx5_failed">Failed opening DAVx⁵, please open the app manually.</string>
-    <string name="sync_with_davx5_website" translatable="false">https://www.davx5.com/</string>
-    <string name="sync_jtx_sync_website" translatable="false">https://jtx.techbee.at/sync-with-davx5</string>
-
 
 
     <string name="attachment_error_on_retrieving_file">Failed to retrieve file.</string>

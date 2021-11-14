@@ -225,20 +225,19 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                         .navigate(R.id.action_global_settingsFragment)
 
                 R.id.nav_twitter ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://techbee.at")))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_twitter))))
 
                 R.id.nav_website ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://jtx.techbee.at")))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx))))
 
                 R.id.nav_faq ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://jtx.techbee.at")))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_faq))))
 
                 R.id.nav_forums ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
-
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_forums))))
 
                 R.id.nav_privacy ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bitfire.at")))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_privacy_policy))))
             }
             true
         }
