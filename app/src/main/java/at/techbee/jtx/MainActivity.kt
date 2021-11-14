@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         }
 
         // check if flavor is ad-Flavor and if ads should be shown
-        if(isFlavorAdEnabled() && AdManager.isAdShowtime(this)) {
+        if(isAdEnabled() && AdManager.isAdShowtime(this)) {
 
             if (!AdManager.isAdsAccepted(this)) {   // show a dialog if ads were not accepted yet
 
@@ -311,8 +311,8 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     }
 
 
-    private fun isFlavorAdEnabled(): Boolean  =
-        (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isPurchased())
+    private fun isAdEnabled(): Boolean  =
+        (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased())
             || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA
                 || BuildConfig.FLAVOR == BUILD_FLAVOR_GLOBAL
 

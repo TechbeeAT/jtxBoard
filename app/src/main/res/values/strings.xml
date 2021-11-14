@@ -386,10 +386,16 @@
     <string name="adinfo_adfree_purchase_description_thankyou">Ads are now removed from the app. If you like this app and you would like to support the continuous development, please also consider the subscription.</string>
     <string name="adinfo_adfree_subscribe_header">Upgrade to jtx Board Ad-free Subscription</string>
     <string name="adinfo_adfree_subscribe_description">The subscription removes the recurring ads from this app and additionally you support the continuous development of this app.</string>
-    <string name="adinfo_adfree_subscribe_header_thankyou">Thank you for buying the jtx Board Ad-free Subscription</string>
-    <string name="adinfo_adfree_subscribe_description_thankyou">Ads are now removed from the ad and upcoming features will automatically be enabled. Your subscription is a major contribution to keeping this project running!</string>
-    <string name="adinfo_adfree_subscribe_yearly">Yearly</string>
-    <string name="adinfo_reset_user_consent">Reset user consent</string>
+    <string name="adinfo_adfree_subscribe_success_header">Thank you for buying the jtx Board Ad-free Subscription</string>
+    <string name="adinfo_adfree_subscribe_success_description">Ads are now removed from the app. Thank you for your contribution to keep this project alive!</string>
+    <string name="adinfo_adfree_subscribe_success_thankyou">Thank you!</string>
+    <string name="adinfo_adfree_subscribe_quarterly">Quarterly</string>
+    <string name="adinfo_button_reset_user_consent">Reset user consent</string>
+    <string name="adinfo_button_manage_subscriptions">Manage subscription</string>
+    <string name="adinfo_adfree_subscribe_purchase_date">Purchased on %1$s</string>
+    <string name="adinfo_adfree_subscribe_order_id">Order ID: %1$s</string>
+
+
 
 
 </resources>

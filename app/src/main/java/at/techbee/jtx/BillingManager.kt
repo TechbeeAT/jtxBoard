@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.MutableLiveData
 import com.android.billingclient.api.*
 import kotlinx.coroutines.*
 
@@ -15,16 +16,18 @@ class BillingManager :
     companion object {
 
         private var billingClient: BillingClient? = null
-        var adfreeSkuDetails: SkuDetails? = null
-        var adfreeSubSkuDetails: SkuDetails? = null
-        private const val IN_APP_PRODUCT_ADFREE = "adfree"
-        private const val IN_APP_PRODUCT_ADFREE_SUBSCRIPTION = "adfreesub"
+        //var adfreeOneTimeSkuDetails: MutableLiveData<SkuDetails?> = MutableLiveData<SkuDetails?>(null)
+        var adfreeSubscriptionSkuDetails: MutableLiveData<SkuDetails?> = MutableLiveData<SkuDetails?>(null)
+        //var adfreeOneTimePurchase: MutableLiveData<Purchase?> = MutableLiveData<Purchase?>(null)
+        var adfreeSubscriptionPurchase: MutableLiveData<Purchase?> = MutableLiveData<Purchase?>(null)
+        //private const val IN_APP_PRODUCT_ONETIME = "adfree"
+        private const val IN_APP_PRODUCT_SUBSCRIPTION = "jtx_adfree_sub_quarterly"
 
 
         private var billingPrefs: SharedPreferences? = null
         private const val PREFS_BILLING = "sharedPreferencesBilling"
-        private const val PREFS_BILLING_ADFREE_PURCHASE_STATE = "prefsBillingAdfreePurchaseState"
-        private const val PREFS_BILLING_ADFREESUB_PURCHASE_STATE = "prefsBillingAdfreeSubPurchaseState"
+        //private const val PREFS_BILLING_ONETIME_PURCHASE_STATE = "prefsBillingOneTimePurchaseState"
+        private const val PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE = "prefsBillingSubscriptionPurchaseState"
 
 
         private val purchasesUpdatedListener =
@@ -56,7 +59,8 @@ class BillingManager :
         fun initialise(activity: Activity) {
 
             // initialisation is done already, just return and do nothing
-            if(billingClient != null && adfreeSkuDetails != null && adfreeSubSkuDetails != null) {
+            //if(billingClient != null && adfreeOneTimeSkuDetails.value != null && adfreeSubscriptionSkuDetails.value != null) {
+            if(billingClient != null && adfreeSubscriptionSkuDetails.value != null) {
                 // if everything is initialised we doublecheck if we missed a purchase and update it if necessary
                 updatePurchases()
                 return
@@ -81,9 +85,6 @@ class BillingManager :
                         CoroutineScope(Dispatchers.IO).launch {
                             querySkuDetails()
                         }
-
-                        // once everything is initialised we doublecheck if we missed a purchase and update it if necessary
-                        updatePurchases()
                     }
                 }
 
@@ -105,10 +106,9 @@ class BillingManager :
         private suspend fun querySkuDetails() {
 
             //query one-time payments
-            val skuList = ArrayList<String>()
-            skuList.add(IN_APP_PRODUCT_ADFREE)
+            /*
             val params = SkuDetailsParams.newBuilder().apply {
-                this.setSkusList(arrayListOf(IN_APP_PRODUCT_ADFREE))
+                this.setSkusList(arrayListOf(IN_APP_PRODUCT_ONETIME))
                 this.setType(BillingClient.SkuType.INAPP)
             }.build()
 
@@ -116,26 +116,29 @@ class BillingManager :
                 Log.d("Billing Client", "Querying products")
                 val queryResult = billingClient?.querySkuDetails(params)
                 queryResult?.skuDetailsList?.forEach {
-                    if(it.sku == IN_APP_PRODUCT_ADFREE)
-                        adfreeSkuDetails = it
+                    if(it.sku == IN_APP_PRODUCT_ONETIME)
+                        adfreeOneTimeSkuDetails.postValue(it)
                 }
+                // once everything is initialised we doublecheck if we missed a purchase and update it if necessary
+                updatePurchases()
             }
+             */
 
             // now query subscriptions
-            val skuListSub = ArrayList<String>()
-            skuListSub.add(IN_APP_PRODUCT_ADFREE)
             val paramsSub = SkuDetailsParams.newBuilder().apply {
-                this.setSkusList(arrayListOf(IN_APP_PRODUCT_ADFREE_SUBSCRIPTION))
+                this.setSkusList(arrayListOf(IN_APP_PRODUCT_SUBSCRIPTION))
                 this.setType(BillingClient.SkuType.SUBS)
             }.build()
 
             withContext(Dispatchers.IO) {
-                Log.d("Billing Client", "Querying subscriptions")
+                //Log.d("Billing Client", "Querying subscriptions")
                 val queryResult = billingClient?.querySkuDetails(paramsSub)
                 queryResult?.skuDetailsList?.forEach {
-                    if(it.sku == IN_APP_PRODUCT_ADFREE_SUBSCRIPTION)
-                        adfreeSubSkuDetails = it
+                    if(it.sku == IN_APP_PRODUCT_SUBSCRIPTION)
+                        adfreeSubscriptionSkuDetails.postValue(it)
                 }
+                // once everything is initialised we doublecheck if we missed a purchase and update it if necessary
+                updatePurchases()
             }
 
 
@@ -146,8 +149,7 @@ class BillingManager :
         /**
          * This function launches the billing flow from Google Play.
          * It shows a bar on the bototm of the page where the user can buy the item.
-         * The passed skuDetails are currently either [BillingManager.adfreeSkuDetails]
-         * or [BillingManager.adfreeSubSkuDetails].
+         * The passed skuDetails are currently [BillingManager.adfreeSubscriptionSkuDetails].
          */
         fun launchBillingFlow(activity: Activity, skuDetails: SkuDetails?) {
 
@@ -170,8 +172,27 @@ class BillingManager :
         private fun updatePurchases() {
 
             CoroutineScope(Dispatchers.IO).launch {
-                val purchases = billingClient?.queryPurchasesAsync(BillingClient.SkuType.INAPP)
-                purchases?.purchasesList?.forEach { purchase ->
+
+                /*
+                val inappPurchases = billingClient?.queryPurchasesAsync(BillingClient.SkuType.INAPP)
+                if(inappPurchases?.purchasesList?.isEmpty() == true) {
+                    billingPrefs?.edit()?.remove(PREFS_BILLING_ONETIME_PURCHASE_STATE)?.apply()
+                    adfreeOneTimePurchase.postValue(null)
+                }
+                 */
+
+                val subscriptionPurchases = billingClient?.queryPurchasesAsync(BillingClient.SkuType.SUBS)
+                if(subscriptionPurchases?.purchasesList?.isEmpty() == true) {
+                    billingPrefs?.edit()?.remove(PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE)?.apply()
+                    adfreeSubscriptionPurchase.postValue(null)
+                }
+
+                val allPurchases = mutableListOf<Purchase>().apply {
+                    //addAll(inappPurchases?.purchasesList ?: emptyList())
+                    addAll(subscriptionPurchases?.purchasesList ?: emptyList())
+                }
+
+                allPurchases.forEach { purchase ->
                     handlePurchase(purchase)
                 }
             }
@@ -192,19 +213,41 @@ class BillingManager :
                 }
             }
 
-            purchase.skus.forEach {
-                when (it) {
-                    IN_APP_PRODUCT_ADFREE -> billingPrefs?.edit()?.putString(PREFS_BILLING_ADFREE_PURCHASE_STATE, purchase.purchaseState.toString())?.apply()
-                    IN_APP_PRODUCT_ADFREE_SUBSCRIPTION -> billingPrefs?.edit()?.putString(PREFS_BILLING_ADFREESUB_PURCHASE_STATE, purchase.purchaseState.toString())?.apply()
-                }
+            if(purchase.skus.contains(IN_APP_PRODUCT_SUBSCRIPTION)) {
+                if(adfreeSubscriptionPurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
+                    adfreeSubscriptionPurchase.postValue(purchase)
+                billingPrefs?.edit()?.putString(PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE, purchase.purchaseState.toString())?.apply()
+            } else {
+                billingPrefs?.edit()?.remove(PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE)?.apply()
+                if(adfreeSubscriptionPurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
+                    adfreeSubscriptionPurchase.postValue(purchase)
             }
+
+            /*
+            if(purchase.skus.contains(IN_APP_PRODUCT_ONETIME)) {
+                if(adfreeOneTimePurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
+                    adfreeOneTimePurchase.postValue(purchase)
+                billingPrefs?.edit()?.putString(PREFS_BILLING_ONETIME_PURCHASE_STATE, purchase.purchaseState.toString())?.apply()
+            } else {
+                billingPrefs?.edit()?.remove(PREFS_BILLING_ONETIME_PURCHASE_STATE)?.apply()
+            }
+
+             */
         }
+
 
         /**
          * @return true if either the one-time item got the status PURCHASED or the subscription got the status PURCHASED, otherwise false
          */
-        fun isPurchased(): Boolean = isAdfreePurchased() || isSubscriptionPurchased()
-        fun isAdfreePurchased(): Boolean = billingPrefs?.getString(PREFS_BILLING_ADFREE_PURCHASE_STATE, Purchase.PurchaseState.UNSPECIFIED_STATE.toString()) == Purchase.PurchaseState.PURCHASED.toString()
-        fun isSubscriptionPurchased(): Boolean = billingPrefs?.getString(PREFS_BILLING_ADFREESUB_PURCHASE_STATE, Purchase.PurchaseState.UNSPECIFIED_STATE.toString()) == Purchase.PurchaseState.PURCHASED.toString()
+        //fun isPurchased(): Boolean = isOneTimePurchased() || isSubscriptionPurchased()
+        //fun isOneTimePurchased(): Boolean = billingPrefs?.getString(PREFS_BILLING_ONETIME_PURCHASE_STATE, null) != null
+
+        /**
+         * Returns true if a purchase status is set for the subscription in the billingPrefs
+         * The status itself doesn't matter here, if a status is set, then the user has an active subscription.
+         * If the user has no subscription or it expired, the item would not be returned in the purchase list.
+         * See also https://developer.android.com/google/play/billing/subscriptions#lifecycle
+         */
+        fun isSubscriptionPurchased(): Boolean = billingPrefs?.getString(PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE, null) != null
     }
 }
