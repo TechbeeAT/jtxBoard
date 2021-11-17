@@ -476,7 +476,7 @@ data class ICalObject(
             summary = summary,
             status = StatusTodo.`NEEDS-ACTION`.name,
             percent = null,
-            priority = 0,
+            priority = null,
             dueTimezone = TZ_ALLDAY,
             dtstartTimezone = TZ_ALLDAY,
             dirty = true
@@ -643,7 +643,7 @@ data class ICalObject(
 
     fun setUpdatedProgress(newPercent: Int): ICalObject {
 
-        if (percent == newPercent)
+        if (percent == newPercent || (percent == null && newPercent == 0))
             return this
 
         percent = if(newPercent == 0) null else newPercent
