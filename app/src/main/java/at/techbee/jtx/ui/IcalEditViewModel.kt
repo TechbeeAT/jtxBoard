@@ -521,18 +521,23 @@ class IcalEditViewModel(
                 }
 
                 // relations need to be rebuilt from the new parent to the child
+                // relations need to be rebuilt from the new child to the parent
                 if (newParentId != null) {
-                    val rel = Relatedto()
-                    rel.icalObjectId = newParentId
-                    rel.linkedICalObjectId = newId
-                    rel.reltype = Reltype.CHILD.name
-                    rel.text = item.property.uid
-                    database.insertRelatedto(rel)
+                    val relChild2Parent = Relatedto()
+                    relChild2Parent.icalObjectId = newParentId
+                    relChild2Parent.linkedICalObjectId = newId
+                    relChild2Parent.reltype = Reltype.CHILD.name
+                    relChild2Parent.text = item.property.uid
+                    database.insertRelatedto(relChild2Parent)
+
+                    val parent = database.getSync(newParentId)
+                    val relParent2Child = Relatedto()
+                    relParent2Child.icalObjectId = newId
+                    relParent2Child.linkedICalObjectId = newParentId
+                    relParent2Child.reltype = Reltype.PARENT.name
+                    relParent2Child.text = parent?.property?.uid
+                    database.insertRelatedto(relParent2Child)
                 }
-
-                TODO("Also the other way must be considered here child to new parent")
-                // maybe also pass the uid of parent and child
-
 
                 return@withContext newId
             }
