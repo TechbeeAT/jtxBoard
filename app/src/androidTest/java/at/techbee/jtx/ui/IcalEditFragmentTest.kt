@@ -99,8 +99,13 @@ class IcalEditFragmentTest {
     private lateinit var sampleNoteEntity: ICalEntity
     private lateinit var sampleTodoEntity: ICalEntity
 
+    private var recurDay: String = ""
+    private var recurWeek: String = ""
+    private var recurMonth: String = ""
+    private var recurYear: String = ""
 
-    @ExperimentalCoroutinesApi
+
+        @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -108,6 +113,11 @@ class IcalEditFragmentTest {
         database = ICalDatabase.getInstance(context).iCalDatabaseDao     // should be in-memory db now
         application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
 
+        val recurOptions = context.resources.getStringArray(R.array.edit_recur_day_week_month_year)
+        recurDay = recurOptions[0]
+        recurWeek = recurOptions[1]
+        recurMonth = recurOptions[2]
+        recurYear = recurOptions[3]
 
         //insert sample entries
         testScope.launch(TestCoroutineDispatcher()) {
@@ -288,7 +298,7 @@ class IcalEditFragmentTest {
     }
 
     @Test
-    fun todo_basic_check() {
+    fun todo_basic_check1() {
 
         val fragmentArgs = Bundle().apply {
             putParcelable("icalentity", sampleTodoEntity)
@@ -304,6 +314,17 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_all_day_switch)).check(matches(not(isDisplayed())))
         onView(withId(R.id.edit_timezone_spinner)).check(matches(not(isDisplayed())))
 
+    }
+
+
+    @Test
+    fun todo_basic_check2() {
+
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleTodoEntity)
+        }
+        launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+
         onView(withId(R.id.edit_progress_label)).check(matches(isDisplayed()))
         onView(withId(R.id.edit_progress_checkbox)).check(matches(isDisplayed()))
         onView(withId(R.id.edit_progress_slider)).check(matches(isDisplayed()))
@@ -314,6 +335,17 @@ class IcalEditFragmentTest {
         onView(withText(R.string.classification_public)).check(matches(isDisplayed()))
         val priorities = context.resources.getStringArray(R.array.priority)
         onView(withText(priorities[0])).check(matches(isDisplayed()))
+
+    }
+
+
+    @Test
+    fun todo_basic_check3() {
+
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleTodoEntity)
+        }
+        launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
         onView(withId(R.id.edit_task_addStartedAndDueTime_switch)).check(matches(isDisplayed()))
         onView(withId(R.id.edit_started_date)).check(matches(isDisplayed()))
@@ -327,6 +359,7 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_completed_date)).check(matches(isDisplayed()))
         onView(withId(R.id.edit_completed_time)).check(matches(isDisplayed()))
     }
+
 
 
     @Test
@@ -629,7 +662,7 @@ class IcalEditFragmentTest {
     }
 
     @Test
-    fun journal_check_recurrence() {
+    fun journal_check_recurrence_nothing_displayed() {
 
         val fragmentArgs = Bundle().apply {
             putParcelable("icalentity", sampleJournalEntity)
@@ -659,6 +692,22 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_recur_all_occurences)).check(matches(not(isDisplayed())))
         onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(not(isDisplayed())))
 
+    }
+
+
+    @Test
+    fun journal_check_recurrence_default_day_recur() {
+
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleJournalEntity)
+        }
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+
+        //switch tab
+        scenario.onFragment {
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_RECURRING))
+        }
+
         onView(withId(R.id.edit_recur_switch)).perform(click())
 
         // spinner is set to day, check visibilities
@@ -677,10 +726,21 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_recur_all_occurences)).check(matches(isDisplayed()))
         onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(isDisplayed()))
 
-        val recurOptions = context.resources.getStringArray(R.array.edit_recur_day_week_month_year)
-        val recurWeek = recurOptions[1]
-        val recurMonth = recurOptions[2]
-        val recurYear = recurOptions[3]
+    }
+
+
+    @Test
+    fun journal_check_recurrence_week_recur() {
+
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleJournalEntity)
+        }
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+
+        //switch tab
+        scenario.onFragment {
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_RECURRING))
+        }
 
         // switch the spinner to Week
         onView(withId(R.id.edit_recur_days_months_spinner)).perform(click())
@@ -701,6 +761,22 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_recur_last_occurence_item)).check(matches(isDisplayed()))
         onView(withId(R.id.edit_recur_all_occurences)).check(matches(isDisplayed()))
         onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(isDisplayed()))
+    }
+
+
+
+    @Test
+    fun journal_check_recurrence_month_recur() {
+
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleJournalEntity)
+        }
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+
+        //switch tab
+        scenario.onFragment {
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_RECURRING))
+        }
 
         // switch the spinner to month
         onView(withId(R.id.edit_recur_days_months_spinner)).perform(click())
@@ -721,6 +797,22 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_recur_last_occurence_item)).check(matches(isDisplayed()))
         onView(withId(R.id.edit_recur_all_occurences)).check(matches(isDisplayed()))
         onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(isDisplayed()))
+    }
+
+
+
+    @Test
+    fun journal_check_recurrence_year_recur() {
+
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleJournalEntity)
+        }
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+
+        //switch tab
+        scenario.onFragment {
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_RECURRING))
+        }
 
         // switch the spinner to year
         onView(withId(R.id.edit_recur_days_months_spinner)).perform(click())
@@ -742,6 +834,24 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_recur_all_occurences)).check(matches(isDisplayed()))
         onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(isDisplayed()))
 
+    }
+
+    @Test
+    fun journal_check_recurrence_day_recur() {
+
+        val fragmentArgs = Bundle().apply {
+            putParcelable("icalentity", sampleJournalEntity)
+        }
+        val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
+
+        //switch tab
+        scenario.onFragment {
+            it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_RECURRING))
+        }
+
+        // switch the spinner to year
+        onView(withId(R.id.edit_recur_days_months_spinner)).perform(click())
+        onView(withText(recurYear)).perform(click())
 
         // turn switch off again and check if empty like initially
         onView(withId(R.id.edit_recur_switch)).perform(click())
@@ -761,6 +871,7 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_recur_all_occurences)).check(matches(not(isDisplayed())))
         onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(not(isDisplayed())))
     }
+
 
 
     // TODO continue with more checks on recurrence
