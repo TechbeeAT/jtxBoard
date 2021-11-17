@@ -104,7 +104,6 @@ aboutLibraries {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
 
     // Support libraries
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
@@ -160,7 +159,7 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.4.0'
 
     // Testing-only dependencies
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.31"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
     androidTestImplementation 'androidx.test:core-ktx:1.4.1-alpha03'
 
     // Testing
