@@ -389,8 +389,8 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_DTEND) var dtend: Long? = null,
     @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String? = null,
 
-    @ColumnInfo(name = COLUMN_STATUS) var status: String = "",     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
-    @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String = Classification.PUBLIC.name,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
+    @ColumnInfo(name = COLUMN_STATUS) var status: String? = null,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
+    @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String? = null,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
 
     @ColumnInfo(name = COLUMN_URL) var url: String? = null,
     @ColumnInfo(name = COLUMN_CONTACT) var contact: String? = null,
@@ -578,7 +578,7 @@ data class ICalObject(
             ?.let { description -> this.description = description }
         values.getAsLong(COLUMN_DTSTART)?.let { dtstart ->
             this.dtstart = dtstart
-        }   //TODO: Add validation, Journals MUST have a DTSTART!
+        }
         values.getAsString(COLUMN_DTSTART_TIMEZONE)?.let { dtstartTimezone ->
             this.dtstartTimezone = dtstartTimezone
         }   //TODO: Validieren auf gültige Timezone!
@@ -968,15 +968,14 @@ enum class StatusTodo(val stringResource: Int) : Parcelable {
             return set.toSet()
         }
 
-        fun getFromString(string: String): StatusTodo? {
-            when (string) {
-                `NEEDS-ACTION`.name -> return `NEEDS-ACTION`
-                COMPLETED.name -> return COMPLETED
-                `IN-PROCESS`.name -> return `IN-PROCESS`
-                CANCELLED.name -> return CANCELLED
-                else -> return null
+        fun getFromString(string: String?): StatusTodo? {
+            return when (string) {
+                `NEEDS-ACTION`.name -> `NEEDS-ACTION`
+                COMPLETED.name -> COMPLETED
+                `IN-PROCESS`.name -> `IN-PROCESS`
+                CANCELLED.name -> CANCELLED
+                else -> null
             }
-
         }
     }
 }

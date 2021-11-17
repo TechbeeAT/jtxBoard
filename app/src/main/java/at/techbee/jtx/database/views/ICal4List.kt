@@ -83,8 +83,8 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_DTEND) var dtend: Long?,
     @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String?,
 
-    @ColumnInfo(name = COLUMN_STATUS) var status: String,
-    @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String,
+    @ColumnInfo(name = COLUMN_STATUS) var status: String?,
+    @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String?,
 
     @ColumnInfo(name = COLUMN_PERCENT) var percent: Int?,
     @ColumnInfo(name = COLUMN_PRIORITY) var priority: Int?,
