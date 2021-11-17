@@ -41,6 +41,8 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var completedFormatted: LiveData<String>
     lateinit var startedFormatted: LiveData<String>
     lateinit var dueFormatted: LiveData<String>
+    lateinit var progressFormatted: LiveData<String>
+
 
 
     lateinit var progressIndicatorVisible: LiveData<Boolean>
@@ -195,6 +197,12 @@ class IcalViewViewModel(private val icalItemId: Long,
                 }
             }
 
+            progressFormatted = Transformations.map(icalEntity) { item ->
+                item?.property?.percent.let { progress ->
+                    String.format("%.0f%%", progress?.toFloat() ?: 0F)
+                }
+            }
+
             collectionText = Transformations.map(icalEntity) { item ->
                 if (item?.ICalCollection?.accountName?.isNotEmpty() == true)
                     item.ICalCollection?.displayName + " (" + item.ICalCollection?.accountName + ")"
@@ -236,7 +244,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map !item?.attachments.isNullOrEmpty()      // true if attachment is NOT null or empty
             }
             progressVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.percent != null && item.property.component == Component.VTODO.name     // true if percent (progress) is NOT null
+                return@map item?.property?.component == Component.VTODO.name     // true if percent (progress) is NOT null
             }
             priorityVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.priority != null      // true if priority is NOT null
@@ -297,7 +305,9 @@ class IcalViewViewModel(private val icalItemId: Long,
             newNote.collectionId = icalEntity.value?.ICalCollection?.collectionId ?: 1L
             val newNoteId = database.insertICalObject(newNote)
 
+            // We insert both directions in the database
             database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newNote.uid))
+            database.insertRelatedto(Relatedto(linkedICalObjectId = icalEntity.value!!.property.id, icalObjectId = newNoteId, reltype = Reltype.PARENT.name, text = icalEntity.value!!.property.uid))
 
             if(attachment != null) {
                 attachment.icalObjectId = newNoteId

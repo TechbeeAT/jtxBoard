@@ -297,7 +297,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
             }
 
             val itemSubtasks = allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id } != null } ?: emptyList()
-            IcalListAdapterHelper.addSubtasksView(model, itemSubtasks, holder.subtasksLinearLayout, context, parent)
+            IcalListAdapterHelper.addSubtasksView(model, itemSubtasks.distinct(), holder.subtasksLinearLayout, context, parent)
 
             IcalListAdapterHelper.addAttachmentView(iCal4ListItem.attachment, holder.attachmentsLinearLayout, context, parent)
 
@@ -307,7 +307,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
             holder.expandSubtasks.setOnClickListener {
 
                 if (!toggleSubtasksExpanded) {
-                    IcalListAdapterHelper.addSubtasksView(model, itemSubtasks, holder.subtasksLinearLayout, context, parent)
+                    IcalListAdapterHelper.addSubtasksView(model, itemSubtasks.distinct(), holder.subtasksLinearLayout, context, parent)
                     toggleSubtasksExpanded = true
                     holder.expandSubtasks.setImageResource(R.drawable.ic_collapse)
                 } else {
@@ -321,7 +321,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
             holder.progressLabel.setOnClickListener {
 
                 if (!toggleSubtasksExpanded) {
-                    IcalListAdapterHelper.addSubtasksView(model, itemSubtasks, holder.subtasksLinearLayout, context, parent)
+                    IcalListAdapterHelper.addSubtasksView(model, itemSubtasks.distinct(), holder.subtasksLinearLayout, context, parent)
                     toggleSubtasksExpanded = true
                     holder.expandSubtasks.setImageResource(R.drawable.ic_collapse)
                 } else {

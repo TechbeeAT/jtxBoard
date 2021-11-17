@@ -265,6 +265,9 @@ class IcalEditViewModel(
         if (iCalObjectUpdated.value!!.collectionId != 1L)
             iCalObjectUpdated.value!!.dirty = true
 
+        if(iCalObjectUpdated.value!!.percent == 0)
+            iCalObjectUpdated.value!!.percent = null
+
         viewModelScope.launch {
 
             insertedOrUpdatedItemId = insertOrUpdateICalObject()
@@ -328,20 +331,40 @@ class IcalEditViewModel(
                         100 -> subtask.status = StatusTodo.COMPLETED.name
                         else -> subtask.status = StatusTodo.`NEEDS-ACTION`.name
                     }
+                    if(subtask.percent == 0)
+                        subtask.percent = null
                     subtask.id = database.insertSubtask(subtask)
                     Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
 
 
-                    // Only insert if the relation doesn't exist already, otherwise there's nothing to do
-                    if (iCalEntity.relatedto?.find { it.icalObjectId == insertedOrUpdatedItemId && it.linkedICalObjectId == subtask.id } == null)
+                    // upsert relation from the Parent to the Child
+
+                    // check if the relation is there, if not we insert
+                    val childRelation = database.findRelatedTo(insertedOrUpdatedItemId, subtask.id, Reltype.CHILD.name)
+                    if(childRelation == null) {
                         database.insertRelatedto(
                             Relatedto(
                                 icalObjectId = insertedOrUpdatedItemId,
                                 linkedICalObjectId = subtask.id,
-                                reltype = "CHILD",
+                                reltype = Reltype.CHILD.name,
                                 text = subtask.uid
                             )
                         )
+                    }
+
+                    // upsert relation from the Child to the Parent
+                    // check if the relation is there, if not we insert
+                    val parentRelation = database.findRelatedTo(subtask.id, insertedOrUpdatedItemId, Reltype.PARENT.name)
+                    if(parentRelation == null) {
+                        database.insertRelatedto(
+                            Relatedto(
+                                icalObjectId = subtask.id,
+                                linkedICalObjectId = insertedOrUpdatedItemId,
+                                reltype = Reltype.PARENT.name,
+                                text = iCalObjectUpdated.value!!.uid
+                            )
+                        )
+                    }
 
                 }
 
@@ -497,7 +520,7 @@ class IcalEditViewModel(
                     database.insertAttachment(it)
                 }
 
-                // relations need to be rebuilt from the child to the parent
+                // relations need to be rebuilt from the new parent to the child
                 if (newParentId != null) {
                     val rel = Relatedto()
                     rel.icalObjectId = newParentId
@@ -506,6 +529,9 @@ class IcalEditViewModel(
                     rel.text = item.property.uid
                     database.insertRelatedto(rel)
                 }
+
+                TODO("Also the other way must be considered here child to new parent")
+                // maybe also pass the uid of parent and child
 
 
                 return@withContext newId

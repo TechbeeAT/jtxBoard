@@ -475,7 +475,7 @@ data class ICalObject(
             module = Module.TODO.name,
             summary = summary,
             status = StatusTodo.`NEEDS-ACTION`.name,
-            percent = 0,
+            percent = null,
             priority = 0,
             dueTimezone = TZ_ALLDAY,
             dtstartTimezone = TZ_ALLDAY,
@@ -646,7 +646,7 @@ data class ICalObject(
         if (percent == newPercent)
             return this
 
-        percent = newPercent
+        percent = if(newPercent == 0) null else newPercent
         status = when (newPercent) {
             100 -> StatusTodo.COMPLETED.name
             in 1..99 -> StatusTodo.`IN-PROCESS`.name

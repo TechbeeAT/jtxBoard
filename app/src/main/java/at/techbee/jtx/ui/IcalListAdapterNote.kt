@@ -182,7 +182,7 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
             }
 
             val itemSubtasks = allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id } != null } ?: emptyList()
-            IcalListAdapterHelper.addSubtasksView(model, itemSubtasks, holder.subtasksLinearLayout, context, parent)
+            IcalListAdapterHelper.addSubtasksView(model, itemSubtasks.distinct(), holder.subtasksLinearLayout, context, parent)
 
             IcalListAdapterHelper.addAttachmentView(iCal4ListItem.attachment, holder.attachmentsLinearLayout, context, parent)
         }
