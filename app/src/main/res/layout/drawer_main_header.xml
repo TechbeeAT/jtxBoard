@@ -55,8 +55,3 @@
         app:layout_constraintStart_toStartOf="@+id/app_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-

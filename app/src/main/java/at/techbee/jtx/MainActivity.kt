@@ -230,11 +230,8 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                 R.id.nav_website ->
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx))))
 
-                R.id.nav_faq ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_faq))))
-
-                R.id.nav_forums ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_forums))))
+                R.id.nav_support ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_support))))
 
                 R.id.nav_privacy ->
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_privacy_policy))))
