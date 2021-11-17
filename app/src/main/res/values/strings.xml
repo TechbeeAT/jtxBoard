@@ -362,8 +362,8 @@
     <string name="settings_select_mimetype_for_audio">Select Mimetype for audio notes</string>
 
 
-    <string name="sync_with_davx5_heading">Sync with DAVx⁵</string>
-    <string name="sync_basic_info">jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data.</string>
+    <string name="sync_with_davx5_heading">Sync with DAVx⁵ (beta)*</string>
+    <string name="sync_basic_info">jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data.\n\n* Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!</string>
     <string name="sync_congratulations">Congratulations! :-)</string>
     <string name="sync_davx5_installed_but_no_collections_found">We have detected DAVx⁵ on your phone. If you haven\'t set up any accounts yet, please follow the instructions on our website:</string>
     <string name="sync_davx5_installed_with_collections_found">We have detected DAVx⁵ on your phone. If you have any troubles or doubts, please check out our website first:</string>
