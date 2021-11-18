@@ -192,3 +192,11 @@ fun getLongListfromCSVString(listAsString: String?): List<Long> {
     }
     return longList
 }
+
+fun getOffsetStringFromTimezone(timezone: String?): String {
+
+    timezone?.let {
+        return TimeZone.getTimeZone(it).getDisplayName(false, TimeZone.SHORT) ?: "" }
+
+    return ""
+}

@@ -19,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.fortuna.ical4j.model.Recur
-import java.text.DateFormat
 import java.util.*
 
 
@@ -54,7 +53,7 @@ class IcalEditViewModel(
 
     var recurrenceList = mutableListOf<Long>()
 
-    var returnVJournalItemId: MutableLiveData<Long> =
+    var returnIcalObjectId: MutableLiveData<Long> =
         MutableLiveData<Long>().apply { postValue(0L) }
     var savingClicked: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>().apply { postValue(false) }
@@ -81,7 +80,7 @@ class IcalEditViewModel(
     var descriptionVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var dateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var timeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var alldayVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var addTimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var timezoneVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var statusVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var classificationVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
@@ -112,48 +111,13 @@ class IcalEditViewModel(
     var recurrenceAdditionsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
 
+    var addTimeChecked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(iCalEntity.property.dueTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.completedTimezone != ICalObject.TZ_ALLDAY)
+    var addTimezoneJournalChecked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(iCalEntity.property.component == Component.VJOURNAL.name && ((iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.dtstartTimezone?.isNotEmpty() == true)))
+    var addTimezoneTodoChecked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && ((iCalEntity.property.dueTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.dueTimezone?.isNotEmpty() == true) || (iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.dtstartTimezone?.isNotEmpty() == true) || (iCalEntity.property.completedTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.completedTimezone?.isNotEmpty() == true)))
 
-    var duedateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        it.due?.let { due ->
-            return@map DateFormat.getDateInstance().format(due)
-         }
-    }
-
-    var duetimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        it.due?.let { due ->
-            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(due)
-        }
-    }
-
-    var completeddateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        it.completed?.let { completed ->
-            return@map DateFormat.getDateInstance().format(completed)
-        }
-    }
-
-    var completedtimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        it.completed?.let { completed ->
-            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(completed)
-        }
-    }
-
-    var starteddateFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        it.dtstart?.let { dtstart ->
-            return@map DateFormat.getDateInstance().format(dtstart)
-        }
-    }
-
-    var startedtimeFormated: LiveData<String> = Transformations.map(iCalObjectUpdated) {
-        it.dtstart?.let { dtstart ->
-            return@map DateFormat.getTimeInstance(DateFormat.SHORT).format(dtstart)
-        }
-    }
-
-
-    var allDayChecked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>(iCalEntity.property.dtstartTimezone == ICalObject.TZ_ALLDAY)
-    var addStartedAndDueTimeChecked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && (iCalEntity.property.dueTimezone != ICalObject.TZ_ALLDAY || iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY))
     var recurrenceChecked: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(iCalEntity.property.rrule?.isNotBlank())
     //todo make test, pre-fill
@@ -209,8 +173,8 @@ class IcalEditViewModel(
         summaryVisible.postValue(selectedTab == TAB_GENERAL)
         descriptionVisible.postValue(selectedTab == TAB_GENERAL)
         dateVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL))
-        timeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL) && iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY ) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
-        alldayVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL))
+        timeVisible.postValue((iCalObjectUpdated.value?.dtstart != null && iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY) || (iCalObjectUpdated.value?.due != null && iCalObjectUpdated.value?.dueTimezone != ICalObject.TZ_ALLDAY) || (iCalObjectUpdated.value?.completed != null && iCalObjectUpdated.value?.completedTimezone != ICalObject.TZ_ALLDAY) )
+        addTimeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL))
         timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL) && iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY ) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
         statusVisible.postValue(selectedTab == TAB_GENERAL)
         classificationVisible.postValue(selectedTab == TAB_GENERAL)
@@ -391,7 +355,7 @@ class IcalEditViewModel(
                 }
             }
 
-            returnVJournalItemId.value = insertedOrUpdatedItemId
+            returnIcalObjectId.value = insertedOrUpdatedItemId
         }
     }
 

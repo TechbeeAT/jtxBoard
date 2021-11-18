@@ -93,7 +93,7 @@ class IcalEditViewModelTest {
         assertTrue(icalEditViewModel.descriptionVisible.value!!)
         assertFalse(icalEditViewModel.dateVisible.value!!)
         assertFalse(icalEditViewModel.timeVisible.value!!)
-        assertFalse(icalEditViewModel.alldayVisible.value!!)
+        assertFalse(icalEditViewModel.addTimeVisible.value!!)
         assertFalse(icalEditViewModel.timezoneVisible.value!!)
         assertTrue(icalEditViewModel.statusVisible.value!!)
         assertTrue(icalEditViewModel.classificationVisible.value!!)
@@ -137,7 +137,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.update()
         Thread.sleep(100)
 
-        val retrievedEntry = database.get(icalEditViewModel.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+        val retrievedEntry = database.get(icalEditViewModel.returnIcalObjectId.getOrAwaitValue()!!).getOrAwaitValue()
 
         assertEquals(updatedEntry.property.module, retrievedEntry?.property?.module)
         assertEquals(updatedEntry.property.component, retrievedEntry?.property?.component)
@@ -175,7 +175,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.update()
         Thread.sleep(100)
 
-        val retrievedEntry = database.get(icalEditViewModel.returnVJournalItemId.value!!).getOrAwaitValue(100)
+        val retrievedEntry = database.get(icalEditViewModel.returnIcalObjectId.value!!).getOrAwaitValue(100)
 
 
         // we create a new instance of the view model and update the values (incl. some deletes)
@@ -208,7 +208,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.update()
         Thread.sleep(100)
 
-        val retrievedEntry2 = database.get(icalEditViewModel.returnVJournalItemId.value!!).getOrAwaitValue(100)
+        val retrievedEntry2 = database.get(icalEditViewModel.returnIcalObjectId.value!!).getOrAwaitValue(100)
 
 
         assertEquals(updatedEntry2.property.module, retrievedEntry2?.property?.module)
@@ -247,7 +247,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.update()
         Thread.sleep(100)
 
-        val retrievedEntry = database.get(icalEditViewModel.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+        val retrievedEntry = database.get(icalEditViewModel.returnIcalObjectId.getOrAwaitValue()!!).getOrAwaitValue()
 
 
         // we create a new instance of the view model and delete the entry
@@ -287,7 +287,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.update()
         Thread.sleep(100)
 
-        val retrievedParent = database.get(icalEditViewModel.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+        val retrievedParent = database.get(icalEditViewModel.returnIcalObjectId.getOrAwaitValue()!!).getOrAwaitValue()
 
         // now take a Subtask and make another two subtasks (by loading the subtask in the fragment and doing the same)
         val firstChildId = retrievedParent?.relatedto?.get(0)?.linkedICalObjectId!!
@@ -306,7 +306,7 @@ class IcalEditViewModelTest {
         icalEditViewModelSubtask.update()
         Thread.sleep(100)
 
-        val retrievedEntrySubtask = database.get(icalEditViewModelSubtask.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+        val retrievedEntrySubtask = database.get(icalEditViewModelSubtask.returnIcalObjectId.getOrAwaitValue()!!).getOrAwaitValue()
 
         //just make sure now that the retrieved Entry is not null
         assertNotNull(retrievedEntrySubtask)
@@ -355,7 +355,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.update()
         Thread.sleep(100)
 
-        val retrievedParent = database.get(icalEditViewModel.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+        val retrievedParent = database.get(icalEditViewModel.returnIcalObjectId.getOrAwaitValue()!!).getOrAwaitValue()
 
         // now take a Subtask and make another two subtasks (by loading the subtask in the fragment and doing the same)
         val firstChildId = retrievedParent?.relatedto?.get(0)?.linkedICalObjectId!!
@@ -374,7 +374,7 @@ class IcalEditViewModelTest {
         icalEditViewModelSubtask.update()
         Thread.sleep(100)
 
-        val retrievedEntrySubtask = database.get(icalEditViewModelSubtask.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+        val retrievedEntrySubtask = database.get(icalEditViewModelSubtask.returnIcalObjectId.getOrAwaitValue()!!).getOrAwaitValue()
 
         //just make sure now that the retrieved Entry is not null
         assertNotNull(retrievedEntrySubtask)
@@ -426,7 +426,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.update()
         Thread.sleep(100)
 
-        val retrievedParent = database.get(icalEditViewModel.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+        val retrievedParent = database.get(icalEditViewModel.returnIcalObjectId.getOrAwaitValue()!!).getOrAwaitValue()
 
         // now take a Subtask and make another two subtasks (by loading the subtask in the fragment and doing the same)
         val firstChildId = retrievedParent?.relatedto?.get(0)?.linkedICalObjectId!!
@@ -448,7 +448,7 @@ class IcalEditViewModelTest {
         icalEditViewModelSubtask.update()
         Thread.sleep(100)
 
-        val retrievedEntrySubtask = database.get(icalEditViewModelSubtask.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+        val retrievedEntrySubtask = database.get(icalEditViewModelSubtask.returnIcalObjectId.getOrAwaitValue()!!).getOrAwaitValue()
         Thread.sleep(100)
 
         //just make sure now that the retrieved Entry is not null
@@ -480,7 +480,7 @@ class IcalEditViewModelTest {
 
 
         // now load all items again by taking the returnVJournalItemId
-        val parentInNewCollection = database.get(icalEditViewModelParent4UpdateCollection.returnVJournalItemId.getOrAwaitValue()).getOrAwaitValue()
+        val parentInNewCollection = database.get(icalEditViewModelParent4UpdateCollection.returnIcalObjectId.getOrAwaitValue()).getOrAwaitValue()
         val child1InNewCollection = database.get(parentInNewCollection?.relatedto?.get(0)!!.linkedICalObjectId!!).getOrAwaitValue()
         val child2InNewCollection = database.get(parentInNewCollection.relatedto?.get(1)!!.linkedICalObjectId!!).getOrAwaitValue()
         val child1x1InNewCollection = database.get(child1InNewCollection?.relatedto?.get(0)!!.linkedICalObjectId!!).getOrAwaitValue()
@@ -515,7 +515,7 @@ class IcalEditViewModelTest {
         icalEditViewModel.update()
         Thread.sleep(100)
 
-        val retrievedParent = database.get(icalEditViewModel.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+        val retrievedParent = database.get(icalEditViewModel.returnIcalObjectId.getOrAwaitValue()!!).getOrAwaitValue()
 
         // now take a Subtask and make another two subtasks (by loading the subtask in the fragment and doing the same)
         val firstChildId = retrievedParent?.relatedto?.get(0)?.linkedICalObjectId!!
@@ -534,7 +534,7 @@ class IcalEditViewModelTest {
         icalEditViewModelSubtask.update()
         Thread.sleep(100)
 
-        val retrievedEntrySubtask = database.get(icalEditViewModelSubtask.returnVJournalItemId.getOrAwaitValue()!!).getOrAwaitValue()
+        val retrievedEntrySubtask = database.get(icalEditViewModelSubtask.returnIcalObjectId.getOrAwaitValue()!!).getOrAwaitValue()
 
         //just make sure now that the retrieved Entry is not null
         assertNotNull(retrievedEntrySubtask)
@@ -565,7 +565,7 @@ class IcalEditViewModelTest {
 
 
         // now load all (newly inserted) items by taking the returnVJournalItemId
-        val parentInNewCollection = database.get(icalEditViewModelParent4UpdateCollection.returnVJournalItemId.getOrAwaitValue()).getOrAwaitValue()
+        val parentInNewCollection = database.get(icalEditViewModelParent4UpdateCollection.returnIcalObjectId.getOrAwaitValue()).getOrAwaitValue()
         val child1InNewCollection = database.get(parentInNewCollection?.relatedto?.get(0)!!.linkedICalObjectId!!).getOrAwaitValue()
         val child2InNewCollection = database.get(parentInNewCollection.relatedto?.get(1)!!.linkedICalObjectId!!).getOrAwaitValue()
         val child1x1InNewCollection = database.get(child1InNewCollection?.relatedto?.get(0)!!.linkedICalObjectId!!).getOrAwaitValue()
