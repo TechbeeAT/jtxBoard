@@ -125,6 +125,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
             if (iCal4ListItem.property.color != null) {
                 try {
                     holder.colorBar.setColorFilter(iCal4ListItem.property.color!!)
+                    holder.colorBar.visibility = View.VISIBLE
                 } catch (e: IllegalArgumentException) {
                     Log.i("Invalid color","Invalid Color cannot be parsed: ${iCal4ListItem.property.color}")
                     holder.colorBar.visibility = View.INVISIBLE
