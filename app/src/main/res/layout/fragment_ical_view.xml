@@ -88,77 +88,94 @@
                     tools:visibility="visible"
                     android:contentDescription="@string/view_readyonly"/>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/view_dtstart_day"
-                    android:layout_width="80dp"
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/view_dtstart_card"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="@{UtilKt.convertLongToDayString(model.icalEntity.property.dtstart)}"
-                    android:textAlignment="center"
-                    android:textSize="36sp"
-                    android:textStyle="bold"
                     android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_collection"
-                    tools:text="31" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/view_dtstart_month"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{UtilKt.convertLongToMonthString(model.icalEntity.property.dtstart)}"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
-                    app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
-                    app:layout_constraintTop_toBottomOf="@+id/view_dtstart_day"
-                    tools:text="December" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/view_dtstart_year"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{UtilKt.convertLongToYearString(model.icalEntity.property.dtstart)}"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="@+id/view_dtstart_day"
-                    app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
-                    app:layout_constraintTop_toBottomOf="@+id/view_dtstart_month"
-                    app:layout_constraintBottom_toTopOf="@id/view_dtstart_time"
-                    tools:text="2020" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/view_dtstart_time"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{UtilKt.convertLongToTimeString(model.icalEntity.property.dtstart)}"
-                    android:textAlignment="center"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
-                    app:layout_constraintTop_toBottomOf="@+id/view_dtstart_year"
-                    app:layout_constraintBottom_toTopOf="@id/view_dtstart_timezone"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:text="13:30" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/view_dtstart_timezone"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    android:text="@{model.dtstartTimezone}"
-                    android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
-                    app:layout_constraintStart_toStartOf="@+id/view_dtstart_day"
-                    app:layout_constraintTop_toBottomOf="@+id/view_dtstart_time"
                     app:layout_constraintVertical_bias="0.0"
-                    tools:text="GMT+02:00" />
+                    >
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp"
+                        android:paddingBottom="8dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/view_journal_dtstart_day"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="@{UtilKt.convertLongToDayString(model.icalEntity.property.dtstart)}"
+                            android:textAlignment="center"
+                            android:textSize="36sp"
+                            android:textStyle="bold"
+                            tools:text="31" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/view_journal_dtstart_month"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="@{UtilKt.convertLongToMonthString(model.icalEntity.property.dtstart)}"
+                            android:textAlignment="center"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            tools:text="December" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/view_journal_dtstart_year"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="@{UtilKt.convertLongToYearString(model.icalEntity.property.dtstart)}"
+                            android:textAlignment="center"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            tools:text="2020" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/view_journal_dtstart_time"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="@{UtilKt.convertLongToTimeString(model.icalEntity.property.dtstart)}"
+                            android:textAlignment="center"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
+                            tools:text="13:30" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/view_journal_dtstart_timezone_offset"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="@{UtilKt.getOffsetStringFromTimezone(model.icalEntity.property.dtstartTimezone)}"
+                            android:textAlignment="center"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
+                            tools:text="GMT+1" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/view_journal_dtstart_timezone_name"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="@{model.icalEntity.property.dtstartTimezone}"
+                            android:textAlignment="center"
+                            android:textSize="12sp"
+                            android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
+                            tools:text="Europe/Vienna" />
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
 
 
                 <com.google.android.material.chip.ChipGroup
@@ -172,8 +189,8 @@
                     app:chipSpacingVertical="0dp"
                     app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/view_dtstart_day"
-                    app:layout_constraintTop_toTopOf="@id/view_dtstart_day"
+                    app:layout_constraintStart_toEndOf="@+id/view_dtstart_card"
+                    app:layout_constraintTop_toTopOf="@id/view_dtstart_card"
                     app:layout_constraintVertical_bias="0.0" />
 
 
