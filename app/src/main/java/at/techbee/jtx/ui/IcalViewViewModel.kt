@@ -38,9 +38,6 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var dtstartTimezone: LiveData<String>
     lateinit var createdFormatted: LiveData<String>
     lateinit var lastModifiedFormatted: LiveData<String>
-    lateinit var completedFormatted: LiveData<String>
-    lateinit var startedFormatted: LiveData<String>
-    lateinit var dueFormatted: LiveData<String>
     lateinit var progressFormatted: LiveData<String>
 
 
@@ -65,6 +62,12 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var completedVisible: LiveData<Boolean>
     lateinit var startedVisible: LiveData<Boolean>
     lateinit var dueVisible: LiveData<Boolean>
+    lateinit var completedTimeVisible: LiveData<Boolean>
+    lateinit var startedTimeVisible: LiveData<Boolean>
+    lateinit var dueTimeVisible: LiveData<Boolean>
+    lateinit var completedTimezoneVisible: LiveData<Boolean>
+    lateinit var startedTimezoneVisible: LiveData<Boolean>
+    lateinit var dueTimezoneVisible: LiveData<Boolean>
 
     lateinit var recurrenceVisible: LiveData<Boolean>
     lateinit var recurrenceItemsVisible: LiveData<Boolean>
@@ -165,38 +168,6 @@ class IcalViewViewModel(private val icalItemId: Long,
                 }
             }
 
-            completedFormatted = Transformations.map(icalEntity) { item ->
-                item?.property?.completed?.let {
-                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(it))
-                    val formattedTime = if (item.property.completedTimezone != ICalObject.TZ_ALLDAY)
-                        DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(item.property.completed!!))
-                        else ""
-                    return@map application.resources.getString(R.string.view_completed_text, "$formattedDate $formattedTime")
-                }
-            }
-
-            startedFormatted = Transformations.map(icalEntity) { item ->
-                item?.property?.dtstart?.let {
-                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(it))
-                    val formattedTime = if (item.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                        DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(it))
-                        else ""
-                    return@map application.resources.getString(R.string.view_start_text, "$formattedDate $formattedTime")
-                }
-            }
-
-            dueFormatted = Transformations.map(icalEntity) { item ->
-
-                item?.property?.due?.let { due ->
-                    val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(due))
-                    val formattedTime =
-                        if (item.property.dueTimezone != ICalObject.TZ_ALLDAY)
-                            DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(due))
-                        else ""
-                    return@map application.resources.getString(R.string.view_due_text, "$formattedDate $formattedTime")
-                }
-            }
-
             progressFormatted = Transformations.map(icalEntity) { item ->
                 item?.property?.percent.let { progress ->
                     String.format("%.0f%%", progress?.toFloat() ?: 0F)
@@ -258,6 +229,28 @@ class IcalViewViewModel(private val icalItemId: Long,
             dueVisible = Transformations.map(icalEntity) { item ->
                 return@map (item?.property?.due != null && item.property.component == Component.VTODO.name)
             }
+
+            startedTimeVisible = Transformations.map(icalEntity) { item ->
+                return@map item?.property?.component == Component.VTODO.name && item.property.dtstart != null && item.property.dtstartTimezone != ICalObject.TZ_ALLDAY
+            }
+            startedTimezoneVisible = Transformations.map(icalEntity) { item ->
+                return@map item?.property?.component == Component.VTODO.name && item.property.dtstart != null && !(item.property.dtstartTimezone == ICalObject.TZ_ALLDAY || item.property.dtstartTimezone.isNullOrEmpty())
+            }
+
+            dueTimeVisible = Transformations.map(icalEntity) { item ->
+                return@map item?.property?.component == Component.VTODO.name && item.property.due != null && item.property.dueTimezone != ICalObject.TZ_ALLDAY          // true if component == JOURNAL and it is not an All Day Event
+            }
+            dueTimezoneVisible = Transformations.map(icalEntity) { item ->
+                return@map item?.property?.component == Component.VTODO.name && item.property.due != null && !(item.property.dueTimezone == ICalObject.TZ_ALLDAY || item.property.dueTimezone.isNullOrEmpty())           // true if component == JOURNAL and it is not an All Day Event
+            }
+
+            completedTimeVisible = Transformations.map(icalEntity) { item ->
+                return@map item?.property?.component == Component.VTODO.name && item.property.completed != null && item.property.completedTimezone != ICalObject.TZ_ALLDAY          // true if component == JOURNAL and it is not an All Day Event
+            }
+            completedTimezoneVisible = Transformations.map(icalEntity) { item ->
+                return@map item?.property?.component == Component.VTODO.name && item.property.completed != null && !(item.property.completedTimezone == ICalObject.TZ_ALLDAY || item.property.completedTimezone.isNullOrEmpty())           // true if component == JOURNAL and it is not an All Day Event
+            }
+
 
             recurrenceVisible = Transformations.map(icalEntity) { item ->
                 return@map (item?.property?.rrule != null || item?.property?.recurOriginalIcalObjectId != null)
