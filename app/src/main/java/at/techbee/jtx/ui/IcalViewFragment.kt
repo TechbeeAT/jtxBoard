@@ -984,7 +984,7 @@ class IcalViewFragment : Fragment() {
         icalEntityCopy.organizer?.organizerId = 0L
         icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
         icalEntityCopy.resources?.forEach { it.resourceId = 0L }
-        icalEntityCopy.alarm?.forEach { it.alarmId = 0L }
+        icalEntityCopy.alarms?.forEach { it.alarmId = 0L }
         icalEntityCopy.unknown?.forEach { it.unknownId = 0L }
 
         return icalEntityCopy
