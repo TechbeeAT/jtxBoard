@@ -139,6 +139,7 @@ class SyncFragment : Fragment() {
             binding.syncCongratulationsTextNoCollections.visibility = View.GONE
             binding.syncCongratulationsTextWithCollections.visibility = View.GONE
             binding.syncCongratulationsSynchedCollectionsText.visibility = View.GONE
+            binding.syncCongratulationsJtxWebsite.visibility = View.GONE
             binding.syncButtonAddAccount.visibility = View.GONE
 
         }
