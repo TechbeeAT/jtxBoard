@@ -219,7 +219,8 @@ data class Attachment (
             if (filename.isNullOrBlank())
                 filename = uri.lastPathSegment
         } catch (e: NullPointerException) {
-            Log.e("Attachment", "$uri is not a valid Uri. \n $e")
+            if(binary.isNullOrEmpty())
+                Log.w("Attachment", "Binary is empty and Uri could not be parsed: $uri. \n $e")
         }
 
         // TODO: make sure that the additional fields are filled out (filename, filesize and extension)
