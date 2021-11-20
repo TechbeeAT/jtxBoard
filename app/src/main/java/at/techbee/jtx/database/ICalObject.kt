@@ -479,6 +479,7 @@ data class ICalObject(
             priority = null,
             dueTimezone = TZ_ALLDAY,
             dtstartTimezone = TZ_ALLDAY,
+            completedTimezone = TZ_ALLDAY,
             dirty = true
         )
 
