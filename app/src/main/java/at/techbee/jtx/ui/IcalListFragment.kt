@@ -291,13 +291,6 @@ class IcalListFragment : Fragment() {
         when (icalListViewModel.searchModule) {
             Module.JOURNAL.name -> {
                 gotodateMenuItem?.isVisible = true
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = true
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = true
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = true
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
-
                 binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_journal).isVisible = true
                 binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_note).isVisible = false
                 binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_todo).isVisible = false
@@ -307,13 +300,6 @@ class IcalListFragment : Fragment() {
             }
             Module.NOTE.name -> {
                 gotodateMenuItem?.isVisible = false
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = true
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = true
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = true
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = false
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = false
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = false
-
                 binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_journal).isVisible = false
                 binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_note).isVisible = true
                 binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_todo).isVisible = false
@@ -323,13 +309,6 @@ class IcalListFragment : Fragment() {
             }
             Module.TODO.name -> {
                 gotodateMenuItem?.isVisible = false
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts)?.isVisible = false
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_drafts_final)?.isVisible = false
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vjournal_final)?.isVisible = false
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled)?.isVisible = true
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_completed)?.isVisible = true
-                optionsMenu?.findItem(R.id.menu_list_quickfilterfilter_vtodo_open_inprogress)?.isVisible = true
-
                 binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_journal).isVisible = false
                 binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_note).isVisible = false
                 binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_todo).isVisible = true
@@ -530,12 +509,6 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_add_journal -> goToEdit(ICalEntity(ICalObject.createJournal()))
             R.id.menu_list_add_note -> goToEdit(ICalEntity(ICalObject.createNote()))
             R.id.menu_list_add_todo -> goToEdit(ICalEntity(ICalObject.createTodo()))
-            R.id.menu_list_quickfilterfilter_vjournal_drafts_final -> this.applyQuickFilterJournal(mutableListOf(StatusJournal.DRAFT, StatusJournal.FINAL))
-            R.id.menu_list_quickfilterfilter_vjournal_drafts -> this.applyQuickFilterJournal(mutableListOf(StatusJournal.DRAFT))
-            R.id.menu_list_quickfilterfilter_vjournal_final -> this.applyQuickFilterJournal(mutableListOf(StatusJournal.FINAL))
-            R.id.menu_list_quickfilterfilter_vtodo_exclude_cancelled -> applyQuickFilterTodo(mutableListOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.`IN-PROCESS`, StatusTodo.COMPLETED))
-            R.id.menu_list_quickfilterfilter_vtodo_open_inprogress -> applyQuickFilterTodo(mutableListOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.`IN-PROCESS`))
-            R.id.menu_list_quickfilterfilter_vtodo_completed -> applyQuickFilterTodo(mutableListOf(StatusTodo.COMPLETED))
             R.id.menu_list_delete_visible -> deleteVisible()
         }
 
@@ -594,12 +567,14 @@ class IcalListFragment : Fragment() {
         this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(iCalObject))
     }
 
+    /*
     private fun applyQuickFilterJournal(statusList: MutableList<StatusJournal>) {
 
         //resetFilter(false)
         icalListViewModel.searchStatusJournal = statusList
         applyFilters()
     }
+     */
 
     private fun applyQuickFilterTodo(statusList: MutableList<StatusTodo>) {
 

@@ -322,12 +322,6 @@
     <string name="menu_list_todo_show_completed">Show completed</string>
     <string name="menu_list_todo_hide_completed">Hide completed</string>
 
-    <string name="menu_list_quickfilterfilter_vjournal_drafts_final">Show Drafts + Final</string>
-    <string name="menu_list_quickfilterfilter_vjournal_drafts">Show drafts only</string>
-    <string name="menu_list_quickfilterfilter_vjournal_final">Show final only</string>
-    <string name="menu_list_quickfilterfilter_vtodo_open_inprogress">Show needs action/in progress</string>
-    <string name="menu_list_quickfilterfilter_vtodo_exclude_cancelled">Exclude cancelled</string>
-    <string name="menu_list_quickfilterfilter_vtodo_completed">Show completed only</string>
     <string name="menu_view_share_text">Share</string>
     <string name="menu_view_share_ics">Share as ICS</string>
     <string name="menu_view_copy_as_journal">Copy as Journal</string>
