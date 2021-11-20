@@ -439,7 +439,7 @@ DELETEs by Object
 
 
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun update(icalObject: ICalObject)
 
     @Update

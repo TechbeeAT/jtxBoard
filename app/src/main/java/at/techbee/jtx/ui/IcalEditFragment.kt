@@ -211,6 +211,8 @@ class IcalEditFragment : Fragment() {
                     icalEditViewModel.iCalObjectUpdated.value?.collectionId =
                         icalEditViewModel.allCollections.value?.get(pos)?.collectionId ?: 1L
                     updateCollectionColor()
+
+                    icalEditViewModel.allCollections.removeObservers(viewLifecycleOwner)     // make sure the selection doesn't change anymore by any sync happening that affects the oberser/collection-lsit
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -407,6 +409,21 @@ class IcalEditFragment : Fragment() {
 
                 icalEditViewModel.update()
             }
+        })
+
+        icalEditViewModel.collectionNotFoundError.observe(viewLifecycleOwner, { error ->
+
+            if(!error)
+                return@observe
+
+            // show a dialog to inform the user
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle(getString(R.string.edit_dialog_collection_not_found_error_title))
+            builder.setMessage(getString(R.string.edit_dialog_collection_not_found_error_message))
+            builder.setIcon(R.drawable.ic_error)
+            builder.setPositiveButton(R.string.ok) { _, _ ->  }
+            builder.show()
+
         })
 
         icalEditViewModel.deleteClicked.observe(viewLifecycleOwner, {

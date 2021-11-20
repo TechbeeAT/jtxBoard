@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui
 
 import android.app.Application
+import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import androidx.lifecycle.*
 import at.techbee.jtx.addLongToCSVString
@@ -56,9 +57,11 @@ class IcalEditViewModel(
     var returnIcalObjectId: MutableLiveData<Long> =
         MutableLiveData<Long>().apply { postValue(0L) }
     var savingClicked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>().apply { postValue(false) }
+        MutableLiveData<Boolean>(false)
     var deleteClicked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>().apply { postValue(false) }
+        MutableLiveData<Boolean>(false)
+    var collectionNotFoundError: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(false)
 
     var iCalObjectUpdated: MutableLiveData<ICalObject> =
         MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property) }
@@ -234,8 +237,17 @@ class IcalEditViewModel(
 
         viewModelScope.launch {
 
-            insertedOrUpdatedItemId = insertOrUpdateICalObject()
-            iCalObjectUpdated.value!!.id = insertedOrUpdatedItemId
+            try {
+                insertedOrUpdatedItemId = insertOrUpdateICalObject()
+                iCalObjectUpdated.value!!.id = insertedOrUpdatedItemId
+            } catch (e: SQLiteConstraintException) {
+                collectionNotFoundError.value = true
+                savingClicked.value = false
+                return@launch
+            }
+
+            // the case that an item gets deleted at the same time the user was already editing this item, is currently not handled.
+            // On save the user would not get an error, he would return to the overview with the deleted item missing
 
 
             // do the rest in a background thread

@@ -255,6 +255,9 @@
     <string name="edit_dialog_sure_to_discard_message">Are you sure you want to discard this entry? This entry will not be saved.</string>
     <string name="edit_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
 
+    <string name="edit_dialog_collection_not_found_error_title">Attention</string>
+    <string name="edit_dialog_collection_not_found_error_message">The selected collection cannot be found anymore, please select another one.</string>
+
     <string name="edit_validation_errors_detected">Please correct the following validation error(s):</string>
     <string name="edit_validation_errors_dialog_header">Validation errors occurred</string>
 
