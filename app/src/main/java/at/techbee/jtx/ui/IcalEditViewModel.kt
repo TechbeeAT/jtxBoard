@@ -456,6 +456,7 @@ class IcalEditViewModel(
         withContext(Dispatchers.IO) {
             val item = database.getSync(id)
             if (item != null) {
+
                 item.property.id = 0L
                 item.property.collectionId = iCalObjectUpdated.value!!.collectionId
                 item.property.sequence = 0
@@ -464,6 +465,11 @@ class IcalEditViewModel(
                 item.property.created = System.currentTimeMillis()
                 item.property.dtstamp = System.currentTimeMillis()
                 item.property.uid = ICalObject.generateNewUID()
+                item.property.flags = null
+                item.property.scheduleTag = null
+                item.property.eTag = null
+                item.property.fileName = null
+
                 val newId = database.insertICalObject(item.property)
 
                 item.attendees?.forEach {
