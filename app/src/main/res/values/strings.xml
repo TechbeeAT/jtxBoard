@@ -309,6 +309,7 @@
     <string name="menu_filter_reset">Reset</string>
     <string name="menu_filter_apply">Apply</string>
     <string name="menu_list_search">Search</string>
+    <string name="menu_list_search_hint">Search</string>
     <string name="menu_list_gotodate">Go to date</string>
     <string name="menu_list_filter">Filter</string>
     <string name="menu_list_clearfilter">Clear filter</string>

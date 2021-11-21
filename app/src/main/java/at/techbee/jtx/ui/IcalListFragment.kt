@@ -480,6 +480,7 @@ class IcalListFragment : Fragment() {
         // add listener for search!
         val searchMenuItem = menu.findItem(R.id.menu_list_search)
         val searchView = searchMenuItem.actionView as SearchView
+        searchView.queryHint = getString(R.string.menu_list_search_hint)
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
