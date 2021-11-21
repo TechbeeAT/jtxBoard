@@ -31,7 +31,6 @@
         <!-- make the elevated style the default card style -->
         <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Filled</item>
         <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.FilledBox.Dense</item>
-        <item name="textInputFilledExposedDropdownMenuStyle">@style/jtx.ExposedDropdownMenu</item>
 
     </style>
 
