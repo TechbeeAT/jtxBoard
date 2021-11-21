@@ -53,6 +53,7 @@
                     android:id="@+id/view_colorbar"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
+                    android:alpha="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_card_colored_edge"
