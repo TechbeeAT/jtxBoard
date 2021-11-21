@@ -185,6 +185,7 @@ class ICalObjectTest {
             percent = null,
             priority = null,
             dueTimezone = ICalObject.TZ_ALLDAY,
+            completedTimezone = ICalObject.TZ_ALLDAY,
             dirty = true,
             // dates and uid must be set explicitely to make the objects equal
             dtstart = factoryObject.dtstart,
@@ -208,6 +209,7 @@ class ICalObjectTest {
             percent = null,
             priority = null,
             dueTimezone = ICalObject.TZ_ALLDAY,
+            completedTimezone = ICalObject.TZ_ALLDAY,
             dirty = true,
             summary = "Task Summary",
             // dates and uid must be set explicitely to make the objects equal
