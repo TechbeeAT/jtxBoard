@@ -936,6 +936,13 @@ class IcalViewFragment : Fragment() {
         icalEntityCopy.property.isRecurLinkedInstance = false
         icalEntityCopy.property.exdate = null
         icalEntityCopy.property.rdate = null
+        icalEntityCopy.property.uid = ICalObject.generateNewUID()
+        icalEntityCopy.property.dirty = true
+
+        icalEntityCopy.property.flags = null
+        icalEntityCopy.property.scheduleTag = null
+        icalEntityCopy.property.eTag = null
+        icalEntityCopy.property.fileName = null
 
 
         if (newModule == Module.JOURNAL || newModule == Module.NOTE) {
