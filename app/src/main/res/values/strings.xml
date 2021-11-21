@@ -123,10 +123,10 @@
     <string name="list_due_inXdays">Due in %d days</string>
     <string name="list_due_inXhours">Due in %d hours</string>
     <string name="list_start_past">Start in past</string>
-    <string name="list_start_today">Start today</string>
+    <string name="list_start_today">Planned start today</string>
     <string name="list_start_tomorrow">Start tomorrow</string>
-    <string name="list_start_inXhours">Start in %d hours</string>
-    <string name="list_start_inXdays">Start in %d days</string>
+    <string name="list_start_inXhours">Planned start in %d hours</string>
+    <string name="list_start_inXdays">Planned start in %d days</string>
     <string name="list_tabitem_journals">Journals</string>
     <string name="list_tabitem_notes">Notes</string>
     <string name="list_tabitem_todos">Tasks</string>
