@@ -177,7 +177,7 @@ class IcalEditFragmentTest {
         onView(withText(convertLongToDayString(sampleJournalEntity.property.dtstart))).check(matches(isDisplayed()))
         onView(withText(convertLongToMonthString(sampleJournalEntity.property.dtstart))).check(matches(isDisplayed()))
         onView(withText(convertLongToYearString(sampleJournalEntity.property.dtstart))).check(matches(isDisplayed()))
-        onView(allOf(withId(R.id.edit_dtstart_time), withText(convertLongToTimeString(sampleJournal.dtstart)))).check(matches(isDisplayed()))
+        onView(allOf(withId(R.id.edit_journal_dtstart_time), withText(convertLongToTimeString(sampleJournal.dtstart)))).check(matches(isDisplayed()))
         onView(withText(R.string.journal_status_final)).check(matches(isDisplayed()))
         onView(withText(R.string.classification_public)).check(matches(isDisplayed()))
 
@@ -279,12 +279,7 @@ class IcalEditFragmentTest {
 
         onView(withText(sampleNoteEntity.property.summary)).check(matches(isDisplayed()))
         onView(withText(sampleNoteEntity.property.description)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_dtstart_day)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_dtstart_month)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_dtstart_year)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_dtstart_time)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_all_day_switch)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_timezone_spinner)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_dtstart_card)).check(matches(not(isDisplayed())))
 
         onView(withId(R.id.edit_progress_label)).check(matches(not(isDisplayed())))
         onView(withId(R.id.edit_progress_checkbox)).check(matches(not(isDisplayed())))
@@ -307,12 +302,7 @@ class IcalEditFragmentTest {
 
         onView(withText(sampleTodoEntity.property.summary)).check(matches(isDisplayed()))
         onView(withText(sampleTodoEntity.property.description)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_dtstart_day)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_dtstart_month)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_dtstart_year)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_dtstart_time)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_all_day_switch)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_timezone_spinner)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.edit_dtstart_card)).check(matches(not(isDisplayed())))
 
     }
 
@@ -347,62 +337,14 @@ class IcalEditFragmentTest {
         }
         launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
-        onView(withId(R.id.edit_task_addStartedAndDueTime_switch)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_started_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_started_time)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_startedtimezone_icon)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_startedtimezone_spinner)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_due_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_due_time)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_duetimezone_icon)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_duetimezone_spinner)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_completed_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_completed_time)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_task_add_time_switch)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_task_add_timezone_switch)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_task_started_card)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_task_due_card)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_task_completed_card)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_dtstart_card)).check(matches(not(isDisplayed())))
     }
 
-
-
-    @Test
-    fun todo_add_time_toggle() {
-
-        val fragmentArgs = Bundle().apply {
-            putParcelable("icalentity", sampleTodoEntity)
-        }
-        launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
-
-        onView(withId(R.id.edit_task_addStartedAndDueTime_switch)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_started_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_started_time)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_startedtimezone_icon)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_startedtimezone_spinner)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_due_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_due_time)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_duetimezone_icon)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_duetimezone_spinner)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_completed_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_completed_time)).check(matches(isDisplayed()))
-
-        onView(withId(R.id.edit_task_addStartedAndDueTime_switch)).perform(scrollTo(), click())
-        // after click (to activate) all the time elements must be visible
-
-        onView(withId(R.id.edit_started_date)).perform(scrollTo())
-        onView(withId(R.id.edit_started_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_started_time)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_startedtimezone_spinner)).perform(scrollTo())
-//        onView(withId(R.id.edit_startedtimezone_icon)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_startedtimezone_spinner)).check(matches(isDisplayed()))
-
-        onView(withId(R.id.edit_due_date)).perform(scrollTo())
-        onView(withId(R.id.edit_due_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_due_time)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_duetimezone_spinner)).perform(scrollTo())
-//        onView(withId(R.id.edit_duetimezone_icon)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_duetimezone_spinner)).check(matches(isDisplayed()))
-
-        onView(withId(R.id.edit_completed_date)).perform(scrollTo())
-        onView(withId(R.id.edit_completed_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_completed_time)).check(matches(isDisplayed()))
-    }
 
 
     @Test
@@ -413,60 +355,32 @@ class IcalEditFragmentTest {
         }
         val scenario = launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
-        // after click (to activate) all the time elements must be visible
-        onView(withId(R.id.edit_task_addStartedAndDueTime_switch)).perform(scrollTo(), click())
-
-        onView(withId(R.id.edit_started_date)).perform(scrollTo(), click())
+        onView(withId(R.id.edit_task_started_card)).perform(scrollTo(), click())
         onView(withText(R.string.edit_datepicker_dialog_select_date)).check(matches(isDisplayed()))
         onView(withId(R.id.confirm_button)).perform(click())
 
-        onView(withId(R.id.edit_started_time)).perform(scrollTo(), click())
-        onView(withText(R.string.edit_datepicker_dialog_select_time)).check(matches(isDisplayed()))
-        onView(withId(R.id.material_timepicker_ok_button)).perform(click())
-
-        onView(withId(R.id.edit_due_date)).perform(scrollTo(), click())
+        onView(withId(R.id.edit_task_due_card)).perform(scrollTo(), click())
         onView(withText(R.string.edit_datepicker_dialog_select_date)).check(matches(isDisplayed()))
         onView(withId(R.id.confirm_button)).perform(click())
 
-        onView(withId(R.id.edit_due_time)).perform(scrollTo(), click())
-        onView(withText(R.string.edit_datepicker_dialog_select_time)).check(matches(isDisplayed()))
-        onView(withId(R.id.material_timepicker_ok_button)).perform(click())
-
-        onView(withId(R.id.edit_completed_date)).perform(scrollTo(), click())
+        onView(withId(R.id.edit_task_completed_card)).perform(scrollTo(), click())
         onView(withText(R.string.edit_datepicker_dialog_select_date)).check(matches(isDisplayed()))
         onView(withId(R.id.confirm_button)).perform(click())
-
-        onView(withId(R.id.edit_completed_time)).perform(scrollTo(), click())
-        onView(withText(R.string.edit_datepicker_dialog_select_time)).check(matches(isDisplayed()))
-        onView(withId(R.id.material_timepicker_ok_button)).perform(click())
 
         scenario.onFragment {
-            assertEquals(true, it.binding.editTaskDatesFragment.editStartedDateEdittext.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editStartedTimeEdittext.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editDueDateEdittext.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editDueTimeEdittext.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editCompletedDateEdittext.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editCompletedTimeEdittext.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editTaskStartedDay.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editTaskStartedMonth.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editTaskStartedYear.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editTaskDueDay.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editTaskDueMonth.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editTaskDueYear.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editTaskCompletedDay.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editTaskCompletedMonth.text?.isNotEmpty())
+            assertEquals(true, it.binding.editTaskDatesFragment.editTaskCompletedYear.text?.isNotEmpty())
         }
     }
 
 
-    @Test
-    fun journal_check_allday() {
-
-        val fragmentArgs = Bundle().apply {
-            putParcelable("icalentity", sampleJournalEntity)
-        }
-        launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
-
-        onView(withId(R.id.edit_dtstart_time)).check(matches(isDisplayed()))
-        onView(withId(R.id.edit_timezone_spinner)).check(matches(isDisplayed()))
-
-        onView(allOf(withText(R.string.edit_all_day), withId(R.id.edit_all_day_switch))).perform(click())
-
-        onView(withId(R.id.edit_dtstart_time)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.edit_timezone_spinner)).check(matches(not(isDisplayed())))
-    }
 
     @Test
     fun journal_check_datepicker() {
@@ -476,9 +390,7 @@ class IcalEditFragmentTest {
         }
         launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
-        onView(allOf(withText(R.string.edit_all_day), withId(R.id.edit_all_day_switch))).perform(click())
-
-        onView(withId(R.id.edit_dtstart_day)).perform(click())
+        onView(withId(R.id.edit_dtstart_card)).perform(click())
         onView(withText(R.string.edit_datepicker_dialog_select_date)).check(matches(isDisplayed()))
 
         onView(withId(R.id.confirm_button)).perform(click())
@@ -493,14 +405,18 @@ class IcalEditFragmentTest {
         }
         launchFragmentInContainer<IcalEditFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
-        onView(withId(R.id.edit_dtstart_day)).perform(click())
+        onView(withId(R.id.edit_journal_add_time_switch)).perform(click())
+        onView(withId(R.id.edit_dtstart_card)).perform(click())
         onView(withText(R.string.edit_datepicker_dialog_select_date)).check(matches(isDisplayed()))
 
         onView(withId(R.id.confirm_button)).perform(click())
         onView(withText(R.string.edit_datepicker_dialog_select_time)).check(matches(isDisplayed()))
         onView(withId(R.id.material_timepicker_ok_button)).perform(click())
 
+        // TODO: Add Test to check if timezone Dialog is shown
+
     }
+
 
     @Test
     fun journal_add_category() {

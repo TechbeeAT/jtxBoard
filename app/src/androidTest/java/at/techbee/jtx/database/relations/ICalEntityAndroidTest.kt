@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
+import junit.framework.TestCase
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.component.VJournal
@@ -76,13 +77,6 @@ class ICalEntityAndroidTest {
                 altrep = null,
                 language = null,
                 other = null
-            ), Comment(
-                commentId = 4,
-                icalObjectId = 20,
-                text = "Comment number two",
-                altrep = null,
-                language = null,
-                other = null
             )),
             categories = listOf(Category(
                 categoryId = 2,
@@ -113,22 +107,6 @@ class ICalEntityAndroidTest {
                 dir = null,
                 language = null,
                 other = null
-            ), Attendee(
-                attendeeId = 6,
-                icalObjectId = 20,
-                caladdress = "johanna@doe.com",
-                cutype = Cutype.INDIVIDUAL.name,
-                member = null,
-                role = Role.`REQ-PARTICIPANT`.name,
-                partstat = null,
-                rsvp = null,
-                delegatedto = null,
-                delegatedfrom = null,
-                sentby = null,
-                cn = null,
-                dir = null,
-                language = null,
-                other = null
             )),
             organizer = null,
             relatedto = listOf(Relatedto(
@@ -136,13 +114,6 @@ class ICalEntityAndroidTest {
                 icalObjectId = 20,
                 linkedICalObjectId = 21,
                 text = "1631560872973-d2d29ddb-76d5-4c21-9afd-2928a0e703b8@at.techbee.jtx",
-                reltype = Reltype.CHILD.name,
-                other = null
-            ), Relatedto(
-                relatedtoId = 9,
-                icalObjectId = 20,
-                linkedICalObjectId = 22,
-                text = "1631563351854-9f69ba0a-efd4-46bd-a30b-86cd51e18b2f@at.techbee.jtx",
                 reltype = Reltype.CHILD.name,
                 other = null
             )),
@@ -166,7 +137,15 @@ class ICalEntityAndroidTest {
             remove(this.getProperty(Property.DTSTAMP))
         }
 
-        assertEquals(comparisonCal, entityCal)
+        // compare properties one by one as the order might not be the same
+        for(i in 0 until comparisonCal.components.size)  {
+            comparisonCal.components[i].properties.forEach { comparisonProp ->
+                if(comparisonProp.name == "DTSTAMP")
+                    return@forEach
+                val entityProp = comparisonCal.components[i].properties.getProperty<Property>(comparisonProp.name)
+                assertEquals(comparisonProp, entityProp)
+            }
+        }
     }
 
     @Test

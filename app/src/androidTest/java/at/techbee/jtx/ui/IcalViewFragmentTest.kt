@@ -154,10 +154,10 @@ class IcalViewFragmentTest {
         val expectedYear = convertLongToYearString(sampleJour.dtstart)
         val expectedTime = convertLongToTimeString(sampleJour.dtstart)
 
-        onView(withId(R.id.view_dtstart_day)).check(matches(withText(expectedDay)))
-        onView(withId(R.id.view_dtstart_month)).check(matches(withText(expectedMonth)))
-        onView(withId(R.id.view_dtstart_year)).check(matches(withText(expectedYear)))
-        onView(withId(R.id.view_dtstart_time)).check(matches(withText(expectedTime)))
+        onView(withId(R.id.view_journal_dtstart_day)).check(matches(withText(expectedDay)))
+        onView(withId(R.id.view_journal_dtstart_month)).check(matches(withText(expectedMonth)))
+        onView(withId(R.id.view_journal_dtstart_year)).check(matches(withText(expectedYear)))
+        onView(withId(R.id.view_journal_dtstart_time)).check(matches(withText(expectedTime)))
 
         val expectedCreated = application.resources.getString(R.string.view_created_text, Date(sampleJour.created))
         val expectedLastModified = application.resources.getString(R.string.view_last_modified_text, Date(sampleJour.lastModified))
