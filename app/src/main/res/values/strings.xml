@@ -13,8 +13,9 @@
     <string name="app_permission_label">jtx Board sync Journals, Notes &amp; Tasks</string>
     <string name="app_permission_desc">sync jtx Board content with other applications like DAVx⁵</string>
 
-    <string name="link_techbee" translatable="false">https://techbee.at</string>
+    <!-- Reusable links in different contexts -->
     <string name="link_davx5" translatable="false">https://www.davx5.com/</string>
+    <string name="link_ffg" translatable="false">https://www.ffg.at</string>
     <string name="link_jtx" translatable="false">https://jtx.techbee.at</string>
     <string name="link_jtx_sync" translatable="false">https://jtx.techbee.at/sync-with-davx5</string>
     <string name="link_jtx_forums" translatable="false">https://forums.bitfire.at/category/30/jtx-board</string>
@@ -22,8 +23,8 @@
     <string name="link_jtx_support" translatable="false">https://jtx.techbee.at/support</string>
     <string name="link_jtx_privacy_policy" translatable="false">https://jtx.techbee.at/privacy</string>
     <string name="link_jtx_twitter" translatable="false">https://twitter.com/jtxBoard</string>
+    <string name="link_techbee" translatable="false">https://techbee.at</string>
     <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
-    <string name="link_ffg">https://www.ffg.at</string>
 
 
 
@@ -220,7 +221,6 @@
     <string name="edit_attachment_add_dialog_hint">Add your attachment-url (https://…)</string>
     <string name="edit_comment_add_dialog_hint">Edit comment</string>
 
-
     <string name="edit_due">Due</string>
     <string name="edit_completed">Completed</string>
     <string name="edit_started">Start(ed)</string>
@@ -252,8 +252,6 @@
     <string name="edit_datepicker_dialog_select_date">Select date</string>
     <string name="edit_datepicker_dialog_select_time">Select time</string>
 
-
-
     <string name="edit_dialog_sure_to_delete_title">Delete \"%1$s\"?</string>
     <string name="edit_dialog_sure_to_discard_title">Discard this entry?</string>
     <string name="edit_dialog_sure_to_delete_message">Are you sure you want to delete \"%1$s\"?</string>
@@ -281,7 +279,6 @@
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">An unknown or unsupported recurrence rule was detected. If you save this entry, the existing recurrence rule will be deleted/overwritten.</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">Unsupported value (Duration) detected!</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">A duration was detected for this entry in the background. Handling a duration is currently not supported by jtx Board. Please use the start, due and end date instead. If you save this entry, the existing duration will be deleted.</string>
-
 
     <string-array name="edit_recur_day_week_month_year">
         <item>Day(s)</item>
@@ -313,8 +310,10 @@
     <string name="menu_edit_delete">Delete</string>
     <string name="menu_edit_save">Save</string>
     <string name="menu_edit_clear_dates">Clear dates</string>
+
     <string name="menu_filter_reset">Reset</string>
     <string name="menu_filter_apply">Apply</string>
+
     <string name="menu_list_search">Search</string>
     <string name="menu_list_search_hint">Search</string>
     <string name="menu_list_gotodate">Go to date</string>
@@ -343,6 +342,7 @@
     <string name="notification_channel_reminder_name">Todo Due Reminder</string>
     <string name="notification_channel_reminder_description">Notification for due todos</string>
 
+    <!-- Shortcuts -->
     <string name="shortcut_addJournal_shortLabel">Journal</string>
     <string name="shortcut_addNote_shortLabel">Note</string>
     <string name="shortcut_addTodo_shortLabel">Todo</string>
@@ -351,6 +351,7 @@
     <string name="shortcut_addTodo_longLabel">Add Todo</string>
 
 
+    <!-- Settings fragment -->
     <string name="settings_enforce_dark_theme">Enforce dark theme</string>
     <string name="settings_list">Settings for the item list</string>
     <string name="settings_show_subtasks_in_list">Show subtasks in list</string>
@@ -361,12 +362,11 @@
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">Show subtasks of Journals and Notes in Tasklist</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">Show subnotes of Journals and Tasks in Noteslist</string>
     <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">Show subjournals of Notes and Tasks in Journallist</string>
-
-
     <string name="settings_app">App Settings</string>
     <string name="settings_select_mimetype_for_audio">Select Mimetype for audio notes</string>
 
 
+    <!-- Sync fragment -->
     <string name="sync_with_davx5_heading">Sync with DAVx⁵ (beta)*</string>
     <string name="sync_basic_info">jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data.\n\n* Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!</string>
     <string name="sync_congratulations">Congratulations! :-)</string>
@@ -380,16 +380,13 @@
     <string name="sync_button_add_account_in_davx5">Add account in DAVx⁵</string>
     <string name="sync_toast_intent_open_davx5_failed">Failed opening DAVx⁵, please open the app manually.</string>
 
-
-    <string name="attachment_error_on_retrieving_file">Failed to retrieve file.</string>
-    <string name="attachment_error_no_app_found_to_open_file_or_uri">No app was found to open this file/URL.</string>
-
-    <string name="toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
+    <!-- Donate fragment -->
     <string name="donate_header_text">The development of an app is a complex topic and development, maintenance and support is hard work. So if you like this app and if you would like to ensure continuous development, please consider a donation :-)</string>
     <string name="donate_thank_you">Thank you!</string>
     <string name="donate_donate_with">Donate with</string>
     <string name="donate_other_donation_methods">If you would like to consier any other donation method, please check our website:</string>
 
+    <!-- Adinfo fragment -->
     <string name="adinfo_text">The development of an app is a complex topic and development, maintenance and support is hard work. Your version of jtx Board is free and financed by ads. Currently once per week you will get a rewarded interstitial ad (usually a video) on saving an entry. If you watch the video until the end (or until you can skip the ad) you will be ad-free for another week.</string>
     <string name="adinfo_adfree_text">If you prefer having no ads, please consider the following upgrade:</string>
     <string name="adinfo_adfree_purchase_header">Upgrade to jtx Board Ad-free</string>
@@ -408,6 +405,12 @@
     <string name="adinfo_adfree_subscribe_order_id">Order ID: %1$s</string>
 
 
+
+
+    <string name="attachment_error_on_retrieving_file">Failed to retrieve file.</string>
+    <string name="attachment_error_no_app_found_to_open_file_or_uri">No app was found to open this file/URL.</string>
+
+    <string name="toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
 
 
 </resources>
