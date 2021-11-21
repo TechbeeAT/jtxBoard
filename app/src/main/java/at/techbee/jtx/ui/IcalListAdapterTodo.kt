@@ -184,6 +184,34 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 }
             }
 
+            if (iCal4ListItem.property.dtstart == null)
+                holder.start.visibility = View.GONE
+            else {
+                holder.start.visibility = View.VISIBLE
+                var millisLeft = iCal4ListItem.property.dtstart!! - System.currentTimeMillis()
+                if (iCal4ListItem.property.dtstartTimezone == ICalObject.TZ_ALLDAY)
+                    millisLeft =
+                        millisLeft + TimeUnit.DAYS.toMillis(1) - 1        // if it's due on the same day, then add 1 day minus 1 millisecond to consider the end of the day
+                val daysLeft =
+                    TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
+                val hoursLeft =
+                    TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
+
+                when {
+                    millisLeft < 0L -> holder.start.text =
+                        context.getString(R.string.list_start_past)
+                    millisLeft >= 0L && daysLeft == 0L && iCal4ListItem.property.dtstartTimezone == ICalObject.TZ_ALLDAY -> holder.start.text =
+                        context.getString(R.string.list_start_today)
+                    millisLeft >= 0L && daysLeft == 1L && iCal4ListItem.property.dtstartTimezone == ICalObject.TZ_ALLDAY -> holder.start.text =
+                        context.getString(R.string.list_start_tomorrow)
+                    millisLeft >= 0L && daysLeft <= 1L && iCal4ListItem.property.dtstartTimezone != ICalObject.TZ_ALLDAY -> holder.start.text =
+                        context.getString(R.string.list_start_inXhours, hoursLeft)
+                    millisLeft >= 0L && daysLeft >= 2L -> holder.start.text =
+                        context.getString(R.string.list_start_inXdays, daysLeft)
+                    else -> holder.start.visibility = View.GONE      //should not be possible
+                }
+            }
+
             /*
             if (iCal4ListItem.property.percent == 100)
                 holder.progressCheckbox.isActivated = true
@@ -362,6 +390,8 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
         var progressCheckbox: CheckBox = itemView.findViewById(R.id.list_item_todo_progress_checkbox)
 
         var due: TextView = itemView.findViewById(R.id.list_item_todo_due)
+        var start: TextView = itemView.findViewById(R.id.list_item_todo_start)
+
 
         var colorBar: ImageView = itemView.findViewById(R.id.list_item_todo_colorbar)
 
