@@ -8,7 +8,8 @@
   -->
 
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/menu_edit_delete"
@@ -19,6 +20,13 @@
     <item
         android:id="@+id/menu_edit_save"
         android:icon="@drawable/ic_save"
-        android:title="@string/menu_edit_delete"
+        android:title="@string/save"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_edit_clear_dates"
+        android:title="@string/menu_edit_clear_dates"
+        android:visible="false"
+        tools:visible="true"
+        app:showAsAction="never" />
 </menu>

@@ -311,6 +311,8 @@
 
     <!-- menus -->
     <string name="menu_edit_delete">Delete</string>
+    <string name="menu_edit_save">Save</string>
+    <string name="menu_edit_clear_dates">Clear dates</string>
     <string name="menu_filter_reset">Reset</string>
     <string name="menu_filter_apply">Apply</string>
     <string name="menu_list_search">Search</string>

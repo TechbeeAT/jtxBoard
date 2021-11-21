@@ -89,6 +89,7 @@ class IcalEditFragment : Fragment() {
     lateinit var icalEditViewModel: IcalEditViewModel
     private lateinit var inflater: LayoutInflater
     private var container: ViewGroup? = null
+    private var menu: Menu? = null
 
     private val allContactsMail: MutableList<String> = mutableListOf()
     //private val allContactsNameAndMail: MutableList<String> = mutableListOf()
@@ -502,6 +503,10 @@ class IcalEditFragment : Fragment() {
                     StatusJournal.getStringResource(requireContext(), it.status) ?: it.status
                 else -> binding.editStatusChip.text = it.status
             }       // if unsupported just show whatever is there
+
+            // show the reset dates menu item if it is a to-do
+            if(it.module == Module.TODO.name)
+                menu?.findItem(R.id.menu_edit_clear_dates)?.isVisible = true
 
             // if the item has an original Id, the user chose to unlink the recurring instance from the original, the recurring values need to be deleted
             if(it.isRecurLinkedInstance) {
@@ -1701,12 +1706,14 @@ class IcalEditFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_ical_edit, menu)
+        this.menu = menu
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.menu_edit_delete -> icalEditViewModel.deleteClicked()
             R.id.menu_edit_save -> icalEditViewModel.savingClicked()
+            R.id.menu_edit_clear_dates -> icalEditViewModel.clearDates()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -2198,6 +2205,7 @@ class IcalEditFragment : Fragment() {
         return isValid
 
     }
+
 
 
     /**

@@ -216,6 +216,16 @@ class IcalEditViewModel(
         deleteClicked.value = true
     }
 
+    fun clearDates() {
+        iCalObjectUpdated.value!!.dtstart = null
+        iCalObjectUpdated.value!!.due = null
+        iCalObjectUpdated.value!!.completed = null
+        addTimezoneTodoChecked.postValue(false)
+        addTimeChecked.postValue(false)
+        iCalObjectUpdated.postValue(iCalObjectUpdated.value)
+    }
+
+
 
     fun update() {
         var insertedOrUpdatedItemId: Long
