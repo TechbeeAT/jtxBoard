@@ -347,7 +347,9 @@ class IcalListFragment : Fragment() {
      */
     private fun loadFilterArgsAndPrefs() {
         // check first if the arguments contain the search-property, if not, check in prefs, if this is also null, return a default value
-        icalListViewModel.searchModule = arguments.module2show ?: prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
+        // The next line is commented out as it has become less useful to use the searchModule from the args. It might make more sense to only use the value in the shared preferences to always return to the list where the user got deeper into details.
+        //icalListViewModel.searchModule = arguments.module2show ?: prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
+        icalListViewModel.searchModule = prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
 
         when(icalListViewModel.searchModule) {
             Module.JOURNAL.name -> {
