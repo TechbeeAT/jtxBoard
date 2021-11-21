@@ -22,6 +22,7 @@ import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.property.DtStart
+import net.fortuna.ical4j.util.MapTimeZoneCache
 import java.util.*
 import java.util.Calendar
 import java.util.TimeZone
@@ -515,6 +516,9 @@ data class ICalObject(
                 dtstartTimezone == TZ_ALLDAY -> DtStart(Date(dtstart)).value
                 dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(dtstart)).value
                 else -> {
+                    // fix for crash when Timezones are needed for ical4j, see https://github.com/ical4j/ical4j/issues/195
+                    System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
+
                     val timezone = TimeZoneRegistryFactory.getInstance().createRegistry()
                         .getTimeZone(dtstartTimezone)
                     val withTimezone = DtStart(DateTime(dtstart))
