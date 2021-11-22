@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/edit_attendees_roledialog_chair"
+        android:text="@string/attendee_role_chair"
         app:layout_constraintBottom_toBottomOf="@+id/edit_attendees_roledialog_chair_icon"
         app:layout_constraintStart_toEndOf="@+id/edit_attendees_roledialog_chair_icon"
         app:layout_constraintTop_toTopOf="@+id/edit_attendees_roledialog_chair_icon" />
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/edit_attendees_roledialog_required"
+        android:text="@string/attendee_role_required_participant"
         app:layout_constraintBottom_toBottomOf="@+id/edit_attendees_roledialog_required_icon"
         app:layout_constraintStart_toEndOf="@+id/edit_attendees_roledialog_required_icon"
         app:layout_constraintTop_toTopOf="@+id/edit_attendees_roledialog_required_icon" />
@@ -73,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/edit_attendees_roledialog_optional"
+        android:text="@string/attendee_role_optional_participant"
         app:layout_constraintBottom_toBottomOf="@+id/edit_attendees_roledialog_optional_icon"
         app:layout_constraintStart_toEndOf="@+id/edit_attendees_roledialog_optional_icon"
         app:layout_constraintTop_toTopOf="@+id/edit_attendees_roledialog_optional_icon" />
@@ -94,7 +94,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/edit_attendees_roledialog_nonparticipant"
+        android:text="@string/attendee_role_non_participant"
         app:layout_constraintBottom_toBottomOf="@+id/edit_attendees_roledialog_nonparticipant_icon"
         app:layout_constraintStart_toEndOf="@+id/edit_attendees_roledialog_nonparticipant_icon"
         app:layout_constraintTop_toTopOf="@+id/edit_attendees_roledialog_nonparticipant_icon" />

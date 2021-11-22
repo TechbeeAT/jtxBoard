@@ -205,10 +205,6 @@
     <string name="edit_url_hint">URL</string>
     <string name="edit_location_hint">Location</string>
     <string name="edit_fab_save_contentDescription">Save</string>
-    <string name="edit_attendees_roledialog_chair">Chair</string>
-    <string name="edit_attendees_roledialog_required">Required</string>
-    <string name="edit_attendees_roledialog_optional">Optional</string>
-    <string name="edit_attendees_roledialog_nonparticipant">Info / Non-participant</string>
     <string name="edit_attachment_add_dialog_hint">Add your attachment-url (https://…)</string>
     <string name="edit_comment_add_dialog_hint">Edit comment</string>
 
