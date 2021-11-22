@@ -30,8 +30,8 @@
 
     <!-- Possible audio formats for settings -->
     <array name="settings_audio_formats">
-        <item>audio/aac</item>
         <item>audio/3gpp</item>
+        <item>audio/aac</item>
         <item>audio/ogg</item>
     </array>
 

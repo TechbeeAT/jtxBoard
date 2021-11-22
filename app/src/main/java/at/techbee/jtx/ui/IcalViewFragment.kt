@@ -67,9 +67,10 @@ class IcalViewFragment : Fragment() {
     private lateinit var settings: SharedPreferences
 
     // set default audio format (might be overwritten by settings)
-    private var audioFileExtension = "mp4"
+    private var audioFileExtension = "3gp"
     private var audioOutputFormat = MediaRecorder.OutputFormat.MPEG_4
     private var audioEncoder = MediaRecorder.AudioEncoder.AAC
+    private var audioMimetype: String = Attachment.FMTTYPE_AUDIO_3GPP
 
 
     /*
@@ -101,14 +102,14 @@ class IcalViewFragment : Fragment() {
             audioFileExtension = "aac"
             audioOutputFormat = MediaRecorder.OutputFormat.MPEG_4
             audioEncoder = MediaRecorder.AudioEncoder.AAC
-        } else if (settingMimetype == Attachment.FMTTYPE_AUDIO_3GPP) {
-            audioFileExtension = "3gp"
-            audioOutputFormat = MediaRecorder.OutputFormat.THREE_GPP
-            audioEncoder = MediaRecorder.AudioEncoder.AMR_NB
         } else if (settingMimetype == Attachment.FMTTYPE_AUDIO_OGG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             audioFileExtension = "ogg"
             audioOutputFormat = MediaRecorder.OutputFormat.OGG
             audioEncoder = MediaRecorder.AudioEncoder.OPUS
+        } else {  // settingMimetype == Attachment.FMTTYPE_AUDIO_3GPP is also the default format
+            audioFileExtension = "3gp"
+            audioOutputFormat = MediaRecorder.OutputFormat.THREE_GPP
+            audioEncoder = MediaRecorder.AudioEncoder.AMR_NB
         }
 
 
@@ -514,10 +515,10 @@ class IcalViewFragment : Fragment() {
                                 newFile.writeBytes(cachedFile.readBytes())
 
                                 val newAttachment = Attachment(
-                                    fmttype = Attachment.FMTTYPE_AUDIO_MP4_AAC,
+                                    fmttype = audioMimetype,
                                     uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, newFile).toString(),
                                     filename = newFilename,
-                                    extension = ".mp4",
+                                    extension = audioFileExtension,
                                     filesize = newFile.length()
                                 )
                                 icalViewViewModel.insertRelated(null, newAttachment)
