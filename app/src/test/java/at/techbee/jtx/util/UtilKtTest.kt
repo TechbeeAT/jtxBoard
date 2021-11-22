@@ -14,7 +14,7 @@ import org.junit.Test
 
 class UtilKtTest {
 
-    val sampleDateTime = 1632395090107L   // = Thu Sep 23 2021 11:04:50 (UTC)
+    private val sampleDateTime = 1632395090107L   // = Thu Sep 23 2021 11:04:50 (UTC)
 
     // TODO: Those tests might fail in the future as the methods return locales, check for a better solution
     //@Test fun convertLongToDateString() = assertEquals("", convertLongToDateString(sampleDateTime))

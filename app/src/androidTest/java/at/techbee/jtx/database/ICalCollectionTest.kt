@@ -10,7 +10,6 @@ package at.techbee.jtx.database
 
 import android.content.ContentValues
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.properties.*
 import org.junit.Test
 
 import org.junit.Assert.*

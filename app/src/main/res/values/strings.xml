@@ -18,8 +18,6 @@
     <string name="link_ffg" translatable="false">https://www.ffg.at</string>
     <string name="link_jtx" translatable="false">https://jtx.techbee.at</string>
     <string name="link_jtx_sync" translatable="false">https://jtx.techbee.at/sync-with-davx5</string>
-    <string name="link_jtx_forums" translatable="false">https://forums.bitfire.at/category/30/jtx-board</string>
-    <string name="link_jtx_faq" translatable="false">https://jtx.techbee.at/faq</string>
     <string name="link_jtx_support" translatable="false">https://jtx.techbee.at/support</string>
     <string name="link_jtx_privacy_policy" translatable="false">https://jtx.techbee.at/privacy</string>
     <string name="link_jtx_twitter" translatable="false">https://twitter.com/jtxBoard</string>
@@ -184,9 +182,6 @@
     <string name="view_dialog_add_note">Add note</string>
     <string name="view_dialog_add_note_dialog_hint">Add your note here</string>
     <string name="view_toast_entry_does_not_exist_anymore">The requested entry does not exist (anymore).</string>
-    <string name="view_start_text">Start: %1$s</string>
-    <string name="view_due_text">Due: %1$s</string>
-    <string name="view_completed_text">Completed: %1$s</string>
     <string name="view_created_text">Created: %1$s</string>
     <string name="view_last_modified_text">Last modified: %1$s</string>
     <string name="view_due">Due</string>
@@ -214,10 +209,6 @@
     <string name="edit_attendees_roledialog_required">Required</string>
     <string name="edit_attendees_roledialog_optional">Optional</string>
     <string name="edit_attendees_roledialog_nonparticipant">Info / Non-participant</string>
-    <string name="edit_timezone_content_desc">Timezone</string>
-    <string name="edit_timezone_start_content_desc">Start Timezone</string>
-    <string name="edit_timezone_due_content_desc">Due Timezone</string>
-    <string name="edit_timezone_completed_content_desc">Completed Timezone</string>
     <string name="edit_attachment_add_dialog_hint">Add your attachment-url (https://…)</string>
     <string name="edit_comment_add_dialog_hint">Edit comment</string>
 
@@ -308,7 +299,6 @@
 
     <!-- menus -->
     <string name="menu_edit_delete">Delete</string>
-    <string name="menu_edit_save">Save</string>
     <string name="menu_edit_clear_dates">Clear dates</string>
 
     <string name="menu_filter_reset">Reset</string>

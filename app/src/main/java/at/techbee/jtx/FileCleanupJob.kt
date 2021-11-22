@@ -18,7 +18,7 @@ import androidx.work.WorkerParameters
 import at.techbee.jtx.database.ICalDatabase
 import java.io.File
 
-class FileCleanupJob (val appContext: Context, workerParams: WorkerParameters):
+class FileCleanupJob (private val appContext: Context, workerParams: WorkerParameters):
     CoroutineWorker(appContext, workerParams) {
 
         override suspend fun doWork(): Result {

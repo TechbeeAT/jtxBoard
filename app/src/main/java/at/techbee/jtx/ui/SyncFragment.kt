@@ -34,7 +34,7 @@ class SyncFragment : Fragment() {
     private lateinit var inflater: LayoutInflater
     private lateinit var dataSource: ICalDatabaseDao
 
-    var collectionsString = ""
+    private var collectionsString = ""
 
 
     companion object {

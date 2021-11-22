@@ -12,7 +12,6 @@ import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
-import junit.framework.TestCase
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.component.VJournal
