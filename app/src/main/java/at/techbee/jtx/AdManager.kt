@@ -145,7 +145,7 @@ class AdManager {
                 .addTestDeviceHashedId("C4E10B8B06DB3B7287C2097746D070C4")
                 .build()
 
-            // Set tag for underage of consent. false means users are not underage.
+            // Set tag for underage of consent. false means users are not underage. Admob will decide which ads to show and should take care to not show personalized ads to children.
             val consentParams = ConsentRequestParameters.Builder().apply {
                 this.setTagForUnderAgeOfConsent(false)
                 if(BuildConfig.DEBUG)
