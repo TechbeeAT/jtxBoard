@@ -605,12 +605,11 @@ class IcalEditFragment : Fragment() {
                 return@observe
 
             if(addTodoTimezone) {
-                if(icalEditViewModel.iCalObjectUpdated.value?.dtstart != null)
-                    showTimezonePicker(TAG_PICKER_DTSTART)
-                else if(icalEditViewModel.iCalObjectUpdated.value?.due != null)
-                    showTimezonePicker(TAG_PICKER_DUE)
-                else if(icalEditViewModel.iCalObjectUpdated.value?.completed != null)
-                    showTimezonePicker(TAG_PICKER_COMPLETED)
+                when {
+                    icalEditViewModel.iCalObjectUpdated.value?.dtstart != null -> showTimezonePicker(TAG_PICKER_DTSTART)
+                    icalEditViewModel.iCalObjectUpdated.value?.due != null -> showTimezonePicker(TAG_PICKER_DUE)
+                    icalEditViewModel.iCalObjectUpdated.value?.completed != null -> showTimezonePicker(TAG_PICKER_COMPLETED)
+                }
             } else {
                 icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = null
                 icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = null
@@ -1323,7 +1322,7 @@ class IcalEditFragment : Fragment() {
         builder.setView(spinner)
         builder.setPositiveButton(R.string.save) { _, _ ->
 
-            val selectedTimezone = icalEditViewModel.possibleTimezones.get(spinner.selectedItemPosition)
+            val selectedTimezone = icalEditViewModel.possibleTimezones[spinner.selectedItemPosition]
 
             when (tag) {
                 TAG_PICKER_DUE -> {

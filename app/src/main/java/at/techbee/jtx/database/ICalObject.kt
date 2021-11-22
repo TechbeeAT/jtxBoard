@@ -779,7 +779,7 @@ data class ICalObject(
         }
 
         //now remove exceptions
-        val exceptions = getLongListfromCSVString(this.exdate)
+        val exceptions = getLongListfromCSVString(this.exdate).toSet()
         recurList.removeAll(exceptions)
 
         //now add additions (this is not in use in jtx, but can theoretically come through the sync
