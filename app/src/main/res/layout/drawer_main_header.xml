@@ -12,8 +12,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:background="?attr/colorBackgroundFloating">
+    android:background="?attr/colorSurfaceInverse">
 
 
     <ImageView
@@ -39,15 +38,20 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/app_name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="?attr/colorOnSurfaceInverse"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/app_subtitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/app_icon" />
+        app:layout_constraintStart_toEndOf="@+id/app_icon"
+        app:layout_constraintTop_toTopOf="@+id/app_icon"
+        app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/app_subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="?attr/colorOnSurfaceInverse"
         android:paddingBottom="8dp"
         android:text="@string/navigation_drawer_subtitle"
         app:layout_constraintBottom_toBottomOf="@+id/app_icon"
