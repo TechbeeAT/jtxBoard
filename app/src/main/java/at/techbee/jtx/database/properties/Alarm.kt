@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) Techbee e.U.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ */
+
 package at.techbee.jtx.database.properties
 
 import android.content.ContentValues
@@ -66,7 +74,7 @@ data class Alarm (
         /**
          * Create a new [Alarm] Property from the specified [ContentValues].
          *
-         * @param values A [Alarm] that at least contain [COLUMN_ALARM_VALUE].
+         * @param values A [Alarm] that at least contain [COLUMN_ALARM_ICALOBJECT_ID].
          * @return A newly created [Alarm] instance.
          */
         fun fromContentValues(values: ContentValues?): Alarm? {

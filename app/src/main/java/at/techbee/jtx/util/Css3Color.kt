@@ -1,6 +1,6 @@
 
 /*
- * Copyright © Ricki Hirner (bitfire web engineering).
+ * Copyright (c) Techbee e.U.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at

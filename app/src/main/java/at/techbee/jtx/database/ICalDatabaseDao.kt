@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Patrick Lang in collaboration with bitfire web engineering.
+ * Copyright (c) Techbee e.U.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -310,7 +310,7 @@ DELETEs by Object
     /**
      * Delete all attachments with a specific icalobjectid.
      *
-     * @param [icalobjectid] of the icalObject that should be deleted.
+     * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = :icalobjectId")
     fun deleteAttachments(icalobjectId: Long)
@@ -318,7 +318,7 @@ DELETEs by Object
     /**
      * Delete all relatedto with a specific icalobjectid.
      *
-     * @param [icalobjectid] of the icalObject that should be deleted.
+     * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectId")
     fun deleteRelatedtos(icalobjectId: Long)
@@ -326,7 +326,7 @@ DELETEs by Object
     /**
      * Delete all attendees with a specific icalobjectid.
      *
-     * @param [icalobjectid] of the icalObject that should be deleted.
+     * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID = :icalobjectId")
     fun deleteAttendees(icalobjectId: Long)
@@ -334,7 +334,7 @@ DELETEs by Object
     /**
      * Delete all attendees with a specific icalobjectid.
      *
-     * @param [icalobjectid] of the icalObject that should be deleted.
+     * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = :icalobjectId")
     fun deleteResources(icalobjectId: Long)
