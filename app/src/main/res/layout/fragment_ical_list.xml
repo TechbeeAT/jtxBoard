@@ -41,7 +41,7 @@
                         android:id="@+id/journals_tab"
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
-                        android:icon="@drawable/ic_date"
+                        android:icon="@drawable/ic_journals"
                         android:text="@string/list_tabitem_journals" />
 
                     <com.google.android.material.tabs.TabItem

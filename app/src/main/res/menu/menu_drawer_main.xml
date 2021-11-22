@@ -65,15 +65,15 @@
     <menu>
         <item
             android:id="@+id/nav_website"
-            android:icon="@drawable/ic_home_dark"
+            android:icon="@drawable/ic_home"
             android:title="@string/navigation_drawer_website"/>
         <item
             android:id="@+id/nav_support"
-            android:icon="@drawable/ic_help_dark"
+            android:icon="@drawable/ic_support"
             android:title="@string/navigation_drawer_support"/>
         <item
             android:id="@+id/nav_privacy"
-            android:icon="@drawable/ic_cloud_off_dark"
+            android:icon="@drawable/ic_privacy"
             android:title="@string/navigation_drawer_privacy_policy"/>
     </menu>
 </item>
