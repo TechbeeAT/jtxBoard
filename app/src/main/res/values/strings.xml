@@ -6,7 +6,7 @@
   ~ http://www.gnu.org/licenses/gpl.html
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- App title and fragment titles -->
     <string name="app_name">jtx Board</string>
@@ -119,13 +119,13 @@
     <string name="list_due_overdue">Overdue</string>
     <string name="list_due_today">Due today</string>
     <string name="list_due_tomorrow">Due tomorrow</string>
-    <string name="list_due_inXdays">Due in %d days</string>
-    <string name="list_due_inXhours">Due in %d hours</string>
+    <string name="list_due_inXdays" tools:ignore="PluralsCandidate">Due in %d days</string>
+    <string name="list_due_inXhours" tools:ignore="PluralsCandidate">Due in %d hours</string>
     <string name="list_start_past">Start in past</string>
     <string name="list_start_today">Planned start today</string>
     <string name="list_start_tomorrow">Start tomorrow</string>
-    <string name="list_start_inXhours">Planned start in %d hours</string>
-    <string name="list_start_inXdays">Planned start in %d days</string>
+    <string name="list_start_inXhours" tools:ignore="PluralsCandidate">Planned start in %d hours</string>
+    <string name="list_start_inXdays" tools:ignore="PluralsCandidate">Planned start in %d days</string>
     <string name="list_tabitem_journals">Journals</string>
     <string name="list_tabitem_notes">Notes</string>
     <string name="list_tabitem_todos">Tasks</string>
