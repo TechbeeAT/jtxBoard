@@ -238,6 +238,9 @@
     <string name="edit_recur_toast_requires_start_date">Recurrence requires a start-date to be set!</string>
     <string name="edit_datepicker_dialog_select_date">Select date</string>
     <string name="edit_datepicker_dialog_select_time">Select time</string>
+    <string name="edit_task_started_add">Pick started date/time</string>
+    <string name="edit_task_due_add">Pick due date/time</string>
+    <string name="edit_task_completed_add">Pick completed date/time</string>
 
     <string name="edit_dialog_sure_to_delete_title">Delete \"%1$s\"?</string>
     <string name="edit_dialog_sure_to_discard_title">Discard this entry?</string>

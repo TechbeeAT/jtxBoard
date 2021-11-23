@@ -99,6 +99,7 @@
                     android:textAlignment="center"
                     android:textSize="36sp"
                     android:textStyle="bold"
+                    android:visibility="@{model.iCalObjectUpdated.dtstart != null ? View.VISIBLE : View.GONE}"
                     tools:text="31" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -109,6 +110,7 @@
                     android:textAlignment="center"
                     android:textSize="12sp"
                     android:textStyle="bold"
+                    android:visibility="@{model.iCalObjectUpdated.dtstart != null ? View.VISIBLE : View.GONE}"
                     tools:text="December" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -119,6 +121,7 @@
                     android:textAlignment="center"
                     android:textSize="12sp"
                     android:textStyle="bold"
+                    android:visibility="@{model.iCalObjectUpdated.dtstart != null ? View.VISIBLE : View.GONE}"
                     tools:text="2020" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -152,6 +155,15 @@
                     android:textSize="12sp"
                     android:visibility="@{model.addTimezoneTodoChecked ? View.VISIBLE : View.GONE}"
                     tools:text="Europe/Vienna" />
+
+                <ImageView
+                    android:id="@+id/edit_task_started_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:visibility="@{model.iCalObjectUpdated.dtstart == null ? View.VISIBLE : View.GONE}"
+                    app:srcCompat="@drawable/ic_date"
+                    android:contentDescription="@string/edit_task_started_add" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -196,6 +208,7 @@
                     android:textAlignment="center"
                     android:textSize="36sp"
                     android:textStyle="bold"
+                    android:visibility="@{model.iCalObjectUpdated.due != null ? View.VISIBLE : View.GONE}"
                     tools:text="31" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -206,6 +219,7 @@
                     android:textAlignment="center"
                     android:textSize="12sp"
                     android:textStyle="bold"
+                    android:visibility="@{model.iCalObjectUpdated.due != null ? View.VISIBLE : View.GONE}"
                     tools:text="December" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -216,6 +230,7 @@
                     android:textAlignment="center"
                     android:textSize="12sp"
                     android:textStyle="bold"
+                    android:visibility="@{model.iCalObjectUpdated.due != null ? View.VISIBLE : View.GONE}"
                     tools:text="2020" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -249,6 +264,15 @@
                     android:textSize="12sp"
                     android:visibility="@{model.addTimezoneTodoChecked ? View.VISIBLE : View.GONE}"
                     tools:text="Europe/Vienna" />
+
+                <ImageView
+                    android:id="@+id/edit_task_due_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:visibility="@{model.iCalObjectUpdated.due == null ? View.VISIBLE : View.GONE}"
+                    app:srcCompat="@drawable/ic_date"
+                    android:contentDescription="@string/edit_task_due_add" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -293,6 +317,7 @@
                     android:textAlignment="center"
                     android:textSize="36sp"
                     android:textStyle="bold"
+                    android:visibility="@{model.iCalObjectUpdated.completed != null ? View.VISIBLE : View.GONE}"
                     tools:text="31" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -303,6 +328,7 @@
                     android:textAlignment="center"
                     android:textSize="12sp"
                     android:textStyle="bold"
+                    android:visibility="@{model.iCalObjectUpdated.completed != null ? View.VISIBLE : View.GONE}"
                     tools:text="December" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -313,6 +339,7 @@
                     android:textAlignment="center"
                     android:textSize="12sp"
                     android:textStyle="bold"
+                    android:visibility="@{model.iCalObjectUpdated.completed != null ? View.VISIBLE : View.GONE}"
                     tools:text="2020" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -346,6 +373,15 @@
                     android:textSize="12sp"
                     android:visibility="@{model.addTimezoneTodoChecked ? View.VISIBLE : View.GONE}"
                     tools:text="Europe/Vienna" />
+
+                <ImageView
+                    android:id="@+id/edit_task_completed_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:visibility="@{model.iCalObjectUpdated.completed == null ? View.VISIBLE : View.GONE}"
+                    app:srcCompat="@drawable/ic_date"
+                    android:contentDescription="@string/edit_task_completed_add" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
