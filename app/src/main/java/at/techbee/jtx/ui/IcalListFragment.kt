@@ -51,12 +51,7 @@ class IcalListFragment : Fragment() {
     private var linearLayoutManager: LinearLayoutManager? = null
     //private var staggeredGridLayoutManager: StaggeredGridLayoutManager? = null
 
-    private var journalListAdapter: IcalListAdapterJournal? = null
-    private var noteListAdapter: IcalListAdapterNote? = null
-    private var todoListAdapter: IcalListAdapterTodo? = null
-
     private lateinit var icalListViewModel: IcalListViewModel
-
     private lateinit var binding: FragmentIcalListBinding
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
@@ -135,26 +130,13 @@ class IcalListFragment : Fragment() {
 
         settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
-
         // set up recycler view
         recyclerView = binding.vjournalListItemsRecyclerView
         linearLayoutManager = LinearLayoutManager(application.applicationContext)
         //staggeredGridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-
         //recyclerView?.layoutManager = staggeredGridLayoutManager
         recyclerView?.layoutManager = linearLayoutManager
         recyclerView?.setHasFixedSize(false)
-
-        // create adapter and provide data
-        journalListAdapter = IcalListAdapterJournal(requireContext(), icalListViewModel)
-        noteListAdapter = IcalListAdapterNote(requireContext(), icalListViewModel)
-        todoListAdapter = IcalListAdapterTodo(requireContext(), icalListViewModel)
-
-        when(icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> recyclerView?.adapter = journalListAdapter
-            Module.NOTE.name -> recyclerView?.adapter = noteListAdapter
-            Module.TODO.name -> recyclerView?.adapter = todoListAdapter
-        }
 
 
         arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
@@ -163,11 +145,12 @@ class IcalListFragment : Fragment() {
         loadFilterArgsAndPrefs()
 
 
-        // Observe the vjournalList for Changes, on any change the recycler view must be updated, additionally the Focus Item might be updated
         icalListViewModel.iCal4List.observe(viewLifecycleOwner, {
 
-            binding.listProgressIndicator.visibility = View.GONE
+
             updateMenuVisibilities()
+            binding.listProgressIndicator.visibility = View.GONE
+
 
             // if the hash is the same as before, the list has not changed and we don't continue (such triggers happen regularly when DAVx5 is doing the sync)
             // searchStatusTodo needs special handling, if it was changed (although the basic list might be the same), the subtasks might change and they
@@ -178,7 +161,14 @@ class IcalListFragment : Fragment() {
             lastSearchStatusTodo = icalListViewModel.searchStatusTodo
 
 
-            recyclerView?.adapter?.notifyDataSetChanged()
+            //recyclerView?.adapter?.notifyDataSetChanged()
+            // instead of notifyDataSetChanged, we initialize the recycler view from scratch in the observer (instead of onCreateView)
+            // this seems to be more efficient and also makes sure that the list gets purged before it's rebuild and avoids strange layout behaviours
+            when(icalListViewModel.searchModule) {
+                Module.JOURNAL.name -> recyclerView?.adapter = IcalListAdapterJournal(requireContext(), icalListViewModel)
+                Module.NOTE.name -> recyclerView?.adapter = IcalListAdapterNote(requireContext(), icalListViewModel)
+                Module.TODO.name -> recyclerView?.adapter = IcalListAdapterTodo(requireContext(), icalListViewModel)
+            }
 
             if(lastSearchModule != icalListViewModel.searchModule)          // we do the animation only if the module was changed. Otherwise animation would also be done when e.g. a progress is changed.
                 recyclerView?.scheduleLayoutAnimation()
@@ -193,8 +183,9 @@ class IcalListFragment : Fragment() {
 
         // This observer is needed in order to make sure that the Subtasks are retrieved!
         icalListViewModel.allSubtasks.observe(viewLifecycleOwner, {
-            if(it.isNotEmpty())
-                recyclerView?.adapter?.notifyDataSetChanged()
+            //if(it.isNotEmpty())
+                //recyclerView?.adapter?.notifyDataSetChanged()
+            // trying to skip this code. This might have the effect, that subtasks that are added during the sync might not be immediately available, but improves the performance as the list does not get updated all the time
         })
 
 
@@ -244,10 +235,6 @@ class IcalListFragment : Fragment() {
             false
         }
 
-        // update the recycler view as the user might have changed the setting to show subtasks
-        prefs.registerOnSharedPreferenceChangeListener { _, _ ->
-            recyclerView?.adapter?.notifyDataSetChanged()
-        }
 
         return binding.root
     }
@@ -262,6 +249,13 @@ class IcalListFragment : Fragment() {
 
         applyFilters()
         updateMenuVisibilities()
+
+        when(icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> recyclerView?.adapter = IcalListAdapterJournal(requireContext(), icalListViewModel)
+            Module.NOTE.name -> recyclerView?.adapter = IcalListAdapterNote(requireContext(), icalListViewModel)
+            Module.TODO.name -> recyclerView?.adapter = IcalListAdapterTodo(requireContext(), icalListViewModel)
+        }
+
         super.onResume()
     }
 
@@ -429,12 +423,6 @@ class IcalListFragment : Fragment() {
         updateToolbarText()
         icalListViewModel.updateSearch()
         savePrefs()
-
-        when(icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> recyclerView?.adapter = journalListAdapter
-            Module.NOTE.name -> recyclerView?.adapter = noteListAdapter
-            Module.TODO.name -> recyclerView?.adapter = todoListAdapter
-        }
 
         //change background
         when (icalListViewModel.searchModule) {
