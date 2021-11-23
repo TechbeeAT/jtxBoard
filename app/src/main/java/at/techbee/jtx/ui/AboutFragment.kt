@@ -102,7 +102,7 @@ class AboutFragment : Fragment() {
         var clickCount = 1
         bindingAboutJtx.aboutAppTechbeeLogo.setOnClickListener {
 
-            val messages = arrayOf("What's up?", "Bzzzz", "Bzzzzzzzzz", "I'm working here", "If it's for coffee, then yes")
+            val messages = arrayOf("If it's for coffee, then yes", "Bzzzz", "Bzzzzzzzzz", "I'm working here", "What's up?")
             if(clickCount%5 == 0)
                 bindingAboutJtx.aboutAppTechbeeLogo.setImageResource(R.drawable.logo_techbee_front)
             else
