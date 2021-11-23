@@ -124,6 +124,14 @@ class IcalListAdapterHelper {
                     )
                 }
 
+                // on long click we notify the model to get the entity, so that the observer can forward the user to the edit fragment
+                subtaskBinding.root.setOnLongClickListener {
+                    // the observer in the fragment will make sure that the edit fragment is opened for the loaded entity
+                    model.postDirectEditEntity(subtask.id)
+                    true
+                }
+
+
 
                 if(settingShowProgressSubtasks) {
                     subtaskBinding.listItemSubtaskProgressSlider.visibility = View.VISIBLE

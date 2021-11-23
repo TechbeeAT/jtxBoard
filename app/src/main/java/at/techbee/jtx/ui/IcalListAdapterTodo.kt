@@ -276,6 +276,14 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 )
             }
 
+            // on long click we notify the model to get the entity, so that the observer can forward the user to the edit fragment
+            holder.listItemCardView.setOnLongClickListener {
+                // the observer in the fragment will make sure that the edit fragment is opened for the loaded entity
+                model.postDirectEditEntity(iCal4ListItem.property.id)
+                true
+            }
+
+
             var resetProgress = iCal4ListItem.property.percent ?: 0
 
             // take care to update the progress in the DB when the progress is changed

@@ -197,6 +197,16 @@ class IcalListFragment : Fragment() {
         })
 
 
+        // observe the directEditEntity. This is set in the Adapter on long click through the model. On long click we forward the user directly to the edit fragment
+        icalListViewModel.directEditEntity.observe(viewLifecycleOwner) {
+            if (it == null)
+                return@observe
+            icalListViewModel.directEditEntity.removeObservers(viewLifecycleOwner)
+            icalListViewModel.directEditEntity.value = null      // invalidate so that on click on back, the value is empty and doesn't create unexpected behaviour!
+            this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(it))
+        }
+
+
 
         binding.tablayoutJournalnotestodos.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
@@ -497,9 +507,6 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_gotodate -> scrollToDate()
             R.id.menu_list_filter -> goToFilter()
             R.id.menu_list_clearfilter -> resetFilter()
-            R.id.menu_list_add_journal -> goToEdit(ICalEntity(ICalObject.createJournal()))
-            R.id.menu_list_add_note -> goToEdit(ICalEntity(ICalObject.createNote()))
-            R.id.menu_list_add_todo -> goToEdit(ICalEntity(ICalObject.createTodo()))
             R.id.menu_list_delete_visible -> deleteVisible()
         }
 

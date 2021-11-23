@@ -55,6 +55,7 @@ class IcalListViewModel(
     val allCollections = database.getAllCollections()
 
     var quickInsertedEntity: MutableLiveData<ICalEntity?> = MutableLiveData<ICalEntity?>().apply { postValue(null) }
+    var directEditEntity: MutableLiveData<ICalEntity?> = MutableLiveData<ICalEntity?>().apply { postValue(null) }
     var scrollOnceId: Long? = null
 
 
@@ -286,6 +287,13 @@ class IcalListViewModel(
 
             scrollOnceId = newId
             quickInsertedEntity.postValue(database.getSync(newId))
+        }
+    }
+
+    fun postDirectEditEntity(icalObjectId: Long) {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            directEditEntity.postValue(database.getSync(icalObjectId))
         }
     }
 }

@@ -34,21 +34,6 @@
             app:showAsAction="never" />
     </group>
 
-    <group android:id="@+id/menu_list_menugroup_add_item" >
-        <item
-            android:id="@+id/menu_list_add_journal"
-            android:title="@string/menu_list_add_journal"
-            app:showAsAction="never" />
-        <item
-            android:id="@+id/menu_list_add_note"
-            android:title="@string/menu_list_add_note"
-            app:showAsAction="never" />
-        <item
-            android:id="@+id/menu_list_add_todo"
-            android:title="@string/menu_list_add_todo"
-            app:showAsAction="never" />
-    </group>
-
     <group android:id="@+id/menu_list_menugroup_delete" >
         <item
             android:id="@+id/menu_list_delete_visible"

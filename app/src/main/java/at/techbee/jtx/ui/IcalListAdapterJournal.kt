@@ -232,6 +232,13 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
                 )
             }
 
+            // on long click we notify the model to get the entity, so that the observer can forward the user to the edit fragment
+            holder.listItemCardView.setOnLongClickListener {
+                // the observer in the fragment will make sure that the edit fragment is opened for the loaded entity
+                model.postDirectEditEntity(iCal4ListItem.property.id)
+                true
+            }
+
 
             val itemSubtasks = allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id } != null } ?: emptyList()
             IcalListAdapterHelper.addSubtasksView(model, itemSubtasks.distinct(), holder.subtasksLinearLayout, context, parent)
