@@ -55,6 +55,7 @@
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             app:layout_scrollFlags="scroll"
             app:navGraph="@navigation/navigation"
+            android:background="@drawable/bg_background"
             tools:layout="@layout/fragment_ical_list" />
 
 

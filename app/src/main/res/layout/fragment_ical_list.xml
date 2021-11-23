@@ -62,14 +62,6 @@
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <ImageView
-            android:id="@+id/list_background"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.2"
-            android:padding="24dp"
-            app:srcCompat="@drawable/bg_journals"
-            tools:ignore="ContentDescription" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -90,8 +82,8 @@
                 android:layout_below="@+id/list_progress_indicator"
                 android:layout_marginEnd="8dp"
                 android:layoutAnimation="@anim/recyclerview_layout_animation"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/fragment_ical_list_item_journal">
 
 
