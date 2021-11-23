@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity
@@ -57,7 +58,8 @@ class AboutFragment : Fragment() {
         //val aboutBinding = FragmentAboutBinding.inflate(inflater, container, false)
         bindingAboutJtx.aboutAppVersion.text = getString(R.string.about_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
         bindingAboutJtx.aboutAppBuildTime.text = getString(R.string.about_app_build_date, SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime))
-
+        binding.aboutLinearlayout.removeAllViews()
+        binding.aboutLinearlayout.addView(bindingAboutJtx.root)
 
         // get the fragment for the about library
         val aboutLibrariesFragment = LibsBuilder()
@@ -95,6 +97,19 @@ class AboutFragment : Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
             override fun onTabReselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
         })
+
+        // let the bee talk, just for fun ;-)
+        var clickCount = 1
+        bindingAboutJtx.aboutAppTechbeeLogo.setOnClickListener {
+
+            val messages = arrayOf("What's up?", "Bzzzz", "Bzzzzzzzzz", "I'm working here", "If it's for coffee, then yes")
+            if(clickCount%5 == 0)
+                bindingAboutJtx.aboutAppTechbeeLogo.setImageResource(R.drawable.logo_techbee_front)
+            else
+                bindingAboutJtx.aboutAppTechbeeLogo.setImageResource(R.drawable.logo_techbee)
+            Toast.makeText(requireContext(), messages[clickCount%5], Toast.LENGTH_SHORT).show()
+            clickCount++
+        }
 
         return binding.root
     }
