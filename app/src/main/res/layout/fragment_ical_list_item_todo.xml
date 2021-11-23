@@ -276,8 +276,9 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/list_item_todo_progress_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
+            android:gravity="center"
             android:text="@string/list_progress"
             app:layout_constraintBottom_toBottomOf="@+id/list_item_todo_progress_slider"
             app:layout_constraintStart_toStartOf="parent"
@@ -334,8 +335,9 @@
         <ImageView
             android:id="@+id/list_item_todo_expand"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:contentDescription="@string/list_expand"
+            android:foregroundGravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/list_item_todo_progress_label"
             app:layout_constraintStart_toEndOf="@+id/list_item_todo_progress_label"
             app:layout_constraintTop_toTopOf="@+id/list_item_todo_progress_label"
