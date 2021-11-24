@@ -28,11 +28,9 @@ buildscript {
         version_lifecycle = "2.4.0"
         version_navigation = '2.4.0-beta02'
         version_room = '2.3.0'
-        version_gson = "2.8.6"
         version_material = '1.5.0-beta01'
-        version_appcompat = "1.3.1"
-        version_appcompat_v7 = "27.1.1"
-        version_work = "2.7.0"
+        version_appcompat = "1.4.0"
+        version_work = "2.7.1"
         version_fragment = "1.4.0-alpha09"
         version_billing = "4.0.0"
 

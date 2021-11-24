@@ -133,16 +133,13 @@ dependencies {
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$version_room"
 
-    // Gson Serializer for Converters
-    //implementation "com.google.code.gson:gson:$version_gson"
-
     // Material.io
     implementation "com.google.android.material:material:$version_material"
 
     implementation "androidx.preference:preference-ktx:1.1.1"
 
     // Admob & Google Consent for Admob & Google billing
-    implementation "com.google.android.gms:play-services-ads:20.4.0"
+    implementation "com.google.android.gms:play-services-ads:20.5.0"
     implementation "com.google.android.ump:user-messaging-platform:2.0.0"
     implementation "com.android.billingclient:billing-ktx:$version_billing"
 
@@ -173,7 +170,7 @@ dependencies {
 
 
     //Fragment Testing
-    debugImplementation('androidx.fragment:fragment-testing:1.3.6') {
+    debugImplementation('androidx.fragment:fragment-testing:1.4.0') {
         // exclude androidx.test:core while fragment_testing depends on 1.1.0
         exclude group: 'androidx.test', module: 'core'
     }
