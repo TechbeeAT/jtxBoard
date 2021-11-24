@@ -875,6 +875,14 @@ object JtxContract {
         /** The content uri of the collections table */
         val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
 
+        /**
+         * Account type used for testing. This account type must be used for integrated testing.
+         * Otherwise the application would check if an account exists in the Android accounts
+         * and delete the test account/collections immediately. Using this test account prevents
+         * this behaviour for Debug builds.
+         */
+        const val TEST_ACCOUNT_TYPE = "TEST"
+
 
         /** The name of the the table for Collections.
          * ICalObjects MUST be linked to a collection! */

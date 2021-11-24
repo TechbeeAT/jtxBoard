@@ -247,6 +247,10 @@ class IcalListViewModel(
         Log.d("checkForDeletedAccounts", "Found accounts: $allDavx5Accounts")
         allRemoteCollections.value?.forEach { collection ->
 
+            // The Test account type should not be deleted, otherwise the tests will fail!
+            if(collection.accountType == ICalCollection.TEST_ACCOUNT_TYPE )
+                return@forEach
+
             val found = allDavx5Accounts.find { account ->
                 collection.accountName == account.name && collection.accountType == account.type
             }

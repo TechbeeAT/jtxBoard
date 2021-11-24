@@ -130,6 +130,8 @@ data class ICalCollection(
                 const val LOCAL_COLLECTION_NAME = "LOCAL"
                 const val LOCAL_ACCOUNT_NAME = "LOCAL"
                 const val LOCAL_ACCOUNT_TYPE = "LOCAL"
+                const val TEST_ACCOUNT_TYPE = "TEST"
+
 
                 const val DAVX5_ACCOUNT_TYPE = "bitfire.at.davdroid"
 
