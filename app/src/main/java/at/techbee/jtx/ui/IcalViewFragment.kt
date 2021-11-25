@@ -277,7 +277,7 @@ class IcalViewFragment : Fragment() {
                 getLongListfromCSVString(it.property.exdate).forEach { exdate ->
                     allExceptionsString += convertLongToFullDateString(exdate)
                     if(it.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                        allExceptionsString += " " + convertLongToTimeString(exdate)
+                        allExceptionsString += " " + convertLongToTimeString(exdate, it.property.dtstartTimezone)
                     allExceptionsString += "\n"
                 }
                 binding.viewRecurrenceExceptionItems.text = allExceptionsString
@@ -286,7 +286,7 @@ class IcalViewFragment : Fragment() {
                 getLongListfromCSVString(it.property.rdate).forEach { rdate ->
                     allAdditionsString += convertLongToFullDateString(rdate)
                     if(it.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                        allAdditionsString += " " + convertLongToTimeString(rdate)
+                        allAdditionsString += " " + convertLongToTimeString(rdate, it.property.dtstartTimezone)
                     allAdditionsString += "\n"
                 }
                 binding.viewRecurrenceAdditionsItems.text = allAdditionsString
@@ -360,7 +360,7 @@ class IcalViewFragment : Fragment() {
             instanceList.forEach { instance ->
                 instance?.let {
                     if (it.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                        recurDates.add(convertLongToFullDateString(it.dtstart) + " " + convertLongToTimeString(it.dtstart))
+                        recurDates.add(convertLongToFullDateString(it.dtstart) + " " + convertLongToTimeString(it.dtstart, it.dtstartTimezone))
                     else
                         recurDates.add(convertLongToFullDateString(it.dtstart))
                 }
@@ -737,7 +737,7 @@ class IcalViewFragment : Fragment() {
         when (item.itemId) {
             R.id.menu_view_share_text -> {
 
-                var shareText = "${convertLongToDateString(icalViewViewModel.icalEntity.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart)}\n"
+                var shareText = "${convertLongToDateString(icalViewViewModel.icalEntity.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart, icalViewViewModel.icalEntity.value!!.property.dtstartTimezone)}\n"
                 shareText += "${icalViewViewModel.icalEntity.value!!.property.summary}\n\n"
                 shareText += "${icalViewViewModel.icalEntity.value!!.property.description}\n\n"
                 //shareText += icalViewViewModel.icalEntity.value!!.getICalString()

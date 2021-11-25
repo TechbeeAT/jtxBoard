@@ -15,14 +15,31 @@ import org.junit.Test
 class UtilKtTest {
 
     private val sampleDateTime = 1632395090107L   // = Thu Sep 23 2021 11:04:50 (UTC)
+    private val sampleTimezone = "UTC+13"
+
+    private val sampleDateTime2 = 1640991660000L  // = Sat Jan 01 2022 00:01:00
+    private val sampleTimezone2 = "Europe/Lisbon"
 
     // TODO: Those tests might fail in the future as the methods return locales, check for a better solution
     //@Test fun convertLongToDateString() = assertEquals("", convertLongToDateString(sampleDateTime))
     //@Test fun convertLongToTimeString()  = assertEquals("11:04", convertLongToTimeString(sampleDateTime))
     //@Test fun convertLongToMonthString() = assertEquals("September", convertLongToMonthString(sampleDateTime))
 
-    @Test fun convertLongToDayString_test() = assertEquals("23", convertLongToDayString(sampleDateTime))
-    @Test fun convertLongToYearString_test() = assertEquals("2021", convertLongToYearString(sampleDateTime))
+    @Test fun convertLongToDayString_test() = assertEquals("23", convertLongToDayString(sampleDateTime, null))
+    @Test fun convertLongToYearString_test() = assertEquals("2021", convertLongToYearString(sampleDateTime, null))
+    @Test fun convertLongToDayString_test_timezone_next_day() = assertEquals("24", convertLongToDayString(sampleDateTime, sampleTimezone))
+
+    @Test fun convertLongToDayString_test_timezone_last_year() {
+        assertEquals("01", convertLongToDayString(sampleDateTime2, null))
+        //assertEquals("01", convertLongToMonthString(sampleDateTime2, null))
+        assertEquals("2022", convertLongToYearString(sampleDateTime2, null))
+
+        assertEquals("31", convertLongToDayString(sampleDateTime2, sampleTimezone2))
+        //assertEquals("12", convertLongToMonthString(sampleDateTime2, sampleTimezone2))
+        assertEquals("2021", convertLongToYearString(sampleDateTime2, sampleTimezone2))
+    }
+
+
 
     @Test fun isValidEmail_testTrue() = assertTrue(isValidEmail("valid@email.com"))
     @Test fun isValidEmail_testFalse1() = assertFalse(isValidEmail("invalid.com"))

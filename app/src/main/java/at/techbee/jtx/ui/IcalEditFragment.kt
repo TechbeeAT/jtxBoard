@@ -47,6 +47,7 @@ import at.techbee.jtx.*
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.databinding.*
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_DAY
@@ -68,15 +69,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
-import net.fortuna.ical4j.model.NumberList
-import net.fortuna.ical4j.model.Recur
-import net.fortuna.ical4j.model.WeekDay
-import net.fortuna.ical4j.model.WeekDayList
+import net.fortuna.ical4j.model.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.lang.ClassCastException
+import java.time.*
 import java.util.*
+import java.util.Calendar
 
 
 class IcalEditFragment : Fragment() {
@@ -547,30 +547,30 @@ class IcalEditFragment : Fragment() {
 
                 // make sure that the time gets reset to 0 (if it was set before)
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart?.let {
-                    val c = Calendar.getInstance().apply {
-                        timeInMillis = it
-                        set(Calendar.HOUR_OF_DAY, 0)
-                        set(Calendar.MINUTE, 0)
-                    }
-                    icalEditViewModel.iCalObjectUpdated.value?.dtstart = c.timeInMillis
+                    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone))
+                        .withHour(0)
+                        .withMinute(0)
+                        .withSecond(0)
+                        .withNano(0)
+                    icalEditViewModel.iCalObjectUpdated.value?.dtstart = zonedDateTime.toInstant().toEpochMilli()
                 }
 
                 icalEditViewModel.iCalObjectUpdated.value?.due?.let {
-                    val c = Calendar.getInstance().apply {
-                        timeInMillis = it
-                        set(Calendar.HOUR_OF_DAY, 0)
-                        set(Calendar.MINUTE, 0)
-                    }
-                    icalEditViewModel.iCalObjectUpdated.value?.due = c.timeInMillis
+                    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dueTimezone))
+                        .withHour(0)
+                        .withMinute(0)
+                        .withSecond(0)
+                        .withNano(0)
+                    icalEditViewModel.iCalObjectUpdated.value?.due = zonedDateTime.toInstant().toEpochMilli()
                 }
 
                 icalEditViewModel.iCalObjectUpdated.value?.completed?.let {
-                    val c = Calendar.getInstance().apply {
-                        timeInMillis = it
-                        set(Calendar.HOUR_OF_DAY, 0)
-                        set(Calendar.MINUTE, 0)
-                    }
-                    icalEditViewModel.iCalObjectUpdated.value?.completed = c.timeInMillis
+                    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.completedTimezone))
+                        .withHour(0)
+                        .withMinute(0)
+                        .withSecond(0)
+                        .withNano(0)
+                    icalEditViewModel.iCalObjectUpdated.value?.completed = zonedDateTime.toInstant().toEpochMilli()
                 }
 
             }
@@ -754,6 +754,7 @@ class IcalEditFragment : Fragment() {
         binding.editDtstartCard.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
+                icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone,
                 TAG_PICKER_DTSTART
             )
         }
@@ -761,6 +762,7 @@ class IcalEditFragment : Fragment() {
         binding.editTaskDatesFragment.editTaskDueCard.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis(),
+                icalEditViewModel.iCalObjectUpdated.value?.dueTimezone,
                 TAG_PICKER_DUE
             )
         }
@@ -768,6 +770,7 @@ class IcalEditFragment : Fragment() {
         binding.editTaskDatesFragment.editTaskCompletedCard.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.completed ?: System.currentTimeMillis(),
+                icalEditViewModel.iCalObjectUpdated.value?.completedTimezone,
                 TAG_PICKER_COMPLETED
             )
         }
@@ -775,6 +778,7 @@ class IcalEditFragment : Fragment() {
         binding.editTaskDatesFragment.editTaskStartedCard.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
+                icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone,
                 TAG_PICKER_DTSTART
             )
         }
@@ -1178,46 +1182,70 @@ class IcalEditFragment : Fragment() {
     }
 
 
-    private fun showTimePicker(fieldValue: Long, tag: String) {
 
-        val dtstartTime = Calendar.getInstance()
-        dtstartTime.timeInMillis = fieldValue
+    private fun showDatePicker(presetValueUTC: Long, timezone: String?, tag: String) {
+
+        val tzId = requireTzId(timezone)
+        val updatedUtcDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(presetValueUTC), tzId)
+
+        val datePicker =
+            MaterialDatePicker.Builder.datePicker()
+                .setTitleText(R.string.edit_datepicker_dialog_select_date)
+                .setSelection(presetValueUTC)
+                .build()
+
+        datePicker.addOnPositiveButtonClickListener {
+            // Respond to positive button click.
+            val selectedUtcDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
+            val zonedTimestamp = updatedUtcDateTime.withYear(selectedUtcDateTime.year).withMonth(selectedUtcDateTime.monthValue).withDayOfMonth(selectedUtcDateTime.dayOfMonth).toInstant().toEpochMilli()
+
+            when (tag) {
+                TAG_PICKER_DTSTART -> icalEditViewModel.iCalObjectUpdated.value!!.dtstart = zonedTimestamp
+                TAG_PICKER_DUE -> icalEditViewModel.iCalObjectUpdated.value!!.due = zonedTimestamp
+                TAG_PICKER_COMPLETED -> icalEditViewModel.iCalObjectUpdated.value!!.completed = zonedTimestamp
+            }
+
+            // if DTSTART was changed, we additionally update the RRULE
+            if(tag == TAG_PICKER_DTSTART)
+                updateRRule()
+
+            if (icalEditViewModel.addTimeChecked.value == true)    // let the user set the time only if the time is desired!
+                showTimePicker(zonedTimestamp, tzId.id, tag)
+
+            // post itself to update the UI
+            icalEditViewModel.iCalObjectUpdated.postValue(icalEditViewModel.iCalObjectUpdated.value)
+        }
+
+        datePicker.show(parentFragmentManager, tag)
+
+    }
+
+
+    private fun showTimePicker(presetValueUTC: Long, timezone: String?, tag: String) {
+
+        val tzId = requireTzId(timezone)
+        val presetUtcDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(presetValueUTC), tzId)
 
         val timePicker =
             MaterialTimePicker.Builder()
-                .setHour(dtstartTime.get(Calendar.HOUR))
-                .setMinute(dtstartTime.get(Calendar.MINUTE))
+                .setHour(presetUtcDateTime.hour)
+                .setMinute(presetUtcDateTime.minute)
                 .setTitleText(R.string.edit_datepicker_dialog_select_time)
                 .build()
 
         timePicker.addOnPositiveButtonClickListener {
 
+            val zonedTimestamp = presetUtcDateTime.withHour(timePicker.hour).withMinute(timePicker.minute).toInstant().toEpochMilli()
+
             when (tag) {
-                TAG_PICKER_DTSTART -> {
-                    val dtstart = Calendar.getInstance()
-                    dtstart.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart
-                        ?: System.currentTimeMillis()
-                    dtstart.set(Calendar.HOUR_OF_DAY, timePicker.hour)
-                    dtstart.set(Calendar.MINUTE, timePicker.minute)
-                    icalEditViewModel.iCalObjectUpdated.value!!.dtstart = dtstart.timeInMillis
-                }
-                TAG_PICKER_DUE -> {
-                    val due = Calendar.getInstance()
-                    due.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.due
-                        ?: System.currentTimeMillis()
-                    due.set(Calendar.HOUR_OF_DAY, timePicker.hour)
-                    due.set(Calendar.MINUTE, timePicker.minute)
-                    icalEditViewModel.iCalObjectUpdated.value!!.due = due.timeInMillis
-                }
-                TAG_PICKER_COMPLETED -> {
-                    val completed = Calendar.getInstance()
-                    completed.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.completed
-                        ?: System.currentTimeMillis()
-                    completed.set(Calendar.HOUR_OF_DAY, timePicker.hour)
-                    completed.set(Calendar.MINUTE, timePicker.minute)
-                    icalEditViewModel.iCalObjectUpdated.value!!.completed = completed.timeInMillis
-                }
+                TAG_PICKER_DTSTART -> icalEditViewModel.iCalObjectUpdated.value!!.dtstart = zonedTimestamp
+                TAG_PICKER_DUE -> icalEditViewModel.iCalObjectUpdated.value!!.due = zonedTimestamp
+                TAG_PICKER_COMPLETED -> icalEditViewModel.iCalObjectUpdated.value!!.completed = zonedTimestamp
             }
+
+            // if DTSTART was changed, we additionally update the RRULE
+            if(tag == TAG_PICKER_DTSTART)
+                updateRRule()
 
             // post itself to update the UI
             icalEditViewModel.iCalObjectUpdated.postValue(icalEditViewModel.iCalObjectUpdated.value)
@@ -1229,67 +1257,6 @@ class IcalEditFragment : Fragment() {
         timePicker.show(parentFragmentManager, tag)
     }
 
-    private fun showDatePicker(fieldValue: Long, tag: String) {
-
-        val datePicker =
-            MaterialDatePicker.Builder.datePicker()
-                .setTitleText(R.string.edit_datepicker_dialog_select_date)
-                .setSelection(fieldValue)
-                .build()
-
-        val c = Calendar.getInstance()
-
-        datePicker.addOnPositiveButtonClickListener {
-            // Respond to positive button click.
-            c.timeInMillis = it
-
-            when (tag) {
-                TAG_PICKER_DTSTART -> {
-                    val dtstart = Calendar.getInstance()
-                    dtstart.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart
-                        ?: System.currentTimeMillis()
-
-                    dtstart.set(Calendar.YEAR, c.get(Calendar.YEAR))
-                    dtstart.set(Calendar.MONTH, c.get(Calendar.MONTH))
-                    dtstart.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
-
-                    icalEditViewModel.iCalObjectUpdated.value!!.dtstart = c.timeInMillis
-                    updateRRule()
-                }
-                TAG_PICKER_DUE -> {
-                    val due = Calendar.getInstance()
-                    due.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.due
-                        ?: System.currentTimeMillis()
-
-                    due.set(Calendar.YEAR, c.get(Calendar.YEAR))
-                    due.set(Calendar.MONTH, c.get(Calendar.MONTH))
-                    due.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
-
-                    icalEditViewModel.iCalObjectUpdated.value!!.due = c.timeInMillis
-                }
-                TAG_PICKER_COMPLETED -> {
-                    val completed = Calendar.getInstance()
-                    completed.timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.completed
-                        ?: System.currentTimeMillis()
-
-                    completed.set(Calendar.YEAR, c.get(Calendar.YEAR))
-                    completed.set(Calendar.MONTH, c.get(Calendar.MONTH))
-                    completed.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
-
-                    icalEditViewModel.iCalObjectUpdated.value!!.completed = c.timeInMillis
-                }
-            }
-
-            if (icalEditViewModel.addTimeChecked.value == true)    // let the user set the time only if the time is desired!
-                showTimePicker(c.timeInMillis, tag)
-
-            // post itself to update the UI
-            icalEditViewModel.iCalObjectUpdated.postValue(icalEditViewModel.iCalObjectUpdated.value)
-        }
-
-        datePicker.show(parentFragmentManager, tag)
-
-    }
 
     private fun showTimezonePicker(tag: String) {
 
@@ -1304,15 +1271,9 @@ class IcalEditFragment : Fragment() {
         spinner.adapter = adapter
 
         when (tag) {
-            TAG_PICKER_DUE -> {
-                spinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(icalEditViewModel.iCalObjectUpdated.value?.dueTimezone))
-            }
-            TAG_PICKER_COMPLETED -> {
-                spinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(icalEditViewModel.iCalObjectUpdated.value?.completedTimezone))
-            }
-            TAG_PICKER_DTSTART -> {
-                spinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone))
-            }
+            TAG_PICKER_DUE -> spinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(icalEditViewModel.iCalObjectUpdated.value?.dueTimezone))
+            TAG_PICKER_COMPLETED -> spinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(icalEditViewModel.iCalObjectUpdated.value?.completedTimezone))
+            TAG_PICKER_DTSTART -> spinner.setSelection(icalEditViewModel.possibleTimezones.indexOf(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone))
         }
 
 
@@ -1326,30 +1287,34 @@ class IcalEditFragment : Fragment() {
 
             when (tag) {
                 TAG_PICKER_DUE -> {
+                    val oldUtcDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis()), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dueTimezone))
                     icalEditViewModel.iCalObjectUpdated.value?.dueTimezone = selectedTimezone
-                    // if other times are set but no timezone is set, we set the timezone also for the other date-times
-                    if(icalEditViewModel.iCalObjectUpdated.value?.completed != null && icalEditViewModel.iCalObjectUpdated.value?.completedTimezone == null)
-                        icalEditViewModel.iCalObjectUpdated.value?.completedTimezone = selectedTimezone
-                    if(icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone == null)
-                        icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone = selectedTimezone
+                    icalEditViewModel.iCalObjectUpdated.value?.due = oldUtcDateTime.withZoneSameLocal(requireTzId(selectedTimezone)).toInstant().toEpochMilli()
                 }
                 TAG_PICKER_COMPLETED -> {
+                    val oldUtcDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(icalEditViewModel.iCalObjectUpdated.value?.completed ?: System.currentTimeMillis()), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.completedTimezone))
                     icalEditViewModel.iCalObjectUpdated.value!!.completedTimezone = selectedTimezone
-                    // if other times are set but no timezone is set, we set the timezone also for the other date-times
-                    if(icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone == null)
-                        icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone = selectedTimezone
-                    if(icalEditViewModel.iCalObjectUpdated.value?.due != null && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone == null)
-                        icalEditViewModel.iCalObjectUpdated.value?.dueTimezone = selectedTimezone
+                    icalEditViewModel.iCalObjectUpdated.value?.completed = oldUtcDateTime.withZoneSameLocal(requireTzId(selectedTimezone)).toInstant().toEpochMilli()
                 }
                 TAG_PICKER_DTSTART -> {
+                    val oldUtcDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis()), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone))
                     icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = selectedTimezone
-                    // if other times are set but no timezone is set, we set the timezone also for the other date-times
-                    if(icalEditViewModel.iCalObjectUpdated.value?.completed != null && icalEditViewModel.iCalObjectUpdated.value?.completedTimezone == null)
-                        icalEditViewModel.iCalObjectUpdated.value?.completedTimezone = selectedTimezone
-                    if(icalEditViewModel.iCalObjectUpdated.value?.due != null && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone == null)
-                        icalEditViewModel.iCalObjectUpdated.value?.dueTimezone = selectedTimezone
+                    icalEditViewModel.iCalObjectUpdated.value?.dtstart = oldUtcDateTime.withZoneSameLocal(requireTzId(selectedTimezone)).toInstant().toEpochMilli()
                 }
             }
+
+            // if times are set but no timezone is set, we set the timezone also for the other date-times
+            /*
+            if(icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone == null)
+                icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone = selectedTimezone
+            if(icalEditViewModel.iCalObjectUpdated.value?.due != null && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone == null)
+                icalEditViewModel.iCalObjectUpdated.value?.dueTimezone = selectedTimezone
+            if(icalEditViewModel.iCalObjectUpdated.value?.completed != null && icalEditViewModel.iCalObjectUpdated.value?.completedTimezone == null)
+                icalEditViewModel.iCalObjectUpdated.value?.completedTimezone = selectedTimezone
+
+             */
+
+
 
             // post itself to update the UI
             icalEditViewModel.iCalObjectUpdated.postValue(icalEditViewModel.iCalObjectUpdated.value)
@@ -2095,13 +2060,13 @@ class IcalEditFragment : Fragment() {
 
         var lastOccurrenceString = convertLongToFullDateString(icalEditViewModel.recurrenceList.lastOrNull())
         if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
-            lastOccurrenceString += " " + convertLongToTimeString(icalEditViewModel.recurrenceList.lastOrNull())
+            lastOccurrenceString += " " + convertLongToTimeString(icalEditViewModel.recurrenceList.lastOrNull(), icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)
 
         var allOccurrencesString = ""
         icalEditViewModel.recurrenceList.forEach {
             allOccurrencesString += convertLongToFullDateString(it)
             if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                allOccurrencesString += " " + convertLongToTimeString(it)
+                allOccurrencesString += " " + convertLongToTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)
             allOccurrencesString += "\n"
         }
 
@@ -2109,7 +2074,7 @@ class IcalEditFragment : Fragment() {
         getLongListfromCSVString(icalEditViewModel.iCalObjectUpdated.value?.exdate).forEach {
             allExceptionsString += convertLongToFullDateString(it)
             if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                allExceptionsString += " " + convertLongToTimeString(it)
+                allExceptionsString += " " + convertLongToTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)
             allExceptionsString += "\n"
         }
 
@@ -2117,7 +2082,7 @@ class IcalEditFragment : Fragment() {
         getLongListfromCSVString(icalEditViewModel.iCalObjectUpdated.value?.rdate).forEach {
             allAdditionsString += convertLongToFullDateString(it)
             if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                allAdditionsString += " " + convertLongToTimeString(it)
+                allAdditionsString += " " + convertLongToTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)
             allAdditionsString += "\n"
         }
 
@@ -2204,6 +2169,7 @@ class IcalEditFragment : Fragment() {
         return isValid
 
     }
+
 
 
 

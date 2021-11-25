@@ -144,14 +144,14 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
                 holder.colorBar.visibility = View.INVISIBLE
 
 
-            holder.dtstartDay.text = convertLongToDayString(iCal4ListItem.property.dtstart)
-            holder.dtstartMonth.text = convertLongToMonthString(iCal4ListItem.property.dtstart)
-            holder.dtstartYear.text = convertLongToYearString(iCal4ListItem.property.dtstart)
+            holder.dtstartDay.text = convertLongToDayString(iCal4ListItem.property.dtstart, iCal4ListItem.property.dtstartTimezone)
+            holder.dtstartMonth.text = convertLongToMonthString(iCal4ListItem.property.dtstart, iCal4ListItem.property.dtstartTimezone)
+            holder.dtstartYear.text = convertLongToYearString(iCal4ListItem.property.dtstart, iCal4ListItem.property.dtstartTimezone)
 
             if (iCal4ListItem.property.dtstartTimezone == ICalObject.TZ_ALLDAY) {
                 holder.dtstartTime.visibility = View.GONE
             } else {
-                holder.dtstartTime.text = convertLongToTimeString(iCal4ListItem.property.dtstart)
+                holder.dtstartTime.text = convertLongToTimeString(iCal4ListItem.property.dtstart, iCal4ListItem.property.dtstartTimezone)
                 holder.dtstartTime.visibility = View.VISIBLE
             }
 

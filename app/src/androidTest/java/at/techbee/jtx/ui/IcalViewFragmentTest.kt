@@ -157,10 +157,10 @@ class IcalViewFragmentTest {
         onView(allOf(withId(R.id.view_summary),withText(sampleJour.summary))).check(matches(isDisplayed()))
         onView(allOf(withId(R.id.view_description),withText(sampleJour.description))).check(matches(isDisplayed()))
 
-        val expectedDay = convertLongToDayString(sampleJour.dtstart)
-        val expectedMonth = convertLongToMonthString(sampleJour.dtstart)
-        val expectedYear = convertLongToYearString(sampleJour.dtstart)
-        val expectedTime = convertLongToTimeString(sampleJour.dtstart)
+        val expectedDay = convertLongToDayString(sampleJour.dtstart, sampleJour.dtstartTimezone)
+        val expectedMonth = convertLongToMonthString(sampleJour.dtstart, sampleJour.dtstartTimezone)
+        val expectedYear = convertLongToYearString(sampleJour.dtstart, sampleJour.dtstartTimezone)
+        val expectedTime = convertLongToTimeString(sampleJour.dtstart, sampleJour.dtstartTimezone)
 
         onView(withId(R.id.view_journal_dtstart_day)).check(matches(withText(expectedDay)))
         onView(withId(R.id.view_journal_dtstart_month)).check(matches(withText(expectedMonth)))

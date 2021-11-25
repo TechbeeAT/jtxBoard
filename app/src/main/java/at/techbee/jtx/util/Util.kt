@@ -12,10 +12,11 @@ import android.icu.text.MessageFormat
 import android.os.Build
 import android.util.Log
 import androidx.core.util.PatternsCompat
+import at.techbee.jtx.database.ICalObject
 import java.lang.NumberFormatException
 import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.time.DayOfWeek
+import java.time.*
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.*
@@ -23,6 +24,7 @@ import java.util.*
 
 
 fun convertLongToDateString(date: Long?): String {
+
     if (date == null || date == 0L)
         return ""
     return DateFormat.getDateInstance(DateFormat.LONG).format(date)
@@ -34,51 +36,38 @@ fun convertLongToFullDateString(date: Long?): String {
     return DateFormat.getDateInstance(DateFormat.FULL).format(date)
 }
 
-fun convertLongToTimeString(time: Long?): String {
+fun convertLongToTimeString(time: Long?, timezone: String?): String {
     if (time == null || time == 0L)
         return ""
-    return DateFormat.getTimeInstance(DateFormat.SHORT).format(time)
+    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), requireTzId(timezone))
+    val formatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
+    return zonedDateTime.toLocalTime().format(formatter)
 }
 
-/*
-fun convertLongToHourString(time: Long?): String {
-    if (time == null || time == 0L)
-        return ""
-    val hour_formatter = SimpleDateFormat("HH")
-    return hour_formatter.format(Date(time)).toString()
-}
-
-
-fun convertLongToMinuteString(time: Long): String {
-    if (time == 0L)
-        return ""
-    val minute_formatter = SimpleDateFormat("mm")
-    return minute_formatter.format(Date(time)).toString()
-}
-
- */
-
-fun convertLongToDayString(date: Long?): String {
+fun convertLongToDayString(date: Long?, timezone: String?): String {
     if (date == null || date == 0L)
         return ""
-    val dayFormatter = SimpleDateFormat("dd", Locale.getDefault())
-    return dayFormatter.format(Date(date)).toString()
+    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+    val formatter = DateTimeFormatter.ofPattern("dd", Locale.getDefault())
+    return zonedDateTime.toLocalDateTime().format(formatter)
 }
 
 
-fun convertLongToMonthString(date: Long?): String {
+fun convertLongToMonthString(date: Long?, timezone: String?): String {
     if (date == null || date == 0L)
         return ""
-    val monthFormatter = SimpleDateFormat("MMMM", Locale.getDefault())
-    return monthFormatter.format(Date(date)).toString()
+    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+    val formatter = DateTimeFormatter.ofPattern("MMMM", Locale.getDefault())
+    return zonedDateTime.toLocalDateTime().format(formatter)
 }
 
 
-fun convertLongToYearString(date: Long?): String {
+fun convertLongToYearString(date: Long?, timezone: String?): String {
     if (date == null || date == 0L)
         return ""
-    val yearFormatter = SimpleDateFormat("yyyy", Locale.getDefault())
-    return yearFormatter.format(Date(date)).toString()
+    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+    val formatter = DateTimeFormatter.ofPattern("yyyy", Locale.getDefault())
+    return zonedDateTime.toLocalDateTime().format(formatter)
 }
 
 
@@ -199,4 +188,21 @@ fun getOffsetStringFromTimezone(timezone: String?): String {
         return TimeZone.getTimeZone(it).getDisplayName(false, TimeZone.SHORT) ?: "" }
 
     return ""
+}
+
+
+/**
+ * Gets a [ZoneId] from a String
+ * @return ZoneId.systemDefault if the Timezone is not set or if it is an all-day event,
+ * The ZoneId of the given String or "UTC" if the string could not be parsed
+ */
+fun requireTzId(timezone: String?): ZoneId {
+    return if(timezone == null || timezone == ICalObject.TZ_ALLDAY)
+        ZoneId.systemDefault()
+    else
+        try {
+            ZoneId.of(timezone)
+        } catch (e: DateTimeException) {
+            ZoneId.of("UTC")
+        }
 }
