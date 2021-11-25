@@ -96,6 +96,7 @@ android {
 
     compileOptions {
         // Flag to enable support for the new language APIs, this is especially necessary to use java.time for versions < O
+        // https://developer.android.com/studio/write/java8-support#library-desugaring
         coreLibraryDesugaringEnabled = true
     }
 }
