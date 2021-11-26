@@ -108,6 +108,9 @@ class IcalEditFragment : Fragment() {
             }
         }
 
+    private var toastNoDtstart: Toast? = null
+
+
 
     companion object {
         const val TAG_PICKER_DTSTART = "dtstart"
@@ -1906,11 +1909,10 @@ class IcalEditFragment : Fragment() {
             return
         }
 
-        if (icalEditViewModel.iCalEntity.property.module == Module.NOTE.name) {
-            Toast.makeText(requireContext(), R.string.edit_recur_toast_notes_cannot_use_recur,Toast.LENGTH_LONG).show()
-            return
-        } else if(icalEditViewModel.iCalEntity.property.dtstart == null) {
-            Toast.makeText(requireContext(), R.string.edit_recur_toast_requires_start_date,Toast.LENGTH_LONG).show()
+        if(icalEditViewModel.iCalEntity.property.dtstart == null) {
+            toastNoDtstart?.cancel()   // cancel if already shown and how again, otherwise the new Toast gets enqueued and will be shown too long
+            toastNoDtstart = Toast.makeText(requireContext(), R.string.edit_recur_toast_requires_start_date,Toast.LENGTH_LONG)
+            toastNoDtstart?.show()
             return
         }
 
