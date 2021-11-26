@@ -722,13 +722,13 @@ data class ICalObject(
                             }
                             zonedDtstartWeekloop = zonedDtstartWeekloop.plusDays(1)
                         }
-                        zonedDtstart = zonedDtstart.plusWeeks(1)
+                        zonedDtstart = zonedDtstart.plusWeeks(interval)
                     }
                 }
                 Recur.Frequency.MONTHLY ->
                 {
+                    zonedDtstart = zonedDtstart.withDayOfMonth(rRule.monthDayList[0] ?:1)
                     for(i in 1..count) {
-                        zonedDtstart.withDayOfMonth(rRule.monthDayList[0] ?:1)
                         recurList.add(zonedDtstart.toInstant().toEpochMilli())
                         Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstart.toInstant().toEpochMilli(), dtstartTimezone))
                         zonedDtstart = zonedDtstart.plusMonths(interval)
