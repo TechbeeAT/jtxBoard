@@ -545,7 +545,7 @@ data class ICalObject(
             }
 
             database.deleteRecurringInstances(id)      // recurring instances are always physically deleted
-            val item = database.getSync(id)!!
+            val item = database.getSync(id)?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
             when {
                 item.property.isRecurLinkedInstance -> {
                     makeRecurringException(item.property, database)   // if the current item

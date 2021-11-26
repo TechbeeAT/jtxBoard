@@ -665,7 +665,8 @@ class IcalListFragment : Fragment() {
 
         val itemIds = mutableListOf<Long>()
         icalListViewModel.iCal4List.value?.forEach {
-            itemIds.add(it.property.id)
+            if(!it.property.isLinkedRecurringInstance)
+                itemIds.add(it.property.id)
         }
 
         MaterialAlertDialogBuilder(requireContext())
