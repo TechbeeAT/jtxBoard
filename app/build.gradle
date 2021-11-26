@@ -219,7 +219,7 @@ dependencies {
     // END packages for ical4j
 
     //About Libraries
-    implementation "com.mikepenz:aboutlibraries:8.9.1"
+    implementation "com.mikepenz:aboutlibraries:8.9.4"
 
 }
 

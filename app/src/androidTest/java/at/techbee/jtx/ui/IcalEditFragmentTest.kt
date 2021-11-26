@@ -113,7 +113,7 @@ class IcalEditFragmentTest {
     private var recurYear: String = ""
 
 
-        @ExperimentalCoroutinesApi
+    @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
