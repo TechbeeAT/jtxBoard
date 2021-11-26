@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.*
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -76,7 +75,6 @@ import java.io.IOException
 import java.lang.ClassCastException
 import java.time.*
 import java.util.*
-import java.util.Calendar
 
 
 class IcalEditFragment : Fragment() {
@@ -1580,7 +1578,6 @@ class IcalEditFragment : Fragment() {
     }
 
 
-    @SuppressLint("SetTextI18n")
     private fun addSubtasksView(subtask: ICalObject?) {
 
         if (subtask == null)
@@ -1949,11 +1946,10 @@ class IcalEditFragment : Fragment() {
                     dayList.add(WeekDay.SU)
 
                 // the day of dtstart must be checked and should not be unchecked!
-                val dtstartCal = Calendar.getInstance().apply {
-                    timeInMillis = icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis()
-                }
-                when (dtstartCal.get(Calendar.DAY_OF_WEEK)) {
-                    Calendar.MONDAY -> {
+                val zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis()), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone))
+
+                when (zonedDtstart.dayOfWeek) {
+                    DayOfWeek.MONDAY -> {
                         dayList.add(WeekDay.MO)
                         if(isLocalizedWeekstartMonday()) {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isChecked = true
@@ -1963,7 +1959,7 @@ class IcalEditFragment : Fragment() {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isEnabled = false
                         }
                     }
-                    Calendar.TUESDAY -> {
+                    DayOfWeek.TUESDAY -> {
                         dayList.add(WeekDay.TU)
                         if(isLocalizedWeekstartMonday()) {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isChecked = true
@@ -1973,7 +1969,7 @@ class IcalEditFragment : Fragment() {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isEnabled = false
                         }
                     }
-                    Calendar.WEDNESDAY -> {
+                    DayOfWeek.WEDNESDAY -> {
                         dayList.add(WeekDay.WE)
                         if(isLocalizedWeekstartMonday()) {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isChecked = true
@@ -1983,7 +1979,7 @@ class IcalEditFragment : Fragment() {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isEnabled = false
                         }
                     }
-                    Calendar.THURSDAY -> {
+                    DayOfWeek.THURSDAY -> {
                         dayList.add(WeekDay.TH)
                         if(isLocalizedWeekstartMonday()) {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isChecked = true
@@ -1993,7 +1989,7 @@ class IcalEditFragment : Fragment() {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isEnabled = false
                         }
                     }
-                    Calendar.FRIDAY -> {
+                    DayOfWeek.FRIDAY -> {
                         dayList.add(WeekDay.FR)
                         if(isLocalizedWeekstartMonday()) {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isChecked = true
@@ -2003,7 +1999,7 @@ class IcalEditFragment : Fragment() {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isEnabled = false
                         }
                     }
-                    Calendar.SATURDAY -> {
+                    DayOfWeek.SATURDAY -> {
                         dayList.add(WeekDay.SA)
                         if(isLocalizedWeekstartMonday()) {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isChecked = true
@@ -2013,7 +2009,7 @@ class IcalEditFragment : Fragment() {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isEnabled = false
                         }
                     }
-                    Calendar.SUNDAY -> {
+                    DayOfWeek.SUNDAY -> {
                         dayList.add(WeekDay.SU)
                         if(isLocalizedWeekstartMonday()) {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isChecked = true
@@ -2023,6 +2019,7 @@ class IcalEditFragment : Fragment() {
                             binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isEnabled = false
                         }
                     }
+                    else -> { }
                 }
 
                 if(dayList.isNotEmpty())
@@ -2058,32 +2055,21 @@ class IcalEditFragment : Fragment() {
         //UpdateUI
         icalEditViewModel.recurrenceList.addAll(icalEditViewModel.iCalEntity.property.getInstancesFromRrule())
 
-        var lastOccurrenceString = convertLongToFullDateString(icalEditViewModel.recurrenceList.lastOrNull())
-        if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
-            lastOccurrenceString += " " + convertLongToTimeString(icalEditViewModel.recurrenceList.lastOrNull(), icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)
+        val lastOccurrenceString = convertLongToFullDateTimeString(icalEditViewModel.recurrenceList.lastOrNull(), icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)
 
         var allOccurrencesString = ""
         icalEditViewModel.recurrenceList.forEach {
-            allOccurrencesString += convertLongToFullDateString(it)
-            if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                allOccurrencesString += " " + convertLongToTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)
-            allOccurrencesString += "\n"
+            allOccurrencesString += convertLongToFullDateTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone) + "\n"
         }
 
         var allExceptionsString = ""
         getLongListfromCSVString(icalEditViewModel.iCalObjectUpdated.value?.exdate).forEach {
-            allExceptionsString += convertLongToFullDateString(it)
-            if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                allExceptionsString += " " + convertLongToTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)
-            allExceptionsString += "\n"
+            allExceptionsString += convertLongToFullDateTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone) + "\n"
         }
 
         var allAdditionsString = ""
         getLongListfromCSVString(icalEditViewModel.iCalObjectUpdated.value?.rdate).forEach {
-            allAdditionsString += convertLongToFullDateString(it)
-            if(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                allAdditionsString += " " + convertLongToTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)
-            allAdditionsString += "\n"
+            allAdditionsString += convertLongToFullDateTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone) + "\n"
         }
 
         binding.editFragmentIcalEditRecur.editRecurLastOccurenceItem.text = lastOccurrenceString

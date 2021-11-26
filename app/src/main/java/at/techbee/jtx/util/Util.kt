@@ -12,35 +12,33 @@ import android.icu.text.MessageFormat
 import android.os.Build
 import android.util.Log
 import androidx.core.util.PatternsCompat
-import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
 import java.lang.NumberFormatException
-import java.text.DateFormat
 import java.time.*
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.*
 
 
-
-fun convertLongToDateString(date: Long?): String {
-
+fun convertLongToFullDateTimeString(date: Long?, timezone: String?): String {
     if (date == null || date == 0L)
         return ""
-    return DateFormat.getDateInstance(DateFormat.LONG).format(date)
-}
-
-fun convertLongToFullDateString(date: Long?): String {
-    if (date == null || date == 0L)
-        return ""
-    return DateFormat.getDateInstance(DateFormat.FULL).format(date)
+    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+    val formatter = when (timezone) {
+        null -> DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT)  // short Format for time to not show the timezone info
+        TZ_ALLDAY -> DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)   // only date
+        else -> DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT)  // all full with long time info with timezone - for now without Timezone, TODO: Check solution without showing seconds
+    }
+    return zonedDateTime.format(formatter)
 }
 
 fun convertLongToTimeString(time: Long?, timezone: String?): String {
     if (time == null || time == 0L)
         return ""
     val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), requireTzId(timezone))
-    val formatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
+    val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
     return zonedDateTime.toLocalTime().format(formatter)
 }
 
@@ -114,35 +112,24 @@ fun getLocalizedOrdinal(from: Int, to: Int, includeEmpty: Boolean): Array<String
 
 }
 
-fun getLocalizedWeekdays(): Array<String> {
+    fun getLocalizedWeekdays(): Array<String> {
 
-    val weekdays = mutableListOf<String>()
+        val weekdays = mutableListOf<String>()
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val wf: WeekFields = WeekFields.of(Locale.getDefault())
         val day: DayOfWeek = wf.firstDayOfWeek
         for(i in 0L..6L) {
             weekdays.add(day.plus(i).getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault()))
         }
-    } else {
-        weekdays.addAll(listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))
+
+        return weekdays.toTypedArray()
     }
 
-    return weekdays.toTypedArray()
-}
+/**
+ * @return true if the first day of the week is monday for the local device, else false
+ */
+fun isLocalizedWeekstartMonday() = WeekFields.of(Locale.getDefault()).firstDayOfWeek == DayOfWeek.MONDAY
 
-
-fun isLocalizedWeekstartMonday(): Boolean {
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val wf: WeekFields = WeekFields.of(Locale.getDefault())
-        val day: DayOfWeek = wf.firstDayOfWeek
-
-        if(day == DayOfWeek.MONDAY)
-            return true
-    }
-    return false
-}
 
 fun addLongToCSVString(listAsString: String?, value: Long?): String? {
 
@@ -197,7 +184,7 @@ fun getOffsetStringFromTimezone(timezone: String?): String {
  * The ZoneId of the given String or "UTC" if the string could not be parsed
  */
 fun requireTzId(timezone: String?): ZoneId {
-    return if(timezone == null || timezone == ICalObject.TZ_ALLDAY)
+    return if(timezone == null || timezone == TZ_ALLDAY)
         ZoneId.systemDefault()
     else
         try {

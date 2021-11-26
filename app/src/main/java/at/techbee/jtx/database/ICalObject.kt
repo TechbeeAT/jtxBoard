@@ -14,18 +14,17 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
 import androidx.room.*
+import at.techbee.jtx.*
 import at.techbee.jtx.R
-import at.techbee.jtx.addLongToCSVString
-import at.techbee.jtx.convertLongToDateString
-import at.techbee.jtx.getLongListfromCSVString
 import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.property.DtStart
 import net.fortuna.ical4j.util.MapTimeZoneCache
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.util.*
-import java.util.Calendar
-import java.util.TimeZone
 import kotlin.IllegalArgumentException
 
 
@@ -677,76 +676,70 @@ data class ICalObject(
 
         val recurList = mutableListOf<Long>()
 
+        // don't continue if this function is called with an empty dtstart
+        if(dtstart == null)
+            return emptyList()
+
         try {
             val rRule = Recur(this.rrule)
-            val interval = rRule.interval                       //interval and count MUST be present
+            val interval = rRule.interval.toLong()                       //interval and count MUST be present
             val count = rRule.count
-
-            val start = Calendar.getInstance().apply {
-                if(dtstartTimezone?.isNotEmpty() == true && dtstartTimezone != TZ_ALLDAY)
-                    this.timeZone = TimeZone.getTimeZone(dtstartTimezone)
-                else
-                    timeZone = TimeZone.getTimeZone("UTC")
-                //TODO: Continue here checking the timezone
-
-                timeInMillis = dtstart?: return emptyList()
-            }
-
+            var zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart?:0L), requireTzId(dtstartTimezone))
 
             when (rRule.frequency)
             {
                 Recur.Frequency.DAILY ->
                 {
                     for(i in 1..count) {
-                        recurList.add(start.timeInMillis)
-                        Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
-                        start.add(Calendar.DATE, interval)
+                        recurList.add(zonedDtstart.toInstant().toEpochMilli())
+                        Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstart.toInstant().toEpochMilli(), dtstartTimezone))
+                        zonedDtstart = zonedDtstart.plusDays(interval)
                     }
                 }
                 Recur.Frequency.WEEKLY -> {
 
-                    val selectedWeekdays = mutableListOf<Int>()
+                    val selectedWeekdays = mutableListOf<DayOfWeek>()
 
                     rRule.dayList.forEach { day ->
                         when(day.day) {
-                            WeekDay.Day.MO -> selectedWeekdays.add(Calendar.MONDAY)
-                            WeekDay.Day.TU -> selectedWeekdays.add(Calendar.TUESDAY)
-                            WeekDay.Day.WE -> selectedWeekdays.add(Calendar.WEDNESDAY)
-                            WeekDay.Day.TH -> selectedWeekdays.add(Calendar.THURSDAY)
-                            WeekDay.Day.FR -> selectedWeekdays.add(Calendar.FRIDAY)
-                            WeekDay.Day.SA -> selectedWeekdays.add(Calendar.SATURDAY)
-                            WeekDay.Day.SU -> selectedWeekdays.add(Calendar.SUNDAY)
+                            WeekDay.Day.MO -> selectedWeekdays.add(DayOfWeek.MONDAY)
+                            WeekDay.Day.TU -> selectedWeekdays.add(DayOfWeek.TUESDAY)
+                            WeekDay.Day.WE -> selectedWeekdays.add(DayOfWeek.WEDNESDAY)
+                            WeekDay.Day.TH -> selectedWeekdays.add(DayOfWeek.THURSDAY)
+                            WeekDay.Day.FR -> selectedWeekdays.add(DayOfWeek.FRIDAY)
+                            WeekDay.Day.SA -> selectedWeekdays.add(DayOfWeek.SATURDAY)
+                            WeekDay.Day.SU -> selectedWeekdays.add(DayOfWeek.SUNDAY)
                             else -> Log.w("LoadRRule", "Error on processing day list ($day)")
                         }
                     }
 
                     for(i in 1..count) {
-                        val startWeekloop = start.clone() as Calendar
+                        var zonedDtstartWeekloop = zonedDtstart
                         for (j in 1..7) {
-                            if(startWeekloop.get(Calendar.DAY_OF_WEEK) in selectedWeekdays) {
-                                recurList.add(startWeekloop.timeInMillis)
-                                Log.d("calculatedDay", convertLongToDateString(startWeekloop.timeInMillis))
+                            if(zonedDtstartWeekloop.dayOfWeek in selectedWeekdays) {
+                                recurList.add(zonedDtstartWeekloop.toInstant().toEpochMilli())
+                                Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstartWeekloop.toInstant().toEpochMilli(), dtstartTimezone))
                             }
-                            startWeekloop.add(Calendar.DATE, 1)
+                            zonedDtstartWeekloop = zonedDtstartWeekloop.plusDays(1)
                         }
-                        start.add(Calendar.WEEK_OF_YEAR, interval)
+                        zonedDtstart = zonedDtstart.plusWeeks(1)
                     }
                 }
                 Recur.Frequency.MONTHLY ->
                 {
                     for(i in 1..count) {
-                        start.set(Calendar.DAY_OF_MONTH, rRule.monthDayList[0] ?:1)
-                        recurList.add(start.timeInMillis)
-                        Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
-                        start.add(Calendar.MONTH, interval)
+                        zonedDtstart.withDayOfMonth(rRule.monthDayList[0] ?:1)
+                        recurList.add(zonedDtstart.toInstant().toEpochMilli())
+                        Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstart.toInstant().toEpochMilli(), dtstartTimezone))
+                        zonedDtstart = zonedDtstart.plusMonths(interval)
                     }
                 }
                 Recur.Frequency.YEARLY ->
                 {
                     for(i in 1..count) {
-                        recurList.add(start.timeInMillis)
-                        Log.d("calculatedDay", convertLongToDateString(start.timeInMillis))
-                        start.add(Calendar.YEAR, interval)
+                        recurList.add(zonedDtstart.toInstant().toEpochMilli())
+                        Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstart.toInstant().toEpochMilli(), dtstartTimezone))
+                        zonedDtstart = zonedDtstart.plusYears(interval)
                     }
                 }
                 else -> Log.w("LoadRRule", "Unsupported recurrence frequency found (${rRule.frequency}")

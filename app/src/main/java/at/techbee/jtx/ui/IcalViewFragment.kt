@@ -275,19 +275,13 @@ class IcalViewFragment : Fragment() {
 
                 var allExceptionsString = ""
                 getLongListfromCSVString(it.property.exdate).forEach { exdate ->
-                    allExceptionsString += convertLongToFullDateString(exdate)
-                    if(it.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                        allExceptionsString += " " + convertLongToTimeString(exdate, it.property.dtstartTimezone)
-                    allExceptionsString += "\n"
+                    allExceptionsString += convertLongToFullDateTimeString(exdate, it.property.dtstartTimezone) + "\n"
                 }
                 binding.viewRecurrenceExceptionItems.text = allExceptionsString
 
                 var allAdditionsString = ""
                 getLongListfromCSVString(it.property.rdate).forEach { rdate ->
-                    allAdditionsString += convertLongToFullDateString(rdate)
-                    if(it.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                        allAdditionsString += " " + convertLongToTimeString(rdate, it.property.dtstartTimezone)
-                    allAdditionsString += "\n"
+                    allAdditionsString += convertLongToFullDateTimeString(rdate, it.property.dtstartTimezone) + "\n"
                 }
                 binding.viewRecurrenceAdditionsItems.text = allAdditionsString
             }
@@ -359,10 +353,7 @@ class IcalViewFragment : Fragment() {
             val recurDates = mutableListOf<String>()
             instanceList.forEach { instance ->
                 instance?.let {
-                    if (it.dtstartTimezone != ICalObject.TZ_ALLDAY)
-                        recurDates.add(convertLongToFullDateString(it.dtstart) + " " + convertLongToTimeString(it.dtstart, it.dtstartTimezone))
-                    else
-                        recurDates.add(convertLongToFullDateString(it.dtstart))
+                    recurDates.add(convertLongToFullDateTimeString(it.dtstart, it.dtstartTimezone))
                 }
             }
             binding.viewRecurrenceItems.text = recurDates.joinToString(separator = "\n")
@@ -737,7 +728,7 @@ class IcalViewFragment : Fragment() {
         when (item.itemId) {
             R.id.menu_view_share_text -> {
 
-                var shareText = "${convertLongToDateString(icalViewViewModel.icalEntity.value!!.property.dtstart)} ${convertLongToTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart, icalViewViewModel.icalEntity.value!!.property.dtstartTimezone)}\n"
+                var shareText = "${convertLongToFullDateTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart, icalViewViewModel.icalEntity.value!!.property.dtstartTimezone)}\n"
                 shareText += "${icalViewViewModel.icalEntity.value!!.property.summary}\n\n"
                 shareText += "${icalViewViewModel.icalEntity.value!!.property.description}\n\n"
                 //shareText += icalViewViewModel.icalEntity.value!!.getICalString()
