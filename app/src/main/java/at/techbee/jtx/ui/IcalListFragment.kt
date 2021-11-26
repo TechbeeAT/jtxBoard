@@ -36,11 +36,15 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.FragmentIcalListBinding
 import at.techbee.jtx.databinding.FragmentIcalListQuickaddDialogBinding
+import at.techbee.jtx.requireTzId
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import java.lang.ClassCastException
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.*
 import java.util.regex.Pattern
 
@@ -496,7 +500,7 @@ class IcalListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
-            R.id.menu_list_gotodate -> scrollToDate()
+            R.id.menu_list_gotodate -> showScrollToDate()
             R.id.menu_list_filter -> goToFilter()
             R.id.menu_list_clearfilter -> resetFilter()
             R.id.menu_list_delete_visible -> deleteVisible()
@@ -579,7 +583,7 @@ class IcalListFragment : Fragment() {
 
 
 
-    private fun scrollToDate() {
+    private fun showScrollToDate() {
 
         // Create a custom date validator to only enable dates that are in the list
         val customDateValidator = object : CalendarConstraints.DateValidator {
@@ -591,19 +595,10 @@ class IcalListFragment : Fragment() {
             override fun isValid(date: Long): Boolean {
 
                 icalListViewModel.iCal4List.value?.forEach {
-                    val itemDateTime = Calendar.getInstance()
-                    itemDateTime.timeInMillis =
-                        it.property.dtstart ?: System.currentTimeMillis()
+                    val zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.property.dtstart?:0L), requireTzId(it.property.dtstartTimezone))
+                    val zonedSelection = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault())
 
-                    val dateDateTime = Calendar.getInstance()
-                    dateDateTime.timeInMillis = date
-
-                    if (itemDateTime.get(Calendar.YEAR) == dateDateTime.get(Calendar.YEAR)
-                        && itemDateTime.get(Calendar.MONTH) == dateDateTime.get(Calendar.MONTH)
-                        && itemDateTime.get(Calendar.DAY_OF_MONTH) == dateDateTime.get(
-                            Calendar.DAY_OF_MONTH
-                        )
-                    )
+                    if(zonedDtstart.dayOfMonth == zonedSelection.dayOfMonth && zonedDtstart.monthValue == zonedSelection.monthValue && zonedDtstart.year == zonedSelection.year)
                         return true
                 }
                 return false
@@ -633,23 +628,15 @@ class IcalListFragment : Fragment() {
 
         datePicker.addOnPositiveButtonClickListener {
             // Respond to positive button click.
-
-            // create a Calendar Object out of the selected dates
-            val selectedDate = Calendar.getInstance()
-            selectedDate.timeInMillis = it
+            val zonedSelection = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
 
             // find the item with the same date
-            val foundItem = icalListViewModel.iCal4List.value?.find { item ->
-                val cItem = Calendar.getInstance()
-                cItem.timeInMillis = item.property.dtstart ?: 0L
-
-                // if this condition is true, the item is considered as found
-                cItem.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR)
-                        && cItem.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH)
-                        && cItem.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)
+            val matchedItem = icalListViewModel.iCal4List.value?.find { item ->
+                val zonedMatch = ZonedDateTime.ofInstant(Instant.ofEpochMilli(item.property.dtstart ?: 0L), requireTzId(item.property.dtstartTimezone))
+                zonedSelection.dayOfMonth == zonedMatch.dayOfMonth && zonedSelection.monthValue == zonedMatch.monthValue && zonedSelection.year == zonedMatch.year
             }
-            if (foundItem != null) {
-                icalListViewModel.scrollOnceId = foundItem.property.id
+            if (matchedItem != null) {
+                icalListViewModel.scrollOnceId = matchedItem.property.id
                 scrollOnce()
             }
         }
