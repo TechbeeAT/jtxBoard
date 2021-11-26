@@ -22,7 +22,7 @@ class UtilKtTest {
 
     // TODO: Those tests might fail in the future as the methods return locales, check for a better solution
     //@Test fun convertLongToDateString() = assertEquals("", convertLongToDateString(sampleDateTime))
-    //@Test fun convertLongToTimeString()  = assertEquals("11:04", convertLongToTimeString(sampleDateTime))
+    @Test fun convertLongToTimeString()  = assertEquals("00:04", convertLongToTimeString(sampleDateTime, sampleTimezone))
     //@Test fun convertLongToMonthString() = assertEquals("September", convertLongToMonthString(sampleDateTime))
 
     @Test fun convertLongToDayString_test() = assertEquals("23", convertLongToDayString(sampleDateTime, null))
