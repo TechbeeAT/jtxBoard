@@ -37,12 +37,12 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
 
         <!-- make the elevated style the default card style -->
-        <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Filled</item>
-        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.FilledBox.Dense</item>
+        <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
 
     </style>
 
-    <style name="jtx.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu">
+    <style name="jtx.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
     </style>
 
     <style name="jtx.TabLabel" parent="TextAppearance.Material3.LabelLarge">
