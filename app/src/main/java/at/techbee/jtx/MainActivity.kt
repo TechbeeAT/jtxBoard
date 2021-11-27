@@ -33,6 +33,7 @@ import at.techbee.jtx.ui.SettingsFragment
 import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import net.fortuna.ical4j.util.MapTimeZoneCache
 
@@ -83,14 +84,15 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
         setSupportActionBar(toolbar)
 
+        // use dynamic color chosen by user
+        DynamicColors.applyToActivitiesIfAvailable(this.application)
+
         // necessary for ical4j
         System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
 
         adaptMenuToBuildFlavor()
         setUpDrawer()
         checkThemeSetting()
-
-
     }
 
 
