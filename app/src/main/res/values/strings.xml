@@ -278,6 +278,7 @@
 
 
     <!-- fragment_ical_filter -->
+    <string name="filter_account">Account</string>
     <string name="filter_collection">Collection</string>
     <string name="filter_status">Status</string>
     <string name="filter_classification">Classification</string>

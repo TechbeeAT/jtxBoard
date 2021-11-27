@@ -39,6 +39,7 @@ class IcalFilterFragment : Fragment() {
     private var displayedStatusChips: MutableList<String> = mutableListOf()
     private var displayedClassificationChips: MutableList<String> = mutableListOf()
     private var displayedCollectionChips: MutableList<String> = mutableListOf()
+    private var displayedAccountChips: MutableList<String> = mutableListOf()
 
 
     private var categoriesPreselected: MutableList<String> = mutableListOf()
@@ -46,6 +47,7 @@ class IcalFilterFragment : Fragment() {
     private var statusJournalPreselected: MutableList<String> = mutableListOf()
     private var classificationPreselected: MutableList<String> = mutableListOf()
     private var collectionPreselected: MutableList<String> = mutableListOf()
+    private var accountPreselected: MutableList<String> = mutableListOf()
     private var modulePreselected: String = Module.JOURNAL.name     // default should be overwritten
 
 
@@ -84,34 +86,24 @@ class IcalFilterFragment : Fragment() {
 
         modulePreselected = arguments.module2preselect
 
-        if (arguments.category2preselect?.isNotEmpty() == true)
-            categoriesPreselected = arguments.category2preselect!!.toMutableList()
+        categoriesPreselected = arguments.category2preselect?.toMutableList() ?: mutableListOf()
+        collectionPreselected = arguments.collection2preselect?.toMutableList() ?: mutableListOf()
+        accountPreselected = arguments.account2preselect?.toMutableList() ?: mutableListOf()
 
-        if (arguments.collection2preselect?.isNotEmpty() == true)
-            collectionPreselected = arguments.collection2preselect!!.toMutableList()
-
-        if (arguments.classification2preselect?.isNotEmpty() == true) {
-            arguments.classification2preselect!!.forEach {
-                if (Classification.values().contains(it))
-                    classificationPreselected.add(getString(it.stringResource))
-            }
+        arguments.classification2preselect?.forEach {
+            if (Classification.values().contains(it))
+                classificationPreselected.add(getString(it.stringResource))
         }
 
-        if (arguments.statusJournal2preselect?.isNotEmpty() == true) {
-            arguments.statusJournal2preselect!!.forEach {
-                if (StatusJournal.values().contains(it))
-                    statusJournalPreselected.add(getString(it.stringResource))
-            }
+        arguments.statusJournal2preselect?.forEach {
+            if (StatusJournal.values().contains(it))
+                statusJournalPreselected.add(getString(it.stringResource))
         }
 
-        if (arguments.statusTodo2preselect?.isNotEmpty() == true) {
-            arguments.statusTodo2preselect!!.forEach {
-                if (StatusTodo.values().contains(it))
-                    statusTodoPreselected.add(getString(it.stringResource))
-            }
+        arguments.statusTodo2preselect?.forEach {
+            if (StatusTodo.values().contains(it))
+                statusTodoPreselected.add(getString(it.stringResource))
         }
-
-//        val priorityItems = resources.getStringArray(R.array.priority)
 
         // Retrieve the String values for the ENUMs Classification, StatusTodo and StatusJournal
         val classificationItems: MutableList<String> = mutableListOf()
@@ -147,12 +139,12 @@ class IcalFilterFragment : Fragment() {
 
 
         // observe and set chips for categories
-        icalFilterViewModel.allCategories.observe(viewLifecycleOwner, {
+        icalFilterViewModel.allCategories.observe(viewLifecycleOwner, { categories ->
             // Add the chips for categories
             if (icalFilterViewModel.allCategories.value != null)
                 addChips(
                     binding.categoryFilterChipgroup,
-                    icalFilterViewModel.allCategories.value!!,
+                    categories,
                     displayedCategoryChips,
                     categoriesPreselected
                 )
@@ -160,11 +152,11 @@ class IcalFilterFragment : Fragment() {
         })
 
         //observe and set list for organizers
-        icalFilterViewModel.allCollections.observe(viewLifecycleOwner, {
+        icalFilterViewModel.allCollections.observe(viewLifecycleOwner, { collections ->
 
             val collectionDisplayNames = mutableListOf<String>()
-            icalFilterViewModel.allCollections.value?.forEach {
-                collectionDisplayNames.add(it.displayName ?: it.url)
+            collections.forEach { collection ->
+                collectionDisplayNames.add(collection.displayName ?: collection.url)
             }
             addChips(
                 binding.collectionFilterChipgroup,
@@ -173,9 +165,18 @@ class IcalFilterFragment : Fragment() {
                 collectionPreselected
             )
 
+            val accountNames = mutableListOf<String>()
+            collections.forEach { collection ->
+                collection.accountName?.let { accountNames.add(it) }
+            }
+            addChips(
+                binding.accountFilterChipgroup,
+                accountNames.distinct(),
+                displayedAccountChips,
+                accountPreselected
+            )
+
         })
-
-
 
         return binding.root
     }
@@ -243,6 +244,7 @@ class IcalFilterFragment : Fragment() {
     private fun resetFilter() {
 
         binding.collectionFilterChipgroup.clearCheck()
+        binding.accountFilterChipgroup.clearCheck()
         binding.statusTodoFilterChipgroup.clearCheck()
         binding.statusJournalFilterChipgroup.clearCheck()
         binding.classificationFilterChipgroup.clearCheck()
@@ -257,6 +259,7 @@ class IcalFilterFragment : Fragment() {
         val statusJournalSelected: MutableList<StatusJournal> = mutableListOf()
         val classificationSelected: MutableList<Classification> = mutableListOf()
         val collectionSelected: MutableList<String> = mutableListOf()
+        val accountSelected: MutableList<String> = mutableListOf()
 
 
         binding.classificationFilterChipgroup.checkedChipIds.forEach { checkedChipId ->
@@ -287,6 +290,11 @@ class IcalFilterFragment : Fragment() {
             collectionSelected.add(chip.text.toString())
         }
 
+        binding.accountFilterChipgroup.checkedChipIds.forEach { checkedChipId ->
+            val chip: Chip = binding.accountFilterChipgroup.findViewById(checkedChipId)
+            accountSelected.add(chip.text.toString())
+        }
+
 
         val direction =
             IcalFilterFragmentDirections.actionIcalFilterFragmentToIcalListFragment().apply {
@@ -294,6 +302,7 @@ class IcalFilterFragment : Fragment() {
                 this.statusTodo2filter = statusTodoSelected.toTypedArray()
                 this.classification2filter = classificationSelected.toTypedArray()
                 this.collection2filter = collectionSelected.toTypedArray()
+                this.account2filter = accountSelected.toTypedArray()
                 this.category2filter = categoriesSelected.toTypedArray()
                 this.module2show = modulePreselected
             }

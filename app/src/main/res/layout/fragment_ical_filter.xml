@@ -37,6 +37,41 @@
 
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/account_filter_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/filter_account"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/account_filter_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/account_filter_icon"
+                    android:layout_width="24sp"
+                    android:layout_height="24sp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/account_filter_label"
+                    app:srcCompat="@drawable/ic_account"
+                    tools:ignore="ContentDescription" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/account_filter_chipgroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/account_filter_label"
+                    app:layout_constraintTop_toBottomOf="@+id/account_filter_label">
+
+                </com.google.android.material.chip.ChipGroup>
+
+
+
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/collection_filter_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -46,7 +81,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/collection_filter_icon"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/account_filter_chipgroup" />
 
                 <ImageView
                     android:id="@+id/collection_filter_icon"

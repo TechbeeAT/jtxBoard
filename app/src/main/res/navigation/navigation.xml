@@ -64,6 +64,11 @@
             app:argType="string[]"
             app:nullable="true" />
         <argument
+            android:name="account2filter"
+            android:defaultValue="@null"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
             android:name="module2show"
             android:defaultValue="@null"
             app:argType="string"
@@ -144,6 +149,11 @@
             android:defaultValue="@null" />
         <argument
             android:name="collection2preselect"
+            android:defaultValue="@null"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="account2preselect"
             android:defaultValue="@null"
             app:argType="string[]"
             app:nullable="true" />

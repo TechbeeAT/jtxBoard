@@ -37,6 +37,8 @@ class IcalListViewModel(
     var searchStatusTodo: MutableList<StatusTodo> = mutableListOf()
     var searchClassification: MutableList<Classification> = mutableListOf()
     var searchCollection: MutableList<String> = mutableListOf()
+    var searchAccount: MutableList<String> = mutableListOf()
+
 
     var searchSettingShowAllSubtasksInTasklist: Boolean = false
     var searchSettingShowAllSubnotesInNoteslist: Boolean = false
@@ -66,11 +68,11 @@ class IcalListViewModel(
 
 // Beginning of query string
         var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST "
-        if(searchCategories.size > 0)
+        if(searchCategories.isNotEmpty())
             queryString += "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID "
-        if(searchOrganizer.size > 0)
+        if(searchOrganizer.isNotEmpty())
             queryString += "LEFT JOIN $TABLE_NAME_ORGANIZER ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ICALOBJECT_ID "
-        if(searchCollection.size > 0)
+        if(searchCollection.isNotEmpty() || searchAccount.isNotEmpty())
             queryString += "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
         //     "LEFT JOIN vattendees ON icalobject._id = vattendees.icalObjectId " +
         //     "LEFT JOIN vorganizer ON icalobject._id = vorganizer.icalObjectId " +
@@ -154,6 +156,17 @@ class IcalListViewModel(
             queryString += ") "
         }
 
+        // Query for the passed filter criteria from FilterFragment
+        if (searchAccount.isNotEmpty()) {
+            queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME IN ("
+            searchAccount.forEach {
+                queryString += "?,"
+                args.add(it)
+            }
+            queryString = queryString.removeSuffix(",")      // remove the last comma
+            queryString += ") "
+        }
+
         // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
         //queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
         when (searchModule) {
@@ -219,6 +232,7 @@ class IcalListViewModel(
         searchStatusTodo.clear()
         searchClassification.clear()
         searchCollection.clear()
+        searchAccount.clear()
         updateSearch()
     }
 
