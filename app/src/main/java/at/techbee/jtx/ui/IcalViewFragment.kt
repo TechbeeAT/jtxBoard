@@ -951,11 +951,10 @@ class IcalViewFragment : Fragment() {
 
             if(icalEntityCopy.property.status == StatusTodo.CANCELLED.name || icalEntityCopy.property.status == StatusTodo.`IN-PROCESS`.name || icalEntityCopy.property.status == StatusTodo.COMPLETED.name || icalEntityCopy.property.status == StatusTodo.`NEEDS-ACTION`.name)
                 icalEntityCopy.property.status = StatusJournal.FINAL.name
+            else
+                icalEntityCopy.property.status = icalViewViewModel.icalEntity.value?.property?.status
             // else just take the copy as it was already a Journal/Note
 
-            if(icalEntityCopy.property.status == StatusTodo.CANCELLED.name || icalEntityCopy.property.status == StatusTodo.`IN-PROCESS`.name || icalEntityCopy.property.status == StatusTodo.COMPLETED.name || icalEntityCopy.property.status == StatusTodo.`NEEDS-ACTION`.name)
-                icalEntityCopy.property.status = StatusJournal.FINAL.name
-            // else just take the copy as it was already a Journal/Note
 
             // only if it is a note we have to handle dtstart additionally, the rest is handled the same way for notes and journals
             if(newModule == Module.NOTE) {
@@ -966,13 +965,11 @@ class IcalViewFragment : Fragment() {
 
         } else if (newModule == Module.TODO) {
             icalEntityCopy.property.component = Component.VTODO.name
-            icalEntityCopy.property.module = Module.TODO.name
 
-            when (icalEntityCopy.property.percent) {
-                in 1..99 -> icalEntityCopy.property.status = StatusTodo.`IN-PROCESS`.name
-                100 -> icalEntityCopy.property.status = StatusTodo.COMPLETED.name
-                else -> icalEntityCopy.property.status = StatusTodo.`NEEDS-ACTION`.name
-            }
+            if(icalEntityCopy.property.status == StatusJournal.CANCELLED.name || icalEntityCopy.property.status == StatusJournal.DRAFT.name || icalEntityCopy.property.status == StatusJournal.FINAL.name)
+                icalEntityCopy.property.status = StatusTodo.`NEEDS-ACTION`.name
+            else
+                icalEntityCopy.property.status = icalViewViewModel.icalEntity.value?.property?.status
         }
 
         // reset the ids of all list properties to make sure that they get inserted as new ones
