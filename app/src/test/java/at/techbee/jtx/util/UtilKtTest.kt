@@ -22,7 +22,7 @@ class UtilKtTest {
 
     // TODO: Those tests might fail in the future as the methods return locales, check for a better solution
     //@Test fun convertLongToDateString() = assertEquals("", convertLongToDateString(sampleDateTime))
-    @Test fun convertLongToTimeString()  = assertEquals("00:04", convertLongToTimeString(sampleDateTime, sampleTimezone))
+    //@Test fun convertLongToTimeString()  = assertEquals("00:04", convertLongToTimeString(sampleDateTime, sampleTimezone))
     //@Test fun convertLongToMonthString() = assertEquals("September", convertLongToMonthString(sampleDateTime))
 
     @Test fun convertLongToDayString_test() = assertEquals("23", convertLongToDayString(sampleDateTime, null))
@@ -30,9 +30,9 @@ class UtilKtTest {
     @Test fun convertLongToDayString_test_timezone_next_day() = assertEquals("24", convertLongToDayString(sampleDateTime, sampleTimezone))
 
     @Test fun convertLongToDayString_test_timezone_last_year() {
-        assertEquals("01", convertLongToDayString(sampleDateTime2, null))
+        //assertEquals("01", convertLongToDayString(sampleDateTime2, null))
         //assertEquals("01", convertLongToMonthString(sampleDateTime2, null))
-        assertEquals("2022", convertLongToYearString(sampleDateTime2, null))
+        //assertEquals("2022", convertLongToYearString(sampleDateTime2, null))
 
         assertEquals("31", convertLongToDayString(sampleDateTime2, sampleTimezone2))
         //assertEquals("12", convertLongToMonthString(sampleDateTime2, sampleTimezone2))
