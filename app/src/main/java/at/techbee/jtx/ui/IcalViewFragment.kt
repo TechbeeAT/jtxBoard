@@ -37,6 +37,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.*
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.*
@@ -880,6 +881,11 @@ class IcalViewFragment : Fragment() {
         }, 0)
     }
 
+    /**
+     * Shows a Dialog if the user really wants to delete the item.
+     * If yes, a Toast is shown and the user is forwarded to the list view
+     * If no, the dialog is closed.
+     */
     private fun deleteItem() {
 
         // show Alert Dialog before the item gets really deleted
@@ -904,7 +910,11 @@ class IcalViewFragment : Fragment() {
     }
 
 
-
+    /**
+     * This function creates a copy of the ICalEntity in the same Module as the ICalEntity
+     * As the new ICalEntity needs some processing getIcalEntityCopy(...) is used to do this (e.g. give a new UID,...)
+     * @return The copy of the [ICalEntity] in the same Module
+     */
     private fun getIcalEntityCopy(): ICalEntity {
         return when (icalViewViewModel.icalEntity.value?.property?.module) {
             Module.JOURNAL.name -> getIcalEntityCopy(Module.JOURNAL)
@@ -914,76 +924,124 @@ class IcalViewFragment : Fragment() {
         }
     }
 
+    /**
+     * This function creates a copy of the ICalEntity in the selected module.
+     * This also applies some transformations, e.g. when a task is copied to a note
+     * @return The [ICalEntity] in transformed to the new module
+     */
     private fun getIcalEntityCopy(newModule: Module): ICalEntity {
 
-        val icalEntityCopy = icalViewViewModel.icalEntity.value!!
-        icalEntityCopy.property.id = 0L
-        icalEntityCopy.property.module = newModule.name
-        icalEntityCopy.property.dtstamp = System.currentTimeMillis()
-        icalEntityCopy.property.created = System.currentTimeMillis()
-        icalEntityCopy.property.lastModified = System.currentTimeMillis()
-        icalEntityCopy.property.dtend = null
-        icalEntityCopy.property.dtendTimezone = null
-        icalEntityCopy.property.recurOriginalIcalObjectId = null
-        icalEntityCopy.property.isRecurLinkedInstance = false
-        icalEntityCopy.property.exdate = null
-        icalEntityCopy.property.rdate = null
-        icalEntityCopy.property.uid = ICalObject.generateNewUID()
-        icalEntityCopy.property.dirty = true
+        /** TODO: the app keeps the reference of the the objects within the iCalEntity to the original objects (despite the copy()).
+         * In the worst case a user click on Copy as Task/Note/Journal, the objects get altered, the user is correctly forwarded to the edit fragment.
+         * But when he returns through the back button, the object does not get reset, so if he clicks on the edit button for the element
+         * the edit screen would open with the already altered values (e.g. the edit fragment of a task would open if he clicked on
+         * Copy as Task before
+         */
 
-        icalEntityCopy.property.flags = null
-        icalEntityCopy.property.scheduleTag = null
-        icalEntityCopy.property.eTag = null
-        icalEntityCopy.property.fileName = null
+        return icalViewViewModel.icalEntity.value!!.copy().apply {
+            property.id = 0L
+            property.dtstamp = System.currentTimeMillis()
+            property.created = System.currentTimeMillis()
+            property.lastModified = System.currentTimeMillis()
+            property.dtend = null
+            property.dtendTimezone = null
+            property.recurOriginalIcalObjectId = null
+            property.isRecurLinkedInstance = false
+            property.exdate = null
+            property.rdate = null
+            property.uid = ICalObject.generateNewUID()
+            property.dirty = true
 
-
-        if (newModule == Module.JOURNAL || newModule == Module.NOTE) {
-            icalEntityCopy.property.component = Component.VJOURNAL.name
-            icalEntityCopy.property.completed = null
-            icalEntityCopy.property.completedTimezone = null
-            if (icalEntityCopy.property.dtstart == null)
-                icalEntityCopy.property.dtstart = System.currentTimeMillis()
-
-            icalEntityCopy.property.due = null
-            icalEntityCopy.property.dueTimezone = null
-            icalEntityCopy.property.duration = null
-            icalEntityCopy.property.priority = null
-
-            if(icalEntityCopy.property.status == StatusTodo.CANCELLED.name || icalEntityCopy.property.status == StatusTodo.`IN-PROCESS`.name || icalEntityCopy.property.status == StatusTodo.COMPLETED.name || icalEntityCopy.property.status == StatusTodo.`NEEDS-ACTION`.name)
-                icalEntityCopy.property.status = StatusJournal.FINAL.name
-            else
-                icalEntityCopy.property.status = icalViewViewModel.icalEntity.value?.property?.status
-            // else just take the copy as it was already a Journal/Note
+            property.flags = null
+            property.scheduleTag = null
+            property.eTag = null
+            property.fileName = null
 
 
-            // only if it is a note we have to handle dtstart additionally, the rest is handled the same way for notes and journals
-            if(newModule == Module.NOTE) {
-                icalEntityCopy.property.dtstart = null
-                icalEntityCopy.property.dtstartTimezone = null
+            if (newModule == Module.JOURNAL || newModule == Module.NOTE) {
+                property.component = Component.VJOURNAL.name
+
+                if (property.dtstart == null) {
+                    property.dtstart = System.currentTimeMillis()
+                    property.dtstartTimezone = TZ_ALLDAY
+                } else {
+                    property.dtstart = icalViewViewModel.icalEntity.value?.property?.dtstart
+                    property.dtstartTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
+                }
+
+                property.due = null
+                property.dueTimezone = null
+                property.completed = null
+                property.completedTimezone = null
+                property.duration = null
+                property.priority = null
+
+                if(property.status == StatusTodo.CANCELLED.name || property.status == StatusTodo.`IN-PROCESS`.name || property.status == StatusTodo.COMPLETED.name || property.status == StatusTodo.`NEEDS-ACTION`.name)
+                    property.status = StatusJournal.FINAL.name
+                else
+                    property.status = icalViewViewModel.icalEntity.value?.property?.status
+                // else just take the copy as it was already a Journal/Note
+
+
+                // only if it is a note we have to handle dtstart additionally, the rest is handled the same way for notes and journals
+                if(newModule == Module.NOTE) {
+                    property.dtstart = null
+                    property.dtstartTimezone = null
+                } else {
+                    property.dtstart = icalViewViewModel.icalEntity.value?.property?.dtstart
+                    property.dtstartTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
+                }
+
+
+            } else if (newModule == Module.TODO) {
+                property.component = Component.VTODO.name
+
+                if(property.status == StatusJournal.CANCELLED.name || property.status == StatusJournal.DRAFT.name || property.status == StatusJournal.FINAL.name)
+                    property.status = StatusTodo.`NEEDS-ACTION`.name
+                else
+                    property.status = icalViewViewModel.icalEntity.value?.property?.status
+
+                if(icalViewViewModel.icalEntity.value?.property?.module == newModule.name) {                          // old and new module are the same, both are tasks
+                    property.dtstart = icalViewViewModel.icalEntity.value?.property?.dtstart
+                    property.dtstartTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
+                    property.due = icalViewViewModel.icalEntity.value?.property?.due
+                    property.dueTimezone = icalViewViewModel.icalEntity.value?.property?.dueTimezone
+                    property.due = icalViewViewModel.icalEntity.value?.property?.completed
+                    property.dueTimezone = icalViewViewModel.icalEntity.value?.property?.completedTimezone
+                } else {
+                    if(property.dtstart == null) {
+                        property.dtstart = null
+                        property.dtstartTimezone = TZ_ALLDAY
+                        property.due = null
+                        property.dueTimezone = TZ_ALLDAY
+                        property.completed = null
+                        property.completedTimezone = TZ_ALLDAY
+                    } else {
+                        property.dtstart = icalViewViewModel.icalEntity.value?.property?.dtstart
+                        property.dtstartTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
+                        property.due = null
+                        property.dueTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
+                        property.completed = null
+                        property.completedTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
+                    }
+                }
             }
 
+            // moved to the end, otherwise the newModule would also be applied to the original object/property
+            property.module = newModule.name
 
-        } else if (newModule == Module.TODO) {
-            icalEntityCopy.property.component = Component.VTODO.name
+            // reset the ids of all list properties to make sure that they get inserted as new ones
+            attachments?.forEach { it.attachmentId = 0L }
+            attendees?.forEach { it.attendeeId = 0L }
+            categories?.forEach { it.categoryId = 0L }
+            comments?.forEach { it.commentId = 0L }
+            organizer?.organizerId = 0L
+            relatedto?.forEach { it.relatedtoId = 0L }
+            resources?.forEach { it.resourceId = 0L }
+            alarms?.forEach { it.alarmId = 0L }
+            unknown?.forEach { it.unknownId = 0L }
 
-            if(icalEntityCopy.property.status == StatusJournal.CANCELLED.name || icalEntityCopy.property.status == StatusJournal.DRAFT.name || icalEntityCopy.property.status == StatusJournal.FINAL.name)
-                icalEntityCopy.property.status = StatusTodo.`NEEDS-ACTION`.name
-            else
-                icalEntityCopy.property.status = icalViewViewModel.icalEntity.value?.property?.status
         }
-
-        // reset the ids of all list properties to make sure that they get inserted as new ones
-        icalEntityCopy.attachments?.forEach { it.attachmentId = 0L }
-        icalEntityCopy.attendees?.forEach { it.attendeeId = 0L }
-        icalEntityCopy.categories?.forEach { it.categoryId = 0L }
-        icalEntityCopy.comments?.forEach { it.commentId = 0L }
-        icalEntityCopy.organizer?.organizerId = 0L
-        icalEntityCopy.relatedto?.forEach { it.relatedtoId = 0L }
-        icalEntityCopy.resources?.forEach { it.resourceId = 0L }
-        icalEntityCopy.alarms?.forEach { it.alarmId = 0L }
-        icalEntityCopy.unknown?.forEach { it.unknownId = 0L }
-
-        return icalEntityCopy
     }
 
     private fun hideEditingMenuOptions() {
