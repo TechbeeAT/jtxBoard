@@ -330,8 +330,8 @@ class SyncContentProvider : ContentProvider() {
                 val attachmentUriString = result.getString(uriColumnIndex)
                 val attachmentUri = Uri.parse(attachmentUriString)
 
-                //TODO: grantUriPermission could enable DAVx5 to access the files, further investigation is needed!
-                context!!.grantUriPermission("at.bitfire.davdroid", attachmentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                //grantUriPermission could enables DAVx5 to access the files
+                context?.grantUriPermission(callingPackage, attachmentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
         }
 

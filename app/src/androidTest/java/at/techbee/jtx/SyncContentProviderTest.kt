@@ -39,6 +39,8 @@ class SyncContentProviderTest {
     private var defaultICalObjectUri: Uri? = null
     private var defaultICalObjectId: Long? = null
 
+    private val fileContentProviderBaseUri = "content://${AUTHORITY_FILEPROVIDER}"
+
 
     @Before
     fun setUp() {
@@ -408,7 +410,7 @@ class SyncContentProviderTest {
         // INSERT
         val values = ContentValues().apply {
             put(JtxContract.JtxAttachment.ICALOBJECT_ID, defaultICalObjectId)
-            put(JtxContract.JtxAttachment.URI, "content://at.techbee.jtx.fileprovider/jtx_images/jtx_6028748326614733966.aac")
+            put(JtxContract.JtxAttachment.URI, "$fileContentProviderBaseUri/jtx_images/jtx_6028748326614733966.aac")
             put(JtxContract.JtxAttachment.BINARY, "AAAA")
         }
         val uriAttachment = JtxContract.JtxAttachment.CONTENT_URI.asSyncAdapter(defaultTestAccount)
@@ -422,13 +424,13 @@ class SyncContentProviderTest {
 
         // UPDATE
         val updatedValues = ContentValues()
-        updatedValues.put(JtxContract.JtxAttachment.URI, "content://at.techbee.jtx.fileprovider/jtx_files/1631560872968.aac")
+        updatedValues.put(JtxContract.JtxAttachment.URI, "$fileContentProviderBaseUri/jtx_files/1631560872968.aac")
         val countUpdated = mContentResolver?.update(newAttachment!!, updatedValues, null, null)
         assertEquals(countUpdated, 1)
         //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
 
         // QUERY the updated value
-        mContentResolver?.query(newAttachment!!, arrayOf(JtxContract.JtxAttachment.ID, JtxContract.JtxAttachment.URI), "${JtxContract.JtxAttachment.URI} = ?", arrayOf("content://at.techbee.jtx.fileprovider/jtx_files/1631560872968.aac"), null).use {
+        mContentResolver?.query(newAttachment!!, arrayOf(JtxContract.JtxAttachment.ID, JtxContract.JtxAttachment.URI), "${JtxContract.JtxAttachment.URI} = ?", arrayOf("$fileContentProviderBaseUri/jtx_files/1631560872968.aac"), null).use {
             assertEquals(1, it!!.count)             // inserted object was found
         }
 

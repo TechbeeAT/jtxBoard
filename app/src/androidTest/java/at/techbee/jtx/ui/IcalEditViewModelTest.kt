@@ -14,6 +14,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
+import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
@@ -51,8 +52,8 @@ class IcalEditViewModelTest {
     private var sampleCategory2 = Category(text = "jtxBoard")
     //private var sampleCategory3 = Category(text = "DAVx5")
 
-    private var sampleAttachment1 = Attachment(uri = "content://at.techbee.jtx.fileprovider/jtx_files/1631560872968.aac")
-    private var sampleAttachment2 = Attachment(uri = "content://at.techbee.jtx.fileprovider/jtx_files/1631560872969.aac")
+    private var sampleAttachment1 = Attachment(uri = "content://$AUTHORITY_FILEPROVIDER/jtx_files/1631560872968.aac")
+    private var sampleAttachment2 = Attachment(uri = "content://$AUTHORITY_FILEPROVIDER/jtx_files/1631560872969.aac")
 
     private var sampleAttendee1 = Attendee(caladdress = "info@techbee.at")
     private var sampleAttendee2 = Attendee(caladdress = "contact@techbee.at")
