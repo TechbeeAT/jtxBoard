@@ -192,21 +192,28 @@
 
     <!-- fragment_ical_edit -->
     <string name="edit_summary_hint">Summary</string>
-    <string name="edit_add_category_hint">Add category</string>
+    <string name="edit_add_category_hint">#mycategory</string>
+    <string name="edit_add_category_helper">Add a category</string>
     <string name="edit_description_hint">Description</string>
-    <string name="edit_attendees_hint">Attendees</string>
-    <string name="edit_resources_hint">Resources</string>
+    <string name="edit_attendees_hint">johanna@example.com</string>
+    <string name="edit_attendees_helper">Add an attendee (e-mail-address)</string>
+    <string name="edit_resources_hint">Projector</string>
+    <string name="edit_resources_helper">Add a resource</string>
     <string name="edit_organizer_hint">Organizer</string>
-    <string name="edit_contact_hint">Contact information</string>
-    <string name="edit_comment_hint">Add comment</string>
+    <string name="edit_contact_hint">Jim Dolittle, +1 919 555 1234</string>
+    <string name="edit_contact_helper">Contact information of the responsible or owner of this entry</string>
+    <string name="edit_comment_hint">Your comment…</string>
+    <string name="edit_comment_helper">Add a comment</string>
     <string name="edit_attachment_button_text">Add attachment</string>
     <string name="edit_take_picture_button_text">Take picture</string>
     <string name="edit_add_link_button_text">Add attachment link</string>
-    <string name="edit_url_hint">URL</string>
-    <string name="edit_location_hint">Location</string>
+    <string name="edit_url_hint">https://www.example.com</string>
+    <string name="edit_url_helper">URL related to this entry</string>
+    <string name="edit_location_hint">E.g. 1CP Conference Room 4350</string>
+    <string name="edit_location_helper">Add a location for this entry</string>
     <string name="edit_fab_save_contentDescription">Save</string>
-    <string name="edit_attachment_add_dialog_hint">Add your attachment-url (https://…)</string>
-    <string name="edit_comment_add_dialog_hint">Edit comment</string>
+    <string name="edit_attachment_add_dialog_hint">Your attachment-url (https://…)</string>
+    <string name="edit_comment_add_dialog_hint">Your comment</string>
 
     <string name="edit_due">Due</string>
     <string name="edit_completed">Completed</string>
@@ -215,7 +222,8 @@
     <string name="edit_add_timezone_switch">Add timezone</string>
     <string name="edit_progress">Progress</string>
     <string name="edit_subtasks_header">Subtasks</string>
-    <string name="edit_subtasks_add_hint">Subtask</string>
+    <string name="edit_subtasks_add_hint">Your subtask</string>
+    <string name="edit_subtasks_add_helper">Add a subtask</string>
     <string name="edit_contact_header">Contact</string>
     <string name="edit_url_header">URL</string>
     <string name="edit_location_header">Location</string>

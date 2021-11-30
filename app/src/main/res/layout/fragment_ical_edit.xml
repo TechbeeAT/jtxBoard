@@ -426,7 +426,7 @@
                         app:endIconContentDescription="Add subtask"
                         app:endIconDrawable="@drawable/ic_todo_add"
                         app:endIconMode="custom"
-                        app:helperText="Add a subtask"
+                        app:helperText="@string/edit_subtasks_add_helper"
                         app:helperTextEnabled="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -532,12 +532,11 @@
                         app:endIconMode="clear_text"
                         app:error="@{model.urlError}"
                         app:errorEnabled="true"
-                        app:helperText="URL related to this entry"
+                        app:helperText="@string/edit_url_helper"
                         app:helperTextEnabled="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/edit_url_header"
-                        app:startIconDrawable="@drawable/ic_link">
+                        app:layout_constraintTop_toBottomOf="@+id/edit_url_header">
 
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -575,12 +574,11 @@
                         android:hint="@string/edit_location_hint"
                         android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
                         app:endIconMode="clear_text"
-                        app:helperText="Location related to this entry"
+                        app:helperText="@string/edit_location_helper"
                         app:helperTextEnabled="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/edit_location_header"
-                        app:startIconDrawable="@drawable/ic_location">
+                        app:layout_constraintTop_toBottomOf="@+id/edit_location_header">
 
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -619,12 +617,11 @@
                         android:labelFor="@id/edit_contact_add_autocomplete"
                         android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
                         app:endIconMode="clear_text"
-                        app:helperText="Contact information of the responsible or owner of this entry"
+                        app:helperText="@string/edit_contact_helper"
                         app:helperTextEnabled="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/edit_contact_header"
-                        app:startIconDrawable="@drawable/ic_contact">
+                        app:layout_constraintTop_toBottomOf="@+id/edit_contact_header">
 
 
                         <com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -686,7 +683,7 @@
                         app:endIconDrawable="@drawable/ic_category_add"
                         app:endIconMode="custom"
                         app:errorEnabled="true"
-                        app:helperText="Add a category"
+                        app:helperText="@string/edit_add_category_helper"
                         app:helperTextEnabled="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -753,7 +750,7 @@
                         app:endIconMode="custom"
                         app:error="@{model.attendeesError}"
                         app:errorEnabled="true"
-                        app:helperText="Add an attendee"
+                        app:helperText="@string/edit_attendees_helper"
                         app:helperTextEnabled="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -820,7 +817,7 @@
                         app:endIconDrawable="@drawable/ic_resources"
                         app:endIconMode="custom"
                         app:errorEnabled="true"
-                        app:helperText="Add a resource"
+                        app:helperText="@string/edit_resources_helper"
                         app:helperTextEnabled="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -895,7 +892,7 @@
                         app:endIconContentDescription="Add category"
                         app:endIconDrawable="@drawable/ic_comment_add"
                         app:endIconMode="custom"
-                        app:helperText="Add a comment"
+                        app:helperText="@string/edit_comment_helper"
                         app:helperTextEnabled="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -907,7 +904,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:imeOptions="actionDone"
-                            android:inputType="textWebEmailAddress|textEmailAddress" />
+                            android:inputType="textCapSentences" />
                     </com.google.android.material.textfield.TextInputLayout>
 
 
