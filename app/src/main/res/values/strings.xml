@@ -209,7 +209,7 @@
     <string name="edit_add_link_button_text">Add attachment link</string>
     <string name="edit_url_hint">https://www.example.com</string>
     <string name="edit_url_helper">URL related to this entry</string>
-    <string name="edit_location_hint">E.g. 1CP Conference Room 4350</string>
+    <string name="edit_location_hint">1CP Conference Room 4350</string>
     <string name="edit_location_helper">Add a location for this entry</string>
     <string name="edit_fab_save_contentDescription">Save</string>
     <string name="edit_attachment_add_dialog_hint">Your attachment-url (https://…)</string>

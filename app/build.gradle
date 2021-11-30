@@ -21,8 +21,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 11
-        versionName "0.03.00 Tsoureki"
+        versionCode 12
+        versionName "0.03.01 Tee mit Honig"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
