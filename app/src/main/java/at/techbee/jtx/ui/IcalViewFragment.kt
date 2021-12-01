@@ -170,122 +170,129 @@ class IcalViewFragment : Fragment() {
             }
 
             if(it.ICalCollection?.readonly == true)
-                hideEditingMenuOptions()
+                hideEditingOptions()
 
 
             updateToolbarText()
 
-            it.let {
-                when (it.property.component) {
-                    Component.VTODO.name -> {
-                        binding.viewStatusChip.text =
-                            StatusTodo.getStringResource(requireContext(), it.property.status)
-                                ?: it.property.status
-                    }
-                    Component.VJOURNAL.name -> {
-                        binding.viewStatusChip.text =
-                            StatusJournal.getStringResource(requireContext(), it.property.status)
-                                ?: it.property.status
-                    }
-                    else -> {
-                        binding.viewStatusChip.text = it.property.status
-                    }
+
+            when (it.property.component) {
+                Component.VTODO.name -> {
+                    binding.viewStatusChip.text =
+                        StatusTodo.getStringResource(requireContext(), it.property.status)
+                            ?: it.property.status
                 }
-
-                binding.viewClassificationChip.text =
-                    Classification.getStringResource(requireContext(), it.property.classification)
-                        ?: it.property.classification
-
-                val priorityArray = resources.getStringArray(R.array.priority)
-                if (icalViewViewModel.icalEntity.value?.property?.priority != null && icalViewViewModel.icalEntity.value?.property?.priority in 0..9)
-                    binding.viewPriorityChip.text =
-                        priorityArray[icalViewViewModel.icalEntity.value?.property?.priority?:0]
-
-                binding.viewCommentsLinearlayout.removeAllViews()
-                icalViewViewModel.icalEntity.value?.comments?.forEach { comment ->
-                    val commentBinding =
-                        FragmentIcalViewCommentBinding.inflate(inflater, container, false)
-                    commentBinding.viewCommentTextview.text = comment.text
-                    binding.viewCommentsLinearlayout.addView(commentBinding.root)
+                Component.VJOURNAL.name -> {
+                    binding.viewStatusChip.text =
+                        StatusJournal.getStringResource(requireContext(), it.property.status)
+                            ?: it.property.status
                 }
-
-                binding.viewAttachmentsLinearlayout.removeAllViews()
-                icalViewViewModel.icalEntity.value?.attachments?.forEach { attachment ->
-                    val attachmentBinding =
-                        FragmentIcalViewAttachmentBinding.inflate(inflater, container, false)
-
-                    //open the attachment on click
-                    attachmentBinding.viewAttachmentCardview.setOnClickListener {
-                        attachment.openFile(requireContext())
-                    }
-
-                    if (attachment.filename?.isNotEmpty() == true)
-                        attachmentBinding.viewAttachmentTextview.text = attachment.filename
-                    else
-                        attachmentBinding.viewAttachmentTextview.text = attachment.fmttype
-
-                    if (attachment.filesize == null)
-                        attachmentBinding.viewAttachmentFilesize.visibility = View.GONE
-                    else
-                        attachmentBinding.viewAttachmentFilesize.text =
-                            getAttachmentSizeString(attachment.filesize ?: 0L)
-
-
-                    // load thumbnail if possible
-                    try {
-                        val thumbSize = Size(50, 50)
-                        val thumbUri = Uri.parse(attachment.uri)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            val thumbBitmap =
-                                context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
-                            attachmentBinding.viewAttachmentPictureThumbnail.setImageBitmap(
-                                thumbBitmap
-                            )
-                            attachmentBinding.viewAttachmentPictureThumbnail.visibility =
-                                View.VISIBLE
-                        }
-                    } catch (e: FileNotFoundException) {
-                        Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
-                    }
-
-                    binding.viewAttachmentsLinearlayout.addView(attachmentBinding.root)
+                else -> {
+                    binding.viewStatusChip.text = it.property.status
                 }
-
-                if (it.ICalCollection?.color != null) {
-                    try {
-                        binding.viewColorbar.setColorFilter(it.ICalCollection?.color!!)
-                    } catch (e: IllegalArgumentException) {
-                        Log.println(
-                            Log.INFO,
-                            "Invalid color",
-                            "Invalid Color cannot be parsed: ${it.ICalCollection?.color}"
-                        )
-                        binding.viewColorbar.visibility = View.INVISIBLE
-                    }
-                } else
-                    binding.viewColorbar.visibility = View.INVISIBLE
-
-                it.property.recurOriginalIcalObjectId?.let { origId ->
-                    binding.viewRecurrenceGotooriginalButton.setOnClickListener { view ->
-                        view.findNavController().navigate(
-                            IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(origId)
-                        )
-                    }
-                }
-
-                var allExceptionsString = ""
-                getLongListfromCSVString(it.property.exdate).forEach { exdate ->
-                    allExceptionsString += convertLongToFullDateTimeString(exdate, it.property.dtstartTimezone) + "\n"
-                }
-                binding.viewRecurrenceExceptionItems.text = allExceptionsString
-
-                var allAdditionsString = ""
-                getLongListfromCSVString(it.property.rdate).forEach { rdate ->
-                    allAdditionsString += convertLongToFullDateTimeString(rdate, it.property.dtstartTimezone) + "\n"
-                }
-                binding.viewRecurrenceAdditionsItems.text = allAdditionsString
             }
+
+            binding.viewClassificationChip.text =
+                Classification.getStringResource(requireContext(), it.property.classification)
+                    ?: it.property.classification
+
+            val priorityArray = resources.getStringArray(R.array.priority)
+            if (it.property.priority in 0..9)
+                binding.viewPriorityChip.text =
+                    priorityArray[icalViewViewModel.icalEntity.value?.property?.priority?:0]
+
+            // don't show the option to add notes if VJOURNAL is not supported (only relevant if the current entry is a VTODO)
+            if(it.ICalCollection?.supportsVJOURNAL != true) {
+                binding.viewAddNote.visibility = View.GONE
+                binding.viewAddAudioNote.visibility = View.GONE
+            }
+
+
+            binding.viewCommentsLinearlayout.removeAllViews()
+            it.comments?.forEach { comment ->
+                val commentBinding =
+                    FragmentIcalViewCommentBinding.inflate(inflater, container, false)
+                commentBinding.viewCommentTextview.text = comment.text
+                binding.viewCommentsLinearlayout.addView(commentBinding.root)
+            }
+
+            binding.viewAttachmentsLinearlayout.removeAllViews()
+            it.attachments?.forEach { attachment ->
+                val attachmentBinding =
+                    FragmentIcalViewAttachmentBinding.inflate(inflater, container, false)
+
+                //open the attachment on click
+                attachmentBinding.viewAttachmentCardview.setOnClickListener {
+                    attachment.openFile(requireContext())
+                }
+
+                if (attachment.filename?.isNotEmpty() == true)
+                    attachmentBinding.viewAttachmentTextview.text = attachment.filename
+                else
+                    attachmentBinding.viewAttachmentTextview.text = attachment.fmttype
+
+                if (attachment.filesize == null)
+                    attachmentBinding.viewAttachmentFilesize.visibility = View.GONE
+                else
+                    attachmentBinding.viewAttachmentFilesize.text =
+                        getAttachmentSizeString(attachment.filesize ?: 0L)
+
+
+                // load thumbnail if possible
+                try {
+                    val thumbSize = Size(50, 50)
+                    val thumbUri = Uri.parse(attachment.uri)
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val thumbBitmap =
+                            context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
+                        attachmentBinding.viewAttachmentPictureThumbnail.setImageBitmap(
+                            thumbBitmap
+                        )
+                        attachmentBinding.viewAttachmentPictureThumbnail.visibility =
+                            View.VISIBLE
+                    }
+                } catch (e: FileNotFoundException) {
+                    Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
+                }
+
+                binding.viewAttachmentsLinearlayout.addView(attachmentBinding.root)
+            }
+
+            if (it.ICalCollection?.color != null) {
+                try {
+                    binding.viewColorbar.setColorFilter(it.ICalCollection?.color!!)
+                } catch (e: IllegalArgumentException) {
+                    Log.println(
+                        Log.INFO,
+                        "Invalid color",
+                        "Invalid Color cannot be parsed: ${it.ICalCollection?.color}"
+                    )
+                    binding.viewColorbar.visibility = View.INVISIBLE
+                }
+            } else
+                binding.viewColorbar.visibility = View.INVISIBLE
+
+            it.property.recurOriginalIcalObjectId?.let { origId ->
+                binding.viewRecurrenceGotooriginalButton.setOnClickListener { view ->
+                    view.findNavController().navigate(
+                        IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(origId)
+                    )
+                }
+            }
+
+            var allExceptionsString = ""
+            getLongListfromCSVString(it.property.exdate).forEach { exdate ->
+                allExceptionsString += convertLongToFullDateTimeString(exdate, it.property.dtstartTimezone) + "\n"
+            }
+            binding.viewRecurrenceExceptionItems.text = allExceptionsString
+
+            var allAdditionsString = ""
+            getLongListfromCSVString(it.property.rdate).forEach { rdate ->
+                allAdditionsString += convertLongToFullDateTimeString(rdate, it.property.dtstartTimezone) + "\n"
+            }
+            binding.viewRecurrenceAdditionsItems.text = allAdditionsString
+
         })
 
         icalViewViewModel.subtasksCountList.observe(viewLifecycleOwner, { })
@@ -1044,14 +1051,13 @@ class IcalViewFragment : Fragment() {
         }
     }
 
-    private fun hideEditingMenuOptions() {
+    private fun hideEditingOptions() {
         binding.viewBottomBar.menu.findItem(R.id.menu_view_bottom_copy).isVisible = false
         binding.viewBottomBar.menu.findItem(R.id.menu_view_bottom_delete).isVisible = false
         binding.viewFabEdit.visibility = View.GONE
         optionsMenu.findItem(R.id.menu_view_delete_item).isVisible = false
-        optionsMenu.findItem(R.id.menu_view_copy_as_journal).isVisible = false
-        optionsMenu.findItem(R.id.menu_view_copy_as_note).isVisible = false
-        optionsMenu.findItem(R.id.menu_view_copy_as_todo).isVisible = false
+        binding.viewAddNote.visibility = View.GONE
+        binding.viewAddAudioNote.visibility = View.GONE
         binding.viewReadyonly.visibility = View.VISIBLE
     }
 }
