@@ -459,7 +459,7 @@ class SyncContentProvider : ContentProvider() {
         if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) || values.containsKey(COLUMN_RDATE) || values.containsKey(COLUMN_EXDATE)))
         {
             try {
-                val id: Long = uri.pathSegments[1].toLong()
+                val id: Long = uri.lastPathSegment?.toLong() ?: throw NumberFormatException("Last path segment was null")
                 rebuildRecurring(id)
             } catch (e: NumberFormatException) {
                 Log.d("pathSegments[1]", "Could not convert path segment to Long. \n$e")

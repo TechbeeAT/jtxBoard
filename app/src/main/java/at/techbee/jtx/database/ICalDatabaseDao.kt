@@ -525,7 +525,7 @@ DELETEs by Object
     fun removeOrphans()
 
     @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id AND $COLUMN_RRULE IS NOT NULL")
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
     fun getRecurringToPopulate(id: Long): ICalObject?
 
 
