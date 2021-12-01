@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -64,6 +65,12 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     private var settings: SharedPreferences? = null
 
 
+    override fun onApplyThemeResource(theme: Resources.Theme?, resid: Int, first: Boolean) {
+        // use dynamic color chosen by user
+        DynamicColors.applyToActivitiesIfAvailable(this.application)
+        super.onApplyThemeResource(theme, resid, first)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -84,8 +91,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
         setSupportActionBar(toolbar)
 
-        // use dynamic color chosen by user
-        DynamicColors.applyToActivitiesIfAvailable(this.application)
+
 
         // necessary for ical4j
         System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
