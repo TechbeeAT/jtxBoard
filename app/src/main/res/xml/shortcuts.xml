@@ -12,7 +12,7 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_about">
+        android:icon="@drawable/ic_todo">
         <intent
             android:action="addTodo"
             android:targetPackage="at.techbee.jtx"
@@ -21,7 +21,7 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_about">
+        android:icon="@drawable/ic_note">
         <intent
             android:action="addNote"
             android:targetPackage="at.techbee.jtx"
@@ -30,7 +30,7 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_about">
+        android:icon="@drawable/ic_journals">
         <intent
             android:action="addJournal"
             android:targetPackage="at.techbee.jtx"
