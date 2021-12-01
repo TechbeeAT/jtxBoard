@@ -56,7 +56,7 @@ class IcalViewFragment : Fragment() {
     private lateinit var dataSource: ICalDatabaseDao
     private lateinit var viewModelFactory: IcalViewViewModelFactory
     lateinit var icalViewViewModel: IcalViewViewModel
-    private lateinit var optionsMenu: Menu
+    private var optionsMenu: Menu? = null
 
     private var fileName: Uri? = null
     private var recorder: MediaRecorder? = null
@@ -730,6 +730,8 @@ class IcalViewFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_ical_view, menu)
         this.optionsMenu = menu
+        if(icalViewViewModel.icalEntity.value?.ICalCollection?.readonly == true)
+            hideEditingOptions()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -1055,7 +1057,7 @@ class IcalViewFragment : Fragment() {
         binding.viewBottomBar.menu.findItem(R.id.menu_view_bottom_copy).isVisible = false
         binding.viewBottomBar.menu.findItem(R.id.menu_view_bottom_delete).isVisible = false
         binding.viewFabEdit.visibility = View.GONE
-        optionsMenu.findItem(R.id.menu_view_delete_item).isVisible = false
+        optionsMenu?.findItem(R.id.menu_view_delete_item)?.isVisible = false
         binding.viewAddNote.visibility = View.GONE
         binding.viewAddAudioNote.visibility = View.GONE
         binding.viewReadyonly.visibility = View.VISIBLE
