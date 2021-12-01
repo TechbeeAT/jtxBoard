@@ -95,7 +95,7 @@
             android:layout_marginEnd="16dp"
             android:textSize="12sp"
             android:textStyle="bold|italic"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_journal_upload_pending_icon"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_todo_upload_pending_icon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/list_item_todo_summary_barrier"
             tools:text="Due in 365 days" />
