@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.lifecycle.*
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4ViewNote
@@ -68,6 +69,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var completedTimezoneVisible: LiveData<Boolean>
     lateinit var startedTimezoneVisible: LiveData<Boolean>
     lateinit var dueTimezoneVisible: LiveData<Boolean>
+    lateinit var uploadPendingVisible: LiveData<Boolean>
 
     lateinit var recurrenceVisible: LiveData<Boolean>
     lateinit var recurrenceItemsVisible: LiveData<Boolean>
@@ -138,6 +140,13 @@ class IcalViewViewModel(private val icalItemId: Long,
             timezoneVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null && !(item.property.dtstartTimezone == ICalObject.TZ_ALLDAY || item.property.dtstartTimezone.isNullOrEmpty())           // true if component == JOURNAL and it is not an All Day Event
             }
+
+            uploadPendingVisible = Transformations.map(icalEntity) { item ->
+                return@map item?.property?.dirty == true && item.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE
+            }
+
+
+
 
             dtstartFormatted = Transformations.map(icalEntity) { item ->
                 item?.property?.dtstart?.let {
