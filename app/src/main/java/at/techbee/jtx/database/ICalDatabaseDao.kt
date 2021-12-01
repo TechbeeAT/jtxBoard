@@ -90,23 +90,23 @@ SELECTs (global selects without parameter)
 
     /**
      * Retrieve an list of all DISTINCT Collections ([ICalCollection])
-     * that support VTODO as a LiveData-List
+     * that support VTODO and are not Read only as a LiveData-List
      *
      * @return a list of VTODO-[Collection] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVTODO = 1 ORDER BY _id ASC")
-    fun getAllVTODOCollections(): LiveData<List<ICalCollection>>
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVTODO = 1 AND $COLUMN_COLLECTION_READONLY = 0 ORDER BY _id ASC")
+    fun getAllWriteableVTODOCollections(): LiveData<List<ICalCollection>>
 
     /**
      * Retrieve an list of all DISTINCT Collections ([ICalCollection])
-     * that support VJOURNAL as a LiveData-List
+     * that support VJOURNAL and are not Read only as a LiveData-List
      *
      * @return a list of VJOURNAL-[Collection] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVJOURNAL = 1 ORDER BY _id ASC")
-    fun getAllVJOURNALCollections(): LiveData<List<ICalCollection>>
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVJOURNAL = 1  AND $COLUMN_COLLECTION_READONLY = 0 ORDER BY _id ASC")
+    fun getAllWriteableVJOURNALCollections(): LiveData<List<ICalCollection>>
 
     /**
      * Retrieve an list of all remote collections ([ICalCollection])

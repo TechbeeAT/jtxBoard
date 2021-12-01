@@ -160,8 +160,8 @@ class IcalEditViewModel(
             allCategories = database.getAllCategories()
             allResources = database.getAllResources()
             allCollections = when (iCalEntity.property.component) {
-                Component.VTODO.name -> database.getAllVTODOCollections()
-                Component.VJOURNAL.name -> database.getAllVJOURNALCollections()
+                Component.VTODO.name -> database.getAllWriteableVTODOCollections()
+                Component.VJOURNAL.name -> database.getAllWriteableVJOURNALCollections()
                 else -> database.getAllCollections() // should not happen!
             }
 
