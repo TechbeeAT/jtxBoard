@@ -214,6 +214,13 @@ class IcalEditFragment : Fragment() {
                         icalEditViewModel.allCollections.value?.get(pos)?.collectionId ?: 1L
                     updateCollectionColor()
 
+                    //Don't show the subtasks tab if the collection doesn't support VTODO
+                    val currentCollection = icalEditViewModel.allCollections.value?.find { col -> col.collectionId == icalEditViewModel.iCalObjectUpdated.value?.collectionId }
+                    if(currentCollection?.supportsVTODO != true)
+                        binding.icalEditTabs.getTabAt(TAB_SUBTASKS)?.view?.visibility = View.GONE
+                    else
+                        binding.icalEditTabs.getTabAt(TAB_SUBTASKS)?.view?.visibility = View.VISIBLE
+
                     icalEditViewModel.allCollections.removeObservers(viewLifecycleOwner)     // make sure the selection doesn't change anymore by any sync happening that affects the oberser/collection-lsit
                 }
 

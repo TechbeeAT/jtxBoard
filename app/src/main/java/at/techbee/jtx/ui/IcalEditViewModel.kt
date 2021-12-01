@@ -307,6 +307,13 @@ class IcalEditViewModel(
                     newResource.icalObjectId = insertedOrUpdatedItemId
                     database.insertResource(newResource)
                 }
+
+                // if a collection was selected that doesn't support VTODO, we do not update/insert any subtasks
+                // deleting a subtask in the DB is not necessary before, as the insertion should never have been possible for VTODOs
+                val currentCollection = allCollections.value?.find { col -> col.collectionId == iCalObjectUpdated.value?.collectionId }
+                if(currentCollection?.supportsVTODO == false)
+                    subtaskUpdated.clear()
+
                 subtaskUpdated.forEach { subtask ->
                     subtask.sequence++
                     subtask.lastModified = System.currentTimeMillis()
