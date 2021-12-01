@@ -66,10 +66,22 @@
             android:textSize="12sp"
             android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@id/list_item_journal_summary_barrier"
-            app:layout_constraintEnd_toStartOf="@id/list_item_journal_recurring_icon"
+            app:layout_constraintEnd_toStartOf="@id/list_item_journal_upload_pending_icon"
             app:layout_constraintStart_toEndOf="@id/list_item_journal_collection"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Category1, Category2" />
+
+
+        <ImageView
+            android:id="@+id/list_item_journal_upload_pending_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/list_item_journal_recurring_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_upload_pending"
+            android:contentDescription="@string/list_item_upload_pending"/>
+
 
         <ImageView
             android:id="@+id/list_item_journal_recurring_icon"
@@ -78,7 +90,7 @@
             app:layout_constraintEnd_toEndOf="@+id/list_item_journal_summary"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_recurring"
-            tools:ignore="ContentDescription" />
+            android:contentDescription="@string/list_item_recurring"/>
 
 
 

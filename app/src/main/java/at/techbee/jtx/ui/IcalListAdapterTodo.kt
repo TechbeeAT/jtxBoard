@@ -266,6 +266,11 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 holder.recurIcon.visibility = View.GONE
 
 
+            // show upload pending symbol if applicable
+            if(iCal4ListItem.property.uploadPending)
+                holder.uploadPendingIcon.visibility = View.VISIBLE
+            else
+                holder.uploadPendingIcon.visibility = View.GONE
 
 
                     // turn to item view when the card is clicked
@@ -417,8 +422,9 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
         var numCommentsText: TextView = itemView.findViewById(R.id.list_item_todo_num_comments_text)
 
         var recurIcon: ImageView = itemView.findViewById(R.id.list_item_todo_recurring_icon)
-    }
+        var uploadPendingIcon: ImageView = itemView.findViewById(R.id.list_item_todo_upload_pending_icon)
 
+    }
 }
 
 

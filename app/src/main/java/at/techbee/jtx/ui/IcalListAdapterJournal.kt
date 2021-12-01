@@ -221,6 +221,11 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
              else
                 holder.recurIcon.visibility = View.GONE
 
+            // show upload pending symbol if applicable
+            if(iCal4ListItem.property.uploadPending)
+                holder.uploadPendingIcon.visibility = View.VISIBLE
+            else
+                holder.uploadPendingIcon.visibility = View.GONE
 
 
 
@@ -287,6 +292,7 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
         var numCommentsText: TextView = itemView.findViewById(R.id.list_item_journal_num_comments_text)
 
         var recurIcon: ImageView = itemView.findViewById(R.id.list_item_journal_recurring_icon)
+        var uploadPendingIcon: ImageView = itemView.findViewById(R.id.list_item_journal_upload_pending_icon)
     }
 
 }

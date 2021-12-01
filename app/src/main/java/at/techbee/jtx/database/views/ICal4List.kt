@@ -52,6 +52,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "collection.$COLUMN_COLLECTION_ACCOUNT_NAME, " +
             "collection.$COLUMN_COLLECTION_DISPLAYNAME, " +
             "main_icalobject.$COLUMN_DELETED, " +
+            "CASE WHEN main_icalobject.$COLUMN_DIRTY = 1 AND collection.$COLUMN_COLLECTION_ACCOUNT_TYPE != 'LOCAL' THEN 1 else 0 END as uploadPending, " +
             "CASE WHEN main_icalobject.$COLUMN_RRULE IS NULL THEN 0 ELSE 1 END as isRecurringOriginal, " +
             "CASE WHEN main_icalobject.$COLUMN_RECURID IS NULL THEN 0 ELSE 1 END as isRecurringInstance, " +
             "main_icalobject.$COLUMN_RECUR_ISLINKEDINSTANCE, " +
@@ -107,6 +108,7 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME) var collectionDisplayName: String?,
 
     @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean,
+    @ColumnInfo var uploadPending: Boolean,
 
     @ColumnInfo var isRecurringOriginal: Boolean,
     @ColumnInfo var isRecurringInstance: Boolean,

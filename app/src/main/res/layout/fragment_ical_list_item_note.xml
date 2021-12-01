@@ -67,10 +67,21 @@
             android:textSize="12sp"
             android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@id/list_item_note_summary_barrier"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/list_item_note_upload_pending_icon"
             app:layout_constraintStart_toEndOf="@id/list_item_note_collection"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Category1, Category2" />
+
+
+        <ImageView
+            android:id="@+id/list_item_note_upload_pending_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_upload_pending"
+            android:contentDescription="@string/list_item_upload_pending"/>
 
 
         <androidx.constraintlayout.widget.Barrier

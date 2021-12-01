@@ -173,6 +173,13 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
             }
 
 
+            // show upload pending symbol if applicable
+            if(iCal4ListItem.property.uploadPending)
+                holder.uploadPendingIcon.visibility = View.VISIBLE
+            else
+                holder.uploadPendingIcon.visibility = View.GONE
+
+
             // turn to item view when the card is clicked
             holder.listItemCardView.setOnClickListener {
                 it.findNavController().navigate(
@@ -228,7 +235,9 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
         var numAttendeesText: TextView = itemView.findViewById(R.id.list_item_note_num_attendees_text)
         var numAttachmentsText: TextView = itemView.findViewById(R.id.list_item_note_num_attachments_text)
         var numCommentsText: TextView = itemView.findViewById(R.id.list_item_note_num_comments_text)
+        var uploadPendingIcon: ImageView = itemView.findViewById(R.id.list_item_note_upload_pending_icon)
+
     }
-    }
+}
 
 
