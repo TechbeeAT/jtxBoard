@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) Techbee e.U.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the GNU Public License v3.0
@@ -7,26 +6,23 @@
   ~ http://www.gnu.org/licenses/gpl.html
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/nav_board"
         android:icon="@drawable/ic_jtx"
-        android:title="@string/navigation_drawer_board"
-        />
+        android:title="@string/navigation_drawer_board" />
 
 
     <item
         android:id="@+id/nav_sync"
         android:icon="@drawable/davx5"
-        android:title="@string/navigation_drawer_sync"
-        />
+        android:title="@string/navigation_drawer_sync" />
 
     <item
         android:id="@+id/nav_about"
         android:icon="@drawable/ic_about"
-        android:title="@string/navigation_drawer_about"
-        />
+        android:title="@string/navigation_drawer_about" />
 
     <item
         android:id="@+id/nav_donate"
@@ -38,44 +34,36 @@
         android:icon="@drawable/ic_adinfo"
         android:title="@string/navigation_drawer_adinfo" />
 
+    <item
+        android:id="@+id/nav_app_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/navigation_drawer_settings" />
 
-<item
-    android:id="@+id/nav_beta_feedback"
-    android:icon="@drawable/ic_forum_dark"
-    android:title="@string/navigation_drawer_beta_feedback"
-    android:visible="false"/>
-
-
-<item
-    android:id="@+id/nav_app_settings"
-    android:icon="@drawable/ic_settings"
-    android:title="@string/navigation_drawer_settings"/>
-
-<item android:title="@string/navigation_drawer_news_updates">
-    <menu>
-        <item
-            android:id="@+id/nav_twitter"
-            android:icon="@drawable/twitter"
-            android:title="@string/twitter_account_name"/>
-    </menu>
-</item>
+    <item android:title="@string/navigation_drawer_news_updates">
+        <menu>
+            <item
+                android:id="@+id/nav_twitter"
+                android:icon="@drawable/twitter"
+                android:title="@string/twitter_account_name" />
+        </menu>
+    </item>
 
 
-<item android:title="@string/navigation_drawer_external_links">
-    <menu>
-        <item
-            android:id="@+id/nav_website"
-            android:icon="@drawable/ic_home"
-            android:title="@string/navigation_drawer_website"/>
-        <item
-            android:id="@+id/nav_support"
-            android:icon="@drawable/ic_support"
-            android:title="@string/navigation_drawer_support"/>
-        <item
-            android:id="@+id/nav_privacy"
-            android:icon="@drawable/ic_privacy"
-            android:title="@string/navigation_drawer_privacy_policy"/>
-    </menu>
-</item>
+    <item android:title="@string/navigation_drawer_external_links">
+        <menu>
+            <item
+                android:id="@+id/nav_website"
+                android:icon="@drawable/ic_home"
+                android:title="@string/navigation_drawer_website" />
+            <item
+                android:id="@+id/nav_support"
+                android:icon="@drawable/ic_support"
+                android:title="@string/navigation_drawer_support" />
+            <item
+                android:id="@+id/nav_privacy"
+                android:icon="@drawable/ic_privacy"
+                android:title="@string/navigation_drawer_privacy_policy" />
+        </menu>
+    </item>
 
 </menu>
