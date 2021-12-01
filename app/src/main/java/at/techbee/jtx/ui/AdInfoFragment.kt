@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import at.techbee.jtx.*
 import at.techbee.jtx.databinding.FragmentAdinfoBinding
+import at.techbee.jtx.util.DateTimeUtils
 import com.google.android.ump.ConsentInformation
 
 
@@ -127,7 +128,7 @@ class AdInfoFragment : Fragment() {
 
         if(BillingManager.isSubscriptionPurchased()) {      // change text if item was already bought
             binding.adinfoCardSubscribeSuccess.setOnClickListener { return@setOnClickListener }   // actually we remove the listener
-            binding.adinfoCardSubscribeSuccessPurchaseDate.text = getString(R.string.adinfo_adfree_subscribe_purchase_date, convertLongToFullDateTimeString(BillingManager.adfreeSubscriptionPurchase.value?.purchaseTime, null))
+            binding.adinfoCardSubscribeSuccessPurchaseDate.text = getString(R.string.adinfo_adfree_subscribe_purchase_date, DateTimeUtils.convertLongToFullDateTimeString(BillingManager.adfreeSubscriptionPurchase.value?.purchaseTime, null))
             binding.adinfoCardSubscribeSuccessOrderNumber.text = getString(R.string.adinfo_adfree_subscribe_order_id, BillingManager.adfreeSubscriptionPurchase.value?.orderId)
             binding.adinfoCardSubscribe.visibility = View.GONE
             binding.adinfoAdfreeText.visibility = View.GONE

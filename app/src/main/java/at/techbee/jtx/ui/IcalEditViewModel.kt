@@ -12,10 +12,10 @@ import android.app.Application
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import androidx.lifecycle.*
-import at.techbee.jtx.addLongToCSVString
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
+import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

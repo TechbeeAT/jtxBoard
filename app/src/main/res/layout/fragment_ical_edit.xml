@@ -17,7 +17,7 @@
 
         <import type="android.view.View" />
 
-        <import type="at.techbee.jtx.UtilKt" />
+        <import type="at.techbee.jtx.util.DateTimeUtils" />
 
         <variable
             name="model"
@@ -168,7 +168,7 @@
                                 android:id="@+id/edit_journal_dtstart_day"
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
-                                android:text="@{UtilKt.convertLongToDayString(model.iCalObjectUpdated.dtstart, model.iCalObjectUpdated.dtstartTimezone)}"
+                                android:text="@{DateTimeUtils.INSTANCE.convertLongToDayString(model.iCalObjectUpdated.dtstart, model.iCalObjectUpdated.dtstartTimezone)}"
                                 android:textAlignment="center"
                                 android:textSize="36sp"
                                 android:textStyle="bold"
@@ -178,7 +178,7 @@
                                 android:id="@+id/edit_journal_dtstart_month"
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
-                                android:text="@{UtilKt.convertLongToMonthString(model.iCalObjectUpdated.dtstart, model.iCalObjectUpdated.dtstartTimezone)}"
+                                android:text="@{DateTimeUtils.INSTANCE.convertLongToMonthString(model.iCalObjectUpdated.dtstart, model.iCalObjectUpdated.dtstartTimezone)}"
                                 android:textAlignment="center"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
@@ -188,7 +188,7 @@
                                 android:id="@+id/edit_journal_dtstart_year"
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
-                                android:text="@{UtilKt.convertLongToYearString(model.iCalObjectUpdated.dtstart, model.iCalObjectUpdated.dtstartTimezone)}"
+                                android:text="@{DateTimeUtils.INSTANCE.convertLongToYearString(model.iCalObjectUpdated.dtstart, model.iCalObjectUpdated.dtstartTimezone)}"
                                 android:textAlignment="center"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
@@ -198,7 +198,7 @@
                                 android:id="@+id/edit_journal_dtstart_time"
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
-                                android:text="@{UtilKt.convertLongToTimeString(model.iCalObjectUpdated.dtstart, model.iCalObjectUpdated.dtstartTimezone)}"
+                                android:text="@{DateTimeUtils.INSTANCE.convertLongToTimeString(model.iCalObjectUpdated.dtstart, model.iCalObjectUpdated.dtstartTimezone)}"
                                 android:textAlignment="center"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
@@ -209,7 +209,7 @@
                                 android:id="@+id/edit_journal_dtstart_timezone_offset"
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
-                                android:text="@{UtilKt.getOffsetStringFromTimezone(model.iCalObjectUpdated.dtstartTimezone)}"
+                                android:text="@{DateTimeUtils.INSTANCE.getOffsetStringFromTimezone(model.iCalObjectUpdated.dtstartTimezone)}"
                                 android:textAlignment="center"
                                 android:textSize="12sp"
                                 android:textStyle="bold"

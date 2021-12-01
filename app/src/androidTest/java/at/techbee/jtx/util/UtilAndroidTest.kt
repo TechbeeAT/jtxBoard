@@ -10,9 +10,9 @@ package at.techbee.jtx.util
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import at.techbee.jtx.getLocalizedOrdinal
-import at.techbee.jtx.getLocalizedWeekdays
-import at.techbee.jtx.isLocalizedWeekstartMonday
+import at.techbee.jtx.util.DateTimeUtils.getLocalizedOrdinal
+import at.techbee.jtx.util.DateTimeUtils.getLocalizedWeekdays
+import at.techbee.jtx.util.DateTimeUtils.isLocalizedWeekstartMonday
 import org.junit.Assert.*
 
 import org.junit.Test

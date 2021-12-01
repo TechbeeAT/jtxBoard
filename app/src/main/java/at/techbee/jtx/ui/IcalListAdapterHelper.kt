@@ -26,6 +26,7 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.databinding.FragmentIcalListItemAttachmentBinding
 import at.techbee.jtx.databinding.FragmentIcalListItemSubtaskBinding
+import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import com.google.android.material.slider.Slider
 import java.io.FileNotFoundException
 

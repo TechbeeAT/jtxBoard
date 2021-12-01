@@ -13,7 +13,6 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="at.techbee.jtx.UtilKt" />
 
         <variable
             name="model"

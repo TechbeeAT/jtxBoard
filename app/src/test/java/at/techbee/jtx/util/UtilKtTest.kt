@@ -8,7 +8,13 @@
 
 package at.techbee.jtx.util
 
-import at.techbee.jtx.*
+import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
+import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
+import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
+import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
+import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
+import at.techbee.jtx.util.DateTimeUtils.isValidEmail
+import at.techbee.jtx.util.DateTimeUtils.isValidURL
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -56,13 +62,13 @@ class UtilKtTest {
     @Test fun getAttachmentSizeString_kilobytes() = assertEquals("1 KB", getAttachmentSizeString(1024))
     @Test fun getAttachmentSizeString_megabytes() = assertEquals("1 MB", getAttachmentSizeString(1048576))
 
-    @Test fun addLongToCSVString() = assertEquals(("1622800800000,1622887200000,1624010400000"), addLongToCSVString("1622800800000,1622887200000", 1624010400000L))
+    @Test fun addLongToCSVString_test() = assertEquals(("1622800800000,1622887200000,1624010400000"), addLongToCSVString("1622800800000,1622887200000", 1624010400000L))
     @Test fun addLongToCSVString_noDuplicate() = assertEquals(("1622800800000,1622887200000,1624010400000"), addLongToCSVString("1622800800000,1622887200000,1624010400000", 1624010400000L))
     @Test fun addLongToCSVString_fromEmpty() = assertEquals(("1624010400000"), addLongToCSVString(null, 1624010400000L))
     @Test fun addLongToCSVString_fromEmpty2() = assertEquals(("1624010400000"), addLongToCSVString("", 1624010400000L))
     @Test fun addLongToCSVString_fromEmpty3() = assertEquals(("1624010400000"), addLongToCSVString("   ", 1624010400000L))
 
-    @Test fun getLongListfromCSVString() {
+    @Test fun getLongListfromCSVString_test() {
         val list = getLongListfromCSVString("1622800800000,1622887200000,1624010400000")
         assertEquals(1622800800000L, list[0])
         assertEquals(1622887200000L, list[1])
