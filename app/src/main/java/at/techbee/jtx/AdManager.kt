@@ -12,7 +12,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import at.techbee.jtx.BuildConfig.FLAVOR
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
@@ -23,88 +22,74 @@ class AdManager {
 
     companion object {
 
-        private const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/5354046379"
-        private const val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_PROD = "ca-app-pub-5573084047491645/3240430994"
-
-        private const val ONE_WEEK_IN_MILLIS = 604800000L  // = one week
-        private const val FIVE_MIN_IN_MILLIS = 300000L     // = 5 min
-
         private val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL = if(BuildConfig.DEBUG)
-            ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_TEST
+            "ca-app-pub-3940256099942544/5354046379"      // Test Admob Unit ID for rewarded interstitials
         else
-            ADMOB_UNIT_ID_REWARDED_INTERSTITIAL_PROD
+            "ca-app-pub-5573084047491645/3240430994"      // Prod Admob Unit ID for rewarded interstitials
 
         var consentInformation: ConsentInformation? = null
         private var consentForm: ConsentForm? = null
-        //var mInterstitialAd: InterstitialAd? = null
         var rewardedInterstitialAd: RewardedInterstitialAd? = null
 
         private var adPrefs: SharedPreferences? = null
 
-        private var nextAdShowtime: Long = 0L
-        private var adsAccepted: Boolean = false
-
         private const val PREFS_ADS = "sharedPreferencesAds"
         private const val PREFS_ADS_NEXT_AD = "prefsNextAd"
         private const val PREFS_ADS_ACCEPTED = "adsAccepted"
-        //private const val ONE_WEEK_IN_MILLIS = 604800000L
+
         private val TIME_TO_NEXT_AD = if(BuildConfig.DEBUG)
-            FIVE_MIN_IN_MILLIS
+            300000L     // = 5 min
         else
-            ONE_WEEK_IN_MILLIS
+            604800000L  // = one week
 
+        private val TIME_TO_FIRST_AD = if(BuildConfig.DEBUG)
+            60000L    // = 10 min
+        else
+            86400000L     // = one day
 
+        private var mainActivity: MainActivity? = null
 
-        fun isAdShowtime(activity: Activity): Boolean {
-
-            if (adPrefs == null)
-                adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
-
-            adPrefs?.let {
-
-                nextAdShowtime = it.getLong(PREFS_ADS_NEXT_AD, 0L)
-                if (nextAdShowtime == 0L)               // initially set the shared preferences to today + one week
-                    it.edit()?.putLong(
-                        PREFS_ADS_NEXT_AD,
-                        System.currentTimeMillis() + TIME_TO_NEXT_AD
-                    )?.apply()
-
-                return System.currentTimeMillis() > nextAdShowtime
-            }
-            return false
-        }
-
-        fun showAd(activity: Activity) {
-
-
+        /**
+         * Initializes the AdManager. This mainly passes the mainActivity to the AdManager to load and provide the AdPreferences
+         */
+        fun initialize(activity: Activity) {
             try {
-                val mainActivity = activity as MainActivity
-                if (isAdShowtime(activity) && rewardedInterstitialAd != null) {
-                    rewardedInterstitialAd?.show(mainActivity, mainActivity)
-                } else {
-                    Log.d("AdLoader", "The interstitial ad wasn't ready yet.")
-                }
+                mainActivity = activity as MainActivity
             } catch (e: ClassCastException) {
                 Log.w("AdLoader", "Class Cast from Activity to MainActivity failed! \n$e")
             }
-
+            adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
         }
 
-        fun processAdReward(activity: Activity) {
+        /**
+         * @return true if the last ad was shown
+         */
+        fun isAdShowtime(): Boolean {
+            val nextAdTime = adPrefs?.getLong(PREFS_ADS_NEXT_AD, 0L) ?: return false      // return false if adPrefs was not correctly initialized
+            if (nextAdTime == 0L) {               // initially set the shared preferences to today + one day
+                adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, System.currentTimeMillis() + TIME_TO_FIRST_AD)?.apply()
+                return true             // initially we return true to show the ad-info dialog, but when the user saves an entry, the setting will be updated in the future and no ad will be shown until the TIME_TO_FIRST_AD is reached
+            }
+            return System.currentTimeMillis() > nextAdTime
+        }
 
-            if (adPrefs == null)
-                adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
-
-            adPrefs?.let {
-                nextAdShowtime = System.currentTimeMillis() + TIME_TO_NEXT_AD
-                it.edit()?.putLong(PREFS_ADS_NEXT_AD, nextAdShowtime)?.apply()
+        /**
+         * Shows the ad if the ad was loaded and ready
+         */
+        fun showAd() {
+            mainActivity?.let { act ->
+                if (isAdShowtime() && rewardedInterstitialAd != null) {
+                    rewardedInterstitialAd?.show(act, act)
+                } else {
+                    Log.d("AdLoader", "The interstitial ad wasn't ready yet.")
+                }
             }
         }
 
 
         private fun setUpAds(context: Context) {
 
-            MobileAds.initialize(context) {}
+            MobileAds.initialize(context) {  }
 
             RewardedInterstitialAd.load(context,
                 ADMOB_UNIT_ID_REWARDED_INTERSTITIAL,
@@ -170,29 +155,24 @@ class AdManager {
 
         }
 
+        /**
+         *  Loads the consent form and takes care of the response. If everything was okay (or the consent was not needed), the ads are set up
+         */
         private fun loadForm(activity: Activity, context: Context, consentInformation: ConsentInformation) {
-
-            // don't continue if the flavor is adfree (ose)
-            if(FLAVOR == MainActivity.BUILD_FLAVOR_OSE)
-                return
 
             if (consentInformation.consentStatus == ConsentInformation.ConsentStatus.REQUIRED || consentInformation.consentStatus == ConsentInformation.ConsentStatus.UNKNOWN) {
 
                 UserMessagingPlatform.loadConsentForm(
                     context,
                     { consentForm ->
-
                         consentForm.show(activity) {
-                            //Handle dismissal by reloading form
-                            loadForm(activity, context, consentInformation)
+                            loadForm(activity, context, consentInformation)    //Handle dismissal by reloading form
                         }
                         Companion.consentForm = consentForm
                         setUpAds(context)
                     }
                 ) {
-                    // Handle the error
-                    //Log.d("consentForm", "Failed loading consent form")
-                    Log.d("consentForm", it.message)
+                    Log.d("consentForm", it.message)     // Handle the error just with a log message
                 }
             } else {
                 setUpAds(context)
@@ -200,6 +180,9 @@ class AdManager {
         }
 
 
+        /**
+         * Resets the user consent information and shows the consent form again
+         */
         fun resetUserConsent(activity: Activity, context: Context) {
 
             // TODO: Not sure if this is correct here. This should be reviewed at again, but for now it is working.
@@ -207,25 +190,26 @@ class AdManager {
             initializeUserConsent(activity, context)
         }
 
-
-
-        fun isAdsAccepted(activity: Activity): Boolean {
-
-            if (adPrefs == null)
-                adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
-
-            adPrefs?.let {
-                adsAccepted = it.getBoolean(PREFS_ADS_ACCEPTED, false)
-            }
-            return adsAccepted
+        /**
+         * Processes the ad reward by setting the preference when to show the next add to one week from now
+         * Additionally sets the rewardedInterstitialAd back to null and calls setUpAds again to load another ad.
+         */
+        fun processAdReward(context: Context) {
+            adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, (System.currentTimeMillis() + TIME_TO_NEXT_AD))?.apply()
+            rewardedInterstitialAd = null
+            setUpAds(context)
         }
 
-        fun setAdsAccepted(isAccepted: Boolean, activity: Activity) {
 
-            if (adPrefs == null)
-                adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
+        /**
+         * @return true if the setting that the user has seen the ad-info dialog is set to true, otherwise false
+         */
+        fun isAdsAccepted(): Boolean = adPrefs?.getBoolean(PREFS_ADS_ACCEPTED, false) ?: false
 
-            adPrefs?.edit()?.putBoolean(PREFS_ADS_ACCEPTED, isAccepted)?.apply()
-        }
+        /**
+         * Sets the setting in the preferences to true, that the user has seen the ad-info dialog
+         */
+        fun setAdsAccepted() = adPrefs?.edit()?.putBoolean(PREFS_ADS_ACCEPTED, true)?.apply()
+
     }
 }

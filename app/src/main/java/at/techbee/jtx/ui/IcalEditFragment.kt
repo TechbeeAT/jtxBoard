@@ -475,10 +475,8 @@ class IcalEditFragment : Fragment() {
 
                 hideKeyboard()
 
-
                 // show Ad if necessary
-                AdManager.showAd(requireActivity())
-
+                AdManager.showAd()
 
                 // return to list view
                 val direction =

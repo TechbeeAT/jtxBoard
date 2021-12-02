@@ -40,6 +40,8 @@
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
     <string name="discard">Discard</string>
+    <string name="gotit">Got it</string>
+
 
     <string name="toolbar_text_jtx_board" translatable="false">jtx Board</string>
     <string name="toolbar_text_jtx_board_journals_overview">Journals Overview</string>
@@ -137,9 +139,8 @@
     <string name="list_progress">Progress</string>
     <string name="list_expand">Expand</string>
     <string name="list_dialog_contribution_title">Select your contribution form</string>
-    <string name="list_dialog_contribution_message">Please choose your contribution to this app: Accept ads or buy the ad-free upgrade. If you are unsure, check the ad-option, you can still change your mind and buy the ad-free option later from the menu!</string>
-    <string name="list_dialog_contribution_acceptads">Accept ads</string>
-    <string name="list_dialog_contribution_buyadfree">Buy ad-free</string>
+    <string name="list_dialog_contribution_message">This app is powered by ads by default. As an alternative we offer an ad-free subscription. For more information please check out the Ad-Info section in the main menu!</string>
+    <string name="list_dialog_contribution_more_information">Find out more</string>
     <string name="list_num_attendees_contentdesc">Number of attendees</string>
     <string name="list_num_attachments_contentdesc">Number of attachments</string>
     <string name="list_num_comments_contentdesc">Number of comments</string>

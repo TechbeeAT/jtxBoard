@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         setSupportActionBar(toolbar)
 
 
-
         // necessary for ical4j
         System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
 
@@ -112,24 +111,26 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
             // TODO Check if the user already bought the app. If yes, skip the Dialog Box
         }
 
-        // check if flavor is ad-Flavor and if ads should be shown
-        if(isAdEnabled() && AdManager.isAdShowtime(this)) {
+        AdManager.initialize(this)
 
-            if (!AdManager.isAdsAccepted(this)) {   // show a dialog if ads were not accepted yet
+        // check if flavor is ad-Flavor and if ads should be shown
+        if(isAdEnabled() && AdManager.isAdShowtime()) {
+
+            if (!AdManager.isAdsAccepted()) {   // show a dialog if ads were not accepted yet
 
                 MaterialAlertDialogBuilder(this)
                     .setTitle(resources.getString(R.string.list_dialog_contribution_title))
                     .setMessage(resources.getString(R.string.list_dialog_contribution_message))
-                    .setNegativeButton(resources.getString(R.string.list_dialog_contribution_buyadfree)) { _, _ ->
+                    .setNegativeButton(resources.getString(R.string.list_dialog_contribution_more_information)) { _, _ ->
                         // Respond to negative button press
-                        AdManager.setAdsAccepted(false, this)
+                        AdManager.setAdsAccepted()    // set ads accepted, userConstent is delayed until the next onResume
                         findNavController(R.id.nav_host_fragment)
                             .navigate(R.id.action_global_adInfoFragment)
                     }
-                    .setPositiveButton(resources.getString(R.string.list_dialog_contribution_acceptads)) { _, _ ->
-                        // Respond to positive button press
+                    .setPositiveButton(resources.getString(R.string.gotit)) { _, _ ->
+                        // Respond to neutal button press
                         // Ads are accepted, load user consent
-                        AdManager.setAdsAccepted(true, this)
+                        AdManager.setAdsAccepted()
                         AdManager.initializeUserConsent(this, applicationContext)
                     }
                     .show()
@@ -140,7 +141,6 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                 Log.d("Ads accepted", "Ads accepted, loading consent form if necessary")
             }
         }
-
 
 
         // handle the intents for the shortcuts
@@ -310,11 +310,14 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
     override fun onUserEarnedReward(item: RewardItem) {
         Log.d("onUserEarnedReward", "Ad watched, user earned Reward")
-        AdManager.processAdReward(this)
+        AdManager.processAdReward(applicationContext)
         Toast.makeText(this, "Congrats, you're ad-free for a week now :-)", Toast.LENGTH_SHORT).show()
     }
 
 
+    /**
+     * @return true if the build flavor is GLOBAL or ALPHA or if the flavor is GOOGLEPLAY and the subscription is NOT purchased
+     */
     private fun isAdEnabled(): Boolean  =
         (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased())
             || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA

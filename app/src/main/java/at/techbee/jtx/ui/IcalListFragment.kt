@@ -806,7 +806,7 @@ class IcalListFragment : Fragment() {
                 prefs.edit().putLong(PREFS_LAST_USED_COLLECTION, it.collectionId).apply()       // save last used collection for next time
 
                 icalListViewModel.insertQuickItem(it, categories)
-                AdManager.showAd(requireActivity())     // don't forget to show an ad if applicable ;-)
+                AdManager.showAd()     // don't forget to show an ad if applicable ;-)
             }
         }
 
