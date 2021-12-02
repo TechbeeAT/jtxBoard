@@ -57,6 +57,7 @@ class AboutFragment : Fragment() {
 
         //val aboutBinding = FragmentAboutBinding.inflate(inflater, container, false)
         bindingAboutJtx.aboutAppVersion.text = getString(R.string.about_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+        bindingAboutJtx.aboutAppCodename.text = getString(R.string.about_app_codename, BuildConfig.versionCodename)
         bindingAboutJtx.aboutAppBuildTime.text = getString(R.string.about_app_build_date, SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime))
         binding.aboutLinearlayout.removeAllViews()
         binding.aboutLinearlayout.addView(bindingAboutJtx.root)
