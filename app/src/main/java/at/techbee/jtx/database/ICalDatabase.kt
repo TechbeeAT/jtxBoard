@@ -16,6 +16,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.ICal4ViewNote
@@ -113,8 +114,8 @@ abstract class ICalDatabase : RoomDatabase() {
                                     val cv = ContentValues()
                                     cv.put(COLUMN_COLLECTION_ID, "1")
                                     cv.put(COLUMN_COLLECTION_ACCOUNT_TYPE, ICalCollection.LOCAL_ACCOUNT_TYPE)
-                                    cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, ICalCollection.LOCAL_ACCOUNT_NAME)
-                                    cv.put(COLUMN_COLLECTION_DISPLAYNAME, ICalCollection.LOCAL_COLLECTION_NAME)
+                                    cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, context.getString(R.string.default_local_account_name))
+                                    cv.put(COLUMN_COLLECTION_DISPLAYNAME, context.getString(R.string.default_local_collection_name))
                                     cv.put(COLUMN_COLLECTION_URL, ICalCollection.LOCAL_COLLECTION_URL)
                                     cv.put(COLUMN_COLLECTION_SUPPORTSVJOURNAL, 1)
                                     cv.put(COLUMN_COLLECTION_SUPPORTSVEVENT, 1)
@@ -128,8 +129,8 @@ abstract class ICalDatabase : RoomDatabase() {
                                     val cv = ContentValues()
                                     cv.put(COLUMN_COLLECTION_ID, "1")
                                     cv.put(COLUMN_COLLECTION_ACCOUNT_TYPE, ICalCollection.LOCAL_ACCOUNT_TYPE)
-                                    cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, ICalCollection.LOCAL_ACCOUNT_NAME)
-                                    cv.put(COLUMN_COLLECTION_DISPLAYNAME, ICalCollection.LOCAL_COLLECTION_NAME)
+                                    cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, context.getString(R.string.default_local_account_name))
+                                    cv.put(COLUMN_COLLECTION_DISPLAYNAME, context.getString(R.string.default_local_collection_name))
                                     cv.put(COLUMN_COLLECTION_URL, ICalCollection.LOCAL_COLLECTION_URL)
                                     cv.put(COLUMN_COLLECTION_SUPPORTSVJOURNAL, 1)
                                     cv.put(COLUMN_COLLECTION_SUPPORTSVEVENT, 1)

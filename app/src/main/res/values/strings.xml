@@ -62,6 +62,10 @@
     <string name="toolbar_text_donate">Donate</string>
     <string name="toolbar_text_adinfo">Ad Info</string>
 
+    <string name="default_local_collection_name">Local</string>
+    <string name="default_local_account_name">Local</string>
+
+
 
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">Draft</string>

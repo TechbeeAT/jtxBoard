@@ -96,7 +96,7 @@ data class ICalCollection(
 
         @ColumnInfo(name = COLUMN_COLLECTION_URL)               var url: String = LOCAL_COLLECTION_URL,
 
-        @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME)       var displayName: String? = LOCAL_COLLECTION_NAME,
+        @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME)       var displayName: String? = null,
         @ColumnInfo(name = COLUMN_COLLECTION_DESCRIPTION)       var description: String? = null,
         @ColumnInfo(name = COLUMN_COLLECTION_OWNER)             var owner: String? = null,
         @ColumnInfo(name = COLUMN_COLLECTION_COLOR)             var color: Int? = null,
@@ -111,10 +111,10 @@ data class ICalCollection(
         @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVJOURNAL)    var supportsVJOURNAL: Boolean = false,
 
         /** Account name */
-        @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME)            var accountName: String? = LOCAL_COLLECTION_NAME,
+        @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME)            var accountName: String? = null,
 
         /** Webcal subscription source URL */
-        @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_TYPE)            var accountType: String? = LOCAL_COLLECTION_NAME,
+        @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_TYPE)            var accountType: String? = LOCAL_ACCOUNT_TYPE,
 
         /** Webcal subscription source URL */
         @ColumnInfo(name = COLUMN_COLLECTION_SYNC_VERSION)            var syncversion: String? = null,
@@ -127,14 +127,9 @@ data class ICalCollection(
         companion object Factory {
 
                 const val LOCAL_COLLECTION_URL = "https://localhost/"
-                const val LOCAL_COLLECTION_NAME = "LOCAL"
-                const val LOCAL_ACCOUNT_NAME = "LOCAL"
                 const val LOCAL_ACCOUNT_TYPE = "LOCAL"
                 const val TEST_ACCOUNT_TYPE = "TEST"
-
-
                 const val DAVX5_ACCOUNT_TYPE = "bitfire.at.davdroid"
-
 
                 /**
                  * Create a new [ICalCollection] from the specified [ContentValues].
@@ -151,9 +146,7 @@ data class ICalCollection(
                                 throw IllegalArgumentException("Forbidden account type: $LOCAL_ACCOUNT_TYPE")
 
                         return ICalCollection().applyContentValues(values)
-
                 }
-
         }
 
         fun applyContentValues(values: ContentValues):ICalCollection {

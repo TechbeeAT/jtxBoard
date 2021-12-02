@@ -481,10 +481,7 @@ class SyncContentProvider : ContentProvider() {
     }
 
     private fun getAccountFromUri(uri: Uri): Account {
-        val accountName = uri.getQueryParameter(ACCOUNT_NAME) ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_NAME missing. Uri: ($uri)")
-        if (accountName == ICalCollection.LOCAL_ACCOUNT_NAME)
-            throw java.lang.IllegalArgumentException("Local collections cannot be used. Uri: ($uri)")
-
+        val accountName = uri.getQueryParameter(ACCOUNT_TYPE) ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_NAME missing. Uri: ($uri)")
         val accountType = uri.getQueryParameter(ACCOUNT_TYPE) ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_TYPE missing. Uri: ($uri)")
         if (accountType == ICalCollection.LOCAL_ACCOUNT_TYPE)
             throw java.lang.IllegalArgumentException("Local collections cannot be used. Uri: ($uri)")
