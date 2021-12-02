@@ -27,7 +27,7 @@ buildscript {
         version_lifecycle_extensions = "2.2.0"
         version_lifecycle = "2.4.0"
         version_navigation = '2.4.0-beta02'
-        version_room = '2.4.0-beta02'
+        version_room = '2.4.0-rc01'
         version_material = '1.5.0-beta01'
         version_appcompat = "1.4.0"
         version_work = "2.7.1"
