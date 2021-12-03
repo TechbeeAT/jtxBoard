@@ -126,6 +126,7 @@ class IcalEditFragment : Fragment() {
 
         const val PREFS_EDIT_VIEW = "sharedPreferencesEditView"
         const val PREFS_LAST_COLLECTION = "lastUsedCollection"
+        const val PREFS_CONTACTS_PERMISSION_SHOWN = "contactsPermissionShown"
     }
 
 
@@ -153,24 +154,16 @@ class IcalEditFragment : Fragment() {
 
 
         // Check if the permission to read local contacts is already granted, otherwise make a dialog to ask for permission
-        if (ContextCompat.checkSelfPermission(
-                requireActivity().applicationContext,
-                Manifest.permission.READ_CONTACTS
-            )
-            == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             loadContacts()
-        } else {
+        } else if(!prefs.getBoolean(PREFS_CONTACTS_PERMISSION_SHOWN, false)) {
             //request for permission to load contacts
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.edit_fragment_app_permission))
                 .setMessage(getString(R.string.edit_fragment_app_permission_message))
                 .setPositiveButton("Ok") { _, _ ->
-                    ActivityCompat.requestPermissions(
-                        requireActivity(),
-                        arrayOf(Manifest.permission.READ_CONTACTS),
-                        CONTACT_READ_PERMISSION_CODE
-                    )
+                    ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_READ_PERMISSION_CODE)
+                    prefs.edit().putBoolean(PREFS_CONTACTS_PERMISSION_SHOWN, true).apply()
                 }
                 .setNegativeButton("Cancel") { _, _ -> }
                 .show()
