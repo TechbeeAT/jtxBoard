@@ -54,8 +54,14 @@ class IcalListViewModel(
     val allSubtasks: LiveData<List<ICal4List?>> = database.getAllSubtasks()
 
     val allRemoteCollections = database.getAllRemoteCollections()
-    val allCollections = database.getAllCollections()
-
+    val allCollections = Transformations.switchMap(listQuery) {               // allCollections reacts on listQuery, but does not depend on it!
+        when (searchModule) {
+            Module.TODO.name -> database.getAllWriteableVTODOCollections()
+            Module.NOTE.name -> database.getAllWriteableVJOURNALCollections()
+            Module.JOURNAL.name -> database.getAllWriteableVJOURNALCollections()
+            else -> database.getAllCollections() // should not happen!
+        }
+    }
     var quickInsertedEntity: MutableLiveData<ICalEntity?> = MutableLiveData<ICalEntity?>().apply { postValue(null) }
     var directEditEntity: MutableLiveData<ICalEntity?> = MutableLiveData<ICalEntity?>().apply { postValue(null) }
     var scrollOnceId: Long? = null
