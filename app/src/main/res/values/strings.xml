@@ -415,5 +415,8 @@
 
     <string name="toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
 
+    <!-- sync content provider -->
+    <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx5 and start the sync again.</string>
+
 
 </resources>

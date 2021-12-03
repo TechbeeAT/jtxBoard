@@ -11,6 +11,7 @@ package at.techbee.jtx
 import android.accounts.Account
 import android.content.*
 import android.database.Cursor
+import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.os.Environment
 import android.util.Base64
@@ -22,6 +23,7 @@ import at.techbee.jtx.database.properties.*
 import java.io.File
 import java.io.IOException
 import android.webkit.MimeTypeMap
+import android.widget.Toast
 import java.lang.NumberFormatException
 
 
@@ -192,36 +194,42 @@ class SyncContentProvider : ContentProvider() {
         // TODO: Make sure that only the items within the collection of the given account are considered
         getAccountFromUri(uri)     // here this is used just for validation
 
-        val id: Long?
+        var id: Long? = null
 
-        when (sUriMatcher.match(uri)) {
-            CODE_ICALOBJECTS_DIR -> id = ICalObject.fromContentValues(values)?.let { database.insertICalObjectSync(it) }
-            CODE_ATTENDEES_DIR -> id = Attendee.fromContentValues(values)?.let { database.insertAttendeeSync(it) }
-            CODE_CATEGORIES_DIR -> id = Category.fromContentValues(values)?.let { database.insertCategorySync(it) }
-            CODE_COMMENTS_DIR -> id = Comment.fromContentValues(values)?.let { database.insertCommentSync(it) }
-            CODE_CONTACTS_DIR -> id = Contact.fromContentValues(values)?.let { database.insertContactSync(it) }
-            CODE_ORGANIZER_DIR -> id = Organizer.fromContentValues(values)?.let { database.insertOrganizerSync(it) }
-            CODE_RELATEDTO_DIR -> id = Relatedto.fromContentValues(values)?.let { database.insertRelatedtoSync(it) }
-            CODE_RESOURCE_DIR -> id = Resource.fromContentValues(values)?.let { database.insertResourceSync(it) }
-            CODE_COLLECTION_DIR -> id = ICalCollection.fromContentValues(values)?.let { database.insertCollectionSync(it) }
-            CODE_ATTACHMENT_DIR -> id = Attachment.fromContentValues(values)?.let { database.insertAttachmentSync(it) }
-            CODE_ALARM_DIR -> id = Alarm.fromContentValues(values)?.let { database.insertAlarmSync(it) }
-            CODE_UNKNOWN_DIR -> id = Unknown.fromContentValues(values)?.let { database.insertUnknownSync(it) }
+        try {
 
-            CODE_ICALOBJECT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-            CODE_ATTENDEE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-            CODE_CATEGORY_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-            CODE_COMMENT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-            CODE_CONTACT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-            CODE_ORGANIZER_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-            CODE_RELATEDTO_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-            CODE_RESOURCE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-            CODE_COLLECTION_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-            CODE_ATTACHMENT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-            CODE_ALARM_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-            CODE_UNKNOWN_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+            when (sUriMatcher.match(uri)) {
+                CODE_ICALOBJECTS_DIR -> id = ICalObject.fromContentValues(values)?.let { database.insertICalObjectSync(it) }
+                CODE_ATTENDEES_DIR -> id = Attendee.fromContentValues(values)?.let { database.insertAttendeeSync(it) }
+                CODE_CATEGORIES_DIR -> id = Category.fromContentValues(values)?.let { database.insertCategorySync(it) }
+                CODE_COMMENTS_DIR -> id = Comment.fromContentValues(values)?.let { database.insertCommentSync(it) }
+                CODE_CONTACTS_DIR -> id = Contact.fromContentValues(values)?.let { database.insertContactSync(it) }
+                CODE_ORGANIZER_DIR -> id = Organizer.fromContentValues(values)?.let { database.insertOrganizerSync(it) }
+                CODE_RELATEDTO_DIR -> id = Relatedto.fromContentValues(values)?.let { database.insertRelatedtoSync(it) }
+                CODE_RESOURCE_DIR -> id = Resource.fromContentValues(values)?.let { database.insertResourceSync(it) }
+                CODE_COLLECTION_DIR -> id = ICalCollection.fromContentValues(values)?.let { database.insertCollectionSync(it) }
+                CODE_ATTACHMENT_DIR -> id = Attachment.fromContentValues(values)?.let { database.insertAttachmentSync(it) }
+                CODE_ALARM_DIR -> id = Alarm.fromContentValues(values)?.let { database.insertAlarmSync(it) }
+                CODE_UNKNOWN_DIR -> id = Unknown.fromContentValues(values)?.let { database.insertUnknownSync(it) }
 
-            else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
+                CODE_ICALOBJECT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+                CODE_ATTENDEE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+                CODE_CATEGORY_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+                CODE_COMMENT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+                CODE_CONTACT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+                CODE_ORGANIZER_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+                CODE_RELATEDTO_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+                CODE_RESOURCE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+                CODE_COLLECTION_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+                CODE_ATTACHMENT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+                CODE_ALARM_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+                CODE_UNKNOWN_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
+
+                else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
+            }
+        } catch (e: SQLiteConstraintException) {
+            Log.e("ConstraintException", "The given insert caused a SQLiteConstraintException. This entry is skipped.\n$e")
+            Toast.makeText(context, R.string.synccontentprovider_sync_problem, Toast.LENGTH_LONG).show()
         }
 
         if (context == null)
