@@ -11,6 +11,7 @@ package at.techbee.jtx.ui
 
 import android.accounts.AccountManager
 import android.app.Application
+import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -250,6 +251,20 @@ class IcalListFragment : Fragment() {
                 R.id.menu_list_bottom_show_completed_tasks -> applyQuickFilterTodo(mutableListOf())
             }
             false
+        }
+
+
+        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
+            icalListViewModel.showSyncProgressIndicator.postValue(
+                ContentResolver.getCurrentSyncs().isNotEmpty()
+            )
+        }
+
+        icalListViewModel.showSyncProgressIndicator.observe(viewLifecycleOwner) {
+            if(it)
+                binding.listSyncProgressIndicator.visibility = View.VISIBLE
+            else
+                binding.listSyncProgressIndicator.visibility = View.GONE
         }
 
 
@@ -840,6 +855,5 @@ class IcalListFragment : Fragment() {
                 }
             }
             .show()
-
     }
 }

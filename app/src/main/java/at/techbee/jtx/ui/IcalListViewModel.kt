@@ -62,9 +62,11 @@ class IcalListViewModel(
             else -> database.getAllCollections() // should not happen!
         }
     }
-    var quickInsertedEntity: MutableLiveData<ICalEntity?> = MutableLiveData<ICalEntity?>().apply { postValue(null) }
-    var directEditEntity: MutableLiveData<ICalEntity?> = MutableLiveData<ICalEntity?>().apply { postValue(null) }
+    var quickInsertedEntity = MutableLiveData<ICalEntity?>(null)
+    var directEditEntity = MutableLiveData<ICalEntity?>(null)
     var scrollOnceId: Long? = null
+
+    val showSyncProgressIndicator = MutableLiveData(false)
 
 
 
