@@ -681,8 +681,8 @@ data class ICalObject(
         val recurList = mutableListOf<Long>()
 
         // don't continue if this function is called with an empty dtstart
-        if(dtstart == null)
-            return emptyList()
+        if(dtstart == null || this.rrule.isNullOrEmpty())
+            return recurList
 
         try {
             val rRule = Recur(this.rrule)
@@ -749,7 +749,7 @@ data class ICalObject(
                 else -> Log.w("LoadRRule", "Unsupported recurrence frequency found (${rRule.frequency}")
             }
         } catch (e: Exception) {
-            Log.w("LoadRRule", "Failed to preset UI according to provided RRule\n$e")
+            Log.w("LoadRRule", "Failed to get Instances from the provided RRule\n$e")
         }
 
         //now remove exceptions
