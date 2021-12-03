@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import at.techbee.jtx.*
+import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.databinding.FragmentAdinfoBinding
 import at.techbee.jtx.util.DateTimeUtils
 import com.google.android.ump.ConsentInformation
@@ -121,40 +122,51 @@ class AdInfoFragment : Fragment() {
         }
          */
 
-        if(BillingManager.adfreeSubscriptionSkuDetails.value == null)
-            binding.adinfoCardSubscribe.visibility = View.GONE
-        else
-            binding.adinfoCardSubscribe.visibility = View.VISIBLE
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && BillingManager.adfreeSubscriptionSkuDetails.value != null) {
 
-        if(BillingManager.isSubscriptionPurchased()) {      // change text if item was already bought
-            binding.adinfoCardSubscribeSuccess.setOnClickListener { return@setOnClickListener }   // actually we remove the listener
-            binding.adinfoCardSubscribeSuccessPurchaseDate.text = getString(R.string.adinfo_adfree_subscribe_purchase_date, DateTimeUtils.convertLongToFullDateTimeString(BillingManager.adfreeSubscriptionPurchase.value?.purchaseTime, null))
-            binding.adinfoCardSubscribeSuccessOrderNumber.text = getString(R.string.adinfo_adfree_subscribe_order_id, BillingManager.adfreeSubscriptionPurchase.value?.orderId)
-            binding.adinfoCardSubscribe.visibility = View.GONE
-            binding.adinfoAdfreeText.visibility = View.GONE
-            binding.adinfoButtonUserconsent.visibility = View.GONE
-            binding.adinfoText.visibility = View.GONE
-            binding.adinfoCardSubscribeSuccess.visibility = View.VISIBLE
-            binding.adinfoThankyouImage.visibility = View.VISIBLE
-            binding.adinfoThankyouText.visibility = View.VISIBLE
-            binding.adinfoButtonManageSubscriptions.visibility = View.VISIBLE
-            binding.adinfoButtonManageSubscriptions.setOnClickListener {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(MANAGE_SUBSCRIPTIONS_LINK)))
+            if (BillingManager.isSubscriptionPurchased()) {      // change text if item was already bought
+                binding.adinfoCardSubscribeSuccess.setOnClickListener { return@setOnClickListener }   // actually we remove the listener
+                binding.adinfoCardSubscribeSuccessPurchaseDate.text =
+                    getString(R.string.adinfo_adfree_subscribe_purchase_date, DateTimeUtils.convertLongToFullDateTimeString(BillingManager.adfreeSubscriptionPurchase.value?.purchaseTime,null))
+                binding.adinfoCardSubscribeSuccessOrderNumber.text = getString(
+                    R.string.adinfo_adfree_subscribe_order_id,
+                    BillingManager.adfreeSubscriptionPurchase.value?.orderId
+                )
+                binding.adinfoCardSubscribe.visibility = View.GONE
+                binding.adinfoAdfreeText.visibility = View.GONE
+                binding.adinfoButtonUserconsent.visibility = View.GONE
+                binding.adinfoText.visibility = View.GONE
+                binding.adinfoCardSubscribeSuccess.visibility = View.VISIBLE
+                binding.adinfoThankyouImage.visibility = View.VISIBLE
+                binding.adinfoThankyouText.visibility = View.VISIBLE
+                binding.adinfoButtonManageSubscriptions.visibility = View.VISIBLE
+                binding.adinfoButtonManageSubscriptions.setOnClickListener {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(MANAGE_SUBSCRIPTIONS_LINK)))
+                }
+            } else {
+                BillingManager.adfreeSubscriptionSkuDetails.value?.price?.let {
+                    binding.adinfoCardSubscribePrice.text = it
+                }
+                binding.adinfoCardSubscribeSuccess.visibility = View.GONE
+                binding.adinfoThankyouImage.visibility = View.GONE
+                binding.adinfoThankyouText.visibility = View.GONE
+                binding.adinfoButtonManageSubscriptions.visibility = View.GONE
+                binding.adinfoCardSubscribe.setOnClickListener {
+                    BillingManager.launchBillingFlow(requireActivity(), BillingManager.adfreeSubscriptionSkuDetails.value)
+                }
+                binding.adinfoCardSubscribe.visibility = View.VISIBLE
+                binding.adinfoAdfreeText.visibility = View.VISIBLE
+                binding.adinfoButtonUserconsent.visibility = View.VISIBLE
+                binding.adinfoText.visibility = View.VISIBLE
+
             }
         } else {
-            BillingManager.adfreeSubscriptionSkuDetails.value?.price?.let {   binding.adinfoCardSubscribePrice.text = it   }
+            binding.adinfoCardSubscribe.visibility = View.GONE
+            binding.adinfoAdfreeText.visibility = View.GONE
             binding.adinfoCardSubscribeSuccess.visibility = View.GONE
             binding.adinfoThankyouImage.visibility = View.GONE
             binding.adinfoThankyouText.visibility = View.GONE
             binding.adinfoButtonManageSubscriptions.visibility = View.GONE
-            binding.adinfoCardSubscribe.setOnClickListener {
-                BillingManager.launchBillingFlow(requireActivity(), BillingManager.adfreeSubscriptionSkuDetails.value)
-            }
-            binding.adinfoCardSubscribe.visibility = View.VISIBLE
-            binding.adinfoAdfreeText.visibility = View.VISIBLE
-            binding.adinfoButtonUserconsent.visibility = View.VISIBLE
-            binding.adinfoText.visibility = View.VISIBLE
-
         }
     }
 }
