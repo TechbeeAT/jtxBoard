@@ -35,7 +35,6 @@ class AdManager {
 
         private const val PREFS_ADS = "sharedPreferencesAds"
         private const val PREFS_ADS_NEXT_AD = "prefsNextAd"
-        private const val PREFS_ADS_ACCEPTED = "adsAccepted"
 
         private val TIME_TO_NEXT_AD = if(BuildConfig.DEBUG)
             300000L     // = 5 min
@@ -62,7 +61,7 @@ class AdManager {
         }
 
         /**
-         * @return true if the last ad was shown
+         * @return true if an ad should be shown (current time < nextAdTime
          */
         fun isAdShowtime(): Boolean {
             val nextAdTime = adPrefs?.getLong(PREFS_ADS_NEXT_AD, 0L) ?: return false      // return false if adPrefs was not correctly initialized
@@ -184,7 +183,6 @@ class AdManager {
          * Resets the user consent information and shows the consent form again
          */
         fun resetUserConsent(activity: Activity, context: Context) {
-
             // TODO: Not sure if this is correct here. This should be reviewed at again, but for now it is working.
             consentInformation?.reset()
             initializeUserConsent(activity, context)
@@ -199,17 +197,6 @@ class AdManager {
             rewardedInterstitialAd = null
             setUpAds(context)
         }
-
-
-        /**
-         * @return true if the setting that the user has seen the ad-info dialog is set to true, otherwise false
-         */
-        fun isAdsAccepted(): Boolean = adPrefs?.getBoolean(PREFS_ADS_ACCEPTED, false) ?: false
-
-        /**
-         * Sets the setting in the preferences to true, that the user has seen the ad-info dialog
-         */
-        fun setAdsAccepted() = adPrefs?.edit()?.putBoolean(PREFS_ADS_ACCEPTED, true)?.apply()
 
     }
 }

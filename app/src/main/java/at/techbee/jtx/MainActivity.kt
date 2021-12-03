@@ -58,11 +58,16 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
         const val BUILD_FLAVOR_GLOBAL = "global"
+
+        private const val PREFS_MAIN = "sharedPreferencesMainActivity"
+        private const val PREFS_MAIN_ADINFO_DIALOG_SHOWN = "adInfoDialogShown"
     }
 
     private lateinit var toolbar: Toolbar
 
     private var settings: SharedPreferences? = null
+    private var mainActivityPrefs: SharedPreferences? = null
+
 
 
     override fun onApplyThemeResource(theme: Resources.Theme?, resid: Int, first: Boolean) {
@@ -79,6 +84,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
         //load settings
         settings = PreferenceManager.getDefaultSharedPreferences(this)
+        mainActivityPrefs = getSharedPreferences(PREFS_MAIN, Context.MODE_PRIVATE)
 
         // Register Notification Channel for Reminders
         createNotificationChannel()
@@ -104,41 +110,16 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     override fun onResume() {
         super.onResume()
 
-        // This code is put in onResume as the Ad might need to be loaded once isAdShowtime returns true
-
-        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA) {
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA)
             BillingManager.initialise(this)
-            // TODO Check if the user already bought the app. If yes, skip the Dialog Box
-        }
 
         AdManager.initialize(this)
-
-        // check if flavor is ad-Flavor and if ads should be shown
-        if(isAdEnabled() && AdManager.isAdShowtime()) {
-
-            if (!AdManager.isAdsAccepted()) {   // show a dialog if ads were not accepted yet
-
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(resources.getString(R.string.list_dialog_contribution_title))
-                    .setMessage(resources.getString(R.string.list_dialog_contribution_message))
-                    .setNegativeButton(resources.getString(R.string.list_dialog_contribution_more_information)) { _, _ ->
-                        // Respond to negative button press
-                        AdManager.setAdsAccepted()    // set ads accepted, userConstent is delayed until the next onResume
-                        findNavController(R.id.nav_host_fragment)
-                            .navigate(R.id.action_global_adInfoFragment)
-                    }
-                    .setPositiveButton(resources.getString(R.string.gotit)) { _, _ ->
-                        // Respond to neutal button press
-                        // Ads are accepted, load user consent
-                        AdManager.setAdsAccepted()
-                        AdManager.initializeUserConsent(this, applicationContext)
-                    }
-                    .show()
-            }
-            // otherwise load the user consent (if necessary) and then load the ad
-            else  {
-                AdManager.initializeUserConsent(this, applicationContext)
-                Log.d("Ads accepted", "Ads accepted, loading consent form if necessary")
+        if(AdManager.isAdShowtime()) {                        // check if flavor is ad-Flavor and if ads should be shown
+            when {
+                BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased() -> showAdInfoDialogIfNecessary()  // show AdInfo Dialog and initialize ads
+                BuildConfig.FLAVOR == BUILD_FLAVOR_GLOBAL -> AdManager.initializeUserConsent(this, applicationContext)                // initialize Ads without Dialog as there is no other option
+                BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA -> showAdInfoDialogIfNecessary()                                                    // show AdInfo Dialog but do not check if subscription was purchased
+                // For BUILD_FLAVOR_OSE we do not laod ads
             }
         }
 
@@ -175,12 +156,12 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     private fun adaptMenuToBuildFlavor() {
         val navView: NavigationView = findViewById(R.id.nav_view)
 
-        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
-            navView.menu.findItem(R.id.nav_donate).isVisible = false     // show the donate fragment only for the OSE-edition
-
-        if(BuildConfig.FLAVOR == BUILD_FLAVOR_OSE || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA)
-            navView.menu.findItem(R.id.nav_adinfo).isVisible = false     // hide the adinfo fragment for the OSE-edition
-
+        when (BuildConfig.FLAVOR) {
+            BUILD_FLAVOR_GOOGLEPLAY -> navView.menu.findItem(R.id.nav_donate).isVisible = false     // hide the donate menu for google play
+            BUILD_FLAVOR_GLOBAL -> navView.menu.findItem(R.id.nav_donate).isVisible = false         // hide the donate menu for app stores with ads
+            BUILD_FLAVOR_OSE -> navView.menu.findItem(R.id.nav_adinfo).isVisible = false            // hide the adinfo for the OSE-edition
+            // BUILD_FLAVOR_ALPHA shows both menu items for testing
+        }
     }
 
 
@@ -248,9 +229,12 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         }
     }
 
+    /**
+     * Checks in the settings if night mode is enforced and switches to it if applicable
+     */
     private fun checkThemeSetting() {
         // user interface settings
-        val enforceDark = settings!!.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false)
+        val enforceDark = settings?.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false) ?: false
         if (enforceDark)
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         else
@@ -300,12 +284,15 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     }
 
 
+    /**
+     * Sets the toolbar with the given title and subtitle
+     * @param [title] to be set in the toolbar
+     * @param [subtitle] to be set in the toolbar
+     */
     fun setToolbarTitle(title: String, subtitle: String?) {
         toolbar.title = title
         toolbar.subtitle = subtitle
-
     }
-
 
 
     override fun onUserEarnedReward(item: RewardItem) {
@@ -315,12 +302,33 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     }
 
 
-    /**
-     * @return true if the build flavor is GLOBAL or ALPHA or if the flavor is GOOGLEPLAY and the subscription is NOT purchased
-     */
-    private fun isAdEnabled(): Boolean  =
-        (BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased())
-            || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA
-                || BuildConfig.FLAVOR == BUILD_FLAVOR_GLOBAL
 
+    /**
+     * Shows a Dialog with Ad-Info and option to buy the subscription
+     * Currently this should only be used for the GooglePlay flavor!
+     */
+    private fun showAdInfoDialogIfNecessary() {
+
+        val adInfoShown = mainActivityPrefs?.getBoolean(PREFS_MAIN_ADINFO_DIALOG_SHOWN, false) ?: false
+        if (!adInfoShown) {   // show a dialog if ads were not accepted yet
+            MaterialAlertDialogBuilder(this)
+                .setTitle(resources.getString(R.string.list_dialog_contribution_title))
+                .setMessage(resources.getString(R.string.list_dialog_contribution_message))
+                .setNegativeButton(resources.getString(R.string.list_dialog_contribution_more_information)) { _, _ ->
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_adInfoFragment)
+                }
+                .setPositiveButton(resources.getString(R.string.gotit)) { _, _ ->
+                    AdManager.initializeUserConsent(this, applicationContext)
+                }
+                .show()
+
+            mainActivityPrefs?.edit()?.putBoolean(PREFS_MAIN_ADINFO_DIALOG_SHOWN, true)?.apply()   // once shown, we don't show it again
+        }
+        // otherwise load the user consent (if necessary) and then load the ad
+        else  {
+            AdManager.initializeUserConsent(this, applicationContext)
+            Log.d("AdInfoShown", "AdInfo was shown, loading consent form if necessary")
+        }
+    }
 }
