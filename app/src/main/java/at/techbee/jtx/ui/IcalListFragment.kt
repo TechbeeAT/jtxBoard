@@ -38,6 +38,7 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.FragmentIcalListBinding
 import at.techbee.jtx.databinding.FragmentIcalListQuickaddDialogBinding
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
+import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -531,6 +532,7 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_filter -> goToFilter()
             R.id.menu_list_clearfilter -> resetFilter()
             R.id.menu_list_delete_visible -> deleteVisible()
+            R.id.menu_list_syncnow -> SyncUtil.syncAllAccounts(requireContext())
         }
 
         return super.onOptionsItemSelected(item)

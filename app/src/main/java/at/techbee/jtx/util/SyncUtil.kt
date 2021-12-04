@@ -52,11 +52,11 @@ class SyncUtil {
          * @return true if DAVx5 was found through the packageManager, else false
          */
         fun isDAVx5Available(activity: Activity?): Boolean {
-            try {
+            return try {
                 activity?.packageManager?.getApplicationInfo(DAVX5_PACKAGE_NAME, 0)
-                return true
+                true
             } catch (e: PackageManager.NameNotFoundException) {
-                return false
+                false
             }
         }
 

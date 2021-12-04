@@ -22,6 +22,13 @@
         android:icon="@drawable/ic_date"
         android:title="@string/menu_list_gotodate"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_list_syncnow"
+        android:icon="@drawable/ic_sync"
+        android:title="@string/menu_list_syncnow"
+        app:showAsAction="never" />
+
     <group android:id="@+id/menugroup_filter" >
         <item
             android:id="@+id/menu_list_filter"
