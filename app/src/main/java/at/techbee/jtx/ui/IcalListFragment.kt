@@ -362,6 +362,9 @@ class IcalListFragment : Fragment() {
             binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_clearfilter)?.isVisible = true
         }
 
+        if(!SyncUtil.isDAVx5Available(activity))
+            optionsMenu?.findItem(R.id.menu_list_syncnow)?.isVisible = false
+
     }
 
 

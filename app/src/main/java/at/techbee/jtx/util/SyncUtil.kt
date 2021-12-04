@@ -72,7 +72,5 @@ class SyncUtil {
                 false
             }
         }
-
-
     }
 }
