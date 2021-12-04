@@ -10,6 +10,7 @@ package at.techbee.jtx.ui
 
 import android.app.Application
 import android.content.ActivityNotFoundException
+import android.content.ContentResolver
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,6 +26,7 @@ import at.techbee.jtx.database.ICalDatabaseDao
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 
 
 class SyncFragment : Fragment() {
@@ -33,6 +35,8 @@ class SyncFragment : Fragment() {
     lateinit var application: Application
     private lateinit var inflater: LayoutInflater
     private lateinit var dataSource: ICalDatabaseDao
+    private lateinit var syncViewModel: SyncViewModel
+
 
     private var collectionsString = ""
 
@@ -54,17 +58,17 @@ class SyncFragment : Fragment() {
         this.application = requireNotNull(this.activity).application
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-        val remoteCollections = dataSource.getAllRemoteCollections()
+        val viewModelFactory = SyncViewModelFactory(dataSource, application)
+        syncViewModel = ViewModelProvider(this, viewModelFactory)[SyncViewModel::class.java]
 
-        remoteCollections.observe(viewLifecycleOwner, { collectionList ->
+
+        syncViewModel.allRemoteCollections.observe(viewLifecycleOwner, { collectionList ->
 
             collectionsString = ""   // reset the string before the observer rebuilds the collections
             collectionList.forEach {
                 collectionsString += it.accountName + " (" + it.displayName + ")\n"
             }
-
             updateUI()
-
         })
 
         binding.syncButtonAddAccount.setOnClickListener {
@@ -88,6 +92,22 @@ class SyncFragment : Fragment() {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$DAVX5_PACKAGE_NAME")))
             }
         }
+
+
+
+        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
+            syncViewModel.showSyncProgressIndicator.postValue(
+                ContentResolver.getCurrentSyncs().isNotEmpty()
+            )
+        }
+
+        syncViewModel.showSyncProgressIndicator.observe(viewLifecycleOwner) {
+            if(it)
+                binding.syncSyncProgressIndicator.visibility = View.VISIBLE
+            else
+                binding.syncSyncProgressIndicator.visibility = View.GONE
+        }
+
         return binding.root
     }
 
