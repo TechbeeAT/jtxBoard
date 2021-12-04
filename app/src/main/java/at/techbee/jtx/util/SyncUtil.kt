@@ -34,6 +34,14 @@ class SyncUtil {
         }
 
         /**
+         * @param [account] for which the sync should be checked
+         * @return true if a sync is running for the JTX Sync Provider Authority and the given account
+         */
+        fun isJtxSyncRunningForAccount(account: Account): Boolean {
+            return ContentResolver.isSyncActive(account, SYNC_PROVIDER_AUTHORITY)
+        }
+
+        /**
          * Immediately starts Sync for all Accounts for the JTX Sync Provider Authority
          */
         fun syncAllAccounts(context: Context) {

@@ -44,6 +44,7 @@ class IcalViewViewModel(private val icalItemId: Long,
 
 
     lateinit var progressIndicatorVisible: LiveData<Boolean>
+    val showSyncProgressIndicator = MutableLiveData(false)
 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>

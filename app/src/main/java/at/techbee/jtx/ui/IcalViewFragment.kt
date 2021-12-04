@@ -12,6 +12,7 @@ import android.Manifest
 import android.accounts.Account
 import android.app.AlertDialog
 import android.app.Application
+import android.content.ContentResolver
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -129,6 +130,12 @@ class IcalViewFragment : Fragment() {
         binding.model = icalViewViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
+            icalViewViewModel.showSyncProgressIndicator.postValue(
+                SyncUtil.isJtxSyncRunningForAccount(
+                    Account(icalViewViewModel.icalEntity.value?.ICalCollection?.accountName, icalViewViewModel.icalEntity.value?.ICalCollection?.accountType)
+                ))
+        }
 
         // set up observers
         icalViewViewModel.editingClicked.observe(viewLifecycleOwner, {
