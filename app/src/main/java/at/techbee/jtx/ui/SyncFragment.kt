@@ -13,20 +13,18 @@ import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.databinding.FragmentSyncBinding
-import android.content.pm.PackageManager
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import android.content.Intent
 import android.net.Uri
+import android.view.*
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import at.techbee.jtx.util.SyncUtil
 
 
 class SyncFragment : Fragment() {
@@ -36,10 +34,9 @@ class SyncFragment : Fragment() {
     private lateinit var inflater: LayoutInflater
     private lateinit var dataSource: ICalDatabaseDao
     private lateinit var syncViewModel: SyncViewModel
+    private var optionsMenu: Menu? = null
 
-    companion object {
-        private const val DAVX5_PACKAGE_NAME = "at.bitfire.davdroid"
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,10 +54,19 @@ class SyncFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.model = syncViewModel
 
+        setHasOptionsMenu(true)
+
+        // don't show the sync menu if DAVx5 is not installed
+        syncViewModel.isDavx5Available.observe(viewLifecycleOwner) {
+            if(!it)
+                optionsMenu?.findItem(R.id.menu_sync_syncnow)?.isVisible = false
+        }
+
 
         binding.syncButtonAddAccount.setOnClickListener {
+            // open davx5
             val intent = Intent(Intent.ACTION_MAIN)
-            intent.setClassName(DAVX5_PACKAGE_NAME,"$DAVX5_PACKAGE_NAME.ui.setup.LoginActivity")
+            intent.setClassName(SyncUtil.DAVX5_PACKAGE_NAME,"${SyncUtil.DAVX5_PACKAGE_NAME}.ui.setup.LoginActivity")
             try {
                 startActivity(intent)
             } catch (e: ActivityNotFoundException) {
@@ -71,17 +77,14 @@ class SyncFragment : Fragment() {
 
         binding.syncButtonPlaystore.setOnClickListener {
             try {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$DAVX5_PACKAGE_NAME")))
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${SyncUtil.DAVX5_PACKAGE_NAME}")))
             } catch (anfe: ActivityNotFoundException) {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$DAVX5_PACKAGE_NAME")))
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${SyncUtil.DAVX5_PACKAGE_NAME}")))
             }
         }
 
-
         ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
-            syncViewModel.showSyncProgressIndicator.postValue(
-                ContentResolver.getCurrentSyncs().isNotEmpty()
-            )
+            syncViewModel.showSyncProgressIndicator.postValue(SyncUtil.isJtxSyncRunning())
         }
 
         return binding.root
@@ -97,16 +100,22 @@ class SyncFragment : Fragment() {
             //This error will always happen for fragment testing, as the cast to Main Activity cannot be successful
         }
 
-        //checks if DAVx5 is installed through the package manager
-        try {
-            activity?.packageManager?.getApplicationInfo(DAVX5_PACKAGE_NAME, 0)
-            //Toast.makeText(activity, "DAVx5 was found :-)", Toast.LENGTH_LONG).show()
-            syncViewModel.isDavx5Available.postValue(true)
-        } catch (e: PackageManager.NameNotFoundException) {
-            //Toast.makeText(activity, "DAVx5 NOT found :-(", Toast.LENGTH_LONG).show()
-            syncViewModel.isDavx5Available.postValue(false)
-        }
+        syncViewModel.isDavx5Available.postValue(SyncUtil.isDAVx5Available(activity))
 
         super.onResume()
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_sync, menu)
+        this.optionsMenu = menu
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.menu_sync_syncnow -> SyncUtil.syncAllAccounts(requireContext())
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 }

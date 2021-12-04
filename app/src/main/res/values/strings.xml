@@ -340,6 +340,8 @@
     <string name="menu_view_delete_item">Delete</string>
     <string name="menu_view_copy_item">Create copy</string>
 
+    <string name="menu_sync_syncnow">Sync now</string>
+
 
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">Todo Due Reminder</string>
@@ -382,6 +384,8 @@
     <string name="sync_furhter_info_davx5">For more information about DAVx⁵ please check out</string>
     <string name="sync_button_add_account_in_davx5">Add account in DAVx⁵</string>
     <string name="sync_toast_intent_open_davx5_failed">Failed opening DAVx⁵, please open the app manually.</string>
+    <string name="sync_toast_intent_start_davx5_sync">Triggering sync in DAVx⁵ failed, please check in DAVx⁵.</string>
+
 
     <!-- Donate fragment -->
     <string name="donate_header_text">The development of an app is a complex topic and development, maintenance and support is hard work. So if you like this app and if you would like to ensure continuous development, please consider a donation :-)</string>
