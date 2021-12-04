@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) Techbee e.U.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the GNU Public License v3.0
@@ -7,47 +6,55 @@
   ~ http://www.gnu.org/licenses/gpl.html
   -->
 
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group android:id="@+id/menugroup_view_share" >
+    <group android:id="@+id/menugroup_view_share">
 
-    <item
-        android:id="@+id/menu_view_share_text"
-        android:icon="@drawable/ic_send"
-        android:title="@string/menu_view_share_text"
-        app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/menu_view_share_text"
+            android:icon="@drawable/ic_send"
+            android:title="@string/menu_view_share_text"
+            app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/menu_view_share_ics"
-        android:icon="@drawable/ic_share"
-        android:title="@string/menu_view_share_ics"
-        app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/menu_view_share_ics"
+            android:icon="@drawable/ic_share"
+            android:title="@string/menu_view_share_ics"
+            app:showAsAction="ifRoom" />
 
     </group>
 
-    <group android:id="@+id/menugroup_view_copy" >
-    <item
-        android:id="@+id/menu_view_copy_as_journal"
-        android:title="@string/menu_view_copy_as_journal"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/menu_view_copy_as_note"
-        android:title="@string/menu_view_copy_as_note"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/menu_view_copy_as_todo"
-        android:title="@string/menu_view_copy_as_todo"
-        app:showAsAction="never" />
+    <group android:id="@+id/menugroup_view_sync">
+        <item
+            android:id="@+id/menu_view_syncnow"
+            android:icon="@drawable/ic_sync"
+            android:title="@string/menu_view_syncnow"
+            app:showAsAction="never" />
     </group>
 
-    <group android:id="@+id/menugroup_view_delete" >
-    <item
-        android:id="@+id/menu_view_delete_item"
-        android:title="@string/menu_view_delete_item"
-        app:showAsAction="never" />
+    <group android:id="@+id/menugroup_view_copy">
+        <item
+            android:id="@+id/menu_view_copy_as_journal"
+            android:title="@string/menu_view_copy_as_journal"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/menu_view_copy_as_note"
+            android:title="@string/menu_view_copy_as_note"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/menu_view_copy_as_todo"
+            android:title="@string/menu_view_copy_as_todo"
+            app:showAsAction="never" />
+    </group>
+
+    <group android:id="@+id/menugroup_view_delete">
+        <item
+            android:id="@+id/menu_view_delete_item"
+            android:title="@string/menu_view_delete_item"
+            app:showAsAction="never" />
     </group>
 
 </menu>

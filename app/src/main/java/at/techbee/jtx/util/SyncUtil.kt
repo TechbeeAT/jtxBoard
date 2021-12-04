@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.util
 
+import android.accounts.Account
 import android.accounts.AccountManager
 import android.app.Activity
 import android.content.ContentResolver
@@ -46,6 +47,18 @@ class SyncUtil {
             accounts.forEach { account ->
                 ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
             }
+        }
+
+        /**
+         * Immediately starts Sync for the given account
+         * @param [account] that should be synced
+         */
+        fun syncAccount(account: Account) {
+
+            val extras = Bundle(2)
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)        // manual sync
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
+            ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
         }
 
         /**

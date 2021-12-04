@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui
 
 import android.Manifest
+import android.accounts.Account
 import android.app.AlertDialog
 import android.app.Application
 import android.content.Intent
@@ -37,6 +38,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.*
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
@@ -44,6 +46,7 @@ import at.techbee.jtx.databinding.*
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
+import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
@@ -177,6 +180,9 @@ class IcalViewFragment : Fragment() {
 
 
             updateToolbarText()
+
+            if(!SyncUtil.isDAVx5Available(activity) || it.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE)
+                optionsMenu?.findItem(R.id.menu_view_syncnow)?.isVisible = false
 
 
             when (it.property.component) {
@@ -729,7 +735,6 @@ class IcalViewFragment : Fragment() {
     }
 
 
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_ical_view, menu)
         this.optionsMenu = menu
@@ -810,6 +815,7 @@ class IcalViewFragment : Fragment() {
                 )
 
             R.id.menu_view_delete_item -> deleteItem()
+            R.id.menu_view_syncnow -> SyncUtil.syncAccount(Account(icalViewViewModel.icalEntity.value?.ICalCollection?.accountName, icalViewViewModel.icalEntity.value?.ICalCollection?.accountType))
         }
         return super.onOptionsItemSelected(item)
     }
