@@ -18,7 +18,18 @@ class SyncViewModel(
         val database: ICalDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
-    val allRemoteCollections = database.getAllRemoteCollections()
+    private val allRemoteCollections = database.getAllRemoteCollections()
     val showSyncProgressIndicator = MutableLiveData(false)
+    val isDavx5Available = MutableLiveData(false)
+    val isRemoteCollectionsAvailable = Transformations.map(allRemoteCollections) {
+        it.isNotEmpty()
+    }
 
+    val collectionsString = Transformations.map(allRemoteCollections) {
+        var collString = ""
+        it.forEach {
+            collString += it.accountName + " (" + it.displayName + ")\n"
+        }
+        return@map collString
+    }
 }
