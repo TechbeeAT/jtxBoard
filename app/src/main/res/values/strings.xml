@@ -22,6 +22,7 @@
     <string name="link_jtx_privacy_policy" translatable="false">https://jtx.techbee.at/privacy</string>
     <string name="link_jtx_twitter" translatable="false">https://twitter.com/jtxBoard</string>
     <string name="link_techbee" translatable="false">https://techbee.at</string>
+    <string name="link_jtx_terms" translatable="false">https://jtx.techbee.at/terms-conditions</string>
     <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
 
 
@@ -310,6 +311,8 @@
 
     <string name="about_app_build_date">Compiled on %s</string>
     <string name="about_app_copyright" translatable="false">© Techbee e.U.</string>
+    <string name="about_app_terms">Terms &amp; Conditions</string>
+
     <string name="about_thanks_ffg">Special thanks to FFG for their trust and financial support to realize this project.</string>
 
 

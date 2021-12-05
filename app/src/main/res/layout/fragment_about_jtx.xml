@@ -65,10 +65,30 @@
             tools:text="Compiled on May 30, 2021" />
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/about_app_terms_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:gravity="center"
+            android:text="@string/about_app_terms"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/about_app_terms_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:autoLink="web"
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:text="@string/link_jtx_terms"
+            android:textSize="20sp" />
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/about_app_copyright"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:autoLink="web"
             android:text="@string/about_app_copyright"
             android:textAlignment="center"
@@ -82,19 +102,9 @@
             android:autoLink="web"
             android:textAlignment="center"
             app:srcCompat="@drawable/logo_techbee"
-            tools:ignore="ContentDescription" />
+            android:contentDescription="@string/link_techbee"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/about_app_techbee_link"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:autoLink="web"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:text="@string/link_techbee"
-            android:textSize="20sp" />
-
+<!--
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/about_app_warranty"
             android:layout_width="wrap_content"
@@ -119,7 +129,7 @@
                 android:layout_height="wrap_content" />
 
         </FrameLayout>
-
+-->
     </LinearLayout>
 
 </ScrollView>
