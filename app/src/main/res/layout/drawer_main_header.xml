@@ -23,7 +23,6 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/navigation_drawer_header_app_icon"
         android:maxWidth="48dp"
         android:src="@drawable/ic_jtx_logo"
         app:layout_constraintBottom_toBottomOf="parent"

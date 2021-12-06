@@ -954,7 +954,7 @@
             android:id="@+id/edit_fab_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/edit_fab_save_contentDescription"
+            android:contentDescription="@string/save"
             android:onClick="@{() -> model.savingClicked()}"
             app:layout_anchor="@id/edit_bottom_bar"
             app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"

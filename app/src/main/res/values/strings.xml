@@ -9,7 +9,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- App title and fragment titles -->
-    <string name="app_name">jtx Board</string>
+    <string name="app_name" translatable="false">jtx Board</string>
     <string name="app_permission_label">jtx Board sync Journals, Notes &amp; Tasks</string>
     <string name="app_permission_desc">sync jtx Board content with other applications like DAVx⁵</string>
 
@@ -104,7 +104,6 @@
 
 
     <!-- Navigation Drawer  -->
-    <string name="navigation_drawer_header_app_icon">App Icon</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_board">Board</string>
@@ -170,9 +169,9 @@
     <string name="view_recurrence_additions">Additions</string>
     <string name="view_recurrence_go_to_original_button">Go to original</string>
     <string name="view_recurrence_note_to_original_dialog_header">Instance of recurring</string>
-    <string name="view_recurrence_note_to_original">This entry is part of a series. Editing this entry will unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore. Otherwise please go to the original event.</string>
+    <string name="view_recurrence_note_to_original">"This entry is part of a series. Editing this entry will unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore. "</string>
     <string name="view_fragment_audio_permission">App Permission</string>
-    <string name="view_fragment_audio_permission_message">JTX needs the permission in order to record audio. Please grant the permission to use this feature.</string>
+    <string name="view_fragment_audio_permission_message">jtx Board needs the permission in order to record audio. Please grant the permission to use this feature.</string>
     <string name="view_fragment_audio_dialog_add_audio_note">Add Audio Note</string>
     <string name="view_comment_playbutton_content_desc">Play audio comment</string>
     <string name="view_fragment_audio_start_stop_recording_contentdesc">Start/Stop recording</string>
@@ -215,13 +214,13 @@
     <string name="edit_attachment_button_text">Add attachment</string>
     <string name="edit_take_picture_button_text">Take picture</string>
     <string name="edit_add_link_button_text">Add attachment link</string>
-    <string name="edit_url_hint">https://www.example.com</string>
+    <string name="edit_url_hint" translatable="false">https://www.example.com</string>
     <string name="edit_url_helper">URL related to this entry</string>
-    <string name="edit_location_hint">1CP Conference Room 4350</string>
+    <string name="edit_location_hint" translatable="false">1CP Conference Room 4350</string>
     <string name="edit_location_helper">Add a location for this entry</string>
-    <string name="edit_fab_save_contentDescription">Save</string>
     <string name="edit_attachment_add_dialog_hint">Your attachment-url (https://…)</string>
     <string name="edit_comment_add_dialog_hint">Your comment</string>
+    <string name="edit_dialog_priority">Priority</string>
 
     <string name="edit_due">Due</string>
     <string name="edit_completed">Completed</string>
@@ -276,10 +275,8 @@
     <string name="edit_validation_errors_resource_not_confirmed">A resource was entered but not confirmed. Please confirm or delete.</string>
     <string name="edit_validation_errors_attendee_not_confirmed">An attendee was entered but not confirmed. Please confirm or delete.</string>
     <string name="edit_validation_errors_subtask_not_confirmed">A subtask was entered but not confirmed. Please confirm or delete.</string>
-    <string name="edit_validation_errors_start_time_not_set">A start date was set but no time entered. Please deactivate the "Add time" switch or add a time.</string>
-    <string name="edit_validation_errors_due_time_not_set">A due date was set but no time entered. Please deactivate the "Add time" switch or add a time.</string>
-    <string name="edit_fragment_app_permission">App Permission</string>
-    <string name="edit_fragment_app_permission_message">JTX can suggest Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
+    <string name="edit_fragment_app_permission">App permission</string>
+    <string name="edit_fragment_app_permission_message">jtx Board can suggest Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_title">Unsupported recurrence rule detected!</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">An unknown or unsupported recurrence rule was detected. If you save this entry, the existing recurrence rule will be deleted/overwritten.</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">Unsupported value (Duration) detected!</string>
@@ -338,7 +335,7 @@
 
 
     <string name="menu_view_share_text">Share</string>
-    <string name="menu_view_share_ics">Share as ICS</string>
+    <string name="menu_view_share_ics">Share as .ics</string>
     <string name="menu_view_copy_as_journal">Copy as Journal</string>
     <string name="menu_view_copy_as_todo">Copy as Todo</string>
     <string name="menu_view_copy_as_note">Copy as Note</string>
@@ -380,7 +377,7 @@
 
     <!-- Sync fragment -->
     <string name="sync_with_davx5_heading">Sync with DAVx⁵ (beta)*</string>
-    <string name="sync_basic_info">jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data.\n\n* Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!</string>
+    <string name="sync_basic_info">jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data.  * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!</string>
     <string name="sync_congratulations">Congratulations! :-)</string>
     <string name="sync_davx5_installed_but_no_collections_found">We have detected DAVx⁵ on your phone. If you haven\'t set up any accounts yet, please follow the instructions on our website:</string>
     <string name="sync_davx5_installed_with_collections_found">We have detected DAVx⁵ on your phone. If you have any troubles or doubts, please check out our website first:</string>
@@ -407,7 +404,7 @@
     <string name="adinfo_adfree_purchase_description">Thank you for considering the ad-free upgrade of jtx Board. This upgrade removes the recurring ads from this app.</string>
     <string name="adinfo_adfree_purchase_header_thankyou">Thank you for buying jtx Board Ad-free</string>
     <string name="adinfo_adfree_purchase_description_thankyou">Ads are now removed from the app. If you like this app and you would like to support the continuous development, please also consider the subscription.</string>
-    <string name="adinfo_adfree_subscribe_header">Upgrade to jtx Board Ad-free Subscription</string>
+    <string name="adinfo_adfree_subscribe_header">Subscription for jtx Board Ad-free</string>
     <string name="adinfo_adfree_subscribe_description">The subscription removes the recurring ads from this app and additionally you support the continuous development of this app.</string>
     <string name="adinfo_adfree_subscribe_success_header">Thank you for buying the jtx Board Ad-free Subscription</string>
     <string name="adinfo_adfree_subscribe_success_description">Ads are now removed from the app. Thank you for your contribution to keep this project alive!</string>
@@ -427,7 +424,7 @@
     <string name="toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
 
     <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx5 and start the sync again.</string>
+    <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again.</string>
 
 
 </resources>

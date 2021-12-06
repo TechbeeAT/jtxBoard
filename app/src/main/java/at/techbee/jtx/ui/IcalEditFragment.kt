@@ -1092,7 +1092,7 @@ class IcalEditFragment : Fragment() {
         binding.editPriorityChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Set priority")
+                .setTitle(R.string.edit_dialog_priority)
                 .setItems(priorityItems) { _, which ->
                     // Respond to item chosen
                     icalEditViewModel.iCalObjectUpdated.value!!.priority = which
