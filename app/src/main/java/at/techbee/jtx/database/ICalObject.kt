@@ -13,6 +13,7 @@ import android.content.Context
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.room.*
 import at.techbee.jtx.*
 import at.techbee.jtx.R
@@ -29,6 +30,7 @@ import java.time.DayOfWeek
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.util.*
+import java.util.TimeZone
 import kotlin.IllegalArgumentException
 
 
@@ -575,6 +577,23 @@ data class ICalObject(
                 }
             }
         }
+
+        /**
+         * This function checks if the given timezone is a timezone that can be processed by the app
+         * @param [tz] the timezone that needs to be validated
+         * @return If the string is null or TZ_ALLDAY, then the input parameter is just returned.
+         * Else the timezone is checked if it can be transformed into a Java Timezone and the
+         * Id of the timezone is returned. This would be the same as the input or GMT if the
+         * Timezone is unknown.
+         */
+        @VisibleForTesting
+        fun getValidTimezoneOrNull(tz: String?): String? {
+
+            if(tz == null || tz == TZ_ALLDAY)
+                return tz
+
+            return TimeZone.getTimeZone(tz).id
+        }
     }
 
 
@@ -588,12 +607,12 @@ data class ICalObject(
             this.dtstart = dtstart
         }
         values.getAsString(COLUMN_DTSTART_TIMEZONE)?.let { dtstartTimezone ->
-            this.dtstartTimezone = dtstartTimezone
-        }   //TODO: Validieren auf gültige Timezone!
+            this.dtstartTimezone = getValidTimezoneOrNull(dtstartTimezone)
+        }
         values.getAsLong(COLUMN_DTEND)?.let { dtend -> this.dtend = dtend }
         values.getAsString(COLUMN_DTEND_TIMEZONE)?.let { dtendTimezone ->
-            this.dtendTimezone = dtendTimezone
-        }   //TODO: Validieren auf gültige Timezone!
+            this.dtendTimezone = getValidTimezoneOrNull(dtendTimezone)
+        }
         values.getAsString(COLUMN_STATUS)?.let { status -> this.status = status }
         values.getAsString(COLUMN_CLASSIFICATION)
             ?.let { classification -> this.classification = classification }
@@ -607,10 +626,10 @@ data class ICalObject(
         values.getAsInteger(COLUMN_PRIORITY)?.let { priority -> this.priority = priority }
         values.getAsLong(COLUMN_DUE)?.let { due -> this.due = due }
         values.getAsString(COLUMN_DUE_TIMEZONE)
-            ?.let { dueTimezone -> this.dueTimezone = dueTimezone }
+            ?.let { dueTimezone -> this.dueTimezone = getValidTimezoneOrNull(dueTimezone) }
         values.getAsLong(COLUMN_COMPLETED)?.let { completed -> this.completed = completed }
         values.getAsString(COLUMN_COMPLETED_TIMEZONE)
-            ?.let { completedTimezone -> this.completedTimezone = completedTimezone }
+            ?.let { completedTimezone -> this.completedTimezone = getValidTimezoneOrNull(completedTimezone) }
         values.getAsString(COLUMN_DURATION)?.let { duration -> this.duration = duration }
         values.getAsString(COLUMN_RRULE)?.let { rrule -> this.rrule = rrule }
         values.getAsString(COLUMN_RDATE)?.let { rdate -> this.rdate = rdate }

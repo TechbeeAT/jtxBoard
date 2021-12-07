@@ -10,12 +10,14 @@ package at.techbee.jtx.database
 
 import android.content.Context
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
 import net.fortuna.ical4j.util.MapTimeZoneCache
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import java.util.*
 
 
 @RunWith(MockitoJUnitRunner::class)
@@ -115,7 +117,7 @@ class ICalObjectTest {
             dirty = true,
             // dates and uid must be set explicitely to make the objects equal
             dtstart = factoryObject.dtstart,
-            dtstartTimezone = ICalObject.TZ_ALLDAY,
+            dtstartTimezone = TZ_ALLDAY,
             created = factoryObject.created,
             lastModified = factoryObject.lastModified,
             dtstamp = factoryObject.dtstamp,
@@ -192,12 +194,12 @@ class ICalObjectTest {
             status = StatusTodo.`NEEDS-ACTION`.name,
             percent = null,
             priority = null,
-            dueTimezone = ICalObject.TZ_ALLDAY,
-            completedTimezone = ICalObject.TZ_ALLDAY,
+            dueTimezone = TZ_ALLDAY,
+            completedTimezone = TZ_ALLDAY,
             dirty = true,
             // dates and uid must be set explicitely to make the objects equal
             dtstart = factoryObject.dtstart,
-            dtstartTimezone = ICalObject.TZ_ALLDAY,
+            dtstartTimezone = TZ_ALLDAY,
             created = factoryObject.created,
             lastModified = factoryObject.lastModified,
             dtstamp = factoryObject.dtstamp,
@@ -216,13 +218,13 @@ class ICalObjectTest {
             status = StatusTodo.`NEEDS-ACTION`.name,
             percent = null,
             priority = null,
-            dueTimezone = ICalObject.TZ_ALLDAY,
-            completedTimezone = ICalObject.TZ_ALLDAY,
+            dueTimezone = TZ_ALLDAY,
+            completedTimezone = TZ_ALLDAY,
             dirty = true,
             summary = "Task Summary",
             // dates and uid must be set explicitely to make the objects equal
             dtstart = factoryObject.dtstart,
-            dtstartTimezone = ICalObject.TZ_ALLDAY,
+            dtstartTimezone = TZ_ALLDAY,
             created = factoryObject.created,
             lastModified = factoryObject.lastModified,
             dtstamp = factoryObject.dtstamp,
@@ -234,7 +236,7 @@ class ICalObjectTest {
     @Test
     fun getRecurId_date() {
         val sampleDate = 1632434400000L   // 2021-09-24
-        val recurId = ICalObject.getRecurId(sampleDate, ICalObject.TZ_ALLDAY)
+        val recurId = ICalObject.getRecurId(sampleDate, TZ_ALLDAY)
         assertEquals("20210923", recurId)
     }
 
@@ -459,7 +461,7 @@ class ICalObjectTest {
 
         val item = ICalObject.createJournal().apply {
             this.dtstart = 1622494800000L
-            this.dtstartTimezone = ICalObject.TZ_ALLDAY
+            this.dtstartTimezone = TZ_ALLDAY
             this.rrule = "FREQ=DAILY;COUNT=4;INTERVAL=4"
         }
 
@@ -570,4 +572,18 @@ class ICalObjectTest {
         val statusTodos = listOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.COMPLETED, StatusTodo.`IN-PROCESS`, StatusTodo.CANCELLED)
         assertEquals(listOf("CANCELLED", "IN-PROCESS", "COMPLETED", "NEEDS-ACTION").toSet(), StatusTodo.getStringSetFromList(statusTodos))
     }
+
+    @Test
+    fun getValidTimezoneOrNull_getNull() = assertNull(ICalObject.getValidTimezoneOrNull(null))
+
+    @Test
+    fun getValidTimezoneOrNull_getTZ_ALLDAY() = assertEquals(TZ_ALLDAY, ICalObject.getValidTimezoneOrNull(TZ_ALLDAY))
+
+    @Test
+    fun getValidTimezoneOrNull_getTZ_ValidTZ() = assertEquals(TimeZone.getTimeZone("Europe/Vienna").id, ICalObject.getValidTimezoneOrNull(TimeZone.getTimeZone("Europe/Vienna").id))
+
+    @Test
+    fun getValidTimezoneOrNull_getTZ_InvalidTZ() = assertEquals("GMT", ICalObject.getValidTimezoneOrNull(TimeZone.getTimeZone("Invalid").id))
+
+
 }
