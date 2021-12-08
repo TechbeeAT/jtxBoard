@@ -110,7 +110,7 @@ class ICalObjectAndroidTest {
             summary = "Summary",
             description = "Description",
             dtstart = System.currentTimeMillis(),
-            dtstartTimezone = TimeZone.getTimeZone("Europe/Vienna").displayName,
+            dtstartTimezone = TimeZone.getTimeZone("Europe/Vienna").id,
             dtend = null,
             dtendTimezone = null,
             status = StatusJournal.FINAL.name,

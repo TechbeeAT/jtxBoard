@@ -24,6 +24,8 @@ import java.io.File
 import java.io.IOException
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import net.fortuna.ical4j.util.MapTimeZoneCache
 import java.lang.NumberFormatException
 
 
@@ -256,6 +258,9 @@ class SyncContentProvider : ContentProvider() {
             return false
 
         database = ICalDatabase.getInstance(context!!.applicationContext).iCalDatabaseDao
+        System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
+        TimeZoneRegistryFactory.getInstance().createRegistry()
+
         return true
     }
 
