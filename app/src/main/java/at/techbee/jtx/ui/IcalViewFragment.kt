@@ -66,6 +66,8 @@ class IcalViewFragment : Fragment() {
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
 
+    private val seekbarHandler = Handler(Looper.getMainLooper())
+
     private var recording: Boolean = false
     private var playing: Boolean = false
 
@@ -313,6 +315,9 @@ class IcalViewFragment : Fragment() {
 
         icalViewViewModel.relatedNotes.observe(viewLifecycleOwner, {
 
+            if(playing)             // don't interrupt if audio is currently played
+                return@observe
+
             if (it?.size != 0) {
                 binding.viewFeedbackLinearlayout.removeAllViews()
                 it.forEach { relatedNote ->
@@ -332,13 +337,13 @@ class IcalViewFragment : Fragment() {
                         //playback on click
                         commentBinding.viewCommentPlaybutton.setOnClickListener {
 
-                            //stop playing if playback is on
-                            if(playing) {
+                            //stop playing if playback is on - but only with the current file. If the player is playing another file, then don't react
+                            if(playing && fileName == Uri.parse(relatedNote.attachmentUri)) {
                                 stopPlaying()
                                 commentBinding.viewCommentPlaybutton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
                                 playing = false
                                 commentBinding.viewCommentProgressbar.progress = 0
-                            } else {
+                            } else if (!playing) {
                                 // write the base64 decoded Bytestream in a file and use it as an input for the player
                                 //val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
                                 fileName = Uri.parse(relatedNote.attachmentUri)
@@ -899,15 +904,12 @@ class IcalViewFragment : Fragment() {
 
         seekbar.max = player?.duration ?: 0
 
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed(object: Runnable {
+        seekbarHandler.postDelayed(object: Runnable {
             override fun run() {
                 try {
-                    if(player == null)           // quit the looper if playback stopped
-                        handler.looper.quit()
-                    else {                       // otherwise loop to update the progress
+                    if(playing) {
                         seekbar.progress = player?.currentPosition ?: 0
-                        handler.postDelayed(this, 10)
+                        seekbarHandler.postDelayed(this, 10)
                     }
                 } catch (e: Exception) {
                     seekbar.progress = 0
