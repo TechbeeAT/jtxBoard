@@ -47,6 +47,7 @@ import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.slider.Slider
 import java.io.*
 import java.lang.ClassCastException
@@ -337,29 +338,9 @@ class IcalViewFragment : Fragment() {
                         //playback on click
                         commentBinding.viewCommentPlaybutton.setOnClickListener {
 
-                            //stop playing if playback is on - but only with the current file. If the player is playing another file, then don't react
-                            if(playing && fileName == Uri.parse(relatedNote.attachmentUri)) {
-                                stopPlaying()
-                                commentBinding.viewCommentPlaybutton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
-                                playing = false
-                                commentBinding.viewCommentProgressbar.progress = 0
-                            } else if (!playing) {
-                                // write the base64 decoded Bytestream in a file and use it as an input for the player
-                                //val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
-                                fileName = Uri.parse(relatedNote.attachmentUri)
+                            val uri = Uri.parse(relatedNote.attachmentUri)
+                            togglePlayback(commentBinding.viewCommentProgressbar, commentBinding.viewCommentPlaybutton, uri)
 
-                                startPlaying()
-                                commentBinding.viewCommentPlaybutton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
-                                playing = true
-
-                                initialiseSeekBar(commentBinding.viewCommentProgressbar)
-
-                                // make sure to set the icon back to the play icon when the player reached the end
-                                player?.setOnCompletionListener {
-                                    commentBinding.viewCommentPlaybutton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
-                                    playing = false
-                                }
-                            }
                         }
 
                     }
@@ -481,27 +462,11 @@ class IcalViewFragment : Fragment() {
 
                         player?.duration?.let { audioDialogBinding.viewAudioDialogProgressbar.max = it }
                         player?.currentPosition?.let { audioDialogBinding.viewAudioDialogProgressbar.progress = it }
-
                     }
                 }
 
                 audioDialogBinding.viewAudioDialogStartplayingFab.setOnClickListener {
-                    if(!playing) {
-                        startPlaying()
-                        initialiseSeekBar(audioDialogBinding.viewAudioDialogProgressbar)
-                        audioDialogBinding.viewAudioDialogStartplayingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
-                        playing = true
-
-                        player?.setOnCompletionListener {
-                            audioDialogBinding.viewAudioDialogStartplayingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
-                            playing = false
-                        }
-                    }
-                    else {
-                        stopPlaying()
-                        audioDialogBinding.viewAudioDialogStartplayingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
-                        playing = false
-                    }
+                    togglePlayback(audioDialogBinding.viewAudioDialogProgressbar, audioDialogBinding.viewAudioDialogStartplayingFab, fileName)
                 }
 
 
@@ -917,6 +882,34 @@ class IcalViewFragment : Fragment() {
                 }
             }
         }, 0)
+    }
+
+
+    private fun togglePlayback(seekbar: SeekBar, button: FloatingActionButton, fileToPlay: Uri?) {
+
+
+        //stop playing if playback is on - but only with the current file. If the player is playing another file, then don't react
+        if(playing && fileName == fileToPlay) {
+            stopPlaying()
+            button.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
+            playing = false
+            seekbar.progress = 0
+        } else if (!playing) {
+            // write the base64 decoded Bytestream in a file and use it as an input for the player
+            //val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
+            fileName = fileToPlay
+
+            startPlaying()
+            initialiseSeekBar(seekbar)
+            button.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
+            playing = true
+
+            // make sure to set the icon back to the play icon when the player reached the end
+            player?.setOnCompletionListener {
+                button.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
+                playing = false
+            }
+        }
     }
 
     /**
