@@ -37,18 +37,33 @@
             tools:visibility="visible"
             android:contentDescription="@string/view_comment_playbutton_content_desc" />
 
+        <SeekBar
+            android:id="@+id/view_comment_progressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="false"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/view_comment_playbutton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_comment_playbutton"
+            app:layout_constraintTop_toTopOf="@+id/view_comment_playbutton" />
+
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/view_comment_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/view_comment_playbutton"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_comment_playbutton"
             tools:text="Comment Text" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

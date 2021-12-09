@@ -19,10 +19,7 @@ import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.util.Log
 import android.util.Size
 import android.view.*
@@ -323,12 +320,14 @@ class IcalViewFragment : Fragment() {
                         return@forEach
 
                     val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
-                    commentBinding.viewCommentTextview.text = relatedNote.summary
+                    if(commentBinding.viewCommentTextview.text.isNotEmpty())
+                        commentBinding.viewCommentTextview.text = relatedNote.summary
+                    else
+                        commentBinding.viewCommentTextview.visibility = View.GONE
+
                     if(relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_MP4_AAC || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_3GPP || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_OGG) {
                         commentBinding.viewCommentPlaybutton.visibility = View.VISIBLE
-
-                        // TODO TRY Catch
-                        // Maybe there is a better solution here anyway
+                        commentBinding.viewCommentProgressbar.visibility = View.VISIBLE
 
                         //playback on click
                         commentBinding.viewCommentPlaybutton.setOnClickListener {
@@ -338,6 +337,7 @@ class IcalViewFragment : Fragment() {
                                 stopPlaying()
                                 commentBinding.viewCommentPlaybutton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
                                 playing = false
+                                commentBinding.viewCommentProgressbar.progress = 0
                             } else {
                                 // write the base64 decoded Bytestream in a file and use it as an input for the player
                                 //val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
@@ -346,6 +346,8 @@ class IcalViewFragment : Fragment() {
                                 startPlaying()
                                 commentBinding.viewCommentPlaybutton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
                                 playing = true
+
+                                initialiseSeekBar(commentBinding.viewCommentProgressbar)
 
                                 // make sure to set the icon back to the play icon when the player reached the end
                                 player?.setOnCompletionListener {
@@ -869,6 +871,9 @@ class IcalViewFragment : Fragment() {
     }
 
     private fun startPlaying() {
+        // make sure the player is not running
+        stopPlaying()
+
         // initialise the player
         fileName?.let {  fname ->
             player = MediaPlayer().apply {
@@ -885,6 +890,7 @@ class IcalViewFragment : Fragment() {
     }
 
     private fun stopPlaying() {
+
         player?.release()
         player = null
     }
@@ -897,10 +903,15 @@ class IcalViewFragment : Fragment() {
         handler.postDelayed(object: Runnable {
             override fun run() {
                 try {
-                    seekbar.progress = player?.currentPosition ?:0
-                    handler.postDelayed(this, 10)
+                    if(player == null)           // quit the looper if playback stopped
+                        handler.looper.quit()
+                    else {                       // otherwise loop to update the progress
+                        seekbar.progress = player?.currentPosition ?: 0
+                        handler.postDelayed(this, 10)
+                    }
                 } catch (e: Exception) {
                     seekbar.progress = 0
+
                 }
             }
         }, 0)
