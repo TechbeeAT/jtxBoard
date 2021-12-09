@@ -18,28 +18,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
         android:clickable="true"
+        android:contentDescription="@string/view_fragment_audio_start_stop_recording_contentdesc"
         android:focusable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_microphone"
-        android:contentDescription="@string/view_fragment_audio_start_stop_recording_contentdesc" />
+        app:srcCompat="@drawable/ic_microphone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/view_audio_dialog_startplaying_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/view_fragment_audio_start_stop_playback_contentdesc"
         android:enabled="false"
         android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_audio_dialog_startrecording_fab"
-        app:srcCompat="@drawable/ic_play"
-        android:contentDescription="@string/view_fragment_audio_start_stop_playback_contentdesc" />
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_play" />
 
     <SeekBar
         android:id="@+id/view_audio_dialog_progressbar"
