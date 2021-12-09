@@ -27,6 +27,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/view_comment_playbutton"
+            style="@style/Widget.Material3.FloatingActionButton.Secondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
