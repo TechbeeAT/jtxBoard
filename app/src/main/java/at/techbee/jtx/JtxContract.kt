@@ -36,7 +36,10 @@ object JtxContract {
     /** The version of this SyncContentProviderContract */
     const val CONTRACT_VERSION = 1
 
-
+    /** Constructs an Uri for the Jtx Sync Adapter with the given Account
+     * @param [account] The account that should be appended to the Base Uri
+     * @return [Uri] with the appended Account
+     */
     fun Uri.asSyncAdapter(account: Account): Uri =
         buildUpon()
             .appendQueryParameter(CALLER_IS_SYNCADAPTER, "true")
@@ -61,22 +64,23 @@ object JtxContract {
         /** Constant to define all day values (for dtstart, due, completed timezone fields */
         const val TZ_ALLDAY = "ALLDAY"
 
-
         /** The name of the ID column.
-         * This is the unique identifier of an ICalObject
+         * This is the unique identifier of an ICalObject.
          * Type: [Long]*/
         const val ID = BaseColumns._ID
 
         /** The column for the module.
-         * This is an internal differentiation for JOURNAL, NOTE and TODO
-         * provided in the enum [Module]
+         * This is an internal differentiation for JOURNAL, NOTE and TODO as provided in the enum [Module].
+         * If the Module is not set explicitely, it will be derived from the [Component] (Todo or Journal/Note) and if a
+         * dtstart is present or not (Journal or Note).
+         * Use e.g. Module.JOURNAL.name to put a correct String value in this field.
          * Type: [String]
          */
         const val MODULE = "module"
 
-        /* The names of all the other columns  */
-        /** The column for the component based on the values
-         * provided in the enum [Component]
+        /***** The names of all the other columns  *****/
+        /** The column for the component based on the values provided in the enum [Component].
+         * Use e.g. Component.VTODO.name to put a correct String value in this field.
          * Type: [String]
          */
         const val COMPONENT = "component"
@@ -105,7 +109,7 @@ object JtxContract {
 
         /**
          * Purpose:  This column/property specifies the timezone of when the calendar component begins.
-         * The corresponding datetime is stored in [DTSTART].
+         * The corresponding datetime is stored in [DTSTART] as UNIX timestamp (milliseconds).
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.4]
          * Type: [String]
          */
@@ -121,7 +125,7 @@ object JtxContract {
 
         /**
          * Purpose:  This column/property specifies the timezone of when the calendar component ends.
-         * The corresponding datetime is stored in [DTEND].
+         * The corresponding datetime is stored in [DTEND] as UNIX timestamp (milliseconds).
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.2]
          * Type: [String]
          */
@@ -138,6 +142,7 @@ object JtxContract {
         /**
          * Purpose:  This property defines the access classification for a calendar component.
          * The possible values of a status are defined in the enum [Classification].
+         * Use e.g. Classification.PUBLIC.name to put a correct String value in this field.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.11]
          * Type: [String]
          */
@@ -214,7 +219,7 @@ object JtxContract {
 
         /**
          * Purpose:  This column/property specifies the timezone of when a to-do is expected to be completed.
-         * The corresponding datetime is stored in [DUE].
+         * The corresponding datetime is stored in [DUE] as UNIX timestamp (milliseconds).
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.2]
          * Type: [String]
          */
@@ -230,7 +235,7 @@ object JtxContract {
 
         /**
          * Purpose:  This column/property specifies the timezone of when a to-do was actually completed.
-         * The corresponding datetime is stored in [DUE].
+         * The corresponding datetime is stored in [DUE] as UNIX timestamp (milliseconds).
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.1]
          * Type: [String]
          */
@@ -291,7 +296,7 @@ object JtxContract {
 
         /**
          * Purpose:  This property specifies the date and time that the calendar information
-         * was created by the calendar user agent in the calendar store.
+         * was created by the calendar user agent in the calendar store and is stored as UNIX timestamp (milliseconds).
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.1]
          * Type: [Long]
          */
@@ -304,7 +309,7 @@ object JtxContract {
          * an iCalendar object that doesn't specify a "METHOD" property, this
          * property specifies the date and time that the information
          * associated with the calendar component was last revised in the
-         * calendar store.
+         * calendar store. It is saved as UNIX timestamp (milliseconds).
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.2]
          * Type: [Long]
          */
@@ -313,6 +318,7 @@ object JtxContract {
         /**
          * Purpose:  This property specifies the date and time that the information associated
          * with the calendar component was last revised in the calendar store.
+         * It is saved as UNIX timestamp (milliseconds).
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.3]
          * Type: [Long]
          */
@@ -352,7 +358,8 @@ object JtxContract {
         const val DELETED = "deleted"
 
         /**
-         * Purpose:  filename of the synched entry (*.ics), only relevant for synched entries through sync-adapter
+         * Purpose:  The remote file name of the synchronized entry (*.ics), only relevant for synchronized
+         * entries through the sync-adapter
          * Type: [String]
          */
         const val FILENAME = "filename"
@@ -385,32 +392,45 @@ object JtxContract {
 
 
 
-        /** This enum class defines the possible values for the attribute status of an [JtxICalObject] for Journals/Notes */
+        /**
+         * This enum class defines the possible values for the attribute status of an [JtxICalObject] for Journals/Notes
+         *  Use its name when the string representation is required, e.g. StatusJournal.DRAFT.name.
+         */
         enum class StatusJournal {
             DRAFT, FINAL, CANCELLED
         }
 
-        /** This enum class defines the possible values for the attribute status of an [JtxICalObject] for Todos */
+        /**
+         * This enum class defines the possible values for the attribute status of an [JtxICalObject] for Todos
+         * Use its name when the string representation is required, e.g. StatusTodo.`NEEDS-ACTION`.name.
+         */
         enum class StatusTodo {
             `NEEDS-ACTION`, COMPLETED, `IN-PROCESS`, CANCELLED
         }
 
-        /** This enum class defines the possible values for the attribute classification of an [JtxICalObject]  */
+        /**
+         * This enum class defines the possible values for the attribute classification of an [JtxICalObject]
+         * Use its name when the string representation is required, e.g. Classification.PUBLIC.name.
+         */
         enum class Classification {
             PUBLIC, PRIVATE, CONFIDENTIAL
         }
 
-        /** This enum class defines the possible values for the attribute component of an [JtxICalObject]  */
+        /**
+         * This enum class defines the possible values for the attribute component of an [JtxICalObject]
+         * Use its name when the string representation is required, e.g. Component.VJOURNAL.name.
+         */
         enum class Component {
             VJOURNAL, VTODO
         }
 
-        /** This enum class defines the possible values for the attribute module of an [JtxICalObject]  */
+        /**
+         * This enum class defines the possible values for the attribute module of an [JtxICalObject]
+         * Use its name when the string representation is required, e.g. Module.JOURNAL.name.
+         */
         enum class Module {
             JOURNAL, NOTE, TODO
         }
-
-
     }
 
 
@@ -435,8 +455,7 @@ object JtxContract {
         const val ICALOBJECT_ID = "icalObjectId"
 
 
-        /* The names of all the other columns  */
-
+        /***** The names of all the other columns  *****/
         /**
          * Purpose:  This value type is used to identify properties that contain a calendar user address (in this case of the attendee).
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.3.3]
@@ -446,6 +465,8 @@ object JtxContract {
 
         /**
          * Purpose:  To identify the type of calendar user specified by the property in this case for the attendee.
+         * The possible values are defined in the enum [Cutype].
+         * Use e.g. Cutype.INDIVIDUAL.name to put a correct String value in this field.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.3]
          * Type: [String]
          */
@@ -453,7 +474,6 @@ object JtxContract {
 
         /**
          * Purpose:  To specify the group or list membership of the calendar user specified by the property in this case for the attendee.
-         * The possible values are defined in the enum [Cutype]
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.11]
          * Type: [String]
          */
@@ -462,6 +482,7 @@ object JtxContract {
         /**
          * Purpose:  To specify the participation role for the calendar user specified by the property in this case for the attendee.
          * The possible values are defined in the enum [Role]
+         * Use e.g. Role.CHAIR.name to put a correct String value in this field.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.16]
          * Type: [String]
          */
@@ -534,17 +555,20 @@ object JtxContract {
         const val OTHER = "other"
 
 
-        /** This enum class defines the possible values for the attribute Cutype of an [JtxAttendee]  */
+        /**
+         * This enum class defines the possible values for the attribute Cutype of an [JtxAttendee]
+         * Use its name when the string representation is required, e.g. Cutype.INDIVIDUAL.name.
+         */
         enum class Cutype {
             INDIVIDUAL, GROUP, RESOURCE, ROOM, UNKNOWN
         }
-
-        /** This enum class defines the possible values for the attribute Role of an [JtxAttendee]  */
+        /**
+         * This enum class defines the possible values for the attribute Role of an [JtxAttendee]
+         * Use its name when the string representation is required, e.g. Role.`REQ-PARTICIPANT`.name.
+         */
         enum class Role {
             CHAIR, `REQ-PARTICIPANT`, `OPT-PARTICIPANT`, `NON-PARTICIPANT`
         }
-
-
     }
 
     @Suppress("unused")
@@ -568,7 +592,7 @@ object JtxContract {
         const val ICALOBJECT_ID = "icalObjectId"
 
 
-/* The names of all the other columns  */
+        /***** The names of all the other columns  *****/
         /**
          * Purpose:  This property defines the name of the category for a calendar component.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.2]
@@ -612,7 +636,7 @@ object JtxContract {
         const val ICALOBJECT_ID = "icalObjectId"
 
 
-/* The names of all the other columns  */
+        /***** The names of all the other columns  *****/
         /**
          * Purpose:  This property specifies non-processing information intended to provide a comment to the calendar user.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
@@ -663,7 +687,7 @@ object JtxContract {
         const val ICALOBJECT_ID = "icalObjectId"
 
 
-/* The names of all the other columns  */
+        /***** The names of all the other columns  *****/
         /**
          * Purpose:  This property defines the name of the contact for a calendar component.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.2]
@@ -715,7 +739,7 @@ object JtxContract {
         const val ICALOBJECT_ID = "icalObjectId"
 
 
-/* The names of all the other columns  */
+        /***** The names of all the other columns  *****/
         /**
          * Purpose:  This value type is used to identify properties that contain a calendar user address (in this case of the organizer).
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3] and [https://tools.ietf.org/html/rfc5545#section-3.3.3]
@@ -788,7 +812,7 @@ object JtxContract {
         const val LINKEDICALOBJECT_ID = "linkedICalObjectId"
 
 
-        /* The names of all the other columns  */
+        /***** The names of all the other columns  *****/
         /**
          * Purpose:  This property is used to represent a relationship or reference between one calendar component and another.
          * The text gives the UID of the related calendar entry.
@@ -800,7 +824,8 @@ object JtxContract {
         /**
          * Purpose:  To specify the type of hierarchical relationship associated
          * with the calendar component specified by the property.
-         * The possible relationship types are defined in the enum [Reltype]
+         * The possible relationship types are defined in the enum [Reltype].
+         * Use e.g. Reltype.PARENT.name to put a correct String value in this field.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.5] and [https://tools.ietf.org/html/rfc5545#section-3.2.15]
          * Type: [String]
          */
@@ -814,7 +839,10 @@ object JtxContract {
         const val OTHER = "other"
 
 
-        /** This enum class defines the possible values for the attribute Reltype of an [JtxRelatedto]  */
+        /**
+         * This enum class defines the possible values for the attribute Reltype of an [JtxRelatedto].
+         * Use its name when the string representation is required, e.g. Reltype.PARENT.name.
+         */
         enum class Reltype {
             PARENT, CHILD, SIBLING
         }
@@ -841,7 +869,7 @@ object JtxContract {
         const val ICALOBJECT_ID = "icalObjectId"
 
 
-/* The names of all the other columns  */
+        /***** The names of all the other columns  *****/
         /**
          * Purpose:  This property defines the name of the resource for a calendar component.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.10]
@@ -893,7 +921,7 @@ object JtxContract {
          * Type: [Long]*/
         const val ID = BaseColumns._ID
 
-        /* The names of all the other columns  */
+        /***** The names of all the other columns  *****/
         /**
          * Purpose:  This column/property defines the url of the collection.
          * Type: [String]
@@ -990,7 +1018,7 @@ object JtxContract {
         const val ICALOBJECT_ID = "icalObjectId"
 
 
-        /* The names of all the other columns  */
+        /***** The names of all the other columns  *****/
         /**
          * Purpose:  This property specifies the uri of an attachment.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
@@ -1051,7 +1079,7 @@ object JtxContract {
         const val ALARM_ATTACH = "attach"
 
 
-        /* The names of all the other columns  */
+        /***** The names of all the other columns  *****/
         /**
          * Purpose:  This property stores the unknown value as json
          * Type: [String]
@@ -1079,7 +1107,7 @@ object JtxContract {
         const val ICALOBJECT_ID = "icalObjectId"
 
 
-        /* The names of all the other columns  */
+        /***** The names of all the other columns  *****/
         /**
          * Purpose:  This property stores the unknown value as json
          * Type: [String]
