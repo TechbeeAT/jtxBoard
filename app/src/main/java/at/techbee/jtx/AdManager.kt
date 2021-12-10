@@ -86,7 +86,7 @@ class AdManager {
         }
 
 
-        private fun setUpAds(context: Context) {
+        private fun loadAd(context: Context) {
 
             MobileAds.initialize(context) {  }
 
@@ -168,13 +168,13 @@ class AdManager {
                             loadForm(activity, context, consentInformation)    //Handle dismissal by reloading form
                         }
                         Companion.consentForm = consentForm
-                        setUpAds(context)
+                        loadAd(context)
                     }
                 ) {
                     Log.d("consentForm", it.message)     // Handle the error just with a log message
                 }
             } else {
-                setUpAds(context)
+                loadAd(context)
             }
         }
 
@@ -195,7 +195,7 @@ class AdManager {
         fun processAdReward(context: Context) {
             adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, (System.currentTimeMillis() + TIME_TO_NEXT_AD))?.apply()
             rewardedInterstitialAd = null
-            setUpAds(context)
+            loadAd(context)
         }
 
     }
