@@ -101,6 +101,7 @@ object JtxContract {
 
         /**
          * Purpose:  This column/property specifies when the calendar component begins.
+         * This value is stored as UNIX timestamp (milliseconds).
          * The corresponding timezone is stored in [DTSTART_TIMEZONE].
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.4]
          * Type: [Long]
@@ -109,7 +110,7 @@ object JtxContract {
 
         /**
          * Purpose:  This column/property specifies the timezone of when the calendar component begins.
-         * The corresponding datetime is stored in [DTSTART] as UNIX timestamp (milliseconds).
+         * The corresponding datetime is stored in [DTSTART].
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.4]
          * Type: [String]
          */
@@ -117,6 +118,7 @@ object JtxContract {
 
         /**
          * Purpose:  This column/property specifies when the calendar component ends.
+         * This value is stored as UNIX timestamp (milliseconds).
          * The corresponding timezone is stored in [DTEND_TIMEZONE].
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.4]
          * Type: [Long]
@@ -125,7 +127,7 @@ object JtxContract {
 
         /**
          * Purpose:  This column/property specifies the timezone of when the calendar component ends.
-         * The corresponding datetime is stored in [DTEND] as UNIX timestamp (milliseconds).
+         * The corresponding datetime is stored in [DTEND].
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.2]
          * Type: [String]
          */
@@ -211,6 +213,7 @@ object JtxContract {
 
         /**
          * Purpose:  This property defines the date and time that a to-do is expected to be completed.
+         * This value is stored as UNIX timestamp (milliseconds).
          * The corresponding timezone is stored in [DUE_TIMEZONE].
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.3]
          * Type: [Long]
@@ -227,6 +230,7 @@ object JtxContract {
 
         /**
          * Purpose:  This property defines the date and time that a to-do was actually completed.
+         * This value is stored as UNIX timestamp (milliseconds).
          * The corresponding timezone is stored in [COMPLETED_TIMEZONE].
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.1]
          * Type: [Long]
@@ -235,7 +239,7 @@ object JtxContract {
 
         /**
          * Purpose:  This column/property specifies the timezone of when a to-do was actually completed.
-         * The corresponding datetime is stored in [DUE] as UNIX timestamp (milliseconds).
+         * The corresponding datetime is stored in [COMPLETED].
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.1]
          * Type: [String]
          */
