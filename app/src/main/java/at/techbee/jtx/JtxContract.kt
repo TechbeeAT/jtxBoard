@@ -111,6 +111,11 @@ object JtxContract {
         /**
          * Purpose:  This column/property specifies the timezone of when the calendar component begins.
          * The corresponding datetime is stored in [DTSTART].
+         * The value of a timezone can be:
+         * 1. the id of a Java timezone to represent the given timezone.
+         * 2. null to represent floating time.
+         * 3. the value of [TZ_ALLDAY] to represent an all-day entry.
+         * If an invalid value is passed, the Timezone is ignored and interpreted as UTC.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.4]
          * Type: [String]
          */
@@ -128,6 +133,7 @@ object JtxContract {
         /**
          * Purpose:  This column/property specifies the timezone of when the calendar component ends.
          * The corresponding datetime is stored in [DTEND].
+         * See [DTSTART_TIMEZONE] for information about the timezone handling
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.2]
          * Type: [String]
          */
@@ -222,7 +228,8 @@ object JtxContract {
 
         /**
          * Purpose:  This column/property specifies the timezone of when a to-do is expected to be completed.
-         * The corresponding datetime is stored in [DUE] as UNIX timestamp (milliseconds).
+         * The corresponding datetime is stored in [DUE].
+         * See [DTSTART_TIMEZONE] for information about the timezone handling
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.2]
          * Type: [String]
          */
@@ -240,6 +247,7 @@ object JtxContract {
         /**
          * Purpose:  This column/property specifies the timezone of when a to-do was actually completed.
          * The corresponding datetime is stored in [COMPLETED].
+         * See [DTSTART_TIMEZONE] for information about the timezone handling
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.1]
          * Type: [String]
          */
@@ -247,6 +255,7 @@ object JtxContract {
 
         /**
          * Purpose:  This property specifies a positive duration of time.
+         * See [DTSTART_TIMEZONE] for information about the timezone handling
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.5]
          * Type: [String]
          */
@@ -263,14 +272,18 @@ object JtxContract {
         /**
          * Purpose:  This property defines the list of DATE-TIME values for
          * recurring events, to-dos, journal entries, or time zone definitions.
-         * Type: [String], contains a list of comma-separated date values as Long
+         * Type: [String], contains a list of comma-separated date values as
+         * UNIX timestamps (milliseconds) e.g. "1636751475000,1636837875000".
+         * Invalid values that cannot be transformed to [Long] are ignored.
          */
         const val RDATE = "rdate"
 
         /**
          * Purpose:  This property defines the list of DATE-TIME exceptions for
          * recurring events, to-dos, journal entries, or time zone definitions.
-         * Type: [String], contains a list of comma-separated date values as Long
+         * Type: [String], contains a list of comma-separated date values as
+         * UNIX timestamps (milliseconds) e.g. "1636751475000,1636837875000".
+         * Invalid values that cannot be transformed to [Long] are ignored.
          */
         const val EXDATE = "exdate"
 
@@ -350,7 +363,7 @@ object JtxContract {
         const val ICALOBJECT_COLLECTIONID = "collectionId"
 
         /**
-         * Purpose:  This column defines if a local collection was changed that is supposed to be synchronised.
+         * Purpose:  This column defines if the local ICalObject was changed and that it is supposed to be synchronised.
          * Type: [Boolean]
          */
         const val DIRTY = "dirty"
