@@ -20,6 +20,9 @@ import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
 import android.os.*
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.util.Log
 import android.util.Size
 import android.view.*
@@ -51,6 +54,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.slider.Slider
 import java.io.*
 import java.lang.ClassCastException
+import java.util.*
 
 
 class IcalViewFragment : Fragment() {
@@ -446,16 +450,60 @@ class IcalViewFragment : Fragment() {
 
                 val audioDialogBinding = FragmentIcalViewAudioDialogBinding.inflate(inflater, container, false)
 
+                val sr: SpeechRecognizer? =
+                    when {
+                        SpeechRecognizer.isRecognitionAvailable(requireContext()) -> SpeechRecognizer.createSpeechRecognizer(requireContext())
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && SpeechRecognizer.isOnDeviceRecognitionAvailable(requireContext()) -> SpeechRecognizer.createOnDeviceSpeechRecognizer(requireContext())
+                        else -> null
+                    }
+                val srIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                srIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                srIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                srIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS,true);
+
+                sr?.setRecognitionListener(object: RecognitionListener {
+                    override fun onReadyForSpeech(p0: Bundle?) { Log.d("SpeechRecognizer", "Ready for Speech") }
+
+                    override fun onBeginningOfSpeech() { Log.d("SpeechRecognizer", "Beginning of Speech")  }
+                    override fun onEndOfSpeech() { Log.d("SpeechRecognizer", "End of Speech")   }
+                    override fun onRmsChanged(p0: Float) {}
+                    override fun onBufferReceived(p0: ByteArray?) {}
+                    override fun onError(errorCode: Int) {
+                        //if(recording)             // ignore errors while recording
+                            //return
+                        //else
+                            Log.d("SpeechRecognizer", "onError: $errorCode")
+                        return
+                    }
+                    override fun onPartialResults(bundle: Bundle?) {
+                        val data: ArrayList<String>? =
+                            bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                        data?.forEach {
+                            Log.d("SpeechRecognizer", "onPartialResult: $it")
+                        }
+                    }
+                    override fun onEvent(p0: Int, p1: Bundle?) {  }
+                    override fun onResults(bundle: Bundle?) {
+                        val data: ArrayList<String>? = bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                        data?.forEach {
+                            Log.d("SpeechRecognizer", "onResult: $it")
+                        }
+                        //editText.setText(data[0])
+                    }
+                })
+
                 audioDialogBinding.viewAudioDialogStartrecordingFab.setOnClickListener {
 
                     if(!recording) {
                         fileName = Uri.parse("${requireContext().cacheDir}/recorded.$audioFileExtension")
                         audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
+                        sr?.startListening(srIntent)
                         startRecording()
                         audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = false
                         recording = true
                     } else {
                         stopRecording()
+                        sr?.stopListening()
                         audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_microphone))
                         audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = true
                         recording = false
@@ -485,7 +533,7 @@ class IcalViewFragment : Fragment() {
                     .setTitle(getString(R.string.view_fragment_audio_dialog_add_audio_note))
                     //.setMessage(getString(R.string.view_fragment_audio_permission_message))
                     .setView(audioDialogBinding.root)
-                    .setPositiveButton("Save") { _, _ ->
+                    .setPositiveButton(R.string.save) { _, _ ->
                         stopRecording()
                         stopPlaying()
 
