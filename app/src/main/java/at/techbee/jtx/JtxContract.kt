@@ -863,63 +863,6 @@ object JtxContract {
         const val OTHER = "other"
     }
 
-    @Suppress("unused")
-    object JtxContact {
-
-        /** The name of the the table for Contact that are linked to an ICalObject.
-         * [https://tools.ietf.org/html/rfc5545#section-3.8.4.2]
-         */
-        private const val CONTENT_URI_PATH = "contact"
-
-        /** The content uri of the Contacts table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
-
-        /** The name of the ID column for the contact.
-         * This is the unique identifier of a Contact
-         * Type: [Long]*/
-        const val ID = BaseColumns._ID
-
-        /** The name of the Foreign Key Column for IcalObjects.
-         * Type: [Long], references [JtxICalObject.ID]
-         */
-        const val ICALOBJECT_ID = "icalObjectId"
-
-
-        /***** The names of all the other columns  *****/
-        /**
-         * Purpose:  This property defines the name of the contact for a calendar component.
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.2]
-         * Type: [String]
-         */
-        const val TEXT = "text"
-
-        /**
-         * Purpose:  To specify an alternate text representation for the property value, in this case of the comment.
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
-         * Type: [String]
-         */
-        const val ALTREP = "altrep"
-
-        /**
-         * Purpose:  To specify the language for text values in a property or property parameter, in this case of the contact.
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.2] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
-         * Language-Tag as defined in RFC5646, e.g. "en:Germany"
-         * Type: [String]
-         */
-        const val LANGUAGE = "language"
-
-        /**
-         * Purpose:  To specify other properties for the contact.
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.2]
-         * The Parameters are stored as JSON. There are two helper functions provided:
-         * getJsonStringFromXParameters(ParameterList?) that returns a Json String from the parameter list
-         * to be stored in this other field. The counterpart to this function is
-         * getXParameterFromJson(String) that returns a list of XParameters from a Json that was created with getJsonStringFromXParameters(...)
-         * Type: [String]
-         */
-        const val OTHER = "other"
-
-    }
 
     @Suppress("unused")
     object JtxOrganizer {

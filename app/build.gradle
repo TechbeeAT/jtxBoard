@@ -111,6 +111,13 @@ aboutLibraries {
     }
 }
 
+// defining the room.schemaLocation explicitly allows AutoMigrations
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 

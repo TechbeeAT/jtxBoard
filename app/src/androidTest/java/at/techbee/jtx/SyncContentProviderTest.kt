@@ -234,49 +234,6 @@ class SyncContentProviderTest {
     }
 
 
-
-
-    @Test
-    fun contact_insert_find_update_delete()  {
-
-       // INSERT
-        val contactValues = ContentValues()
-        contactValues.put(JtxContract.JtxContact.ICALOBJECT_ID, defaultICalObjectId)
-        contactValues.put(JtxContract.JtxContact.TEXT, "inserted contact")
-        val uriContacts = JtxContract.JtxContact.CONTENT_URI.asSyncAdapter(defaultTestAccount)
-        val newContact = mContentResolver?.insert(uriContacts, contactValues)
-        assertNotNull(newContact)
-
-        //QUERY
-        mContentResolver?.query(newContact!!, arrayOf(JtxContract.JtxContact.ID), null, null, null).use {
-            assertEquals(1, it!!.count)             // inserted object was found
-        }
-
-        // UPDATE
-        val updatedContactValues = ContentValues()
-        updatedContactValues.put(JtxContract.JtxContact.TEXT, "updated contact")
-        val countUpdated = mContentResolver?.update(newContact!!, updatedContactValues, null, null)
-        assertEquals(countUpdated, 1)
-        //Log.println(Log.INFO, "attendee_insert_find_update", "Assert successful, found ${cursor?.count} entries, updated entries: $countUpdated")
-
-        // QUERY the updated value
-        mContentResolver?.query(newContact!!, arrayOf(JtxContract.JtxContact.ID, JtxContract.JtxContact.TEXT), "${JtxContract.JtxContact.TEXT} = ?", arrayOf("updated contact"), null).use {
-            assertEquals(1, it!!.count)             // inserted object was found
-        }
-
-        //delete
-        val countDel: Int? = mContentResolver?.delete(newContact!!, null, null)
-        assertNotNull(countDel)
-        assertEquals(1,countDel)
-        //Log.println(Log.INFO, "icalObject_insert_find_delete", "Assert successful, DB has ${cursor?.count} entries, deleted entries: $countDel")
-
-        //find
-        mContentResolver?.query(newContact!!, arrayOf(JtxContract.JtxContact.ID, JtxContract.JtxContact.TEXT), "${JtxContract.JtxContact.TEXT} = ?", arrayOf("updated contact"), null).use {
-            assertEquals(0, it!!.count)             // inserted object was found
-        }
-    }
-
-
     @Test
     fun organizer_insert_find_update_delete()  {
 

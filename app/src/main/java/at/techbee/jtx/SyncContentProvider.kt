@@ -33,7 +33,6 @@ private const val CODE_ICALOBJECTS_DIR = 1
 private const val CODE_ATTENDEES_DIR = 2
 private const val CODE_CATEGORIES_DIR = 3
 private const val CODE_COMMENTS_DIR = 4
-private const val CODE_CONTACTS_DIR = 5
 private const val CODE_ORGANIZER_DIR = 6
 private const val CODE_RELATEDTO_DIR = 7
 private const val CODE_RESOURCE_DIR = 8
@@ -46,7 +45,6 @@ private const val CODE_ICALOBJECT_ITEM = 101
 private const val CODE_ATTENDEE_ITEM = 102
 private const val CODE_CATEGORY_ITEM = 103
 private const val CODE_COMMENT_ITEM = 104
-private const val CODE_CONTACT_ITEM = 105
 private const val CODE_ORGANIZER_ITEM = 106
 private const val CODE_RELATEDTO_ITEM = 107
 private const val CODE_RESOURCE_ITEM = 108
@@ -81,7 +79,6 @@ class SyncContentProvider : ContentProvider() {
         addURI(SYNC_PROVIDER_AUTHORITY, "attendee", CODE_ATTENDEES_DIR)
         addURI(SYNC_PROVIDER_AUTHORITY, "category", CODE_CATEGORIES_DIR)
         addURI(SYNC_PROVIDER_AUTHORITY, "comment", CODE_COMMENTS_DIR)
-        addURI(SYNC_PROVIDER_AUTHORITY, "contact", CODE_CONTACTS_DIR)
         addURI(SYNC_PROVIDER_AUTHORITY, "organizer", CODE_ORGANIZER_DIR)
         addURI(SYNC_PROVIDER_AUTHORITY, "relatedto", CODE_RELATEDTO_DIR)
         addURI(SYNC_PROVIDER_AUTHORITY, "resource", CODE_RESOURCE_DIR)
@@ -95,7 +92,6 @@ class SyncContentProvider : ContentProvider() {
         addURI(SYNC_PROVIDER_AUTHORITY, "attendee/#", CODE_ATTENDEE_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "category/#", CODE_CATEGORY_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "comment/#", CODE_COMMENT_ITEM)
-        addURI(SYNC_PROVIDER_AUTHORITY, "contact/#", CODE_CONTACT_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "organizer/#", CODE_ORGANIZER_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "relatedto/#", CODE_RELATEDTO_ITEM)
         addURI(SYNC_PROVIDER_AUTHORITY, "resource/#", CODE_RESOURCE_ITEM)
@@ -134,7 +130,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_ATTENDEES_DIR -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) "
             CODE_CATEGORIES_DIR -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) "
             CODE_COMMENTS_DIR -> queryString += "$TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) "
-            CODE_CONTACTS_DIR -> queryString += "$TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) "
             CODE_ORGANIZER_DIR -> queryString += "$TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) "
             CODE_RELATEDTO_DIR -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) "
             CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) "
@@ -148,7 +143,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
             CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ?"
             CODE_COMMENT_ITEM -> queryString += "$TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_COMMENT.$COLUMN_COMMENT_ID = ? "
-            CODE_CONTACT_ITEM -> queryString += "$TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CONTACT.$COLUMN_CONTACT_ID = ? "
             CODE_ORGANIZER_ITEM -> queryString += "$TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ID = ? "
             CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ? "
             CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ? "
@@ -205,7 +199,6 @@ class SyncContentProvider : ContentProvider() {
                 CODE_ATTENDEES_DIR -> id = Attendee.fromContentValues(values)?.let { database.insertAttendeeSync(it) }
                 CODE_CATEGORIES_DIR -> id = Category.fromContentValues(values)?.let { database.insertCategorySync(it) }
                 CODE_COMMENTS_DIR -> id = Comment.fromContentValues(values)?.let { database.insertCommentSync(it) }
-                CODE_CONTACTS_DIR -> id = Contact.fromContentValues(values)?.let { database.insertContactSync(it) }
                 CODE_ORGANIZER_DIR -> id = Organizer.fromContentValues(values)?.let { database.insertOrganizerSync(it) }
                 CODE_RELATEDTO_DIR -> id = Relatedto.fromContentValues(values)?.let { database.insertRelatedtoSync(it) }
                 CODE_RESOURCE_DIR -> id = Resource.fromContentValues(values)?.let { database.insertResourceSync(it) }
@@ -218,7 +211,6 @@ class SyncContentProvider : ContentProvider() {
                 CODE_ATTENDEE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
                 CODE_CATEGORY_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
                 CODE_COMMENT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
-                CODE_CONTACT_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
                 CODE_ORGANIZER_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
                 CODE_RELATEDTO_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
                 CODE_RESOURCE_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID ($uri)")
@@ -296,7 +288,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_ATTENDEES_DIR -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) "
             CODE_CATEGORIES_DIR -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) "
             CODE_COMMENTS_DIR -> queryString += "$TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) "
-            CODE_CONTACTS_DIR -> queryString += "$TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) "
             CODE_ORGANIZER_DIR -> queryString += "$TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) "
             CODE_RELATEDTO_DIR -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) "
             CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) "
@@ -309,7 +300,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
             CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ? "
             CODE_COMMENT_ITEM -> queryString += "$TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_COMMENT.$COLUMN_COMMENT_ID = ? "
-            CODE_CONTACT_ITEM -> queryString += "$TABLE_NAME_CONTACT WHERE $COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CONTACT.$COLUMN_CONTACT_ID = ? "
             CODE_ORGANIZER_ITEM -> queryString += "$TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ID = ? "
             CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ? "
             CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ? "
@@ -371,7 +361,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_ATTENDEES_DIR -> queryString += "$TABLE_NAME_ATTENDEE "
             CODE_CATEGORIES_DIR -> queryString += "$TABLE_NAME_CATEGORY "
             CODE_COMMENTS_DIR -> queryString += "$TABLE_NAME_COMMENT "
-            CODE_CONTACTS_DIR -> queryString += "$TABLE_NAME_CONTACT "
             CODE_ORGANIZER_DIR -> queryString += "$TABLE_NAME_ORGANIZER "
             CODE_RELATEDTO_DIR -> queryString += "$TABLE_NAME_RELATEDTO "
             CODE_RESOURCE_DIR -> queryString += "$TABLE_NAME_RESOURCE "
@@ -385,7 +374,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE "
             CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY "
             CODE_COMMENT_ITEM -> queryString += "$TABLE_NAME_COMMENT "
-            CODE_CONTACT_ITEM -> queryString += "$TABLE_NAME_CONTACT "
             CODE_ORGANIZER_ITEM -> queryString += "$TABLE_NAME_ORGANIZER "
             CODE_RELATEDTO_ITEM -> queryString += "$TABLE_NAME_RELATEDTO "
             CODE_RESOURCE_ITEM -> queryString += "$TABLE_NAME_RESOURCE "
@@ -427,7 +415,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_ATTENDEES_DIR -> queryString += "$COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) "
             CODE_CATEGORIES_DIR -> queryString += "$COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) "
             CODE_COMMENTS_DIR -> queryString += "$COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) "
-            CODE_CONTACTS_DIR -> queryString += "$COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) "
             CODE_ORGANIZER_DIR -> queryString += "$COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) "
             CODE_RELATEDTO_DIR -> queryString += "$COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) "
             CODE_RESOURCE_DIR -> queryString += "$COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) "
@@ -441,7 +428,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_ATTENDEE_ITEM -> queryString += "$COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
             CODE_CATEGORY_ITEM -> queryString += "$COLUMN_CATEGORY_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ID = ? "
             CODE_COMMENT_ITEM -> queryString += "$COLUMN_COMMENT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_COMMENT.$COLUMN_COMMENT_ID = ? "
-            CODE_CONTACT_ITEM -> queryString += "$COLUMN_CONTACT_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_CONTACT.$COLUMN_CONTACT_ID = ? "
             CODE_ORGANIZER_ITEM -> queryString += "$COLUMN_ORGANIZER_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ID = ? "
             CODE_RELATEDTO_ITEM -> queryString += "$COLUMN_RELATEDTO_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ID = ? "
             CODE_RESOURCE_ITEM -> queryString += "$COLUMN_RESOURCE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_RESOURCE.$COLUMN_RESOURCE_ID = ? "

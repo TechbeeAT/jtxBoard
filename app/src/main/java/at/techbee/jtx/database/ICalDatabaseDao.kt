@@ -239,9 +239,6 @@ INSERTs (Synchronously)
     fun insertRelatedtoSync(relatedto: Relatedto): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertContactSync(contact: Contact): Long
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertResourceSync(resource: Resource): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -12,9 +12,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import androidx.annotation.VisibleForTesting
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.*
@@ -28,24 +27,24 @@ import java.util.*
  * And a global method to get access to the database.
  */
 
-@Database(entities = [
-    Attendee::class,
-    Category::class,
-    Comment::class,
-    ICalCollection::class,
-    Contact::class,
-    ICalObject::class,
-    Organizer::class,
-    Relatedto::class,
-    Resource::class,
-    Alarm::class,
-    Unknown::class,
-    Attachment::class],
-        views = [
-            ICal4List::class,
-            ICal4ViewNote::class],
-        version = 1,
-        exportSchema = false)
+@Database(
+    entities = [
+        Attendee::class,
+        Category::class,
+        Comment::class,
+        ICalCollection::class,
+        ICalObject::class,
+        Organizer::class,
+        Relatedto::class,
+        Resource::class,
+        Alarm::class,
+        Unknown::class,
+        Attachment::class],
+    views = [
+        ICal4List::class,
+        ICal4ViewNote::class],
+    version = 2,
+    exportSchema = true)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {
 
@@ -53,6 +52,8 @@ abstract class ICalDatabase : RoomDatabase() {
      * Connects the database to the DAO.
      */
     abstract val iCalDatabaseDao: ICalDatabaseDao
+
+
 
     /**
      * Define a companion object, this allows us to add functions on the SleepDatabase class.
@@ -67,6 +68,14 @@ abstract class ICalDatabase : RoomDatabase() {
          *  reads will be done to and from the main memory. It means that changes made by one
          *  thread to shared data are visible to other threads.
          */
+
+
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE `contact`")
+            }
+        }
+
         @Volatile
         private var INSTANCE: ICalDatabase? = null
 
@@ -103,49 +112,50 @@ abstract class ICalDatabase : RoomDatabase() {
                             ICalDatabase::class.java,
                             "jtx_database"
                     )
-                            // Wipes and rebuilds instead of migrating if no Migration object.
-                            // Migration is not part of this lesson. You can learn more about
-                            // migration with Room in this blog post:
-                            // https://medium.com/androiddevelopers/understanding-migrations-with-room-f01e04b07929
-                            .fallbackToDestructiveMigration()
-                            //This Callback is executed on create and on open. On create the local collection must be initialized.
-                            .addCallback( object: Callback() {
-                                override fun onCreate(db: SupportSQLiteDatabase) {
-                                    val cv = ContentValues()
-                                    cv.put(COLUMN_COLLECTION_ID, "1")
-                                    cv.put(COLUMN_COLLECTION_ACCOUNT_TYPE, ICalCollection.LOCAL_ACCOUNT_TYPE)
-                                    cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, context.getString(R.string.default_local_account_name))
-                                    cv.put(COLUMN_COLLECTION_DISPLAYNAME, context.getString(R.string.default_local_collection_name))
-                                    cv.put(COLUMN_COLLECTION_URL, ICalCollection.LOCAL_COLLECTION_URL)
-                                    cv.put(COLUMN_COLLECTION_SUPPORTSVJOURNAL, 1)
-                                    cv.put(COLUMN_COLLECTION_SUPPORTSVEVENT, 1)
-                                    cv.put(COLUMN_COLLECTION_SUPPORTSVTODO, 1)
-                                    cv.put(COLUMN_COLLECTION_READONLY, 0)
-                                    db.insert(TABLE_NAME_COLLECTION, SQLiteDatabase.CONFLICT_IGNORE, cv)
-                                    super.onCreate(db)
-                                }
+                        .addMigrations(MIGRATION_1_2)
 
-                                override fun onOpen(db: SupportSQLiteDatabase) {
-                                    val cv = ContentValues()
-                                    cv.put(COLUMN_COLLECTION_ID, "1")
-                                    cv.put(COLUMN_COLLECTION_ACCOUNT_TYPE, ICalCollection.LOCAL_ACCOUNT_TYPE)
-                                    cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, context.getString(R.string.default_local_account_name))
-                                    cv.put(COLUMN_COLLECTION_DISPLAYNAME, context.getString(R.string.default_local_collection_name))
-                                    cv.put(COLUMN_COLLECTION_URL, ICalCollection.LOCAL_COLLECTION_URL)
-                                    cv.put(COLUMN_COLLECTION_SUPPORTSVJOURNAL, 1)
-                                    cv.put(COLUMN_COLLECTION_SUPPORTSVEVENT, 1)
-                                    cv.put(COLUMN_COLLECTION_SUPPORTSVTODO, 1)
-                                    cv.put(COLUMN_COLLECTION_READONLY, 0)
-                                    db.insert(TABLE_NAME_COLLECTION, SQLiteDatabase.CONFLICT_IGNORE, cv)
-                                    super.onOpen(db)
-                                }
+                        // Wipes and rebuilds instead of migrating if no Migration object.
+                        // Migration is not part of this lesson. You can learn more about
+                        // migration with Room in this blog post:
+                        // https://medium.com/androiddevelopers/understanding-migrations-with-room-f01e04b07929
+                        .fallbackToDestructiveMigration()
+                        //This Callback is executed on create and on open. On create the local collection must be initialized.
+                        .addCallback( object: Callback() {
+                            override fun onCreate(db: SupportSQLiteDatabase) {
+                                val cv = ContentValues()
+                                cv.put(COLUMN_COLLECTION_ID, "1")
+                                cv.put(COLUMN_COLLECTION_ACCOUNT_TYPE, ICalCollection.LOCAL_ACCOUNT_TYPE)
+                                cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, context.getString(R.string.default_local_account_name))
+                                cv.put(COLUMN_COLLECTION_DISPLAYNAME, context.getString(R.string.default_local_collection_name))
+                                cv.put(COLUMN_COLLECTION_URL, ICalCollection.LOCAL_COLLECTION_URL)
+                                cv.put(COLUMN_COLLECTION_SUPPORTSVJOURNAL, 1)
+                                cv.put(COLUMN_COLLECTION_SUPPORTSVEVENT, 1)
+                                cv.put(COLUMN_COLLECTION_SUPPORTSVTODO, 1)
+                                cv.put(COLUMN_COLLECTION_READONLY, 0)
+                                db.insert(TABLE_NAME_COLLECTION, SQLiteDatabase.CONFLICT_IGNORE, cv)
+                                super.onCreate(db)
+                            }
 
-                            })
-                            .build()
+                            override fun onOpen(db: SupportSQLiteDatabase) {
+                                val cv = ContentValues()
+                                cv.put(COLUMN_COLLECTION_ID, "1")
+                                cv.put(COLUMN_COLLECTION_ACCOUNT_TYPE, ICalCollection.LOCAL_ACCOUNT_TYPE)
+                                cv.put(COLUMN_COLLECTION_ACCOUNT_NAME, context.getString(R.string.default_local_account_name))
+                                cv.put(COLUMN_COLLECTION_DISPLAYNAME, context.getString(R.string.default_local_collection_name))
+                                cv.put(COLUMN_COLLECTION_URL, ICalCollection.LOCAL_COLLECTION_URL)
+                                cv.put(COLUMN_COLLECTION_SUPPORTSVJOURNAL, 1)
+                                cv.put(COLUMN_COLLECTION_SUPPORTSVEVENT, 1)
+                                cv.put(COLUMN_COLLECTION_SUPPORTSVTODO, 1)
+                                cv.put(COLUMN_COLLECTION_READONLY, 0)
+                                db.insert(TABLE_NAME_COLLECTION, SQLiteDatabase.CONFLICT_IGNORE, cv)
+                                super.onOpen(db)
+                            }
+
+                        })
+                        .build()
                     // Assign INSTANCE to the newly created database.
                     INSTANCE = instance
                 }
-
 
                 // Return instance; smart cast to be non-null.
                 return instance
@@ -241,5 +251,5 @@ abstract class ICalDatabase : RoomDatabase() {
         database.insertOrganizer(Organizer(caladdress = UUID.randomUUID().toString(), icalObjectId = newEntry2))
         // database.insertRelatedto(Relatedto(text = "related to", icalObjectId = newEntry2))
     }
-
 }
+
