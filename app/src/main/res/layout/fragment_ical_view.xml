@@ -877,7 +877,7 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
                     android:autoLink="all"
-                    android:text="@{model.icalEntity.organizer.caladdress}"
+                    android:text="@{model.organizerFormatted}"
                     android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/view_organizer_header"

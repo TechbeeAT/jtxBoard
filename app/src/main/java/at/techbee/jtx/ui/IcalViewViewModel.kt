@@ -40,6 +40,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var createdFormatted: LiveData<String>
     lateinit var lastModifiedFormatted: LiveData<String>
     lateinit var progressFormatted: LiveData<String>
+    lateinit var organizerFormatted: LiveData<String>
 
 
 
@@ -182,6 +183,10 @@ class IcalViewViewModel(private val icalItemId: Long,
                 item?.property?.percent.let { progress ->
                     String.format("%.0f%%", progress?.toFloat() ?: 0F)
                 }
+            }
+
+            organizerFormatted = Transformations.map(icalEntity) { item ->
+                item?.organizer?.caladdress?.removePrefix("mailto:")
             }
 
             collectionText = Transformations.map(icalEntity) { item ->
