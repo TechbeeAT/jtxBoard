@@ -81,6 +81,7 @@ object JtxContract {
         /***** The names of all the other columns  *****/
         /** The column for the component based on the values provided in the enum [Component].
          * Use e.g. Component.VTODO.name to put a correct String value in this field.
+         * If no Component is provided on Insert, an IllegalArgumentException is thrown
          * Type: [String]
          */
         const val COMPONENT = "component"
@@ -142,6 +143,8 @@ object JtxContract {
         /**
          * Purpose:  This property defines the overall status or confirmation for the calendar component.
          * The possible values of a status are defined in [StatusTodo] for To-Dos and in [StatusJournal] for Notes and Journals
+         * If no valid Status is used, the value is taken and will be shown as-is.
+         * Also null-value is allowed.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.11]
          * Type: [String]
          */
@@ -151,6 +154,8 @@ object JtxContract {
          * Purpose:  This property defines the access classification for a calendar component.
          * The possible values of a status are defined in the enum [Classification].
          * Use e.g. Classification.PUBLIC.name to put a correct String value in this field.
+         * If no valid Classification is used, the value is taken and will be shown as-is.
+         * Also null-value is allowed.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.11]
          * Type: [String]
          */
@@ -205,6 +210,8 @@ object JtxContract {
 
         /**
          * Purpose:  This property is used by an assignee or delegatee of a to-do to convey the percent completion of a to-do to the "Organizer".
+         * The value must either be null or between 0 and 100. The value 0 is interpreted as null.
+         * If a value outside of the boundaries (0-100) is passed, the value is reset to null.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.8]
          * Type: [Int]
          */
@@ -212,7 +219,8 @@ object JtxContract {
 
         /**
          * Purpose:  This property defines the relative priority for a calendar component.
-         * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.9]
+         * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.9]. The priority can be null or between 0 and 9.
+         * Values outside of these boundaries are accepted but internally not mapped to a string resource.
          * Type: [Int]
          */
         const val PRIORITY = "priority"
@@ -484,6 +492,8 @@ object JtxContract {
          * Purpose:  To identify the type of calendar user specified by the property in this case for the attendee.
          * The possible values are defined in the enum [Cutype].
          * Use e.g. Cutype.INDIVIDUAL.name to put a correct String value in this field.
+         * If no value is passed for the Cutype, the Cutype will be interpreted as INDIVIDUAL as according to the RFC.
+         * Other values are accepted and treated as UNKNOWN.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.3]
          * Type: [String]
          */
@@ -500,6 +510,8 @@ object JtxContract {
          * Purpose:  To specify the participation role for the calendar user specified by the property in this case for the attendee.
          * The possible values are defined in the enum [Role]
          * Use e.g. Role.CHAIR.name to put a correct String value in this field.
+         * If no value (null) is passed for the Role, it will be interpreted as REQ-PARTICIPANT as according to the RFC.
+         * Other values are accepted and treated as REQ-PARTICIPANTs.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.16]
          * Type: [String]
          */
@@ -843,6 +855,7 @@ object JtxContract {
          * with the calendar component specified by the property.
          * The possible relationship types are defined in the enum [Reltype].
          * Use e.g. Reltype.PARENT.name to put a correct String value in this field.
+         * Other values and null-values are allowed, but will not be processed by the app.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.5] and [https://tools.ietf.org/html/rfc5545#section-3.2.15]
          * Type: [String]
          */

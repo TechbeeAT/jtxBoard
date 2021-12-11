@@ -201,7 +201,6 @@ data class Attendee (
 /** This enum class defines the possible values for the attribute [Attendee.cutype]  */
 @Suppress("unused")
 enum class Cutype  {
-
         INDIVIDUAL, GROUP, RESOURCE, ROOM, UNKNOWN
 }
 
@@ -218,7 +217,6 @@ enum class Role (val stringResource: Int, val icon: Int) {
 
 
         companion object {
-
                 fun getDrawableResourceByName(name: String?): Int {
                         values().forEach {
                                 if (it.name == name)

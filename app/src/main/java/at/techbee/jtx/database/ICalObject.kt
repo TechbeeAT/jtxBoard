@@ -395,8 +395,8 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_DTEND) var dtend: Long? = null,
     @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String? = null,
 
-    @ColumnInfo(name = COLUMN_STATUS) var status: String? = null,     // 0 = DRAFT, 1 = FINAL, 2 = CANCELLED, -1 = NOT SUPPORTED (value in statusX)
-    @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String? = null,    // 0 = PUBLIC, 1 = PRIVATE, 2 = CONFIDENTIAL, -1 = NOT SUPPORTED (value in classificationX)
+    @ColumnInfo(name = COLUMN_STATUS) var status: String? = null,
+    @ColumnInfo(name = COLUMN_CLASSIFICATION) var classification: String? = null,
 
     @ColumnInfo(name = COLUMN_URL) var url: String? = null,
     @ColumnInfo(name = COLUMN_CONTACT) var contact: String? = null,
@@ -619,7 +619,11 @@ data class ICalObject(
         values.getAsDouble(COLUMN_GEO_LONG)?.let { geoLong -> this.geoLong = geoLong }
         values.getAsString(COLUMN_LOCATION)?.let { location -> this.location = location }
         values.getAsString(COLUMN_LOCATION_ALTREP)?.let { locationAltrep -> this.locationAltrep = locationAltrep }
-        values.getAsInteger(COLUMN_PERCENT)?.let { percent -> this.percent = percent }
+        values.getAsInteger(COLUMN_PERCENT)?.let { percent ->
+            if(percent in 1..100)
+                this.percent = percent
+            else
+                this.percent = null }
         values.getAsInteger(COLUMN_PRIORITY)?.let { priority -> this.priority = priority }
         values.getAsLong(COLUMN_DUE)?.let { due -> this.due = due }
         values.getAsString(COLUMN_DUE_TIMEZONE)
