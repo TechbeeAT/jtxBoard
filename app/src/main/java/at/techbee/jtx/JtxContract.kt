@@ -11,6 +11,14 @@ package at.techbee.jtx
 import android.accounts.Account
 import android.net.Uri
 import android.provider.BaseColumns
+import android.util.Log
+import net.fortuna.ical4j.model.ParameterList
+import net.fortuna.ical4j.model.Property
+import net.fortuna.ical4j.model.PropertyList
+import net.fortuna.ical4j.model.parameter.XParameter
+import net.fortuna.ical4j.model.property.XProperty
+import org.json.JSONObject
+import java.lang.NullPointerException
 
 @Suppress("unused")
 object JtxContract {
@@ -46,6 +54,126 @@ object JtxContract {
             .appendQueryParameter(ACCOUNT_NAME, account.name)
             .appendQueryParameter(ACCOUNT_TYPE, account.type)
             .build()
+
+    /**
+     * This function takes a string and tries to parse it to a list of XParameters.
+     * This is the counterpart of getJsonStringFromXParameters(...)
+     * @param [string] that should be parsed
+     * @return The list of XParameter parsed from the string
+     */
+    fun getXParametersFromJson(string: String): List<XParameter> {
+
+        val jsonObject = JSONObject(string)
+        val xparamList = mutableListOf<XParameter>()
+        for (i in 0 until jsonObject.length()) {
+            val names = jsonObject.names() ?: break
+            val xparamName = names[i]?.toString() ?: break
+            val xparamValue = jsonObject.getString(xparamName).toString()
+            if(xparamName.isNotBlank() && xparamValue.isNotBlank()) {
+                val xparam = XParameter(xparamName, xparamValue)
+                xparamList.add(xparam)
+            }
+        }
+        return xparamList
+    }
+
+    /**
+     * This function takes a string and tries to parse it to a list of XProperty.
+     * This is the counterpart of getJsonStringFromXProperties(...)
+     * @param [string] that should be parsed
+     * @return The list of XProperty parsed from the string
+     */
+    fun getXPropertyListFromJson(string: String): PropertyList<Property> {
+
+        val propertyList = PropertyList<Property>()
+
+        if(string.isBlank())
+            return propertyList
+
+        try {
+            val jsonObject = JSONObject(string)
+            for (i in 0 until jsonObject.length()) {
+                val names = jsonObject.names() ?: break
+                val propertyName = names[i]?.toString() ?: break
+                val propertyValue = jsonObject.getString(propertyName).toString()
+                if (propertyName.isNotBlank() && propertyValue.isNotBlank()) {
+                    val prop = XProperty(propertyName, propertyValue)
+                    propertyList.add(prop)
+                }
+            }
+        } catch (e: NullPointerException) {
+            Log.w("XPropertyList", "Error parsing x-property-list $string\n$e")
+        }
+        return propertyList
+    }
+
+
+    /**
+     * Takes a Parameter List and returns a Json String to be saved in a DB field.
+     * This is the counterpart to getXParameterFromJson(...)
+     * @param [parameters] The ParameterList that should be transformed into a Json String
+     * @return The generated Json object as a [String]
+     */
+    fun getJsonStringFromXParameters(parameters: ParameterList?): String? {
+
+        if(parameters == null)
+            return null
+
+        val jsonObject = JSONObject()
+        parameters.forEach { parameter ->
+            jsonObject.put(parameter.name, parameter.value)
+        }
+        return if(jsonObject.length() == 0)
+            null
+        else
+            jsonObject.toString()
+    }
+
+    /**
+     * Takes a Property List and returns a Json String to be saved in a DB field.
+     * This is the counterpart to getXPropertyListFromJson(...)
+     * @param [propertyList] The PropertyList that should be transformed into a Json String
+     * @return The generated Json object as a [String]
+     */
+    fun getJsonStringFromXProperties(propertyList: PropertyList<*>?): String? {
+
+        if(propertyList == null)
+            return null
+
+        val jsonObject = JSONObject()
+        propertyList.forEach { property ->
+            jsonObject.put(property.name, property.value)
+        }
+        return if(jsonObject.length() == 0)
+            null
+        else
+            jsonObject.toString()
+    }
+
+
+    /**
+     * Some date fields in jtx Board are saved as a list of Long values separated by commas.
+     * This applies for example to the exdate for recurring events.
+     * This function takes a string and tries to parse it to a list of long values (timestamps)
+     * @param [string] that should be parsed
+     * @return a [MutableList<Long>] with the timestamps parsed from the string
+     *
+     */
+    fun getLongListFromString(string: String): MutableList<Long> {
+
+        val stringList = string.split(",")
+        val longList = mutableListOf<Long>()
+
+        stringList.forEach {
+            try {
+                longList.add(it.toLong())
+            } catch (e: NumberFormatException) {
+                Log.w("getLongListFromString", "String could not be cast to Long ($it)")
+                return@forEach
+            }
+        }
+        return longList
+    }
 
 
     @Suppress("unused")
@@ -420,7 +548,11 @@ object JtxContract {
 
         /**
          * Purpose:  To specify other properties for the ICalObject.
-         * This is especially used for additional attributes relevant for the synchronization
+         * This is especially used for additional properties that cannot be put into another field, especially relevant for the synchronization
+         * The Properties are stored as JSON. There are two helper functions provided:
+         * getJsonStringFromXProperties(PropertyList<*> that returns a Json String from the property list
+         * to be stored in this other field. The counterpart to this function is
+         * getXPropertyListFromJson(String) that returns a PropertyList from a Json that was created with getJsonStringFromXProperties()
          * Type: [String]
          */
         const val OTHER = "other"
@@ -495,7 +627,9 @@ object JtxContract {
         /***** The names of all the other columns  *****/
         /**
          * Purpose:  This value type is used to identify properties that contain a calendar user address (in this case of the attendee).
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.3.3]
+         * This is usually an e-mail address as defined in [https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.3].
+         * The value should be passed as String containing the URI with "mailto:", for example: "mailto:jane_doe@example.com"
+         * See also [https://tools.ietf.org/html/rfc5545#section-3.8.4.1].
          * Type: [String]
          */
         const val CALADDRESS = "caladdress"
@@ -555,28 +689,33 @@ object JtxContract {
         /**
          * Purpose:  To specify the calendar users that have delegated their participation to the calendar user specified by the property
          * in this case for the attendee.
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.4]
+         * This is usually an e-mail address as defined in [https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.3].
+         * The value should be passed as String containing the URI with "mailto:", for example: "mailto:jane_doe@example.com"
+         * See also [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.4]
          * Type: [String]
          */
         const val DELEGATEDFROM = "delegatedfrom"
 
         /**
          * Purpose:  To specify the calendar user that is acting on behalf of the calendar user specified by the property in this case for the attendee.
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.18]
+         * This is usually an e-mail address as defined in [https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.3].
+         * The value should be passed as String containing the URI with "mailto:", for example: "mailto:jane_doe@example.com"
+         * See also [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://datatracker.ietf.org/doc/html/rfc5545#section-3.2.18]
          * Type: [String]
          */
         const val SENTBY = "sentby"
 
         /**
          * Purpose:  To specify the common name to be associated with the calendar user specified by the property in this case for the attendee.
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.18]
+         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://datatracker.ietf.org/doc/html/rfc5545#section-3.2.2]
          * Type: [String]
          */
         const val CN = "cn"
 
         /**
          * Purpose:  To specify reference to a directory entry associated with the calendar user specified by the property in this case for the attendee.
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.2]
+         * Expected is an URI as defined in [https://datatracker.ietf.org/doc/html/rfc5545#section-3.2.6].
+         * The value should be passed as String, e.g. "ldap://example.com:6666/o=ABC%20Industries,c=US???(cn=Jim%20Dolittle)"
          * Type: [String]
          */
         const val DIR = "dir"
@@ -584,13 +723,18 @@ object JtxContract {
         /**
          * Purpose:  To specify the language for text values in a property or property parameter, in this case of the attendee.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
+         * Language-Tag as defined in RFC5646, e.g. "en:Germany"
          * Type: [String]
          */
         const val LANGUAGE = "language"
 
         /**
-         * Purpose:  To specify other properties for the attendee.
+         * Purpose:  To specify other parameters for the attendee.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1]
+         * The Parameters are stored as JSON. There are two helper functions provided:
+         * getJsonStringFromXParameters(ParameterList?) that returns a Json String from the parameter list
+         * to be stored in this other field. The counterpart to this function is
+         * getXParameterFromJson(String) that returns a list of XParameters from a Json that was created with getJsonStringFromXParameters(...)
          * Type: [String]
          */
         const val OTHER = "other"
@@ -645,6 +789,7 @@ object JtxContract {
         /**
          * Purpose:  To specify the language for text values in a property or property parameter, in this case of the category.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.2] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
+         * Language-Tag as defined in RFC5646, e.g. "en:Germany"
          * Type: [String]
          */
         const val LANGUAGE = "language"
@@ -652,6 +797,10 @@ object JtxContract {
         /**
          * Purpose:  To specify other properties for the category.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.2]
+         * The Parameters are stored as JSON. There are two helper functions provided:
+         * getJsonStringFromXParameters(ParameterList?) that returns a Json String from the parameter list
+         * to be stored in this other field. The counterpart to this function is
+         * getXParameterFromJson(String) that returns a list of XParameters from a Json that was created with getJsonStringFromXParameters(...)
          * Type: [String]
          */
         const val OTHER = "other"
@@ -690,6 +839,7 @@ object JtxContract {
         /**
          * Purpose:  To specify the language for text values in a property or property parameter, in this case of the comment.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
+         * Language-Tag as defined in RFC5646, e.g. "en:Germany"
          * Type: [String]
          */
         const val ALTREP = "altrep"
@@ -704,6 +854,10 @@ object JtxContract {
         /**
          * Purpose:  To specify other properties for the comment.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
+         * The Parameters are stored as JSON. There are two helper functions provided:
+         * getJsonStringFromXParameters(ParameterList?) that returns a Json String from the parameter list
+         * to be stored in this other field. The counterpart to this function is
+         * getXParameterFromJson(String) that returns a list of XParameters from a Json that was created with getJsonStringFromXParameters(...)
          * Type: [String]
          */
         const val OTHER = "other"
@@ -749,6 +903,7 @@ object JtxContract {
         /**
          * Purpose:  To specify the language for text values in a property or property parameter, in this case of the contact.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.2] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
+         * Language-Tag as defined in RFC5646, e.g. "en:Germany"
          * Type: [String]
          */
         const val LANGUAGE = "language"
@@ -756,6 +911,10 @@ object JtxContract {
         /**
          * Purpose:  To specify other properties for the contact.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.2]
+         * The Parameters are stored as JSON. There are two helper functions provided:
+         * getJsonStringFromXParameters(ParameterList?) that returns a Json String from the parameter list
+         * to be stored in this other field. The counterpart to this function is
+         * getXParameterFromJson(String) that returns a list of XParameters from a Json that was created with getJsonStringFromXParameters(...)
          * Type: [String]
          */
         const val OTHER = "other"
@@ -787,7 +946,9 @@ object JtxContract {
         /***** The names of all the other columns  *****/
         /**
          * Purpose:  This value type is used to identify properties that contain a calendar user address (in this case of the organizer).
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3] and [https://tools.ietf.org/html/rfc5545#section-3.3.3]
+         * This is usually an e-mail address as defined in [https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.3].
+         * The value should be passed as String containing the URI with "mailto:", for example: "mailto:jane_doe@example.com"
+         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3].
          * Type: [String]
          */
         const val CALADDRESS = "caladdress"
@@ -801,6 +962,8 @@ object JtxContract {
 
         /**
          * Purpose:  To specify reference to a directory entry associated with the calendar user specified by the property in this case for the organizer.
+         * Expected is an URI as defined in [https://datatracker.ietf.org/doc/html/rfc5545#section-3.2.6].
+         * The value should be passed as String, e.g. "ldap://example.com:6666/o=ABC%20Industries,c=US???(cn=Jim%20Dolittle)"
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3] and [https://tools.ietf.org/html/rfc5545#section-3.2.2]
          * Type: [String]
          */
@@ -808,7 +971,9 @@ object JtxContract {
 
         /**
          * Purpose:  To specify the calendar user that is acting on behalf of the calendar user specified by the property in this case for the organizer.
-         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3] and [https://tools.ietf.org/html/rfc5545#section-3.2.18]
+         * This is usually an e-mail address as defined in [https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.3].
+         * The value should be passed as String containing the URI with "mailto:", for example: "mailto:jane_doe@example.com"
+         * See also [https://tools.ietf.org/html/rfc5545#section-3.8.4.3] and [https://datatracker.ietf.org/doc/html/rfc5545#section-3.2.18]
          * Type: [String]
          */
         const val SENTBY = "sentbyparam"
@@ -816,6 +981,7 @@ object JtxContract {
         /**
          * Purpose:  To specify the language for text values in a property or property parameter, in this case of the organizer.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3] and [https://tools.ietf.org/html/rfc5545#section-3.2.10]
+         * Language-Tag as defined in RFC5646, e.g. "en:Germany"
          * Type: [String]
          */
         const val LANGUAGE = "language"
@@ -823,6 +989,10 @@ object JtxContract {
         /**
          * Purpose:  To specify other properties for the organizer.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3]
+         * The Parameters are stored as JSON. There are two helper functions provided:
+         * getJsonStringFromXParameters(ParameterList?) that returns a Json String from the parameter list
+         * to be stored in this other field. The counterpart to this function is
+         * getXParameterFromJson(String) that returns a list of XParameters from a Json that was created with getJsonStringFromXParameters(...)
          * Type: [String]
          */
         const val OTHER = "other"
@@ -881,6 +1051,10 @@ object JtxContract {
         /**
          * Purpose:  To specify other properties for the related-to.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.5]
+         * The Parameters are stored as JSON. There are two helper functions provided:
+         * getJsonStringFromXParameters(ParameterList?) that returns a Json String from the parameter list
+         * to be stored in this other field. The counterpart to this function is
+         * getXParameterFromJson(String) that returns a list of XParameters from a Json that was created with getJsonStringFromXParameters(...)
          * Type: [String]
          */
         const val OTHER = "other"
@@ -928,6 +1102,7 @@ object JtxContract {
         /**
          * Purpose:  To specify an alternate text representation for the property value, in this case of the resource.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.4]
+         * Language-Tag as defined in RFC5646, e.g. "en:Germany"
          * Type: [String]
          */
         const val LANGUAGE = "language"
@@ -935,6 +1110,10 @@ object JtxContract {
         /**
          * Purpose:  To specify other properties for the resource.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.10]
+         * The Parameters are stored as JSON. There are two helper functions provided:
+         * getJsonStringFromXParameters(ParameterList?) that returns a Json String from the parameter list
+         * to be stored in this other field. The counterpart to this function is
+         * getXParameterFromJson(String) that returns a list of XParameters from a Json that was created with getJsonStringFromXParameters(...)
          * Type: [String]
          */
         const val OTHER = "other"
@@ -1093,6 +1272,10 @@ object JtxContract {
         /**
          * Purpose:  To specify other properties for the attachment.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.1.1]
+         * The Parameters are stored as JSON. There are two helper functions provided:
+         * getJsonStringFromXParameters(ParameterList?) that returns a Json String from the parameter list
+         * to be stored in this other field. The counterpart to this function is
+         * getXParameterFromJson(String) that returns a list of XParameters from a Json that was created with getJsonStringFromXParameters(...)
          * Type: [String]
          */
         const val OTHER = "other"
@@ -1133,6 +1316,10 @@ object JtxContract {
         /***** The names of all the other columns  *****/
         /**
          * Purpose:  This property stores the unknown value as json
+         * The Parameters are stored as JSON. There are two helper functions provided:
+         * getJsonStringFromXParameters(ParameterList?) that returns a Json String from the parameter list
+         * to be stored in this other field. The counterpart to this function is
+         * getXParameterFromJson(String) that returns a list of XParameters from a Json that was created with getJsonStringFromXParameters(...)
          * Type: [String]
          */
         const val ALARM_OTHER = "other"

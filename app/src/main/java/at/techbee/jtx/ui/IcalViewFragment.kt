@@ -653,7 +653,7 @@ class IcalViewFragment : Fragment() {
     private fun addAttendeeChip(attendee: Attendee) {
 
         val attendeeChip = inflater.inflate(R.layout.fragment_ical_view_attendees_chip, binding.viewAttendeeChipgroup, false) as Chip
-        attendeeChip.text = attendee.caladdress
+        attendeeChip.text = attendee.caladdress.removePrefix("mailto:")
         attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.getDrawableResourceByName(attendee.role), null)
 
         binding.viewAttendeeChipgroup.addView(attendeeChip)
@@ -735,7 +735,7 @@ class IcalViewFragment : Fragment() {
                 shareText += "# ${categories.joinToString(separator=", ")}"
 
                 val attendees: MutableList<String> = mutableListOf()
-                icalViewViewModel.icalEntity.value!!.attendees?.forEach { attendees.add(it.caladdress) }
+                icalViewViewModel.icalEntity.value!!.attendees?.forEach { attendees.add(it.caladdress.removePrefix("mailto:")) }
 
                 // prepare file attachment, the file is stored in the externalCacheDir and then provided through a FileProvider
                 var uri: Uri? = null

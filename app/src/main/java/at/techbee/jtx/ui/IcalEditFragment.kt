@@ -1445,7 +1445,7 @@ class IcalEditFragment : Fragment() {
             binding.editAttendeesChipgroup,
             false
         ) as Chip
-        attendeeChip.text = attendee.caladdress
+        attendeeChip.text = attendee.caladdress.removePrefix("mailto:")
         attendeeChip.chipIcon = ResourcesCompat.getDrawable(
             resources,
             Role.getDrawableResourceByName(attendee.role),
@@ -2105,8 +2105,8 @@ class IcalEditFragment : Fragment() {
     }
 
     private fun addNewAttendee() {
-        val newAtt = Attendee(caladdress = binding.editAttendeesAdd.editText?.text.toString())
-        if ((newAtt.caladdress.isNotEmpty() && !isValidEmail(newAtt.caladdress)))
+        val newAtt = Attendee(caladdress = "mailto:${binding.editAttendeesAdd.editText?.text}")
+        if ((newAtt.caladdress.isNotEmpty() && !isValidEmail(newAtt.caladdress.removePrefix("mailto:"))))
             icalEditViewModel.attendeesError.value = "Please enter a valid email-address"
         else if (!icalEditViewModel.attendeeUpdated.contains(newAtt)) {
             addAttendeeChip(newAtt)
