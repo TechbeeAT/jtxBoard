@@ -71,16 +71,17 @@ object JtxContract {
 
         /** The column for the module.
          * This is an internal differentiation for JOURNAL, NOTE and TODO as provided in the enum [Module].
-         * If the Module is not set explicitely, it will be derived from the [Component] (Todo or Journal/Note) and if a
-         * dtstart is present or not (Journal or Note).
-         * Use e.g. Module.JOURNAL.name to put a correct String value in this field.
+         * The Module does not need to be set. On import it will be derived from the component from the [Component] (Todo or Journal/Note) and if a
+         * dtstart is present or not (Journal or Note). If the module was set, it might be overwritten on import. In this sense also
+         * unknown values are overwritten.
+         * Use e.g. Module.JOURNAL.name for a correct String value in this field.
          * Type: [String]
          */
         const val MODULE = "module"
 
         /***** The names of all the other columns  *****/
         /** The column for the component based on the values provided in the enum [Component].
-         * Use e.g. Component.VTODO.name to put a correct String value in this field.
+         * Use e.g. Component.VTODO.name for a correct String value in this field.
          * If no Component is provided on Insert, an IllegalArgumentException is thrown
          * Type: [String]
          */
@@ -300,17 +301,18 @@ object JtxContract {
          * "SEQUENCE" properties to identify a specific instance of a
          * recurring "VEVENT", "VTODO", or "VJOURNAL" calendar component.
          * The property value is the original value of the "DTSTART" property
-         * of the recurrence instance.
+         * of the recurrence instance, ie. a DATE or DATETIME value e.g. "20211101T160000".
+         * Must be null for non-recurring and original events from which recurring events are derived.
+         * Type: [String]
          */
         const val RECURID = "recurid"
 
         /**
          * Stores the reference to the original event from which the recurring event was derived.
-         * This value is NULL for the orignal event.
-         * Type: [Long]
+         * This value is NULL for the orignal event or if the event is not recurring
+         * Type: [Long], References [JtxICalObject.ID]
          */
         const val RECUR_ORIGINALICALOBJECTID = "original_id"
-
 
         /**
          * Purpose:  This property defines the persistent, globally unique identifier for the calendar component.
@@ -351,6 +353,7 @@ object JtxContract {
 
         /**
          * Purpose:  This property defines the revision sequence number of the calendar component within a sequence of revisions.
+         * If no sequence is present, it is automatically initialized with 0
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.4]
          * Type: [Int]
          */
@@ -366,7 +369,7 @@ object JtxContract {
 
         /**
          * Purpose:  This column is the foreign key to the [JtxCollection].
-         * Type: [Long]
+         * Type: [Long], references [JtxCollection.ID]
          */
         const val ICALOBJECT_COLLECTIONID = "collectionId"
 
@@ -476,7 +479,8 @@ object JtxContract {
         const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
-         * Type: [Long] */
+         * Type: [Long], references [JtxICalObject.ID]
+         */
         const val ICALOBJECT_ID = "icalObjectId"
 
 
@@ -617,7 +621,8 @@ object JtxContract {
         const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
-         * Type: [Long] */
+         * Type: [Long], references [JtxICalObject.ID]
+         */
         const val ICALOBJECT_ID = "icalObjectId"
 
 
@@ -661,7 +666,8 @@ object JtxContract {
         const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
-         * Type: [Long] */
+         * Type: [Long], references [JtxICalObject.ID]
+         */
         const val ICALOBJECT_ID = "icalObjectId"
 
 
@@ -712,7 +718,8 @@ object JtxContract {
         const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
-         * Type: [Long] */
+         * Type: [Long], references [JtxICalObject.ID]
+         */
         const val ICALOBJECT_ID = "icalObjectId"
 
 
@@ -764,7 +771,8 @@ object JtxContract {
         const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
-         * Type: [Long] */
+         * Type: [Long], references [JtxICalObject.ID]
+         */
         const val ICALOBJECT_ID = "icalObjectId"
 
 
@@ -832,7 +840,8 @@ object JtxContract {
         const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
-         * Type: [Long] */
+         * Type: [Long], references [JtxICalObject.ID]
+         */
         const val ICALOBJECT_ID = "icalObjectId"
 
         /** The name of the second Foreign Key Column of the related IcalObject
@@ -895,7 +904,8 @@ object JtxContract {
         const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
-         * Type: [Long] */
+         * Type: [Long], references [JtxICalObject.ID]
+         */
         const val ICALOBJECT_ID = "icalObjectId"
 
 
@@ -1044,7 +1054,8 @@ object JtxContract {
         const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
-         * Type: [Long] */
+         * Type: [Long], references [JtxICalObject.ID]
+         */
         const val ICALOBJECT_ID = "icalObjectId"
 
 
@@ -1092,7 +1103,8 @@ object JtxContract {
 
         /** The name of the ID column for attachments.
          * This is the unique identifier of an Attachment
-         * Type: [Long]*/
+         * Type: [Long], references [JtxICalObject.ID]
+         */
         const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
@@ -1129,7 +1141,8 @@ object JtxContract {
 
         /** The name of the ID column for attachments.
          * This is the unique identifier of an Attachment
-         * Type: [Long]*/
+         * Type: [Long], references [JtxICalObject.ID]
+         */
         const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
