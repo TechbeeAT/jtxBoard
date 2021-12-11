@@ -11,6 +11,7 @@ package at.techbee.jtx.database
 import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
+import androidx.annotation.ColorInt
 import androidx.room.*
 import kotlinx.parcelize.Parcelize
 
@@ -99,7 +100,9 @@ data class ICalCollection(
         @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME)       var displayName: String? = null,
         @ColumnInfo(name = COLUMN_COLLECTION_DESCRIPTION)       var description: String? = null,
         @ColumnInfo(name = COLUMN_COLLECTION_OWNER)             var owner: String? = null,
-        @ColumnInfo(name = COLUMN_COLLECTION_COLOR)             var color: Int? = null,
+        @ColumnInfo(name = COLUMN_COLLECTION_COLOR)
+        @ColorInt
+        var color: Int? = null,
 
         /** whether the collection supports VEVENT; in case of calendars: null means true */
         @ColumnInfo(name = COLUMN_COLLECTION_SUPPORTSVEVENT)          var supportsVEVENT: Boolean = false,

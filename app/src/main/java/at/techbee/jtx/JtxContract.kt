@@ -265,6 +265,10 @@ object JtxContract {
         /**
          * Purpose:  This property specifies a positive duration of time.
          * See [DTSTART_TIMEZONE] for information about the timezone handling
+         * The string representation follows the notation as given in RFC-5545
+         * for the value type duration: [https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.6]
+         * Exampe: "P15DT5H0M20S". This field is currently not in use. If present, the user would
+         * see a notification that a duration cannot be processed and will be overwritten if the entry is changed.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.5]
          * Type: [String]
          */
@@ -274,6 +278,10 @@ object JtxContract {
         /**
          * Purpose:  This property defines a rule or repeating pattern for recurring events,
          * to-dos, journal entries, or time zone definitions.
+         * The representation of the RRULE follows the value type RECUR of RFC-5545 as given in
+         * [https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10]
+         * For example: "FREQ=DAILY;COUNT=10"
+         * See also [https://datatracker.ietf.org/doc/html/rfc5545#section-3.8.5.3].
          * Type: [String]
          */
         const val RRULE = "rrule"
@@ -361,9 +369,9 @@ object JtxContract {
 
         /**
          * Purpose:  This property specifies a color used for displaying the calendar, event, todo, or journal data.
-         * See [https://tools.ietf.org/html/rfc7986#section-5.9]
-         * The expected String is a String that can be parsed by Color.parseColor(...)
-         * Type: [String]
+         * See [https://tools.ietf.org/html/rfc7986#section-5.9].
+         * The color is represented as Int-value as described in [https://developer.android.com/reference/android/graphics/Color#color-ints]
+         * Type: [Int]
          */
         const val COLOR = "color"
 
@@ -989,6 +997,7 @@ object JtxContract {
         /**
          * Purpose:  This column/property defines the color of the collection items.
          * This color can also be overwritten by the color in an ICalObject.
+         * The color is represented as Int-value as described in [https://developer.android.com/reference/android/graphics/Color#color-ints]
          * Type: [Int]
          */
         const val COLOR = "color"

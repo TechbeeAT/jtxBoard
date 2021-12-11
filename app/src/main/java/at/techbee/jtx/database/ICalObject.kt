@@ -13,6 +13,7 @@ import android.content.Context
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
+import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
 import androidx.room.*
 import at.techbee.jtx.*
@@ -435,7 +436,9 @@ data class ICalObject(
 
     @ColumnInfo(name = COLUMN_RSTATUS) var rstatus: String? = null,
 
-    @ColumnInfo(name = COLUMN_COLOR) var color: Int? = null,
+    @ColumnInfo(name = COLUMN_COLOR)
+    @ColorInt
+    var color: Int? = null,
 
     @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long = 1L,
 
