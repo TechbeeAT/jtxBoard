@@ -308,7 +308,7 @@ object JtxContract {
         /**
          * Purpose:  This property specifies information related to the global position for the activity specified by a calendar component.
          * This property is split in the fields [GEO_LAT] for the latitude
-         * and [GEO_LONG] for the longitude coordinates.
+         * and [GEO_LONG] for the longitude coordinates using the WGS84 ellipsoid.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.6]
          * Type: [Float]
          */
@@ -317,7 +317,7 @@ object JtxContract {
         /**
          * Purpose:  This property specifies information related to the global position for the activity specified by a calendar component.
          * This property is split in the fields [GEO_LAT] for the latitude
-         * and [GEO_LONG] for the longitude coordinates.
+         * and [GEO_LONG] for the longitude coordinates using the WGS84 ellipsoid.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.6]
          * Type: [Double]
          */
