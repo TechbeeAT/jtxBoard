@@ -665,6 +665,10 @@ object JtxContract {
 
         /**
          * Purpose:  To specify the participation status for the calendar user specified by the property in this case for the attendee.
+         * The possible values are defined in the enum [PartstatJournal] and [PartstatTodo]
+         * Use e.g. PartstatJournal.ACCEPTED.name to put a correct String value in this field.
+         * If no value (null) is passed for the Partstat, it will be interpreted as NEEDS-ACTION as according to the RFC.
+         * Other values are accepted and treated as NEEDS-ACTION.
          * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.1] and [https://tools.ietf.org/html/rfc5545#section-3.2.12]
          * Type: [String]
          */
@@ -753,6 +757,16 @@ object JtxContract {
          */
         enum class Role {
             CHAIR, `REQ-PARTICIPANT`, `OPT-PARTICIPANT`, `NON-PARTICIPANT`
+        }
+        /** This enum class defines the possible values for the attribute [JtxAttendee] for the Component VJOURNAL  */
+        @Suppress("unused")
+        enum class PartstatJournal  {
+            `NEEDS-ACTION`, ACCEPTED, DECLINED
+        }
+        /** This enum class defines the possible values for the attribute [JtxAttendee] for the Component VTODO  */
+        @Suppress("unused")
+        enum class PartstatTodo  {
+            `NEEDS-ACTION`, ACCEPTED, DECLINED, TENTATIVE, DELEGATED, COMPLETED, `IN-PROCESS`
         }
     }
 
@@ -1297,4 +1311,3 @@ object JtxContract {
         const val UNKNOWN_VALUE = "value"
     }
 }
-

@@ -137,7 +137,7 @@ data class Attendee (
         @ColumnInfo(index = true, name = COLUMN_ATTENDEE_ID)    var attendeeId: Long = 0L,
 
         @ColumnInfo(index = true, name = COLUMN_ATTENDEE_ICALOBJECT_ID)       var icalObjectId: Long = 0L,
-        @ColumnInfo(name = COLUMN_ATTENDEE_CALADDRESS)          var caladdress: String = "",
+        @ColumnInfo(name = COLUMN_ATTENDEE_CALADDRESS)     var caladdress: String = "",
         @ColumnInfo(name = COLUMN_ATTENDEE_CUTYPE)         var cutype: String? = Cutype.INDIVIDUAL.name,
         @ColumnInfo(name = COLUMN_ATTENDEE_MEMBER)         var member: String? = null,
         @ColumnInfo(name = COLUMN_ATTENDEE_ROLE)           var role: String? = Role.`REQ-PARTICIPANT`.name,
@@ -227,4 +227,13 @@ enum class Role (val stringResource: Int, val icon: Int) {
         }
 }
 
-
+/** This enum class defines the possible values for the attribute [Attendee.partstat] for the Component VJOURNAL  */
+@Suppress("unused")
+enum class PartstatJournal  {
+        `NEEDS-ACTION`, ACCEPTED, DECLINED
+}
+/** This enum class defines the possible values for the attribute [Attendee.partstat] for the Component VTODO  */
+@Suppress("unused")
+enum class PartstatTodo  {
+        `NEEDS-ACTION`, ACCEPTED, DECLINED, TENTATIVE, DELEGATED, COMPLETED, `IN-PROCESS`
+}
