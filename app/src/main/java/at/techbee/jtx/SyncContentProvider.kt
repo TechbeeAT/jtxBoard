@@ -497,6 +497,11 @@ class SyncContentProvider : ContentProvider() {
     private fun createEmptyFileForAttachment(id: Long) {
 
         val attachment = database.getAttachmentById(id) ?: return
+
+        // don't continue if an uri is already present (e.g. for weblinks)
+        if(!attachment.uri.isNullOrEmpty())
+            return
+
         val fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(attachment.fmttype)
 
         try {
