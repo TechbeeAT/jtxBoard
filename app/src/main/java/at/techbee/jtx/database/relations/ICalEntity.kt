@@ -8,8 +8,6 @@
 
 package at.techbee.jtx.database.relations
 
-import android.content.Context
-import android.net.Uri
 import android.os.Parcelable
 import android.util.Log
 import androidx.room.Embedded
@@ -36,11 +34,9 @@ import net.fortuna.ical4j.model.parameter.*
 import net.fortuna.ical4j.model.parameter.Role
 import net.fortuna.ical4j.model.property.*
 import net.fortuna.ical4j.validate.ValidationException
-import org.apache.commons.io.IOUtils
 import java.io.ByteArrayOutputStream
 import java.net.URI
 import java.net.URISyntaxException
-import net.fortuna.ical4j.util.MapTimeZoneCache
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.TimeZone
@@ -99,7 +95,7 @@ data class ICalEntity(
 ) : Parcelable {
 
 
-    fun getIcalFormat(context: Context): Calendar {
+    fun getIcalFormat(): Calendar {
 
         val ical = Calendar()
         ical.properties += Version.VERSION_2_0
@@ -110,12 +106,12 @@ data class ICalEntity(
             val vTodo = VToDo(true /* generates DTSTAMP */)
             ical.components += vTodo
             val props = vTodo.properties
-            addProperties(props, context)
+            addProperties(props)
         } else if (this.property.component == JtxContract.JtxICalObject.Component.VJOURNAL.name) {
             val vJournal = VJournal(true /* generates DTSTAMP */)
             ical.components += vJournal
             val props = vJournal.properties
-            addProperties(props, context)
+            addProperties(props)
         }
 
         alarms?.forEach { alarm ->
@@ -141,9 +137,8 @@ data class ICalEntity(
      * Adds properties of this ICalEntity to a Property List
      * Attention! This is currently more or less copy paste from JtxIcalObject in ical4android!
      * @param props: The property list where the properties should be added
-     * @param context Context
      */
-    private fun addProperties(props: PropertyList<Property>, context: Context) {
+    private fun addProperties(props: PropertyList<Property>) {
 
         val xPropCompletedtimezone = "X-COMPLETEDTIMEZONE"
 
@@ -446,17 +441,6 @@ data class ICalEntity(
             //todo: take care of other attributes for attendees
         }
 
-        attachments?.forEach { attachment ->
-            if (attachment.uri?.isNotEmpty() == true)
-                context.contentResolver.openInputStream(Uri.parse(URI(attachment.uri).toString()))
-                    .use { file ->
-                        val att = Attach(IOUtils.toByteArray(file)).apply {
-                            attachment.fmttype?.let { this.parameters.add(FmtType(it)) }
-                        }
-                        props += att
-                    }
-        }
-
         unknown?.forEach {
             it.value?.let {  jsonString ->
                 props.add(unknownPropertyFromJsonString(jsonString))
@@ -475,14 +459,11 @@ data class ICalEntity(
             parameterList.add(param)
             props += RelatedTo(parameterList, it.text)
         }
-
     }
 
 
-    fun writeIcalOutputStream(context: Context, os: ByteArrayOutputStream) {
-
-
-        val ical = getIcalFormat(context)
+    fun writeIcalOutputStream(os: ByteArrayOutputStream) {
+        val ical = getIcalFormat()
         Log.d("iCalFileContent", ical.toString())
         // Corresponds to   ICalendar.softValidate(ical)   in ical4android
         try {
@@ -582,8 +563,6 @@ data class ICalEntity(
                         .build()
                 )
         }
-
         return builder.build()
     }
-
 }

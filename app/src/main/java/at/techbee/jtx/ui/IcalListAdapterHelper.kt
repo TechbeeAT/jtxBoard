@@ -10,6 +10,7 @@ package at.techbee.jtx.ui
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -29,6 +30,7 @@ import at.techbee.jtx.databinding.FragmentIcalListItemSubtaskBinding
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import com.google.android.material.slider.Slider
 import java.io.FileNotFoundException
+import java.lang.NullPointerException
 
 class IcalListAdapterHelper {
 
@@ -177,28 +179,35 @@ class IcalListAdapterHelper {
                     else -> attachmentBinding.listItemAttachmentTextview.text = ""
                 }
 
-                if (attachment.filesize == null)
+                val filesize = attachment.getFilesize(context)
+                if (filesize == 0L)
                     attachmentBinding.listItemAttachmentFilesize.visibility = View.GONE
                 else
-                    attachmentBinding.listItemAttachmentFilesize.text = getAttachmentSizeString(attachment.filesize?:0L)
+                    attachmentBinding.listItemAttachmentFilesize.text = getAttachmentSizeString(filesize)
 
                 // load thumbnail if possible
 
-                try {
-                    val thumbSize = Size(50, 50)
-                    val thumbUri = Uri.parse(attachment.uri)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    try {
+                        val thumbSize = Size(50, 50)
+                        val thumbUri = Uri.parse(attachment.uri)
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        val thumbBitmap =
-                            context.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
-                        attachmentBinding.listItemAttachmentPictureThumbnail.setImageBitmap(
-                            thumbBitmap
-                        )
-                        attachmentBinding.listItemAttachmentPictureThumbnail.visibility =
-                            View.VISIBLE
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            val thumbBitmap =
+                                context.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
+                            attachmentBinding.listItemAttachmentPictureThumbnail.setImageBitmap(
+                                thumbBitmap
+                            )
+                            attachmentBinding.listItemAttachmentPictureThumbnail.visibility =
+                                View.VISIBLE
+                        }
+                    } catch (e: NullPointerException) {
+                        Log.i("UriEmpty", "Uri was empty or could not be parsed.")
+                    } catch (e: FileNotFoundException) {
+                        Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
+                    } catch (e: ImageDecoder.DecodeException) {
+                        Log.i("ImageThumbnail", "Could not retrieve image thumbnail from file ${attachment.uri}")
                     }
-                } catch (e: FileNotFoundException) {
-                    Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
                 }
 
 

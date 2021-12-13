@@ -13,8 +13,6 @@ import android.content.*
 import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
-import android.os.Environment
-import android.util.Base64
 import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -236,7 +234,7 @@ class SyncContentProvider : ContentProvider() {
         Log.println(Log.INFO, "newContentUri", ContentUris.withAppendedId(uri, id).toString())
 
         if(sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR)
-            storeBinaryAttachmentInDir(id)
+            createEmptyFileForAttachment(id)
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true))
             rebuildRecurring(id)
@@ -329,12 +327,21 @@ class SyncContentProvider : ContentProvider() {
         // if the request was for an Attachment, then allow the calling application to access the file by grantUriPermission
         if(sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR || CODE_ATTACHMENT_DIR == CODE_ATTACHMENT_ITEM) {
             while(result?.moveToNext() == true) {
-                val uriColumnIndex = result.getColumnIndex(COLUMN_ATTACHMENT_URI)
-                val attachmentUriString = result.getString(uriColumnIndex)
-                val attachmentUri = Uri.parse(attachmentUriString)
 
-                //grantUriPermission could enables DAVx5 to access the files
-                context?.grantUriPermission(callingPackage, attachmentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                try {
+                    val uriColumnIndex = result.getColumnIndex(COLUMN_ATTACHMENT_URI)
+                    val attachmentUriString = result.getString(uriColumnIndex)
+                    val attachmentUri = Uri.parse(attachmentUriString)
+
+                    //grantUriPermission could enables DAVx5 to access the files
+                    context?.grantUriPermission(
+                        callingPackage,
+                        attachmentUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                } catch(e: NullPointerException) {
+                    Log.i("attachment", "Uri not present or could not be parsed.")
+                }
             }
         }
 
@@ -465,7 +472,6 @@ class SyncContentProvider : ContentProvider() {
 
             }
         }
-
         return 1
     }
 
@@ -488,35 +494,27 @@ class SyncContentProvider : ContentProvider() {
         return Account(accountName, accountType)
     }
 
-    private fun storeBinaryAttachmentInDir(id: Long) {
+    private fun createEmptyFileForAttachment(id: Long) {
 
-        val attachment = database.getAttachmentById(id)
-        if(attachment?.binary == null)
-            return
-
-        val bytearray = Base64.decode(attachment.binary, Base64.DEFAULT)
+        val attachment = database.getAttachmentById(id) ?: return
         val fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(attachment.fmttype)
 
-
         try {
-            val storageDir = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            val storageDir = Attachment.getAttachmentDirectory(context!!)
             val file = File.createTempFile("jtx_", ".$fileExtension", storageDir)
-            file.writeBytes(bytearray)
-            //Log.d("externalFilesPath", file.absolutePath)
+            file.createNewFile()
 
             val attachmentUri = FileProvider.getUriForFile(context!!, AUTHORITY_FILEPROVIDER, file)
-            val contentResolver = context!!.contentResolver
-
-            if(attachment.fmttype == null)
-                attachment.fmttype = contentResolver.getType(attachmentUri)
 
             attachment.binary = null
             attachment.uri = attachmentUri.toString()
             attachment.extension = ".$fileExtension"
             attachment.filename = file.name
             attachment.filesize = file.length()
-
             database.updateAttachment(attachment)
+
+            //grantUriPermission enables DAVx5 to write into the generated file
+            context?.grantUriPermission(callingPackage, attachmentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
         } catch (e: IOException) {
             Log.e("SyncContentProvider", "Failed to access storage\n$e")
@@ -525,10 +523,8 @@ class SyncContentProvider : ContentProvider() {
 
 
     private fun rebuildRecurring(id: Long) {
-
         // rebuild recurring
         database.getRecurringToPopulate(id)?.recreateRecurring(database)
-
     }
 
 }

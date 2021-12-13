@@ -12,6 +12,10 @@
         name="external_cache_files"
         path="." />
     <files-path
+        name="attachments"
+        path="attachments/" />
+
+    <files-path
         name="jtx_files"
         path="." />
     <external-files-path

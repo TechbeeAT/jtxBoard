@@ -154,19 +154,16 @@ data class Attachment (
          * choose to put the application to the external storage,
          * the files must still be stored and retrieved from the right place
          */
-        fun getAttachmentDirectory(context: Context): String? {
+        fun getAttachmentDirectory(context: Context): File? {
 
-            val filePath = "${context.filesDir}"
-            val file = File(filePath)
-
-            if (!file.exists()) {
-                if (!file.mkdirs()) {
+            val filesPath = File(context.filesDir, "attachments/")
+            if (!filesPath.exists()) {
+                if (!filesPath.mkdirs()) {
                     Log.e("Attachment", "Failed creating attachment directory")
                     return null
                 }
             }
-
-            return filePath
+            return filesPath
         }
 
 
@@ -220,7 +217,7 @@ data class Attachment (
                 filename = uri.lastPathSegment
         } catch (e: NullPointerException) {
             if(binary.isNullOrEmpty())
-                Log.w("Attachment", "Binary is empty and Uri could not be parsed: $uri. \n $e")
+                Log.i("Attachment", "Binary is empty and Uri could not be parsed: $uri. \n $e")
         }
 
         // TODO: make sure that the additional fields are filled out (filename, filesize and extension)
@@ -273,6 +270,16 @@ data class Attachment (
             }
         }
     }
+
+    fun getFilesize(context: Context): Long {
+        try {
+            return context.contentResolver.openFileDescriptor(Uri.parse(this.uri), "r")?.statSize ?: 0L
+        } catch (e: Exception) {
+            return 0L
+        }
+    }
+
+
 }
 
 

@@ -139,7 +139,7 @@ class ICalEntityAndroidTest {
             remove(this.getProperty(Property.DTSTAMP))
         }
 
-        val entityCal = entity.getIcalFormat(context)
+        val entityCal = entity.getIcalFormat()
         entityCal.getComponent<VJournal>(net.fortuna.ical4j.model.Component.VJOURNAL).properties.apply {
             remove(this.getProperty(Property.DTSTAMP))
         }
@@ -207,10 +207,8 @@ class ICalEntityAndroidTest {
         //ICalCollection = ICalCollection(collectionId = 2,  url = https://baikal.techbee.at/html/dav.php/calendars/patrick/jtx-board/, displayName=JTX Board, description=null, owner=https://baikal.techbee.at/html/dav.php/principals/patrick/, color=null, supportsVEVENT=true, supportsVTODO=true, supportsVJOURNAL=true, accountName=baikal techbee, accountType=bitfire.at.davdroid, syncversion=null, readonly=false))
 
         val os = ByteArrayOutputStream()
-        entity.writeIcalOutputStream(context, os)
-
-        val entityCal = entity.getIcalFormat(context)
-
+        entity.writeIcalOutputStream(os)
+        val entityCal = entity.getIcalFormat()
         assertEquals(entityCal.toString(), os.toString())
 
     }

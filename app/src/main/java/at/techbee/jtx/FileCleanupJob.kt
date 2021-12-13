@@ -10,12 +10,12 @@ package at.techbee.jtx
 
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
 import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.properties.Attachment
 import java.io.File
 
 class FileCleanupJob (private val appContext: Context, workerParams: WorkerParameters):
@@ -24,25 +24,18 @@ class FileCleanupJob (private val appContext: Context, workerParams: WorkerParam
         override suspend fun doWork(): Result {
 
             val foundFileContentUris = mutableListOf<Uri>()
-            val dataSource = ICalDatabase.getInstance(appContext.applicationContext).iCalDatabaseDao
+            val database = ICalDatabase.getInstance(appContext.applicationContext).iCalDatabaseDao
 
             Log.d("FileCleanupJob", "File CleanupJob started")
 
-            val filesPath = File(appContext.filesDir, ".")
-            filesPath.listFiles()?.forEach {
+            Attachment.getAttachmentDirectory(appContext)?.listFiles()?.forEach {
                 Log.d("FileInFolder", it.path.toString())
                 val fileContentUri = FileProvider.getUriForFile(appContext, AUTHORITY_FILEPROVIDER, it)
                 foundFileContentUris.add(fileContentUri)
                 Log.d("FileInFolderCUri", fileContentUri.toString())
             }
 
-            val extFilesPath = File(appContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString())
-            extFilesPath.listFiles()?.forEach {
-                val fileContentUri = FileProvider.getUriForFile(appContext, AUTHORITY_FILEPROVIDER, it)
-                foundFileContentUris.add(fileContentUri)
-            }
-
-            val allAttachmentUris = dataSource.getAllAttachmentUris()
+            val allAttachmentUris = database.getAllAttachmentUris()
             allAttachmentUris.forEach { attachment2keep ->
                 foundFileContentUris.remove(Uri.parse(attachment2keep))
             }

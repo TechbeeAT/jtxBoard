@@ -949,8 +949,7 @@ class IcalEditFragment : Fragment() {
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
                 try {
-                    val storageDir =
-                        requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                    val storageDir = Attachment.getAttachmentDirectory(requireContext())
                     val file = File.createTempFile("jtx_", ".jpg", storageDir)
                     //Log.d("externalFilesPath", file.absolutePath)
 

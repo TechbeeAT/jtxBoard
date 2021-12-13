@@ -16,6 +16,7 @@ import android.content.ContentResolver
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.ImageDecoder
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
@@ -51,6 +52,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.slider.Slider
 import java.io.*
 import java.lang.ClassCastException
+import java.lang.NullPointerException
 
 
 class IcalViewFragment : Fragment() {
@@ -247,29 +249,36 @@ class IcalViewFragment : Fragment() {
                 else
                     attachmentBinding.viewAttachmentTextview.text = attachment.fmttype
 
-                if (attachment.filesize == null)
+                val filesize = attachment.getFilesize(requireContext())
+                if (filesize == 0L)
                     attachmentBinding.viewAttachmentFilesize.visibility = View.GONE
                 else
                     attachmentBinding.viewAttachmentFilesize.text =
-                        getAttachmentSizeString(attachment.filesize ?: 0L)
+                        getAttachmentSizeString(filesize)
 
 
                 // load thumbnail if possible
-                try {
-                    val thumbSize = Size(50, 50)
-                    val thumbUri = Uri.parse(attachment.uri)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    try {
+                        val thumbSize = Size(50, 50)
+                        val thumbUri = Uri.parse(attachment.uri)
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        val thumbBitmap =
-                            context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
-                        attachmentBinding.viewAttachmentPictureThumbnail.setImageBitmap(
-                            thumbBitmap
-                        )
-                        attachmentBinding.viewAttachmentPictureThumbnail.visibility =
-                            View.VISIBLE
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            val thumbBitmap =
+                                context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
+                            attachmentBinding.viewAttachmentPictureThumbnail.setImageBitmap(
+                                thumbBitmap
+                            )
+                            attachmentBinding.viewAttachmentPictureThumbnail.visibility =
+                                View.VISIBLE
+                        }
+                    } catch (e: NullPointerException) {
+                        Log.i("UriEmpty", "Uri was empty or could not be parsed.")
+                    } catch (e: FileNotFoundException) {
+                        Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
+                    } catch (e: ImageDecoder.DecodeException) {
+                        Log.i("ImageThumbnail", "Could not retrieve image thumbnail from file ${attachment.uri}")
                     }
-                } catch (e: FileNotFoundException) {
-                    Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
                 }
 
                 binding.viewAttachmentsLinearlayout.addView(attachmentBinding.root)
@@ -506,7 +515,6 @@ class IcalViewFragment : Fragment() {
                                     uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, newFile).toString(),
                                     filename = newFilename,
                                     extension = audioFileExtension,
-                                    filesize = newFile.length()
                                 )
                                 icalViewViewModel.insertRelated(null, newAttachment)
 
@@ -649,7 +657,6 @@ class IcalViewFragment : Fragment() {
     }
 
 
-
     private fun addAttendeeChip(attendee: Attendee) {
 
         val attendeeChip = inflater.inflate(R.layout.fragment_ical_view_attendees_chip, binding.viewAttendeeChipgroup, false) as Chip
@@ -713,7 +720,6 @@ class IcalViewFragment : Fragment() {
             binding.viewSubtasksLinearlayout.addView(subtaskBinding.root)
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_ical_view, menu)
         this.optionsMenu = menu
@@ -728,7 +734,6 @@ class IcalViewFragment : Fragment() {
                 var shareText = "${convertLongToFullDateTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart, icalViewViewModel.icalEntity.value!!.property.dtstartTimezone)}\n"
                 shareText += "${icalViewViewModel.icalEntity.value!!.property.summary}\n\n"
                 shareText += "${icalViewViewModel.icalEntity.value!!.property.description}\n\n"
-                //shareText += icalViewViewModel.icalEntity.value!!.getICalString()
 
                 val categories: MutableList<String> = mutableListOf()
                 icalViewViewModel.icalEntity.value!!.categories?.forEach { categories.add(it.text) }
@@ -737,39 +742,48 @@ class IcalViewFragment : Fragment() {
                 val attendees: MutableList<String> = mutableListOf()
                 icalViewViewModel.icalEntity.value!!.attendees?.forEach { attendees.add(it.caladdress.removePrefix("mailto:")) }
 
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND_MULTIPLE
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.icalEntity.value!!.property.summary)
+                    putExtra(Intent.EXTRA_TEXT, shareText)
+                    putExtra(Intent.EXTRA_EMAIL, attendees.toTypedArray())
+                }
+                val files = ArrayList<Uri>()
+
                 // prepare file attachment, the file is stored in the externalCacheDir and then provided through a FileProvider
-                var uri: Uri? = null
                 try {
                     val icsFileName = "${requireContext().externalCacheDir}/ics_file.ics"
                     val icsFile = File(icsFileName).apply {
                         val os = ByteArrayOutputStream()
-                        icalViewViewModel.icalEntity.value!!.writeIcalOutputStream(requireContext(), os)
+                        icalViewViewModel.icalEntity.value!!.writeIcalOutputStream(os)
                         this.writeBytes(os.toByteArray())
                         createNewFile()
                     }
-                    uri = getUriForFile(requireContext(),
-                        AUTHORITY_FILEPROVIDER, icsFile)
+                    val uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, icsFile)
+                    files.add(uri)
                 } catch (e: Exception) {
                     Log.i("fileprovider", "Failed to attach ICS File")
                     Toast.makeText(requireContext(), "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
                 }
 
-                val shareIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.icalEntity.value!!.property.summary)
-                    putExtra(Intent.EXTRA_TEXT, shareText)
-                    putExtra(Intent.EXTRA_STREAM, uri)
-                    putExtra(Intent.EXTRA_EMAIL, attendees.toTypedArray())
-
+                icalViewViewModel.icalEntity.value?.attachments?.forEach {
+                    try {
+                        files.add(Uri.parse(it.uri))
+                    } catch (e: NullPointerException) {
+                        Log.i("Attachment", "Attachment Uri could not be parsed")
+                    } catch (e: FileNotFoundException) {
+                        Log.i("Attachment", "Attachment-File could not be accessed.")
+                    }
                 }
+                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files)
 
                 Log.d("shareIntent", shareText)
                 startActivity(Intent(shareIntent))
             }
             R.id.menu_view_share_ics -> {
 
-                val shareText = icalViewViewModel.icalEntity.value!!.getIcalFormat(requireContext()).toString()
+                val shareText = icalViewViewModel.icalEntity.value!!.getIcalFormat().toString()
                 Log.d("iCalFileContent", shareText)
 
                 val shareIntent = Intent().apply {

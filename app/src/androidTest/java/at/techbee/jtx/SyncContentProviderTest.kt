@@ -367,7 +367,7 @@ class SyncContentProviderTest {
         // INSERT
         val values = ContentValues().apply {
             put(JtxContract.JtxAttachment.ICALOBJECT_ID, defaultICalObjectId)
-            put(JtxContract.JtxAttachment.URI, "$fileContentProviderBaseUri/jtx_images/jtx_6028748326614733966.aac")
+            put(JtxContract.JtxAttachment.URI, "$fileContentProviderBaseUri/attachments/jtx_6028748326614733966.aac")
             put(JtxContract.JtxAttachment.BINARY, "AAAA")
         }
         val uriAttachment = JtxContract.JtxAttachment.CONTENT_URI.asSyncAdapter(defaultTestAccount)
