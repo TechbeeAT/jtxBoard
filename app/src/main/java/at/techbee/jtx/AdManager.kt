@@ -27,9 +27,18 @@ class AdManager {
         else
             "ca-app-pub-5573084047491645/3240430994"      // Prod Admob Unit ID for rewarded interstitials
 
+        val ADMOB_UNIT_ID_BANNER = if(BuildConfig.DEBUG)
+            "ca-app-pub-3940256099942544/6300978111"      // Test Admob Unit ID
+        else
+            "ca-app-pub-5573084047491645/9205580258"      // Prod Admob Unit ID
+
+
+
         var consentInformation: ConsentInformation? = null
         private var consentForm: ConsentForm? = null
         var rewardedInterstitialAd: RewardedInterstitialAd? = null
+        var inlineBannerAd: AdView? = null
+        var inlineBannerAdRequest: AdRequest? = null
 
         private var adPrefs: SharedPreferences? = null
 
@@ -75,7 +84,7 @@ class AdManager {
         /**
          * Shows the ad if the ad was loaded and ready
          */
-        fun showAd() {
+        fun showInterstitialAd() {
             mainActivity?.let { act ->
                 if (isAdShowtime() && rewardedInterstitialAd != null) {
                     rewardedInterstitialAd?.show(act, act)
@@ -86,7 +95,7 @@ class AdManager {
         }
 
 
-        private fun loadAd(context: Context) {
+        private fun loadAds(context: Context) {
 
             MobileAds.initialize(context) {  }
 
@@ -118,6 +127,19 @@ class AdManager {
                         Log.e("onAdFailedToLoad", loadAdError.toString())
                     }
                 })
+
+
+            // Load Ad for Recycler View
+            inlineBannerAdRequest = AdRequest.Builder().build()
+            /*
+            val adSize = AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(context, 200)
+            inlineBannerAd = AdView(context).apply {
+                adUnitId = ADMOB_UNIT_ID_BANNER
+                //setAdSize(adSize)
+                setAdSize(AdSize.BANNER)
+                loadAd(adRequest)
+            }
+             */
         }
 
 
@@ -168,13 +190,13 @@ class AdManager {
                             loadForm(activity, context, consentInformation)    //Handle dismissal by reloading form
                         }
                         Companion.consentForm = consentForm
-                        loadAd(context)
+                        loadAds(context)
                     }
                 ) {
                     Log.d("consentForm", it.message)     // Handle the error just with a log message
                 }
             } else {
-                loadAd(context)
+                loadAds(context)
             }
         }
 
@@ -195,7 +217,7 @@ class AdManager {
         fun processAdReward(context: Context) {
             adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, (System.currentTimeMillis() + TIME_TO_NEXT_AD))?.apply()
             rewardedInterstitialAd = null
-            loadAd(context)
+            loadAds(context)
         }
 
     }

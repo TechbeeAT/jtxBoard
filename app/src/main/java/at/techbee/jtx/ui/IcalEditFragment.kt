@@ -17,7 +17,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
@@ -469,7 +468,7 @@ class IcalEditFragment : Fragment() {
                 hideKeyboard()
 
                 // show Ad if necessary
-                AdManager.showAd()
+                AdManager.showInterstitialAd()
 
                 // return to list view
                 val direction =

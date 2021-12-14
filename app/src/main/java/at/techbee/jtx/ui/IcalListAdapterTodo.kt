@@ -24,6 +24,7 @@ import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
+import com.google.android.gms.ads.AdView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
 import java.lang.IllegalArgumentException
@@ -359,7 +360,6 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 }
             }
 
-
             holder.progressLabel.setOnClickListener {
 
                 if (!toggleSubtasksExpanded) {
@@ -372,17 +372,34 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                     holder.expandSubtasks.setImageResource(R.drawable.ic_expand)
                 }
             }
-
         }
+
+
+        if(position%5 == 4 && AdManager.inlineBannerAdRequest != null) {
+            holder.adViewContainer.visibility = View.VISIBLE
+            holder.adView.loadAd(AdManager.inlineBannerAdRequest)
+        } else {
+            holder.adViewContainer.visibility = View.GONE
+        }
+
+
+
+            /*
+            if(AdManager.inlineBannerAd != null && position%4 == 3) {
+
+                val adParent = AdManager.inlineBannerAd?.parent as ViewGroup?
+                if(adParent != null && adParent.childCount > 0)
+                    adParent.removeAllViews()
+                holder.adViewContainer.addView(AdManager.inlineBannerAd)
+            }
+
+             */
 
         //scrolling is much smoother when isRecyclable is set to false
         holder.setIsRecyclable(false)
-
     }
 
-
     class TodoItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         //val listItemBinding = FragmentIcalListItemBinding.inflate(LayoutInflater.from(itemView.context), itemView as ViewGroup, false)
         var listItemCardView: MaterialCardView = itemView.findViewById(R.id.list_item_todo_card_view)
 
@@ -424,6 +441,8 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
         var recurIcon: ImageView = itemView.findViewById(R.id.list_item_todo_recurring_icon)
         var uploadPendingIcon: ImageView = itemView.findViewById(R.id.list_item_todo_upload_pending_icon)
 
+        var adViewContainer: LinearLayout = itemView.findViewById(R.id.list_item_todo_adcontainer)
+        var adView: AdView = itemView.findViewById(R.id.list_item_todo_adview)
     }
 }
 
