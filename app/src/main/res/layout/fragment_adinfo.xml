@@ -211,7 +211,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAlignment="viewEnd"
-                        android:textStyle="bold"
+                        android:textStyle="italic"
                         app:layout_constraintEnd_toEndOf="@+id/adinfo_card_subscribe_period"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="@+id/adinfo_card_subscribe_period"
@@ -225,7 +225,7 @@
                         android:layout_marginEnd="16dp"
                         android:text="@string/adinfo_adfree_subscribe_quarterly"
                         android:textAlignment="textEnd"
-                        android:textStyle="bold"
+                        android:textStyle="italic"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/adinfo_card_subscribe_price" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
