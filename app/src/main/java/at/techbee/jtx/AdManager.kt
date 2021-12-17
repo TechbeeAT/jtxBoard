@@ -63,7 +63,7 @@ class AdManager {
         /**
          * @return true if an ad should be shown (current time < nextAdTime
          */
-        fun isAdShowtime(): Boolean {
+        fun isInterstitialAdShowtime(): Boolean {
             val nextAdTime = adPrefs?.getLong(PREFS_ADS_NEXT_AD, 0L) ?: return false      // return false if adPrefs was not correctly initialized
             if (nextAdTime == 0L) {               // initially set the shared preferences to today + one day
                 adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, System.currentTimeMillis() + TIME_TO_FIRST_AD)?.apply()
@@ -75,9 +75,9 @@ class AdManager {
         /**
          * Shows the ad if the ad was loaded and ready
          */
-        fun showAd() {
+        fun showInterstitialAd() {
             mainActivity?.let { act ->
-                if (isAdShowtime() && rewardedInterstitialAd != null) {
+                if (isInterstitialAdShowtime() && rewardedInterstitialAd != null) {
                     rewardedInterstitialAd?.show(act, act)
                 } else {
                     Log.d("AdLoader", "The interstitial ad wasn't ready yet.")
@@ -86,55 +86,56 @@ class AdManager {
         }
 
 
-        private fun loadAd(context: Context) {
+        private fun loadAds(context: Context) {
+
+            val configuration = RequestConfiguration.Builder().setTestDeviceIds(listOf("C4E10B8B06DB3B7287C2097746D070C4", "D69766433D841525603C53DC036422CD")).build()
+            MobileAds.setRequestConfiguration(configuration)
 
             MobileAds.initialize(context) {
 
                 RewardedInterstitialAd.load(context,
-                    ADMOB_UNIT_ID_REWARDED_INTERSTITIAL,
-                    AdRequest.Builder().build(), object : RewardedInterstitialAdLoadCallback() {
-                        override fun onAdLoaded(ad: RewardedInterstitialAd) {
-                            rewardedInterstitialAd = ad
-                            rewardedInterstitialAd!!.fullScreenContentCallback = object :
-                                FullScreenContentCallback() {
-                                /** Called when the ad failed to show full screen content.  */
-                                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                                    Log.i("onAdFailedToShow", adError.toString())
-                                }
+                ADMOB_UNIT_ID_REWARDED_INTERSTITIAL,
+                AdRequest.Builder().build(), object : RewardedInterstitialAdLoadCallback() {
+                    override fun onAdLoaded(ad: RewardedInterstitialAd) {
+                        rewardedInterstitialAd = ad
+                        rewardedInterstitialAd!!.fullScreenContentCallback = object :
+                            FullScreenContentCallback() {
+                            /** Called when the ad failed to show full screen content.  */
+                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                Log.i("onAdFailedToShow", adError.toString())
+                            }
 
-                                /** Called when ad showed the full screen content.  */
-                                override fun onAdShowedFullScreenContent() {
-                                    Log.i("onAdShowed", "onAdShowedFullScreenContent")
-                                }
+                            /** Called when ad showed the full screen content.  */
+                            override fun onAdShowedFullScreenContent() {
+                                Log.i("onAdShowed", "onAdShowedFullScreenContent")
+                            }
 
-                                /** Called when full screen content is dismissed.  */
-                                override fun onAdDismissedFullScreenContent() {
-                                    Log.i("onAdDismissed", "onAdDismissedFullScreenContent")
-                                }
+                            /** Called when full screen content is dismissed.  */
+                            override fun onAdDismissedFullScreenContent() {
+                                Log.i("onAdDismissed", "onAdDismissedFullScreenContent")
                             }
                         }
+                    }
 
-                        override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                            Log.e("onAdFailedToLoad", loadAdError.toString())
-                        }
-                    })
+                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                        Log.e("onAdFailedToLoad", loadAdError.toString())
+                    }
+                })
             }
         }
 
 
         fun initializeUserConsent(activity: Activity, context: Context) {
 
-            val debugSettings = ConsentDebugSettings.Builder(context)
-                .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
-                //.addTestDeviceHashedId("TEST-DEVICE-HASHED-ID")
-                .addTestDeviceHashedId("C4E10B8B06DB3B7287C2097746D070C4")
-                .build()
-
-            // Set tag for underage of consent. false means users are not underage. Admob will decide which ads to show and should take care to not show personalized ads to children.
             val consentParams = ConsentRequestParameters.Builder().apply {
                 this.setTagForUnderAgeOfConsent(false)
-                if(BuildConfig.DEBUG)
+                if(BuildConfig.DEBUG) {
+                    val debugSettings = ConsentDebugSettings.Builder(context)
+                        .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
+                        .addTestDeviceHashedId("C4E10B8B06DB3B7287C2097746D070C4")
+                        .build()
                     this.setConsentDebugSettings(debugSettings)    // set Geography to EEA for DEBUG builds
+                }
             }.build()
 
             val consentInformation = UserMessagingPlatform.getConsentInformation(context)
@@ -152,7 +153,6 @@ class AdManager {
                 })
 
             Companion.consentInformation = consentInformation
-
         }
 
         /**
@@ -169,13 +169,13 @@ class AdManager {
                             loadForm(activity, context, consentInformation)    //Handle dismissal by reloading form
                         }
                         Companion.consentForm = consentForm
-                        loadAd(context)
+                        loadAds(context)
                     }
                 ) {
                     Log.d("consentForm", it.message)     // Handle the error just with a log message
                 }
             } else {
-                loadAd(context)
+                loadAds(context)
             }
         }
 
@@ -196,7 +196,20 @@ class AdManager {
         fun processAdReward(context: Context) {
             adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, (System.currentTimeMillis() + TIME_TO_NEXT_AD))?.apply()
             rewardedInterstitialAd = null
-            loadAd(context)
+            loadAds(context)
+        }
+
+        /**
+         * @return true if ads should basically be shown for this flavor
+         */
+        fun isAdFlavor(): Boolean {
+            return when(BuildConfig.FLAVOR) {
+                MainActivity.BUILD_FLAVOR_GOOGLEPLAY -> true
+                MainActivity.BUILD_FLAVOR_GLOBAL -> true
+                MainActivity.BUILD_FLAVOR_OSE -> false
+                MainActivity.BUILD_FLAVOR_ALPHA -> true
+                else -> true
+            }
         }
 
     }

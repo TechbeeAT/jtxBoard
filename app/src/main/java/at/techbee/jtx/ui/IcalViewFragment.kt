@@ -46,6 +46,7 @@ import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.SyncUtil
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -599,6 +600,12 @@ class IcalViewFragment : Fragment() {
             }
             false
         }
+
+
+        // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only)
+        if(AdManager.isAdFlavor() && !BillingManager.isSubscriptionPurchased())
+            binding.viewAdView.loadAd(AdRequest.Builder().build())
+
 
         return binding.root
     }

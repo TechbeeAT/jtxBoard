@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
             BillingManager.initialise(this)
 
         AdManager.initialize(this)
-        if(AdManager.isAdShowtime()) {                        // check if flavor is ad-Flavor and if ads should be shown
+        if(AdManager.isInterstitialAdShowtime()) {                        // check if flavor is ad-Flavor and if ads should be shown
             when {
                 BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased() -> showAdInfoDialogIfNecessary()  // show AdInfo Dialog and initialize ads
                 BuildConfig.FLAVOR == BUILD_FLAVOR_GLOBAL -> AdManager.initializeUserConsent(this, applicationContext)                // initialize Ads without Dialog as there is no other option
@@ -300,7 +300,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     override fun onUserEarnedReward(item: RewardItem) {
         Log.d("onUserEarnedReward", "Ad watched, user earned Reward")
         AdManager.processAdReward(applicationContext)
-        Toast.makeText(this, "Congrats, you're ad-free for a week now :-)", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "No more video-ads for a week now :-)", Toast.LENGTH_SHORT).show()
     }
 
 

@@ -732,12 +732,26 @@
                 </com.google.android.material.chip.ChipGroup>
 
 
+                <com.google.android.gms.ads.AdView
+                    xmlns:ads="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/view_adView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    ads:adSize="BANNER"
+                    ads:adUnitId="ca-app-pub-5573084047491645/9263174599"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_spc_chipgroup" />
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_url_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
                     android:text="@string/view_url_header"
                     android:textSize="18sp"
@@ -745,7 +759,7 @@
                     android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_link"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_spc_chipgroup" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_adView" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_url"
