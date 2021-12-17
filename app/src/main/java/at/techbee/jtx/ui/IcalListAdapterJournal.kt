@@ -28,6 +28,8 @@ import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToMonthString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToTimeString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.google.android.material.card.MaterialCardView
 import java.lang.IllegalArgumentException
 import java.util.*
@@ -253,12 +255,18 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
             IcalListAdapterHelper.addSubtasksView(model, itemSubtasks.distinct(), holder.subtasksLinearLayout, context, parent)
 
             IcalListAdapterHelper.addAttachmentView(iCal4ListItem.attachment, holder.attachmentsLinearLayout, context, parent)
+        }
 
+        // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
+        if(position%5 == 4 && AdManager.isAdFlavor() && !BillingManager.isSubscriptionPurchased()) {
+            holder.adView.visibility = View.VISIBLE
+            holder.adView.loadAd(AdRequest.Builder().build())
+        } else {
+            holder.adView.visibility = View.GONE
         }
 
         //scrolling is much smoother when isRecyclable is set to false
         holder.setIsRecyclable(false)
-
     }
 
 
@@ -297,8 +305,9 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
 
         var recurIcon: ImageView = itemView.findViewById(R.id.list_item_journal_recurring_icon)
         var uploadPendingIcon: ImageView = itemView.findViewById(R.id.list_item_journal_upload_pending_icon)
-    }
 
+        var adView: AdView = itemView.findViewById(R.id.list_item_journal_adview)
+    }
 }
 
 

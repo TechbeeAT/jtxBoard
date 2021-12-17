@@ -6,16 +6,14 @@
   ~ http://www.gnu.org/licenses/gpl.html
   -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
 
-    <com.google.android.material.card.MaterialCardView
+<com.google.android.material.card.MaterialCardView
         android:id="@+id/list_item_todo_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -363,6 +361,7 @@
     </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/list_item_todo_adview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -371,7 +370,7 @@
             android:layout_below="@id/list_item_todo_card_view"
             android:visibility="gone"
             tools:visibility="visible"
-            ads:adUnitId="ca-app-pub-5573084047491645/9205580258"
+            ads:adUnitId="ca-app-pub-5573084047491645/8866878338"
             ads:adSize="BANNER"/>
 
 </RelativeLayout>

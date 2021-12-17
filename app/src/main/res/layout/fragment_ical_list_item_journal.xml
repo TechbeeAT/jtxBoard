@@ -7,9 +7,16 @@
   ~ http://www.gnu.org/licenses/gpl.html
   -->
 
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+
+<com.google.android.material.card.MaterialCardView
     android:id="@+id/list_item_journal_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -351,4 +358,19 @@
             app:layout_constraintTop_toBottomOf="@id/list_item_journal_classification" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/list_item_journal_adview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_journal_card_view"
+        android:layout_marginTop="8dp"
+        android:minHeight="50dp"
+        android:visibility="gone"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-5573084047491645/9205580258"
+        tools:visibility="visible" />
+
+</RelativeLayout>

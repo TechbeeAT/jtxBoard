@@ -138,8 +138,8 @@
     <string name="list_fab_add_contentdesc">Add new item</string>
     <string name="list_progress">Progress</string>
     <string name="list_expand">Expand</string>
-    <string name="list_dialog_contribution_title">Select your contribution form</string>
-    <string name="list_dialog_contribution_message">This app is powered by ads by default. As an alternative we offer an ad-free subscription. For more information please check out the Ad-Info section in the main menu!</string>
+    <string name="list_dialog_contribution_title">Note on advertisements</string>
+    <string name="list_dialog_contribution_message">This app is powered by advertisements by default. As an alternative we offer an ad-free subscription. For more information please check out the Ad-Info section in the main menu!</string>
     <string name="list_dialog_contribution_more_information">Find out more</string>
     <string name="list_num_attendees_contentdesc">Number of attendees</string>
     <string name="list_num_attachments_contentdesc">Number of attachments</string>
@@ -392,13 +392,13 @@
 
 
     <!-- Donate fragment -->
-    <string name="donate_header_text">The development of an app is a complex topic and development, maintenance and support is hard work. So if you like this app and if you would like to ensure continuous development, please consider a donation :-)</string>
+    <string name="donate_header_text">adinfo_text</string>
     <string name="donate_thank_you">Thank you!</string>
     <string name="donate_donate_with">Donate with</string>
     <string name="donate_other_donation_methods">If you would like to consier any other donation method, please check our website:</string>
 
     <!-- Adinfo fragment -->
-    <string name="adinfo_text">The development of an app is a complex topic and development, maintenance and support is hard work. Your version of jtx Board is free and financed by ads. Currently once per week you will get a rewarded interstitial ad (usually a video) on saving an entry. If you watch the video until the end (or until you can skip the ad) you will be ad-free for another week.</string>
+    <string name="adinfo_text">The development of an app is a complex topic and development, maintenance and support is hard work. Your version of jtx Board is free and financed by advertisements. By accepting ads you contribute to the ongoing development and financing of this project.</string>
     <string name="adinfo_adfree_text">If you prefer this app without ads, please consider the following upgrade:</string>
     <string name="adinfo_adfree_purchase_header">Upgrade to jtx Board Ad-free</string>
     <string name="adinfo_adfree_purchase_description">Thank you for considering the ad-free upgrade of jtx Board. This upgrade removes the recurring ads from this app.</string>
@@ -422,9 +422,9 @@
     <string name="attachment_error_no_app_found_to_open_file_or_uri">No app was found to open this file/URL.</string>
 
     <string name="toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
+    <string name="toast_adfree_for_a_week">No more video-ads for a week now :-)</string>
 
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again.</string>
-
 
 </resources>

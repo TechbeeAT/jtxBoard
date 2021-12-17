@@ -24,6 +24,8 @@ import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.google.android.material.card.MaterialCardView
 import java.lang.IllegalArgumentException
 
@@ -201,6 +203,16 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
             IcalListAdapterHelper.addAttachmentView(iCal4ListItem.attachment, holder.attachmentsLinearLayout, context, parent)
         }
 
+
+        // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
+        if(position%5 == 4 && AdManager.isAdFlavor() && !BillingManager.isSubscriptionPurchased()) {
+            holder.adView.visibility = View.VISIBLE
+            holder.adView.loadAd(AdRequest.Builder().build())
+        } else {
+            holder.adView.visibility = View.GONE
+        }
+
+
         //scrolling is much smoother when isRecyclable is set to false
         holder.setIsRecyclable(false)
     }
@@ -237,6 +249,7 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
         var numCommentsText: TextView = itemView.findViewById(R.id.list_item_note_num_comments_text)
         var uploadPendingIcon: ImageView = itemView.findViewById(R.id.list_item_note_upload_pending_icon)
 
+        var adView: AdView = itemView.findViewById(R.id.list_item_note_adview)
     }
 }
 

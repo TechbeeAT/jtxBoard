@@ -101,7 +101,7 @@
     <string name="list_fab_add_contentdesc">Neuen Eintrag hinzufügen</string>
     <string name="list_progress">Fortschritt</string>
     <string name="list_expand">Erweitern</string>
-    <string name="list_dialog_contribution_title">Wählen Sie Ihren Beitrag</string>
+    <string name="list_dialog_contribution_title">Information zur Werbung</string>
     <string name="list_dialog_contribution_message">Diese App wird standardmäßig durch Werbung finanziert. Als Alternative bieten wir ein Abo um die Werbung zu entfernen. Für weitere Informationen schauen Sie bitte in den Werbeinformation-Bereich im Hauptmenü.</string>
     <string name="list_dialog_contribution_more_information">Mehr erfahren</string>
     <string name="list_num_attendees_contentdesc">Anzahl der Teilnehmer</string>
@@ -294,7 +294,7 @@
     <string name="donate_thank_you">Dankeschön!</string>
     <string name="donate_donate_with">Spenden über</string>
     <string name="donate_other_donation_methods">Weitere Optionen zum Spenden finden Sie auf unserer Website:</string>
-    <string name="adinfo_text">"Die Entwicklung einer App ist eine komplexe Angelegenheit und die Entwicklung, Wartung und Betreuung ist harte Arbeit. jtx Board ist gratis und durch Werbung finanziert. Aktuell werden Sie ein Mal pro Woche eine Werbeeinblendung sehen. Wenn Sie das Video bis zum Ende schauen, sind Sie wieder für eine Woche von Werbung befreit. "</string>
+    <string name="adinfo_text">Die Entwicklung einer App ist eine komplexe Angelegenheit und die Entwicklung, Wartung und Betreuung ist harte Arbeit. Diese Version von jtx Board ist gratis und durch Werbung finanziert. Durch die Werbeflächen wird unterstützen Sie die weitere Entwicklung und Finanzierung dieses Projekts.</string>
     <string name="adinfo_adfree_text">Falls Sie lieber diese App werbefrei nutzen wollen, können Sie stattdessen mit folgendem Abo die Werbung entfernen:</string>
     <string name="adinfo_adfree_purchase_header">Upgrade zu jtx Board werbefrei</string>
     <string name="adinfo_adfree_purchase_description">Vielen Dank, dass sie dieses Upgrade in Erwägung ziehen. Dieses Upgrade entfernt die wiederkehrende Werbung.</string>
@@ -327,4 +327,5 @@
     <string name="adinfo_adfree_subscribe_success_description">Die Werbung ist jetzt von dieser App entfernt. Vielen Dank für Ihren Beitrag um dieses Projekt am Laufen zu halten!</string>
     <string name="navigation_drawer_board">Board</string>
     <string name="edit_dialog_priority">Priorität</string>
+    <string name="toast_adfree_for_a_week">Keine weitere Video-Werbung für eine Woche :-)</string>
 </resources>
