@@ -300,7 +300,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     override fun onUserEarnedReward(item: RewardItem) {
         Log.d("onUserEarnedReward", "Ad watched, user earned Reward")
         AdManager.processAdReward(applicationContext)
-        Toast.makeText(this, "No more video-ads for a week now :-)", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.toast_adfree_for_a_week, Toast.LENGTH_SHORT).show()
     }
 
 
