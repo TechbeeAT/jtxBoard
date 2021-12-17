@@ -56,7 +56,7 @@ class AttachmentTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val dir = Attachment.getAttachmentDirectory(context)
 
-        assertEquals("/data/user/0/${context.packageName}/files", dir)
+        assertEquals("/data/user/0/${context.packageName}/files/attachments", dir.toString())
     }
 
     @Test
