@@ -27,18 +27,10 @@ class AdManager {
         else
             "ca-app-pub-5573084047491645/3240430994"      // Prod Admob Unit ID for rewarded interstitials
 
-        val ADMOB_UNIT_ID_BANNER = if(BuildConfig.DEBUG)
-            "ca-app-pub-3940256099942544/6300978111"      // Test Admob Unit ID
-        else
-            "ca-app-pub-5573084047491645/9205580258"      // Prod Admob Unit ID
-
-
 
         var consentInformation: ConsentInformation? = null
         private var consentForm: ConsentForm? = null
         var rewardedInterstitialAd: RewardedInterstitialAd? = null
-        var inlineBannerAd: AdView? = null
-        var inlineBannerAdRequest: AdRequest? = null
 
         private var adPrefs: SharedPreferences? = null
 
@@ -72,7 +64,7 @@ class AdManager {
         /**
          * @return true if an ad should be shown (current time < nextAdTime
          */
-        fun isAdShowtime(): Boolean {
+        fun isInterstitialAdShowtime(): Boolean {
             val nextAdTime = adPrefs?.getLong(PREFS_ADS_NEXT_AD, 0L) ?: return false      // return false if adPrefs was not correctly initialized
             if (nextAdTime == 0L) {               // initially set the shared preferences to today + one day
                 adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, System.currentTimeMillis() + TIME_TO_FIRST_AD)?.apply()
@@ -86,7 +78,7 @@ class AdManager {
          */
         fun showInterstitialAd() {
             mainActivity?.let { act ->
-                if (isAdShowtime() && rewardedInterstitialAd != null) {
+                if (isInterstitialAdShowtime() && rewardedInterstitialAd != null) {
                     rewardedInterstitialAd?.show(act, act)
                 } else {
                     Log.d("AdLoader", "The interstitial ad wasn't ready yet.")
@@ -97,9 +89,12 @@ class AdManager {
 
         private fun loadAds(context: Context) {
 
-            MobileAds.initialize(context) {  }
+            val configuration = RequestConfiguration.Builder().setTestDeviceIds(listOf("C4E10B8B06DB3B7287C2097746D070C4", "D69766433D841525603C53DC036422CD")).build()
+            MobileAds.setRequestConfiguration(configuration)
 
-            RewardedInterstitialAd.load(context,
+            MobileAds.initialize(context) {
+
+                RewardedInterstitialAd.load(context,
                 ADMOB_UNIT_ID_REWARDED_INTERSTITIAL,
                 AdRequest.Builder().build(), object : RewardedInterstitialAdLoadCallback() {
                     override fun onAdLoaded(ad: RewardedInterstitialAd) {
@@ -127,35 +122,21 @@ class AdManager {
                         Log.e("onAdFailedToLoad", loadAdError.toString())
                     }
                 })
-
-
-            // Load Ad for Recycler View
-            inlineBannerAdRequest = AdRequest.Builder().build()
-            /*
-            val adSize = AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(context, 200)
-            inlineBannerAd = AdView(context).apply {
-                adUnitId = ADMOB_UNIT_ID_BANNER
-                //setAdSize(adSize)
-                setAdSize(AdSize.BANNER)
-                loadAd(adRequest)
             }
-             */
         }
 
 
         fun initializeUserConsent(activity: Activity, context: Context) {
 
-            val debugSettings = ConsentDebugSettings.Builder(context)
-                .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
-                //.addTestDeviceHashedId("TEST-DEVICE-HASHED-ID")
-                .addTestDeviceHashedId("C4E10B8B06DB3B7287C2097746D070C4")
-                .build()
-
-            // Set tag for underage of consent. false means users are not underage. Admob will decide which ads to show and should take care to not show personalized ads to children.
             val consentParams = ConsentRequestParameters.Builder().apply {
                 this.setTagForUnderAgeOfConsent(false)
-                if(BuildConfig.DEBUG)
+                if(BuildConfig.DEBUG) {
+                    val debugSettings = ConsentDebugSettings.Builder(context)
+                        .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
+                        .addTestDeviceHashedId("C4E10B8B06DB3B7287C2097746D070C4")
+                        .build()
                     this.setConsentDebugSettings(debugSettings)    // set Geography to EEA for DEBUG builds
+                }
             }.build()
 
             val consentInformation = UserMessagingPlatform.getConsentInformation(context)
@@ -173,7 +154,6 @@ class AdManager {
                 })
 
             Companion.consentInformation = consentInformation
-
         }
 
         /**
@@ -218,6 +198,19 @@ class AdManager {
             adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, (System.currentTimeMillis() + TIME_TO_NEXT_AD))?.apply()
             rewardedInterstitialAd = null
             loadAds(context)
+        }
+
+        /**
+         * @return true if ads should basically be shown for this flavor
+         */
+        fun isAdFlavor(): Boolean {
+            return when(BuildConfig.FLAVOR) {
+                MainActivity.BUILD_FLAVOR_GOOGLEPLAY -> true
+                MainActivity.BUILD_FLAVOR_GLOBAL -> true
+                MainActivity.BUILD_FLAVOR_OSE -> false
+                MainActivity.BUILD_FLAVOR_ALPHA -> true
+                else -> true
+            }
         }
 
     }
