@@ -88,36 +88,37 @@ class AdManager {
 
         private fun loadAd(context: Context) {
 
-            MobileAds.initialize(context) {  }
+            MobileAds.initialize(context) {
 
-            RewardedInterstitialAd.load(context,
-                ADMOB_UNIT_ID_REWARDED_INTERSTITIAL,
-                AdRequest.Builder().build(), object : RewardedInterstitialAdLoadCallback() {
-                    override fun onAdLoaded(ad: RewardedInterstitialAd) {
-                        rewardedInterstitialAd = ad
-                        rewardedInterstitialAd!!.fullScreenContentCallback = object :
-                            FullScreenContentCallback() {
-                            /** Called when the ad failed to show full screen content.  */
-                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                                Log.i("onAdFailedToShow", adError.toString())
-                            }
+                RewardedInterstitialAd.load(context,
+                    ADMOB_UNIT_ID_REWARDED_INTERSTITIAL,
+                    AdRequest.Builder().build(), object : RewardedInterstitialAdLoadCallback() {
+                        override fun onAdLoaded(ad: RewardedInterstitialAd) {
+                            rewardedInterstitialAd = ad
+                            rewardedInterstitialAd!!.fullScreenContentCallback = object :
+                                FullScreenContentCallback() {
+                                /** Called when the ad failed to show full screen content.  */
+                                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                    Log.i("onAdFailedToShow", adError.toString())
+                                }
 
-                            /** Called when ad showed the full screen content.  */
-                            override fun onAdShowedFullScreenContent() {
-                                Log.i("onAdShowed", "onAdShowedFullScreenContent")
-                            }
+                                /** Called when ad showed the full screen content.  */
+                                override fun onAdShowedFullScreenContent() {
+                                    Log.i("onAdShowed", "onAdShowedFullScreenContent")
+                                }
 
-                            /** Called when full screen content is dismissed.  */
-                            override fun onAdDismissedFullScreenContent() {
-                                Log.i("onAdDismissed", "onAdDismissedFullScreenContent")
+                                /** Called when full screen content is dismissed.  */
+                                override fun onAdDismissedFullScreenContent() {
+                                    Log.i("onAdDismissed", "onAdDismissedFullScreenContent")
+                                }
                             }
                         }
-                    }
 
-                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                        Log.e("onAdFailedToLoad", loadAdError.toString())
-                    }
-                })
+                        override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                            Log.e("onAdFailedToLoad", loadAdError.toString())
+                        }
+                    })
+            }
         }
 
 
