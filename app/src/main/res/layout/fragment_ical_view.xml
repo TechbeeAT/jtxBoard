@@ -328,7 +328,7 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_task_started_header"
-                    android:layout_width="80dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/view_started"
                     android:textAlignment="center"
@@ -429,7 +429,7 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_task_due_header"
-                    android:layout_width="80dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/view_due"
                     android:textAlignment="center"
@@ -527,7 +527,7 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_task_completed_header"
-                    android:layout_width="80dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/view_completed"
                     android:textAlignment="center"
