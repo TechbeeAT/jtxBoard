@@ -605,6 +605,8 @@ class IcalViewFragment : Fragment() {
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only)
         if(AdManager.isAdFlavor() && !BillingManager.isSubscriptionPurchased())
             binding.viewAdView.loadAd(AdRequest.Builder().build())
+        else
+            binding.viewAdView.visibility = View.GONE
 
 
         return binding.root
