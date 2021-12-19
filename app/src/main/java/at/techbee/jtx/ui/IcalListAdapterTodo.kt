@@ -24,7 +24,6 @@ import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
@@ -378,7 +377,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
         if(position%5 == 4 && AdManager.isAdFlavor() && !BillingManager.isSubscriptionPurchased()) {
             holder.adView.visibility = View.VISIBLE
-            holder.adView.loadAd(AdRequest.Builder().build())
+            holder.adView.loadAd(AdManager.getNewAdrequest())
         } else {
             holder.adView.visibility = View.GONE
         }

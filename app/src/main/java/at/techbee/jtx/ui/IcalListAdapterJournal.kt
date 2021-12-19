@@ -28,7 +28,6 @@ import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToMonthString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToTimeString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.material.card.MaterialCardView
 import java.lang.IllegalArgumentException
@@ -260,7 +259,7 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
         if(position%5 == 4 && AdManager.isAdFlavor() && !BillingManager.isSubscriptionPurchased()) {
             holder.adView.visibility = View.VISIBLE
-            holder.adView.loadAd(AdRequest.Builder().build())
+            holder.adView.loadAd(AdManager.getNewAdrequest())
         } else {
             holder.adView.visibility = View.GONE
         }

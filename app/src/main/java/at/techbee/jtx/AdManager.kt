@@ -88,8 +88,15 @@ class AdManager {
 
         private fun loadAds(context: Context) {
 
-            val configuration = RequestConfiguration.Builder().setTestDeviceIds(listOf("C4E10B8B06DB3B7287C2097746D070C4", "D69766433D841525603C53DC036422CD")).build()
-            MobileAds.setRequestConfiguration(configuration)
+            if(BuildConfig.DEBUG) {
+                val configuration = RequestConfiguration.Builder().setTestDeviceIds(
+                    listOf(
+                        "C4E10B8B06DB3B7287C2097746D070C4",
+                        "D69766433D841525603C53DC036422CD"
+                    )
+                ).build()
+                MobileAds.setRequestConfiguration(configuration)
+            }
 
             MobileAds.initialize(context) {
 
@@ -123,6 +130,12 @@ class AdManager {
                 })
             }
         }
+
+
+        /**
+         * @return [AdRequest] to be used for Banner Ads
+         */
+        fun getNewAdrequest() = AdRequest.Builder().build()
 
 
         fun initializeUserConsent(activity: Activity, context: Context) {
