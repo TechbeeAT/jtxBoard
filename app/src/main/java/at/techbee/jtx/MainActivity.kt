@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         const val BUILD_FLAVOR_ALPHA = "alphatest"
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
+        const val BUILD_FLAVOR_HUAWEI = "huawei"
         const val BUILD_FLAVOR_GLOBAL = "global"
 
         private const val PREFS_MAIN = "sharedPreferencesMainActivity"
@@ -116,11 +117,13 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
             BillingManager.initialise(this)
 
         AdManager.initialize(this)
-        if(AdManager.isInterstitialAdShowtime()) {                        // check if flavor is ad-Flavor and if ads should be shown
+        AdManagerHuawei.initialize(this)
+        if(AdManager.isAdFlavor()) {                        // check if flavor is ad-Flavor and if ads should be shown
             when {
                 BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased() -> showAdInfoDialogIfNecessary()  // show AdInfo Dialog and initialize ads
                 BuildConfig.FLAVOR == BUILD_FLAVOR_GLOBAL -> AdManager.initializeUserConsent(this, applicationContext)                // initialize Ads without Dialog as there is no other option
                 BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA -> showAdInfoDialogIfNecessary()                                                    // show AdInfo Dialog but do not check if subscription was purchased
+                BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.initialize(this)                                         // initialize Huawei Ads
                 // For BUILD_FLAVOR_OSE we do not laod ads
             }
         }
@@ -160,6 +163,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
 
         when (BuildConfig.FLAVOR) {
             BUILD_FLAVOR_GOOGLEPLAY -> navView.menu.findItem(R.id.nav_donate).isVisible = false     // hide the donate menu for google play
+            BUILD_FLAVOR_HUAWEI -> navView.menu.findItem(R.id.nav_donate).isVisible = false     // hide the donate menu for google play
             BUILD_FLAVOR_GLOBAL -> navView.menu.findItem(R.id.nav_donate).isVisible = false         // hide the donate menu for app stores with ads
             BUILD_FLAVOR_OSE -> navView.menu.findItem(R.id.nav_adinfo).isVisible = false            // hide the adinfo for the OSE-edition
             // BUILD_FLAVOR_ALPHA shows both menu items for testing

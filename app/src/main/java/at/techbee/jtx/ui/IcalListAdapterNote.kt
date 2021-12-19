@@ -26,6 +26,7 @@ import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
 import com.google.android.gms.ads.AdView
 import com.google.android.material.card.MaterialCardView
+import com.huawei.hms.ads.banner.BannerView
 import java.lang.IllegalArgumentException
 
 class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
@@ -204,11 +205,27 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
 
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
-        if(position%5 == 4 && AdManager.isAdFlavor() && !BillingManager.isSubscriptionPurchased()) {
-            holder.adView.visibility = View.VISIBLE
-            holder.adView.loadAd(AdManager.getNewAdrequest())
+        if(position%5 == 4) {
+            when {
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased() -> {
+                    AdManager.loadBannerAdForView(holder.adView)
+                    holder.adView.visibility = View.VISIBLE
+                    holder.adViewHuwei.visibility = View.GONE
+                }
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> {
+                    AdManagerHuawei.loadBannerAdForView(holder.adViewHuwei)
+                    holder.adView.visibility = View.GONE
+                    holder.adViewHuwei.visibility = View.VISIBLE
+                }
+                else -> {
+                    AdManager.loadBannerAdForView(holder.adView)
+                    holder.adView.visibility = View.VISIBLE
+                    holder.adViewHuwei.visibility = View.GONE
+                }
+            }
         } else {
             holder.adView.visibility = View.GONE
+            holder.adViewHuwei.visibility = View.GONE
         }
 
 
@@ -249,6 +266,8 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
         var uploadPendingIcon: ImageView = itemView.findViewById(R.id.list_item_note_upload_pending_icon)
 
         var adView: AdView = itemView.findViewById(R.id.list_item_note_adview)
+        var adViewHuwei: BannerView = itemView.findViewById(R.id.list_item_note_adview_huawei)
+
     }
 }
 

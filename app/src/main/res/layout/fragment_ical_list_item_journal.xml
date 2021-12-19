@@ -367,10 +367,21 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/list_item_journal_card_view"
         android:layout_marginTop="8dp"
-        android:minHeight="50dp"
         android:visibility="gone"
         ads:adSize="BANNER"
         ads:adUnitId="ca-app-pub-5573084047491645/9205580258"
         tools:visibility="visible" />
+
+    <com.huawei.hms.ads.banner.BannerView xmlns:hwads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/list_item_journal_adview_huawei"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_journal_adview"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        hwads:adId="testw6vs28auh3"
+        hwads:bannerSize="BANNER_SIZE_360_57"
+        />
 
 </RelativeLayout>

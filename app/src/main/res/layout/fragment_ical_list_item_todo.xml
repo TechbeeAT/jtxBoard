@@ -365,12 +365,23 @@
             android:id="@+id/list_item_todo_adview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="50dp"
             android:layout_marginTop="8dp"
             android:layout_below="@id/list_item_todo_card_view"
             android:visibility="gone"
             tools:visibility="visible"
             ads:adUnitId="ca-app-pub-5573084047491645/8866878338"
             ads:adSize="BANNER"/>
+
+    <com.huawei.hms.ads.banner.BannerView xmlns:hwads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/list_item_todo_adview_huawei"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_todo_adview"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        hwads:adId="testw6vs28auh3"
+        hwads:bannerSize="BANNER_SIZE_360_57"
+        />
 
 </RelativeLayout>

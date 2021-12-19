@@ -46,17 +46,14 @@ class AdManager {
         else
             86400000L     // = one day
 
-        private var mainActivity: MainActivity? = null
+        private var activity: MainActivity? = null
 
         /**
          * Initializes the AdManager. This mainly passes the mainActivity to the AdManager to load and provide the AdPreferences
          */
-        fun initialize(activity: Activity) {
-            try {
-                mainActivity = activity as MainActivity
-            } catch (e: ClassCastException) {
-                Log.w("AdLoader", "Class Cast from Activity to MainActivity failed! \n$e")
-            }
+        fun initialize(activity: MainActivity) {
+
+            this.activity = activity
             adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
         }
 
@@ -76,7 +73,7 @@ class AdManager {
          * Shows the ad if the ad was loaded and ready
          */
         fun showInterstitialAd() {
-            mainActivity?.let { act ->
+            activity?.let { act ->
                 if (isInterstitialAdShowtime() && rewardedInterstitialAd != null) {
                     rewardedInterstitialAd?.show(act, act)
                 } else {
@@ -133,9 +130,12 @@ class AdManager {
 
 
         /**
-         * @return [AdRequest] to be used for Banner Ads
+         * Loads the ad for the given AdView
+         * @param [adView] for which the ad should be loaded
          */
-        fun getNewAdrequest() = AdRequest.Builder().build()
+        fun loadBannerAdForView(adView: AdView) {
+            adView.loadAd(AdRequest.Builder().build())
+        }
 
 
         fun initializeUserConsent(activity: Activity, context: Context) {
@@ -218,6 +218,7 @@ class AdManager {
         fun isAdFlavor(): Boolean {
             return when(BuildConfig.FLAVOR) {
                 MainActivity.BUILD_FLAVOR_GOOGLEPLAY -> true
+                MainActivity.BUILD_FLAVOR_HUAWEI -> true
                 MainActivity.BUILD_FLAVOR_GLOBAL -> true
                 MainActivity.BUILD_FLAVOR_OSE -> false
                 MainActivity.BUILD_FLAVOR_ALPHA -> true

@@ -602,10 +602,29 @@ class IcalViewFragment : Fragment() {
 
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only)
-        if(AdManager.isAdFlavor() && !BillingManager.isSubscriptionPurchased())
-            binding.viewAdView.loadAd(AdManager.getNewAdrequest())
-        else
+        if(AdManager.isAdFlavor()) {
+            when {
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased() -> {
+                    AdManager.loadBannerAdForView(binding.viewAdView)
+                    binding.viewAdView.visibility = View.VISIBLE
+                    binding.viewAdViewHuawei.visibility = View.GONE
+                }
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> {
+                    AdManagerHuawei.loadBannerAdForView(binding.viewAdViewHuawei)
+                    binding.viewAdView.visibility = View.GONE
+                    binding.viewAdViewHuawei.visibility = View.VISIBLE
+                }
+                else -> {
+                    AdManager.loadBannerAdForView(binding.viewAdView)
+                    binding.viewAdView.visibility = View.VISIBLE
+                    binding.viewAdViewHuawei.visibility = View.GONE
+                }
+            }
+        }
+        else {
             binding.viewAdView.visibility = View.GONE
+            binding.viewAdViewHuawei.visibility = View.GONE
+        }
 
 
         return binding.root

@@ -400,6 +400,7 @@
 
     <!-- Adinfo fragment -->
     <string name="adinfo_text">The development of an app is a complex topic and development, maintenance and support is hard work. Your version of jtx Board is free and financed by advertisements. By accepting ads you contribute to the ongoing development and financing of this project.</string>
+    <string name="adinfo_huwei_only_non_personalized_text">This version of jtx Board is using non-personalized ads.</string>
     <string name="adinfo_adfree_text">If you prefer this app without ads, please consider the following upgrade:</string>
     <string name="adinfo_adfree_purchase_header">Upgrade to jtx Board Ad-free</string>
     <string name="adinfo_adfree_purchase_description">Thank you for considering the ad-free upgrade of jtx Board. This upgrade removes the recurring ads from this app.</string>

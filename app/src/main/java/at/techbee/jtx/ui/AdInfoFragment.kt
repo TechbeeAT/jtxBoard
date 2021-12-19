@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import at.techbee.jtx.*
 import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_GOOGLEPLAY
+import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_HUAWEI
 import at.techbee.jtx.databinding.FragmentAdinfoBinding
 import at.techbee.jtx.util.DateTimeUtils
 import com.google.android.ump.ConsentInformation
@@ -167,6 +168,11 @@ class AdInfoFragment : Fragment() {
             binding.adinfoThankyouImage.visibility = View.GONE
             binding.adinfoThankyouText.visibility = View.GONE
             binding.adinfoButtonManageSubscriptions.visibility = View.GONE
+
+            if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI) {
+                binding.adinfoButtonUserconsent.visibility = View.GONE
+                binding.adinfoHuweiOnlyNonPersonalizedText.visibility = View.VISIBLE
+            }
         }
     }
 }
