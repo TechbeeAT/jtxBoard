@@ -21,9 +21,9 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 100000005
-        versionName "1.00.00-beta05"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-release.gplay)
-        buildConfigField "String", "versionCodename", "\"Banana-Shake\""
+        versionCode 100000008
+        versionName "1.00.00-release"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-release.gplay)
+        buildConfigField "String", "versionCodename", "\"Xmas-cookie\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -163,8 +163,8 @@ dependencies {
     implementation "com.android.billingclient:billing-ktx:$version_billing"
 
     // Huawei Ads Lite (works only on Huawei phones)
-    implementation "com.huawei.hms:ads:3.4.49.301"    // should be replaced by ads-lite when it can be tested with a huawei phone
-    //implementation "com.huawei.hms:ads-lite:13.4.49.301"
+    //implementation "com.huawei.hms:ads:3.4.49.301"    // should be replaced by ads-lite when it can be tested with a huawei phone
+    implementation "com.huawei.hms:ads-lite:13.4.49.301"
     implementation "com.huawei.hms:ads-consent:3.4.49.301"
 
     // Workmanager support
