@@ -116,18 +116,15 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA)
             BillingManager.initialise(this)
 
-        AdManager.initialize(this)
-        AdManagerHuawei.initialize(this)
         if(AdManager.isAdFlavor()) {                        // check if flavor is ad-Flavor and if ads should be shown
             when {
                 BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased() -> showAdInfoDialogIfNecessary()  // show AdInfo Dialog and initialize ads
-                BuildConfig.FLAVOR == BUILD_FLAVOR_GLOBAL -> AdManager.initializeUserConsent(this, applicationContext)                // initialize Ads without Dialog as there is no other option
+                BuildConfig.FLAVOR == BUILD_FLAVOR_GLOBAL -> AdManager.checkOrRequestConsentAndLoadAds(this, applicationContext)                // initialize Ads without Dialog as there is no other option
                 BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA -> showAdInfoDialogIfNecessary()                                                    // show AdInfo Dialog but do not check if subscription was purchased
                 BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.initialize(this)                                         // initialize Huawei Ads
                 // For BUILD_FLAVOR_OSE we do not laod ads
             }
         }
-
 
         // handle the intents for the shortcuts
         when (intent.action) {
@@ -325,7 +322,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
                         .navigate(R.id.action_global_adInfoFragment)
                 }
                 .setPositiveButton(resources.getString(R.string.gotit)) { _, _ ->
-                    AdManager.initializeUserConsent(this, applicationContext)
+                    AdManager.checkOrRequestConsentAndLoadAds(this, applicationContext)
                 }
                 .show()
 
@@ -333,7 +330,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         }
         // otherwise load the user consent (if necessary) and then load the ad
         else  {
-            AdManager.initializeUserConsent(this, applicationContext)
+            AdManager.checkOrRequestConsentAndLoadAds(this, applicationContext)
             Log.d("AdInfoShown", "AdInfo was shown, loading consent form if necessary")
         }
     }

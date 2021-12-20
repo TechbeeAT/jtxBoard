@@ -98,7 +98,7 @@ class AdInfoFragment : Fragment() {
             binding.adinfoButtonUserconsent.visibility = View.GONE
          else
             binding.adinfoButtonUserconsent.setOnClickListener {
-                AdManager.resetUserConsent(requireActivity(), requireContext())
+                AdManager.resetUserConsent(requireActivity() as MainActivity, requireContext())
             }
 
         /*
@@ -169,9 +169,13 @@ class AdInfoFragment : Fragment() {
             binding.adinfoThankyouText.visibility = View.GONE
             binding.adinfoButtonManageSubscriptions.visibility = View.GONE
 
+            // we don't show the button to reset the user consent for the HUAWEI flavor. Currently there is no user consent implemented for HUAWEI.
+            // If a user consent would be required, we only show non-personalized ads, additionally we show this as an info.
+            // If no consent was required, we hide the button and show no info.
             if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI) {
                 binding.adinfoButtonUserconsent.visibility = View.GONE
-                binding.adinfoHuweiOnlyNonPersonalizedText.visibility = View.VISIBLE
+                if(!AdManagerHuawei.isPersonalizedAdsAllowed)
+                    binding.adinfoHuweiOnlyNonPersonalizedText.visibility = View.VISIBLE
             }
         }
     }
