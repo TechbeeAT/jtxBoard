@@ -55,6 +55,38 @@
                 app:srcCompat="@drawable/ic_davx5_icon_green_bg_without_shadow"
                 tools:ignore="ContentDescription,ImageContrastCheck" />
 
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/sync_coming_soon_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/sync_coming_soon_heading"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sync_davx5_logo" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/sync_coming_soon_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/sync_coming_soon_text"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sync_coming_soon_header" />
+
+<!--
+
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/sync_basic_info"
                 android:layout_width="0dp"
@@ -68,7 +100,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sync_davx5_logo" />
+                app:layout_constraintTop_toBottomOf="@+id/sync_coming_soon_text" />
 
 
             <com.google.android.material.textview.MaterialTextView
@@ -304,7 +336,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sync_further_info_davx5" />
 
-
+-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

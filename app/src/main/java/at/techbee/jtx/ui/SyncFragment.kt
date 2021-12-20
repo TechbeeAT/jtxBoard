@@ -56,6 +56,8 @@ class SyncFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
+        // TODO: Uncomment again once Sync with DAVx5 is ready
+        /*
         // don't show the sync menu if DAVx5 is not installed
         syncViewModel.isDavx5Available.observe(viewLifecycleOwner) {
             if(!it)
@@ -86,6 +88,7 @@ class SyncFragment : Fragment() {
         ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
             syncViewModel.showSyncProgressIndicator.postValue(SyncUtil.isJtxSyncRunning())
         }
+         */
 
         return binding.root
     }

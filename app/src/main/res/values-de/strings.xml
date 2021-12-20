@@ -330,4 +330,6 @@
     <string name="toast_adfree_for_a_week">Keine weitere Video-Werbung für eine Woche :-)</string>
     <string name="edit_attachment_beta_info">* Bitte beachten Sie, dass sich die Synchronisierung von Anhängen mit DAVx⁵ in einem experimentellen Stadium befindet, das unerwünschtes Verhalten oder Fehler zur Folge haben kann. Sollten Sie Probleme feststellen, geben Sie uns bitte Bescheid über die Support-Foren oder eine Support-Anfrage auf der Website!</string>
     <string name="adinfo_huwei_only_non_personalized_text">Diese Version von jtx Board zeigt keine personalisierte Werbung.</string>
+    <string name="sync_coming_soon_heading">Sync mit DAVx⁵ (in Kürze erhältlich)</string>
+    <string name="sync_coming_soon_text">jtx Board bietet selbst keine Server-Synchronisierung an, unterstützt aber demnächst die Synchronisierung durch DAVx⁵. Durch diese Kombination können Sie jeglichen kompatiblen CalDAV-Server verwenden und Ihre Einträge ablegen, sichern und synchronisieren. Dieses Feature ist aktuell noch in Entwicklung und wird in bald released! Bleiben Sie auf dem laufenden auf unserer Website und auf Twitter :-)</string>
 </resources>

@@ -377,6 +377,8 @@
 
 
     <!-- Sync fragment -->
+    <string name="sync_coming_soon_heading">Sync with DAVx⁵ (coming soon)</string>
+    <string name="sync_coming_soon_text">jtx Board does not provide server-synchronisation itself, but will support synchronisation through DAVx⁵. This method will allow you to use a compatible CalDAV-server of your choice to store, backup and syncrhonise your data. \nThis feature is still under development and will be released soon! Stay tuned on our website and on Twitter :-)</string>
     <string name="sync_with_davx5_heading">Sync with DAVx⁵ (beta)*</string>
     <string name="sync_basic_info">jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data.  * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!</string>
     <string name="sync_congratulations">Congratulations! :-)</string>
