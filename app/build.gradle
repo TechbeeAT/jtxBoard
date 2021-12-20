@@ -70,7 +70,6 @@ android {
     productFlavors {
         gplay {
             dimension 'version'
-            //applicationIdSuffix '.googleplay'
             versionNameSuffix '.gplay'
         }
         huawei {
@@ -88,7 +87,6 @@ android {
         }
         global {
             dimension 'version'
-            //applicationIdSuffix '.testing'
             versionNameSuffix '.global'
         }
     }
@@ -199,16 +197,6 @@ dependencies {
         // exclude androidx.test:core while fragment_testing depends on 1.1.0
         exclude group: 'androidx.test', module: 'core'
     }
-    //implementation("androidx.fragment:fragment-ktx:$version_fragment")
-/*
-    debugImplementation("androidx.fragment:fragment-testing:$version_fragment")
-    debugImplementation("androidx.fragment:fragment-ktx:$version_fragment")
-    debugImplementation("androidx.test:core:1.4.0")
-    debugImplementation("androidx.test:rules:1.4.0")
-    debugImplementation("androidx.test:runner:1.4.0")
-
- */
-
 
     // Testing for Workmanager
     androidTestImplementation("androidx.work:work-testing:$version_work")
