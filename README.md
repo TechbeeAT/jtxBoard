@@ -11,21 +11,19 @@ Using the iCal standard ensures compatibility and interoperability with other ap
 ### Combine journals, notes & tasks
 Instead of using separate apps for journals, notes & tasks you can use them out of one hand, combine and link them to each other, e.g. create meeting minutes and link your tasks to them. 
 
-### Sync with DAVx5
+### Sync with DAVx5 (coming soon)
 Synchronize your entries with any compatible CalDAV server by using DAVx5 (https://www.davx5.com/). By using DAVx5 you are free to choose your preferred provider for CalDAV, you can even use your local server to store and synchronize your data.
 
 **Find out more on https://jtx.techbee.at/**
 
 ---
 
-Link destinations work in progress
-
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
     alt="Get it on Google Play"
-    height="80">](https://jtx.techbee.at)
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+    height="80">](https://play.google.com/store/apps/details?id=at.techbee.jtx)
+<!-- [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="Get it on F-Droid"
-    height="80">](https://jtx.techbee.at)
+    height="80">](https://jtx.techbee.at) -->
 
 ---
 
