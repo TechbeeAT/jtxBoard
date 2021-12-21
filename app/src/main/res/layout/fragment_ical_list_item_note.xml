@@ -274,27 +274,13 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/list_item_note_adview"
+    <LinearLayout
+        android:id="@+id/list_item_note_adContainer"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/list_item_note_card_view"
         android:layout_marginTop="8dp"
-        android:visibility="gone"
-        ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-5573084047491645/2684613362"
-        tools:visibility="visible" />
-
-    <com.huawei.hms.ads.banner.BannerView xmlns:hwads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/list_item_note_adview_huawei"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/list_item_note_adview"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        hwads:adId="o02sczyyg9"
-        hwads:bannerSize="BANNER_SIZE_360_57"
-        />
+        android:visibility="gone"/>
 
 </RelativeLayout>

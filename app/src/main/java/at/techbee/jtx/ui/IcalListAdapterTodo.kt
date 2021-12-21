@@ -24,10 +24,8 @@ import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
-import com.google.android.gms.ads.AdView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
-import com.huawei.hms.ads.banner.BannerView
 import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit
 
@@ -60,9 +58,6 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
     }
 
     override fun getItemCount(): Int {
-
-        //Log.println(Log.INFO, "getItemCount", vJournalListCount.value.toString())
-        //Log.println(Log.INFO, "getItemCount", vJournalList.value?.size!!.toString())
 
         return if (iCal4List.value == null || iCal4List.value?.size == null)
             0
@@ -376,28 +371,15 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
         }
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
-        if(position%5 == 4) {
+        if(position%5 == 4 && AdManager.isAdFlavor()) {
             when {
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased() -> {
-                    AdManager.loadBannerAdForView(holder.adView)
-                    holder.adView.visibility = View.VISIBLE
-                    holder.adViewHuwei.visibility = View.GONE
-                }
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> {
-                    AdManagerHuawei.loadBannerAdForView(holder.adViewHuwei)
-                    holder.adView.visibility = View.GONE
-                    holder.adViewHuwei.visibility = View.VISIBLE
-                }
-                else -> {
-                    AdManager.loadBannerAdForView(holder.adView)
-                    holder.adView.visibility = View.VISIBLE
-                    holder.adViewHuwei.visibility = View.GONE
-                }
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY
+                        && !BillingManager.isSubscriptionPurchased() -> AdManager.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.ADMOB_UNIT_ID_BANNER_LIST_TODO)
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.addAdViewToContainerViewFragment(holder.adContainer, context, AdManagerHuawei.HW_UNIT_ID_BANNER_LIST_TODO)
+                else -> AdManager.addAdViewToContainerViewFragment(holder.adContainer, context, null)
             }
-        } else {
-            holder.adView.visibility = View.GONE
-            holder.adViewHuwei.visibility = View.GONE
-        }
+        } else
+            holder.adContainer.visibility = View.GONE
 
 
         //scrolling is much smoother when isRecyclable is set to false
@@ -446,9 +428,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
         var recurIcon: ImageView = itemView.findViewById(R.id.list_item_todo_recurring_icon)
         var uploadPendingIcon: ImageView = itemView.findViewById(R.id.list_item_todo_upload_pending_icon)
 
-        var adView: AdView = itemView.findViewById(R.id.list_item_todo_adview)
-        var adViewHuwei: BannerView = itemView.findViewById(R.id.list_item_todo_adview_huawei)
-
+        var adContainer: LinearLayout = itemView.findViewById(R.id.list_item_todo_adContainer)
     }
 }
 

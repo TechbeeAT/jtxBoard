@@ -727,39 +727,20 @@
                         app:chipIconVisible="true"
                         app:closeIconVisible="false"
                         tools:text="Public" />
-
-
                 </com.google.android.material.chip.ChipGroup>
 
-
-                <com.google.android.gms.ads.AdView
-                    xmlns:ads="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/view_adView"
+                <LinearLayout
+                    android:id="@+id/view_adContainer"
+                    android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignParentBottom="true"
-                    ads:adSize="BANNER"
-                    ads:adUnitId="ca-app-pub-5573084047491645/9263174599"
                     android:layout_marginTop="8dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_spc_chipgroup" />
 
-                <com.huawei.hms.ads.banner.BannerView xmlns:hwads="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/view_adView_huawei"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignParentBottom="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_adView"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    hwads:adId="s29u6so07k"
-                    hwads:bannerSize="BANNER_SIZE_360_57"
-                    />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_url_header"
@@ -774,7 +755,7 @@
                     android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_link"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_adView_huawei" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_adContainer" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_url"

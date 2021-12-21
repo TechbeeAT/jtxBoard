@@ -12,6 +12,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import android.view.View
+import android.widget.LinearLayout
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
@@ -25,6 +27,14 @@ class AdManager {
             "ca-app-pub-3940256099942544/5354046379"      // Test Admob Unit ID for rewarded interstitials
         else
             "ca-app-pub-5573084047491645/3240430994"      // Prod Admob Unit ID for rewarded interstitials
+
+        private val ADMOB_UNIT_ID_BANNER_TEST = "ca-app-pub-3940256099942544/6300978111"
+        val ADMOB_UNIT_ID_BANNER_VIEW = "ca-app-pub-5573084047491645/9263174599"
+        val ADMOB_UNIT_ID_BANNER_LIST_JOURNAL = "ca-app-pub-5573084047491645/9205580258"
+        val ADMOB_UNIT_ID_BANNER_LIST_NOTE = "ca-app-pub-5573084047491645/2684613362"
+        val ADMOB_UNIT_ID_BANNER_LIST_TODO = "ca-app-pub-5573084047491645/8866878338"
+
+
 
         var consentInformation: ConsentInformation? = null
         private var consentForm: ConsentForm? = null
@@ -158,12 +168,25 @@ class AdManager {
             }
         }
 
+
         /**
-         * Loads the ad for the given AdView
-         * @param [adView] for which the ad should be loaded
+         * Loads a banner ad with an optional given unitId and adds it to the LinearLayout
+         * [linearLayout] to which the banner should be added
+         * [context] calling context
+         * [unitId] the UnitId, preferrable as defined in AdManager e.g. ADMOB_UNIT_ID_BANNER_LIST_JOURNAL
          */
-        fun loadBannerAdForView(adView: AdView) {
+        fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?) {
+            val adView = AdView(context)
+            adView.adSize = AdSize.BANNER
+            adView.adUnitId = if(BuildConfig.DEBUG)
+                ADMOB_UNIT_ID_BANNER_TEST
+            else
+                unitId ?: ADMOB_UNIT_ID_BANNER_LIST_JOURNAL
             adView.loadAd(AdRequest.Builder().build())
+
+            linearLayout.removeAllViews()
+            linearLayout.addView(adView)
+            linearLayout.visibility = View.VISIBLE
         }
 
         /**

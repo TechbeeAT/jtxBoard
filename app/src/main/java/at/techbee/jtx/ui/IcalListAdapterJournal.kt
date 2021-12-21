@@ -28,9 +28,7 @@ import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToMonthString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToTimeString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
-import com.google.android.gms.ads.AdView
 import com.google.android.material.card.MaterialCardView
-import com.huawei.hms.ads.banner.BannerView
 import java.lang.IllegalArgumentException
 import java.util.*
 
@@ -258,28 +256,15 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
         }
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
-        if(position%5 == 4) {
+        if(position%5 == 4 && AdManager.isAdFlavor()) {
             when {
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased() -> {
-                    AdManager.loadBannerAdForView(holder.adView)
-                    holder.adView.visibility = View.VISIBLE
-                    holder.adViewHuwei.visibility = View.GONE
-                }
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> {
-                    AdManagerHuawei.loadBannerAdForView(holder.adViewHuwei)
-                    holder.adView.visibility = View.GONE
-                    holder.adViewHuwei.visibility = View.VISIBLE
-                }
-                else -> {
-                    AdManager.loadBannerAdForView(holder.adView)
-                    holder.adView.visibility = View.VISIBLE
-                    holder.adViewHuwei.visibility = View.GONE
-                }
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY
+                        && !BillingManager.isSubscriptionPurchased() -> AdManager.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.ADMOB_UNIT_ID_BANNER_LIST_JOURNAL)
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.addAdViewToContainerViewFragment(holder.adContainer, context, AdManagerHuawei.HW_UNIT_ID_BANNER_LIST_JOURNAL)
+                else -> AdManager.addAdViewToContainerViewFragment(holder.adContainer, context, null)
             }
-        } else {
-            holder.adView.visibility = View.GONE
-            holder.adViewHuwei.visibility = View.GONE
-        }
+        } else
+            holder.adContainer.visibility = View.GONE
 
         //scrolling is much smoother when isRecyclable is set to false
         holder.setIsRecyclable(false)
@@ -322,9 +307,7 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
         var recurIcon: ImageView = itemView.findViewById(R.id.list_item_journal_recurring_icon)
         var uploadPendingIcon: ImageView = itemView.findViewById(R.id.list_item_journal_upload_pending_icon)
 
-        var adView: AdView = itemView.findViewById(R.id.list_item_journal_adview)
-        var adViewHuwei: BannerView = itemView.findViewById(R.id.list_item_journal_adview_huawei)
-
+        var adContainer: LinearLayout = itemView.findViewById(R.id.list_item_journal_adContainer)
     }
 }
 

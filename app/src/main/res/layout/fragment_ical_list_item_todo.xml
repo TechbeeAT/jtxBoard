@@ -355,33 +355,16 @@
                 app:layout_constraintTop_toTopOf="@+id/list_item_todo_progress_label"
                 app:srcCompat="@drawable/ic_expand" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/list_item_todo_adview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_below="@id/list_item_todo_card_view"
-            android:visibility="gone"
-            tools:visibility="visible"
-            ads:adUnitId="ca-app-pub-5573084047491645/8866878338"
-            ads:adSize="BANNER"/>
-
-    <com.huawei.hms.ads.banner.BannerView xmlns:hwads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/list_item_todo_adview_huawei"
+    <LinearLayout
+        android:id="@+id/list_item_todo_adContainer"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/list_item_todo_adview"
+        android:layout_below="@id/list_item_todo_card_view"
         android:layout_marginTop="8dp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        hwads:adId="d1cbvsvy7j"
-        hwads:bannerSize="BANNER_SIZE_360_57"
-        />
+        android:visibility="gone"/>
 
 </RelativeLayout>
