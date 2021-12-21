@@ -53,13 +53,7 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
 
     }
 
-    override fun getItemCount(): Int {
-
-        return if (iCal4List.value == null || iCal4List.value?.size == null)
-            0
-        else
-            iCal4List.value?.size!!
-    }
+    override fun getItemCount() = iCal4List.value?.size ?: 0
 
     override fun onBindViewHolder(holder: NoteItemHolder, position: Int) {
 
