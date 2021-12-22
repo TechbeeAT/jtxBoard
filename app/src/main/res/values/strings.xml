@@ -139,7 +139,7 @@
     <string name="list_progress">Progress</string>
     <string name="list_expand">Expand</string>
     <string name="list_dialog_contribution_title">Note on advertisements</string>
-    <string name="list_dialog_contribution_message">This app is powered by advertisements by default. As an alternative we offer an ad-free subscription. For more information please check out the Ad-Info section in the main menu!</string>
+    <string name="list_dialog_contribution_message">This app is powered by advertisements by default. For more information please check out the Ad-Info section in the main menu!</string>
     <string name="list_dialog_contribution_more_information">Find out more</string>
     <string name="list_num_attendees_contentdesc">Number of attendees</string>
     <string name="list_num_attachments_contentdesc">Number of attachments</string>

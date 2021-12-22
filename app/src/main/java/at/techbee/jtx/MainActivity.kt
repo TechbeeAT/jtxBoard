@@ -106,22 +106,20 @@ class MainActivity : AppCompatActivity()  {
         adaptMenuToBuildFlavor()
         setUpDrawer()
         checkThemeSetting()
+
+        BillingManager.getInstance()?.initialise(this)
+        BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.observe(this) {
+            if(it)
+                AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)
+        }
+
+        if(AdManager.getInstance()?.isAdFlavor() == true)                        // check if flavor is ad-Flavor and if ads should be shown
+            showAdInfoDialogIfNecessary()  // show AdInfo Dialog and initialize ads
     }
 
 
     override fun onResume() {
         super.onResume()
-
-        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
-            BillingManager.initialise(this)
-
-        if(AdManager.getInstance()?.isAdFlavor() == true) {                        // check if flavor is ad-Flavor and if ads should be shown
-            when {
-                BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased() -> showAdInfoDialogIfNecessary()  // show AdInfo Dialog and initialize ads
-                else -> AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)                // initialize Ads without Dialog as there is no other option
-                // For BUILD_FLAVOR_OSE we do not laod ads
-            }
-        }
 
         // handle the intents for the shortcuts
         when (intent.action) {
@@ -317,7 +315,7 @@ class MainActivity : AppCompatActivity()  {
 
             mainActivityPrefs?.edit()?.putBoolean(PREFS_MAIN_ADINFO_DIALOG_SHOWN, true)?.apply()   // once shown, we don't show it again
         }
-        // otherwise load the user consent (if necessary) and then load the ad
+        // otherwise load the user consent (if necessary) and then load the ads
         else  {
             AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)
             Log.d("AdInfoShown", "AdInfo was shown, loading consent form if necessary")

@@ -153,7 +153,7 @@ dependencies {
     // Admob & Google Consent for Admob & Google billing
     gplayImplementation "com.google.android.gms:play-services-ads:20.5.0"
     gplayImplementation "com.google.android.ump:user-messaging-platform:2.0.0"
-    implementation "com.android.billingclient:billing-ktx:$version_billing"
+    gplayImplementation "com.android.billingclient:billing-ktx:$version_billing"
     globalImplementation "com.google.android.gms:play-services-ads:20.5.0"
     globalImplementation "com.google.android.ump:user-messaging-platform:2.0.0"
 

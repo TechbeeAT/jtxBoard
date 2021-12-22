@@ -131,8 +131,6 @@ class AdManager: AdManagerDefinition {
 
             override fun onAdShowedFullScreenContent() {
                 Log.d("InterstitalAd", "Ad showed fullscreen content.")
-                interstitialAd = null
-                loadAds(context)
             }
         }
     }
@@ -185,10 +183,18 @@ class AdManager: AdManagerDefinition {
     }
 
     override fun showInterstitialAd(activity: Activity) {
+
+        // don't show an interstitial on the day when the app was installed
+        if(!BuildConfig.DEBUG && activity.packageManager.getPackageInfo("at.techbee.jtx", 0).firstInstallTime < System.currentTimeMillis() + 86400000) // = one day
+            return
+
         if (interstitialAd != null)
             interstitialAd?.show(activity)
         else
             Log.d("AdLoader", "The interstitial ad wasn't ready yet.")
+
+        interstitialAd = null
+        loadAds(activity)
     }
 
     override fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?) {

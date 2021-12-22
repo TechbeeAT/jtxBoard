@@ -49,6 +49,7 @@ import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.databinding.*
 import at.techbee.jtx.monetization.AdManager
+import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_DAY
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_MONTH
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_UNSUPPORTED
@@ -469,7 +470,8 @@ class IcalEditFragment : Fragment() {
                 hideKeyboard()
 
                 // show Ad if necessary
-                AdManager.getInstance()?.showInterstitialAd(requireActivity())
+                if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.value == false)
+                    AdManager.getInstance()?.showInterstitialAd(requireActivity())
 
                 // return to list view
                 val direction =

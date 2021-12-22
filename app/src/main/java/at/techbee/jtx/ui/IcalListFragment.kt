@@ -37,6 +37,7 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.FragmentIcalListBinding
 import at.techbee.jtx.databinding.FragmentIcalListQuickaddDialogBinding
+import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.datepicker.CalendarConstraints
@@ -826,7 +827,9 @@ class IcalListFragment : Fragment() {
                 prefs.edit().putLong(PREFS_LAST_USED_COLLECTION, it.collectionId).apply()       // save last used collection for next time
 
                 icalListViewModel.insertQuickItem(it, categories)
-                AdManager.getInstance()?.showInterstitialAd(requireActivity())     // don't forget to show an ad if applicable ;-)
+
+                if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.value == false)
+                    AdManager.getInstance()?.showInterstitialAd(requireActivity())     // don't forget to show an ad if applicable ;-)
             }
         }
 

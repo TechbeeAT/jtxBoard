@@ -23,7 +23,6 @@ import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_HUAWEI
 import at.techbee.jtx.databinding.FragmentAdinfoBinding
 import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.monetization.BillingManager
-import at.techbee.jtx.util.DateTimeUtils
 
 
 class AdInfoFragment : Fragment() {
@@ -48,25 +47,21 @@ class AdInfoFragment : Fragment() {
         this.binding = FragmentAdinfoBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
-        BillingManager.adfreeSubscriptionSkuDetails.observe(viewLifecycleOwner) {
+        BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.observe(viewLifecycleOwner) {
             updateFragmentContent()
         }
 
-        BillingManager.adfreeSubscriptionPurchase.observe(viewLifecycleOwner){
-            updateFragmentContent()
+        BillingManager.getInstance()?.adFreeSubscriptionPrice?.observe(viewLifecycleOwner) {
+            binding.adinfoCardSubscribePrice.text = it ?: ""
         }
 
-                /*
-        BillingManager.adfreeOneTimeSkuDetails.observe(viewLifecycleOwner) {
-            updateFragmentContent()
+        BillingManager.getInstance()?.adFreeSubscriptionOrderId?.observe(viewLifecycleOwner) {
+            binding.adinfoCardSubscribeSuccessOrderNumber.text = getString(R.string.adinfo_adfree_subscribe_order_id, it)
         }
 
-        BillingManager.adfreeOneTimePurchase.observe(viewLifecycleOwner){
-            updateFragmentContent()
+        BillingManager.getInstance()?.adFreeSubscriptionPurchaseDate?.observe(viewLifecycleOwner) {
+            binding.adinfoCardSubscribeSuccessPurchaseDate.text = getString(R.string.adinfo_adfree_subscribe_purchase_date, it)
         }
-        */
-
-
 
         return binding.root
     }
@@ -102,39 +97,11 @@ class AdInfoFragment : Fragment() {
          else
             binding.adinfoButtonUserconsent.visibility = View.GONE
 
-        /*
-        if(BillingManager.adfreeOneTimeSkuDetails.value == null)
-            binding.adinfoCardPurchase.visibility = View.GONE
-        else
-            binding.adinfoCardPurchase.visibility = View.VISIBLE
 
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY) {
 
-        if(BillingManager.adfreeSubscriptionSkuDetails.value == null && BillingManager.adfreeOneTimeSkuDetails.value == null)
-            binding.adinfoAdfreeText.visibility = View.GONE
-
-        if(BillingManager.isOneTimePurchased()) {      // change text if item was already bought
-            binding.adinfoCardPurchaseHeader.text = getText(R.string.adinfo_adfree_purchase_header_thankyou)
-            binding.adinfoCardPurchaseDescription.text = getText(R.string.adinfo_adfree_purchase_description_thankyou)
-            binding.adinfoCardPurchasePrice.visibility = View.GONE
-        } else {
-            BillingManager.adfreeOneTimeSkuDetails.value?.price?.let { binding.adinfoCardPurchasePrice.text = it }
-            binding.adinfoCardPurchase.setOnClickListener {
-                BillingManager.launchBillingFlow(requireActivity(), BillingManager.adfreeOneTimeSkuDetails.value)
-            }
-        }
-         */
-
-        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && BillingManager.adfreeSubscriptionSkuDetails.value != null) {
-
-            if (BillingManager.isSubscriptionPurchased()) {      // change text if item was already bought
+            if (BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.value == true) {      // change text if item was already bought
                 binding.adinfoCardSubscribeSuccess.setOnClickListener { return@setOnClickListener }   // actually we remove the listener
-                binding.adinfoCardSubscribeSuccessPurchaseDate.text =
-                    getString(R.string.adinfo_adfree_subscribe_purchase_date, DateTimeUtils.convertLongToFullDateTimeString(
-                        BillingManager.adfreeSubscriptionPurchase.value?.purchaseTime,null))
-                binding.adinfoCardSubscribeSuccessOrderNumber.text = getString(
-                    R.string.adinfo_adfree_subscribe_order_id,
-                    BillingManager.adfreeSubscriptionPurchase.value?.orderId
-                )
                 binding.adinfoCardSubscribe.visibility = View.GONE
                 binding.adinfoAdfreeText.visibility = View.GONE
                 binding.adinfoButtonUserconsent.visibility = View.GONE
@@ -147,15 +114,12 @@ class AdInfoFragment : Fragment() {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(MANAGE_SUBSCRIPTIONS_LINK)))
                 }
             } else {
-                BillingManager.adfreeSubscriptionSkuDetails.value?.price?.let {
-                    binding.adinfoCardSubscribePrice.text = it
-                }
                 binding.adinfoCardSubscribeSuccess.visibility = View.GONE
                 binding.adinfoThankyouImage.visibility = View.GONE
                 binding.adinfoThankyouText.visibility = View.GONE
                 binding.adinfoButtonManageSubscriptions.visibility = View.GONE
                 binding.adinfoCardSubscribe.setOnClickListener {
-                    BillingManager.launchBillingFlow(requireActivity(), BillingManager.adfreeSubscriptionSkuDetails.value)
+                    BillingManager.getInstance()?.launchSubscriptionBillingFlow(requireActivity())
                 }
                 binding.adinfoCardSubscribe.visibility = View.VISIBLE
                 binding.adinfoAdfreeText.visibility = View.VISIBLE
