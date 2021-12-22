@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.monetization
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.widget.LinearLayout
@@ -26,14 +27,14 @@ import com.huawei.hms.ads.consent.inter.Consent
 import com.huawei.hms.ads.consent.inter.ConsentUpdateListener
 
 
-class AdManagerHuawei : AdManagerDefinition {
+class AdManager : AdManagerDefinition {
 
     companion object {
 
         @Volatile
-        private var INSTANCE: AdManagerHuawei? = null
+        private var INSTANCE: AdManager? = null
 
-        fun getInstance(): AdManagerHuawei? {
+        fun getInstance(): AdManager? {
 
             synchronized(this) {
                 // Copy the current value of INSTANCE to a local variable so Kotlin can smart cast.
@@ -41,15 +42,15 @@ class AdManagerHuawei : AdManagerDefinition {
                 val instance = INSTANCE
                 // If instance is `null` assign a new instance.
                 if (instance == null) {
-                    INSTANCE = AdManagerHuawei()
+                    INSTANCE = AdManager()
                 }
                 return INSTANCE
             }
         }
     }
 
-    override val unitIdRewardedInterstitialTest: String? = null
-    override val unitIdRewardedInterstitial: String? = null
+    override val unitIdInterstitialTest: String? = null
+    override val unitIdInterstitial: String? = null
     override val unitIdBannerTest = "testw6vs28auh3"
     override val unitIdBannerView = "s29u6so07k"
     override val unitIdBannerListJournal = "o1zwzcs28c"
@@ -65,10 +66,7 @@ class AdManagerHuawei : AdManagerDefinition {
     }
 
     override fun resetUserConsent(activity: MainActivity, context: Context) { /* nothing to do for huawei */ }
-    override fun showInterstitialAd() { /* nothing to do for huawei */ }
-    override fun processAdReward(context: Context) { /* nothing to do for huawei */ }
-
-
+    override fun showInterstitialAd(activity: Activity) { /* nothing to do for huawei */ }
 
     /**
      * Loads a banner ad with an optional given unitId and adds it to the LinearLayout

@@ -24,7 +24,7 @@ import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.monetization.AdManagerHuawei
+import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.monetization.BillingManager
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
@@ -367,16 +367,10 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
         }
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
-        if(position%5 == 4 && AdManager.getInstance()?.isAdFlavor() == true) {
-            when {
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY
-                        && !BillingManager.isSubscriptionPurchased() -> AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.getInstance()?.unitIdBannerListTodo)
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManagerHuawei.getInstance()?.unitIdBannerListTodo)
-                else -> AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, null)
-            }
-        } else
+        if(position%5 == 4 && AdManager.getInstance()?.isAdFlavor() == true && !BillingManager.isSubscriptionPurchased())
+            AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.getInstance()?.unitIdBannerListTodo)
+        else
             holder.adContainer.visibility = View.GONE
-
 
         //scrolling is much smoother when isRecyclable is set to false
         holder.setIsRecyclable(false)

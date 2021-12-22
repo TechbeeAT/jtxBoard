@@ -28,7 +28,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import at.techbee.jtx.AdManager
+import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
@@ -826,7 +826,7 @@ class IcalListFragment : Fragment() {
                 prefs.edit().putLong(PREFS_LAST_USED_COLLECTION, it.collectionId).apply()       // save last used collection for next time
 
                 icalListViewModel.insertQuickItem(it, categories)
-                AdManager.getInstance()?.showInterstitialAd()     // don't forget to show an ad if applicable ;-)
+                AdManager.getInstance()?.showInterstitialAd(requireActivity())     // don't forget to show an ad if applicable ;-)
             }
         }
 

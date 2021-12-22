@@ -24,7 +24,7 @@ import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.monetization.AdManagerHuawei
+import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToMonthString
@@ -252,14 +252,9 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
         }
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
-        if(position%5 == 4 && AdManager.getInstance()?.isAdFlavor() == true) {
-            when {
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY
-                        && !BillingManager.isSubscriptionPurchased() -> AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.getInstance()?.unitIdBannerListJournal)
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManagerHuawei.getInstance()?.unitIdBannerListJournal)
-                else -> AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, null)
-            }
-        } else
+        if(position%5 == 4 && AdManager.getInstance()?.isAdFlavor() == true && !BillingManager.isSubscriptionPurchased())
+            AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.getInstance()?.unitIdBannerListJournal)
+        else
             holder.adContainer.visibility = View.GONE
 
         //scrolling is much smoother when isRecyclable is set to false

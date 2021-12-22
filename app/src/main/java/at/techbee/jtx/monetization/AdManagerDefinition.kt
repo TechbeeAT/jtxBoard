@@ -8,16 +8,16 @@
 
 package at.techbee.jtx.monetization
 
+import android.app.Activity
 import android.content.Context
 import android.widget.LinearLayout
-import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity
 
 
 interface AdManagerDefinition {
 
-    val unitIdRewardedInterstitialTest: String?      // Test Admob Unit ID for rewarded interstitials
-    val unitIdRewardedInterstitial: String?      // Prod Admob Unit ID for rewarded interstitials
+    val unitIdInterstitialTest: String?      // Test Admob Unit ID for rewarded interstitials
+    val unitIdInterstitial: String?      // Prod Admob Unit ID for rewarded interstitials
 
     val unitIdBannerTest: String?
     val unitIdBannerView: String?
@@ -37,12 +37,6 @@ interface AdManagerDefinition {
     fun isConsentRequired(): Boolean
 
     /**
-     * Processes the ad reward by setting the preference when to show the next add to one week from now
-     * Additionally sets the rewardedInterstitialAd back to null and calls setUpAds again to load another ad.
-     */
-    fun processAdReward(context: Context)
-
-    /**
      * Resets the user consent information and shows the consent form again
      */
     fun resetUserConsent(activity: MainActivity, context: Context)
@@ -56,7 +50,7 @@ interface AdManagerDefinition {
     /**
      * Shows the ad if the ad was loaded and ready
      */
-    fun showInterstitialAd()
+    fun showInterstitialAd(activity: Activity)
 
     /**
      * Loads a banner ad with an optional given unitId and adds it to the LinearLayout
@@ -66,20 +60,4 @@ interface AdManagerDefinition {
      */
     fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?)
 
-
-    companion object {
-        const val PREFS_ADS = "sharedPreferencesAds"
-        const val PREFS_ADS_NEXT_AD = "prefsNextAd"
-
-        val TIME_TO_NEXT_AD = if(BuildConfig.DEBUG)
-            300000L     // = 5 min
-        else
-            604800000L  // = one week
-
-        val TIME_TO_FIRST_AD = if(BuildConfig.DEBUG)
-            60000L    // = 10 min
-        else
-            86400000L     // = one day
-
-    }
 }

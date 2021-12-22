@@ -8,31 +8,20 @@
 
 package at.techbee.jtx.monetization
 
+import android.app.Activity
 import android.content.Context
-import android.view.View
 import android.widget.LinearLayout
-import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity
-import com.huawei.hms.ads.AdParam
-import com.huawei.hms.ads.BannerAdSize
-import com.huawei.hms.ads.HwAds
-import com.huawei.hms.ads.banner.BannerView
-import com.huawei.hms.ads.NonPersonalizedAd.ALLOW_NON_PERSONALIZED
-import com.huawei.hms.ads.RequestOptions
-import com.huawei.hms.ads.consent.bean.AdProvider
-import com.huawei.hms.ads.consent.constant.ConsentStatus
-import com.huawei.hms.ads.consent.inter.Consent
-import com.huawei.hms.ads.consent.inter.ConsentUpdateListener
 
 
-class AdManagerOSE : AdManagerDefinition {
+class AdManager : AdManagerDefinition {
 
     companion object {
 
         @Volatile
-        private var INSTANCE: AdManagerOSE? = null
+        private var INSTANCE: AdManager? = null
 
-        fun getInstance(): AdManagerOSE? {
+        fun getInstance(): AdManager? {
 
             synchronized(this) {
                 // Copy the current value of INSTANCE to a local variable so Kotlin can smart cast.
@@ -40,15 +29,15 @@ class AdManagerOSE : AdManagerDefinition {
                 val instance = INSTANCE
                 // If instance is `null` assign a new instance.
                 if (instance == null) {
-                    INSTANCE = AdManagerOSE()
+                    INSTANCE = AdManager()
                 }
                 return INSTANCE
             }
         }
     }
 
-    override val unitIdRewardedInterstitialTest: String? = null
-    override val unitIdRewardedInterstitial: String? = null
+    override val unitIdInterstitialTest: String? = null
+    override val unitIdInterstitial: String? = null
     override val unitIdBannerTest: String? = null
     override val unitIdBannerView: String? = null
     override val unitIdBannerListJournal: String? = null
@@ -59,7 +48,6 @@ class AdManagerOSE : AdManagerDefinition {
     override fun isConsentRequired() = false
     override fun checkOrRequestConsentAndLoadAds(activity: MainActivity, context: Context) { /* nothing to do for ose */  }
     override fun resetUserConsent(activity: MainActivity, context: Context) { /* nothing to do for ose */  }
-    override fun showInterstitialAd() { /* nothing to do for ose */  }
-    override fun processAdReward(context: Context) { /* nothing to do for ose */  }
+    override fun showInterstitialAd(activity: Activity) { /* nothing to do for ose */  }
     override fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?) { /* nothing to do for ose */  }
 }

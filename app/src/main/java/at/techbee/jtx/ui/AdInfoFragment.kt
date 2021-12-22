@@ -21,7 +21,7 @@ import at.techbee.jtx.*
 import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_HUAWEI
 import at.techbee.jtx.databinding.FragmentAdinfoBinding
-import at.techbee.jtx.monetization.AdManagerHuawei
+import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.util.DateTimeUtils
 
@@ -179,7 +179,7 @@ class AdInfoFragment : Fragment() {
             // If no consent was required, we hide the button and show no info.
             if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI) {
                 binding.adinfoButtonUserconsent.visibility = View.GONE
-                if(AdManagerHuawei.getInstance()?.isConsentRequired() == false)
+                if(AdManager.getInstance()?.isConsentRequired() == false)
                     binding.adinfoHuweiOnlyNonPersonalizedText.visibility = View.VISIBLE
             }
         }

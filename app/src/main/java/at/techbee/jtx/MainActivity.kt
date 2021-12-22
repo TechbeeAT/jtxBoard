@@ -29,13 +29,11 @@ import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.monetization.AdManagerHuawei
+import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.SettingsFragment
-import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
-import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
@@ -52,7 +50,7 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
  * This main activity is just a container for our fragments,
  * where the real action is.
  */
-class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
+class MainActivity : AppCompatActivity()  {
 
     companion object {
         const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
@@ -120,8 +118,7 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         if(AdManager.getInstance()?.isAdFlavor() == true) {                        // check if flavor is ad-Flavor and if ads should be shown
             when {
                 BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased() -> showAdInfoDialogIfNecessary()  // show AdInfo Dialog and initialize ads
-                BuildConfig.FLAVOR == BUILD_FLAVOR_GLOBAL -> AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)                // initialize Ads without Dialog as there is no other option
-                BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)           // initialize Huawei Ads
+                else -> AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)                // initialize Ads without Dialog as there is no other option
                 // For BUILD_FLAVOR_OSE we do not laod ads
             }
         }
@@ -296,14 +293,6 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
         toolbar.title = title
         toolbar.subtitle = subtitle
     }
-
-
-    override fun onUserEarnedReward(item: RewardItem) {
-        Log.d("onUserEarnedReward", "Ad watched, user earned Reward")
-        AdManager.getInstance()?.processAdReward(applicationContext)
-        Toast.makeText(this, R.string.toast_adfree_for_a_week, Toast.LENGTH_SHORT).show()
-    }
-
 
 
     /**

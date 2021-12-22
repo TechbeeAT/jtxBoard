@@ -42,7 +42,7 @@ import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.*
-import at.techbee.jtx.monetization.AdManagerHuawei
+import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
@@ -603,14 +603,9 @@ class IcalViewFragment : Fragment() {
         }
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only)
-        if(AdManager.getInstance()?.isAdFlavor() == true) {
-            when {
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY
-                        && !BillingManager.isSubscriptionPurchased() -> AdManager.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), AdManager.getInstance()?.unitIdBannerView)
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), AdManagerHuawei.getInstance()?.unitIdBannerView)
-                else -> AdManager.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), null)
-            }
-        }
+        if(AdManager.getInstance()?.isAdFlavor() == true && !BillingManager.isSubscriptionPurchased())
+            AdManager.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), AdManager.getInstance()?.unitIdBannerView)
+
         return binding.root
     }
 

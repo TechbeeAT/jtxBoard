@@ -294,7 +294,7 @@
     <string name="donate_thank_you">Dankeschön!</string>
     <string name="donate_donate_with">Spenden über</string>
     <string name="donate_other_donation_methods">Weitere Optionen zum Spenden finden Sie auf unserer Website:</string>
-    <string name="adinfo_text">Die Entwicklung einer App ist eine komplexe Angelegenheit und die Entwicklung, Wartung und Betreuung ist harte Arbeit. Diese Version von jtx Board ist gratis und durch Werbung finanziert. Durch die Werbeflächen wird unterstützen Sie die weitere Entwicklung und Finanzierung dieses Projekts.</string>
+    <string name="adinfo_text">Die Entwicklung einer App ist eine komplexe Angelegenheit und die Entwicklung, Wartung und Betreuung ist harte Arbeit. Diese Version von jtx Board ist gratis und durch Werbung finanziert. Durch die Werbeflächen unterstützen Sie die weitere Entwicklung und Finanzierung dieses Projekts.</string>
     <string name="adinfo_adfree_text">Falls Sie lieber diese App werbefrei nutzen wollen, können Sie stattdessen mit folgendem Abo die Werbung entfernen:</string>
     <string name="adinfo_adfree_purchase_header">Upgrade zu jtx Board werbefrei</string>
     <string name="adinfo_adfree_purchase_description">Vielen Dank, dass sie dieses Upgrade in Erwägung ziehen. Dieses Upgrade entfernt die wiederkehrende Werbung.</string>

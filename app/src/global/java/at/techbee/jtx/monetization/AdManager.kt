@@ -6,22 +6,18 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx
+package at.techbee.jtx.monetization
 
 import android.app.Activity
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import at.techbee.jtx.monetization.AdManagerDefinition
-import at.techbee.jtx.monetization.AdManagerDefinition.Companion.PREFS_ADS
-import at.techbee.jtx.monetization.AdManagerDefinition.Companion.PREFS_ADS_NEXT_AD
-import at.techbee.jtx.monetization.AdManagerDefinition.Companion.TIME_TO_FIRST_AD
-import at.techbee.jtx.monetization.AdManagerDefinition.Companion.TIME_TO_NEXT_AD
+import at.techbee.jtx.BuildConfig
+import at.techbee.jtx.MainActivity
 import com.google.android.gms.ads.*
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.ump.*
 
 
@@ -47,8 +43,8 @@ class AdManager: AdManagerDefinition {
         }
     }
 
-    override val unitIdRewardedInterstitialTest = "ca-app-pub-3940256099942544/5354046379"      // Test Admob Unit ID for rewarded interstitials
-    override val unitIdRewardedInterstitial = "ca-app-pub-5573084047491645/3240430994"      // Prod Admob Unit ID for rewarded interstitials
+    override val unitIdInterstitialTest = "ca-app-pub-3940256099942544/1033173712"      // Test Admob Unit ID for rewarded interstitials
+    override val unitIdInterstitial = "ca-app-pub-5573084047491645/5522012773"      // Prod Admob Unit ID for interstitials
 
     override val unitIdBannerTest = "ca-app-pub-3940256099942544/6300978111"
     override val unitIdBannerView = "ca-app-pub-5573084047491645/9263174599"
@@ -57,14 +53,9 @@ class AdManager: AdManagerDefinition {
     override val unitIdBannerListTodo = "ca-app-pub-5573084047491645/8866878338"
 
 
-
     private var consentInformation: ConsentInformation? = null
     private var consentForm: ConsentForm? = null
-    private var rewardedInterstitialAd: RewardedInterstitialAd? = null
-
-    private var adPrefs: SharedPreferences? = null
-
-    private var activity: MainActivity? = null
+    private var interstitialAd: InterstitialAd? = null
 
 
     /**
@@ -108,56 +99,47 @@ class AdManager: AdManagerDefinition {
             MobileAds.setRequestConfiguration(configuration)
         }
 
-        MobileAds.initialize(context) {
 
-            val interstitialUnitId = if(BuildConfig.DEBUG)
-                unitIdRewardedInterstitialTest
-            else
-                unitIdRewardedInterstitial
+        val interstitialUnitId = if(BuildConfig.DEBUG)
+            unitIdInterstitialTest
+        else
+            unitIdInterstitial
+
+        val adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(context, interstitialUnitId, adRequest, object : InterstitialAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.d("InterstitalAd", adError.message)
+                interstitialAd = null
+            }
+
+            override fun onAdLoaded(ad: InterstitialAd) {
+                Log.d("InterstitalAd", "Ad was loaded.")
+                interstitialAd = ad
+            }
+        })
 
 
-            RewardedInterstitialAd.load(context,
-                interstitialUnitId,
-                AdRequest.Builder().build(),
-                object : RewardedInterstitialAdLoadCallback() {
-                    override fun onAdLoaded(ad: RewardedInterstitialAd) {
-                        rewardedInterstitialAd = ad
-                        rewardedInterstitialAd!!.fullScreenContentCallback = object :
-                            FullScreenContentCallback() {
-                            /** Called when the ad failed to show full screen content.  */
-                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                                Log.i("onAdFailedToShow", adError.toString())
-                            }
+        interstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+            override fun onAdDismissedFullScreenContent() {
+                Log.d("InterstitalAd", "Ad was dismissed.")
+            }
 
-                            /** Called when ad showed the full screen content.  */
-                            override fun onAdShowedFullScreenContent() {
-                                Log.i("onAdShowed", "onAdShowedFullScreenContent")
-                            }
+            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                Log.d("InterstitalAd", "Ad failed to show.")
+            }
 
-                            /** Called when full screen content is dismissed.  */
-                            override fun onAdDismissedFullScreenContent() {
-                                Log.i("onAdDismissed", "onAdDismissedFullScreenContent")
-                            }
-                        }
-                    }
-
-                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                        Log.e("onAdFailedToLoad", loadAdError.toString())
-                    }
-                }
-            )
+            override fun onAdShowedFullScreenContent() {
+                Log.d("InterstitalAd", "Ad showed fullscreen content.")
+                interstitialAd = null
+                loadAds(context)
+            }
         }
     }
 
     override fun isAdFlavor() = true
 
     override fun isConsentRequired(): Boolean = consentInformation?.consentStatus == ConsentInformation.ConsentStatus.REQUIRED || consentInformation?.consentStatus == ConsentInformation.ConsentStatus.OBTAINED
-
-    override fun processAdReward(context: Context) {
-        adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, (System.currentTimeMillis() + TIME_TO_NEXT_AD))?.apply()
-        rewardedInterstitialAd = null
-        loadAds(context)
-    }
 
     override fun resetUserConsent(activity: MainActivity, context: Context) {
         // TODO: Not sure if this is correct here. This should be reviewed at again, but for now it is working.
@@ -171,9 +153,6 @@ class AdManager: AdManagerDefinition {
      * It loads the user consent to check if a user consent is needed
      */
     override fun checkOrRequestConsentAndLoadAds(activity: MainActivity, context: Context) {
-
-        this.activity = activity
-        adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
 
         val consentParams = ConsentRequestParameters.Builder().apply {
             this.setTagForUnderAgeOfConsent(false)
@@ -205,28 +184,11 @@ class AdManager: AdManagerDefinition {
         INSTANCE = this
     }
 
-
-    /**
-     * @return true if an ad should be shown (current time < nextAdTime
-     */
-    private fun isInterstitialAdShowtime(): Boolean {
-        val nextAdTime = adPrefs?.getLong(PREFS_ADS_NEXT_AD, 0L) ?: return false      // return false if adPrefs was not correctly initialized
-        if (nextAdTime == 0L) {               // initially set the shared preferences to today + one day
-            adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, System.currentTimeMillis() + TIME_TO_FIRST_AD)?.apply()
-            return true             // initially we return true to show the ad-info dialog, but when the user saves an entry, the setting will be updated in the future and no ad will be shown until the TIME_TO_FIRST_AD is reached
-        }
-        return System.currentTimeMillis() > nextAdTime
-    }
-
-
-    override fun showInterstitialAd() {
-        activity?.let { act ->
-            if (isInterstitialAdShowtime() && rewardedInterstitialAd != null) {
-                rewardedInterstitialAd?.show(act, act)
-            } else {
-                Log.d("AdLoader", "The interstitial ad wasn't ready yet.")
-            }
-        }
+    override fun showInterstitialAd(activity: Activity) {
+        if (interstitialAd != null)
+            interstitialAd?.show(activity)
+        else
+            Log.d("AdLoader", "The interstitial ad wasn't ready yet.")
     }
 
     override fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?) {
