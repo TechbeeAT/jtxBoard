@@ -42,6 +42,8 @@ import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.*
+import at.techbee.jtx.monetization.AdManagerHuawei
+import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
@@ -605,7 +607,7 @@ class IcalViewFragment : Fragment() {
             when {
                 BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY
                         && !BillingManager.isSubscriptionPurchased() -> AdManager.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), AdManager.getInstance()?.unitIdBannerView)
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), AdManagerHuawei.HW_UNIT_ID_BANNER_VIEW)
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), AdManagerHuawei.getInstance()?.unitIdBannerView)
                 else -> AdManager.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), null)
             }
         }
@@ -840,7 +842,6 @@ class IcalViewFragment : Fragment() {
             } catch (e: IOException) {
                 Log.e("startRecording()", "prepare() failed")
             }
-
             start()
         }
     }

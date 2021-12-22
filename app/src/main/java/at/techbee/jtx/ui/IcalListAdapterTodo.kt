@@ -24,6 +24,8 @@ import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.monetization.AdManagerHuawei
+import at.techbee.jtx.monetization.BillingManager
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
 import java.lang.IllegalArgumentException
@@ -369,7 +371,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
             when {
                 BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY
                         && !BillingManager.isSubscriptionPurchased() -> AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.getInstance()?.unitIdBannerListTodo)
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.addAdViewToContainerViewFragment(holder.adContainer, context, AdManagerHuawei.HW_UNIT_ID_BANNER_LIST_JOURNAL)
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManagerHuawei.getInstance()?.unitIdBannerListTodo)
                 else -> AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, null)
             }
         } else

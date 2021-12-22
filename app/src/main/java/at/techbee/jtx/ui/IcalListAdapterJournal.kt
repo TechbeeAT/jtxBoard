@@ -24,6 +24,8 @@ import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.monetization.AdManagerHuawei
+import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToMonthString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToTimeString
@@ -254,7 +256,7 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
             when {
                 BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY
                         && !BillingManager.isSubscriptionPurchased() -> AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.getInstance()?.unitIdBannerListJournal)
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.addAdViewToContainerViewFragment(holder.adContainer, context, AdManagerHuawei.HW_UNIT_ID_BANNER_LIST_JOURNAL)
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManagerHuawei.getInstance()?.unitIdBannerListJournal)
                 else -> AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, null)
             }
         } else

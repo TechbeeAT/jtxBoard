@@ -29,6 +29,8 @@ import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.relations.ICalEntity
+import at.techbee.jtx.monetization.AdManagerHuawei
+import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.SettingsFragment
 import com.google.android.gms.ads.*
@@ -55,7 +57,6 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     companion object {
         const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
 
-        const val BUILD_FLAVOR_ALPHA = "alphatest"
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
         const val BUILD_FLAVOR_HUAWEI = "huawei"
@@ -113,15 +114,14 @@ class MainActivity : AppCompatActivity(), OnUserEarnedRewardListener  {
     override fun onResume() {
         super.onResume()
 
-        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY || BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA)
+        if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
             BillingManager.initialise(this)
 
         if(AdManager.getInstance()?.isAdFlavor() == true) {                        // check if flavor is ad-Flavor and if ads should be shown
             when {
                 BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && !BillingManager.isSubscriptionPurchased() -> showAdInfoDialogIfNecessary()  // show AdInfo Dialog and initialize ads
                 BuildConfig.FLAVOR == BUILD_FLAVOR_GLOBAL -> AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)                // initialize Ads without Dialog as there is no other option
-                BuildConfig.FLAVOR == BUILD_FLAVOR_ALPHA -> showAdInfoDialogIfNecessary()                                                    // show AdInfo Dialog but do not check if subscription was purchased
-                BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.initialize(this)                                         // initialize Huawei Ads
+                BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)           // initialize Huawei Ads
                 // For BUILD_FLAVOR_OSE we do not laod ads
             }
         }

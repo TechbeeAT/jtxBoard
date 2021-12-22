@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx
+package at.techbee.jtx.monetization
 
 import android.app.Activity
 import android.content.Context
@@ -169,7 +169,7 @@ class BillingManager :
                 val responseCode = billingClient?.launchBillingFlow(activity, flowParams)?.responseCode
             } else {
                 Toast.makeText(activity, "Ooops, something went wrong there. Please check your internet connection or try again later!", Toast.LENGTH_LONG).show()
-                this.initialise(activity)
+                initialise(activity)
             }
         }
 
@@ -256,6 +256,7 @@ class BillingManager :
          * If the user has no subscription or it expired, the item would not be returned in the purchase list.
          * See also https://developer.android.com/google/play/billing/subscriptions#lifecycle
          */
-        fun isSubscriptionPurchased(): Boolean = billingPrefs?.getString(PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE, null) != null
+        fun isSubscriptionPurchased(): Boolean = billingPrefs?.getString(
+            PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE, null) != null
     }
 }

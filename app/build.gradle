@@ -80,11 +80,6 @@ android {
             dimension 'version'
             versionNameSuffix '.ose'
         }
-        alphatest {
-            dimension 'version'
-            //applicationIdSuffix '.testing'
-            versionNameSuffix '.alphatest'
-        }
         global {
             dimension 'version'
             versionNameSuffix '.global'

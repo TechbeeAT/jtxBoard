@@ -21,6 +21,8 @@ import at.techbee.jtx.*
 import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_HUAWEI
 import at.techbee.jtx.databinding.FragmentAdinfoBinding
+import at.techbee.jtx.monetization.AdManagerHuawei
+import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.util.DateTimeUtils
 
 
@@ -127,7 +129,8 @@ class AdInfoFragment : Fragment() {
             if (BillingManager.isSubscriptionPurchased()) {      // change text if item was already bought
                 binding.adinfoCardSubscribeSuccess.setOnClickListener { return@setOnClickListener }   // actually we remove the listener
                 binding.adinfoCardSubscribeSuccessPurchaseDate.text =
-                    getString(R.string.adinfo_adfree_subscribe_purchase_date, DateTimeUtils.convertLongToFullDateTimeString(BillingManager.adfreeSubscriptionPurchase.value?.purchaseTime,null))
+                    getString(R.string.adinfo_adfree_subscribe_purchase_date, DateTimeUtils.convertLongToFullDateTimeString(
+                        BillingManager.adfreeSubscriptionPurchase.value?.purchaseTime,null))
                 binding.adinfoCardSubscribeSuccessOrderNumber.text = getString(
                     R.string.adinfo_adfree_subscribe_order_id,
                     BillingManager.adfreeSubscriptionPurchase.value?.orderId
@@ -156,9 +159,12 @@ class AdInfoFragment : Fragment() {
                 }
                 binding.adinfoCardSubscribe.visibility = View.VISIBLE
                 binding.adinfoAdfreeText.visibility = View.VISIBLE
-                binding.adinfoButtonUserconsent.visibility = View.VISIBLE
                 binding.adinfoText.visibility = View.VISIBLE
 
+                if(AdManager.getInstance()?.isConsentRequired() == true)
+                    binding.adinfoButtonUserconsent.visibility = View.VISIBLE
+                else
+                    binding.adinfoButtonUserconsent.visibility = View.GONE
             }
         } else {
             binding.adinfoCardSubscribe.visibility = View.GONE
@@ -173,7 +179,7 @@ class AdInfoFragment : Fragment() {
             // If no consent was required, we hide the button and show no info.
             if(BuildConfig.FLAVOR == BUILD_FLAVOR_HUAWEI) {
                 binding.adinfoButtonUserconsent.visibility = View.GONE
-                if(!AdManagerHuawei.isPersonalizedAdsAllowed)
+                if(AdManagerHuawei.getInstance()?.isConsentRequired() == false)
                     binding.adinfoHuweiOnlyNonPersonalizedText.visibility = View.VISIBLE
             }
         }
