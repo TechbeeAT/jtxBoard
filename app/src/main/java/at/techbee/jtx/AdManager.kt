@@ -14,132 +14,182 @@ import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
+import at.techbee.jtx.AdManagerInterface.Companion.PREFS_ADS
+import at.techbee.jtx.AdManagerInterface.Companion.PREFS_ADS_NEXT_AD
+import at.techbee.jtx.AdManagerInterface.Companion.TIME_TO_FIRST_AD
+import at.techbee.jtx.AdManagerInterface.Companion.TIME_TO_NEXT_AD
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
 import com.google.android.ump.*
 
-class AdManager {
+interface AdManagerInterface {
+
+    val unitIdRewardedInterstitialTest: String?      // Test Admob Unit ID for rewarded interstitials
+    val unitIdRewardedInterstitial: String?      // Prod Admob Unit ID for rewarded interstitials
+
+    val unitIdBannerTest: String?
+    val unitIdBannerView: String?
+    val unitIdBannerListJournal: String?
+    val unitIdBannerListNote: String?
+    val unitIdBannerListTodo: String?
+
+
+    /**
+     * @return true if ads should basically be shown for this flavor
+     */
+    fun isAdFlavor(): Boolean
+
+    /**
+     * @return true if a user consent is required
+     */
+    fun isConsentRequired(): Boolean
+
+    /**
+     * Processes the ad reward by setting the preference when to show the next add to one week from now
+     * Additionally sets the rewardedInterstitialAd back to null and calls setUpAds again to load another ad.
+     */
+    fun processAdReward(context: Context)
+
+    /**
+     * Resets the user consent information and shows the consent form again
+     */
+    fun resetUserConsent(activity: MainActivity, context: Context)
+
+    /**
+     * This function initializes the AdManager and loads the adPrefs.
+     * It loads the user consent to check if a user consent is needed
+     */
+    fun checkOrRequestConsentAndLoadAds(activity: MainActivity, context: Context)
+
+    /**
+     * Shows the ad if the ad was loaded and ready
+     */
+    fun showInterstitialAd()
+
+    /**
+     * Loads a banner ad with an optional given unitId and adds it to the LinearLayout
+     * [linearLayout] to which the banner should be added
+     * [context] calling context
+     * [unitId] the UnitId, preferrable as defined in AdManager e.g. ADMOB_UNIT_ID_BANNER_LIST_JOURNAL
+     */
+    fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?)
+
 
     companion object {
+        const val PREFS_ADS = "sharedPreferencesAds"
+        const val PREFS_ADS_NEXT_AD = "prefsNextAd"
 
-        private val ADMOB_UNIT_ID_REWARDED_INTERSTITIAL = if(BuildConfig.DEBUG)
-            "ca-app-pub-3940256099942544/5354046379"      // Test Admob Unit ID for rewarded interstitials
-        else
-            "ca-app-pub-5573084047491645/3240430994"      // Prod Admob Unit ID for rewarded interstitials
-
-        private val ADMOB_UNIT_ID_BANNER_TEST = "ca-app-pub-3940256099942544/6300978111"
-        val ADMOB_UNIT_ID_BANNER_VIEW = "ca-app-pub-5573084047491645/9263174599"
-        val ADMOB_UNIT_ID_BANNER_LIST_JOURNAL = "ca-app-pub-5573084047491645/9205580258"
-        val ADMOB_UNIT_ID_BANNER_LIST_NOTE = "ca-app-pub-5573084047491645/2684613362"
-        val ADMOB_UNIT_ID_BANNER_LIST_TODO = "ca-app-pub-5573084047491645/8866878338"
-
-
-
-        var consentInformation: ConsentInformation? = null
-        private var consentForm: ConsentForm? = null
-        var rewardedInterstitialAd: RewardedInterstitialAd? = null
-
-        private var adPrefs: SharedPreferences? = null
-
-        private const val PREFS_ADS = "sharedPreferencesAds"
-        private const val PREFS_ADS_NEXT_AD = "prefsNextAd"
-
-        private val TIME_TO_NEXT_AD = if(BuildConfig.DEBUG)
+        val TIME_TO_NEXT_AD = if(BuildConfig.DEBUG)
             300000L     // = 5 min
         else
             604800000L  // = one week
 
-        private val TIME_TO_FIRST_AD = if(BuildConfig.DEBUG)
+        val TIME_TO_FIRST_AD = if(BuildConfig.DEBUG)
             60000L    // = 10 min
         else
             86400000L     // = one day
 
-        private var activity: MainActivity? = null
+    }
+}
 
-        /**
-         * This function initializes the AdManager and loads the adPrefs.
-         * It loads the user consent to check if a user consent is needed
-         */
-        fun checkOrRequestConsentAndLoadAds(activity: MainActivity, context: Context) {
+class AdManager: AdManagerInterface {
 
-            this.activity = activity
-            adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
+    companion object {
 
-            val consentParams = ConsentRequestParameters.Builder().apply {
-                this.setTagForUnderAgeOfConsent(false)
-                if(BuildConfig.DEBUG) {
-                    val debugSettings = ConsentDebugSettings.Builder(context)
-                        .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
-                        .addTestDeviceHashedId("C4E10B8B06DB3B7287C2097746D070C4")
-                        .build()
-                    this.setConsentDebugSettings(debugSettings)    // set Geography to EEA for DEBUG builds
+        @Volatile
+        private var INSTANCE: AdManager? = null
+
+        fun getInstance(): AdManager? {
+
+            synchronized(this) {
+                // Copy the current value of INSTANCE to a local variable so Kotlin can smart cast.
+                // Smart cast is only available to local variables.
+                val instance = INSTANCE
+                // If instance is `null` assign a new instance.
+                if (instance == null) {
+                    INSTANCE = AdManager()
                 }
-            }.build()
-
-            val consentInformation = UserMessagingPlatform.getConsentInformation(context)
-            consentInformation.requestConsentInfoUpdate(
-                activity,
-                consentParams,
-                {
-                    // The consent information state was updated.
-                    // You are now ready to check if a form is available.
-                    Log.d("ConsentInformation", consentInformation.consentStatus.toString())
-                    loadForm(activity, context, consentInformation)
-                },
-                {
-                    // Handle the error.
-                })
-
-            Companion.consentInformation = consentInformation
+                return INSTANCE
+            }
         }
+    }
 
-        /**
-         *  Loads the consent form and takes care of the response. If everything was okay (or the consent was not needed), the ads are set up
-         *  If no user consent is necessary, the ads are loaded directly
-         */
-        private fun loadForm(activity: Activity, context: Context, consentInformation: ConsentInformation) {
+    override val unitIdRewardedInterstitialTest = "ca-app-pub-3940256099942544/5354046379"      // Test Admob Unit ID for rewarded interstitials
+    override val unitIdRewardedInterstitial = "ca-app-pub-5573084047491645/3240430994"      // Prod Admob Unit ID for rewarded interstitials
 
-            if (consentInformation.consentStatus == ConsentInformation.ConsentStatus.REQUIRED || consentInformation.consentStatus == ConsentInformation.ConsentStatus.UNKNOWN) {
+    override val unitIdBannerTest = "ca-app-pub-3940256099942544/6300978111"
+    override val unitIdBannerView = "ca-app-pub-5573084047491645/9263174599"
+    override val unitIdBannerListJournal = "ca-app-pub-5573084047491645/9205580258"
+    override val unitIdBannerListNote = "ca-app-pub-5573084047491645/2684613362"
+    override val unitIdBannerListTodo = "ca-app-pub-5573084047491645/8866878338"
 
-                UserMessagingPlatform.loadConsentForm(
-                    context,
-                    { consentForm ->
-                        consentForm.show(activity) {
-                            loadForm(activity, context, consentInformation)    //Handle dismissal by reloading form
-                        }
-                        Companion.consentForm = consentForm
-                        loadAds(context)
+
+
+    private var consentInformation: ConsentInformation? = null
+    private var consentForm: ConsentForm? = null
+    private var rewardedInterstitialAd: RewardedInterstitialAd? = null
+
+    private var adPrefs: SharedPreferences? = null
+
+    private var activity: MainActivity? = null
+
+
+
+
+    /**
+     *  Loads the consent form and takes care of the response. If everything was okay (or the consent was not needed), the ads are set up
+     *  If no user consent is necessary, the ads are loaded directly
+     */
+    private fun loadForm(activity: Activity, context: Context, consentInformation: ConsentInformation) {
+
+        if (consentInformation.consentStatus == ConsentInformation.ConsentStatus.REQUIRED || consentInformation.consentStatus == ConsentInformation.ConsentStatus.UNKNOWN) {
+
+            UserMessagingPlatform.loadConsentForm(
+                context,
+                { consentForm ->
+                    consentForm.show(activity) {
+                        loadForm(activity, context, consentInformation)    //Handle dismissal by reloading form
                     }
-                ) {
-                    Log.d("consentForm", it.message)     // Handle the error just with a log message
+                    this.consentForm = consentForm
+                    loadAds(context)
                 }
-            } else {
-                loadAds(context)
+            ) {
+                Log.d("consentForm", it.message)     // Handle the error just with a log message
             }
+        } else {
+            loadAds(context)
+        }
+    }
+
+
+    /**
+     * Initializes the Admob MobileAds and loads an interstitial Ad
+     */
+    private fun loadAds(context: Context) {
+
+        if(BuildConfig.DEBUG) {
+            val configuration = RequestConfiguration.Builder().setTestDeviceIds(
+                listOf(
+                    "C4E10B8B06DB3B7287C2097746D070C4",
+                    "D69766433D841525603C53DC036422CD"
+                )
+            ).build()
+            MobileAds.setRequestConfiguration(configuration)
         }
 
+        MobileAds.initialize(context) {
 
-        /**
-         * Initializes the Admob MobileAds and loads an interstitial Ad
-         */
-        private fun loadAds(context: Context) {
+            val interstitialUnitId = if(BuildConfig.DEBUG)
+                unitIdRewardedInterstitialTest
+            else
+                unitIdRewardedInterstitial
 
-            if(BuildConfig.DEBUG) {
-                val configuration = RequestConfiguration.Builder().setTestDeviceIds(
-                    listOf(
-                        "C4E10B8B06DB3B7287C2097746D070C4",
-                        "D69766433D841525603C53DC036422CD"
-                    )
-                ).build()
-                MobileAds.setRequestConfiguration(configuration)
-            }
 
-            MobileAds.initialize(context) {
-
-                RewardedInterstitialAd.load(context,
-                ADMOB_UNIT_ID_REWARDED_INTERSTITIAL,
-                AdRequest.Builder().build(), object : RewardedInterstitialAdLoadCallback() {
+            RewardedInterstitialAd.load(context,
+                interstitialUnitId,
+                AdRequest.Builder().build(),
+                object : RewardedInterstitialAdLoadCallback() {
                     override fun onAdLoaded(ad: RewardedInterstitialAd) {
                         rewardedInterstitialAd = ad
                         rewardedInterstitialAd!!.fullScreenContentCallback = object :
@@ -164,87 +214,102 @@ class AdManager {
                     override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                         Log.e("onAdFailedToLoad", loadAdError.toString())
                     }
-                })
-            }
-        }
-
-
-        /**
-         * Loads a banner ad with an optional given unitId and adds it to the LinearLayout
-         * [linearLayout] to which the banner should be added
-         * [context] calling context
-         * [unitId] the UnitId, preferrable as defined in AdManager e.g. ADMOB_UNIT_ID_BANNER_LIST_JOURNAL
-         */
-        fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?) {
-            val adView = AdView(context)
-            adView.adSize = AdSize.BANNER
-            adView.adUnitId = if(BuildConfig.DEBUG)
-                ADMOB_UNIT_ID_BANNER_TEST
-            else
-                unitId ?: ADMOB_UNIT_ID_BANNER_LIST_JOURNAL
-            adView.loadAd(AdRequest.Builder().build())
-
-            linearLayout.removeAllViews()
-            linearLayout.addView(adView)
-            linearLayout.visibility = View.VISIBLE
-        }
-
-        /**
-         * @return true if an ad should be shown (current time < nextAdTime
-         */
-        private fun isInterstitialAdShowtime(): Boolean {
-            val nextAdTime = adPrefs?.getLong(PREFS_ADS_NEXT_AD, 0L) ?: return false      // return false if adPrefs was not correctly initialized
-            if (nextAdTime == 0L) {               // initially set the shared preferences to today + one day
-                adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, System.currentTimeMillis() + TIME_TO_FIRST_AD)?.apply()
-                return true             // initially we return true to show the ad-info dialog, but when the user saves an entry, the setting will be updated in the future and no ad will be shown until the TIME_TO_FIRST_AD is reached
-            }
-            return System.currentTimeMillis() > nextAdTime
-        }
-
-        /**
-         * Shows the ad if the ad was loaded and ready
-         */
-        fun showInterstitialAd() {
-            activity?.let { act ->
-                if (isInterstitialAdShowtime() && rewardedInterstitialAd != null) {
-                    rewardedInterstitialAd?.show(act, act)
-                } else {
-                    Log.d("AdLoader", "The interstitial ad wasn't ready yet.")
                 }
+            )
+        }
+    }
+
+    override fun isAdFlavor() = true
+
+    override fun isConsentRequired(): Boolean = consentInformation?.consentStatus == ConsentInformation.ConsentStatus.REQUIRED || consentInformation?.consentStatus == ConsentInformation.ConsentStatus.OBTAINED
+
+    override fun processAdReward(context: Context) {
+        adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, (System.currentTimeMillis() + TIME_TO_NEXT_AD))?.apply()
+        rewardedInterstitialAd = null
+        loadAds(context)
+    }
+
+    override fun resetUserConsent(activity: MainActivity, context: Context) {
+        // TODO: Not sure if this is correct here. This should be reviewed at again, but for now it is working.
+        consentInformation?.reset()
+        checkOrRequestConsentAndLoadAds(activity, context)
+    }
+
+
+    /**
+     * This function initializes the AdManager and loads the adPrefs.
+     * It loads the user consent to check if a user consent is needed
+     */
+    override fun checkOrRequestConsentAndLoadAds(activity: MainActivity, context: Context) {
+
+        this.activity = activity
+        adPrefs = activity.getSharedPreferences(PREFS_ADS, Context.MODE_PRIVATE)
+
+        val consentParams = ConsentRequestParameters.Builder().apply {
+            this.setTagForUnderAgeOfConsent(false)
+            if(BuildConfig.DEBUG) {
+                val debugSettings = ConsentDebugSettings.Builder(context)
+                    .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
+                    .addTestDeviceHashedId("C4E10B8B06DB3B7287C2097746D070C4")
+                    .build()
+                this.setConsentDebugSettings(debugSettings)    // set Geography to EEA for DEBUG builds
+            }
+        }.build()
+
+        val consentInformation = UserMessagingPlatform.getConsentInformation(context)
+        consentInformation.requestConsentInfoUpdate(
+            activity,
+            consentParams,
+            {
+                // The consent information state was updated.
+                // You are now ready to check if a form is available.
+                Log.d("ConsentInformation", consentInformation.consentStatus.toString())
+                loadForm(activity, context, consentInformation)
+            },
+            {
+                // Handle the error.
+            })
+
+        this.consentInformation = consentInformation
+
+        INSTANCE = this
+    }
+
+
+    /**
+     * @return true if an ad should be shown (current time < nextAdTime
+     */
+    private fun isInterstitialAdShowtime(): Boolean {
+        val nextAdTime = adPrefs?.getLong(PREFS_ADS_NEXT_AD, 0L) ?: return false      // return false if adPrefs was not correctly initialized
+        if (nextAdTime == 0L) {               // initially set the shared preferences to today + one day
+            adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, System.currentTimeMillis() + TIME_TO_FIRST_AD)?.apply()
+            return true             // initially we return true to show the ad-info dialog, but when the user saves an entry, the setting will be updated in the future and no ad will be shown until the TIME_TO_FIRST_AD is reached
+        }
+        return System.currentTimeMillis() > nextAdTime
+    }
+
+
+    override fun showInterstitialAd() {
+        activity?.let { act ->
+            if (isInterstitialAdShowtime() && rewardedInterstitialAd != null) {
+                rewardedInterstitialAd?.show(act, act)
+            } else {
+                Log.d("AdLoader", "The interstitial ad wasn't ready yet.")
             }
         }
+    }
 
-        /**
-         * Resets the user consent information and shows the consent form again
-         */
-        fun resetUserConsent(activity: MainActivity, context: Context) {
-            // TODO: Not sure if this is correct here. This should be reviewed at again, but for now it is working.
-            consentInformation?.reset()
-            checkOrRequestConsentAndLoadAds(activity, context)
-        }
+    override fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?) {
+        val adView = AdView(context)
+        adView.adSize = AdSize.BANNER
+        adView.adUnitId = if(BuildConfig.DEBUG)
+            unitIdBannerTest
+        else
+            unitId ?: unitIdBannerView
+        adView.loadAd(AdRequest.Builder().build())
 
-        /**
-         * Processes the ad reward by setting the preference when to show the next add to one week from now
-         * Additionally sets the rewardedInterstitialAd back to null and calls setUpAds again to load another ad.
-         */
-        fun processAdReward(context: Context) {
-            adPrefs?.edit()?.putLong(PREFS_ADS_NEXT_AD, (System.currentTimeMillis() + TIME_TO_NEXT_AD))?.apply()
-            rewardedInterstitialAd = null
-            loadAds(context)
-        }
-
-        /**
-         * @return true if ads should basically be shown for this flavor
-         */
-        fun isAdFlavor(): Boolean {
-            return when(BuildConfig.FLAVOR) {
-                MainActivity.BUILD_FLAVOR_GOOGLEPLAY -> true
-                MainActivity.BUILD_FLAVOR_HUAWEI -> true
-                MainActivity.BUILD_FLAVOR_GLOBAL -> true
-                MainActivity.BUILD_FLAVOR_OSE -> false
-                MainActivity.BUILD_FLAVOR_ALPHA -> true
-                else -> true
-            }
-        }
+        linearLayout.removeAllViews()
+        linearLayout.addView(adView)
+        linearLayout.visibility = View.VISIBLE
     }
 }

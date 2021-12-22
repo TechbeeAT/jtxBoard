@@ -22,7 +22,6 @@ import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_HUAWEI
 import at.techbee.jtx.databinding.FragmentAdinfoBinding
 import at.techbee.jtx.util.DateTimeUtils
-import com.google.android.ump.ConsentInformation
 
 
 class AdInfoFragment : Fragment() {
@@ -94,12 +93,12 @@ class AdInfoFragment : Fragment() {
     private fun updateFragmentContent() {
 
         // If the user is in a country, where the consent is not required or the initial user consent is still unknown (it must be chosen before the first ad if necessary!) then don't show the button.
-        if (AdManager.consentInformation?.consentStatus == ConsentInformation.ConsentStatus.NOT_REQUIRED || AdManager.consentInformation?.consentStatus == ConsentInformation.ConsentStatus.UNKNOWN)
-            binding.adinfoButtonUserconsent.visibility = View.GONE
-         else
+        if (AdManager.getInstance()?.isConsentRequired() == true)
             binding.adinfoButtonUserconsent.setOnClickListener {
-                AdManager.resetUserConsent(requireActivity() as MainActivity, requireContext())
+                AdManager.getInstance()?.resetUserConsent(requireActivity() as MainActivity, requireContext())
             }
+         else
+            binding.adinfoButtonUserconsent.visibility = View.GONE
 
         /*
         if(BillingManager.adfreeOneTimeSkuDetails.value == null)

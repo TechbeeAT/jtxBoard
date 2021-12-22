@@ -197,12 +197,12 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
 
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
-        if(position%5 == 4 && AdManager.isAdFlavor()) {
+        if(position%5 == 4 && AdManager.getInstance()?.isAdFlavor() == true) {
             when {
                 BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY
-                        && !BillingManager.isSubscriptionPurchased() -> AdManager.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.ADMOB_UNIT_ID_BANNER_LIST_NOTE)
-                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.addAdViewToContainerViewFragment(holder.adContainer, context, AdManagerHuawei.HW_UNIT_ID_BANNER_LIST_NOTE)
-                else -> AdManager.addAdViewToContainerViewFragment(holder.adContainer, context, null)
+                        && !BillingManager.isSubscriptionPurchased() -> AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.getInstance()?.unitIdBannerListNote)
+                BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_HUAWEI -> AdManagerHuawei.addAdViewToContainerViewFragment(holder.adContainer, context, AdManagerHuawei.HW_UNIT_ID_BANNER_LIST_JOURNAL)
+                else -> AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, null)
             }
         } else
             holder.adContainer.visibility = View.GONE
