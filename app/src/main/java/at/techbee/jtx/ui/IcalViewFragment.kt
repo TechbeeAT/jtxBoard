@@ -414,11 +414,11 @@ class IcalViewFragment : Fragment() {
             builder.setIcon(R.drawable.ic_comment_add)
             builder.setView(addnoteDialogBinding.root)
 
-            builder.setPositiveButton("Save") { _, _ ->
+            builder.setPositiveButton(R.string.save) { _, _ ->
                 icalViewViewModel.insertRelated(addnoteDialogBinding.viewViewAddnoteDialogEdittext.text.toString(), null)
             }
 
-            builder.setNegativeButton("Cancel") { _, _ ->
+            builder.setNegativeButton(R.string.cancel) { _, _ ->
                 // Do nothing, just close the message
             }
             //builder is shown on positiveButton after unlinking or immediately (after the recur-check)
@@ -430,10 +430,10 @@ class IcalViewFragment : Fragment() {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
                     .setMessage(getString(R.string.view_recurrence_note_to_original))
-                    .setPositiveButton("Continue") { _, _ ->
+                    .setPositiveButton(R.string.cont) { _, _ ->
                         builder.show()
                     }
-                    .setNegativeButton("Go to Original") { _, _ ->
+                    .setNegativeButton(R.string.view_recurrence_go_to_original_button) { _, _ ->
                         this.findNavController().navigate(
                             IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
                                 originalId
@@ -496,7 +496,7 @@ class IcalViewFragment : Fragment() {
                     .setTitle(getString(R.string.view_fragment_audio_dialog_add_audio_note))
                     //.setMessage(getString(R.string.view_fragment_audio_permission_message))
                     .setView(audioDialogBinding.root)
-                    .setPositiveButton("Save") { _, _ ->
+                    .setPositiveButton(R.string.save) { _, _ ->
                         stopRecording()
                         stopPlaying()
 
@@ -539,10 +539,10 @@ class IcalViewFragment : Fragment() {
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
                         .setMessage(getString(R.string.view_recurrence_note_to_original))
-                        .setPositiveButton("Continue") { _, _ ->
+                        .setPositiveButton(R.string.cont) { _, _ ->
                             audioRecorderAlertDialogBuilder.show()
                         }
-                        .setNegativeButton("Go to Original") { _, _ ->
+                        .setNegativeButton(R.string.view_recurrence_go_to_original_button) { _, _ ->
                             this.findNavController().navigate(
                                 IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
                                     originalId

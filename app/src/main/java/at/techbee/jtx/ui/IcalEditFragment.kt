@@ -1648,7 +1648,7 @@ class IcalEditFragment : Fragment() {
             builder.setView(updatedSummary)
 
 
-            builder.setPositiveButton("Save") { _, _ ->
+            builder.setPositiveButton(R.string.save) { _, _ ->
 
                 if (icalEditViewModel.subtaskUpdated.find { it.uid == subtask.uid } == null) {
                     val changedItem = subtask.copy()
@@ -1661,11 +1661,11 @@ class IcalEditFragment : Fragment() {
                 bindingSubtask.editSubtaskTextview.text = updatedSummary.text.toString()
 
             }
-            builder.setNegativeButton("Cancel") { _, _ ->
+            builder.setNegativeButton(R.string.cancel) { _, _ ->
                 // Do nothing, just close the message
             }
 
-            builder.setNeutralButton("Delete") { _, _ ->
+            builder.setNeutralButton(R.string.delete) { _, _ ->
                 icalEditViewModel.subtaskDeleted.add(subtask)
                 bindingSubtask.root.visibility = View.GONE
             }

@@ -332,4 +332,5 @@
     <string name="adinfo_huwei_only_non_personalized_text">Diese Version von jtx Board zeigt keine personalisierte Werbung.</string>
     <string name="sync_coming_soon_heading">Sync mit DAVx⁵ (in Kürze erhältlich)</string>
     <string name="sync_coming_soon_text">jtx Board bietet selbst keine Server-Synchronisierung an, unterstützt aber demnächst die Synchronisierung durch DAVx⁵. Durch diese Kombination können Sie jeglichen kompatiblen CalDAV-Server verwenden und Ihre Einträge ablegen, sichern und synchronisieren. Dieses Feature ist aktuell noch in Entwicklung und wird in bald released! Bleiben Sie auf dem laufenden auf unserer Website und auf Twitter :-)</string>
+    <string name="cont">Weiter</string>
 </resources>
