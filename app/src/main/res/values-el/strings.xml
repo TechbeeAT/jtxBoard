@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) Techbee e.U.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the GNU Public License v3.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.gnu.org/licenses/gpl.html
+  -->
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Τίτλος εφαρμογής και τίτλοι τμημάτων -->
+    <string name="app_name" translatable="false">jtx Board</string>
+    <string name="app_permission_label">jtx Board sync Ημερολόγιο, Σημειώσεις &amp; Εργασίες</string>
+    <string name="app_permission_desc">το sync jtx Board παρέχει περιεχόμενο σε συνδυασμό με άλλες εφαρμογές όπως η DAVx⁵</string>
+
+    <!-- Επαναχρησιμοποιήσιμοι σύνδεσμοι σε διαφορετικά περιβάλλοντα -->
+    <string name="link_davx5" translatable="false">https://www.davx5.com/</string>
+    <string name="link_ffg" translatable="false">https://www.ffg.at</string>
+    <string name="link_jtx" translatable="false">https://jtx.techbee.at</string>
+    <string name="link_jtx_sync" translatable="false">https://jtx.techbee.at/sync-with-davx5</string>
+    <string name="link_jtx_support" translatable="false">https://jtx.techbee.at/support</string>
+    <string name="link_jtx_privacy_policy" translatable="false">https://jtx.techbee.at/privacy</string>
+    <string name="link_jtx_twitter" translatable="false">https://twitter.com/jtxBoard</string>
+    <string name="link_techbee" translatable="false">https://techbee.at</string>
+    <string name="link_jtx_terms" translatable="false">https://jtx.techbee.at/terms-conditions</string>
+    <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
+
+
+    <!-- Πιθανές μορφές ρυθμίσεις ήχου -->
+    <array name="settings_audio_formats">
+        <item>audio/3gpp</item>
+        <item>audio/aac</item>
+        <item>audio/ogg</item>
+    </array>
+
+
+    <!-- Ρυθμήσεις -->
+    <string name="save">Αποθήκευση</string>
+    <string name="cancel">Ακύρωση</string>
+    <string name="ok">OK</string>
+    <string name="delete">Διαγραφή</string>
+    <string name="discard">Απόρριψη</string>
+    <string name="gotit">Επιβεβαίωση</string>
+
+
+    <string name="toolbar_text_jtx_board" translatable="false">jtx Board</string>
+    <string name="toolbar_text_jtx_board_journals_overview">Επισκόπηση Ημερολογίων</string>
+    <string name="toolbar_text_jtx_board_notes_overview">Επισκόπηση Σημειώσεων</string>
+    <string name="toolbar_text_jtx_board_tasks_overview">Επισκόπηση Εργασιών</string>
+    <string name="toolbar_text_view_journal_details">Λεπτομέριες Ημερολογίων</string>
+    <string name="toolbar_text_view_note_details">Λεπτομέριες Σημειώσεων</string>
+    <string name="toolbar_text_view_task_details">Λεπτομέριες Εργασιών</string>
+    <string name="toolbar_text_add_journal">Προσθήκη εγγραφής</string>
+    <string name="toolbar_text_add_note">Προσθήκη Σημείωσης</string>
+    <string name="toolbar_text_add_task">Προσθήκη Εργασίας</string>
+    <string name="toolbar_text_edit_journal">Επεξεργασία Ημερολογίου</string>
+    <string name="toolbar_text_edit_note">Επεξεργασία Σημείωσης</string>
+    <string name="toolbar_text_edit_task">Επεξεργασία Εργασίας</string>
+
+    <string name="toolbar_text_filter">Φίλτρα</string>
+    <string name="toolbar_text_settings">Ρυθμίσεις</string>
+    <string name="toolbar_text_about">Σχετικά</string>
+    <string name="toolbar_text_sync">Συγχρονισμός</string>
+    <string name="toolbar_text_donate">Δωρεά</string>
+    <string name="toolbar_text_adinfo">Πληροφορίες διαφημίσεων</string>
+
+    <string name="default_local_collection_name">Τοπικές</string>
+    <string name="default_local_account_name">Τοπικές</string>
+
+
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">Πρόχειρο</string>
+    <string name="journal_status_final">Τελικό</string>
+    <string name="journal_status_cancelled">Ακυρωμένο</string>
+
+    <string name="todo_status_needsaction">Ανοιχτό</string>
+    <string name="todo_status_completed">Ολοκληρωμένο</string>
+    <string name="todo_status_inprocess">Σε εξέλιξη</string>
+    <string name="todo_status_cancelled">Ακυρωμένο</string>
+
+    <string-array name="priority">
+        <item>0 - Χωρίς</item>
+        <item>1 - Μέγιστη</item>
+        <item>2 - Πολύ υψηλή</item>
+        <item>3 - Υψηλή</item>
+        <item>4 - Μέση προς υψηλή</item>
+        <item>5 - Μέση</item>
+        <item>6 - Μέση προς χαμηλή</item>
+        <item>7 - Χαμηλή</item>
+        <item>8 - Πολύ χαμηλή</item>
+        <item>9 - Χαμηλότερη</item>
+    </string-array>
+
+    <string name="classification_public">Δημόσιο</string>
+    <string name="classification_private">Ιδιωτικό</string>
+    <string name="classification_confidential">Εμπιστευτικό</string>
+
+    <string name="attendee_role_required_participant">Απαιτείται συμμετοχή</string>
+    <string name="attendee_role_optional_participant">Προαιρετική συμμετοχή</string>
+    <string name="attendee_role_non_participant">Χωρίς συμμετοχή / Info</string>
+
+
+    <!-- Navigation Drawer  -->
+    <string name="navigation_drawer_open">Άνοιγμα πλοηγού</string>
+    <string name="navigation_drawer_close">Κλείσιμο πλοηγού</string>
+    <string name="navigation_drawer_board">Πίνακας</string>
+    <string name="navigation_drawer_sync">Συγχρονισμός με DAVx⁵</string>
+    <string name="navigation_drawer_about">Σχετικά / Άδεια</string>
+    <string name="navigation_drawer_subtitle">Ημερολόγια, σημειώσεις &amp; εργασίες για android</string>
+    <string name="navigation_drawer_beta_feedback">Beta σχόλια</string>
+    <string name="navigation_drawer_settings">Ρυθμίσεις</string>
+    <string name="navigation_drawer_news_updates">Νέα &amp; ενημερώσεις</string>
+    <string name="navigation_drawer_external_links">Εξωτερικές συνδέσεις</string>
+    <string name="navigation_drawer_website">Ιστοσελίδα</string>
+    <string name="navigation_drawer_support">Υποστήριξη</string>
+    <string name="navigation_drawer_donate">Δωρεά</string>
+    <string name="navigation_drawer_adinfo">Πληροφορίες διαφημίσεων</string>
+    <string name="navigation_drawer_privacy_policy">Πολιτική Απορρήτου</string>
+
+
+    <!-- fragment_ical_list -->
+    <string name="list_due_overdue">Καθυστερημένα</string>
+    <string name="list_due_today">Μέχρι σήμερα</string>
+    <string name="list_due_tomorrow">Μέχρι αύριο</string>
+    <string name="list_due_inXdays" tools:ignore="PluralsCandidate">Μέχρι %d ημέρες</string>
+    <string name="list_due_inXhours" tools:ignore="PluralsCandidate">Μέχρι %d ώρες</string>
+    <string name="list_start_past">Άρχησαν στο παρελθόν</string>
+    <string name="list_start_today">Σχεδιασμένα για σήμερα</string>
+    <string name="list_start_tomorrow">Αρχίζουν αύριο</string>
+    <string name="list_start_inXhours" tools:ignore="PluralsCandidate">Σχεδιασμένα να αρχήσουν σε %d ώρες</string>
+    <string name="list_start_inXdays" tools:ignore="PluralsCandidate">Σχεδιασμένα να αρχήσουν σε %d ημέρες</string>
+    <string name="list_tabitem_journals">Ημερολόγια</string>
+    <string name="list_tabitem_notes">Σημειώσεις</string>
+    <string name="list_tabitem_todos">Εργασίες</string>
+    <string name="list_fab_add_contentdesc">Προσθήκη νέου</string>
+    <string name="list_progress">Πρόοδος</string>
+    <string name="list_expand">Επέκταση</string>
+    <string name="list_dialog_contribution_title">Σημείωση για τις διαφημίσεις</string>
+    <string name="list_dialog_contribution_message">Αυτή η εφαρμογή περιέχει από διαφημίσεις από προεπιλογή. Για περισσότερες πληροφορίες, ανατρέξτε στην ενότητα Ad-Info (Πληροφορίες διαφημίσεων) στο κύριο μενού!</string>
+    <string name="list_dialog_contribution_more_information">Περισσότερα</string>
+    <string name="list_num_attendees_contentdesc">Αριθμός συμμετεχόντων</string>
+    <string name="list_num_attachments_contentdesc">Αριθμός συνημμένων</string>
+    <string name="list_num_comments_contentdesc">Αριθμός σχολίων</string>
+    <string name="list_dialog_delete_visible_title">Διαγραφή όλων των ορατών?</string>
+    <string name="list_dialog_delete_visible_message">Αυτή η ενέργεια διαγράφει όλες τις ορατές καταχωρήσεις. (%1$d). Είστε σίγουροι ότι θέλετε να συνεχίσετε; Αυτή η λειτουργία δεν μπορεί να αναιρεθεί!</string>
+    <string name="list_quickadd_dialog_summary_description_hint">Περίληψη/Περιγραφή</string>
+    <string name="list_quickadd_dialog_summary_description_helper">Η πρώτη γραμμή ερμηνεύεται ως περίληψη, η υπόλοιπη ως περιγραφή. Τα hashtags ερμηνεύονται ως κατηγορίες (πχ. #category).</string>
+    <string name="list_item_upload_pending">Η μεταφόρτωση εκκρεμεί</string>
+    <string name="list_item_recurring">Επαναλαμβανόμενη καταχώρηση</string>
+
+
+    <!-- fragment_ical_view -->
+    <string name="view_readyonly">Μόνο για ανάγωνση</string>
+    <string name="view_upload_pending">Η μεταφόρτωση εκκρεμεί</string>
+    <string name="view_url_header">URL</string>
+    <string name="view_location_header">Τοποθεσία</string>
+    <string name="view_attendees_header">Συμμετέχοντες</string>
+    <string name="view_resources_header">Πηγές</string>
+    <string name="view_organizer_header">Διοργανωτής</string>
+    <string name="view_contact_header">Επαφές</string>
+    <string name="view_relatedto_header">Σχετικά με</string>
+    <string name="view_comments_header">Σχόλια</string>
+    <string name="view_attachments_header">Συνημμένα</string>
+    <string name="view_recurrence_header">Επανάληψη</string>
+    <string name="view_recurrence_exceptions">Εξαιρέσεις</string>
+    <string name="view_recurrence_additions">Προσθήκες</string>
+    <string name="view_recurrence_go_to_original_button">Μεταφορά στο πρωτότυπο</string>
+    <string name="view_recurrence_note_to_original_dialog_header">Περίπτωση επαναλαμβανόμενης</string>
+    <string name="view_recurrence_note_to_original">"Αυτή η καταχώρηση είναι μέρος μιας σειράς επαναλαμβανόμενων καταχωρήσεων. Η επεξεργασία αυτής της καταχώρισης θα την αποσυνδέσει από τη ακολουθία, θα συνεχιστεί ως αυτόνομο συμβάν και οι αλλαγές στο αρχικό συμβάν δεν θα επηρεάζουν πλέον αυτήν την καταχώριση."</string>
+    <string name="view_fragment_audio_permission">Άδεια εφαρμογής</string>
+    <string name="view_fragment_audio_permission_message">Η εφαρμογή jtx Board χρειάζεται την άδεια για την εγγραφή ήχου. Παρακαλούμε παραχωρήστε την άδεια χρήσης αυτής της δυνατότητας.</string>
+    <string name="view_fragment_audio_dialog_add_audio_note">Προσθήκη ηχητικής σημείωσης</string>
+    <string name="view_comment_playbutton_content_desc">Αναπαραγωγή ηχητικής σημείωσης</string>
+    <string name="view_fragment_audio_start_stop_recording_contentdesc">Έναρξη/διακοπή ηχογράφησης</string>
+    <string name="view_fragment_audio_start_stop_playback_contentdesc">Αναπαραγωγή σχολίου ήχου</string>
+    <string name="view_reccurrence_note_is_exception">Αυτό το στοιχείο αποτελεί εξαίρεση σε μια επαναλαμβανόμενη καταχώριση.</string>
+    <string name="view_feedback_linked_notes">Σχόλια / Συνδεδεμένες σημειώσεις</string>
+    <string name="view_add_note">Προσθήκη σημείωσης</string>
+    <string name="view_add_audio_note">Προσθήκη ήχου</string>
+    <string name="view_fab_edit_entry_contentDesc">Επεξεργασία καταχώρισης</string>
+    <string name="view_subtasks_header">Υποεργασίες</string>
+    <string name="view_progress_label">Πρόοδος</string>
+    <string name="view_dialog_sure_to_delete_title">Διαγραφή \"%1$s\"?</string>
+    <string name="view_dialog_sure_to_delete_message">Είστε σίγουροι πως θέλετε να διαγράψετε το \"%1$s\"?</string>
+    <string name="view_toast_deleted_successfully">\"%1$s\" Επιτυχής διαγραφή</string>
+    <string name="view_dialog_add_note">Προσθήκη σημείωσης</string>
+    <string name="view_dialog_add_note_dialog_hint">Προσθέστε την σημείωση σας εδώ</string>
+    <string name="view_toast_entry_does_not_exist_anymore">Η καταχώρηση που ζητήθηκε δεν υπάρχει (πλέον).</string>
+    <string name="view_created_text">Δημιουργήθηκε: %1$s</string>
+    <string name="view_last_modified_text">Τελευταία επεξεργασία: %1$s</string>
+    <string name="view_due">Μέχρι</string>
+    <string name="view_completed">Ολοκληρώθηκε</string>
+    <string name="view_started">Έναρξη</string>
+
+
+    <!-- fragment_ical_edit -->
+    <string name="edit_summary_hint">Περίληψη</string>
+    <string name="edit_add_category_hint">#ηκατηγοριαμου</string>
+    <string name="edit_add_category_helper">Προσθήκη κατηγορίας</string>
+    <string name="edit_description_hint">Περιγραφή</string>
+    <string name="edit_attendees_hint">johanna@example.com</string>
+    <string name="edit_attendees_helper">Προσθέστε έναν συμμετέχοντα (e-mail-address)</string>
+    <string name="edit_resources_hint">Προβολέας</string>
+    (What do you mean here?)
+    <string name="edit_resources_helper">Πηγή</string>
+    <string name="edit_organizer_hint">Διοργανωτής</string>
+    <string name="edit_contact_hint">Jim Dolittle, +1 919 555 1234</string>
+    <string name="edit_contact_helper">Στοιχεία επικοινωνίας του υπεύθυνου ή του κατόχου αυτής της καταχώρισης</string>
+    <string name="edit_comment_hint">Το σχόλιό σου…</string>
+    <string name="edit_comment_helper">Προσθήκη σχολίου</string>
+    <string name="edit_attachment_button_text">Προσθήκη συνημμένου</string>
+    <string name="edit_take_picture_button_text">Φωτογραφία</string>
+    <string name="edit_add_link_button_text">Προσθήκη link</string>
+    <string name="edit_url_hint" translatable="false">https://www.example.com</string>
+    <string name="edit_url_helper">Σχετικό URL με αυτή την εγγραφή</string>
+    <string name="edit_location_hint" translatable="false">1CP Conference Room 4350</string>
+    <string name="edit_location_helper">Προσθέστε μια τοποθεσία για αυτήν την καταχώρηση</string>
+    <string name="edit_attachment_add_dialog_hint">Το συνημμένο-url σας (https://…)</string>
+    <string name="edit_comment_add_dialog_hint">Το σχόλιο σου</string>
+    <string name="edit_dialog_priority">Προτεραιότητα</string>
+    <string name="edit_attachment_beta_info">*Λάβετε υπόψη ότι ο συγχρονισμός συνημμένων με το DAVx5 είναι μια πειραματική δυνατότητα. Λάβετε υπόψη ότι αυτό μπορεί να προκαλέσει απροσδόκητη συμπεριφορά ή σφάλματα. Εάν αντιμετωπίζετε προβλήματα, ενημερώστε μας μέσω των φόρουμ υποστήριξης ή ενός αιτήματος υποστήριξης στον ιστότοπο!</string>
+
+    <string name="edit_due">Μέχρι</string>
+    <string name="edit_completed">Ολοκληρώθηκε</string>
+    <string name="edit_started">Έναρξη</string>
+    <string name="edit_add_time_switch">Προσθήκη ώρας</string>
+    <string name="edit_add_timezone_switch">Προσθήκη ζώνης ώρας</string>
+    <string name="edit_progress">Πρόοδος</string>
+    <string name="edit_subtasks_header">Υποεργασίες</string>
+    <string name="edit_subtasks_add_hint">Η δευτερεύουσα εργασία σας</string>
+    <string name="edit_subtasks_add_helper">Προσθήκη δευτερεύουσας εργασίας</string>
+    <string name="edit_contact_header">Επικοινωνία</string>
+    <string name="edit_url_header">URL</string>
+    <string name="edit_location_header">Τοποθεσία</string>
+    <string name="edit_categories_header">Κατηγορίες</string>
+    <string name="edit_attendees_header">Συμμετέχοντες</string>
+    <string name="edit_resources_header">Πόροι</string>
+    <string name="edit_recurrence_header">Επανάληψη</string>
+    <string name="edit_attachment_delete_attachment">Διαγραφή συνημμένου</string>
+    <string name="edit_attachment_add_link_dialog">Προσθήκη συνημμένου συνδέσμου</string>
+    <string name="edit_recur_last_occurrence">Τελευταία προβολή</string>
+    <string name="edit_recur_all_occurrences">Όλες οι προβολές</string>
+    <string name="edit_recur_exceptions">Εξαιρέσεις</string>
+    <string name="edit_recur_additions">Προσθήκες</string>
+    <string name="edit_recur_repeat_every_x">Επανάληψη κάθε</string>
+    <string name="edit_recur_on_weekday">σε</string>
+    <string name="edit_recur_on_the_x_day_of_month">στο</string>
+    <string name="edit_recur_x_day_of_the_month">ημέρα του μήνα</string>
+    <string name="edit_recur_x_times">φορές</string>
+    <string name="edit_recur_toast_requires_start_date">Η επανάληψη απαιτεί να οριστεί μια ημερομηνία έναρξης!</string>
+    <string name="edit_datepicker_dialog_select_date">Επιλογή ημερομηνίας</string>
+    <string name="edit_datepicker_dialog_select_time">Επιλογή ώρας</string>
+    <string name="edit_task_started_add">Επιλογή ημερομηνίας/ώρας έναρξης</string>
+    <string name="edit_task_due_add">Επιλογή ημερομηνίας/ώρας λήξης</string>
+    <string name="edit_task_completed_add">Επιλογή ημερομηνίας/ώρας ολοκλήρωσης</string>
+
+    <string name="edit_dialog_sure_to_delete_title">Διαγραφή του \"%1$s\";</string>
+    <string name="edit_dialog_sure_to_discard_title">Θέλετε να απορρίψτε αυτήν την καταχώριση;</string>
+    <string name="edit_dialog_sure_to_delete_message">Είστε βέβαιοι ότι θέλετε να διαγράψετε το \"%1$s\";</string>
+    <string name="edit_dialog_sure_to_discard_message">Είστε βέβαιοι ότι θέλετε να απορρίψετε αυτήν την καταχώριση; Αυτή η καταχώρηση δεν θα αποθηκευτεί.</string>
+    <string name="edit_toast_deleted_successfully">\"%1$s\"Διαγράφηκε επιτυχώς</string>
+
+    <string name="edit_dialog_collection_not_found_error_title">Προσοχή</string>
+    <string name="edit_dialog_collection_not_found_error_message">Η επιλεγμένη συλλογή δεν μπορεί να βρεθεί πλέον, παρακαλώ επιλέξτε μία άλλη.</string>
+
+    <string name="edit_validation_errors_detected">Διορθώστε τα ακόλουθα σφάλματα επικύρωσης:</string>
+    <string name="edit_validation_errors_dialog_header">Παρουσιάστηκαν σφάλματα επικύρωσης</string>
+
+    <string name="edit_validation_errors_summary_or_description_necessary">Θα πρέπει να προσθέσετε μια περίληψη ή μία περιγραφή.</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">Η ημερομηνία λήξης δεν μπορεί να είναι πριν από την ημερομηνία έναρξης.</string>
+    <string name="edit_validation_errors_category_not_confirmed">Έγινε εισαγωγή μιας κατηγορίας αλλά δεν επιβεβαιώθηκε. Παρακαλώ επιβεβαιώστε ή διαγράψτε την.</string>
+    <string name="edit_validation_errors_comment_not_confirmed">Έγινε εισαγωγή σχολίου αλλά δεν επιβεβαιώθηκε. Επιβεβαιώστε ή διαγράψτε το.</string>
+    <string name="edit_validation_errors_resource_not_confirmed">Έγινε εισαγωγή πηγής αλλά δεν επιβεβαιώθηκε. Επιβεβαιώστε ή διαγράψτε την.</string>
+    <string name="edit_validation_errors_attendee_not_confirmed">Έγινε εισαγωγή ενός συμμετέχοντα αλλά δεν επιβεβαιώθηκε. Επιβεβαιώστε ή διαγράψτε τον.</string>
+    <string name="edit_validation_errors_subtask_not_confirmed">Εισήγαγε μια δευτερεύουσα εργασία αλλά δεν επιβεβαιώθηκε. Επιβεβαιώστε ή διαγράψτε την.</string>
+    <string name="edit_fragment_app_permission">Άδεια εφαρμογής</string>
+    Το
+    <string name="edit_fragment_app_permission_message">Η εφαρμογή jtx Board μπορεί να προτείνει δεδομένα συμμετεχόντων με βάση τις επαφές σας ως τιμές εισόδου για τις καταχωρίσεις σας. Απαιτείται να παρέχετε δικαιώματα ανάγνωσης στις επαφές σας για να ενεργοποιηθεί αυτή η δυνατότητα.</string>
+    <string name="edit_fragment_recur_unknown_rrule_dialog_title">Εντοπίστηκε ένας μη υποστηριζόμενος κανόνας επανάληψης!</string>
+    <string name="edit_fragment_recur_unknown_rrule_dialog_message">Εντοπίστηκε ένας άγνωστος ή μη υποστηριζόμενος κανόνας επανάληψης. Εάν αποθηκεύσετε αυτήν την καταχώρηση, ο υπάρχων κανόνας επανάληψης θα διαγραφεί/αντικατασταθεί.</string>
+    <string name="edit_fragment_recur_unsupported_duration_dialog_title">Εντοπίστηκε μη υποστηριζόμενη τιμή (Διάρκεια)!</string>
+    <string name="edit_fragment_recur_unsupported_duration_dialog_message">Εντοπίστηκε μια διάρκεια για αυτήν την καταχώρηση στο παρασκήνιο. Ο χειρισμός μιας διάρκειας δεν υποστηρίζεται, προς το παρόν, από το jtx Board. Χρησιμοποιήστε την ημερομηνία έναρξης, κατά την διάρκεια και λήξης. Εάν αποθηκεύσετε αυτήν την καταχώρηση, η υπάρχουσα διάρκεια θα διαγραφεί.</string>
+
+    <string-array name="edit_recur_day_week_month_year">
+        <item>Day(s)</item>
+        <item>Week(s)</item>
+        <item>Month(s)</item>
+        <item>Year(s)</item>
+    </string-array>
+
+
+    <!-- fragment_ical_filter -->
+    <string name="filter_account">Λογαριασμός</string>
+    <string name="filter_collection">Συλλογή</string>
+    <string name="filter_status">Κατάσταση</string>
+    <string name="filter_classification">Ταξινόμηση</string>
+    <string name="filter_category">Κατηγορία</string>
+    <string name="filter_fab_apply_filter_contentdescription">Εφαρμογή φίλτρου</string>
+
+    <!-- fragment_about -->
+    <string name="about_tabitem_jtx" translatable="false">jtx Board</string>
+    <string name="about_tabitem_translations">Μεταφράσεις</string>
+    <string name="about_tabitem_libraries">Βιβλιοθήκες</string>
+    <string name="about_tabitem_thanks">Ιδιαίτερες ευχαριστίες</string>
+    <string name="about_app_version">Έκδοση: %1$s (%2$d)</string>
+    <string name="about_app_codename">Κωδικό όνομα: "%1$s"</string>
+
+    <string name="about_app_build_date">Συντάχθηκε σε %s</string>
+    <string name="about_app_copyright" translatable="false">© Techbee e.U.</string>
+    <string name="about_app_terms">Όροι &amp; Προϋποθέσεις</string>
+
+    <string name="about_thanks_ffg">Ευχαριστούμε ιδιαιτέρως την FFG για την εμπιστοσύνη και την οικονομική τους υποστήριξη για την υλοποίηση αυτού του έργου.</string>
+
+
+    <!-- menus -->
+    <string name="menu_edit_delete">Διαγραφή</string>
+    <string name="menu_edit_clear_dates">Καθαρισμός ημερομηνιών</string>
+
+    <string name="menu_filter_reset">Επαναφορά</string>
+    <string name="menu_filter_apply">Καταχώρηση</string>
+
+    <string name="menu_list_search">Αναζήτηση</string>
+    <string name="menu_list_search_hint">Αναζήτηση</string>
+    <string name="menu_list_gotodate">Σε ημερομηνία</string>
+    <string name="menu_list_filter">Φίλτρα</string>
+    <string name="menu_list_clearfilter">Διαγραφή φίλτρου</string>
+    <string name="menu_list_quick_journal">Γρήγορο Ημερολόγιο</string>
+    <string name="menu_list_quick_note">Γρήγορη Σημείωση</string>
+    <string name="menu_list_quick_todo">Γρήγορη Εργασία</string>
+    <string name="menu_list_delete_visible">Διαγραφή ορατών</string>
+    <string name="menu_list_todo_show_completed">Εμφάνηση ολοκληρωμένων</string>
+    <string name="menu_list_todo_hide_completed">Απόκρυψη ολοκληρωμένων</string>
+    <string name="menu_list_syncnow">Συγχρονισμός τώρα</string>
+
+
+    <string name="menu_view_share_text">Κοινοποίηση</string>
+    <string name="menu_view_share_ics">Κοινοποίησε ως .ics</string>
+    <string name="menu_view_copy_as_journal">Αντιγραφή ως Ημερολόγιο</string>
+    <string name="menu_view_copy_as_todo">Αντιγραφή ως Εργασία</string>
+    <string name="menu_view_copy_as_note">Αντιγραφή ως Σημείωση</string>
+    <string name="menu_view_delete_item">Διαγραφή</string>
+    <string name="menu_view_copy_item">Δημιουργία αντιγράφου</string>
+    <string name="menu_view_syncnow">Συγχρονισμός τώρα</string>
+
+
+    <string name="menu_sync_syncnow">Συγχρονισμός τώρα</string>
+
+
+    <!-- Notification channel for Reminders -->
+    <string name="notification_channel_reminder_name">Επιθυμητή υπενθύμιση</string>
+    <string name="notification_channel_reminder_description">Ειδοποίηση για εργασίες σε καθηστέρηση</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_addJournal_shortLabel">Ημερολόγιο</string>
+    <string name="shortcut_addNote_shortLabel">Σημείωση</string>
+    <string name="shortcut_addTodo_shortLabel">Εργασία</string>
+    <string name="shortcut_addJournal_longLabel">Προσθήκη Ημερολογίου</string>
+    <string name="shortcut_addNote_longLabel">Προσθήκη Σημείωσης</string>
+    <string name="shortcut_addTodo_longLabel">Προσθήκη Εργασίας</string>
+
+
+    <!-- Settings fragment -->
+    <string name="settings_enforce_dark_theme">Εφαρμογή σκούρου θέματος</string>
+    <string name="settings_list">Ρυθμίσεις για τη λίστα στοιχείων</string>
+    <string name="settings_show_subtasks_in_list">Εμφάνιση δευτερευουσών εργασιών στη λίστα</string>
+    <string name="settings_show_attachments_in_list">Εμφάνιση συνημμένων στη λίστα</string>
+    <string name="settings_show_progress_for_subtasks_in_list">Εμφάνιση προόδου για δευτερεύουσες εργασίες στη λίστα</string>
+    <string name="settings_show_progress_for_maintasks_in_list">Εμφάνιση προόδου για εργασίες στη λίστα</string>
+    <string name="settings_group_settings_for_subentries">Ρυθμίσεις για υποεργασίες, υποσημειώσεις και υποημερολόγια</string>
+    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">Εμφάνιση δευτερευουσών εργασιών των ημερολογίων και των σημειώσεων στη λίστα εργασιών</string>
+    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">Εμφάνιση υποσημειώσεων των ημερολογίων και των εργασιών στη λίστα σημειώσεων</string>
+    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">Εμφάνιση υποημερολογίων των σημειώσεων και εργασιών στη λίστα ημερολογίων</string>
+    <string name="settings_app">Ρυθμίσεις εφαρμογής</string>
+    <string name="settings_select_mimetype_for_audio">Επιλέξτε Mimetype για ηχητικές σημειώσεις</string>
+
+
+    <!-- Sync fragment -->
+    <string name="sync_coming_soon_heading">Συγχρονισμός με DAVx⁵ (σύντομα κοντά σας)</string>
+    <string name="sync_coming_soon_text">Το jtx Board δεν παρέχει ο ίδιος συγχρονισμό διακομιστή, αλλά θα υποστηρίζει συγχρονισμό μέσω DAVx5. Αυτή η μέθοδος θα σας επιτρέψει να χρησιμοποιήσετε έναν συμβατό διακομιστή CalDAV της επιλογής σας για αποθήκευση, δημιουργία αντιγράφων ασφαλείας και συγχρονισμό των δεδομένων σας. \nΑυτή η λειτουργία είναι ακόμα υπό κατασκευή και θα κυκλοφορήσει σύντομα! Μείνετε συντονισμένοι στην ιστοσελίδα μας και στο Twitter :-)</string>
+    <string name="sync_with_davx5_heading">Συγχρονισμός με DAVx⁵ (beta)*</string>
+    <string name="sync_basic_info">Το jtx Board δεν παρέχει ο ίδιο συγχρονισμό με τον διακομιστή, αλλά υποστηρίζει συγχρονισμό μέσω DAVx5. Αυτή η μέθοδος σάς επιτρέπει να χρησιμοποιείτε οποιονδήποτε συμβατό διακομιστή CalDAV της επιλογής σας για αποθήκευση, δημιουργία αντιγράφων ασφαλείας και συγχρονισμό των δεδομένων σας. * Λάβετε υπόψη ότι αυτή η λειτουργία εξακολουθεί να θεωρείται beta. Παρόλο που αυτή η λειτουργία έχει δοκιμαστεί, ενδέχεται να παρουσιαστούν προβλήματα. Εάν αντιμετωπίσετε οποιοδήποτε πρόβλημα, θα εκτιμούσαμε τα σχόλιά σας!</string>
+    <string name="sync_congratulations">Συγχαρητήρια! :-)</string>
+    <string name="sync_davx5_installed_but_no_collections_found">Εντοπίσαμε έναν DAVx⁵ λογαριασμό στο τηλέφωνό σας. Εάν δεν τον έχετε ακόμα εγκαταστήσει, ακολουθήστε τις οδηγίες στον ιστότοπό μας:</string>
+    <string name="sync_davx5_installed_with_collections_found">Εντοπίσαμε έναν λογαριασμό DAVx⁵ στο τηλέφωνο σας. Εάν έχετε οποιοδήποτε πρόβλημα ή αμφιβολίες, παρακαλώ ενημερωθείται πρώτα από τον ιστότοπο μας:</string>
+    <string name="sync_davx5_installed_with_collections_synched_collections">Οι ακόλουθοι λογαριασμοί (ημερολόγια) είναι επί του παρόντος συγχρονισμένοι:</string>
+    <string name="sync_check_out_davx5">Ολοκληρώθηκε DAVx⁵!</string>
+    <string name="sync_davx5_not_found">Δεν εντοπίσαμε DAVx⁵ λογαριασμό στο τηλέφωνό σας.\nΓια περισσότερες πληροφορίες σχετικά με τον συγχρονισμό, παρακαλούμε να ανατρέξετε στο:</string>
+    <string name="sync_davx5_get_davx5_on">ή λάβεται το DAVx⁵ στο</string>
+    <string name="sync_furhter_info_davx5">Για περισσότερες πληροφορίες σχετικά με το DAVx⁵ παρκαλώ επισκεφθείτε το</string>
+    <string name="sync_button_add_account_in_davx5">Προσθέστε έναν λογαριασμό στο DAVx⁵</string>
+    <string name="sync_toast_intent_open_davx5_failed">Αποτυχία ανοίγματος του DAVx⁵, παρακαλώ ανοίξτε χειροκίνητα την εφαρμογή.</string>
+    <string name="sync_toast_intent_start_davx5_sync">Η ενεργοποίηση του συγχρονισμού με το DAVx⁵ απαίτυχε, παρακαλώ ελέγξτε το DAVx⁵.</string>
+
+
+    <!-- Donate fragment -->
+    <string name="donate_header_text">adinfo_text</string>
+    <string name="donate_thank_you">Ευχαριστούμε!</string>
+    <string name="donate_donate_with">Δωρίστε μέσω</string>
+    <string name="donate_other_donation_methods">Εάν θέλετε να εξετάσετε οποιαδήποτε άλλη μέθοδο δωρεάς, ελέγξτε τον ιστότοπό μας:</string>
+
+    <!-- Adinfo fragment -->
+    <string name="adinfo_text">Η ανάπτυξη μιας εφαρμογής είναι ένα περίπλοκο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι μία επίσης πολύ σκληρή δουλειά. Η έκδοση του jtx Board είναι δωρεάν και χρηματοδοτείται από διαφημίσεις. Με την αποδοχή διαφημίσεων συμβάλλετε στη συνεχή ανάπτυξη και χρηματοδότηση αυτού του έργου.</string>
+    <string name="adinfo_huwei_only_non_personalized_text">Αυτή η έκδοση του jtx board χρησιμοποιεί μη εξατομικευμένες διαφημίσεις.</string>
+    <string name="adinfo_adfree_text">Αν προτιμάτε αυτήν την εφαρμογή χωρίς διαφημίσεις, εξετάστε την ακόλουθη αναβάθμιση:</string>
+    <string name="adinfo_adfree_purchase_header">Αναβάθμιση σε jtx Board χωρίς διαφημίσεις</string>
+    <string name="adinfo_adfree_purchase_description">Σας ευχαριστούμε που σκεφτήκατε την αναβάθμιση του jtx Board χωρίς διαφημίσεις. Αυτή η αναβάθμιση καταργεί τις επαναλαμβανόμενες διαφημίσεις από αυτήν την εφαρμογή.</string>
+    <string name="adinfo_adfree_purchase_header_thankyou">Σας ευχαριστούμε που αγοράσατε το jtx Board χωρίς διαφημίσεις</string>
+    <string name="adinfo_adfree_purchase_description_thankyou">Οι διαφημίσεις έχουν πλέον καταργηθεί από την εφαρμογή. Εάν σας αρέσει αυτή η εφαρμογή και θέλετε να υποστηρίξετε τη συνεχή ανάπτυξη, εξετάστε επίσης τη συνδρομή.</string>
+    <string name="adinfo_adfree_subscribe_header">Συνδρομή για jtx Board xωρίς διαφημίσεις</string>
+    <string name="adinfo_adfree_subscribe_description">Η συνδρομή αφαιρεί τις επαναλαμβανόμενες διαφημίσεις από αυτήν την εφαρμογή και επιπλέον υποστηρίζετε τη συνεχή ανάπτυξη αυτής της εφαρμογής.</string>
+    <string name="adinfo_adfree_subscribe_success_header">Σας ευχαριστούμε που αγοράσατε τη συνδρομή jtx Board χωρίς διαφημίσεις</string>
+    <string name="adinfo_adfree_subscribe_success_description">Οι διαφημίσεις έχουν πλέον καταργηθεί από την εφαρμογή. Σας ευχαριστούμε για τη συνεισφορά σας για να κρατήσετε αυτό το έργο ζωντανό!</string>
+    <string name="adinfo_adfree_subscribe_success_thankyou">Ευχαριστούμε!</string>
+    <string name="adinfo_adfree_subscribe_quarterly">Τριμηνιαία</string>
+    <string name="adinfo_button_reset_user_consent">Επαναφορά συναίνεσης χρήστη</string>
+    <string name="adinfo_button_manage_subscriptions">Διαχείριση συνδρομής</string>
+    <string name="adinfo_adfree_subscribe_purchase_date">Αγοράστηκε στις %1$s</string>
+    <string name="adinfo_adfree_subscribe_order_id">Αναγνωριστικό παραγγελίας: %1$s</string>
+
+
+    <string name="attachment_error_on_retrieving_file">Η ανάκτηση του αρχείου απέτυχε.</string>
+    <string name="attachment_error_no_app_found_to_open_file_or_uri">Δεν βρέθηκε εφαρμογή για να ανοίξει αυτό το αρχείο/URL.</string>
+
+    <string name="toast_item_is_now_recu_exception">Το επαναλαμβανόμενο στοιχείο αποτελεί πλέον εξαίρεση.</string>
+    <string name="toast_adfree_for_a_week">Όχι άλλες βίντεο διαφημίσεις εδώ και μια εβδομάδα :-)</string>
+
+    <!-- sync content provider -->
+    <string name="synccontentprovider_sync_problem">Λυπούμαστε, το jtx board δυσκολεύεται να συγχρονίστει. Κλείστε το DAVx⁵ και ξεκινήστε τον συγχρονισμό εκ νέου.</string>
+
+</resources>
