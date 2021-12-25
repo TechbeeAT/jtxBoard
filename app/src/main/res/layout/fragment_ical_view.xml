@@ -1184,10 +1184,12 @@
                     android:id="@+id/view_add_note"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/view_add_note"
                     app:icon="@drawable/ic_comment_add"
-                    app:layout_constraintEnd_toStartOf="@+id/view_add_audio_note"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout" />
@@ -1196,14 +1198,14 @@
                     android:id="@+id/view_add_audio_note"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/view_add_audio_note"
                     app:icon="@drawable/ic_microphone"
-                    app:layout_constraintBottom_toBottomOf="@+id/view_add_note"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/view_add_note"
-                    app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_add_note" />
 
 
                 <com.google.android.material.textview.MaterialTextView
@@ -1217,7 +1219,7 @@
                     android:textSize="12sp"
                     android:textStyle="italic"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_add_note"
+                    app:layout_constraintTop_toBottomOf="@+id/view_add_audio_note"
                     tools:text="Created: Sun Dec 20 20:38:30 GMT+01:00 2020" />
 
 
