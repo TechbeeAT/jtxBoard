@@ -99,6 +99,10 @@ android {
         // https://developer.android.com/studio/write/java8-support#library-desugaring
         coreLibraryDesugaringEnabled = true
     }
+
+    lintOptions{
+        disable 'MissingTranslation'   // do not fail lint check because of missing translations
+    }
 }
 
 aboutLibraries {
