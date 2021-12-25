@@ -1,0 +1,11 @@
+Elevate the power of the <b>ical-standard</b> to the next level, use the potential of the combination of <b>journals, notes and tasks out of one app</b> and use <b>DAVx5</b> to synchronize your entries with the server of your choice (coming soon)!
+
+<b>iCal standard compliant</b>
+Using the iCal standard ensures compatibility and interoparability with other apps and services independent of a dedicated provider or infrastructure.
+
+<b>Combine journals, notes & tasks</b>
+Instead of using separate apps for journals, notes & tasks you can use them out of one hand, combine and link them to each other, e.g. create meeting minutes and link your tasks to them. 
+
+<b>Sync with DAVx5 (coming soon)</b>
+Synchronize your entries with any compatible CalDAV server by using DAVx5. By using DAVx5 you are free to choose your preferred provider for CalDAV, you can even use your local server to store and synchronize your data.
+Note: DAVx5 is an independent app and must be acquired separately.
