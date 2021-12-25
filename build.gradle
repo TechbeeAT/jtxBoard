@@ -61,18 +61,13 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
-
-
 }
 
 allprojects {
     repositories {
         google()
         mavenCentral()
-
-        // Maven repository address for the HUAWEI Ads SDK.
-        maven { url 'https://developer.huawei.com/repo/' }
-
+        maven { url 'https://developer.huawei.com/repo/' }  // Maven repository address for the HUAWEI Ads SDK.
     }
 }
 
