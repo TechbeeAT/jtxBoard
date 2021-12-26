@@ -154,6 +154,9 @@ dependencies {
 
     implementation "androidx.preference:preference-ktx:1.1.1"
 
+    // Volley for simple network requests
+    implementation("com.android.volley:volley:1.2.1")
+
     // Admob & Google Consent for Admob & Google billing
     gplayImplementation "com.google.android.gms:play-services-ads:20.5.0"
     gplayImplementation "com.google.android.ump:user-messaging-platform:2.0.0"

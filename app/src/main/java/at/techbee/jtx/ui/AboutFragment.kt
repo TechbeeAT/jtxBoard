@@ -22,10 +22,15 @@ import at.techbee.jtx.R
 import at.techbee.jtx.databinding.FragmentAboutBinding
 import at.techbee.jtx.databinding.FragmentAboutJtxBinding
 import at.techbee.jtx.databinding.FragmentAboutThanksBinding
+import at.techbee.jtx.databinding.FragmentAboutTranslationsBinding
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.material.tabs.TabLayout
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
+import org.json.JSONException
 import java.text.SimpleDateFormat
+
 
 class AboutFragment : Fragment() {
 
@@ -53,6 +58,7 @@ class AboutFragment : Fragment() {
 
         val bindingAboutJtx = FragmentAboutJtxBinding.inflate(inflater, container, false)
         val bindingAboutThanks = FragmentAboutThanksBinding.inflate(inflater, container, false)
+        val bindingAboutTranslations = FragmentAboutTranslationsBinding.inflate(inflater, container, false)
 
 
         //val aboutBinding = FragmentAboutBinding.inflate(inflater, container, false)
@@ -77,24 +83,18 @@ class AboutFragment : Fragment() {
             .add(aboutLibrariesFragment, null)
             .commit()
 
-
-        binding.aboutTablayout.getTabAt(TAB_POSITION_TRANSLATIONS)?.view?.visibility = View.GONE
-
         binding.aboutTablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-
                 binding.aboutLinearlayout.removeAllViews()
-
                 when (tab?.position) {
                     TAB_POSITION_ABOUT -> binding.aboutLinearlayout.addView(bindingAboutJtx.root)
-                    //TAB_POSITION_TRANSLATIONS -> null // TODO: replace with translations
+                    TAB_POSITION_TRANSLATIONS -> binding.aboutLinearlayout.addView(bindingAboutTranslations.root)
                     TAB_POSITION_LIBRARIES -> binding.aboutLinearlayout.addView(aboutLibrariesFragment.requireView())
                     TAB_POSITION_THANKS -> binding.aboutLinearlayout.addView(bindingAboutThanks.root)
                     else -> binding.aboutLinearlayout.addView(bindingAboutJtx.root)
                 }
             }
-
             override fun onTabUnselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
             override fun onTabReselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
         })
@@ -112,6 +112,9 @@ class AboutFragment : Fragment() {
             clickCount++
         }
 
+
+        getTranslators()
+
         return binding.root
     }
 
@@ -128,4 +131,45 @@ class AboutFragment : Fragment() {
         super.onResume()
     }
 
+    private fun getTranslators() {
+
+        val url = " https://api.poeditor.com/v2/contributors/list"
+
+        val jsonObjectRequest: JsonObjectRequest = object : JsonObjectRequest(
+            Method.POST, url, null,
+            { response ->
+                try {
+                    Log.d("jsonResponse", response.toString())
+                    val result = response.getJSONObject("result")
+                    val contributors = result.getJSONArray("contributors")
+                    for(i in 0 until contributors.length()) {
+                        val name = contributors.getJSONObject(i).getString("name")
+                        Log.d("json", "Name = $name")
+
+                        val languages = contributors.getJSONObject(i).getJSONArray("permissions").getJSONObject(0).getJSONArray("languages")
+                        for(j in 0 until languages.length()) {
+                            val language = languages.getString(j)
+                            Log.d("json", "Language = $language")
+                        }
+                    }
+                    Log.d("jsonResponse", contributors.toString())
+                } catch (e: JSONException) {
+                    Log.w("Contributors", "Failed to parse JSON response with contributors\n$e")
+                }
+            },
+            { error ->
+                   Log.d("jsonResponse", error.toString())
+            }) {
+
+            override fun getBody(): ByteArray {
+                return "api_token=7f94161134af8f355eb6feced64dcad5&id=500401".toByteArray()
+            }
+
+            override fun getHeaders(): MutableMap<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["Content-Type"] = "application/x-www-form-urlencoded"
+                return params            }
+        }
+        Volley.newRequestQueue(requireContext()).add(jsonObjectRequest)
+    }
 }
