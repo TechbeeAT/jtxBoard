@@ -1,0 +1,4 @@
+We are proud to present the first release of jtx Board :-)
+It has come a long way and we hope you enjoy this app. Feel free to give feedback, report bugs or send feature requests!
++ Added changelogs files
++ Added Greek language support
