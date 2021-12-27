@@ -23,6 +23,7 @@
     <string name="link_jtx_twitter" translatable="false">https://twitter.com/jtxBoard</string>
     <string name="link_techbee" translatable="false">https://techbee.at</string>
     <string name="link_jtx_terms" translatable="false">https://jtx.techbee.at/terms-conditions</string>
+    <string name="link_jtx_poeditor" translatable="false">https://poeditor.com/join/project?hash=4jaOOJSLxx</string>
     <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
 
 
@@ -315,6 +316,9 @@
     <string name="about_thanks_ffg">Special thanks to FFG for their trust and financial support to realize this project.</string>
     <string name="about_translations_thanks_to">Thanks to</string>
     <string name="about_translations_for_contributions_in">for contributions in</string>
+    <string name="about_translations_basic_info">jtx Board is an open source app that appreciates the participation and contribution of the open source community. On this page we would like to attribute the efforts of community members for translations.</string>
+    <string name="about_translations_contribution_info">If you would like to edit/add translations or add new languages to this app, feel free to join the jtx Board project on the translation platform POEditor:</string>
+    <string name="about_translations_contribution_button">Join on POEditor.com</string>
 
 
     <!-- menus -->

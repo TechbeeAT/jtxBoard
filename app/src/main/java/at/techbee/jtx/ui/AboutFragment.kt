@@ -9,6 +9,8 @@
 package at.techbee.jtx.ui
 
 import android.app.Application
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -59,6 +61,15 @@ class AboutFragment : Fragment() {
         val bindingAboutJtx = FragmentAboutJtxBinding.inflate(inflater, container, false)
         val bindingAboutThanks = FragmentAboutThanksBinding.inflate(inflater, container, false)
         val bindingAboutTranslations = FragmentAboutTranslationsBinding.inflate(inflater, container, false)
+
+        // showing the link to POEditor only for ose-flavor
+        if(BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_OSE) {
+            bindingAboutTranslations.fragmentAboutTranslationsContributionInfo.visibility = View.VISIBLE
+            bindingAboutTranslations.fragmentAboutTranslationsButtonPoeditor.visibility = View.VISIBLE
+            bindingAboutTranslations.fragmentAboutTranslationsButtonPoeditor.setOnClickListener {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_poeditor))))
+            }
+        }
 
 
         //val aboutBinding = FragmentAboutBinding.inflate(inflater, container, false)
@@ -131,6 +142,10 @@ class AboutFragment : Fragment() {
         super.onResume()
     }
 
+    /**
+     * This method queries the translators from the POEditor API and adds the name and languages to the linear layout
+     * @param [layout] to which the translators should be added
+     */
     private fun addTranslators(layout: LinearLayout) {
 
         val url = " https://api.poeditor.com/v2/contributors/list"
@@ -154,15 +169,13 @@ class AboutFragment : Fragment() {
                             languageLocales.add(Locale.forLanguageTag(language).displayLanguage)
                             //Log.d("json", "LanguageLocale = ${languageLocale.displayLanguage}")
                         }
+
+                        // create a new card through the binding and add the parsed name and languages, then add it to the linear layout
                         val translatorBinding = FragmentAboutTranslationsTranslatorBinding.inflate(inflater, layout, false)
                         translatorBinding.fragmentAboutTranslationsTranslatorName.text = name
                         translatorBinding.fragmentAboutTranslationsTranslatorLanguages.text = languageLocales.joinToString(separator = ", ")
                         layout.addView(translatorBinding.root)
                     }
-
-
-
-                    //Log.d("jsonResponse", contributors.toString())
                 } catch (e: JSONException) {
                     Log.w("Contributors", "Failed to parse JSON response with contributors\n$e")
                 }
