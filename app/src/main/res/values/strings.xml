@@ -27,15 +27,6 @@
     <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
 
 
-
-    <!-- Possible audio formats for settings -->
-    <array name="settings_audio_formats">
-        <item>audio/3gpp</item>
-        <item>audio/aac</item>
-        <item>audio/ogg</item>
-    </array>
-
-
     <!-- Global Strings -->
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
@@ -82,18 +73,7 @@
     <string name="todo_status_inprocess">In process</string>
     <string name="todo_status_cancelled">Cancelled</string>
 
-    <string-array name="priority">
-        <item>0 - No priority</item>
-        <item>1 - Highest</item>
-        <item>2 - Higher</item>
-        <item>3 - High</item>
-        <item>4 - Medium high</item>
-        <item>5 - Medium</item>
-        <item>6 - Medium low</item>
-        <item>7 - Low</item>
-        <item>8 - Lower</item>
-        <item>9 - Lowest</item>
-    </string-array>
+
 
     <string name="classification_public">Public</string>
     <string name="classification_private">Private</string>
@@ -284,13 +264,6 @@
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">An unknown or unsupported recurrence rule was detected. If you save this entry, the existing recurrence rule will be deleted/overwritten.</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">Unsupported value (Duration) detected!</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">A duration was detected for this entry in the background. Handling a duration is currently not supported by jtx Board. Please use the start, due and end date instead. If you save this entry, the existing duration will be deleted.</string>
-
-    <string-array name="edit_recur_day_week_month_year">
-        <item>Day(s)</item>
-        <item>Week(s)</item>
-        <item>Month(s)</item>
-        <item>Year(s)</item>
-    </string-array>
 
 
     <!-- fragment_ical_filter -->

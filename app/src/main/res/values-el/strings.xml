@@ -26,14 +26,6 @@
     <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
 
 
-    <!-- Πιθανές μορφές ρυθμίσεις ήχου -->
-    <array name="settings_audio_formats">
-        <item>audio/3gpp</item>
-        <item>audio/aac</item>
-        <item>audio/ogg</item>
-    </array>
-
-
     <!-- Ρυθμήσεις -->
     <string name="save">Αποθήκευση</string>
     <string name="cancel">Ακύρωση</string>
@@ -78,18 +70,7 @@
     <string name="todo_status_inprocess">Σε εξέλιξη</string>
     <string name="todo_status_cancelled">Ακυρωμένο</string>
 
-    <string-array name="priority">
-        <item>0 - Χωρίς</item>
-        <item>1 - Μέγιστη</item>
-        <item>2 - Πολύ υψηλή</item>
-        <item>3 - Υψηλή</item>
-        <item>4 - Μέση προς υψηλή</item>
-        <item>5 - Μέση</item>
-        <item>6 - Μέση προς χαμηλή</item>
-        <item>7 - Χαμηλή</item>
-        <item>8 - Πολύ χαμηλή</item>
-        <item>9 - Χαμηλότερη</item>
-    </string-array>
+
 
     <string name="classification_public">Δημόσιο</string>
     <string name="classification_private">Ιδιωτικό</string>
@@ -281,12 +262,6 @@
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">Εντοπίστηκε μη υποστηριζόμενη τιμή (Διάρκεια)!</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">Εντοπίστηκε μια διάρκεια για αυτήν την καταχώρηση στο παρασκήνιο. Ο χειρισμός μιας διάρκειας δεν υποστηρίζεται, προς το παρόν, από το jtx Board. Χρησιμοποιήστε την ημερομηνία έναρξης, κατά την διάρκεια και λήξης. Εάν αποθηκεύσετε αυτήν την καταχώρηση, η υπάρχουσα διάρκεια θα διαγραφεί.</string>
 
-    <string-array name="edit_recur_day_week_month_year">
-        <item>Day(s)</item>
-        <item>Week(s)</item>
-        <item>Month(s)</item>
-        <item>Year(s)</item>
-    </string-array>
 
 
     <!-- fragment_ical_filter -->

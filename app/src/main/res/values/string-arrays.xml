@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) Techbee e.U.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the GNU Public License v3.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.gnu.org/licenses/gpl.html
+  -->
+
+<resources>
+
+    <string-array name="edit_recur_day_week_month_year">
+        <item>Day(s)</item>
+        <item>Week(s)</item>
+        <item>Month(s)</item>
+        <item>Year(s)</item>
+    </string-array>
+
+
+    <string-array name="priority">
+        <item>0 - No priority</item>
+        <item>1 - Highest</item>
+        <item>2 - Higher</item>
+        <item>3 - High</item>
+        <item>4 - Medium high</item>
+        <item>5 - Medium</item>
+        <item>6 - Medium low</item>
+        <item>7 - Low</item>
+        <item>8 - Lower</item>
+        <item>9 - Lowest</item>
+    </string-array>
+
+
+</resources>

@@ -8,27 +8,6 @@
 
 <resources>
 
-    <string-array name="edit_recur_day_week_month_year">
-        <item>Tag</item>
-        <item>Woche</item>
-        <item>Monat</item>
-        <item>Jahr</item>
-    </string-array>
-
-    <string-array name="priority">
-        <item>0 - Keine Priorität</item>
-        <item>1 - Höchste</item>
-        <item>2 - Höher</item>
-        <item>3 - Hoch</item>
-        <item>4 - Medium hoch</item>
-        <item>5 - Medium</item>
-        <item>6 - Medium niedrig</item>
-        <item>7 - Niedrig</item>
-        <item>8 - Niedriger</item>
-        <item>9 - Niedrigste</item>
-    </string-array>
-
-
     <string name="app_permission_label">jtx Board Synchronisierung für Journale, Notizen und Aufgaben</string>
     <string name="app_permission_desc">synchronisieren von jtx Board mit anderen Anwendungen wie zB DAVx⁵</string>
     <string name="save">Speichern</string>
