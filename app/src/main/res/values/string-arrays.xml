@@ -7,14 +7,12 @@
   -->
 
 <resources>
-
     <string-array name="edit_recur_day_week_month_year">
         <item>Day(s)</item>
         <item>Week(s)</item>
         <item>Month(s)</item>
         <item>Year(s)</item>
     </string-array>
-
 
     <string-array name="priority">
         <item>0 - No priority</item>
@@ -28,6 +26,4 @@
         <item>8 - Lower</item>
         <item>9 - Lowest</item>
     </string-array>
-
-
 </resources>

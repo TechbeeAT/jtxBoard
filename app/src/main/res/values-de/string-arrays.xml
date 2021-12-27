@@ -7,7 +7,6 @@
   -->
 
 <resources>
-
     <string-array name="edit_recur_day_week_month_year">
         <item>Tag</item>
         <item>Woche</item>
@@ -27,5 +26,4 @@
         <item>8 - Niedriger</item>
         <item>9 - Niedrigste</item>
     </string-array>
-
 </resources>

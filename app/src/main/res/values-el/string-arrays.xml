@@ -7,7 +7,6 @@
   -->
 
 <resources>
-
     <string-array name="priority">
         <item>0 - Χωρίς</item>
         <item>1 - Μέγιστη</item>

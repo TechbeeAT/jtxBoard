@@ -262,8 +262,6 @@
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">Εντοπίστηκε μη υποστηριζόμενη τιμή (Διάρκεια)!</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">Εντοπίστηκε μια διάρκεια για αυτήν την καταχώρηση στο παρασκήνιο. Ο χειρισμός μιας διάρκειας δεν υποστηρίζεται, προς το παρόν, από το jtx Board. Χρησιμοποιήστε την ημερομηνία έναρξης, κατά την διάρκεια και λήξης. Εάν αποθηκεύσετε αυτήν την καταχώρηση, η υπάρχουσα διάρκεια θα διαγραφεί.</string>
 
-
-
     <!-- fragment_ical_filter -->
     <string name="filter_account">Λογαριασμός</string>
     <string name="filter_collection">Συλλογή</string>
