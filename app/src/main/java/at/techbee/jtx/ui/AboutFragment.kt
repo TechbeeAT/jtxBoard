@@ -14,15 +14,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
-import at.techbee.jtx.databinding.FragmentAboutBinding
-import at.techbee.jtx.databinding.FragmentAboutJtxBinding
-import at.techbee.jtx.databinding.FragmentAboutThanksBinding
-import at.techbee.jtx.databinding.FragmentAboutTranslationsBinding
+import at.techbee.jtx.databinding.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.tabs.TabLayout
@@ -30,6 +28,8 @@ import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 import org.json.JSONException
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class AboutFragment : Fragment() {
@@ -113,7 +113,7 @@ class AboutFragment : Fragment() {
         }
 
 
-        getTranslators()
+        addTranslators(bindingAboutTranslations.aboutTranslationsLinearlayout)
 
         return binding.root
     }
@@ -131,7 +131,7 @@ class AboutFragment : Fragment() {
         super.onResume()
     }
 
-    private fun getTranslators() {
+    private fun addTranslators(layout: LinearLayout) {
 
         val url = " https://api.poeditor.com/v2/contributors/list"
 
@@ -146,13 +146,23 @@ class AboutFragment : Fragment() {
                         val name = contributors.getJSONObject(i).getString("name")
                         Log.d("json", "Name = $name")
 
+                        val languageLocales = mutableListOf<String>()
                         val languages = contributors.getJSONObject(i).getJSONArray("permissions").getJSONObject(0).getJSONArray("languages")
                         for(j in 0 until languages.length()) {
                             val language = languages.getString(j)
-                            Log.d("json", "Language = $language")
+                            //Log.d("json", "Language = $language")
+                            languageLocales.add(Locale.forLanguageTag(language).displayLanguage)
+                            //Log.d("json", "LanguageLocale = ${languageLocale.displayLanguage}")
                         }
+                        val translatorBinding = FragmentAboutTranslationsTranslatorBinding.inflate(inflater, layout, false)
+                        translatorBinding.fragmentAboutTranslationsTranslatorName.text = name
+                        translatorBinding.fragmentAboutTranslationsTranslatorLanguages.text = languageLocales.joinToString(separator = ", ")
+                        layout.addView(translatorBinding.root)
                     }
-                    Log.d("jsonResponse", contributors.toString())
+
+
+
+                    //Log.d("jsonResponse", contributors.toString())
                 } catch (e: JSONException) {
                     Log.w("Contributors", "Failed to parse JSON response with contributors\n$e")
                 }
