@@ -154,7 +154,10 @@ data class Attachment (
          * choose to put the application to the external storage,
          * the files must still be stored and retrieved from the right place
          */
-        fun getAttachmentDirectory(context: Context): File? {
+        fun getAttachmentDirectory(context: Context?): File? {
+
+            if(context == null)
+                return null
 
             val filesPath = File(context.filesDir, "attachments/")
             if (!filesPath.exists()) {

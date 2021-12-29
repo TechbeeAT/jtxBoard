@@ -13,6 +13,7 @@ import android.content.*
 import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
+import android.os.ParcelFileDescriptor
 import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -237,7 +238,7 @@ class SyncContentProvider : ContentProvider() {
             createEmptyFileForAttachment(id)
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true))
-            rebuildRecurring(id)
+            database.getRecurringToPopulate(id)?.recreateRecurring(database)
 
         return ContentUris.withAppendedId(uri, id)
     }
@@ -466,16 +467,49 @@ class SyncContentProvider : ContentProvider() {
         {
             try {
                 val id: Long = uri.lastPathSegment?.toLong() ?: throw NumberFormatException("Last path segment was null")
-                rebuildRecurring(id)
+                database.getRecurringToPopulate(id)?.recreateRecurring(database)
             } catch (e: NumberFormatException) {
-                Log.d("pathSegments[1]", "Could not convert path segment to Long. \n$e")
-
+                throw  java.lang.IllegalArgumentException("Could not convert path segment to Long: $uri\n$e")
             }
         }
         return 1
     }
 
+    override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor? {
 
+        if(sUriMatcher.match(uri) != CODE_ATTACHMENT_ITEM)
+            throw  java.lang.IllegalArgumentException("Only attachment Uris are allowed: $uri")
+
+        val id: Long
+        try {
+            id = uri.lastPathSegment?.toLong() ?: throw NumberFormatException("Last path segment was null")
+        } catch (e: NumberFormatException) {
+            throw  java.lang.IllegalArgumentException("Could not convert path segment to Long: $uri\n$e")
+        }
+        val attachment = database.getAttachmentById(id) ?: throw java.lang.IllegalArgumentException("No attachment found for the given id: $id")
+        val attachmentUri = attachment.uri ?: throw java.lang.IllegalArgumentException("No uri found for the given id: $id")
+        if(!attachmentUri.startsWith("content://"))
+            throw java.lang.IllegalArgumentException("Uri is not a content uri: $attachmentUri.")
+
+        val filename = Uri.parse(attachmentUri).lastPathSegment ?: throw java.lang.IllegalArgumentException("No filename found in uri: $attachmentUri")
+        val attachmentFile = File("${Attachment.getAttachmentDirectory(context)}/$filename")
+
+        //ParcelFileDescriptor also has a Callback when it's closed, that could be interesting!
+
+        val pfdMode = if(mode == "w")
+            ParcelFileDescriptor.MODE_READ_WRITE
+        else
+            ParcelFileDescriptor.MODE_READ_ONLY
+
+        return ParcelFileDescriptor.open(attachmentFile, pfdMode)
+    }
+
+    /**
+     * Checks if the given uri has the flag for isSyncAdapter
+     * @param [uri] that should be checked
+     * @return true if the value for CALLER_IS_SYNCADAPTER is true (false is not returned, insted an exception is thrown)
+     * @throws [IllegalArgumentException] if the parameter is missing or if the parameter is false
+     */
     private fun isSyncAdapter(uri: Uri): Boolean {
 
         val isSyncAdapter = uri.getBooleanQueryParameter(CALLER_IS_SYNCADAPTER, false)
@@ -485,6 +519,12 @@ class SyncContentProvider : ContentProvider() {
             throw java.lang.IllegalArgumentException("Currently only Syncadapters are supported. Uri: ($uri)")
     }
 
+    /**
+     * Extracts the account from an uri
+     * @param [uri] from which the account should be extracted
+     * @return the Account with the extracted account name and type
+     * @throws [IllegalArgumentException] if account type or name could not be extracted or if the local account type was used
+     */
     private fun getAccountFromUri(uri: Uri): Account {
         val accountName = uri.getQueryParameter(ACCOUNT_NAME) ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_NAME missing. Uri: ($uri)")
         val accountType = uri.getQueryParameter(ACCOUNT_TYPE) ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_TYPE missing. Uri: ($uri)")
@@ -494,6 +534,10 @@ class SyncContentProvider : ContentProvider() {
         return Account(accountName, accountType)
     }
 
+    /**
+     * Creates a new attachment file in the attachments directory
+     * @param [id] of the attachment in the database
+     */
     private fun createEmptyFileForAttachment(id: Long) {
 
         val attachment = database.getAttachmentById(id) ?: return
@@ -510,27 +554,15 @@ class SyncContentProvider : ContentProvider() {
             file.createNewFile()
 
             val attachmentUri = FileProvider.getUriForFile(context!!, AUTHORITY_FILEPROVIDER, file)
-
             attachment.binary = null
             attachment.uri = attachmentUri.toString()
             attachment.extension = ".$fileExtension"
             attachment.filename = file.name
             attachment.filesize = file.length()
             database.updateAttachment(attachment)
-
-            //grantUriPermission enables DAVx5 to write into the generated file
-            context?.grantUriPermission(callingPackage, attachmentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-
         } catch (e: IOException) {
             Log.e("SyncContentProvider", "Failed to access storage\n$e")
         }
     }
-
-
-    private fun rebuildRecurring(id: Long) {
-        // rebuild recurring
-        database.getRecurringToPopulate(id)?.recreateRecurring(database)
-    }
-
 }
 
