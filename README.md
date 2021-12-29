@@ -41,3 +41,22 @@ Contributions are always welcome! Whether financial support, translations, code 
 For communication with the team and other people, please use the forums to get in touch: [Forums](https://forums.bitfire.at/category/30/jtx-board)
 
 <img src="https://jtx.techbee.at/wp-content/uploads/2021/12/header-image.png" alt="jtx Board Banner with Screenshot" width="70%">
+
+
+### Flavors
+
+jtx Board provides different flavors: 
+- gplay is the flavor for the Google Play store that contains ads from Admob and the billing manager for monetization (subscription to remove ads). 
+- huawei is the flavor for the Huawei App Gallery that also contains ads, but from the Huawei Ads provider. 
+- global is another flavor that contains ads from Admob but no billing manager.
+- ose is the open source edition. **If you would like to create build the app from source, this is the recommended flavor.** This flavor contains only open source libraries and no ads. Instead of ads this flavor has an additional page for donations visible.
+
+Currently there is also no difference in functionalities between the flavors. 
+
+
+### Permissions
+jtx Board uses/requests the following permissions:
+- GET_ACCOUNTS is used to determine if there are accounts set up in DAVx5 and show them in the UI
+- RECORD_AUDIO can be used to access the microphone for adding audio notes
+- READ_SYNC_STATS is used to show a progress bar when a synchronization through DAVx5 is currently in progress
+- INTERNET is used to retrieve the list of contributors for translations from POEditor.com
