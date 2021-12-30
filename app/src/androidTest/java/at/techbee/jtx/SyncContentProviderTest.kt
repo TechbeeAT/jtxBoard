@@ -12,6 +12,7 @@ import android.accounts.Account
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.net.Uri
+import android.os.ParcelFileDescriptor
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
@@ -401,6 +402,42 @@ class SyncContentProviderTest {
         mContentResolver?.query(newAttachment!!, arrayOf(JtxContract.JtxAttachment.ID, JtxContract.JtxAttachment.URI), "${JtxContract.JtxAttachment.URI} = ?", arrayOf("https://techbee.at"), null).use {
             assertEquals(0, it!!.count)             // inserted object was found
         }
+    }
+
+    @Test
+    fun attachment_insert_find_update_delete_generate_file()  {
+
+        // INSERT
+        val values = ContentValues().apply {
+            put(JtxContract.JtxAttachment.ICALOBJECT_ID, defaultICalObjectId)
+            put(JtxContract.JtxAttachment.FMTTYPE, "text/plain")
+        }
+        val uriAttachment = JtxContract.JtxAttachment.CONTENT_URI.asSyncAdapter(defaultTestAccount)
+        val newAttachment = mContentResolver?.insert(uriAttachment, values)
+        assertNotNull(newAttachment)
+
+        //QUERY
+        mContentResolver?.query(newAttachment!!, arrayOf(JtxContract.JtxAttachment.URI), null, null, null).use {
+            assertEquals(1, it!!.count)             // inserted object was found
+            it.moveToFirst()
+            val localUri = it.getString(0)
+            Log.d("localUri", localUri)
+            assertTrue(localUri.startsWith("content://"))
+        }
+
+        val textIn = "jtx Board rulz"
+        val pfd = mContentResolver?.openFile(newAttachment!!, "w", null)
+        ParcelFileDescriptor.AutoCloseOutputStream(pfd).write(textIn.toByteArray())
+
+        val pfd2 = mContentResolver?.openFile(newAttachment!!, "r", null)
+        val textCompare = String(ParcelFileDescriptor.AutoCloseInputStream(pfd2).readBytes())
+
+        assertEquals(textIn, textCompare)
+
+        //delete
+        val countDel: Int? = mContentResolver?.delete(newAttachment!!, null, null)
+        assertNotNull(countDel)
+        assertEquals(1,countDel)
     }
 
 
