@@ -337,9 +337,9 @@ Global Strings -->
 
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Λυπούμαστε, το jtx board δυσκολεύεται να συγχρονίστει. Κλείστε το DAVx⁵ και ξεκινήστε τον συγχρονισμό εκ νέου."</string>
-    <string name="about_translations_thanks_to"></string>
-    <string name="about_translations_for_contributions_in"></string>
-    <string name="about_translations_basic_info"></string>
-    <string name="about_translations_contribution_info"></string>
-    <string name="about_translations_contribution_button"></string>
+    <string name="about_translations_thanks_to">"Ευχαριστίες"</string>
+    <string name="about_translations_for_contributions_in">"Συνεισφορά"</string>
+    <string name="about_translations_basic_info">"Η jtx Board είναι μια εφαρμογή ανοιχτού κώδικα που εκτιμά τη συμμετοχή και τη συνεισφορά της κοινότητας ανοιχτού κώδικα. Σε αυτή τη σελίδα θα θέλαμε να αποδώσουμε τις προσπάθειες των μελών της κοινότητας για μεταφράσεις."</string>
+    <string name="about_translations_contribution_info">"Εάν θέλετε να επεξεργαστείτε, να προσθέσετε μεταφράσεις ή να προσθέσετε νέες γλώσσες σε αυτήν την εφαρμογή, μη διστάσετε να κάνετε εγγραφή για το έργο της jtx Board στη μεταφραστική πλατφόρμα POEditor:"</string>
+    <string name="about_translations_contribution_button">"Εγγραφείτε στο POEditor.com"</string>
 </resources>
