@@ -44,6 +44,7 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.*
 import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.monetization.BillingManager
+import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
@@ -1015,7 +1016,7 @@ class IcalViewFragment : Fragment() {
                 property.component = Component.VJOURNAL.name
 
                 if (property.dtstart == null) {
-                    property.dtstart = System.currentTimeMillis()
+                    property.dtstart = DateTimeUtils.getTodayAsLong()
                     property.dtstartTimezone = TZ_ALLDAY
                 } else {
                     property.dtstart = icalViewViewModel.icalEntity.value?.property?.dtstart

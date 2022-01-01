@@ -18,6 +18,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.room.*
 import at.techbee.jtx.*
 import at.techbee.jtx.R
+import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
@@ -461,7 +462,7 @@ data class ICalObject(
         fun createJournal(): ICalObject = ICalObject(
             component = Component.VJOURNAL.name,
             module = Module.JOURNAL.name,
-            dtstart = System.currentTimeMillis(),
+            dtstart = DateTimeUtils.getTodayAsLong(),
             dtstartTimezone = TZ_ALLDAY,
             status = StatusJournal.FINAL.name,
             dirty = true

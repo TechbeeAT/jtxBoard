@@ -84,6 +84,7 @@ class IcalListFragment : Fragment() {
 
         const val PREFS_LAST_USED_COLLECTION = "lastUsedCollection"
         const val PREFS_MODULE = "prefsModule"
+        const val PREFS_ISFIRSTRUN = "isFirstRun"
 
         //Journal
         const val PREFS_JOURNAL_COLLECTION = "prefsJournalCollection"
@@ -153,6 +154,11 @@ class IcalListFragment : Fragment() {
         prefs = requireActivity().getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)
 
         loadFilterArgsAndPrefs()
+
+        if(prefs.getBoolean(PREFS_ISFIRSTRUN, true)) {
+            icalListViewModel.addWelcomeEntries(requireContext())
+            prefs.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
+        }
 
 
         icalListViewModel.iCal4List.observe(viewLifecycleOwner, {

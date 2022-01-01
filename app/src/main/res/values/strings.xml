@@ -133,6 +133,14 @@
     <string name="list_item_upload_pending">Upload pending</string>
     <string name="list_item_recurring">Recurring entry</string>
 
+    <string name="list_welcome_entry_journal_summary">Congratulations, this is your first journal entry :-)</string>
+    <string name="list_welcome_entry_journal_description">Journals can be used to keep your notes for a specific date. Use this functionality for example for protocols, meeting minutes, diary entries and so on. If you edit this entry, you will see the options to add categories, attendees, attachments, … Feel free to delete this entry whenever you want!</string>
+    <string name="list_welcome_entry_note_summary">Congratulations, this is your first note entry :-)</string>
+    <string name="list_welcome_entry_note_description">Notes are traditional notes and not bound to a dedicated date. Like journals you can add attachments, attendees and more when editing or adding an entry. By the way you can also add subtasks to any entry, no matter if it\'s a journal, note or task!</string>
+    <string name="list_welcome_entry_todo_summary">Congratulations, this is your first task entry :-)</string>
+    <string name="list_welcome_entry_todo_description">Additionally to journals and notes, tasks can have a planned start, a due and a completed date. They can be checked when they are done or a progress can be set. Edit this entry to check out all options :-)</string>
+    <string name="list_welcome_category">#FirstSteps</string>
+
 
     <!-- fragment_ical_view -->
     <string name="view_readyonly">Read only</string>

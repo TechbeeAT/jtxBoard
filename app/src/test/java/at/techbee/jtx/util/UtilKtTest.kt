@@ -13,10 +13,13 @@ import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
+import at.techbee.jtx.util.DateTimeUtils.getTodayAsLong
 import at.techbee.jtx.util.DateTimeUtils.isValidEmail
 import at.techbee.jtx.util.DateTimeUtils.isValidURL
 import org.junit.Assert.*
 import org.junit.Test
+import java.time.Instant
+import java.time.ZoneId
 
 class UtilKtTest {
 
@@ -84,5 +87,11 @@ class UtilKtTest {
     @Test fun getLongListfromCSVString_empty() = assertEquals(emptyList<Long>(), getLongListfromCSVString(null))
     @Test fun getLongListfromCSVString_empty2() = assertEquals(emptyList<Long>(), getLongListfromCSVString("asdf"))
 
-
+    // one day in millis is 86400000, we get the UTC time so the UTC time divided by 86400000 must always have 0 rest
+    @Test fun getTodayAsLong_test() {
+        val today = getTodayAsLong()
+        val offset = ZoneId.systemDefault().rules.getOffset(Instant.now())
+        val todayUTC = today + offset.totalSeconds*1000
+        assertTrue(todayUTC%86400000 == 0L)
+    }
 }

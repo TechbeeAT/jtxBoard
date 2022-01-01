@@ -10,10 +10,12 @@ package at.techbee.jtx.ui
 
 import android.accounts.Account
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
+import at.techbee.jtx.JtxContract.JtxICalObject.TZ_ALLDAY
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
@@ -21,6 +23,7 @@ import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
+import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -316,10 +319,62 @@ class IcalListViewModel(
         }
     }
 
+    /**
+     * This function takes an icalObjectId, retrives the icalObject and posts it  in the directEditEntity LiveData Object.
+     * This can be observed and will forward the user to the edit fragment.
+     * [icalObjectId] that should be opened in the edit view
+     */
     fun postDirectEditEntity(icalObjectId: Long) {
 
         viewModelScope.launch(Dispatchers.IO) {
             directEditEntity.postValue(database.getSync(icalObjectId))
+        }
+    }
+
+    /**
+     * This function adds some welcome entries, this should only be used on the first install.
+     * @param [context] to resolve localized string resources
+     */
+    fun addWelcomeEntries(context: Context) {
+
+        val welcomeJournal = ICalObject.createJournal().apply {
+            this.dtstart = DateTimeUtils.getTodayAsLong()
+            this.dtstartTimezone = TZ_ALLDAY
+            this.summary = context.getString(R.string.list_welcome_entry_journal_summary)
+            this.description = context.getString(R.string.list_welcome_entry_journal_description)
+        }
+
+        val welcomeNote = ICalObject.createNote().apply {
+            this.summary = context.getString(R.string.list_welcome_entry_note_summary)
+            this.description = context.getString(R.string.list_welcome_entry_note_description)
+        }
+
+        val welcomeTodo = ICalObject.createTodo().apply {
+            this.dtstart = DateTimeUtils.getTodayAsLong()
+            this.dtstartTimezone = TZ_ALLDAY
+            this.due = DateTimeUtils.getTodayAsLong() + 604800000  // = + one week in millis
+            this.dueTimezone = TZ_ALLDAY
+            this.summary = context.getString(R.string.list_welcome_entry_journal_summary)
+            this.description = context.getString(R.string.list_welcome_entry_journal_description)
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val wj = database.insertICalObject(welcomeJournal)
+            val wn = database.insertICalObject(welcomeNote)
+            val wt = database.insertICalObject(welcomeTodo)
+
+            database.insertCategory(Category().apply {
+                this.icalObjectId = wj
+                this.text = context.getString(R.string.list_welcome_category)
+            })
+            database.insertCategory(Category().apply {
+                this.icalObjectId = wn
+                this.text = context.getString(R.string.list_welcome_category)
+            })
+            database.insertCategory(Category().apply {
+                this.icalObjectId = wt
+                this.text = context.getString(R.string.list_welcome_category)
+            })
         }
     }
 }
