@@ -1,13 +1,354 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) Techbee e.U.
-  ~ All rights reserved. This program and the accompanying materials
-  ~ are made available under the terms of the GNU Public License v3.0
-  ~ which accompanies this distribution, and is available at
-  ~ http://www.gnu.org/licenses/gpl.html
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_permission_label">"jtx Board sync diari, note e attività"</string>
+    <string name="app_permission_desc">"sincronizza il contenuto della jtx Board con altre applicazioni come DAVx⁵"</string>
 
+    <!-- Possible audio formats for settings
+Global Strings -->
+    <string name="save">"Salva"</string>
+    <string name="cancel">"Annulla"</string>
+    <string name="ok">"Ok"</string>
+    <string name="delete">"Eliminare"</string>
+    <string name="discard">"Scartare"</string>
+    <string name="gotit">"Fatto"</string>
+    <string name="cont">"Continua"</string>
+    <string name="toolbar_text_jtx_board_journals_overview">"Diari Sintesi"</string>
+    <string name="toolbar_text_jtx_board_notes_overview">"Note Sintesi"</string>
+    <string name="toolbar_text_jtx_board_tasks_overview">"Attività Sintesi"</string>
+    <string name="toolbar_text_view_journal_details">"Diario Dettagli"</string>
+    <string name="toolbar_text_view_note_details">"Nota Dettagli"</string>
+    <string name="toolbar_text_view_task_details">"Attività Dettagli"</string>
+    <string name="toolbar_text_add_journal">"Aggiungi diario"</string>
+    <string name="toolbar_text_add_note">"Aggiungi nota"</string>
+    <string name="toolbar_text_add_task">"Aggiungi attività"</string>
+    <string name="toolbar_text_edit_journal">"Modifica diario"</string>
+    <string name="toolbar_text_edit_note">"Modifica nota"</string>
+    <string name="toolbar_text_edit_task">"Modifica attività"</string>
+    <string name="toolbar_text_filter">"Filtro"</string>
+    <string name="toolbar_text_settings">"Impostazioni"</string>
+    <string name="toolbar_text_about">"Sopra"</string>
+    <string name="toolbar_text_sync">"Sincronizza"</string>
+    <string name="toolbar_text_donate">"Donare"</string>
+    <string name="toolbar_text_adinfo">"Informazioni sull'annuncio"</string>
+    <string name="default_local_collection_name">"Locale"</string>
+    <string name="default_local_account_name">"Locale"</string>
 
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Bozza"</string>
+    <string name="journal_status_final">"Finale"</string>
+    <string name="journal_status_cancelled">"Annullato"</string>
+    <string name="todo_status_needsaction">"Bisogna azione"</string>
+    <string name="todo_status_completed">"Finito"</string>
+    <string name="todo_status_inprocess">"In corso"</string>
+    <string name="todo_status_cancelled">"Annullato"</string>
+    <string name="classification_public">"Pubblico"</string>
+    <string name="classification_private">"Privato"</string>
+    <string name="classification_confidential">"Confidenziale"</string>
 
+    <!-- Fuzzy -->
+    <string name="attendee_role_chair">"Amministratore"</string>
+    <string name="attendee_role_required_participant">"Partecipante richiesto"</string>
+    <string name="attendee_role_optional_participant">"Partecipante opzionale"</string>
+    <string name="attendee_role_non_participant">"Non partecipante / Informativo"</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"Apri il cassetto di navigazione"</string>
+    <string name="navigation_drawer_close">"Chiudi il riquadro di navigazione"</string>
+    <string name="navigation_drawer_board">"Tavola"</string>
+    <string name="navigation_drawer_sync">"Sincronizza con DAVx⁵"</string>
+    <string name="navigation_drawer_about">"Informazioni / Licenza"</string>
+    <string name="navigation_drawer_subtitle">"diari, note ed attività per Android"</string>
+    <string name="navigation_drawer_beta_feedback">"Feedback beta"</string>
+    <string name="navigation_drawer_settings">"Impostazioni"</string>
+    <string name="navigation_drawer_news_updates">"Notizie e aggiornamenti"</string>
+    <string name="navigation_drawer_external_links">"link esterno"</string>
+    <string name="navigation_drawer_website">"Sito web"</string>
+    <string name="navigation_drawer_support">"Supporto"</string>
+    <string name="navigation_drawer_donate">"Donare"</string>
+    <string name="navigation_drawer_adinfo">"Informazioni sull'annuncio"</string>
+    <string name="navigation_drawer_privacy_policy">"politica sulla riservatezza"</string>
+
+    <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"In ritardo"</string>
+    <string name="list_due_today">"Da fare oggi"</string>
+    <string name="list_due_tomorrow">"Per domani"</string>
+    <string name="list_due_inXdays">"Scadenza tra %d giorni"</string>
+    <string name="list_due_inXhours">"Scadenza tra %d ore"</string>
+    <string name="list_start_past">"Inizia in passato"</string>
+    <string name="list_start_today">"Inizio previsto oggi"</string>
+    <string name="list_start_tomorrow">"Inizia domani"</string>
+    <string name="list_start_inXhours">"Inizio pianificato tra %d ore"</string>
+    <string name="list_start_inXdays">"Inizio pianificato tra %d giorni"</string>
+    <string name="list_tabitem_journals">"Diario"</string>
+    <string name="list_tabitem_notes">"Nota"</string>
+    <string name="list_tabitem_todos">"Attività"</string>
+    <string name="list_fab_add_contentdesc">"Aggiungi un nuovo elemento"</string>
+    <string name="list_progress">"Progresso"</string>
+    <string name="list_expand">"Espandere"</string>
+    <string name="list_dialog_contribution_title">"Nota sugli annunci"</string>
+    <string name="list_dialog_contribution_message">"Questa app è alimentata da annunci pubblicitari per impostazione predefinita. Per maggiori informazioni, controlla la sezione Ad-Info nel menu principale!"</string>
+    <string name="list_dialog_contribution_more_information">"Scopri di più"</string>
+    <string name="list_num_attendees_contentdesc">"Numero di partecipanti"</string>
+    <string name="list_num_attachments_contentdesc">"Numero di allegati"</string>
+    <string name="list_num_comments_contentdesc">"Numero di commenti"</string>
+    <string name="list_dialog_delete_visible_title">"Eliminare tutto visibile?"</string>
+    <string name="list_dialog_delete_visible_message">"Questa azione elimina tutti i appunti visibili (%1$d). Sei sicuro di voler procedere? Questa operazione non può essere annullata!"</string>
+    <string name="list_quickadd_dialog_summary_description_hint">"Riassunto/Descrizione"</string>
+    <string name="list_quickadd_dialog_summary_description_helper">"La prima riga è interpretata come riassunto, il resto come descrizione. Gli hashtag sono interpretati come categorie (es. #categoria)."</string>
+    <string name="list_item_upload_pending">"Caricamento in sospeso"</string>
+    <string name="list_item_recurring">"Voce ricorrente"</string>
+
+    <!-- fragment_ical_view -->
+    <string name="view_readyonly">"Protezione alla scrittura"</string>
+    <string name="view_upload_pending">"Caricamento in sospeso"</string>
+    <string name="view_url_header">"URL"</string>
+    <string name="view_location_header">"Posizione"</string>
+    <string name="view_attendees_header">"Partecipanti"</string>
+    <string name="view_resources_header">"Risorse"</string>
+    <string name="view_organizer_header">"Organizzatore"</string>
+    <string name="view_contact_header">"Contatto"</string>
+    <string name="view_relatedto_header">"Relativo a"</string>
+    <string name="view_comments_header">"Commenti"</string>
+    <string name="view_attachments_header">"Allegati"</string>
+    <string name="view_recurrence_header">"Ricorrenza"</string>
+    <string name="view_recurrence_exceptions">"Eccezioni"</string>
+    <string name="view_recurrence_additions">"aggiunte"</string>
+    <string name="view_recurrence_go_to_original_button">"Vai all'originale"</string>
+    <string name="view_recurrence_note_to_original_dialog_header">"Istanza di ricorrente"</string>
+    <string name="view_recurrence_note_to_original">"Questa voce fa parte di una serie. La modifica di questa voce la scollegherà dalla serie, continuerà come evento autonomo e le modifiche all'evento originale non influenzeranno più questa voce. "</string>
+    <string name="view_fragment_audio_permission">"Autorizzazione app"</string>
+    <string name="view_fragment_audio_permission_message">"jtx Board ha bisogno dell'autorizzazione per registrare l'audio. Si prega di concedere l'autorizzazione per utilizzare questa funzione."</string>
+    <string name="view_fragment_audio_dialog_add_audio_note">"Aggiungi nota audio"</string>
+    <string name="view_comment_playbutton_content_desc">"Riproduci commento audio"</string>
+    <string name="view_fragment_audio_start_stop_recording_contentdesc">"Avvia/Interrompi registrazione"</string>
+    <string name="view_fragment_audio_start_stop_playback_contentdesc">"Riproduci commento audio"</string>
+    <string name="view_reccurrence_note_is_exception">"Questo elemento è un'eccezione a una voce ricorrente."</string>
+    <string name="view_feedback_linked_notes">"Feedback/Note collegate"</string>
+    <string name="view_add_note">"Aggiungi nota"</string>
+    <string name="view_add_audio_note">"Aggiungi audio"</string>
+    <string name="view_fab_edit_entry_contentDesc">"Modifica voce"</string>
+    <string name="view_subtasks_header">"Sottoattività"</string>
+    <string name="view_progress_label">"Progresso"</string>
+    <string name="view_dialog_sure_to_delete_title">"Eliminare \"%1$s\"?"</string>
+    <string name="view_dialog_sure_to_delete_message">"Sei sicuro di voler eliminare \"%1$s\"?"</string>
+    <string name="view_toast_deleted_successfully">"\"%1$s\" eliminato con successo"</string>
+    <string name="view_dialog_add_note">"Aggiungi nota"</string>
+    <string name="view_dialog_add_note_dialog_hint">"Aggiungi la tua nota qui"</string>
+    <string name="view_toast_entry_does_not_exist_anymore">"La voce richiesta non esiste (più)."</string>
+    <string name="view_created_text">"Creato: %1$s"</string>
+    <string name="view_last_modified_text">"Ultima modifica: %1$s"</string>
+    <string name="view_due">"Scadente"</string>
+    <string name="view_completed">"Completato"</string>
+    <string name="view_started">"Comincia"</string>
+
+    <!-- fragment_ical_edit -->
+    <string name="edit_summary_hint">"Riassunto"</string>
+    <string name="edit_add_category_hint">"#miacategoria"</string>
+    <string name="edit_add_category_helper">"Aggiungi una categoria"</string>
+    <string name="edit_description_hint">"Descrizione"</string>
+    <string name="edit_attendees_hint">"johanna@esempio.com"</string>
+    <string name="edit_attendees_helper">"Aggiungi un partecipante (indirizzo e-mail)"</string>
+    <string name="edit_resources_hint">"Proiettore"</string>
+    <string name="edit_resources_helper">"Aggiungi una risorsa"</string>
+    <string name="edit_organizer_hint">"Organizzatore"</string>
+    <string name="edit_contact_hint">"Jim Dolittle, +1 919 555 1234"</string>
+    <string name="edit_contact_helper">"Informazioni di contatto del responsabile o proprietario di questa voce"</string>
+    <string name="edit_comment_hint">"Il tuo commento…"</string>
+    <string name="edit_comment_helper">"Aggiungi un commento"</string>
+    <string name="edit_attachment_button_text">"Aggiungi allegato"</string>
+    <string name="edit_take_picture_button_text">"Fare una foto"</string>
+    <string name="edit_add_link_button_text">"Aggiungi link allegato"</string>
+    <string name="edit_url_helper">"URL relativo a questa voce"</string>
+    <string name="edit_location_helper">"Aggiungi una posizione per questa voce"</string>
+    <string name="edit_attachment_add_dialog_hint">"Il tuo allegato-url (https://…)"</string>
+    <string name="edit_comment_add_dialog_hint">"Il tuo commento"</string>
+    <string name="edit_dialog_priority">"Priorità"</string>
+    <string name="edit_attachment_beta_info">"* Si noti che la sincronizzazione degli allegati con DAVx⁵ è una funzionalità sperimentale. Tieni presente che ciò potrebbe causare comportamenti o errori imprevisti. Se riscontri problemi, faccelo sapere tramite i forum di supporto o una richiesta di supporto sul sito web!"</string>
+    <string name="edit_due">"Scadente"</string>
+    <string name="edit_completed">"Completato"</string>
+    <string name="edit_started">"Comincia"</string>
+    <string name="edit_add_time_switch">"Aggiungi tempo"</string>
+    <string name="edit_add_timezone_switch">"Aggiungi fuso orario"</string>
+    <string name="edit_progress">"Progresso"</string>
+    <string name="edit_subtasks_header">"Sottoattività"</string>
+    <string name="edit_subtasks_add_hint">"La tua sottoattività"</string>
+    <string name="edit_subtasks_add_helper">"Aggiungi una sottoattività"</string>
+    <string name="edit_contact_header">"Contatto"</string>
+    <string name="edit_url_header">"URL"</string>
+    <string name="edit_location_header">"Posizione"</string>
+    <string name="edit_categories_header">"Categorie"</string>
+    <string name="edit_attendees_header">"Partecipanti"</string>
+    <string name="edit_resources_header">"Risorse"</string>
+    <string name="edit_recurrence_header">"Ricorrenza"</string>
+    <string name="edit_attachment_delete_attachment">"Elimina allegato"</string>
+    <string name="edit_attachment_add_link_dialog">"Aggiungi link allegato"</string>
+    <string name="edit_recur_last_occurrence">"Ultima occorrenza"</string>
+    <string name="edit_recur_all_occurrences">"Tutte le occorrenze"</string>
+    <string name="edit_recur_exceptions">"Eccezioni"</string>
+    <string name="edit_recur_additions">"aggiunte"</string>
+    <string name="edit_recur_repeat_every_x">"Ripeti ogni"</string>
+    <string name="edit_recur_on_weekday">"in poi"</string>
+    <string name="edit_recur_on_the_x_day_of_month">"sul"</string>
+    <string name="edit_recur_x_day_of_the_month">"giorno del mese"</string>
+    <string name="edit_recur_x_times">"volte"</string>
+    <string name="edit_recur_toast_requires_start_date">"La ricorrenza richiede l'impostazione di una data di inizio!"</string>
+    <string name="edit_datepicker_dialog_select_date">"Seleziona la data"</string>
+    <string name="edit_datepicker_dialog_select_time">"Seleziona l'ora"</string>
+    <string name="edit_task_started_add">"Scegli data/ora di inizio"</string>
+    <string name="edit_task_due_add">"Scegli data/ora di scadenza"</string>
+    <string name="edit_task_completed_add">"Scegli data/ora di completamento"</string>
+    <string name="edit_dialog_sure_to_delete_title">"Eliminare \"%1$s\"?"</string>
+    <string name="edit_dialog_sure_to_discard_title">"Eliminare questa voce?"</string>
+    <string name="edit_dialog_sure_to_delete_message">"Sei sicuro di voler eliminare \"%1$s\"?"</string>
+    <string name="edit_dialog_sure_to_discard_message">"Sei sicuro di voler eliminare questa voce? Questa voce non verrà salvata."</string>
+    <string name="edit_toast_deleted_successfully">"\"%1$s\" eliminato con successo"</string>
+    <string name="edit_dialog_collection_not_found_error_title">"Attenzione"</string>
+    <string name="edit_dialog_collection_not_found_error_message">"La raccolta selezionata non può più essere trovata, selezionane un'altra."</string>
+    <string name="edit_validation_errors_detected">"Correggi i seguenti errori di convalida:"</string>
+    <string name="edit_validation_errors_dialog_header">"Si sono verificati errori di convalida"</string>
+    <string name="edit_validation_errors_summary_or_description_necessary">"Dovrebbe essere fornito un riassunto o una descrizione."</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La data di scadenza non può essere precedente alla data di inizio."</string>
+    <string name="edit_validation_errors_category_not_confirmed">"Una categoria è stata inserita ma non confermata. Si prega di confermare o eliminare."</string>
+    <string name="edit_validation_errors_comment_not_confirmed">"Un commento è stato inserito ma non confermato. Si prega di confermare o eliminare."</string>
+    <string name="edit_validation_errors_resource_not_confirmed">"Una risorsa è stata inserita ma non confermata. Si prega di confermare o eliminare."</string>
+    <string name="edit_validation_errors_attendee_not_confirmed">"Un partecipante è stato inserito ma non confermato. Si prega di confermare o eliminare."</string>
+    <string name="edit_validation_errors_subtask_not_confirmed">"È stata immessa una sottoattività ma non è stata confermata. Si prega di confermare o eliminare."</string>
+    <string name="edit_fragment_app_permission">"Autorizzazione app"</string>
+    <string name="edit_fragment_app_permission_message">"jtx Board può suggerire i dati dei partecipanti in base ai tuoi contatti come valori di input per le tue voci. Le autorizzazioni di lettura sui tuoi contatti sono necessarie per abilitare questa funzione."</string>
+    <string name="edit_fragment_recur_unknown_rrule_dialog_title">"Rilevata regola di ricorrenza non supportata!"</string>
+    <string name="edit_fragment_recur_unknown_rrule_dialog_message">"È stata rilevata una regola di ricorrenza sconosciuta o non supportata. Se salvi questa voce, la regola di ricorrenza esistente verrà eliminata/sovrascritta."</string>
+    <string name="edit_fragment_recur_unsupported_duration_dialog_title">"Rilevato valore non supportato (durata)!"</string>
+    <string name="edit_fragment_recur_unsupported_duration_dialog_message">"È stata rilevata una durata per questa voce in background. La gestione di una durata non è attualmente supportata da jtx Board. Utilizza invece la data di inizio, scadenza e fine. Se salvi questa voce, la durata esistente verrà eliminata."</string>
+
+    <!-- fragment_ical_filter -->
+    <string name="filter_account">"Account"</string>
+    <string name="filter_collection">"Collezione"</string>
+    <string name="filter_status">"Stato"</string>
+    <string name="filter_classification">"Classificazione"</string>
+    <string name="filter_category">"Categoria"</string>
+    <string name="filter_fab_apply_filter_contentdescription">"Applica il filtro"</string>
+    <string name="about_tabitem_translations">"Traduzioni"</string>
+    <string name="about_tabitem_libraries">"Biblioteche"</string>
+    <string name="about_tabitem_thanks">"Ringraziamenti speciali"</string>
+    <string name="about_app_version">"Versione: %1$s (%2$d)"</string>
+    <string name="about_app_codename">"Nome in codice: %1$s"</string>
+    <string name="about_app_build_date">"Compilato su %s"</string>
+    <string name="about_app_terms">"Termini &amp; Condizioni"</string>
+    <string name="about_thanks_ffg">"Un ringraziamento speciale a FFG per la fiducia e il supporto finanziario per la realizzazione di questo progetto."</string>
+
+    <!-- menus -->
+    <string name="menu_edit_delete">"Eliminare"</string>
+    <string name="menu_edit_clear_dates">"Cancella date"</string>
+    <string name="menu_filter_reset">"Resettare"</string>
+    <string name="menu_filter_apply">"Applicare"</string>
+    <string name="menu_list_search">"Ricerca"</string>
+    <string name="menu_list_search_hint">"Ricerca"</string>
+    <string name="menu_list_gotodate">"Vai alla data"</string>
+    <string name="menu_list_filter">"Filtro"</string>
+    <string name="menu_list_clearfilter">"Resetta filtro"</string>
+    <string name="menu_list_quick_journal">"Diario rapido"</string>
+    <string name="menu_list_quick_note">"Nota rapida"</string>
+    <string name="menu_list_quick_todo">"Attività rapida"</string>
+    <string name="menu_list_delete_visible">"Elimina visibile"</string>
+    <string name="menu_list_todo_show_completed">"Mostra completata"</string>
+    <string name="menu_list_todo_hide_completed">"Nascondi completato"</string>
+    <string name="menu_list_syncnow">"Sincronizza ora"</string>
+    <string name="menu_view_share_text">"Condividere"</string>
+    <string name="menu_view_share_ics">"Condividi come .ics"</string>
+    <string name="menu_view_copy_as_journal">"Copia come diario"</string>
+    <string name="menu_view_copy_as_todo">"Copia come cose da fare"</string>
+    <string name="menu_view_copy_as_note">"Copia come nota"</string>
+    <string name="menu_view_delete_item">"Eliminare"</string>
+    <string name="menu_view_copy_item">"Crea copia"</string>
+    <string name="menu_view_syncnow">"Sincronizza ora"</string>
+    <string name="menu_sync_syncnow">"Sincronizza ora"</string>
+
+    <!-- Notification channel for Reminders -->
+    <string name="notification_channel_reminder_name">"Promemoria per attività scadente"</string>
+    <string name="notification_channel_reminder_description">"Notifica per attività"</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_addJournal_shortLabel">"Diario"</string>
+    <string name="shortcut_addNote_shortLabel">"Nota"</string>
+    <string name="shortcut_addTodo_shortLabel">"Attività"</string>
+    <string name="shortcut_addJournal_longLabel">"Aggiungi diario"</string>
+    <string name="shortcut_addNote_longLabel">"Aggiungi nota"</string>
+    <string name="shortcut_addTodo_longLabel">"Aggiungi attività"</string>
+
+    <!-- Settings fragment -->
+    <string name="settings_enforce_dark_theme">"Applica tema scuro"</string>
+    <string name="settings_list">"Impostazioni per l'elenco degli elementi"</string>
+    <string name="settings_show_subtasks_in_list">"Mostra le sottoattività nell'elenco"</string>
+    <string name="settings_show_attachments_in_list">"Mostra allegati nell'elenco"</string>
+    <string name="settings_show_progress_for_subtasks_in_list">"Mostra l'avanzamento delle sottoattività nell'elenco"</string>
+    <string name="settings_show_progress_for_maintasks_in_list">"Mostra i progressi per le attività nell'elenco"</string>
+    <string name="settings_group_settings_for_subentries">"Impostazioni per sottoattività, note secondarie e dirai secondari"</string>
+    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Mostra le sottoattività di diari e note nell'elenco delle attività"</string>
+    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Mostra sottonote di diari e attività nell'elenco delle note"</string>
+    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"Mostra riviste secondarie di note e attività in Journallist"</string>
+    <string name="settings_app">"Impostazioni dell'app"</string>
+    <string name="settings_select_mimetype_for_audio">"Seleziona Tipo MI per le note audio"</string>
+
+    <!-- Sync fragment -->
+    <string name="sync_coming_soon_heading">"Sincronizza con DAVx⁵ (disponibile a breve)"</string>
+    <string name="sync_coming_soon_text">"jtx Board non fornisce la sincronizzazione del server in sé, ma supporterà la sincronizzazione tramite DAVx⁵. Questo metodo ti consentirà di utilizzare un server CalDAV compatibile di tua scelta per archiviare, eseguire il backup e sincronizzare i tuoi dati.
+Questa funzione è ancora in fase di sviluppo e verrà rilasciata presto! Resta sintonizzato sul nostro sito e su Twitter :-)"</string>
+    <string name="sync_with_davx5_heading">"Sincronizzazione con DAVx⁵ (beta)*"</string>
+    <string name="sync_basic_info">"jtx Board non fornisce la sincronizzazione del server in sé, ma supporta la sincronizzazione tramite DAVx⁵. Questo metodo ti consente di utilizzare qualsiasi server CalDAV compatibile di tua scelta per archiviare, eseguire il backup e sincronizzare i tuoi dati. * Si prega di notare che questa funzionalità è ancora considerata come beta. Sebbene questa funzionalità sia stata testata, i problemi potrebbero ancora verificarsi. In caso di problemi, apprezzeremmo il tuo feedback!"</string>
+    <string name="sync_congratulations">"Congratulazioni! :-)"</string>
+    <string name="sync_davx5_installed_but_no_collections_found">"Abbiamo rilevato DAVx⁵ sul tuo telefono. Se non hai ancora creato alcun account, segui le istruzioni sul nostro sito:"</string>
+    <string name="sync_davx5_installed_with_collections_found">"Abbiamo rilevato DAVx⁵ sul tuo telefono. In caso di problemi o dubbi, consultare prima il nostro sito:"</string>
+    <string name="sync_davx5_installed_with_collections_synched_collections">"I seguenti conti (calendari) sono attualmente sincronizzati:"</string>
+    <string name="sync_check_out_davx5">"Dai un'occhiata a DAVx⁵!"</string>
+    <string name="sync_davx5_not_found">"Non abbiamo rilevato DAVx⁵ sul tuo telefono.
+Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
+    <string name="sync_davx5_get_davx5_on">"o scarica DAVx⁵ su"</string>
+    <string name="sync_furhter_info_davx5">"Per ulteriori informazioni su DAVx⁵ si prega di consultare"</string>
+    <string name="sync_button_add_account_in_davx5">"Aggiungi account in DAVx⁵"</string>
+    <string name="sync_toast_intent_open_davx5_failed">"Impossibile aprire DAVx⁵, aprire l'app manualmente."</string>
+    <string name="sync_toast_intent_start_davx5_sync">"L'attivazione della sincronizzazione in DAVx⁵ non è riuscita, controllare in DAVx⁵."</string>
+
+    <!-- Donate fragment -->
+    <string name="donate_header_text">"Lo sviluppo di un'app è un argomento complesso e lo sviluppo, la manutenzione e il supporto sono un duro lavoro. Quindi, se ti piace questa app e se desideri garantire uno sviluppo continuo, considera una donazione :-)"</string>
+    <string name="donate_thank_you">"Grazie!"</string>
+    <string name="donate_donate_with">"Dona con"</string>
+    <string name="donate_other_donation_methods">"Se desideri considerare qualsiasi altro metodo di donazione, controlla il nostro sito Web:"</string>
+
+    <!-- Adinfo fragment -->
+    <string name="adinfo_text">"Lo sviluppo di un'app è un argomento complesso e lo sviluppo, la manutenzione e il supporto sono un duro lavoro. La tua versione di jtx Board è gratuita e finanziata dalla pubblicità. Accettando gli annunci contribuisci allo sviluppo continuo ed al finanziamento di questo progetto."</string>
+    <string name="adinfo_huwei_only_non_personalized_text">"Questa versione di jtx Board utilizza annunci non personalizzati."</string>
+    <string name="adinfo_adfree_text">"Se preferisci questa app senza pubblicità, considera il seguente aggiornamento:"</string>
+    <string name="adinfo_adfree_purchase_header">"Aggiorna a jtx Board senza pubblicità"</string>
+    <string name="adinfo_adfree_purchase_description">"Grazie per aver preso in considerazione l'aggiornamento senza pubblicità di jtx Board. Questo aggiornamento rimuove gli annunci ricorrenti da questa app."</string>
+    <string name="adinfo_adfree_purchase_header_thankyou">"Grazie per aver acquistato jtx Board senza pubblicità"</string>
+    <string name="adinfo_adfree_purchase_description_thankyou">"Gli annunci vengono ora rimossi dall'app. Se ti piace questa app e desideri supportarne lo sviluppo continuo, considera anche l'abbonamento."</string>
+    <string name="adinfo_adfree_subscribe_header">"Abbonamento per jtx Board senza pubblicità"</string>
+    <string name="adinfo_adfree_subscribe_description">"L'abbonamento rimuove gli annunci ricorrenti da questa app e inoltre sostieni il continuo sviluppo di questa app."</string>
+    <string name="adinfo_adfree_subscribe_success_header">"Grazie per aver acquistato l'abbonamento senza pubblicità jtx Board"</string>
+    <string name="adinfo_adfree_subscribe_success_description">"Gli annunci vengono ora rimossi dall'app. Grazie per il tuo contributo per mantenere vivo questo progetto!"</string>
+    <string name="adinfo_adfree_subscribe_success_thankyou">"Grazie!"</string>
+    <string name="adinfo_adfree_subscribe_quarterly">"Trimestrale"</string>
+    <string name="adinfo_button_reset_user_consent">"Resetta il consenso dell'utente"</string>
+    <string name="adinfo_button_manage_subscriptions">"Gestisci abbonamento"</string>
+    <string name="adinfo_adfree_subscribe_purchase_date">"Acquistato su %1$s"</string>
+    <string name="adinfo_adfree_subscribe_order_id">"ID ordine: %1$s"</string>
+    <string name="attachment_error_on_retrieving_file">"Impossibile recuperare il file."</string>
+    <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nessuna app trovata per aprire questo file/URL."</string>
+    <string name="toast_item_is_now_recu_exception">"L'elemento ricorrente è ora un'eccezione."</string>
+    <string name="toast_adfree_for_a_week">"Senza annunci video per una settimana ora :-)"</string>
+
+    <!-- sync content provider -->
+    <string name="synccontentprovider_sync_problem">"Spiacenti, jtx ha difficoltà a sincronizzarsi. Chiudere DAVx⁵ e riavviare la sincronizzazione."</string>
+    <string name="about_translations_thanks_to">"Grazie a"</string>
+    <string name="about_translations_for_contributions_in">"per i contributi in"</string>
+    <string name="about_translations_basic_info">"jtx Board è un'app open source che apprezza la partecipazione e il contributo della comunità open source. In questa pagina vorremmo attribuire gli sforzi dei membri della comunità per le traduzioni."</string>
+    <string name="about_translations_contribution_info">"Se desideri modificare/aggiungere traduzioni o aggiungere nuove lingue a questa app, sentiti libero di unirti al progetto jtx Board sulla piattaforma di traduzione POEditor:"</string>
+    <string name="about_translations_contribution_button">"Contribuire su POEditor.com"</string>
+    <string name="list_welcome_entry_journal_summary">"Congratulazioni, questa è la tua prima annotazione nel diario :-)"</string>
+    <string name="list_welcome_entry_journal_description">"I diari possono essere utilizzati per conservare i tuoi appunti per una data specifica. Utilizzare questa funzionalità ad esempio per i protocolli, i verbali delle riunioni, le voci del diario e così via. Se modifichi questa voce, vedrai le opzioni per aggiungere categorie, partecipanti, allegati, … Sentiti libero di eliminare questa voce quando vuoi!"</string>
+    <string name="list_welcome_entry_note_summary">"Congratulazioni, questa è la tua prima nota :-)"</string>
+    <string name="list_welcome_entry_note_description">"Le note sono note tradizionali e non legate a una data dedicata. Come i diari, puoi aggiungere allegati, partecipanti e altro quando modifichi o aggiungi una voce. A proposito, puoi anche aggiungere attività secondarie a qualsiasi voce, non importa se si tratta di un diario, una nota o un'attività!"</string>
+    <string name="list_welcome_entry_todo_summary">"Congratulazioni, questa è la tua prima voce di attività :-)"</string>
+    <string name="list_welcome_entry_todo_description">"Oltre ai diari e alle note, le attività possono avere un inizio pianificato, una data di scadenza e una data di completamento. Possono essere verificati al termine o è possibile impostare un avanzamento. Modifica questa voce per controllare tutte le opzioni :-)"</string>
+    <string name="list_welcome_category">"#PrimiPassi"</string>
 </resources>
