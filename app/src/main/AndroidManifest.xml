@@ -107,9 +107,15 @@
 
     </application>
 
-    <!-- package visiblity – which apps do we need to see? -->
     <queries>
+        <!-- package visiblity – which apps do we need to see? -->
         <package android:name="at.bitfire.davdroid" />
+
+        <!-- necessary for Speech Recognition for Devices > APi 30 -->
+        <intent>
+            <action
+                android:name="android.speech.RecognitionService" />
+        </intent>
     </queries>
 
 </manifest>

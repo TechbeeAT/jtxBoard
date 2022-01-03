@@ -8,14 +8,12 @@
 
 package at.techbee.jtx.ui
 
-import android.Manifest
 import android.accounts.Account
 import android.app.AlertDialog
 import android.app.Application
 import android.content.ContentResolver
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
 import android.media.MediaPlayer
 import android.media.MediaRecorder
@@ -26,7 +24,6 @@ import android.util.Size
 import android.view.*
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.content.res.ResourcesCompat
@@ -453,8 +450,7 @@ class IcalViewFragment : Fragment() {
         binding.viewAddAudioNote.setOnClickListener {
 
             // Check if the permission to record audio is already granted, otherwise make a dialog to ask for permission
-            if (ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.RECORD_AUDIO)
-                == PackageManager.PERMISSION_GRANTED) {
+            if (PermissionsHelper.checkPermissionRecordAudio(requireActivity())) {
 
                 val audioDialogBinding = FragmentIcalViewAudioDialogBinding.inflate(inflater, container, false)
 
@@ -481,7 +477,6 @@ class IcalViewFragment : Fragment() {
                     togglePlayback(audioDialogBinding.viewAudioDialogProgressbar, audioDialogBinding.viewAudioDialogStartplayingFab, fileName)
                 }
 
-
                 audioDialogBinding.viewAudioDialogProgressbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                         if (fromUser)
@@ -490,7 +485,6 @@ class IcalViewFragment : Fragment() {
                     override fun onStartTrackingTouch(seekBar: SeekBar?) {   }
                     override fun onStopTrackingTouch(seekBar: SeekBar?)  {   }
                 })
-
 
                 //Prepare the builder to open dialog to record audio
                 val audioRecorderAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
@@ -532,7 +526,6 @@ class IcalViewFragment : Fragment() {
                         stopPlaying()
                     }
 
-
                 // if the item is an instance of a recurring entry, make sure that the user is aware of this
                 val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
                 if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
@@ -554,21 +547,8 @@ class IcalViewFragment : Fragment() {
                 } else {
                     audioRecorderAlertDialogBuilder.show()
                 }
-
-
-            } else {
-                //request for permission to load contacts
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(getString(R.string.view_fragment_audio_permission))
-                    .setMessage(getString(R.string.view_fragment_audio_permission_message))
-                    .setPositiveButton("Ok") { _, _ ->
-                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_CODE)
-                    }
-                    .setNegativeButton("Cancel") { _, _ -> }
-                    .show()
             }
         }
-
 
         var resetProgress = icalViewViewModel.icalEntity.value?.property?.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
 

@@ -13,13 +13,20 @@ import android.accounts.AccountManager
 import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -30,6 +37,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.MainActivity
+import at.techbee.jtx.PermissionsHelper
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
@@ -221,7 +229,6 @@ class IcalListFragment : Fragment() {
             icalListViewModel.directEditEntity.value = null      // invalidate so that on click on back, the value is empty and doesn't create unexpected behaviour!
             this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(it))
         }
-
 
 
         binding.tablayoutJournalnotestodos.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -777,7 +784,6 @@ class IcalListFragment : Fragment() {
                         icalListViewModel.allCollections.removeObservers(viewLifecycleOwner)     // remove the observer, the live data must NOT change the data in the background anymore! (esp. the item positions)
                         selectedCollectionPos = pos
 
-
                         // update color of colorbar
                         try {
                         icalListViewModel.allCollections.value?.get(pos)?.color.let { color ->
@@ -795,6 +801,65 @@ class IcalListFragment : Fragment() {
 
                     override fun onNothingSelected(p0: AdapterView<*>?) {}
                 }
+        }
+
+
+        val sr: SpeechRecognizer? = when {
+            SpeechRecognizer.isRecognitionAvailable(requireContext()) -> SpeechRecognizer.createSpeechRecognizer(requireContext())
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && SpeechRecognizer.isOnDeviceRecognitionAvailable(requireContext()) -> SpeechRecognizer.createOnDeviceSpeechRecognizer(requireContext())
+            else -> null
+        }
+
+        if(sr != null) {
+            quickAddDialogBinding.listQuickaddDialogTextinput.endIconDrawable = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_microphone)
+            quickAddDialogBinding.listQuickaddDialogTextinput.setEndIconOnClickListener {
+                // Record Audio Permission is needed to access the microphone
+                PermissionsHelper.checkPermissionRecordAudio(requireActivity())
+
+                val srIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                srIntent.putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                )
+                srIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                srIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+
+                sr.setRecognitionListener(object : RecognitionListener {
+                    override fun onReadyForSpeech(p0: Bundle?) {
+                        Toast.makeText(requireContext(), R.string.list_quickadd_dialog_sr_start_listening, Toast.LENGTH_SHORT).show()
+                    }
+                    override fun onBeginningOfSpeech() { }
+                    override fun onEndOfSpeech() {
+                        Toast.makeText(requireContext(),R.string.list_quickadd_dialog_sr_stop_listening, Toast.LENGTH_SHORT).show()
+                    }
+                    override fun onRmsChanged(p0: Float) {}
+                    override fun onBufferReceived(p0: ByteArray?) {}
+                    override fun onError(errorCode: Int) {
+                        Toast.makeText(requireContext(),getString(R.string.list_quickadd_dialog_sr_error, errorCode.toString()), Toast.LENGTH_SHORT).show()
+                        return
+                    }
+                    override fun onPartialResults(bundle: Bundle?) {
+                        val data: ArrayList<String>? = bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                        // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
+                        if (data?.isNotEmpty() == true) {
+                            quickAddDialogBinding.listQuickaddDialogSrPartialResult.text = data[0]
+                            quickAddDialogBinding.listQuickaddDialogSrPartialResult.visibility = View.VISIBLE
+                        }
+                    }
+                    override fun onEvent(p0: Int, p1: Bundle?) {}
+                    override fun onResults(bundle: Bundle?) {
+                        quickAddDialogBinding.listQuickaddDialogSrPartialResult.visibility = View.GONE
+                        val data: ArrayList<String>? = bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                        // add a return if there is already text present to add it in a new line
+                        if(quickAddDialogBinding.listQuickaddDialogEdittext.text?.isNotBlank() == true)
+                            quickAddDialogBinding.listQuickaddDialogEdittext.text?.append("\n")
+                        // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
+                        if (data?.isNotEmpty() == true)
+                            quickAddDialogBinding.listQuickaddDialogEdittext.text = quickAddDialogBinding.listQuickaddDialogEdittext.text?.append(data[0])
+                    }
+                })
+                sr.startListening(srIntent)
+            }
         }
 
 
@@ -839,7 +904,6 @@ class IcalListFragment : Fragment() {
             }
         }
 
-
         /**
          * SHOW DIALOG
          * The result is taken care of in the observer
@@ -857,8 +921,8 @@ class IcalListFragment : Fragment() {
                     icalListViewModel.quickInsertedEntity.value = null     // invalidate so that on click on back, the value is empty and doesn't create unexpected behaviour!
                 }
             }
-            .setNegativeButton(R.string.cancel) { _, _ ->  }
-            .setNeutralButton("Save & edit") { _, _ ->
+            .setNeutralButton(R.string.cancel) { _, _ ->  }
+            .setNegativeButton(R.string.save_and_edit) { _, _ ->
                 createNewQuickEntry()
                 icalListViewModel.quickInsertedEntity.observe(viewLifecycleOwner) {
                     if (it == null)

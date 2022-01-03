@@ -65,6 +65,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:helperText="@string/list_quickadd_dialog_summary_description_helper"
         app:helperTextEnabled="true"
+        app:endIconMode="custom"
+        app:endIconContentDescription="@string/list_quickadd_dialog_sr_endicon_contentdesc"
         >
 
         <com.google.android.material.textfield.TextInputEditText
@@ -79,6 +81,20 @@
             android:scrollbars="vertical"
             />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/list_quickadd_dialog_sr_partial_result"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toBottomOf="@id/list_quickadd_dialog_textinput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="TextView"
+        tools:visibility="visible"
+        android:visibility="gone" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
