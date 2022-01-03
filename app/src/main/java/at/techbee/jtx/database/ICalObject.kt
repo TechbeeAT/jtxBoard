@@ -459,12 +459,15 @@ data class ICalObject(
 
         const val TZ_ALLDAY = "ALLDAY"
 
-        fun createJournal(): ICalObject = ICalObject(
+        fun createJournal() = createJournal(null)
+
+        fun createJournal(summary: String?): ICalObject = ICalObject(
             component = Component.VJOURNAL.name,
             module = Module.JOURNAL.name,
             dtstart = DateTimeUtils.getTodayAsLong(),
             dtstartTimezone = TZ_ALLDAY,
             status = StatusJournal.FINAL.name,
+            summary = summary,
             dirty = true
         )
 

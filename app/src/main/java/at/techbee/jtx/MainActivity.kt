@@ -8,6 +8,7 @@
 
 package at.techbee.jtx
 
+import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -146,6 +147,38 @@ class MainActivity : AppCompatActivity()  {
                             ICalEntity(ICalObject.createTodo())
                         )
                     )
+            }
+            // Take data also from other sharing intents
+            Intent.ACTION_SEND -> {
+                if (intent.type == "text/plain") {
+                    var summary: String? = null
+                    intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
+                        summary = it
+                    }
+
+                    val options = arrayOf(getString(R.string.intent_dialog_add_journal), getString(R.string.intent_dialog_add_note), getString(R.string.intent_dialog_add_task))
+                    AlertDialog.Builder(this)
+                        .setTitle(R.string.intent_dialog_title)
+                        .setIcon(R.drawable.ic_fromshareintent)
+                        .setItems(options
+                        ) { _, selection ->
+                            val iCalObject = when(selection) {
+                                0 -> ICalObject.createJournal(summary)
+                                1 -> ICalObject.createNote(summary)
+                                2 -> ICalObject.createTask(summary)
+                                else -> return@setItems
+                            }
+                            findNavController(R.id.nav_host_fragment)
+                                .navigate(
+                                    IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
+                                        ICalEntity(iCalObject)
+                                    )
+                                )
+                        }
+                        .show()
+
+
+                }
             }
         }
     }

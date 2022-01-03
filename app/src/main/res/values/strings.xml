@@ -68,6 +68,11 @@
     <string name="default_local_account_name">Local</string>
 
 
+    <string name="intent_dialog_title">Add content to a journal, note or task?</string>
+    <string name="intent_dialog_add_journal">Journal</string>
+    <string name="intent_dialog_add_note">Note</string>
+    <string name="intent_dialog_add_task">Task</string>
+
 
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">Draft</string>
