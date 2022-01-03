@@ -335,7 +335,7 @@ class IcalViewFragment : Fragment() {
                         return@forEach
 
                     val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
-                    if(commentBinding.viewCommentTextview.text.isNotEmpty())
+                    if(relatedNote.summary?.isNotEmpty() == true)
                         commentBinding.viewCommentTextview.text = relatedNote.summary
                     else
                         commentBinding.viewCommentTextview.visibility = View.GONE
