@@ -250,14 +250,14 @@ class MainActivity : AppCompatActivity()  {
 
         if (requestCode == CONTACT_READ_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(this, "Contacts Read Permission Granted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.permission_read_contacts_granted, Toast.LENGTH_SHORT).show()
             else
-                Toast.makeText(this, "Contacts Read Permission Denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.permission_read_contacts_denied, Toast.LENGTH_SHORT).show()
         } else if (requestCode == RECORD_AUDIO_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(this, "Record Audio Permission Granted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.permission_record_audio_granted, Toast.LENGTH_SHORT).show()
             else
-                Toast.makeText(this, "Record Audio Permission Denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.permission_record_audio_denied, Toast.LENGTH_SHORT).show()
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

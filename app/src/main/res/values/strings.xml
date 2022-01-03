@@ -26,6 +26,11 @@
     <string name="link_jtx_poeditor" translatable="false">https://poeditor.com/join/project?hash=4jaOOJSLxx</string>
     <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
 
+    <!-- Permissions -->
+    <string name="permission_read_contacts_granted">Read contacts permission granted</string>
+    <string name="permission_read_contacts_denied">Read contacts permission denied</string>
+    <string name="permission_record_audio_granted">Record audio permission granted</string>
+    <string name="permission_record_audio_denied">Record audio permission denied</string>
 
     <!-- Global Strings -->
     <string name="save">Save</string>
