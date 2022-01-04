@@ -868,22 +868,6 @@ class IcalListFragment : Fragment() {
          */
         fun createNewQuickEntry() {
             val text = quickAddDialogBinding.listQuickaddDialogEdittext.text.toString()
-            var summary: String? = null
-            var description: String? = null
-            text.split(System.lineSeparator(), limit = 2).let {
-                if(it.isNotEmpty())
-                    summary = it[0]
-                if(it.size >= 2)
-                    description = it[1]
-            }
-
-            // extract categories (all words that start with #)
-            val categories = mutableListOf<Category>()
-            val matcher = Pattern.compile("#[a-zA-Z0-9]*").matcher(text)
-            while (matcher.find()) {
-                if(matcher.group().length >= 2)    // hashtag should have at least one character
-                    categories.add(Category(text = matcher.group()))
-            }
             val newIcalObject = when(icalListViewModel.searchModule) {
                 Module.JOURNAL.name -> ICalObject.createJournal()
                 Module.NOTE.name -> ICalObject.createNote(null)
@@ -891,9 +875,9 @@ class IcalListFragment : Fragment() {
                 else -> null
             }
             newIcalObject?.let {
-                it.summary = summary
-                it.description = description
+                it.parseSummaryAndDescription(text)
                 it.collectionId = icalListViewModel.allCollections.value?.get(selectedCollectionPos)?.collectionId ?: 1L
+                val categories = Category.extractHashtagsFromText(text)
 
                 prefs.edit().putLong(PREFS_LAST_USED_COLLECTION, it.collectionId).apply()       // save last used collection for next time
 

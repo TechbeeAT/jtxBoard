@@ -27,7 +27,6 @@ import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.property.DtStart
-import net.fortuna.ical4j.util.MapTimeZoneCache
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -885,6 +884,24 @@ data class ICalObject(
             //TODO Check also rdate
 
         }
+    }
+
+    /**
+     * Takes a string, extracts the first line to the summary, the remaining lines to the description
+     * @param [text] that should be parsed
+     */
+    fun parseSummaryAndDescription(text: String?) {
+        if(text == null)
+            return
+
+        text.split(System.lineSeparator(), limit = 2).let {
+            if(it.isNotEmpty())
+                this.summary = it[0]
+            if(it.size >= 2)
+                this.description = it[1]
+        }
+
+
     }
 }
 

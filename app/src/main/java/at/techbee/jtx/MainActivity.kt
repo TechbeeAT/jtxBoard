@@ -29,6 +29,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.monetization.BillingManager
@@ -151,11 +152,7 @@ class MainActivity : AppCompatActivity()  {
             // Take data also from other sharing intents
             Intent.ACTION_SEND -> {
                 if (intent.type == "text/plain") {
-                    var summary: String? = null
-                    intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-                        summary = it
-                    }
-
+                    val text = intent.getStringExtra(Intent.EXTRA_TEXT)
                     val options = arrayOf(getString(R.string.intent_dialog_add_journal), getString(R.string.intent_dialog_add_note), getString(R.string.intent_dialog_add_task))
                     AlertDialog.Builder(this)
                         .setTitle(R.string.intent_dialog_title)
@@ -163,21 +160,21 @@ class MainActivity : AppCompatActivity()  {
                         .setItems(options
                         ) { _, selection ->
                             val iCalObject = when(selection) {
-                                0 -> ICalObject.createJournal(summary)
-                                1 -> ICalObject.createNote(summary)
-                                2 -> ICalObject.createTask(summary)
+                                0 -> ICalObject.createJournal()
+                                1 -> ICalObject.createNote()
+                                2 -> ICalObject.createTodo()
                                 else -> return@setItems
                             }
+                            iCalObject.parseSummaryAndDescription(text)
+                            val categories = Category.extractHashtagsFromText(text)
                             findNavController(R.id.nav_host_fragment)
                                 .navigate(
                                     IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
-                                        ICalEntity(iCalObject)
+                                        ICalEntity(iCalObject, categories = categories)
                                     )
                                 )
                         }
                         .show()
-
-
                 }
             }
         }

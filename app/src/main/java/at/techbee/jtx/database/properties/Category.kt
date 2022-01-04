@@ -16,6 +16,7 @@ import androidx.room.*
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
 import kotlinx.parcelize.Parcelize
+import java.util.regex.Pattern
 
 /** The name of the the table for Categories that are linked to an ICalObject.
  * [https://tools.ietf.org/html/rfc5545#section-3.8.1.2]*/
@@ -93,6 +94,25 @@ data class Category (
 
             return Category().applyContentValues(values)
         }
+
+
+        /**
+         * extract categories (all words that start with #) and return a list of categories
+         * @return a list of [Category] from the text (# included)
+         */
+        fun extractHashtagsFromText(text: String?): List<Category> {
+
+            if(text.isNullOrEmpty())
+                return emptyList()
+
+            val categories = mutableListOf<Category>()
+            val matcher = Pattern.compile("#[a-zA-Z0-9]*").matcher(text)
+            while (matcher.find()) {
+                if(matcher.group().length >= 2)    // hashtag should have at least one character
+                    categories.add(Category(text = matcher.group()))
+            }
+            return categories
+        }
     }
 
 
@@ -105,7 +125,5 @@ data class Category (
 
         return this
     }
-
-
 }
 
