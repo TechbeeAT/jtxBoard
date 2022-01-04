@@ -163,8 +163,11 @@ class IcalListFragment : Fragment() {
 
         loadFilterArgsAndPrefs()
 
+        // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
+        val firstInstall = requireContext().packageManager?.getPackageInfo(requireContext().packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
         if(prefs.getBoolean(PREFS_ISFIRSTRUN, true)) {
-            icalListViewModel.addWelcomeEntries(requireContext())
+            if (firstInstall > 1641596400000L)
+                icalListViewModel.addWelcomeEntries(requireContext())
             prefs.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
         }
 
