@@ -1,1 +1,1 @@
-Get the most out of Journals, Tasks and Notes
+Keep track of journals, notes & tasks - iCalendar compliant and syncable (DAVx5)

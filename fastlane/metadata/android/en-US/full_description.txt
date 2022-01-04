@@ -1,11 +1,19 @@
-Elevate the power of the <b>ical-standard</b> to the next level, use the potential of the combination of <b>journals, notes and tasks out of one app</b> and use <b>DAVx5</b> to synchronize your entries with the server of your choice (coming soon)!
+Elevate the power of the <b>iCalendar standard</b> to the next level, use the potential of the combination of <b>journals (VJournal), notes (VJournal) and tasks (VTodo) out of one app</b> and use <b>DAVx5</b> to synchronize your entries with the CalDAV-server of your choice (coming soon)!
 
 <b>iCal standard compliant</b>
-Using the iCal standard ensures compatibility and interoparability with other apps and services independent of a dedicated provider or infrastructure.
+Using the iCal standard ensures compatibility and interoparability with other apps and services independent of a dedicated provider or infrastructure. Journals and Notes are compliant to the definition of the VJOURNAL component, Tasks are compliant to the VTODO component. Future features will also include import and export functionalities to and from .ics files :-)
 
 <b>Combine journals, notes & tasks</b>
-Instead of using separate apps for journals, notes & tasks you can use them out of one hand, combine and link them to each other, e.g. create meeting minutes and link your tasks to them. 
+Instead of using separate apps for journals, notes & tasks you can use them out of one hand, combine and link them to each other, e.g. create meeting minutes and link your tasks to them.
 
 <b>Sync with DAVx5 (coming soon)</b>
 Synchronize your entries with any compatible CalDAV server by using DAVx5. By using DAVx5 you are free to choose your preferred provider for CalDAV, you can even use your local server to store and synchronize your data.
 Note: DAVx5 is an independent app and must be acquired separately.
+
+<b>Open Source</b>
+Your data can contain private and sensitive data by their nature. We believe that individuals and companies should be able to be in full control of their own data. This means the freedom to choose where and how the data are stored, and freedom in choice of software. That is why we chose DAVx5 as a Sync Adapter to synchronise your data between your phone and any compatible CalDAV-server. The source code for jtx Board is publically available - find out more on https://jtx.techbee.at !
+
+<i>What does VJournal and VTodo mean?</i>
+VJournal and VTodo are calendar components defined in the international standard RFC-5545, the Internet Calendaring and Scheduling Core Object Specification (iCalendar), see https://datatracker.ietf.org/doc/html/rfc5545 . This standard also defines the VEvent component, which is the standard definition for calendar event entries. jtx Board is using the VJournal component according to this iCalendar standard for journal entries and tasks. VJournals can have a defined start date, but they cannot have a duration or an end date. VJournals with a defined start date are considered journals entries in jtx Board, VJournals without start date are interpreted as notes. The VTodo component as defined in the iCalendar standard defines the technical specification of tasks, which can have a scheduled start, due and completed date as well as a progress and a completed status (amongst others).
+
+The VEvent definition is widely used, the VTodo component also found some implementations in Apps, but the VJournal component remained in the dark almost not being implmented at all by other apps and services. With jtx Board we would like to revive the usage of this standard and empower it with the possibilities to link and combine VTodos with VJournals - and in the future also VEvents! :-)

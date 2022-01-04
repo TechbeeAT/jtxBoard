@@ -1,0 +1,5 @@
++ Share texts and images now with jtx Board and choose if you would like to add it as a new journal, note or task :-)
++ Use speech-to-text when adding a new quick-entry
++ Added Italian language support / Ora disponibile in Italiano :-)
++ Added attribution for translation contributors
++ Bugfixes
