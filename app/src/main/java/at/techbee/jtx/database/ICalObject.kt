@@ -900,8 +900,6 @@ data class ICalObject(
             if(it.size >= 2)
                 this.description = it[1]
         }
-
-
     }
 }
 

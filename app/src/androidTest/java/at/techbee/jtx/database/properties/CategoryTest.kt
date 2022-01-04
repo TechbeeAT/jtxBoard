@@ -33,31 +33,32 @@ class CategoryTest {
             put(COLUMN_CATEGORY_LANGUAGE, sampleCategory.language)
             put(COLUMN_CATEGORY_OTHER, sampleCategory.other)
         }
-
         val cvCategory = Category.fromContentValues(cv)
         assertEquals(sampleCategory, cvCategory)
     }
 
     @Test
     fun createFromContentValuesWithoutIcalobjectId() {
-
-        val cv = ContentValues(1).apply {
-            put(COLUMN_CATEGORY_TEXT,  "category")
-        }
-
+        val cv = ContentValues(1)
+        cv.put(COLUMN_CATEGORY_TEXT,  "category")
         val cvCategory = Category.fromContentValues(cv)
         assertNull(cvCategory)
     }
 
     @Test
     fun createFromContentValuesWithoutText() {
-
-
-        val cv = ContentValues(1).apply {
-            put(COLUMN_CATEGORY_ICALOBJECT_ID, 1L)
-        }
-
+        val cv = ContentValues(1)
+        cv.put(COLUMN_CATEGORY_ICALOBJECT_ID, 1L)
         val cvCategory = Category.fromContentValues(cv)
         assertNull(cvCategory)
+    }
+
+    @Test
+    fun extractHashtagsFromTextTest() {
+        val text = "This should be in the #summary\nThis should be in the description\nAdding further #lines\nand #categories here\n"
+        val categories = Category.extractHashtagsFromText(text)
+        assertEquals("#summary", categories[0].text)
+        assertEquals("#lines", categories[1].text)
+        assertEquals("#categories", categories[2].text)
     }
 }

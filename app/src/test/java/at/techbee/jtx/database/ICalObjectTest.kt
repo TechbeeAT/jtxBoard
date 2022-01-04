@@ -585,5 +585,16 @@ class ICalObjectTest {
     @Test
     fun getValidTimezoneOrNull_getTZ_InvalidTZ() = assertEquals("GMT", ICalObject.getValidTimezoneOrNull(TimeZone.getTimeZone("Invalid").id))
 
+    @Test
+    fun parseSummaryAndDescriptionTest() {
+        val textSummary = "This should be in the #summary"
+        val textDescription = "This should be in the description\nAdding further #lines\nand #categories here\n"
+        val text = textSummary + System.lineSeparator() + textDescription
 
+        val journal = ICalObject.createJournal()
+        journal.parseSummaryAndDescription(text)
+
+        assertEquals(textSummary, journal.summary)
+        assertEquals(textDescription, journal.description)
+    }
 }
