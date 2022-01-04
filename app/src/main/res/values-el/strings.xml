@@ -358,12 +358,12 @@ Global Strings -->
     <string name="list_quickadd_dialog_sr_error">"Συγνώμη, η ομιλία σε κείμενο αντιμετώπισε κάποιο πρόβλημα."</string>
 
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted"></string>
-    <string name="permission_read_contacts_denied"></string>
-    <string name="permission_record_audio_granted"></string>
-    <string name="permission_record_audio_denied"></string>
-    <string name="intent_dialog_title"></string>
-    <string name="intent_dialog_add_journal"></string>
-    <string name="intent_dialog_add_note"></string>
-    <string name="intent_dialog_add_task"></string>
+    <string name="permission_read_contacts_granted">"Παραχωρήθηκε η άδεια ανάγνωσης επαφών"</string>
+    <string name="permission_read_contacts_denied">"Η άδεια ανάγνωσης των επαφών απορρίφθηκε"</string>
+    <string name="permission_record_audio_granted">"Άδεια εγγραφής ομιλίας παραχωρήθηκε"</string>
+    <string name="permission_record_audio_denied">"Η άδεια εγγραφής ομιλίας απορρίφθηκε"</string>
+    <string name="intent_dialog_title">"Να προστεθεί το περιεχόμενο στο ημέρες λογικό, την σημείωση ή την εργασία;"</string>
+    <string name="intent_dialog_add_journal">"Ημερολόγιο"</string>
+    <string name="intent_dialog_add_note">"Σημείωση"</string>
+    <string name="intent_dialog_add_task">"Εργασία"</string>
 </resources>
