@@ -8,28 +8,30 @@ Global Strings -->
     <string name="save">"Salva"</string>
     <string name="cancel">"Annulla"</string>
     <string name="ok">"Ok"</string>
-    <string name="delete">"Eliminare"</string>
-    <string name="discard">"Scartare"</string>
+    <string name="delete">"Elimina"</string>
+    <string name="discard">"Scarta"</string>
     <string name="gotit">"Fatto"</string>
     <string name="cont">"Continua"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Diari Sintesi"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Note Sintesi"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Attività Sintesi"</string>
-    <string name="toolbar_text_view_journal_details">"Diario Dettagli"</string>
-    <string name="toolbar_text_view_note_details">"Nota Dettagli"</string>
-    <string name="toolbar_text_view_task_details">"Attività Dettagli"</string>
-    <string name="toolbar_text_add_journal">"Aggiungi diario"</string>
-    <string name="toolbar_text_add_note">"Aggiungi nota"</string>
-    <string name="toolbar_text_add_task">"Aggiungi attività"</string>
+    <string name="toolbar_text_jtx_board_journals_overview">"Riepilogo Diari"</string>
+    <string name="toolbar_text_jtx_board_notes_overview">"Riepilogo Note"</string>
+    <string name="toolbar_text_jtx_board_tasks_overview">"Riepilogo Attività"</string>
+    <string name="toolbar_text_view_journal_details">"Dettaglio Diari"</string>
+    <string name="toolbar_text_view_note_details">"Dettaglio Note"</string>
+    <string name="toolbar_text_view_task_details">"Dettaglio Attività"</string>
+    <string name="toolbar_text_add_journal">"Inserisci diario"</string>
+    <string name="toolbar_text_add_note">"Inserisci nota"</string>
+    <string name="toolbar_text_add_task">"Inserisci attività"</string>
     <string name="toolbar_text_edit_journal">"Modifica diario"</string>
     <string name="toolbar_text_edit_note">"Modifica nota"</string>
     <string name="toolbar_text_edit_task">"Modifica attività"</string>
     <string name="toolbar_text_filter">"Filtro"</string>
     <string name="toolbar_text_settings">"Impostazioni"</string>
+
+    <!-- dove viene usata questa riga? -->
     <string name="toolbar_text_about">"Sopra"</string>
     <string name="toolbar_text_sync">"Sincronizza"</string>
-    <string name="toolbar_text_donate">"Donare"</string>
-    <string name="toolbar_text_adinfo">"Informazioni sull'annuncio"</string>
+    <string name="toolbar_text_donate">"Dona"</string>
+    <string name="toolbar_text_adinfo">"Informazioni sull'annuncio pubblicitario"</string>
     <string name="default_local_collection_name">"Locale"</string>
     <string name="default_local_account_name">"Locale"</string>
 
@@ -37,8 +39,8 @@ Global Strings -->
     <string name="journal_status_draft">"Bozza"</string>
     <string name="journal_status_final">"Finale"</string>
     <string name="journal_status_cancelled">"Annullato"</string>
-    <string name="todo_status_needsaction">"Bisogna azione"</string>
-    <string name="todo_status_completed">"Finito"</string>
+    <string name="todo_status_needsaction">"Azione richiesta"</string>
+    <string name="todo_status_completed">"Completato"</string>
     <string name="todo_status_inprocess">"In corso"</string>
     <string name="todo_status_cancelled">"Annullato"</string>
     <string name="classification_public">"Pubblico"</string>
@@ -61,12 +63,14 @@ Global Strings -->
     <string name="navigation_drawer_beta_feedback">"Feedback beta"</string>
     <string name="navigation_drawer_settings">"Impostazioni"</string>
     <string name="navigation_drawer_news_updates">"Notizie e aggiornamenti"</string>
-    <string name="navigation_drawer_external_links">"link esterno"</string>
+    <string name="navigation_drawer_external_links">"Link esterno"</string>
     <string name="navigation_drawer_website">"Sito web"</string>
     <string name="navigation_drawer_support">"Supporto"</string>
+
+    <!-- secondo me questa riga dipende dal contesto. Forse all'interno della app l'imperativo potrebbe essere più corretto -->
     <string name="navigation_drawer_donate">"Donare"</string>
-    <string name="navigation_drawer_adinfo">"Informazioni sull'annuncio"</string>
-    <string name="navigation_drawer_privacy_policy">"politica sulla riservatezza"</string>
+    <string name="navigation_drawer_adinfo">"Informazioni sull'annuncio pubblicitario"</string>
+    <string name="navigation_drawer_privacy_policy">"Politica di riservatezza"</string>
 
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"In ritardo"</string>
@@ -74,7 +78,7 @@ Global Strings -->
     <string name="list_due_tomorrow">"Per domani"</string>
     <string name="list_due_inXdays">"Scadenza tra %d giorni"</string>
     <string name="list_due_inXhours">"Scadenza tra %d ore"</string>
-    <string name="list_start_past">"Inizia in passato"</string>
+    <string name="list_start_past">"Inizio nel passato"</string>
     <string name="list_start_today">"Inizio previsto oggi"</string>
     <string name="list_start_tomorrow">"Inizia domani"</string>
     <string name="list_start_inXhours">"Inizio pianificato tra %d ore"</string>
@@ -82,24 +86,26 @@ Global Strings -->
     <string name="list_tabitem_journals">"Diario"</string>
     <string name="list_tabitem_notes">"Nota"</string>
     <string name="list_tabitem_todos">"Attività"</string>
+
+    <!-- valutare l'uso di "Inserisci" -->
     <string name="list_fab_add_contentdesc">"Aggiungi un nuovo elemento"</string>
     <string name="list_progress">"Progresso"</string>
-    <string name="list_expand">"Espandere"</string>
+    <string name="list_expand">"Espandi"</string>
     <string name="list_dialog_contribution_title">"Nota sugli annunci"</string>
     <string name="list_dialog_contribution_message">"Questa app è alimentata da annunci pubblicitari per impostazione predefinita. Per maggiori informazioni, controlla la sezione Ad-Info nel menu principale!"</string>
     <string name="list_dialog_contribution_more_information">"Scopri di più"</string>
     <string name="list_num_attendees_contentdesc">"Numero di partecipanti"</string>
     <string name="list_num_attachments_contentdesc">"Numero di allegati"</string>
     <string name="list_num_comments_contentdesc">"Numero di commenti"</string>
-    <string name="list_dialog_delete_visible_title">"Eliminare tutto visibile?"</string>
-    <string name="list_dialog_delete_visible_message">"Questa azione elimina tutti i appunti visibili (%1$d). Sei sicuro di voler procedere? Questa operazione non può essere annullata!"</string>
+    <string name="list_dialog_delete_visible_title">"Eliminare tutti gli elementi visibili?"</string>
+    <string name="list_dialog_delete_visible_message">"Questa azione elimina tutti gli elementi visibili (%1$d). Sei sicuro di voler procedere? Questa operazione non può essere annullata!"</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Riassunto/Descrizione"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La prima riga è interpretata come riassunto, il resto come descrizione. Gli hashtag sono interpretati come categorie (es. #categoria)."</string>
     <string name="list_item_upload_pending">"Caricamento in sospeso"</string>
     <string name="list_item_recurring">"Voce ricorrente"</string>
 
     <!-- fragment_ical_view -->
-    <string name="view_readyonly">"Protezione alla scrittura"</string>
+    <string name="view_readyonly">"Protezione di scrittura"</string>
     <string name="view_upload_pending">"Caricamento in sospeso"</string>
     <string name="view_url_header">"URL"</string>
     <string name="view_location_header">"Posizione"</string>
@@ -112,11 +118,13 @@ Global Strings -->
     <string name="view_attachments_header">"Allegati"</string>
     <string name="view_recurrence_header">"Ricorrenza"</string>
     <string name="view_recurrence_exceptions">"Eccezioni"</string>
-    <string name="view_recurrence_additions">"aggiunte"</string>
+    <string name="view_recurrence_additions">"Aggiunte"</string>
     <string name="view_recurrence_go_to_original_button">"Vai all'originale"</string>
-    <string name="view_recurrence_note_to_original_dialog_header">"Istanza di ricorrente"</string>
-    <string name="view_recurrence_note_to_original">"Questa voce fa parte di una serie. La modifica di questa voce la scollegherà dalla serie, continuerà come evento autonomo e le modifiche all'evento originale non influenzeranno più questa voce. "</string>
+    <string name="view_recurrence_note_to_original_dialog_header">"Istanza ricorrente"</string>
+    <string name="view_recurrence_note_to_original">"Questa voce fa parte di una serie. Ogni modifica a questa voce la disconnetterà dalla serie rendendola un evento autonomo. Successive modifiche all'evento originale non influenzeranno più questa voce. "</string>
     <string name="view_fragment_audio_permission">"Autorizzazione app"</string>
+
+    <!-- Fuzzy -->
     <string name="view_fragment_audio_permission_message">"jtx Board ha bisogno dell'autorizzazione per registrare l'audio. Si prega di concedere l'autorizzazione per utilizzare questa funzione."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Aggiungi nota audio"</string>
     <string name="view_comment_playbutton_content_desc">"Riproduci commento audio"</string>
@@ -137,7 +145,7 @@ Global Strings -->
     <string name="view_toast_entry_does_not_exist_anymore">"La voce richiesta non esiste (più)."</string>
     <string name="view_created_text">"Creato: %1$s"</string>
     <string name="view_last_modified_text">"Ultima modifica: %1$s"</string>
-    <string name="view_due">"Scadente"</string>
+    <string name="view_due">"In scadenza"</string>
     <string name="view_completed">"Completato"</string>
     <string name="view_started">"Comincia"</string>
 
@@ -146,13 +154,13 @@ Global Strings -->
     <string name="edit_add_category_hint">"#miacategoria"</string>
     <string name="edit_add_category_helper">"Aggiungi una categoria"</string>
     <string name="edit_description_hint">"Descrizione"</string>
-    <string name="edit_attendees_hint">"johanna@esempio.com"</string>
+    <string name="edit_attendees_hint">"mario.rossi@esempio.com"</string>
     <string name="edit_attendees_helper">"Aggiungi un partecipante (indirizzo e-mail)"</string>
     <string name="edit_resources_hint">"Proiettore"</string>
     <string name="edit_resources_helper">"Aggiungi una risorsa"</string>
     <string name="edit_organizer_hint">"Organizzatore"</string>
-    <string name="edit_contact_hint">"Jim Dolittle, +1 919 555 1234"</string>
-    <string name="edit_contact_helper">"Informazioni di contatto del responsabile o proprietario di questa voce"</string>
+    <string name="edit_contact_hint">"Mario Rossi, +39 919 555 1234"</string>
+    <string name="edit_contact_helper">"Informazioni di contatto del responsabile o del proprietario di questa voce"</string>
     <string name="edit_comment_hint">"Il tuo commento…"</string>
     <string name="edit_comment_helper">"Aggiungi un commento"</string>
     <string name="edit_attachment_button_text">"Aggiungi allegato"</string>
@@ -164,10 +172,10 @@ Global Strings -->
     <string name="edit_comment_add_dialog_hint">"Il tuo commento"</string>
     <string name="edit_dialog_priority">"Priorità"</string>
     <string name="edit_attachment_beta_info">"* Si noti che la sincronizzazione degli allegati con DAVx⁵ è una funzionalità sperimentale. Tieni presente che ciò potrebbe causare comportamenti o errori imprevisti. Se riscontri problemi, faccelo sapere tramite i forum di supporto o una richiesta di supporto sul sito web!"</string>
-    <string name="edit_due">"Scadente"</string>
+    <string name="edit_due">"In scadenza"</string>
     <string name="edit_completed">"Completato"</string>
     <string name="edit_started">"Comincia"</string>
-    <string name="edit_add_time_switch">"Aggiungi tempo"</string>
+    <string name="edit_add_time_switch">"Aggiungi orario"</string>
     <string name="edit_add_timezone_switch">"Aggiungi fuso orario"</string>
     <string name="edit_progress">"Progresso"</string>
     <string name="edit_subtasks_header">"Sottoattività"</string>
@@ -204,10 +212,10 @@ Global Strings -->
     <string name="edit_toast_deleted_successfully">"\"%1$s\" eliminato con successo"</string>
     <string name="edit_dialog_collection_not_found_error_title">"Attenzione"</string>
     <string name="edit_dialog_collection_not_found_error_message">"La raccolta selezionata non può più essere trovata, selezionane un'altra."</string>
-    <string name="edit_validation_errors_detected">"Correggi i seguenti errori di convalida:"</string>
-    <string name="edit_validation_errors_dialog_header">"Si sono verificati errori di convalida"</string>
+    <string name="edit_validation_errors_detected">"Correggi i seguenti errori di validazione:"</string>
+    <string name="edit_validation_errors_dialog_header">"Si sono verificati errori di validazione"</string>
     <string name="edit_validation_errors_summary_or_description_necessary">"Dovrebbe essere fornito un riassunto o una descrizione."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La data di scadenza non può essere precedente alla data di inizio."</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La data di scadenza non può precedere la data di inizio."</string>
     <string name="edit_validation_errors_category_not_confirmed">"Una categoria è stata inserita ma non confermata. Si prega di confermare o eliminare."</string>
     <string name="edit_validation_errors_comment_not_confirmed">"Un commento è stato inserito ma non confermato. Si prega di confermare o eliminare."</string>
     <string name="edit_validation_errors_resource_not_confirmed">"Una risorsa è stata inserita ma non confermata. Si prega di confermare o eliminare."</string>
@@ -228,19 +236,19 @@ Global Strings -->
     <string name="filter_category">"Categoria"</string>
     <string name="filter_fab_apply_filter_contentdescription">"Applica il filtro"</string>
     <string name="about_tabitem_translations">"Traduzioni"</string>
-    <string name="about_tabitem_libraries">"Biblioteche"</string>
+    <string name="about_tabitem_libraries">"Librerie"</string>
     <string name="about_tabitem_thanks">"Ringraziamenti speciali"</string>
     <string name="about_app_version">"Versione: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nome in codice: %1$s"</string>
-    <string name="about_app_build_date">"Compilato su %s"</string>
-    <string name="about_app_terms">"Termini &amp; Condizioni"</string>
+    <string name="about_app_build_date">"Compilato tramite %s"</string>
+    <string name="about_app_terms">"Termini e Condizioni"</string>
     <string name="about_thanks_ffg">"Un ringraziamento speciale a FFG per la fiducia e il supporto finanziario per la realizzazione di questo progetto."</string>
 
     <!-- menus -->
-    <string name="menu_edit_delete">"Eliminare"</string>
+    <string name="menu_edit_delete">"Elimina"</string>
     <string name="menu_edit_clear_dates">"Cancella date"</string>
     <string name="menu_filter_reset">"Resettare"</string>
-    <string name="menu_filter_apply">"Applicare"</string>
+    <string name="menu_filter_apply">"Applica"</string>
     <string name="menu_list_search">"Ricerca"</string>
     <string name="menu_list_search_hint">"Ricerca"</string>
     <string name="menu_list_gotodate">"Vai alla data"</string>
@@ -298,7 +306,7 @@ Questa funzione è ancora in fase di sviluppo e verrà rilasciata presto! Resta 
     <string name="sync_congratulations">"Congratulazioni! :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"Abbiamo rilevato DAVx⁵ sul tuo telefono. Se non hai ancora creato alcun account, segui le istruzioni sul nostro sito:"</string>
     <string name="sync_davx5_installed_with_collections_found">"Abbiamo rilevato DAVx⁵ sul tuo telefono. In caso di problemi o dubbi, consultare prima il nostro sito:"</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"I seguenti conti (calendari) sono attualmente sincronizzati:"</string>
+    <string name="sync_davx5_installed_with_collections_synched_collections">"I seguenti account (calendari) sono attualmente sincronizzati:"</string>
     <string name="sync_check_out_davx5">"Dai un'occhiata a DAVx⁵!"</string>
     <string name="sync_davx5_not_found">"Non abbiamo rilevato DAVx⁵ sul tuo telefono.
 Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
@@ -309,13 +317,13 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="sync_toast_intent_start_davx5_sync">"L'attivazione della sincronizzazione in DAVx⁵ non è riuscita, controllare in DAVx⁵."</string>
 
     <!-- Donate fragment -->
-    <string name="donate_header_text">"Lo sviluppo di un'app è un argomento complesso e lo sviluppo, la manutenzione e il supporto sono un duro lavoro. Quindi, se ti piace questa app e se desideri garantire uno sviluppo continuo, considera una donazione :-)"</string>
+    <string name="donate_header_text">"Lo sviluppo di un'app è un processo complesso e lo sviluppo, la manutenzione e il supporto sono un duro lavoro. Quindi, se ti piace questa app e se desideri garantire uno sviluppo continuo, considera una donazione :-)"</string>
     <string name="donate_thank_you">"Grazie!"</string>
     <string name="donate_donate_with">"Dona con"</string>
     <string name="donate_other_donation_methods">"Se desideri considerare qualsiasi altro metodo di donazione, controlla il nostro sito Web:"</string>
 
     <!-- Adinfo fragment -->
-    <string name="adinfo_text">"Lo sviluppo di un'app è un argomento complesso e lo sviluppo, la manutenzione e il supporto sono un duro lavoro. La tua versione di jtx Board è gratuita e finanziata dalla pubblicità. Accettando gli annunci contribuisci allo sviluppo continuo ed al finanziamento di questo progetto."</string>
+    <string name="adinfo_text">"Lo sviluppo di un'app è un processo complesso e lo sviluppo, la manutenzione e il supporto sono un duro lavoro. La tua versione di jtx Board è gratuita e finanziata dalla pubblicità. Accettando gli annunci contribuisci allo sviluppo continuo ed al finanziamento di questo progetto."</string>
     <string name="adinfo_huwei_only_non_personalized_text">"Questa versione di jtx Board utilizza annunci non personalizzati."</string>
     <string name="adinfo_adfree_text">"Se preferisci questa app senza pubblicità, considera il seguente aggiornamento:"</string>
     <string name="adinfo_adfree_purchase_header">"Aggiorna a jtx Board senza pubblicità"</string>
@@ -351,4 +359,34 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="list_welcome_entry_todo_summary">"Congratulazioni, questa è la tua prima voce di attività :-)"</string>
     <string name="list_welcome_entry_todo_description">"Oltre ai diari e alle note, le attività possono avere un inizio pianificato, una data di scadenza e una data di completamento. Possono essere verificati al termine o è possibile impostare un avanzamento. Modifica questa voce per controllare tutte le opzioni :-)"</string>
     <string name="list_welcome_category">"#PrimiPassi"</string>
+
+    <!-- Fuzzy -->
+    <string name="save_and_edit">"Salva e modifica"</string>
+
+    <!-- Fuzzy -->
+    <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Usa la sintesi vocale"</string>
+
+    <!-- Fuzzy -->
+    <string name="list_quickadd_dialog_sr_start_listening">"La sintesi vocale è in ascolto."</string>
+
+    <!-- Fuzzy -->
+    <string name="list_quickadd_dialog_sr_stop_listening">"La sintesi vocale ha smesso di ascoltare."</string>
+
+    <!-- Fuzzy -->
+    <string name="list_quickadd_dialog_sr_error">"Spiacenti, la sintesi vocale ha riscontrato un errore. (%1$s)"</string>
+
+    <!-- Permissions -->
+    <!-- Fuzzy -->
+    <string name="permission_read_contacts_granted">"Permesso di lettura dei contatti concesso"</string>
+
+    <!-- Fuzzy -->
+    <string name="permission_read_contacts_denied">"Permesso di lettura dei contatti negato"</string>
+
+    <!-- Fuzzy -->
+    <string name="permission_record_audio_granted">"Permesso di registrazione audio concessa"</string>
+    <string name="permission_record_audio_denied">"Permesso di registrazione audio negato"</string>
+    <string name="intent_dialog_title">"Aggiungere contenuto a un diario, una nota o un'attività?"</string>
+    <string name="intent_dialog_add_journal">"Diario"</string>
+    <string name="intent_dialog_add_note">"Nota"</string>
+    <string name="intent_dialog_add_task">"Attività"</string>
 </resources>
