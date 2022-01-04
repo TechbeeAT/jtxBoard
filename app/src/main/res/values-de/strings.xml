@@ -115,7 +115,7 @@ Global Strings -->
     <string name="view_recurrence_note_to_original_dialog_header">"Instanz von wiederkehrendem Eintrag"</string>
     <string name="view_recurrence_note_to_original">"Dieser Eintrag ist Teil einer Serie. Wenn Sie diesen Eintrag bearbeiten, wird die Verknüpfung zum Original entfernt, al s eigenständiger Eintrag weiter bestehen und Änderungen am Original werden nicht mehr auf diesen Eintrag übertragen. "</string>
     <string name="view_fragment_audio_permission">"App Berechtigungen"</string>
-    <string name="view_fragment_audio_permission_message">"jtx Board benötigt Ihre Zustimmung um Audio aufzunehmen. Bitte geben Sie die Berechtigung um dieses Funktionalität zu nutzen. "</string>
+    <string name="view_fragment_audio_permission_message">"jtx Board benötigt Ihre Zustimmung um Audio aufzunehmen und um die Spracherkennung zu nutzen. Bitte geben Sie die Berechtigung um dieses Funktionalität zu nutzen."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Audio-Notiz hinzufügen"</string>
     <string name="view_comment_playbutton_content_desc">"Audio-Notiz abspielen"</string>
     <string name="view_fragment_audio_start_stop_recording_contentdesc">"Aufnahme starten/stoppen"</string>
@@ -340,4 +340,26 @@ Global Strings -->
     <string name="about_translations_basic_info">"jtx Board ist ein Open Source Projekt, das unter Beteiligung der Open Source Community realisiert wird. Auf dieser Seite wollen wir uns bei den Community Mitgliedern für die Übersetzungen bedanken."</string>
     <string name="about_translations_contribution_info">"Falls Sie auch Übersetzungen bearbeiten/hinzufügen wollen, freuen wir uns über Ihren Beitrag über die Platform POEditor.com:"</string>
     <string name="about_translations_contribution_button">"Mitmachen auf POEditor.com"</string>
+    <string name="list_welcome_entry_journal_summary">"Glückwunsch, das ist Ihr erster Journaleintrag :-)"</string>
+    <string name="list_welcome_entry_journal_description">"Journale können genutzt werden um Ihre Notizen zu einem bestimmten Datum festzuhalten. Dies kann zum Beispiel für Protokolle, Versammlungsberichte, Tagebucheinträge und ähnliches genutzt werden. Wenn Sie diesen Beitrag bearbeiten, werfen Sie auch einen Blick auf die weiteren Optionen zum Eintragen von Kategorien, Teilnehmern, Anhängen, ... Sie können diesen Eintrag jederzeit löschen!"</string>
+    <string name="list_welcome_entry_note_summary">"Glückwunsch, das ist Ihr erster Notizeintrag :-)"</string>
+    <string name="list_welcome_entry_note_description">"Notizen sind gewöhnliche Aufzeichnungen, die nicht an ein bestimmtes Datum gebunden sind. Wie Journale können ebenfalls Anhänge, Teilnehmer und mehr hinzugefügt werden. Übrigens können Sie auch Unteraufgaben zu jeder Art von Eintrag machen, egal ob Journal, Notiz oder Aufgabe!"</string>
+    <string name="list_welcome_entry_todo_summary">"Glückwunsch, das ist Ihr erster Aufgabeneintrag :-)"</string>
+    <string name="list_welcome_entry_todo_description">"Aufgaben können ein geplantes Startdatum, ein Fälligkeits- und Enddatum haben. Sie können abgeschlossen werden und ein Fortschritt kann erfasst werden. Bearbeiten Sie diesen Eintrag um alle Optionen anzusehen :-)"</string>
+    <string name="list_welcome_category">"#ErsteSchritte"</string>
+    <string name="save_and_edit">"Speichern &amp; bearbeiten"</string>
+    <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Spracherkennung nutzen"</string>
+    <string name="list_quickadd_dialog_sr_start_listening">"Spracherkennung gestartet."</string>
+    <string name="list_quickadd_dialog_sr_stop_listening">"Spracherkennung gestoppt."</string>
+    <string name="list_quickadd_dialog_sr_error">"Entschuldigung, bei der Spracherkennung ist ein Problem aufgetreten. (%1$s)"</string>
+
+    <!-- Permissions -->
+    <string name="permission_read_contacts_granted">"Leseberechtigung für Kontakte erteilt"</string>
+    <string name="permission_read_contacts_denied">"Leseberechtigung für Kontakte abgelehnt"</string>
+    <string name="permission_record_audio_granted">"Audio-Aufnahmeberechtigung erteilt"</string>
+    <string name="permission_record_audio_denied">"Audio-Aufnahmeberechtigung abgelehnt"</string>
+    <string name="intent_dialog_title">"Inhalt hinzufügen zu Journal, Notiz oder Aufgabe?"</string>
+    <string name="intent_dialog_add_journal">"Journal"</string>
+    <string name="intent_dialog_add_note">"Notiz"</string>
+    <string name="intent_dialog_add_task">"Aufgabe"</string>
 </resources>
