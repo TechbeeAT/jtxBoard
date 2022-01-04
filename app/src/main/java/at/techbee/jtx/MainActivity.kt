@@ -19,16 +19,21 @@ import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.ParcelFileDescriptor
+import android.os.Parcelable
 import android.util.Log
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.FileProvider
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.monetization.AdManager
@@ -40,6 +45,8 @@ import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import net.fortuna.ical4j.util.MapTimeZoneCache
+import java.io.File
+import java.io.IOException
 
 
 // this is necessary for the app permission, 100  and 200 ist just a freely chosen value
@@ -70,6 +77,8 @@ class MainActivity : AppCompatActivity()  {
 
     private var settings: SharedPreferences? = null
     private var mainActivityPrefs: SharedPreferences? = null
+
+    private var lastProcessedIntentHash: Int? = null
 
 
 
@@ -117,66 +126,116 @@ class MainActivity : AppCompatActivity()  {
 
         if(AdManager.getInstance()?.isAdFlavor() == true)                        // check if flavor is ad-Flavor and if ads should be shown
             showAdInfoDialogIfNecessary()  // show AdInfo Dialog and initialize ads
-    }
 
+    }
 
     override fun onResume() {
         super.onResume()
 
-        // handle the intents for the shortcuts
-        when (intent.action) {
-            "addJournal" -> {
-                findNavController(R.id.nav_host_fragment)
-                    .navigate(
-                        IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
-                            ICalEntity(ICalObject.createJournal())
+        //hanlde intents, but only if it wasn't already handled
+        if(intent.hashCode() != lastProcessedIntentHash) {
+
+            intent?.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+
+            // handle the intents for the shortcuts
+            when (intent?.action) {
+                "addJournal" -> {
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(
+                            IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
+                                ICalEntity(ICalObject.createJournal())
+                            )
                         )
-                    )
-            }
-            "addNote" -> {
-                findNavController(R.id.nav_host_fragment)
-                    .navigate(
-                        IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
-                            ICalEntity(ICalObject.createNote())
+                }
+                "addNote" -> {
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(
+                            IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
+                                ICalEntity(ICalObject.createNote())
+                            )
                         )
-                    )
-            }
-            "addTodo" -> {
-                findNavController(R.id.nav_host_fragment)
-                    .navigate(
-                        IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
-                            ICalEntity(ICalObject.createTodo())
+                }
+                "addTodo" -> {
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(
+                            IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
+                                ICalEntity(ICalObject.createTodo())
+                            )
                         )
+                }
+                // Take data also from other sharing intents
+                Intent.ACTION_SEND -> {
+
+                    val options = arrayOf(
+                        getString(R.string.intent_dialog_add_journal),
+                        getString(R.string.intent_dialog_add_note),
+                        getString(R.string.intent_dialog_add_task)
                     )
-            }
-            // Take data also from other sharing intents
-            Intent.ACTION_SEND -> {
-                if (intent.type == "text/plain") {
-                    val text = intent.getStringExtra(Intent.EXTRA_TEXT)
-                    val options = arrayOf(getString(R.string.intent_dialog_add_journal), getString(R.string.intent_dialog_add_note), getString(R.string.intent_dialog_add_task))
                     AlertDialog.Builder(this)
                         .setTitle(R.string.intent_dialog_title)
                         .setIcon(R.drawable.ic_fromshareintent)
-                        .setItems(options
+                        .setItems(
+                            options
                         ) { _, selection ->
-                            val iCalObject = when(selection) {
+                            val iCalObject = when (selection) {
                                 0 -> ICalObject.createJournal()
                                 1 -> ICalObject.createNote()
                                 2 -> ICalObject.createTodo()
                                 else -> return@setItems
                             }
-                            iCalObject.parseSummaryAndDescription(text)
-                            val categories = Category.extractHashtagsFromText(text)
+                            val entity = ICalEntity(iCalObject)
+                            if (intent.type == "text/plain") {
+                                val text = intent.getStringExtra(Intent.EXTRA_TEXT)
+                                iCalObject.parseSummaryAndDescription(text)
+                                val categories = Category.extractHashtagsFromText(text)
+                                entity.categories = categories
+                            } else if (intent.type?.startsWith("image/") == true || intent.type == "application/pdf") {
+                                (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
+
+                                    try {
+                                        val extension = MimeTypeMap.getSingleton()
+                                            .getExtensionFromMimeType(intent.type)
+                                        val filename = "${System.currentTimeMillis()}.$extension"
+                                        val newFile =
+                                            File(Attachment.getAttachmentDirectory(this), filename)
+                                        newFile.createNewFile()
+
+                                        val attachmentDescriptor =
+                                            this.contentResolver.openFileDescriptor(it, "r")
+                                        val attachmentBytes =
+                                            ParcelFileDescriptor.AutoCloseInputStream(
+                                                attachmentDescriptor
+                                            ).readBytes()
+                                        newFile.writeBytes(attachmentBytes)
+
+                                        val newAttachment = Attachment(
+                                            uri = FileProvider.getUriForFile(
+                                                this,
+                                                AUTHORITY_FILEPROVIDER,
+                                                newFile
+                                            ).toString(),
+                                            filename = newFile.name,
+                                            extension = newFile.extension,
+                                            fmttype = intent.type
+                                        )
+                                        entity.attachments = listOf(newAttachment)
+
+                                    } catch (e: IOException) {
+                                        Log.e("IOException", "Failed to process file\n$e")
+                                    }
+                                }
+                            }
                             findNavController(R.id.nav_host_fragment)
                                 .navigate(
                                     IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
-                                        ICalEntity(iCalObject, categories = categories)
+                                        entity
                                     )
                                 )
                         }
                         .show()
                 }
             }
+            lastProcessedIntentHash = intent.hashCode()
         }
     }
 

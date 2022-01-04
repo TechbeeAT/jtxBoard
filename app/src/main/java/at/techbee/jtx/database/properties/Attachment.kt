@@ -275,10 +275,10 @@ data class Attachment (
     }
 
     fun getFilesize(context: Context): Long {
-        try {
-            return context.contentResolver.openFileDescriptor(Uri.parse(this.uri), "r")?.statSize ?: 0L
+        return try {
+            context.contentResolver.openFileDescriptor(Uri.parse(this.uri), "r")?.statSize ?: 0L
         } catch (e: Exception) {
-            return 0L
+            0L
         }
     }
 
