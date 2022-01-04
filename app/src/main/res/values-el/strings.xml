@@ -355,7 +355,7 @@ Global Strings -->
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Χρήση ομιλίας σε κείμενο"</string>
     <string name="list_quickadd_dialog_sr_start_listening">"Η ομιλία σε κείμενο έχει ξεκινήσει"</string>
     <string name="list_quickadd_dialog_sr_stop_listening">"Η ομιλία σε κείμενο έχει σταματήσει "</string>
-    <string name="list_quickadd_dialog_sr_error">"Συγνώμη, η ομιλία σε κείμενο αντιμετώπισε κάποιο πρόβλημα."</string>
+    <string name="list_quickadd_dialog_sr_error">"Συγνώμη, η ομιλία σε κείμενο αντιμετώπισε κάποιο πρόβλημα. (%1$s)"</string>
 
     <!-- Permissions -->
     <string name="permission_read_contacts_granted">"Παραχωρήθηκε η άδεια ανάγνωσης επαφών"</string>
