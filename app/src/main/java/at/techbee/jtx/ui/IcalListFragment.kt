@@ -57,7 +57,6 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
-import java.util.regex.Pattern
 
 
 class IcalListFragment : Fragment() {
@@ -147,7 +146,7 @@ class IcalListFragment : Fragment() {
         // add menu
         setHasOptionsMenu(true)
 
-        settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        settings = PreferenceManager.getDefaultSharedPreferences(context)
 
         // set up recycler view
         recyclerView = binding.vjournalListItemsRecyclerView
@@ -164,7 +163,7 @@ class IcalListFragment : Fragment() {
         loadFilterArgsAndPrefs()
 
         // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
-        val firstInstall = requireContext().packageManager?.getPackageInfo(requireContext().packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
+        val firstInstall = context?.packageManager?.getPackageInfo(requireContext().packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
         if(prefs.getBoolean(PREFS_ISFIRSTRUN, true)) {
             if (firstInstall > 1641596400000L)
                 icalListViewModel.addWelcomeEntries(requireContext())
@@ -829,16 +828,16 @@ class IcalListFragment : Fragment() {
 
                 sr.setRecognitionListener(object : RecognitionListener {
                     override fun onReadyForSpeech(p0: Bundle?) {
-                        Toast.makeText(requireContext(), R.string.list_quickadd_dialog_sr_start_listening, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.list_quickadd_dialog_sr_start_listening, Toast.LENGTH_SHORT).show()
                     }
                     override fun onBeginningOfSpeech() { }
                     override fun onEndOfSpeech() {
-                        Toast.makeText(requireContext(),R.string.list_quickadd_dialog_sr_stop_listening, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,R.string.list_quickadd_dialog_sr_stop_listening, Toast.LENGTH_SHORT).show()
                     }
                     override fun onRmsChanged(p0: Float) {}
                     override fun onBufferReceived(p0: ByteArray?) {}
                     override fun onError(errorCode: Int) {
-                        Toast.makeText(requireContext(),getString(R.string.list_quickadd_dialog_sr_error, errorCode.toString()), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,getString(R.string.list_quickadd_dialog_sr_error, errorCode.toString()), Toast.LENGTH_SHORT).show()
                         return
                     }
                     override fun onPartialResults(bundle: Bundle?) {
