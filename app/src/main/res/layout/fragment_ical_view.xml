@@ -122,7 +122,7 @@
                     android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_collection"
-                    app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
+                    app:layout_constraintBottom_toTopOf="@id/view_barrier_above_summary"
                     app:layout_constraintVertical_bias="0.0"
                     >
 
@@ -212,7 +212,7 @@
                     android:layout_marginEnd="8dp"
                     app:chipSpacingHorizontal="8dp"
                     app:chipSpacingVertical="0dp"
-                    app:layout_constraintBottom_toTopOf="@id/view_top_barrier"
+                    app:layout_constraintBottom_toTopOf="@id/view_barrier_above_summary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/view_dtstart_card"
                     app:layout_constraintTop_toTopOf="@id/view_dtstart_card"
@@ -220,10 +220,12 @@
 
 
                 <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/view_top_barrier"
+                    android:id="@+id/view_barrier_above_summary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:barrierDirection="top"/>
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="view_categories_chipgroup,view_dtstart_card,view_collection"
+                    tools:layout_editor_absoluteY="192dp" />
 
 
                 <com.google.android.material.card.MaterialCardView
@@ -236,7 +238,7 @@
                     android:focusable="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_top_barrier">
+                    app:layout_constraintTop_toBottomOf="@id/view_barrier_above_summary">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -630,8 +632,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="view_task_completed_card,view_task_due_card,view_task_started_card"
-                    tools:layout_editor_absoluteY="667dp" />
+                    app:constraint_referenced_ids="view_task_completed_card,view_task_due_card,view_task_started_card"  />
 
 
                 <com.google.android.material.textview.MaterialTextView
