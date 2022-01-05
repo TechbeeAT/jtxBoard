@@ -354,8 +354,8 @@ class IcalListViewModel(
             this.dtstartTimezone = TZ_ALLDAY
             this.due = DateTimeUtils.getTodayAsLong() + 604800000  // = + one week in millis
             this.dueTimezone = TZ_ALLDAY
-            this.summary = context.getString(R.string.list_welcome_entry_journal_summary)
-            this.description = context.getString(R.string.list_welcome_entry_journal_description)
+            this.summary = context.getString(R.string.list_welcome_entry_todo_summary)
+            this.description = context.getString(R.string.list_welcome_entry_todo_description)
         }
 
         viewModelScope.launch(Dispatchers.IO) {
