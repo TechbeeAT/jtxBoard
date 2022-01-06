@@ -170,6 +170,7 @@
     <string name="view_relatedto_header">Related to</string>
     <string name="view_comments_header">Comments</string>
     <string name="view_attachments_header">Attachments</string>
+    <string name="view_alarms_header">Alarms</string>
     <string name="view_recurrence_header">Recurrence</string>
     <string name="view_recurrence_exceptions">Exceptions</string>
     <string name="view_recurrence_additions">Additions</string>

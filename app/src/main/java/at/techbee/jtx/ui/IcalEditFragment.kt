@@ -202,11 +202,6 @@ class IcalEditFragment : Fragment() {
         if(icalEditViewModel.iCalEntity.property.module == Module.NOTE.name && binding.icalEditTabs.tabCount >= TAB_RECURRING)
             binding.icalEditTabs.getTabAt(TAB_RECURRING)?.view?.visibility = View.GONE
 
-        // Until implemented remove the tab for alarms and attachments
-        binding.icalEditTabs.getTabAt(TAB_ALARMS)?.view?.visibility = View.GONE
-        //binding.icalEditTabs.getTabAt(TAB_ATTACHMENTS).view.visibility = View.GONE
-
-
         binding.editCollectionSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
 
