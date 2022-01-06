@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) Techbee e.U.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the GNU Public License v3.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.gnu.org/licenses/gpl.html
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="model"
+            type="at.techbee.jtx.ui.IcalEditViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/edit_alarms_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:drawablePadding="8dp"
+            android:text="@string/view_alarms_header"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_alarm"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_alarms_header">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="+ On start"
+                    style="?android:attr/buttonBarButtonStyle" />
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="+ On due"
+                    style="?android:attr/buttonBarButtonStyle"/>
+
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="+ On completed"
+                    style="?android:attr/buttonBarButtonStyle"/>
+
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="+ Custom"
+                    style="?android:attr/buttonBarButtonStyle"/>
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
