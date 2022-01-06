@@ -18,6 +18,9 @@ import androidx.room.PrimaryKey
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
 import kotlinx.parcelize.Parcelize
+import net.fortuna.ical4j.model.DateTime
+import net.fortuna.ical4j.model.component.VAlarm
+import net.fortuna.ical4j.model.property.Trigger
 
 /** The name of the the table for Alarms that are linked to an ICalObject.
  * [https://tools.ietf.org/html/rfc5545#section-3.8.1.10]*/
@@ -67,7 +70,6 @@ data class Alarm (
     @ColumnInfo(index = true, name = COLUMN_ALARM_OTHER) var other: String? = null,
 ): Parcelable
 
-
 {
     companion object Factory {
 
@@ -87,10 +89,19 @@ data class Alarm (
 
             return Alarm().applyContentValues(values)
         }
+
+        fun fromTimestamp(timestamp: Long) = Alarm().apply {
+                this.trigger = getTriggerAsDateTime(timestamp)
+            }
+
+        fun getTriggerAsDateTime(timestamp: Long): String {
+            val vAlarm = VAlarm(DateTime(timestamp))
+            vAlarm.trigger.isUtc = true
+            return vAlarm.trigger.value
+        }
     }
 
     fun applyContentValues(values: ContentValues): Alarm {
-
         values.getAsLong(COLUMN_ALARM_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
         values.getAsString(COLUMN_ALARM_ACTION)?.let { action -> this.action = action }
         values.getAsString(COLUMN_ALARM_DESCRIPTION)?.let { desc -> this.description = desc }
@@ -102,5 +113,20 @@ data class Alarm (
         values.getAsString(COLUMN_ALARM_ATTACH)?.let { attach -> this.attach = attach }
         values.getAsString(COLUMN_ALARM_OTHER)?.let { other -> this.other = other }
         return this
+    }
+
+    fun getTriggerAsLong(): Long? {
+        if(trigger == null) 
+            return null
+
+        val vAlarm = VAlarm()
+        vAlarm.properties.add(Trigger())
+        vAlarm.trigger.value = trigger
+        vAlarm.trigger.isUtc = true
+
+        if(vAlarm.trigger.dateTime != null)
+            return vAlarm.trigger.dateTime.time
+
+        return null
     }
 }

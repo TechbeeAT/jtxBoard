@@ -314,6 +314,10 @@ class IcalEditViewModel(
                 }
                 alarmUpdated.forEach { newAlarm ->
                     newAlarm.icalObjectId = insertedOrUpdatedItemId
+                    if(newAlarm.action.isNullOrEmpty())
+                        newAlarm.action = "DISPLAY"
+                    iCalObjectUpdated.value?.summary?.let { newAlarm.summary = it }
+                    iCalObjectUpdated.value?.description?.let { newAlarm.description = it }
                     database.insertAlarm(newAlarm)
                 }
 
