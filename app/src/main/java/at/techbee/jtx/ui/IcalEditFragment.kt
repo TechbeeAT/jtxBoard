@@ -381,16 +381,9 @@ class IcalEditFragment : Fragment() {
                 }
                 hideKeyboard()
                 icalEditViewModel.updateVisibility()
-
             }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // nothing to do
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // nothing to do
-            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
+            override fun onTabReselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
         })
 
         binding.editSummaryEditTextinputfield.addTextChangedListener {
@@ -428,7 +421,6 @@ class IcalEditFragment : Fragment() {
             builder.setIcon(R.drawable.ic_error)
             builder.setPositiveButton(R.string.ok) { _, _ ->  }
             builder.show()
-
         })
 
         icalEditViewModel.deleteClicked.observe(viewLifecycleOwner, {
@@ -438,7 +430,6 @@ class IcalEditFragment : Fragment() {
                     showDiscardMessage()
                 else
                     showDeleteMessage()
-
             }
         })
 
@@ -529,6 +520,20 @@ class IcalEditFragment : Fragment() {
 
             // update color for collection if possible
             updateCollectionColor()
+
+            // update quick alarm options depending if dates are set
+            if(it.dtstart == null)
+                binding.editFragmentIcalEditAlarm.editAlarmsButtonOnstart.visibility = View.GONE
+            else
+                binding.editFragmentIcalEditAlarm.editAlarmsButtonOnstart.visibility = View.VISIBLE
+            if(it.due == null)
+                binding.editFragmentIcalEditAlarm.editAlarmsButtonOndue.visibility = View.GONE
+            else
+                binding.editFragmentIcalEditAlarm.editAlarmsButtonOndue.visibility = View.VISIBLE
+            if(it.completed == null)
+                binding.editFragmentIcalEditAlarm.editAlarmsButtonOncomplete.visibility = View.GONE
+            else
+                binding.editFragmentIcalEditAlarm.editAlarmsButtonOncomplete.visibility = View.VISIBLE
         }
 
 
@@ -674,6 +679,16 @@ class IcalEditFragment : Fragment() {
                 addResourceChip(singleResource)
             }
         }
+
+        icalEditViewModel.iCalEntity.alarms?.forEach { singleAlarm ->
+            if(!icalEditViewModel.alarmUpdated.contains(singleAlarm)) {
+                icalEditViewModel.alarmUpdated.add(singleAlarm)
+                addAlarmView(singleAlarm)
+            }
+        }
+        addAlarmView(Alarm())
+        addAlarmView(Alarm())
+        addAlarmView(Alarm())
 
 
         // Set up items to suggest for categories
@@ -1524,6 +1539,20 @@ class IcalEditFragment : Fragment() {
             }
             builder.show()
         }
+    }
+
+    private fun addAlarmView(alarm: Alarm) {
+
+        val bindingAlarm = CardAlarmBinding.inflate(inflater, container, false)
+        bindingAlarm.cardAlarmDate.text = "Test"
+        binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout.addView(bindingAlarm.root)
+
+        bindingAlarm.cardAlarmDelete.setOnClickListener {
+            icalEditViewModel.alarmUpdated.remove(alarm)
+            binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout.removeView(bindingAlarm.root)
+        }
+
+        //TODO: Continue here!
     }
 
 

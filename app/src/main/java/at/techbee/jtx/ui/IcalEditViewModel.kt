@@ -71,6 +71,7 @@ class IcalEditViewModel(
     var attachmentUpdated: MutableList<Attachment> = mutableListOf()
     var attendeeUpdated: MutableList<Attendee> = mutableListOf()
     var resourceUpdated: MutableList<Resource> = mutableListOf()
+    var alarmUpdated: MutableList<Alarm> = mutableListOf()
     var subtaskUpdated: MutableList<ICalObject> = mutableListOf()
     var subtaskDeleted: MutableList<ICalObject> = mutableListOf()
 
@@ -272,6 +273,7 @@ class IcalEditViewModel(
                 database.deleteAttachments(insertedOrUpdatedItemId)
                 database.deleteAttendees(insertedOrUpdatedItemId)
                 database.deleteResources(insertedOrUpdatedItemId)
+                database.deleteAlarms(insertedOrUpdatedItemId)
 
                 subtaskDeleted.forEach { subtask2del ->
                     viewModelScope.launch(Dispatchers.IO) {
@@ -309,6 +311,10 @@ class IcalEditViewModel(
                 resourceUpdated.forEach { newResource ->
                     newResource.icalObjectId = insertedOrUpdatedItemId
                     database.insertResource(newResource)
+                }
+                alarmUpdated.forEach { newAlarm ->
+                    newAlarm.icalObjectId = insertedOrUpdatedItemId
+                    database.insertAlarm(newAlarm)
                 }
 
                 // if a collection was selected that doesn't support VTODO, we do not update/insert any subtasks
