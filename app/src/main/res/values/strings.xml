@@ -246,6 +246,7 @@
     <string name="edit_attendees_header">Attendees</string>
     <string name="edit_resources_header">Resources</string>
     <string name="edit_recurrence_header">Recurrence</string>
+    <string name="edit_alarms_header">Alarms</string>
     <string name="edit_attachment_delete_attachment">Delete attachment</string>
     <string name="edit_attachment_add_link_dialog">Add attachment link</string>
     <string name="edit_recur_last_occurrence">Last occurrence</string>
@@ -290,6 +291,10 @@
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">Unsupported value (Duration) detected!</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">A duration was detected for this entry in the background. Handling a duration is currently not supported by jtx Board. Please use the start, due and end date instead. If you save this entry, the existing duration will be deleted.</string>
 
+    <string name="edit_alarms_addonstart">+ On start</string>
+    <string name="edit_alarms_addondue">+ On due</string>
+    <string name="edit_alarms_addoncomplete">+ On complete</string>
+    <string name="edit_alarms_addcustom">+ Custom</string>
 
     <!-- fragment_ical_filter -->
     <string name="filter_account">Account</string>
