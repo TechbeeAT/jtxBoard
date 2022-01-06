@@ -223,6 +223,36 @@ class IcalEditFragment : Fragment() {
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
             }
 
+        binding.editFragmentIcalEditAlarm.editAlarmsButtonCustom.setOnClickListener {
+            var zonedTimestamp = ZonedDateTime.now()
+
+            val datePicker =
+                MaterialDatePicker.Builder.datePicker()
+                    .setTitleText(R.string.edit_datepicker_dialog_select_date)
+                    .setSelection(zonedTimestamp.toInstant().toEpochMilli())
+                    .build()
+
+            val timePicker =
+                MaterialTimePicker.Builder()
+                    .setTitleText(R.string.edit_datepicker_dialog_select_time)
+                    .build()
+
+            timePicker.addOnPositiveButtonClickListener {
+                zonedTimestamp = zonedTimestamp
+                    .withHour(timePicker.hour)
+                    .withMinute(timePicker.minute)
+                val newAlarm = Alarm.fromTimestamp(zonedTimestamp.toInstant().toEpochMilli())
+                icalEditViewModel.alarmUpdated.add(newAlarm)
+                addAlarmView(newAlarm)
+            }
+
+            datePicker.addOnPositiveButtonClickListener {
+                zonedTimestamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
+                timePicker.show(parentFragmentManager, tag)
+            }
+            datePicker.show(parentFragmentManager, tag)
+        }
+
         // notify the user if a duration was detected (currently not supported)
         if(icalEditViewModel.iCalEntity.property.duration?.isNotEmpty() == true) {
             MaterialAlertDialogBuilder(requireContext())
@@ -686,9 +716,6 @@ class IcalEditFragment : Fragment() {
                 addAlarmView(singleAlarm)
             }
         }
-        addAlarmView(Alarm())
-        addAlarmView(Alarm())
-        addAlarmView(Alarm())
 
 
         // Set up items to suggest for categories
@@ -1522,8 +1549,6 @@ class IcalEditFragment : Fragment() {
             builder.setTitle(R.string.edit_comment_add_dialog_hint)
             builder.setIcon(R.drawable.ic_comment_add)
             builder.setView(updatedText)
-
-
             builder.setPositiveButton(R.string.save) { _, _ ->
                 // update the comment
                 val updatedComment = comment.copy()
@@ -1531,10 +1556,7 @@ class IcalEditFragment : Fragment() {
                 icalEditViewModel.commentUpdated.add(updatedComment)
                 bindingComment.editCommentTextview.text = updatedComment.text
             }
-            builder.setNegativeButton(R.string.cancel) { _, _ ->
-                // Do nothing, just close the message
-            }
-
+            builder.setNegativeButton(R.string.cancel) { _, _ -> /* Do nothing, just close the message */ }
             builder.setNeutralButton(R.string.delete) { _, _ ->
                 icalEditViewModel.commentUpdated.remove(comment)
                 bindingComment.root.visibility = View.GONE
@@ -1545,8 +1567,13 @@ class IcalEditFragment : Fragment() {
 
     private fun addAlarmView(alarm: Alarm) {
 
+        // we don't add alarm of which the DateTime is not set or cannot be determined
+        if(alarm.getTriggerAsLong() == null)
+            return
+
         val bindingAlarm = CardAlarmBinding.inflate(inflater, container, false)
-        bindingAlarm.cardAlarmDate.text = "Test"
+
+        bindingAlarm.cardAlarmDate.text = convertLongToFullDateTimeString(alarm.getTriggerAsLong(), null)
         binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout.addView(bindingAlarm.root)
 
         bindingAlarm.cardAlarmDelete.setOnClickListener {
@@ -1554,7 +1581,41 @@ class IcalEditFragment : Fragment() {
             binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout.removeView(bindingAlarm.root)
         }
 
-        //TODO: Continue here!
+        bindingAlarm.cardAlarm.setOnClickListener {
+
+            val alarmTriggerMillis = alarm.getTriggerAsLong() ?: return@setOnClickListener
+            var zonedTimestamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(alarmTriggerMillis), ZoneId.systemDefault())
+
+            val datePicker =
+                MaterialDatePicker.Builder.datePicker()
+                    .setTitleText(R.string.edit_datepicker_dialog_select_date)
+                    .setSelection(zonedTimestamp.toInstant().toEpochMilli())
+                    .build()
+
+            val timePicker =
+                MaterialTimePicker.Builder()
+                    .setTitleText(R.string.edit_datepicker_dialog_select_time)
+                    .setHour(zonedTimestamp.hour)
+                    .setMinute(zonedTimestamp.minute)
+                    .build()
+
+            timePicker.addOnPositiveButtonClickListener {
+                zonedTimestamp = zonedTimestamp
+                    .withHour(timePicker.hour)
+                    .withMinute(timePicker.minute)
+                alarm.trigger = Alarm.getTriggerAsDateTime(zonedTimestamp.toInstant().toEpochMilli())
+                bindingAlarm.cardAlarmDate.text = convertLongToFullDateTimeString(zonedTimestamp.toInstant().toEpochMilli(), null)
+            }
+
+            datePicker.addOnPositiveButtonClickListener {
+                zonedTimestamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
+                timePicker.show(parentFragmentManager, tag)
+            }
+            datePicker.show(parentFragmentManager, tag)
+        }
+
+
+        //TODO: Continue here! -> make it clickable to edit the alarm
     }
 
 
