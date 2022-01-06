@@ -202,6 +202,10 @@ class IcalEditFragment : Fragment() {
         if(icalEditViewModel.iCalEntity.property.module == Module.NOTE.name && binding.icalEditTabs.tabCount >= TAB_RECURRING)
             binding.icalEditTabs.getTabAt(TAB_RECURRING)?.view?.visibility = View.GONE
 
+        // VJOURNALs are not allowed to have Alarms!
+        if(icalEditViewModel.iCalEntity.property.component == Component.VJOURNAL.name)
+            binding.icalEditTabs.getTabAt(TAB_ALARMS)?.view?.visibility = View.GONE
+
         binding.editCollectionSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
 
