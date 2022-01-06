@@ -828,16 +828,16 @@ class IcalListFragment : Fragment() {
 
                 sr.setRecognitionListener(object : RecognitionListener {
                     override fun onReadyForSpeech(p0: Bundle?) {
-                        Toast.makeText(context, R.string.list_quickadd_dialog_sr_start_listening, Toast.LENGTH_SHORT).show()
+                        context?.let { Toast.makeText(it, R.string.list_quickadd_dialog_sr_start_listening, Toast.LENGTH_SHORT).show() }
                     }
                     override fun onBeginningOfSpeech() { }
                     override fun onEndOfSpeech() {
-                        Toast.makeText(context,R.string.list_quickadd_dialog_sr_stop_listening, Toast.LENGTH_SHORT).show()
+                        context?.let { Toast.makeText(it,R.string.list_quickadd_dialog_sr_stop_listening, Toast.LENGTH_SHORT).show() }
                     }
                     override fun onRmsChanged(p0: Float) {}
                     override fun onBufferReceived(p0: ByteArray?) {}
                     override fun onError(errorCode: Int) {
-                        Toast.makeText(context,getString(R.string.list_quickadd_dialog_sr_error, errorCode.toString()), Toast.LENGTH_SHORT).show()
+                        context?.let { Toast.makeText(it,getString(R.string.list_quickadd_dialog_sr_error, errorCode.toString()), Toast.LENGTH_SHORT).show()  }
                         return
                     }
                     override fun onPartialResults(bundle: Bundle?) {
