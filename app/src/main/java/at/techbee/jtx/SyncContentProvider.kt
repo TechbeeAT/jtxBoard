@@ -59,9 +59,6 @@ const val CALLER_IS_SYNCADAPTER = "caller_is_syncadapter"
 const val ACCOUNT_NAME = "account_name"
 const val ACCOUNT_TYPE = "account_type"
 
-/** The URI for the Icalobject table.  */
-
-
 
 class SyncContentProvider : ContentProvider() {
 

@@ -245,7 +245,8 @@ class IcalEditFragment : Fragment() {
                 zonedTimestamp = zonedTimestamp
                     .withHour(timePicker.hour)
                     .withMinute(timePicker.minute)
-                val newAlarm = Alarm.fromTimestamp(zonedTimestamp.toInstant().toEpochMilli())
+                val newAlarm = Alarm()
+                newAlarm.triggerTime = zonedTimestamp.toInstant().toEpochMilli()
                 icalEditViewModel.alarmUpdated.add(newAlarm)
                 addAlarmView(newAlarm)
             }
@@ -1570,12 +1571,12 @@ class IcalEditFragment : Fragment() {
     private fun addAlarmView(alarm: Alarm) {
 
         // we don't add alarm of which the DateTime is not set or cannot be determined
-        if(alarm.getTriggerAsLong() == null)
+        if(alarm.triggerTime == null)
             return
 
         val bindingAlarm = CardAlarmBinding.inflate(inflater, container, false)
 
-        bindingAlarm.cardAlarmDate.text = convertLongToFullDateTimeString(alarm.getTriggerAsLong(), null)
+        bindingAlarm.cardAlarmDate.text = convertLongToFullDateTimeString(alarm.triggerTime, null)
         binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout.addView(bindingAlarm.root)
 
         bindingAlarm.cardAlarmDelete.setOnClickListener {
@@ -1585,8 +1586,9 @@ class IcalEditFragment : Fragment() {
 
         bindingAlarm.cardAlarm.setOnClickListener {
 
-            val alarmTriggerMillis = alarm.getTriggerAsLong() ?: return@setOnClickListener
-            var zonedTimestamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(alarmTriggerMillis), ZoneId.systemDefault())
+            if(alarm.triggerTime == null)
+                return@setOnClickListener
+            var zonedTimestamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(alarm.triggerTime!!), ZoneId.systemDefault())
 
             val datePicker =
                 MaterialDatePicker.Builder.datePicker()
@@ -1605,7 +1607,7 @@ class IcalEditFragment : Fragment() {
                 zonedTimestamp = zonedTimestamp
                     .withHour(timePicker.hour)
                     .withMinute(timePicker.minute)
-                alarm.trigger = Alarm.getTriggerAsDateTime(zonedTimestamp.toInstant().toEpochMilli())
+                alarm.triggerTime = zonedTimestamp.toInstant().toEpochMilli()
                 bindingAlarm.cardAlarmDate.text = convertLongToFullDateTimeString(zonedTimestamp.toInstant().toEpochMilli(), null)
             }
 

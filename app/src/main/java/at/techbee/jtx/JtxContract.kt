@@ -12,6 +12,7 @@ import android.accounts.Account
 import android.net.Uri
 import android.provider.BaseColumns
 import android.util.Log
+import at.techbee.jtx.database.properties.Alarm
 import net.fortuna.ical4j.model.ParameterList
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.PropertyList
@@ -1257,29 +1258,134 @@ object JtxContract {
         const val ID = BaseColumns._ID
 
         /** The name of the Foreign Key Column for IcalObjects.
-         * Type: [Long] */
+         * Type: [Long], references [JtxICalObject.ID]
+         */
         const val ICALOBJECT_ID = "icalObjectId"
 
-        const val ALARM_ACTION = "action"
-        const val ALARM_DESCRIPTION = "description"
-        const val ALARM_TRIGGER = "trigger"
-        const val ALARM_SUMMARY = "summary"
-        const val ALARM_ATTENDEE = "attendee"
-        const val ALARM_DURATION = "duration"
-        const val ALARM_REPEAT = "repeat"
-        const val ALARM_ATTACH = "attach"
-
-
-        /***** The names of all the other columns  *****/
         /**
-         * Purpose:  This property stores the unknown value as json
-         * The Parameters are stored as JSON. There are two helper functions provided:
-         * getJsonStringFromXParameters(ParameterList?) that returns a Json String from the parameter list
-         * to be stored in this other field. The counterpart to this function is
-         * getXParameterFromJson(String) that returns a list of XParameters from a Json that was created with getJsonStringFromXParameters(...)
+         * Each "VALARM" calendar component has a particular type
+         * of action with which it is associated.  This property specifies
+         * the type of action.  Applications MUST ignore alarms with x-name
+         * and iana-token values they don't recognize.
+         * Currently only "DISPLAY" is supported, all other values can be stored but are ignored
          * Type: [String]
          */
-        const val ALARM_OTHER = "other"
+        const val ACTION = "action"
+
+        /**
+         * This property provides a more complete description of the
+         * calendar component than that provided by the "SUMMARY" property.
+         * Type: [String]
+         */
+        const val DESCRIPTION = "description"
+
+        /**
+         * This property defines a short summary or subject for the
+         * calendar component.
+         * Type: [String]
+         */
+        const val SUMMARY = "summary"
+
+        /**
+         * This property contains a CSV-list of attendees as Uris
+         * e.g. "mailto:contact@techbee.at,mailto:jtx@techbee.at"
+         */
+        const val ATTENDEE = "attendee"
+
+        /**
+         * The alarm can be defined such that it triggers repeatedly.  A
+         * definition of an alarm with a repeating trigger MUST include both
+         * the "DURATION" and "REPEAT" properties.  The "DURATION" property
+         * specifies the delay period, after which the alarm will repeat.
+         * Type: [String]
+         */
+        const val DURATION = "duration"
+
+        /**
+         * The "REPEAT" property specifies the number of additional
+         * repetitions that the alarm will be triggered.  This repetition
+         * count is in addition to the initial triggering of the alarm.  Both
+         * of these properties MUST be present in order to specify a
+         * repeating alarm.  If one of these two properties is absent, then
+         * the alarm will not repeat beyond the initial trigger.
+         * Type: [String]
+         */
+        const val REPEAT = "repeat"
+
+        /**
+         * Contains the uri of an attachment
+         * Type: [String]
+         */
+        const val ATTACH = "attach"
+
+        /**
+         * Purpose:  To specify other properties for the alarm.
+         * see [https://tools.ietf.org/html/rfc5545#section-3.8.4.3]
+         * Type: [String]
+         */
+        const val OTHER = "other"
+
+        /**
+         * Stores a timestamp with the absolute time when the alarm should be triggered.
+         * This value is stored as UNIX timestamp (milliseconds).
+         * Either a Alarm Trigger Time OR a Alarm Relative Duration must be provided, but not both!
+         * Type: [Long]
+         */
+        const val TRIGGER_TIME = "triggerTime"
+
+        /**
+         * Purpose:  This column/property specifies the timezone of the absolute trigger time.
+         * The corresponding datetime is stored in [TRIGGER_TIME].
+         * The value of a timezone can be:
+         * 1. the id of a Java timezone to represent the given timezone.
+         * 2. null to represent floating time.
+         * If an invalid value is passed, the Timezone is ignored and interpreted as UTC.
+         * See [https://tools.ietf.org/html/rfc5545#section-3.8.2.4]
+         * Type: [String]
+         */
+        const val TRIGGER_TIMEZONE = "triggerTimezone"
+
+        /**
+         * Purpose:  This property defines the field to which the duration is relatiive to.
+         * The possible values of a status are defined in the enum [AlarmRelativeTo].
+         * Use e.g. AlarmRelativeTo.START.name to put a correct String value in this field.
+         * AlarmRelativeTo.START would make the duration relative to DTSTART.
+         * AlarmRelativeTo.END would make the duration relative to DUE (only VTODO is supported!).
+         * If no valid AlarmRelativeTo is provided, the default value is AlarmRelativeTo.START.
+         * Type: [String]
+         */
+        const val TRIGGER_RELATIVE_TO = "triggerRelativeTo"
+
+        /**
+         * Purpose: Specifying a relative time for the
+         * trigger of the alarm.  The default duration is relative to the
+         * start of an event or to-do with which the alarm is associated.
+         * The duration can be explicitly set to trigger from either the end
+         * or the start of the associated event or to-do with the [TRIGGER_RELATIVE_TO]
+         * parameter.  A value of START will set the alarm to trigger off the
+         * start of the associated event or to-do.  A value of END will set
+         * the alarm to trigger off the end of the associated event or to-do.
+         * Either a positive or negative duration may be specified for the
+         * "TRIGGER" property.  An alarm with a positive duration is
+         * triggered after the associated start or end of the event or to-do.
+         * An alarm with a negative duration is triggered before the
+         * associated start or end of the event or to-do.
+         * Type: [String]
+         */
+        const val TRIGGER_RELATIVE_DURATION = "triggerRelativeDuration"
+
+
+        /** This enum class defines the possible values for the attribute [Alarm.triggerRelativeTo] for the Component VALARM  */
+        @Suppress("unused")
+        enum class AlarmRelativeTo  {
+            START, END
+        }
+
+        /** This enum class defines the possible values for the attribute [Alarm.action] for the Component VALARM  */
+        @Suppress("unused")
+        enum class AlarmAction  {
+            AUDIO, DISPLAY, EMAIL
+        }
     }
 
     @Suppress("unused")

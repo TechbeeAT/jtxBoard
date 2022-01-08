@@ -446,9 +446,12 @@ class SyncContentProviderTest {
 
         val sampleAlarm = Alarm(
             icalObjectId = defaultICalObjectId!!,
-            action = "AUDIO" ,
+            action = JtxContract.JtxAlarm.AlarmAction.AUDIO.name ,
             description = "my description",
-            trigger = "DATE-TIME:19970317T133000Z",
+            triggerRelativeDuration = "-PT15M",
+            triggerRelativeTo = JtxContract.JtxAlarm.AlarmRelativeTo.START.name,
+            triggerTime = 1641560551926L,
+            triggerTimezone = "Europe/Vienna",
             summary = "summary",
             duration = "PT15M",
             attach = "ftp://example.com/pub/sounds/bell-01.aud",
@@ -460,15 +463,18 @@ class SyncContentProviderTest {
         // INSERT
         val values = ContentValues().apply {
             put(JtxContract.JtxAlarm.ICALOBJECT_ID, sampleAlarm.icalObjectId)
-            put(JtxContract.JtxAlarm.ALARM_DESCRIPTION, sampleAlarm.description)
-            put(JtxContract.JtxAlarm.ALARM_ACTION, sampleAlarm.action)
-            put(JtxContract.JtxAlarm.ALARM_TRIGGER, sampleAlarm.trigger)
-            put(JtxContract.JtxAlarm.ALARM_SUMMARY, sampleAlarm.summary)
-            put(JtxContract.JtxAlarm.ALARM_DURATION, sampleAlarm.duration)
-            put(JtxContract.JtxAlarm.ALARM_ATTACH, sampleAlarm.attach)
-            put(JtxContract.JtxAlarm.ALARM_ATTENDEE, sampleAlarm.attendee)
-            put(JtxContract.JtxAlarm.ALARM_REPEAT, sampleAlarm.repeat)
-            put(JtxContract.JtxAlarm.ALARM_OTHER, sampleAlarm.other)
+            put(JtxContract.JtxAlarm.DESCRIPTION, sampleAlarm.description)
+            put(JtxContract.JtxAlarm.ACTION, sampleAlarm.action)
+            put(JtxContract.JtxAlarm.TRIGGER_RELATIVE_DURATION, sampleAlarm.triggerRelativeDuration)
+            put(JtxContract.JtxAlarm.TRIGGER_RELATIVE_TO, sampleAlarm.triggerRelativeTo)
+            put(JtxContract.JtxAlarm.TRIGGER_TIME, sampleAlarm.triggerTime)
+            put(JtxContract.JtxAlarm.TRIGGER_TIMEZONE, sampleAlarm.triggerTimezone)
+            put(JtxContract.JtxAlarm.SUMMARY, sampleAlarm.summary)
+            put(JtxContract.JtxAlarm.DURATION, sampleAlarm.duration)
+            put(JtxContract.JtxAlarm.ATTACH, sampleAlarm.attach)
+            put(JtxContract.JtxAlarm.ATTENDEE, sampleAlarm.attendee)
+            put(JtxContract.JtxAlarm.REPEAT, sampleAlarm.repeat)
+            put(JtxContract.JtxAlarm.OTHER, sampleAlarm.other)
         }
         val uriAlarm = JtxContract.JtxAlarm.CONTENT_URI.asSyncAdapter(defaultTestAccount)
         val newAlarm = mContentResolver?.insert(uriAlarm, values)
@@ -482,12 +488,12 @@ class SyncContentProviderTest {
         // UPDATE
         sampleAlarm.summary = "New Summary"
         val updatedValues = ContentValues()
-        updatedValues.put(JtxContract.JtxAlarm.ALARM_SUMMARY, sampleAlarm.summary)
+        updatedValues.put(JtxContract.JtxAlarm.SUMMARY, sampleAlarm.summary)
         val countUpdated = mContentResolver?.update(newAlarm!!, updatedValues, null, null)
         assertEquals(countUpdated, 1)
 
         // QUERY the updated value
-        mContentResolver?.query(newAlarm!!, arrayOf(JtxContract.JtxAlarm.ID, JtxContract.JtxAlarm.ALARM_SUMMARY), "${JtxContract.JtxAlarm.ALARM_SUMMARY} = ?", arrayOf(sampleAlarm.summary), null).use {
+        mContentResolver?.query(newAlarm!!, arrayOf(JtxContract.JtxAlarm.ID, JtxContract.JtxAlarm.SUMMARY), "${JtxContract.JtxAlarm.SUMMARY} = ?", arrayOf(sampleAlarm.summary), null).use {
             assertEquals(1, it!!.count)             // inserted object was found
         }
 
