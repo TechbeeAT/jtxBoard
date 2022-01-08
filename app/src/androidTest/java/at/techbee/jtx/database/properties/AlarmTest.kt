@@ -9,6 +9,7 @@
 package at.techbee.jtx.database.properties
 
 import android.content.ContentValues
+import at.techbee.jtx.JtxContract
 import org.junit.Assert
 import org.junit.Test
 
@@ -25,7 +26,10 @@ class AlarmTest {
             icalObjectId = 1L,
             action = "AUDIO" ,
             description = "my description",
-            trigger = "DATE-TIME:19970317T133000Z",
+            triggerRelativeDuration = "-PT15M",
+            triggerRelativeTo = JtxContract.JtxAlarm.AlarmRelativeTo.START.name,
+            triggerTime = 1641560551926L,
+            triggerTimezone = "Europe/Vienna",
             summary = "summary",
             duration = "PT15M",
             attach = "ftp://example.com/pub/sounds/bell-01.aud",
@@ -38,7 +42,10 @@ class AlarmTest {
             put(COLUMN_ALARM_ICALOBJECT_ID, sampleAlarm.icalObjectId)
             put(COLUMN_ALARM_DESCRIPTION, sampleAlarm.description)
             put(COLUMN_ALARM_ACTION, sampleAlarm.action)
-            put(COLUMN_ALARM_TRIGGER, sampleAlarm.trigger)
+            put(COLUMN_ALARM_TRIGGER_RELATIVE_DURATION, sampleAlarm.triggerRelativeDuration)
+            put(COLUMN_ALARM_TRIGGER_RELATIVE_TO, sampleAlarm.triggerRelativeTo)
+            put(COLUMN_ALARM_TRIGGER_TIME, sampleAlarm.triggerTime)
+            put(COLUMN_ALARM_TRIGGER_TIMEZONE, sampleAlarm.triggerTimezone)
             put(COLUMN_ALARM_SUMMARY, sampleAlarm.summary)
             put(COLUMN_ALARM_DURATION, sampleAlarm.duration)
             put(COLUMN_ALARM_ATTACH, sampleAlarm.attach)

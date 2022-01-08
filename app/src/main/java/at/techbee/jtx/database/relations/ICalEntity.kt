@@ -117,7 +117,15 @@ data class ICalEntity(
         alarms?.forEach { alarm ->
             val vAlarm = VAlarm().apply {
                 alarm.action?.let { this.action.value = it }
-                alarm.trigger?.let { this.trigger.value = it }
+                if(alarm.triggerTime != null && alarm.triggerRelativeDuration.isNullOrEmpty()) {
+                    this.trigger.dateTime = DateTime(alarm.triggerTime!!)
+                } else if (alarm.triggerTime == null && alarm.triggerRelativeDuration?.isNotEmpty() == true) {
+                    this.trigger.duration = java.time.Duration.parse(alarm.triggerRelativeDuration)
+                    if(alarm.triggerRelativeTo == AlarmRelativeTo.START.name)
+                        this.trigger.parameters.add(Related.START)
+                    else
+                        this.trigger.parameters.add(Related.END)
+                }
                 alarm.summary?.let {this.summary.value = it }
                 alarm.repeat?.let { this.repeat.value = it }
                 alarm.duration?.let { this.duration.value = it }
