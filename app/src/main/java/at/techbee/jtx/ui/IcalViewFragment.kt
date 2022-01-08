@@ -22,6 +22,7 @@ import android.os.*
 import android.util.Log
 import android.util.Size
 import android.view.*
+import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -366,7 +367,7 @@ class IcalViewFragment : Fragment() {
 
             binding.viewSubtasksLinearlayout.removeAllViews()
             it.forEach { singleSubtask ->
-                addSubtasksView(singleSubtask, container)
+                addSubtasksView(singleSubtask, binding.viewSubtasksLinearlayout)
             }
         }
 
@@ -658,12 +659,12 @@ class IcalViewFragment : Fragment() {
     }
 
 
-    private fun addSubtasksView(subtask: ICalObject?, container: ViewGroup?) {
+    private fun addSubtasksView(subtask: ICalObject?, linearLayout: LinearLayout) {
 
         if (subtask == null)
             return
 
-        val subtaskBinding = FragmentIcalViewSubtaskBinding.inflate(inflater, container, false)
+        val subtaskBinding = FragmentIcalViewSubtaskBinding.inflate(inflater, linearLayout, false)
 
         var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
 
@@ -707,7 +708,7 @@ class IcalViewFragment : Fragment() {
                     IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(subtask.id))
         }
 
-            binding.viewSubtasksLinearlayout.addView(subtaskBinding.root)
+            linearLayout.addView(subtaskBinding.root)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
