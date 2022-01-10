@@ -1111,9 +1111,40 @@
                     android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_comments_header">
+                    app:layout_constraintTop_toBottomOf="@+id/view_comments_header"/>
 
-                </LinearLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/view_alarms_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:text="@string/view_alarms_header"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="@{model.alarmsVisible ? View.VISIBLE : View.GONE}"
+                    app:drawableStartCompat="@drawable/ic_alarm"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_relatedto" />
+
+
+                <LinearLayout
+                    android:id="@+id/view_alarms_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:divider="?android:dividerHorizontal"
+                    android:orientation="vertical"
+                    android:showDividers="middle"
+                    android:visibility="@{model.alarmsVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_alarms_header"/>
+
 
 
                 <com.google.android.material.textview.MaterialTextView
@@ -1129,7 +1160,7 @@
                     android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_attachment"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_comments_linearlayout" />
+                    app:layout_constraintTop_toBottomOf="@id/view_alarms_linearlayout" />
 
 
                 <LinearLayout
