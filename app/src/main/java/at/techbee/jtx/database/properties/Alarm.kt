@@ -9,15 +9,26 @@
 package at.techbee.jtx.database.properties
 
 import android.content.ContentValues
+import android.content.Context
 import android.os.Parcelable
 import android.provider.BaseColumns
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.LinearLayout
+import androidx.annotation.VisibleForTesting
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.databinding.CardAlarmBinding
+import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.parcelize.Parcelize
+import java.time.Duration
+import java.time.format.DateTimeParseException
 
 /** The name of the the table for Alarms that are linked to an ICalObject.
  * [https://tools.ietf.org/html/rfc5545#section-3.8.1.10]*/
@@ -198,6 +209,35 @@ data class Alarm (
 
             return Alarm().applyContentValues(values)
         }
+
+        /**
+         * @return [Alarm] with action set to AlarmAction.DISPLAY
+          */
+        fun createDisplayAlarm() = Alarm().apply {
+            action = AlarmAction.DISPLAY.name
+        }
+
+        /**
+         * @param [dur] the TriggerDuration of the alarm
+         * @param [alarmRelativeTo] a value of the Enum [AlarmRelativeTo] or null
+         * @return [Alarm] with action set to AlarmAction.DISPLAY, triggerRelativeDuration set to given duration and triggerRelativeTo set to the given alarmRelativeTo or null
+         */
+        fun createDisplayAlarm(dur: Duration, alarmRelativeTo: AlarmRelativeTo?) = Alarm().apply {
+            action = AlarmAction.DISPLAY.name
+            triggerRelativeDuration = dur.toString()
+            alarmRelativeTo?.let { triggerRelativeTo = it.name }
+        }
+
+        /**
+         * @param [time] the timestamp when the alarm should be triggered
+         * @param [timezone] the timezone for the trigger or null
+         * @return [Alarm] with action set to AlarmAction.DISPLAY, triggerTime set to the given time and triggerTimezone set to the timezone (if passed)
+         */
+        fun createDisplayAlarm(time: Long, timezone: String?) = Alarm().apply {
+            action = AlarmAction.DISPLAY.name
+            triggerTime = time
+            timezone?.let { triggerTimezone = it }
+        }
     }
 
     fun applyContentValues(values: ContentValues): Alarm {
@@ -215,6 +255,95 @@ data class Alarm (
         values.getAsString(COLUMN_ALARM_TRIGGER_RELATIVE_TO)?.let { triggerRelativeTo -> this.triggerRelativeTo = triggerRelativeTo }
         values.getAsString(COLUMN_ALARM_TRIGGER_RELATIVE_DURATION)?.let { triggerRelativeDuration -> this.triggerRelativeDuration = triggerRelativeDuration }
         return this
+    }
+
+    /**
+     * @param [referenceDate] to which the trigger duration should be added
+     * @return the timestamp of the referenceDate before/after the triggerDuration
+     */
+    @VisibleForTesting
+    fun getDatetimeFromTriggerDuration(referenceDate: Long): Long? {
+        getTriggerAsDuration()?.let { return referenceDate + it.toMillis() } ?: return null
+    }
+
+    /**
+     * @return The parsed triggerRelativeDuration of this alarm as Duration or null if the value cannot be parsed
+     */
+    @VisibleForTesting
+    fun getTriggerAsDuration() = try {
+        Duration.parse(this.triggerRelativeDuration)
+    } catch (e: DateTimeParseException) {
+        Log.w(
+            "triggerRelativeDuration",
+            "Failed parsing duration: ${this.triggerRelativeDuration}\n$e"
+        )
+        null
+    }
+
+    /**
+     * @return the duration as a human readible string, e.g. "7 days before start" or null (if the triggerDuration could not be parsed)
+     */
+    @VisibleForTesting
+    fun getTriggerDurationAsString(context: Context): String? {
+
+        val dur = getTriggerAsDuration() ?: return null
+
+        // The final structure should be "xx minutes/hours/days before/after-start/due
+        // "%1$d %2$s %3$s", e.g. 7 days before start
+        val param1Value = when {
+            dur.abs().toMinutes() in 1..60 -> dur.abs().toMinutes()
+            dur.abs().toHours() in 1..23 -> dur.abs().toHours()
+            dur.abs().toDays() in 1..365 -> dur.abs().toDays()
+            else -> null
+        }
+        val param2Unit = when {
+            dur.abs().toMinutes() in 1..60 -> context.getString(R.string.alarms_minutes)
+            dur.abs().toHours() in 1..23 -> context.getString(R.string.alarms_hours)
+            dur.abs().toDays() in 1..365 -> context.getString(R.string.alarms_days)
+            else -> null
+        }
+        val param3BeforeAfterStartDue = when {
+            dur.isNegative && this.triggerRelativeTo == AlarmRelativeTo.END.name -> context.getString(R.string.alarms_before_due)
+            !dur.isNegative && this.triggerRelativeTo == AlarmRelativeTo.END.name -> context.getString(R.string.alarms_after_due)
+            dur.isNegative -> context.getString(R.string.alarms_before_start)
+            !dur.isNegative -> context.getString(R.string.alarms_after_start)
+            else -> null
+        }
+
+        return when {
+            dur == Duration.ZERO && triggerRelativeTo == AlarmRelativeTo.START.name -> context.getString(R.string.alarms_onstart)
+            dur == Duration.ZERO && triggerRelativeTo == AlarmRelativeTo.END.name -> context.getString(R.string.alarms_ondue)
+            param1Value != null -> context.getString(R.string.alarms_duration_full_string, param1Value, param2Unit, param3BeforeAfterStartDue)
+            else -> this.triggerRelativeDuration
+        }
+    }
+
+    fun getAlarmCardBinding(inflater: LayoutInflater, container: LinearLayout, referenceDate: Long?, referenceTZ: String?): CardAlarmBinding? {
+
+        // we don't add alarm of which the DateTime is not set or cannot be determined
+        if(triggerTime == null && triggerRelativeDuration == null)
+            return null
+
+        val bindingAlarm = CardAlarmBinding.inflate(inflater, container, false)
+
+        if(triggerTime != null) {
+            bindingAlarm.cardAlarmDate.text =
+                DateTimeUtils.convertLongToFullDateTimeString(
+                    triggerTime,
+                    triggerTimezone
+                )
+            bindingAlarm.cardAlarmDuration.visibility = View.GONE
+        }
+        else if(triggerRelativeDuration?.isNotEmpty() == true) {
+            if(referenceDate == null)
+                return null
+
+            bindingAlarm.cardAlarmDate.text = DateTimeUtils.convertLongToFullDateTimeString(
+                getDatetimeFromTriggerDuration(referenceDate), referenceTZ
+            )
+            bindingAlarm.cardAlarmDuration.text = getTriggerDurationAsString(inflater.context)
+        }
+        return bindingAlarm
     }
 }
 

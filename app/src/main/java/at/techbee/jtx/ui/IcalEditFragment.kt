@@ -81,7 +81,9 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.lang.ClassCastException
+import java.lang.NumberFormatException
 import java.time.*
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 
@@ -245,10 +247,11 @@ class IcalEditFragment : Fragment() {
                 zonedTimestamp = zonedTimestamp
                     .withHour(timePicker.hour)
                     .withMinute(timePicker.minute)
-                val newAlarm = Alarm()
-                newAlarm.triggerTime = zonedTimestamp.toInstant().toEpochMilli()
-                icalEditViewModel.alarmUpdated.add(newAlarm)
-                addAlarmView(newAlarm)
+                val newAlarm = Alarm.createDisplayAlarm(zonedTimestamp.toInstant().toEpochMilli(), null)
+                if(!icalEditViewModel.alarmUpdated.contains(newAlarm)) {
+                    icalEditViewModel.alarmUpdated.add(newAlarm)
+                    addAlarmView(newAlarm)
+                }
             }
 
             datePicker.addOnPositiveButtonClickListener {
@@ -256,6 +259,64 @@ class IcalEditFragment : Fragment() {
                 timePicker.show(parentFragmentManager, tag)
             }
             datePicker.show(parentFragmentManager, tag)
+        }
+
+        binding.editFragmentIcalEditAlarm.editAlarmsButtonAddRelative.setOnClickListener {
+
+            val alarm = Alarm.createDisplayAlarm()
+
+            val number = try {
+                Integer.parseInt(binding.editFragmentIcalEditAlarm.editAlarmsNumber.text.toString()).toLong()
+            } catch (e: NumberFormatException) {
+                Log.w("AlarmDuration", "Trigger Duration of Alarm could not be parsed as Integer \n$e")
+                return@setOnClickListener
+            }
+
+            val dur = when (binding.editFragmentIcalEditAlarm.editAlarmsMinutesHoursDaysSpinner.selectedItem) {
+                getString(R.string.alarms_minutes) -> Duration.of(number, ChronoUnit.MINUTES)
+                getString(R.string.alarms_hours) -> Duration.of(number, ChronoUnit.HOURS)
+                getString(R.string.alarms_days) -> Duration.of(number, ChronoUnit.DAYS)
+                else -> return@setOnClickListener
+            }
+
+            when(binding.editFragmentIcalEditAlarm.editAlarmsBeforeAfterStartDueSpinner.selectedItem) {
+                getString(R.string.alarms_before_start) -> {
+                    alarm.triggerRelativeDuration = dur.negated().toString()
+                    alarm.triggerRelativeTo = AlarmRelativeTo.START.name
+                }
+                getString(R.string.alarms_after_start) -> {
+                    alarm.triggerRelativeDuration = dur.toString()
+                    alarm.triggerRelativeTo = AlarmRelativeTo.START.name
+                }
+                getString(R.string.alarms_before_due) -> {
+                    alarm.triggerRelativeDuration = dur.negated().toString()
+                    alarm.triggerRelativeTo = AlarmRelativeTo.END.name
+                }
+                getString(R.string.alarms_after_due) -> {
+                    alarm.triggerRelativeDuration = dur.toString()
+                    alarm.triggerRelativeTo = AlarmRelativeTo.END.name
+                }
+            }
+            if(!icalEditViewModel.alarmUpdated.contains(alarm)) {
+                icalEditViewModel.alarmUpdated.add(alarm)
+                addAlarmView(alarm)
+            }
+        }
+
+        binding.editFragmentIcalEditAlarm.editAlarmsButtonOnstart.setOnClickListener {
+            val alarm = Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.START)
+            if(!icalEditViewModel.alarmUpdated.contains(alarm)) {
+                icalEditViewModel.alarmUpdated.add(alarm)
+                addAlarmView(alarm)
+            }
+        }
+
+        binding.editFragmentIcalEditAlarm.editAlarmsButtonOndue.setOnClickListener {
+            val alarm = Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.END)
+            if(!icalEditViewModel.alarmUpdated.contains(alarm)) {
+                icalEditViewModel.alarmUpdated.add(alarm)
+                addAlarmView(alarm)
+            }
         }
 
         // notify the user if a duration was detected (currently not supported)
@@ -565,10 +626,33 @@ class IcalEditFragment : Fragment() {
                 binding.editFragmentIcalEditAlarm.editAlarmsButtonOndue.visibility = View.GONE
             else
                 binding.editFragmentIcalEditAlarm.editAlarmsButtonOndue.visibility = View.VISIBLE
-            if(it.completed == null)
-                binding.editFragmentIcalEditAlarm.editAlarmsButtonOncomplete.visibility = View.GONE
+
+            if(it.dtstart == null && it.due == null)
+                binding.editFragmentIcalEditAlarm.editAlarmsScrollviewRelativeAlarm.visibility = View.GONE
             else
-                binding.editFragmentIcalEditAlarm.editAlarmsButtonOncomplete.visibility = View.VISIBLE
+                binding.editFragmentIcalEditAlarm.editAlarmsScrollviewRelativeAlarm.visibility = View.VISIBLE
+
+            val adapterMinutesHoursDays = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                arrayOf(getString(R.string.alarms_minutes), getString(R.string.alarms_hours), getString(R.string.alarms_days))
+            )
+            adapterMinutesHoursDays.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.editFragmentIcalEditAlarm.editAlarmsMinutesHoursDaysSpinner.adapter = adapterMinutesHoursDays
+
+            val adapterBeforeAfterOptions = arrayListOf<String>()
+            if(it.dtstart != null)
+                adapterBeforeAfterOptions.addAll(arrayListOf(getString(R.string.alarms_before_start), getString(R.string.alarms_after_start)))
+            if(it.due != null)
+                adapterBeforeAfterOptions.addAll(arrayListOf(getString(R.string.alarms_before_due), getString(R.string.alarms_after_due)))
+            val adapterBeforeAfter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                adapterBeforeAfterOptions
+            )
+            adapterBeforeAfter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.editFragmentIcalEditAlarm.editAlarmsBeforeAfterStartDueSpinner.adapter = adapterBeforeAfter
+
         }
 
 
@@ -1571,55 +1655,34 @@ class IcalEditFragment : Fragment() {
     private fun addAlarmView(alarm: Alarm) {
 
         // we don't add alarm of which the DateTime is not set or cannot be determined
-        if(alarm.triggerTime == null)
+        if(alarm.triggerTime == null && alarm.triggerRelativeDuration == null)
             return
 
-        val bindingAlarm = CardAlarmBinding.inflate(inflater, container, false)
+        val bindingAlarm = when {
+            alarm.triggerTime != null ->
+                alarm.getAlarmCardBinding(inflater, binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout, null, null )
+            alarm.triggerRelativeDuration?.isNotEmpty() == true -> {
 
-        bindingAlarm.cardAlarmDate.text = convertLongToFullDateTimeString(alarm.triggerTime, null)
-        binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout.addView(bindingAlarm.root)
+                val referenceDate = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name)
+                    icalEditViewModel.iCalObjectUpdated.value?.due ?: icalEditViewModel.iCalEntity.property.due ?: return
+                else
+                    icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: icalEditViewModel.iCalEntity.property.dtstart ?: return
 
-        bindingAlarm.cardAlarmDelete.setOnClickListener {
+                val referenceTZ = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name)
+                    icalEditViewModel.iCalObjectUpdated.value?.dueTimezone ?: icalEditViewModel.iCalEntity.property.dueTimezone
+                else
+                    icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone ?: icalEditViewModel.iCalEntity.property.dtstartTimezone
+
+                alarm.getAlarmCardBinding(inflater, binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout, referenceDate, referenceTZ )
+            }
+            else -> return
+        }
+
+        bindingAlarm?.cardAlarmDelete?.setOnClickListener {
             icalEditViewModel.alarmUpdated.remove(alarm)
             binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout.removeView(bindingAlarm.root)
         }
-
-        bindingAlarm.cardAlarm.setOnClickListener {
-
-            if(alarm.triggerTime == null)
-                return@setOnClickListener
-            var zonedTimestamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(alarm.triggerTime!!), ZoneId.systemDefault())
-
-            val datePicker =
-                MaterialDatePicker.Builder.datePicker()
-                    .setTitleText(R.string.edit_datepicker_dialog_select_date)
-                    .setSelection(zonedTimestamp.toInstant().toEpochMilli())
-                    .build()
-
-            val timePicker =
-                MaterialTimePicker.Builder()
-                    .setTitleText(R.string.edit_datepicker_dialog_select_time)
-                    .setHour(zonedTimestamp.hour)
-                    .setMinute(zonedTimestamp.minute)
-                    .build()
-
-            timePicker.addOnPositiveButtonClickListener {
-                zonedTimestamp = zonedTimestamp
-                    .withHour(timePicker.hour)
-                    .withMinute(timePicker.minute)
-                alarm.triggerTime = zonedTimestamp.toInstant().toEpochMilli()
-                bindingAlarm.cardAlarmDate.text = convertLongToFullDateTimeString(zonedTimestamp.toInstant().toEpochMilli(), null)
-            }
-
-            datePicker.addOnPositiveButtonClickListener {
-                zonedTimestamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
-                timePicker.show(parentFragmentManager, tag)
-            }
-            datePicker.show(parentFragmentManager, tag)
-        }
-
-
-        //TODO: Continue here! -> make it clickable to edit the alarm
+        binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout.addView(bindingAlarm?.root)
     }
 
 
