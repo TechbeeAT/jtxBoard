@@ -18,6 +18,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.room.*
 import at.techbee.jtx.*
 import at.techbee.jtx.R
+import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
@@ -791,7 +792,7 @@ data class ICalObject(
 
 
 
-    fun recreateRecurring(database: ICalDatabaseDao) {
+    fun recreateRecurring(database: ICalDatabaseDao, context: Context) {
 
         val original = database.getSync(id) ?: return
         database.deleteRecurringInstances(id)
@@ -876,6 +877,24 @@ data class ICalObject(
                 it.resourceId = 0L
                 it.icalObjectId = instanceId
                 database.insertResourceSync(it)
+            }
+            instance.alarms?.forEach {
+                it.alarmId = 0L
+                it.icalObjectId = instanceId
+                // we skip triggers with an absolute date, only triggers with a duration are relevant for
+                if(it.triggerTime == null && it.triggerRelativeDuration?.isNotEmpty() == true) {
+                    it.alarmId = database.insertAlarmSync(it)
+
+                    // take care of notifications
+                    val triggerTime = when {
+                        it.triggerTime != null -> it.triggerTime
+                        it.triggerRelativeDuration != null && it.triggerRelativeTo == AlarmRelativeTo.END.name -> it.getDatetimeFromTriggerDuration(
+                            instance.property.due)
+                        it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(instance.property.dtstart)
+                        else -> null
+                    }
+                    triggerTime?.let { trigger -> it.scheduleNotification(context, trigger) }
+                }
             }
 
             //TODO: How to deal with relatedTo?
