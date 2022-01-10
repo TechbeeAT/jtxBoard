@@ -318,12 +318,24 @@ class IcalEditViewModel(
                         newAlarm.action = AlarmAction.DISPLAY.name
 
                     // VALARM with action DISPLAY must have a description. We try to set it to the summary, otherwise to the description. If the description was empty as well, it's set to an empty string.
-                    iCalObjectUpdated.value?.summary?.let { newAlarm.description = it }
-                    if(newAlarm.description.isNullOrEmpty())
-                        iCalObjectUpdated.value?.description?.let { newAlarm.description = it }
+                    iCalObjectUpdated.value?.summary?.let {
+                        newAlarm.summary = it
+                        newAlarm.description = it
+                    }
+                    iCalObjectUpdated.value?.description?.let { newAlarm.description = it }
                     if(newAlarm.description.isNullOrEmpty())
                         newAlarm.description = ""
-                    database.insertAlarm(newAlarm)
+                    newAlarm.alarmId = database.insertAlarm(newAlarm)
+
+                    // take care of notifications
+                    val triggerTime = when {
+                        newAlarm.triggerTime != null -> newAlarm.triggerTime
+                        newAlarm.triggerRelativeDuration != null && newAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> newAlarm.getDatetimeFromTriggerDuration(
+                            iCalObjectUpdated.value?.due)
+                        newAlarm.triggerRelativeDuration != null -> newAlarm.getDatetimeFromTriggerDuration(iCalObjectUpdated.value?.dtstart)
+                        else -> null
+                    }
+                    triggerTime?.let { newAlarm.scheduleNotification(getApplication(), it) }
                 }
 
                 // if a collection was selected that doesn't support VTODO, we do not update/insert any subtasks

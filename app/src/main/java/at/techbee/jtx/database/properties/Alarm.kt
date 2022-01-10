@@ -8,8 +8,14 @@
 
 package at.techbee.jtx.database.properties
 
+import android.app.AlarmManager
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
@@ -17,10 +23,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.VisibleForTesting
+import androidx.core.app.NotificationCompat
+import androidx.navigation.NavDeepLinkBuilder
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import at.techbee.jtx.MainActivity
+import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
@@ -261,8 +271,9 @@ data class Alarm (
      * @param [referenceDate] to which the trigger duration should be added
      * @return the timestamp of the referenceDate before/after the triggerDuration
      */
-    @VisibleForTesting
-    fun getDatetimeFromTriggerDuration(referenceDate: Long): Long? {
+    fun getDatetimeFromTriggerDuration(referenceDate: Long?): Long? {
+        if(referenceDate == null)
+            return null
         getTriggerAsDuration()?.let { return referenceDate + it.toMillis() } ?: return null
     }
 
@@ -344,6 +355,60 @@ data class Alarm (
             bindingAlarm.cardAlarmDuration.text = getTriggerDurationAsString(inflater.context)
         }
         return bindingAlarm
+    }
+
+    fun scheduleNotification(context: Context, triggerTime: Long) {
+
+        if(triggerTime < System.currentTimeMillis())
+            return
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            // prepare the args to open the icalViewFragment
+            val args: Bundle = Bundle().apply {
+                putLong("item2show", icalObjectId)
+            }
+            // prepare the intent that is passed to the notification in setContentIntent(...)
+            // this will be the intent that is executed when the user clicks on the notification
+            val contentIntent = NavDeepLinkBuilder(context)
+                .setComponentName(MainActivity::class.java)
+                .setGraph(R.navigation.navigation)
+                .setDestination(R.id.icalViewFragment)
+                .setArguments(args)
+                .createPendingIntent()
+
+            // this is the notification itself that will be put as an Extra into the notificationIntent
+            val notification = NotificationCompat.Builder(context, MainActivity.CHANNEL_REMINDER_DUE)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle(summary)
+                .setContentText(description)
+                .setContentIntent(contentIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
+                .build()
+            notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL
+
+            // the notificationIntent that is an Intent of the NotificationPublisher Class
+            val notificationIntent = Intent(context, NotificationPublisher::class.java).apply {
+                putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
+                putExtra(NotificationPublisher.NOTIFICATION, notification)
+            }
+
+            // the pendingIntent is initiated that is passed on to the alarm manager
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                alarmId.toInt(),
+                notificationIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+
+            // the alarmManager finally takes care, that the pendingIntent is queued to start the notification Intent that on click would start the contentIntent
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
+
+        } else {
+            Log.i("scheduleNotification", "Due to necessity of PendingIntent.FLAG_IMMUTABLE, the notification functionality can only be used from Build Versions > M (Api-Level 23)")
+        }
     }
 }
 
