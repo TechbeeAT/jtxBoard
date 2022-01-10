@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="@string/edit_alarms_addonstart" />
+                    android:text="@string/alarms_onstart" />
 
                 <Button
                     android:id="@+id/edit_alarms_button_ondue"
@@ -68,16 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="@string/edit_alarms_addondue" />
-
-                <Button
-                    android:id="@+id/edit_alarms_button_oncomplete"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/edit_alarms_addoncomplete" />
+                    android:text="@string/alarms_ondue" />
 
                 <Button
                     android:id="@+id/edit_alarms_button_custom"
@@ -86,9 +77,56 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="@string/edit_alarms_addcustom" />
+                    android:text="@string/alarms_custom" />
             </LinearLayout>
 
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:id="@+id/edit_alarms_scrollview_relative_alarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:fitsSystemWindows="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_alarms_scrollview">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+
+                <EditText
+                    android:id="@+id/edit_alarms_number"
+                    android:layout_width="30dp"
+                    android:layout_height="50dp"
+                    android:inputType="number"
+                    android:text="@string/alarms_default_number"
+                    android:importantForAutofill="no" />
+
+                <Spinner
+                    android:id="@+id/edit_alarms_minutes_hours_days_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:labelFor="@id/edit_alarms_number"/>
+
+                <Spinner
+                    android:id="@+id/edit_alarms_before_after_start_due_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp" />
+
+                <Button
+                    android:id="@+id/edit_alarms_button_add_relative"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:text="@string/add" />
+
+            </LinearLayout>
         </HorizontalScrollView>
 
         <LinearLayout
@@ -101,7 +139,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_alarms_scrollview" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_alarms_scrollview_relative_alarm" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

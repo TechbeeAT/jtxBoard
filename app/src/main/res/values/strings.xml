@@ -41,6 +41,8 @@
     <string name="discard">Discard</string>
     <string name="gotit">Got it</string>
     <string name="cont">Continue</string>
+    <string name="add">Add</string>
+
 
 
     <string name="toolbar_text_jtx_board" translatable="false">jtx Board</string>
@@ -291,10 +293,20 @@
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">Unsupported value (Duration) detected!</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">A duration was detected for this entry in the background. Handling a duration is currently not supported by jtx Board. Please use the start, due and end date instead. If you save this entry, the existing duration will be deleted.</string>
 
-    <string name="edit_alarms_addonstart">+ On start</string>
-    <string name="edit_alarms_addondue">+ On due</string>
-    <string name="edit_alarms_addoncomplete">+ On complete</string>
-    <string name="edit_alarms_addcustom">+ Custom</string>
+    <!-- alarms -->
+    <string name="alarms_onstart">On start</string>
+    <string name="alarms_ondue">On due</string>
+    <string name="alarms_custom">Custom</string>
+    <string name="alarms_before_start">before Start</string>
+    <string name="alarms_after_start">after Start</string>
+    <string name="alarms_before_due">before Due</string>
+    <string name="alarms_after_due">after Due</string>
+    <string name="alarms_minutes">Minute(s)</string>
+    <string name="alarms_hours">Hour(s)</string>
+    <string name="alarms_days">Day(s)</string>
+    <string name="alarms_duration_full_string" translatable="false">%1$d %2$s %3$s</string>
+    <string name="alarms_default_number" translatable="false">15</string>
+
 
     <!-- fragment_ical_filter -->
     <string name="filter_account">Account</string>
