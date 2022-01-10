@@ -388,12 +388,11 @@ class IcalEditViewModel(
                             )
                         )
                     }
-
                 }
 
                 if (recurrenceList.size > 0 || iCalObjectUpdated.value!!.id != 0L)    // recreateRecurring if the recurrenceList is not empty, but also when it is an update, as the recurrence might have been deactivated and it is necessary to delete instances
                     launch(Dispatchers.IO) {
-                        iCalObjectUpdated.value?.recreateRecurring(database)
+                        iCalObjectUpdated.value?.recreateRecurring(database, getApplication())
                     }
 
 
