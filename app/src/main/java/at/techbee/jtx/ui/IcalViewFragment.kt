@@ -90,7 +90,6 @@ class IcalViewFragment : Fragment() {
      */
 
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
@@ -171,7 +170,6 @@ class IcalViewFragment : Fragment() {
                             IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(entity)
                         )
                     }
-
                 }
             }
         })
@@ -284,6 +282,26 @@ class IcalViewFragment : Fragment() {
                 binding.viewAttachmentsLinearlayout.addView(attachmentBinding.root)
             }
 
+            binding.viewAlarmsLinearlayout.removeAllViews()      // remove all views if something has changed to rebuild from scratch
+            it.alarms?.forEach { alarm ->
+                addAlarmView(alarm)
+            }
+
+            binding.viewCategoriesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
+            it.categories?.forEach { category ->
+                addCategoryChip(category)
+            }
+
+            binding.viewResourcesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
+            it.resources?.forEach { resource ->
+                addResourceChip(resource)
+            }
+
+            binding.viewAttendeeChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
+            it.attendees?.forEach { attendee ->
+                addAttendeeChip(attendee)
+            }
+
             if (it.ICalCollection?.color != null) {
                 try {
                     binding.viewColorbar.setColorFilter(it.ICalCollection?.color!!)
@@ -321,7 +339,6 @@ class IcalViewFragment : Fragment() {
         })
 
         icalViewViewModel.subtasksCountList.observe(viewLifecycleOwner, { })
-
 
         icalViewViewModel.relatedNotes.observe(viewLifecycleOwner, {
 
@@ -379,28 +396,6 @@ class IcalViewFragment : Fragment() {
             }
             binding.viewRecurrenceItems.text = recurDates.joinToString(separator = "\n")
         }
-
-
-        icalViewViewModel.categories.observe(viewLifecycleOwner, {
-            binding.viewCategoriesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
-            it?.forEach { category ->
-                addCategoryChip(category)
-            }
-        })
-
-        icalViewViewModel.resources.observe(viewLifecycleOwner, {
-            binding.viewResourcesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
-            it?.forEach { resource ->
-                addResourceChip(resource)
-            }
-        })
-
-        icalViewViewModel.attendees.observe(viewLifecycleOwner, {
-            binding.viewAttendeeChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
-            it?.forEach { attendee ->
-                addAttendeeChip(attendee)
-            }
-        })
 
 
         binding.viewAddNote.setOnClickListener {
@@ -654,7 +649,34 @@ class IcalViewFragment : Fragment() {
         attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.getDrawableResourceByName(attendee.role), null)
 
         binding.viewAttendeeChipgroup.addView(attendeeChip)
+    }
 
+    private fun addAlarmView(alarm: Alarm) {
+
+        // we don't add alarm of which the DateTime is not set or cannot be determined
+        if(alarm.triggerTime == null && alarm.triggerRelativeDuration == null)
+            return
+
+        val bindingAlarm = when {
+            alarm.triggerTime != null ->
+                alarm.getAlarmCardBinding(inflater, binding.viewAlarmsLinearlayout, null, null )
+            alarm.triggerRelativeDuration?.isNotEmpty() == true -> {
+
+                val referenceDate = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name)
+                    icalViewViewModel.icalEntity.value?.property?.due ?: return
+                else
+                    icalViewViewModel.icalEntity.value?.property?.dtstart ?: return
+
+                val referenceTZ = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name)
+                    icalViewViewModel.icalEntity.value?.property?.dueTimezone
+                else
+                    icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
+                alarm.getAlarmCardBinding(inflater, binding.viewAlarmsLinearlayout, referenceDate, referenceTZ )
+            }
+            else -> return
+        }
+        bindingAlarm?.cardAlarmDelete?.visibility = View.GONE
+        binding.viewAlarmsLinearlayout.addView(bindingAlarm?.root)
     }
 
 
