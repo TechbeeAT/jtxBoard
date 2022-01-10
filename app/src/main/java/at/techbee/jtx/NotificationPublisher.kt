@@ -13,6 +13,10 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import at.techbee.jtx.database.ICalDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class NotificationPublisher : BroadcastReceiver() {
@@ -21,9 +25,11 @@ class NotificationPublisher : BroadcastReceiver() {
         val notification = intent.getParcelableExtra<Notification>(NOTIFICATION)
         val id = intent.getLongExtra(NOTIFICATION_ID, 0L)
 
-        //val alarm = ICalDatabase.getInstance(context).iCalDatabaseDao.getAlarmSync(id.toLong())
-        //if(alarm != null)     // notify only if the alarm still exists
-            notificationManager.notify(id.toInt(), notification)
+        CoroutineScope(Dispatchers.IO).launch {
+            val alarm = ICalDatabase.getInstance(context).iCalDatabaseDao.getAlarmSync(id)
+            if(alarm != null)     // notify only if the alarm still exists
+                notificationManager.notify(id.toInt(), notification)
+        }
     }
 
     companion object {
