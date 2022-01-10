@@ -19,12 +19,15 @@ class NotificationPublisher : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = intent.getParcelableExtra<Notification>(NOTIFICATION)
-        val id = intent.getLongExtra(NOTIFICATION_ID, 0L).toInt()
-        notificationManager.notify(id, notification)
+        val id = intent.getLongExtra(NOTIFICATION_ID, 0L)
+
+        //val alarm = ICalDatabase.getInstance(context).iCalDatabaseDao.getAlarmSync(id.toLong())
+        //if(alarm != null)     // notify only if the alarm still exists
+            notificationManager.notify(id.toInt(), notification)
     }
 
     companion object {
-        var NOTIFICATION_ID = "notification-id"
-        var NOTIFICATION = "notification"
+        var NOTIFICATION_ID = "notification-id"   // identifier behind the value for alarmId
+        var NOTIFICATION = "alarmNotification"
     }
 }

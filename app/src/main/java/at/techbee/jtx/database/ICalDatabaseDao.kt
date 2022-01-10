@@ -476,6 +476,16 @@ DELETEs by Object
     @Query("SELECT * from icalobject WHERE _id = :key")
     fun getSync(key: Long): ICalEntity?
 
+    @Transaction
+    @Query("SELECT * from alarm WHERE _id = :key")
+    fun getAlarmSync(key: Long): Alarm?
+
+    @Transaction
+    @Query("SELECT * from alarm WHERE icalObjectId = :icalobjectId")
+    fun getAlarmsSync(icalobjectId: Long): List<Alarm>?
+
+
+
 
 
     // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
