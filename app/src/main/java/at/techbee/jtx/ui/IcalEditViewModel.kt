@@ -277,15 +277,9 @@ class IcalEditViewModel(
 
                 subtaskDeleted.forEach { subtask2del ->
                     viewModelScope.launch(Dispatchers.IO) {
-                        database.deleteRelatedChildren(subtask2del.id)       // Also Child-Elements of Child-Elements need to be deleted!
-                        database.delete(subtask2del)
-                        database.deleteRelatedto(
-                            iCalObjectUpdated.value!!.id,
-                            subtask2del.id
-                        )
+                        ICalObject.deleteItemWithChildren(subtask2del.id, database)
                     }
                     Log.println(Log.INFO, "Subtask", "${subtask2del.summary} deleted")
-
                 }
 
                 // now insert or update the item and take care of all attributes

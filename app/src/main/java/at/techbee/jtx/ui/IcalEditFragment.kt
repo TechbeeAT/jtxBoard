@@ -1124,24 +1124,26 @@ class IcalEditFragment : Fragment() {
 
         binding.editSubtasksAdd.setEndIconOnClickListener {
             // Respond to end icon presses
-            val newSubtask =
-                ICalObject.createTask(summary = binding.editSubtasksAdd.editText?.text.toString())
-            icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
-            addSubtasksView(newSubtask)      // add the new comment
-            binding.editSubtasksAdd.editText?.text?.clear()  // clear the field
-
+            if(binding.editSubtasksAdd.editText?.text.toString().isNotBlank()) {
+                val newSubtask =
+                    ICalObject.createTask(summary = binding.editSubtasksAdd.editText?.text.toString())
+                icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
+                addSubtasksView(newSubtask)      // add the new comment
+                binding.editSubtasksAdd.editText?.text?.clear()  // clear the field
+            }
         }
-
 
         // Transform the comment input into a view when the Done button in the keyboard is clicked
         binding.editSubtasksAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    val newSubtask =
-                        ICalObject.createTask(summary = binding.editSubtasksAdd.editText?.text.toString())
-                    icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
-                    addSubtasksView(newSubtask)      // add the new comment
-                    binding.editSubtasksAdd.editText?.text?.clear()  // clear the field
+                    if(binding.editSubtasksAdd.editText?.text.toString().isNotBlank()) {
+                        val newSubtask =
+                            ICalObject.createTask(summary = binding.editSubtasksAdd.editText?.text.toString())
+                        icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
+                        addSubtasksView(newSubtask)      // add the new comment
+                        binding.editSubtasksAdd.editText?.text?.clear()  // clear the field
+                    }
                     true
                 }
                 else -> false
