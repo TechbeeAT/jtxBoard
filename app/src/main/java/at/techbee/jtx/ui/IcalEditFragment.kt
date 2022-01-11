@@ -72,7 +72,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
-import kotlinx.coroutines.Dispatchers
 import net.fortuna.ical4j.model.*
 import java.io.File
 import java.io.FileNotFoundException
@@ -634,6 +633,11 @@ class IcalEditFragment : Fragment() {
             adapterBeforeAfter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.editFragmentIcalEditAlarm.editAlarmsBeforeAfterStartDueSpinner.adapter = adapterBeforeAfter
 
+            // recreate alarm views (as start or due date might have been updated)
+            binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout.removeAllViews()
+            icalEditViewModel.alarmUpdated.forEach { singleAlarm ->
+                addAlarmView(singleAlarm)
+            }
         }
 
 
@@ -1008,8 +1012,6 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-
-
         binding.editCommentAdd.setEndIconOnClickListener {
             // Respond to end icon presses
             val newComment = Comment(text = binding.editCommentAdd.editText?.text.toString())
@@ -1018,7 +1020,6 @@ class IcalEditFragment : Fragment() {
             binding.editCommentAdd.editText?.text?.clear()  // clear the field
 
         }
-
 
         // Transform the comment input into a view when the Done button in the keyboard is clicked
         binding.editCommentAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
@@ -1035,7 +1036,6 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-
         binding.editFragmentIcalEditAttachment.buttonAttachmentAdd.setOnClickListener {
             var chooseFile = Intent(Intent.ACTION_GET_CONTENT)
             chooseFile.type = "*/*"
@@ -1047,7 +1047,6 @@ class IcalEditFragment : Fragment() {
                 Toast.makeText(context, "Failed to open filepicker", Toast.LENGTH_LONG).show()
             }
         }
-
 
         // don't show the button if the device does not have a camera
         if (!requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY))
