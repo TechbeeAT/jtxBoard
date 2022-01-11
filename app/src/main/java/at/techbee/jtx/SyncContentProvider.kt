@@ -237,6 +237,20 @@ class SyncContentProvider : ContentProvider() {
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true))
             database.getRecurringToPopulate(id)?.recreateRecurring(database, context!!)
 
+        if(sUriMatcher.match(uri) == CODE_ALARM_DIR) {
+            val alarm = database.getAlarmSync(id) ?: return null
+            val icalobject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return null
+            // take care of notifications
+            val triggerTime = when {
+                alarm.triggerTime != null -> alarm.triggerTime
+                alarm.triggerRelativeDuration != null && alarm.triggerRelativeTo == AlarmRelativeTo.END.name -> alarm.getDatetimeFromTriggerDuration(
+                    icalobject.due)
+                alarm.triggerRelativeDuration != null -> alarm.getDatetimeFromTriggerDuration(icalobject.dtstart)
+                else -> null
+            }
+            triggerTime?.let { trigger -> alarm.scheduleNotification(context!!, trigger) }
+        }
+
         return ContentUris.withAppendedId(uri, id)
     }
 
