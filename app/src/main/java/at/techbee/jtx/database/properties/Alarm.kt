@@ -322,8 +322,8 @@ data class Alarm (
         }
 
         return when {
-            dur == Duration.ZERO && triggerRelativeTo == AlarmRelativeTo.START.name -> context.getString(R.string.alarms_onstart)
             dur == Duration.ZERO && triggerRelativeTo == AlarmRelativeTo.END.name -> context.getString(R.string.alarms_ondue)
+            dur == Duration.ZERO -> context.getString(R.string.alarms_onstart)
             param1Value != null -> context.getString(R.string.alarms_duration_full_string, param1Value, param2Unit, param3BeforeAfterStartDue)
             else -> this.triggerRelativeDuration
         }
