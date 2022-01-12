@@ -249,7 +249,6 @@ class SyncContentProvider : ContentProvider() {
             return false
 
         database = ICalDatabase.getInstance(context!!.applicationContext).iCalDatabaseDao
-        System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
         TimeZoneRegistryFactory.getInstance().createRegistry()
 
         return true

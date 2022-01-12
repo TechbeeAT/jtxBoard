@@ -15,7 +15,6 @@ import at.techbee.jtx.database.properties.*
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.component.VJournal
-import net.fortuna.ical4j.util.MapTimeZoneCache
 import org.junit.Assert.*
 import org.junit.Before
 
@@ -29,9 +28,6 @@ class ICalEntityAndroidTest {
 
     @Before
     fun setup() {
-
-        // fix for crash when Timezones are needed for ical4j, see https://github.com/ical4j/ical4j/issues/195
-        System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
         context = InstrumentationRegistry.getInstrumentation().context
     }
 

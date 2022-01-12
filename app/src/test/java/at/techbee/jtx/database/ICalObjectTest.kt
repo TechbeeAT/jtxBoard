@@ -11,7 +11,6 @@ package at.techbee.jtx.database
 import android.content.Context
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
-import net.fortuna.ical4j.util.MapTimeZoneCache
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -250,13 +249,9 @@ class ICalObjectTest {
     }
  */
 
-    // TODO: Check this test further, it fails because of net.fortuna.ical4j.model.TimeZoneRegistryImpl getTimeZone
 
     @Test
     fun getRecurId_datetime_withTimezone() {
-
-        // fix for crash when Timezones are needed for ical4j, see https://github.com/ical4j/ical4j/issues/195
-        System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
 
         val sampleDate = 1632474660000L   // 2021-09-24 11:11:00
         val recurId = ICalObject.getRecurId(sampleDate, "Africa/Banjul")
