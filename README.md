@@ -1,18 +1,17 @@
 # jtx Board
 
 ## Get the most out of journals, notes & tasks
-Elevate the power of the ical-standard to the next level,
-use the potential of the combination of journals, notes and tasks out of one app
-and use DAVx5 to synchronize your entries with the server of your choice!
+Elevate the power of the iCalendar standard to the next level, use the potential of the combination of journals (VJournal), notes (VJournal) and tasks (VTodo) out of one app and use DAVx5 to synchronize your entries with the CalDAV-server of your choice (coming soon)!
 
 ### iCal standard compliant
-Using the iCal standard ensures compatibility and interoperability with other apps and services independent of a dedicated provider or infrastructure.
+Using the iCal standard ensures compatibility and interoparability with other apps and services independent of a dedicated provider or infrastructure. Journals and Notes are compliant to the definition of the VJOURNAL component, Tasks are compliant to the VTODO component. Future features will also include import and export functionalities to and from .ics files :-)
 
 ### Combine journals, notes & tasks
 Instead of using separate apps for journals, notes & tasks you can use them out of one hand, combine and link them to each other, e.g. create meeting minutes and link your tasks to them. 
 
 ### Sync with DAVx5 (coming soon)
 Synchronize your entries with any compatible CalDAV server by using DAVx5 (https://www.davx5.com/). By using DAVx5 you are free to choose your preferred provider for CalDAV, you can even use your local server to store and synchronize your data.
+Note: DAVx5 is an independent app and must be acquired separately.
 
 **Find out more on https://jtx.techbee.at/**
 
@@ -46,10 +45,10 @@ For communication with the team and other people, please use the forums to get i
 ### Flavors
 
 jtx Board provides different flavors: 
-- gplay is the flavor for the Google Play store that contains ads from Admob and the billing manager for monetization (subscription to remove ads). 
-- huawei is the flavor for the Huawei App Gallery that also contains ads, but from the Huawei Ads provider. 
-- global is another flavor that contains ads from Admob but no billing manager.
-- ose is the open source edition. **If you would like to create build the app from source, this is the recommended flavor.** This flavor contains only open source libraries and no ads. Instead of ads this flavor has an additional page for donations visible.
+- **gplay** is the flavor for the Google Play store that contains ads from Admob and the billing manager for monetization (subscription to remove ads). 
+- **huawei** is the flavor for the Huawei App Gallery that also contains ads, but from the Huawei Ads provider. 
+- **global** is another flavor that contains ads from Admob but no billing manager.
+- **ose** is the open source edition. **If you would like to create build the app from source, this is the recommended flavor.** This flavor contains only open source libraries and no ads. Instead of ads this flavor has an additional page for donations visible.
 
 Currently there is also no difference in functionalities between the flavors. 
 
