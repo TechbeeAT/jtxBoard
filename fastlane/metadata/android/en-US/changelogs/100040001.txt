@@ -1,2 +1,0 @@
-+ Add alarms and receive a notification
-+ Added Russian language support
