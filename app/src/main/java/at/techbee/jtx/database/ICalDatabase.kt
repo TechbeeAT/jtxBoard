@@ -13,6 +13,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import androidx.annotation.VisibleForTesting
 import androidx.room.*
+import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import at.techbee.jtx.R
@@ -42,8 +43,13 @@ import at.techbee.jtx.database.views.ICal4ViewNote
     views = [
         ICal4List::class,
         ICal4ViewNote::class],
-    version = 2,
-    exportSchema = true)
+    version = 3,
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class
+        )
+    ]
+)
 //@TypeConverters(Converters::class)
 abstract class ICalDatabase : RoomDatabase() {
 
@@ -52,6 +58,9 @@ abstract class ICalDatabase : RoomDatabase() {
      */
     abstract val iCalDatabaseDao: ICalDatabaseDao
 
+
+    @DeleteColumn(tableName = TABLE_NAME_ALARM, columnName = "trigger")
+    class AutoMigration2to3: AutoMigrationSpec
 
 
     /**
@@ -74,6 +83,7 @@ abstract class ICalDatabase : RoomDatabase() {
                 database.execSQL("DROP TABLE `contact`")
             }
         }
+
 
         @Volatile
         private var INSTANCE: ICalDatabase? = null
@@ -187,4 +197,3 @@ abstract class ICalDatabase : RoomDatabase() {
         }
     }
 }
-

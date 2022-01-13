@@ -167,6 +167,15 @@ SELECTs (global selects without parameter)
     @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
     suspend fun getICalObjectById(id: Long): ICalObject?
 
+    /**
+     * Retrieve an [ICalObject] by Id synchronously (suspend)
+     *
+     * @param id The id of the [ICalObject] in the DB
+     * @return the [ICalObject] with the passed id or null if not found
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
+    fun getICalObjectByIdSync(id: Long): ICalObject?
+
 
 
     /**
@@ -202,6 +211,9 @@ INSERTs (Asyncronously / Suspend)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertResource(resource: Resource): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAlarm(alarm: Alarm): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRelatedto(relatedto: Relatedto): Long
@@ -262,7 +274,6 @@ DELETEs by Object
 
     /**
      * Delete an iCalObject by the object.
-     *
      * @param icalObject The object of the icalObject that should be deleted.
      */
     @Delete
@@ -270,7 +281,6 @@ DELETEs by Object
 
     /**
      * Delete an iCalObject by the object.
-     *
      * @param id The iCalObjects to be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
@@ -278,7 +288,6 @@ DELETEs by Object
 
     /**
      * Delete an ICalCollection by the id.
-     *
      * @param id The ICalCollection to be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ID = :id")
@@ -289,7 +298,6 @@ DELETEs by Object
 
     /**
      * Delete all categories with a specific icalobjectid.
-     *
      * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID = :icalobjectId")
@@ -297,7 +305,6 @@ DELETEs by Object
 
     /**
      * Delete all comment with a specific icalobjectid.
-     *
      * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID = :icalobjectId")
@@ -306,7 +313,6 @@ DELETEs by Object
 
     /**
      * Delete all attachments with a specific icalobjectid.
-     *
      * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = :icalobjectId")
@@ -314,7 +320,6 @@ DELETEs by Object
 
     /**
      * Delete all relatedto with a specific icalobjectid.
-     *
      * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectId")
@@ -322,21 +327,24 @@ DELETEs by Object
 
     /**
      * Delete all attendees with a specific icalobjectid.
-     *
      * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID = :icalobjectId")
     fun deleteAttendees(icalobjectId: Long)
 
     /**
-     * Delete all attendees with a specific icalobjectid.
-     *
+     * Delete all resources with a specific icalobjectid.
      * @param [icalobjectId] of the icalObject that should be deleted.
      */
     @Query("DELETE FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = :icalobjectId")
     fun deleteResources(icalobjectId: Long)
 
-
+    /**
+     * Delete all alarms with a specific icalobjectid.
+     * @param [icalobjectId] of the icalObject that should be deleted.
+     */
+    @Query("DELETE FROM $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = :icalobjectId")
+    fun deleteAlarms(icalobjectId: Long)
 
     /**
      * Delete a category by the object.
@@ -476,6 +484,16 @@ DELETEs by Object
     @Transaction
     @Query("SELECT * from icalobject WHERE _id = :key")
     fun getSync(key: Long): ICalEntity?
+
+    @Transaction
+    @Query("SELECT * from alarm WHERE _id = :key")
+    fun getAlarmSync(key: Long): Alarm?
+
+    @Transaction
+    @Query("SELECT * from alarm WHERE icalObjectId = :icalobjectId")
+    fun getAlarmsSync(icalobjectId: Long): List<Alarm>?
+
+
 
 
 

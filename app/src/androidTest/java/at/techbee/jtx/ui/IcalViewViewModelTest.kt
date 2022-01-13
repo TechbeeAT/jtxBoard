@@ -19,7 +19,6 @@ import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -150,9 +149,7 @@ class IcalViewViewModelTest {
         Thread.sleep(100)
         icalViewViewModel.icalEntity.getOrAwaitValue()
 
-        assertNotNull(icalViewViewModel.icalEntity)
-        assertEquals(icalViewViewModel.categories.getOrAwaitValue(), listOf<Category>())
-
+        assertNotNull(icalViewViewModel.icalEntity.getOrAwaitValue())
         assertNull(icalViewViewModel.dtstartFormatted.getOrAwaitValue())
         assertNotNull(icalViewViewModel.createdFormatted.getOrAwaitValue())
         assertNotNull(icalViewViewModel.lastModifiedFormatted.getOrAwaitValue())
@@ -167,6 +164,7 @@ class IcalViewViewModelTest {
         assertEquals(false, icalViewViewModel.contactVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.commentsVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.attachmentsVisible.getOrAwaitValue())
+        assertEquals(false, icalViewViewModel.alarmsVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.relatedtoVisible.getOrAwaitValue())
         assertEquals(true, icalViewViewModel.progressVisible.getOrAwaitValue())
         assertEquals(true, icalViewViewModel.priorityVisible.getOrAwaitValue())

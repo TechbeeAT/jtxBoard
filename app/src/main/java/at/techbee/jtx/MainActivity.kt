@@ -44,7 +44,6 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
-import net.fortuna.ical4j.util.MapTimeZoneCache
 import java.io.File
 import java.io.IOException
 
@@ -109,9 +108,7 @@ class MainActivity : AppCompatActivity()  {
 
         setSupportActionBar(toolbar)
 
-
         // necessary for ical4j
-        System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
         TimeZoneRegistryFactory.getInstance().createRegistry()
 
         adaptMenuToBuildFlavor()

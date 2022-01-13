@@ -28,9 +28,6 @@ class IcalViewViewModel(private val icalItemId: Long,
                         application: Application) : AndroidViewModel(application) {
 
     lateinit var icalEntity: LiveData<ICalEntity?>
-    lateinit var categories: LiveData<List<Category>?>
-    lateinit var resources: LiveData<List<Resource>?>
-    lateinit var attendees: LiveData<List<Attendee>?>
     lateinit var relatedNotes: LiveData<List<ICal4ViewNote?>>
     lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
     lateinit var recurInstances: LiveData<List<ICalObject?>>
@@ -57,6 +54,7 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var organizerVisible: LiveData<Boolean>
     lateinit var contactVisible: LiveData<Boolean>
     lateinit var commentsVisible: LiveData<Boolean>
+    lateinit var alarmsVisible: LiveData<Boolean>
     lateinit var attachmentsVisible: LiveData<Boolean>
     lateinit var relatedtoVisible: LiveData<Boolean>
     lateinit var progressVisible: LiveData<Boolean>
@@ -102,19 +100,6 @@ class IcalViewViewModel(private val icalItemId: Long,
                 database.get(icalItemId)
 
             subtasksCountList = database.getSubtasksCount()
-
-            categories = Transformations.map(icalEntity) {
-                it?.categories
-            }
-
-            resources = Transformations.map(icalEntity) {
-                it?.resources
-            }
-
-            attendees = Transformations.map(icalEntity) {
-                it?.attendees
-            }
-
 
             relatedNotes = Transformations.switchMap(icalEntity) {
                 it?.property?.id?.let { parentId -> database.getRelatedNotes(parentId) }
@@ -225,6 +210,9 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
             commentsVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.comments.isNullOrEmpty()      // true if comment is NOT null or empty
+            }
+            alarmsVisible = Transformations.map(icalEntity) { item ->
+                return@map !item?.alarms.isNullOrEmpty()      // true if alarms is NOT null or empty
             }
             attachmentsVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.attachments.isNullOrEmpty()      // true if attachment is NOT null or empty

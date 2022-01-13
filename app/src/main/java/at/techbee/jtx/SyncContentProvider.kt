@@ -59,9 +59,6 @@ const val CALLER_IS_SYNCADAPTER = "caller_is_syncadapter"
 const val ACCOUNT_NAME = "account_name"
 const val ACCOUNT_TYPE = "account_type"
 
-/** The URI for the Icalobject table.  */
-
-
 
 class SyncContentProvider : ContentProvider() {
 
@@ -238,7 +235,21 @@ class SyncContentProvider : ContentProvider() {
             createEmptyFileForAttachment(id)
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true))
-            database.getRecurringToPopulate(id)?.recreateRecurring(database)
+            database.getRecurringToPopulate(id)?.recreateRecurring(database, context!!)
+
+        if(sUriMatcher.match(uri) == CODE_ALARM_DIR) {
+            val alarm = database.getAlarmSync(id) ?: return null
+            val icalobject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return null
+            // take care of notifications
+            val triggerTime = when {
+                alarm.triggerTime != null -> alarm.triggerTime
+                alarm.triggerRelativeDuration != null && alarm.triggerRelativeTo == AlarmRelativeTo.END.name -> alarm.getDatetimeFromTriggerDuration(
+                    icalobject.due)
+                alarm.triggerRelativeDuration != null -> alarm.getDatetimeFromTriggerDuration(icalobject.dtstart)
+                else -> null
+            }
+            triggerTime?.let { trigger -> alarm.scheduleNotification(context!!, trigger) }
+        }
 
         return ContentUris.withAppendedId(uri, id)
     }
@@ -249,7 +260,6 @@ class SyncContentProvider : ContentProvider() {
             return false
 
         database = ICalDatabase.getInstance(context!!.applicationContext).iCalDatabaseDao
-        System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache::class.java.name)
         TimeZoneRegistryFactory.getInstance().createRegistry()
 
         return true
@@ -467,7 +477,7 @@ class SyncContentProvider : ContentProvider() {
         {
             try {
                 val id: Long = uri.lastPathSegment?.toLong() ?: throw NumberFormatException("Last path segment was null")
-                database.getRecurringToPopulate(id)?.recreateRecurring(database)
+                database.getRecurringToPopulate(id)?.recreateRecurring(database, context!!)
             } catch (e: NumberFormatException) {
                 throw  java.lang.IllegalArgumentException("Could not convert path segment to Long: $uri\n$e")
             }

@@ -71,6 +71,7 @@ class IcalEditViewModel(
     var attachmentUpdated: MutableList<Attachment> = mutableListOf()
     var attendeeUpdated: MutableList<Attendee> = mutableListOf()
     var resourceUpdated: MutableList<Resource> = mutableListOf()
+    var alarmUpdated: MutableList<Alarm> = mutableListOf()
     var subtaskUpdated: MutableList<ICalObject> = mutableListOf()
     var subtaskDeleted: MutableList<ICalObject> = mutableListOf()
 
@@ -112,6 +113,8 @@ class IcalEditViewModel(
     var recurrenceDayOfMonthVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceExceptionsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceAdditionsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var alarmsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+
 
 
     var addTimeChecked: MutableLiveData<Boolean> =
@@ -206,6 +209,7 @@ class IcalEditViewModel(
         recurrenceDayOfMonthVisible.postValue((selectedTab == TAB_RECURRING && recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_MONTH))
         recurrenceExceptionsVisible.postValue(selectedTab == TAB_RECURRING && iCalEntity.property.exdate?.isNotEmpty() == true)
         recurrenceAdditionsVisible.postValue(selectedTab == TAB_RECURRING && iCalEntity.property.rdate?.isNotEmpty() == true)
+        alarmsVisible.postValue(selectedTab == TAB_ALARMS)
     }
 
     fun savingClicked() {
@@ -269,6 +273,7 @@ class IcalEditViewModel(
                 database.deleteAttachments(insertedOrUpdatedItemId)
                 database.deleteAttendees(insertedOrUpdatedItemId)
                 database.deleteResources(insertedOrUpdatedItemId)
+                database.deleteAlarms(insertedOrUpdatedItemId)
 
                 subtaskDeleted.forEach { subtask2del ->
                     viewModelScope.launch(Dispatchers.IO) {
@@ -300,6 +305,31 @@ class IcalEditViewModel(
                 resourceUpdated.forEach { newResource ->
                     newResource.icalObjectId = insertedOrUpdatedItemId
                     database.insertResource(newResource)
+                }
+                alarmUpdated.forEach { newAlarm ->
+                    newAlarm.icalObjectId = insertedOrUpdatedItemId
+                    if(newAlarm.action.isNullOrEmpty())
+                        newAlarm.action = AlarmAction.DISPLAY.name
+
+                    // VALARM with action DISPLAY must have a description. We try to set it to the summary, otherwise to the description. If the description was empty as well, it's set to an empty string.
+                    iCalObjectUpdated.value?.summary?.let {
+                        newAlarm.summary = it
+                        newAlarm.description = it
+                    }
+                    iCalObjectUpdated.value?.description?.let { newAlarm.description = it }
+                    if(newAlarm.description.isNullOrEmpty())
+                        newAlarm.description = ""
+                    newAlarm.alarmId = database.insertAlarm(newAlarm)
+
+                    // take care of notifications
+                    val triggerTime = when {
+                        newAlarm.triggerTime != null -> newAlarm.triggerTime
+                        newAlarm.triggerRelativeDuration != null && newAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> newAlarm.getDatetimeFromTriggerDuration(
+                            iCalObjectUpdated.value?.due)
+                        newAlarm.triggerRelativeDuration != null -> newAlarm.getDatetimeFromTriggerDuration(iCalObjectUpdated.value?.dtstart)
+                        else -> null
+                    }
+                    triggerTime?.let { newAlarm.scheduleNotification(getApplication(), it) }
                 }
 
                 // if a collection was selected that doesn't support VTODO, we do not update/insert any subtasks
@@ -352,12 +382,11 @@ class IcalEditViewModel(
                             )
                         )
                     }
-
                 }
 
                 if (recurrenceList.size > 0 || iCalObjectUpdated.value!!.id != 0L)    // recreateRecurring if the recurrenceList is not empty, but also when it is an update, as the recurrence might have been deactivated and it is necessary to delete instances
                     launch(Dispatchers.IO) {
-                        iCalObjectUpdated.value?.recreateRecurring(database)
+                        iCalObjectUpdated.value?.recreateRecurring(database, getApplication())
                     }
 
 
