@@ -72,6 +72,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
+import io.noties.markwon.Markwon
+import io.noties.markwon.editor.MarkwonEditor
+import io.noties.markwon.editor.MarkwonEditorTextWatcher
 import net.fortuna.ical4j.model.*
 import java.io.File
 import java.io.FileNotFoundException
@@ -151,6 +154,10 @@ class IcalEditFragment : Fragment() {
         // add menu
         setHasOptionsMenu(true)
 
+        // add markwon to description edittext
+        val markwon = Markwon.create(requireContext())
+        val markwonEditor = MarkwonEditor.create(markwon)
+        binding.editDescriptionEdittext.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(markwonEditor))
 
         // Check if the permission to read local contacts is already granted, otherwise make a dialog to ask for permission
         if (ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
@@ -481,7 +488,6 @@ class IcalEditFragment : Fragment() {
         binding.editSummaryEditTextinputfield.addTextChangedListener {
             updateToolbarText()
         }
-
 
         icalEditViewModel.savingClicked.observe(viewLifecycleOwner, {
             if (it == true) {
