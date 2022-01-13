@@ -231,5 +231,9 @@ dependencies {
     //About Libraries
     implementation "com.mikepenz:aboutlibraries:8.9.4"
 
+    // Markwon for markdown support
+    implementation  "io.noties.markwon:core:$version_markwon"
+    implementation  "io.noties.markwon:ext-strikethrough:$version_markwon"
+    implementation  "io.noties.markwon:editor:$version_markwon"
 }
 

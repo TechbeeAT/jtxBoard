@@ -51,6 +51,8 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.slider.Slider
+import io.noties.markwon.Markwon
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import java.io.*
 import java.lang.ClassCastException
 import java.lang.NullPointerException
@@ -102,6 +104,10 @@ class IcalViewFragment : Fragment() {
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
         val arguments = IcalViewFragmentArgs.fromBundle((requireArguments()))
+
+        val markwon = Markwon.builder(requireContext())
+            .usePlugin(StrikethroughPlugin.create())
+            .build()
 
         // add menu
         setHasOptionsMenu(true)
@@ -224,6 +230,11 @@ class IcalViewFragment : Fragment() {
                 binding.viewAddAudioNote.visibility = View.GONE
             }
 
+            // setting the description with Markdown
+            it.property.description?.let { desc ->
+                val descMarkwon = markwon.toMarkdown(desc)
+                binding.viewDescription.text = descMarkwon
+            }
 
             binding.viewCommentsLinearlayout.removeAllViews()
             it.comments?.forEach { comment ->
