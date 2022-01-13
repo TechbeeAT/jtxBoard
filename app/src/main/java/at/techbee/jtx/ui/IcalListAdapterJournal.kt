@@ -31,6 +31,8 @@ import at.techbee.jtx.util.DateTimeUtils.convertLongToMonthString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToTimeString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
 import com.google.android.material.card.MaterialCardView
+import io.noties.markwon.Markwon
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import java.lang.IllegalArgumentException
 import java.util.*
 
@@ -44,6 +46,9 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
     private var settingShowProgressSubtasks = true
     private var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = model.iCal4List
     private var allSubtasks: LiveData<List<ICal4List?>> = model.allSubtasks
+    private var markwon = Markwon.builder(context)
+        .usePlugin(StrikethroughPlugin.create())
+        .build()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JournalItemHolder {
 
@@ -88,7 +93,10 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
             if (iCal4ListItem.property.description.isNullOrEmpty())
                 holder.description.visibility = View.GONE
             else {
-                holder.description.text = iCal4ListItem.property.description
+                iCal4ListItem.property.description?.let {
+                    val descMarkwon = markwon.toMarkdown(it)
+                    holder.description.text = descMarkwon
+                }
                 holder.description.visibility = View.VISIBLE
             }
 

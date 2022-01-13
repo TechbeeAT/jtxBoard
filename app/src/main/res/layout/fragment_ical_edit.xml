@@ -302,6 +302,7 @@
 
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_description_edittext"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textWebEditText|textMultiLine|textCapSentences|textImeMultiLine"
