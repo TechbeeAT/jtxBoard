@@ -17,6 +17,7 @@
     <string name="link_davx5" translatable="false">https://www.davx5.com/</string>
     <string name="link_ffg" translatable="false">https://www.ffg.at</string>
     <string name="link_jtx" translatable="false">https://jtx.techbee.at</string>
+    <string name="link_jtx_news" translatable="false">https://jtx.techbee.at/category/news</string>
     <string name="link_jtx_sync" translatable="false">https://jtx.techbee.at/sync-with-davx5</string>
     <string name="link_jtx_support" translatable="false">https://jtx.techbee.at/support</string>
     <string name="link_jtx_privacy_policy" translatable="false">https://jtx.techbee.at/privacy</string>
@@ -118,6 +119,7 @@
     <string name="navigation_drawer_news_updates">News &amp; updates</string>
     <string name="navigation_drawer_external_links">External links</string>
     <string name="navigation_drawer_website">Website</string>
+    <string name="navigation_drawer_website_news">News &amp; Release Notes</string>
     <string name="navigation_drawer_support">Support</string>
     <string name="navigation_drawer_donate">Donate</string>
     <string name="navigation_drawer_adinfo">Ad Info</string>
