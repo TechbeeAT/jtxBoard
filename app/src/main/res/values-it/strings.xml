@@ -272,8 +272,8 @@ Global Strings -->
     <!-- menus -->
     <string name="menu_edit_delete">"Elimina"</string>
     <string name="menu_edit_clear_dates">"Cancella date"</string>
-    <string name="menu_filter_reset">"Resettare"</string>
-    <string name="menu_filter_apply">"Applica"</string>
+    <string name="reset">"Resettare"</string>
+    <string name="apply">"Applica"</string>
     <string name="menu_list_search">"Ricerca"</string>
     <string name="menu_list_search_hint">"Ricerca"</string>
     <string name="menu_list_gotodate">"Vai alla data"</string>

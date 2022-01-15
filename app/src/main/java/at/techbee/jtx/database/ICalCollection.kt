@@ -9,10 +9,15 @@
 package at.techbee.jtx.database
 
 import android.content.ContentValues
+import android.content.Context
 import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.annotation.ColorInt
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import at.techbee.jtx.R
+
 import kotlinx.parcelize.Parcelize
 
 
@@ -136,7 +141,6 @@ data class ICalCollection(
 
                 /**
                  * Create a new [ICalCollection] from the specified [ContentValues].
-                 *
                  * @param values A [ICalCollection] that at least contain [.COLUMN_NAME].
                  * @return A newly created [ICalCollection] instance.
                  */
@@ -149,6 +153,19 @@ data class ICalCollection(
                                 throw IllegalArgumentException("Forbidden account type: $LOCAL_ACCOUNT_TYPE")
 
                         return ICalCollection().applyContentValues(values)
+                }
+
+                /**
+                 * Creates a new local collection with all Components activated
+                 * @param [context] to resolve the default local account name from string resources
+                 */
+                fun createLocalCollection(context: Context) = ICalCollection().apply {
+                        this.accountType = LOCAL_ACCOUNT_TYPE
+                        this.accountName = context.getString(R.string.default_local_account_name)
+                        this.supportsVEVENT = true
+                        this.supportsVJOURNAL = true
+                        this.supportsVTODO = true
+                        this.readonly = false
                 }
         }
 

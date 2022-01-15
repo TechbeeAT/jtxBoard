@@ -239,8 +239,8 @@ Global Strings -->
     <!-- menus -->
     <string name="menu_edit_delete">"Διαγραφή"</string>
     <string name="menu_edit_clear_dates">"Καθαρισμός ημερομηνιών"</string>
-    <string name="menu_filter_reset">"Επαναφορά"</string>
-    <string name="menu_filter_apply">"Καταχώρηση"</string>
+    <string name="reset">"Επαναφορά"</string>
+    <string name="apply">"Καταχώρηση"</string>
     <string name="menu_list_search">"Αναζήτηση"</string>
     <string name="menu_list_search_hint">"Αναζήτηση"</string>
     <string name="menu_list_gotodate">"Σε ημερομηνία"</string>

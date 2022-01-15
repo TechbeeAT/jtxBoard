@@ -11,12 +11,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_filter_reset"
-        android:title="@string/reset"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/menu_filter_apply"
-        android:title="@string/apply"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/menu_collections_add_local"
+        android:title="@string/menu_collections_add_local"
+        app:showAsAction="never" />
 
 </menu>
