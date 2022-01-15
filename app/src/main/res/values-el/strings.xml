@@ -239,8 +239,8 @@ Global Strings -->
     <!-- menus -->
     <string name="menu_edit_delete">"Διαγραφή"</string>
     <string name="menu_edit_clear_dates">"Καθαρισμός ημερομηνιών"</string>
-    <string name="reset">"Επαναφορά"</string>
-    <string name="apply">"Καταχώρηση"</string>
+    <string name="menu_filter_reset">"Επαναφορά"</string>
+    <string name="menu_filter_apply">"Καταχώρηση"</string>
     <string name="menu_list_search">"Αναζήτηση"</string>
     <string name="menu_list_search_hint">"Αναζήτηση"</string>
     <string name="menu_list_gotodate">"Σε ημερομηνία"</string>
@@ -366,4 +366,43 @@ Global Strings -->
     <string name="intent_dialog_add_journal">"Ημερολόγιο"</string>
     <string name="intent_dialog_add_note">"Σημείωση"</string>
     <string name="intent_dialog_add_task">"Εργασία"</string>
+    <string name="add">"Προσθήκη"</string>
+    <string name="edit">"Επεξεργασία"</string>
+    <string name="reset">"Επαναφορά"</string>
+    <string name="apply">"Καταχώρηση"</string>
+    <string name="not_available_abbreviation">"Δ/Υ"</string>
+    <string name="collection">"Συλλογή "</string>
+    <string name="toolbar_text_collections">"Συλλογές"</string>
+    <string name="navigation_drawer_collections">"Συλλογες"</string>
+    <string name="view_alarms_header">"Ειδοποιησεις"</string>
+    <string name="edit_alarms_header">"Ειδοποιήσεις"</string>
+    <string name="edit_dialog_set_attendee_role">"Καθορισμός ρόλου"</string>
+
+    <!-- alarms -->
+    <string name="alarms_onstart">"Έναρξη"</string>
+    <string name="alarms_ondue">"Μέχρι"</string>
+    <string name="alarms_custom">"Τυπικό"</string>
+    <string name="alarms_before_start">"Πριν την έναρξη"</string>
+    <string name="alarms_after_start">"Μετά την έναρξη"</string>
+    <string name="alarms_before_due">"Πριν απο"</string>
+    <string name="alarms_after_due">"Μετά απο"</string>
+    <string name="alarms_minutes">"Λεπτό(ά)"</string>
+    <string name="alarms_hours">"Ώρα(ες)"</string>
+    <string name="alarms_days">"Ημέρα(ες)"</string>
+
+    <!-- fragment_collections -->
+    <string name="collections_local_collections">"Προσωπική συλλογή"</string>
+    <string name="collections_remote_collections">"Απομακρυσμένη συλλογή"</string>
+    <string name="collections_journals_num">"Ημερολόγια:"</string>
+    <string name="collections_notes_num">"Σημειώσεις:"</string>
+    <string name="collections_tasks_num">"Εργασίες:"</string>
+    <string name="collections_local_nolocalcollections">"Δεν βρέθηκαν προσωπικές συλλογές"</string>
+    <string name="collections_local_noremotecollections">"Δεν βρέθηκαν απομακρυσμένες συλλογές"</string>
+    <string name="collections_info">"Οι συλλογές είναι μια συσσώρευση καταχωρήσεων όπως φακέλους με αρχεία.  Μπορείτε να δημιουργήσετε νέες προσωπικές συλλογές μέσω του μενού ή μπορείτε να ρυθμίσετε νέες απομακρυσμένες συλλογές για συγχρονισμό με το DAVx⁵."</string>
+    <string name="collections_collection_menu">"Μενού συλλογής"</string>
+    <string name="collections_dialog_add_local_collection_title">"Προσθήκη προσωπικής συλλογής"</string>
+    <string name="collections_dialog_edit_local_collection_title">"Επεξεργασία προσωπικής συλλογής"</string>
+    <string name="collections_dialog_delete_local_title">"Διαγραφή"</string>
+    <string name="collections_dialog_delete_local_message">"Η διαγραφή μιας συλλογής θα διαγράψει επίσης όλα τα ημερολόγια, τις σημειώσεις και τις εργασίες σε αυτήν τη συλλογή. Η ενέργεια αυτή δεν θα μπορεί να αναιρεθεί. Είστε σίγουροι ότι θέλετε να συνεχίσετε;"</string>
+    <string name="menu_collections_add_local">"Προσθήκη προσωπικής συλλογης"</string>
 </resources>
