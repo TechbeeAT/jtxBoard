@@ -18,23 +18,13 @@ Global Strings -->
     <string name="toolbar_text_view_journal_details">"Dettaglio Diario"</string>
     <string name="toolbar_text_view_note_details">"Dettaglio Note"</string>
     <string name="toolbar_text_view_task_details">"Dettaglio Attività"</string>
-
-    <!-- Diario é un oggetto che si riferisce al contesto dell'applicazione, quindi secondo me dovrebbe essere con la maiuscola, piuttosto che con la minuscola. -->
     <string name="toolbar_text_add_journal">"Inserisci Diario"</string>
-
-    <!-- Nota é un oggetto che si riferisce al contesto dell'applicazione, quindi secondo me dovrebbe essere con la maiuscola, piuttosto che con la minuscola. -->
     <string name="toolbar_text_add_note">"Inserisci Nota"</string>
-
-    <!-- Attivitá é un oggetto che si riferisce al contesto dell'applicazione, quindi secondo me dovrebbe essere con la maiuscola, piuttosto che con la minuscola. -->
     <string name="toolbar_text_add_task">"Inserisci Attività"</string>
-
-    <!-- Diario é un oggetto che si riferisce al contesto dell'applicazione, quindi secondo me dovrebbe essere con la maiuscola, piuttosto che con la minuscola. -->
     <string name="toolbar_text_edit_journal">"Modifica Diario"</string>
 
     <!-- Nota é un oggetto che si riferisce al contesto dell'applicazione, quindi secondo me dovrebbe essere con la maiuscola, piuttosto che con la minuscola. -->
     <string name="toolbar_text_edit_note">"Modifica Nota"</string>
-
-    <!-- Attività é un oggetto che si riferisce al contesto dell'applicazione, quindi secondo me dovrebbe essere con la maiuscola, piuttosto che con la minuscola. -->
     <string name="toolbar_text_edit_task">"Modifica Attività"</string>
     <string name="toolbar_text_filter">"Filtro"</string>
     <string name="toolbar_text_settings">"Impostazioni"</string>
@@ -264,6 +254,8 @@ Global Strings -->
     <string name="about_tabitem_libraries">"Librerie"</string>
     <string name="about_tabitem_thanks">"Ringraziamenti speciali"</string>
     <string name="about_app_version">"Versione: %1$s (%2$d)"</string>
+
+    <!-- Qual é l'effettivo significato di questa label? -->
     <string name="about_app_codename">"Nome in codice: %1$s"</string>
     <string name="about_app_build_date">"Compilato tramite %s"</string>
     <string name="about_app_terms">"Termini e Condizioni"</string>
@@ -272,8 +264,8 @@ Global Strings -->
     <!-- menus -->
     <string name="menu_edit_delete">"Elimina"</string>
     <string name="menu_edit_clear_dates">"Cancella date"</string>
-    <string name="reset">"Resettare"</string>
-    <string name="apply">"Applica"</string>
+    <string name="menu_filter_reset">"Resettare"</string>
+    <string name="menu_filter_apply">"Applica"</string>
     <string name="menu_list_search">"Ricerca"</string>
     <string name="menu_list_search_hint">"Ricerca"</string>
     <string name="menu_list_gotodate">"Vai alla data"</string>
@@ -298,6 +290,8 @@ Global Strings -->
 
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">"Promemoria per attività scadente"</string>
+
+    <!-- Cosa significa? -->
     <string name="notification_channel_reminder_description">"Notifica per Attività"</string>
 
     <!-- Shortcuts -->
@@ -414,4 +408,52 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="intent_dialog_add_journal">"Diario"</string>
     <string name="intent_dialog_add_note">"Nota"</string>
     <string name="intent_dialog_add_task">"Attività"</string>
+
+    <!-- Fuzzy -->
+    <string name="add">"Aggiungi"</string>
+
+    <!-- Fuzzy -->
+    <string name="edit">"Modifica"</string>
+    <string name="reset">"Resettare"</string>
+    <string name="apply">"Applica"</string>
+    <string name="not_available_abbreviation"></string>
+    <string name="collection">"Collezione"</string>
+    <string name="toolbar_text_collections">"Collezioni"</string>
+    <string name="navigation_drawer_collections">"Collezioni"</string>
+
+    <!-- Fuzzy -->
+    <string name="view_alarms_header">"Notificazioni"</string>
+    <string name="edit_alarms_header">"Notificazioni"</string>
+    <string name="edit_dialog_set_attendee_role"></string>
+
+    <!-- alarms -->
+    <!-- Fuzzy -->
+    <string name="alarms_onstart">"All'inizio"</string>
+    <string name="alarms_ondue">"Alla scadenza"</string>
+    <string name="alarms_custom">"Individuale"</string>
+
+    <!-- Fuzzy -->
+    <string name="alarms_before_start">"Prima dell'inizio"</string>
+    <string name="alarms_after_start">"Dopo l'inizio"</string>
+    <string name="alarms_before_due">"prima della scadenza"</string>
+    <string name="alarms_after_due">"dopo la scadenza"</string>
+    <string name="alarms_minutes"></string>
+    <string name="alarms_hours"></string>
+    <string name="alarms_days"></string>
+
+    <!-- fragment_collections -->
+    <string name="collections_local_collections">"Collezioni locali"</string>
+    <string name="collections_remote_collections">"Collezioni remote"</string>
+    <string name="collections_journals_num">"Diari: %1$s"</string>
+    <string name="collections_notes_num">"Note: %1$s"</string>
+    <string name="collections_tasks_num">"Attività: %1$s"</string>
+    <string name="collections_local_nolocalcollections">"Alcuna collezione locale trovato"</string>
+    <string name="collections_local_noremotecollections">"Alcuna collezione remota trovato"</string>
+    <string name="collections_info"></string>
+    <string name="collections_collection_menu">"Menu collezioni"</string>
+    <string name="collections_dialog_add_local_collection_title">"Aggiungi collezione locale"</string>
+    <string name="collections_dialog_edit_local_collection_title">"Aggiungi collezione remota"</string>
+    <string name="collections_dialog_delete_local_title">"Eliminare \"%1$s\"?"</string>
+    <string name="collections_dialog_delete_local_message"></string>
+    <string name="menu_collections_add_local">"Aggiungi collezione locale"</string>
 </resources>
