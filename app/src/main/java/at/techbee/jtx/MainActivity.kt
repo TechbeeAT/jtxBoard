@@ -277,6 +277,10 @@ class MainActivity : AppCompatActivity()  {
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_icalListFragment)
 
+                R.id.nav_collections ->
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_collectionsFragment)
+
                 R.id.nav_sync ->
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_syncFragment)

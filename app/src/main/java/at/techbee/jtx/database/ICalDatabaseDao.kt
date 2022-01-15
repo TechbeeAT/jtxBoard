@@ -15,10 +15,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.database.views.ICal4ViewNote
-import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
-import at.techbee.jtx.database.views.VIEW_NAME_ICAL4VIEWNOTE
+import at.techbee.jtx.database.views.*
 
 
 /**
@@ -87,6 +84,26 @@ SELECTs (global selects without parameter)
     @Transaction
     @Query("SELECT * FROM $TABLE_NAME_COLLECTION ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllCollections(): LiveData<List<ICalCollection>>
+
+    /**
+     * Retrieve an list of all LOCAL Collections from the [CollectionsView] as a LiveData-List
+     * A local collection is a collection with account type LOCAL
+     * @return a list of [CollectionsView] as LiveData<List<CollectionsView>>
+     */
+    @Transaction
+    @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE IN ('LOCAL') ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    fun getLocalCollections(): LiveData<List<CollectionsView>>
+
+    /**
+     * Retrieve an list of all REMOTE Collections from the [CollectionsView] as a LiveData-List
+     * A local collection is a collection with account type NOT LOCAL
+     * @return a list of [CollectionsView] as LiveData<List<CollectionsView>>
+     */
+    @Transaction
+    @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN ('LOCAL') ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    fun getRemoteCollections(): LiveData<List<CollectionsView>>
+
+
 
     /**
      * Retrieve an list of all DISTINCT Collections ([ICalCollection])
@@ -293,6 +310,12 @@ DELETEs by Object
     @Query("DELETE FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ID = :id")
     fun deleteICalCollectionbyId(id: Long)
 
+    /**
+     * Delete an ICalCollection by the object.
+     * @param [collection] to be deleted.
+     */
+    @Delete
+    fun deleteICalCollection(collection: ICalCollection)
 
 
 
@@ -449,6 +472,9 @@ DELETEs by Object
 
     @Update
     fun updateAttachment(attachment: Attachment)
+
+    @Update(onConflict = OnConflictStrategy.ABORT)
+    suspend fun updateCollection(collection: ICalCollection)
 
     @Transaction
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_PERCENT = :progress, $COLUMN_STATUS = :status, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")

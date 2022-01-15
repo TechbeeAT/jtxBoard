@@ -13,6 +13,8 @@ import android.content.Context
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
 import androidx.room.*
@@ -598,6 +600,25 @@ data class ICalObject(
 
             return TimeZone.getTimeZone(tz).id
         }
+
+        /**
+         * Tries to apply the given color on an image view or hides the image view if applying fails
+         * @param [image] where the color should be applied to
+         * @param [color] as Int?
+         */
+        fun applyColorOrHide(image: ImageView, color: Int?) {
+
+            if (color != null) {
+                try {
+                    image.setColorFilter(color)
+                    image.visibility = View.VISIBLE
+                } catch (e: java.lang.IllegalArgumentException) {
+                    Log.i("Invalid color","Invalid Color cannot be parsed: $color")
+                    image.visibility = View.INVISIBLE
+                }
+            } else
+                image.visibility = View.INVISIBLE
+        }
     }
 
 
@@ -910,13 +931,13 @@ data class ICalObject(
      * @param [text] that should be parsed
      */
     fun parseSummaryAndDescription(text: String?) {
-        if(text == null)
+        if (text == null)
             return
 
         text.split(System.lineSeparator(), limit = 2).let {
-            if(it.isNotEmpty())
+            if (it.isNotEmpty())
                 this.summary = it[0]
-            if(it.size >= 2)
+            if (it.size >= 2)
                 this.description = it[1]
         }
     }

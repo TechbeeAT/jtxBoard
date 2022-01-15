@@ -128,15 +128,8 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
                 holder.collection.visibility = View.VISIBLE
             }
 
-            if (iCal4ListItem.property.color != null) {
-                try {
-                    holder.colorBar.setColorFilter(iCal4ListItem.property.color!!)
-                } catch (e: IllegalArgumentException) {
-                    Log.i("Invalid color","Invalid Color cannot be parsed: ${iCal4ListItem.property.color}")
-                    holder.colorBar.visibility = View.INVISIBLE
-                }
-            } else
-                holder.colorBar.visibility = View.INVISIBLE
+            // applying the color
+            ICalObject.applyColorOrHide(holder.colorBar, iCal4ListItem.property.color)
 
 
             holder.status.text = StatusJournal.getStringResource(context, iCal4ListItem.property.status)

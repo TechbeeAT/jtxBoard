@@ -140,17 +140,8 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
                 holder.collection.visibility = View.VISIBLE
             }
 
-
-            if (iCal4ListItem.property.color != null) {
-                try {
-                    holder.colorBar.setColorFilter(iCal4ListItem.property.color!!)
-                } catch (e: IllegalArgumentException) {
-                    Log.i("Invalid color","Invalid Color cannot be parsed: ${iCal4ListItem.property.color}")
-                    holder.colorBar.visibility = View.INVISIBLE
-                }
-            } else
-                holder.colorBar.visibility = View.INVISIBLE
-
+            // applying the color
+            ICalObject.applyColorOrHide(holder.colorBar, iCal4ListItem.property.color)
 
             holder.dtstartDay.text = convertLongToDayString(iCal4ListItem.property.dtstart, iCal4ListItem.property.dtstartTimezone)
             holder.dtstartMonth.text = convertLongToMonthString(iCal4ListItem.property.dtstart, iCal4ListItem.property.dtstartTimezone)

@@ -42,7 +42,12 @@
     <string name="gotit">Got it</string>
     <string name="cont">Continue</string>
     <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="reset">Reset</string>
+    <string name="apply">Apply</string>
+    <string name="not_available_abbreviation">n/a</string>
 
+    <string name="collection">Collection</string>
 
 
     <string name="toolbar_text_jtx_board" translatable="false">jtx Board</string>
@@ -65,6 +70,8 @@
     <string name="toolbar_text_sync">Sync</string>
     <string name="toolbar_text_donate">Donate</string>
     <string name="toolbar_text_adinfo">Ad Info</string>
+    <string name="toolbar_text_collections">Collections</string>
+
 
     <string name="default_local_collection_name">Local</string>
     <string name="default_local_account_name">Local</string>
@@ -102,6 +109,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_board">Board</string>
+    <string name="navigation_drawer_collections">Collections</string>
     <string name="navigation_drawer_sync">Sync with DAVx⁵</string>
     <string name="navigation_drawer_about">About / License</string>
     <string name="navigation_drawer_subtitle">journals, notes &amp; tasks for android</string>
@@ -272,6 +280,7 @@
     <string name="edit_dialog_sure_to_delete_message">Are you sure you want to delete \"%1$s\"?</string>
     <string name="edit_dialog_sure_to_discard_message">Are you sure you want to discard this entry? This entry will not be saved.</string>
     <string name="edit_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
+    <string name="edit_dialog_set_attendee_role">Set attendee role</string>
 
     <string name="edit_dialog_collection_not_found_error_title">Attention</string>
     <string name="edit_dialog_collection_not_found_error_message">The selected collection cannot be found anymore, please select another one.</string>
@@ -335,13 +344,26 @@
     <string name="about_translations_contribution_info">If you would like to edit/add translations or add new languages to this app, feel free to join the jtx Board project on the translation platform POEditor:</string>
     <string name="about_translations_contribution_button">Join on POEditor.com</string>
 
+    <!-- fragment_collections -->
+    <string name="collections_local_collections">Local Collections</string>
+    <string name="collections_remote_collections">Remote Collections</string>
+    <string name="collections_journals_num">Journals: %1$s</string>
+    <string name="collections_notes_num">Notes: %1$s</string>
+    <string name="collections_tasks_num">Tasks: %1$s</string>
+    <string name="collections_local_nolocalcollections">No local Collections found</string>
+    <string name="collections_local_noremotecollections">No remote Collections found</string>
+    <string name="collections_info">Collections are an accumulation of entries like folders with files. You can create new local collections through the menu or you can set up new remote collections to synchronize through DAVx⁵.</string>
+    <string name="collections_collection_menu">Collection menu</string>
+    <string name="collections_dialog_add_local_collection_title">Add local Collection</string>
+    <string name="collections_dialog_edit_local_collection_title">Edit local Collection</string>
+    <string name="collections_dialog_delete_local_title">Delete \"%1$s\"?</string>
+    <string name="collections_dialog_delete_local_message">Deleting a collection will also delete all journals, notes and tasks within this collection. This cannot be undone. Are you sure that you want to continue?</string>
 
     <!-- menus -->
     <string name="menu_edit_delete">Delete</string>
     <string name="menu_edit_clear_dates">Clear dates</string>
 
-    <string name="menu_filter_reset">Reset</string>
-    <string name="menu_filter_apply">Apply</string>
+    <string name="menu_collections_add_local">Add local Collection</string>
 
     <string name="menu_list_search">Search</string>
     <string name="menu_list_search_hint">Search</string>

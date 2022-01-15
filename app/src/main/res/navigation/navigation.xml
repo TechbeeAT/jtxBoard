@@ -210,6 +210,16 @@
         android:id="@+id/action_global_adInfoFragment"
         app:destination="@id/adInfoFragment"
         app:popUpTo="@id/icalListFragment" />
+    <fragment
+        android:id="@+id/collectionsFragment"
+        android:name="at.techbee.jtx.ui.CollectionsFragment"
+        android:label="CollectionsFragment"
+        tools:layout="@layout/fragment_collections"/>
+    <action
+        android:id="@+id/action_global_collectionsFragment"
+        app:destination="@id/collectionsFragment"
+        app:popUpTo="@id/icalListFragment" />
+
 
 
 </navigation>

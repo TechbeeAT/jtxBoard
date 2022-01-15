@@ -314,19 +314,8 @@ class IcalViewFragment : Fragment() {
                 addAttendeeChip(attendee)
             }
 
-            if (it.ICalCollection?.color != null) {
-                try {
-                    binding.viewColorbar.setColorFilter(it.ICalCollection?.color!!)
-                } catch (e: IllegalArgumentException) {
-                    Log.println(
-                        Log.INFO,
-                        "Invalid color",
-                        "Invalid Color cannot be parsed: ${it.ICalCollection?.color}"
-                    )
-                    binding.viewColorbar.visibility = View.INVISIBLE
-                }
-            } else
-                binding.viewColorbar.visibility = View.INVISIBLE
+            // applying the color
+            ICalObject.applyColorOrHide(binding.viewColorbar, it.ICalCollection?.color)
 
             it.property.recurOriginalIcalObjectId?.let { origId ->
                 binding.viewRecurrenceGotooriginalButton.setOnClickListener { view ->

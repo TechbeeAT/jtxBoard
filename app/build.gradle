@@ -235,5 +235,8 @@ dependencies {
     implementation  "io.noties.markwon:core:$version_markwon"
     implementation  "io.noties.markwon:ext-strikethrough:$version_markwon"
     implementation  "io.noties.markwon:editor:$version_markwon"
+
+    // Color Picker
+    implementation 'com.larswerkman:HoloColorPicker:1.5'
 }
 

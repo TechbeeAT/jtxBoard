@@ -167,11 +167,11 @@ class IcalEditFragment : Fragment() {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.edit_fragment_app_permission))
                 .setMessage(getString(R.string.edit_fragment_app_permission_message))
-                .setPositiveButton("Ok") { _, _ ->
+                .setPositiveButton(R.string.ok) { _, _ ->
                     ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_READ_PERMISSION_CODE)
                     prefs.edit().putBoolean(PREFS_CONTACTS_PERMISSION_SHOWN, true).apply()
                 }
-                .setNegativeButton("Cancel") { _, _ -> }
+                .setNegativeButton(R.string.cancel) { _, _ -> }
                 .show()
         }
 
@@ -1289,20 +1289,9 @@ class IcalEditFragment : Fragment() {
         val selectedCollection = icalEditViewModel.allCollections.value?.find { collection ->
             collection.collectionId == icalEditViewModel.iCalObjectUpdated.value?.collectionId
         }
-        if(selectedCollection?.color != null) {
-            try {
-                binding.editColorbar.visibility = View.VISIBLE
-                binding.editColorbar.setColorFilter(selectedCollection.color!!)
-            } catch (e: IllegalArgumentException) {
-                Log.i("Invalid color","Invalid Color cannot be parsed: ${selectedCollection.color}")
-                binding.editColorbar.visibility = View.INVISIBLE
-            }
-        } else {
-            binding.editColorbar.visibility = View.INVISIBLE
-        }
+        // applying the color
+        ICalObject.applyColorOrHide(binding.editColorbar, selectedCollection?.color)
     }
-
-
 
     private fun showDatePicker(presetValueUTC: Long, timezone: String?, tag: String) {
 
@@ -1572,7 +1561,7 @@ class IcalEditFragment : Fragment() {
         attendeeChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Set attendee role")
+                .setTitle(R.string.edit_dialog_set_attendee_role)
                 .setItems(attendeeRoles) { _, which ->
                     // Respond to item chosen
                     val curIndex =
