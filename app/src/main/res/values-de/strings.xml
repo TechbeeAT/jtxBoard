@@ -237,8 +237,8 @@ Global Strings -->
     <!-- menus -->
     <string name="menu_edit_delete">"Löschen"</string>
     <string name="menu_edit_clear_dates">"Datumsfelder löschen"</string>
-    <string name="reset">"Zurücksetzen"</string>
-    <string name="apply">"Anwenden"</string>
+    <string name="menu_filter_reset">"Zurücksetzen"</string>
+    <string name="menu_filter_apply">"Anwenden"</string>
     <string name="menu_list_search">"Suchen"</string>
     <string name="menu_list_search_hint">"Suchen"</string>
     <string name="menu_list_gotodate">"Zu Datum gehen"</string>
@@ -362,4 +362,43 @@ Global Strings -->
     <string name="intent_dialog_add_journal">"Journal"</string>
     <string name="intent_dialog_add_note">"Notiz"</string>
     <string name="intent_dialog_add_task">"Aufgabe"</string>
+    <string name="add">"Hinzufügen"</string>
+    <string name="edit">"Bearbeiten"</string>
+    <string name="reset">"Zurücksetzen"</string>
+    <string name="apply">"Anwenden"</string>
+    <string name="not_available_abbreviation">"n.V."</string>
+    <string name="collection">"Collection"</string>
+    <string name="toolbar_text_collections">"Collections"</string>
+    <string name="navigation_drawer_collections">"Collections"</string>
+    <string name="view_alarms_header">"Alarme"</string>
+    <string name="edit_alarms_header">"Alarme"</string>
+    <string name="edit_dialog_set_attendee_role">"Teilnehmer-Rolle vergeben"</string>
+
+    <!-- alarms -->
+    <string name="alarms_onstart">"Bei Start"</string>
+    <string name="alarms_ondue">"Bei Fälligkeit"</string>
+    <string name="alarms_custom">"Individuell"</string>
+    <string name="alarms_before_start">"vor Start"</string>
+    <string name="alarms_after_start">"nach Start"</string>
+    <string name="alarms_before_due">"vor Fälligkeit"</string>
+    <string name="alarms_after_due">"nach Fälligkeit"</string>
+    <string name="alarms_minutes">"Minute(n)"</string>
+    <string name="alarms_hours">"Stunde(n)"</string>
+    <string name="alarms_days">"Tag(e)"</string>
+
+    <!-- fragment_collections -->
+    <string name="collections_local_collections">"Lokale Collections"</string>
+    <string name="collections_remote_collections">"Remote Collections"</string>
+    <string name="collections_journals_num">"Journale: %1$s"</string>
+    <string name="collections_notes_num">"Notizen: %1$s"</string>
+    <string name="collections_tasks_num">"Aufgaben: %1$s"</string>
+    <string name="collections_local_nolocalcollections">"Keine lokalen Collections gefunden"</string>
+    <string name="collections_local_noremotecollections">"Keine remote Collections gefunden"</string>
+    <string name="collections_info">"Collections sind eine Sammlung von Einträgen ähnlich wie Ordner. Sie können lokale Collections über das Menü hinzufügen oder remote Collections zur Synchronisation über DAVx⁵ einrichten."</string>
+    <string name="collections_collection_menu">"Collections Menü"</string>
+    <string name="collections_dialog_add_local_collection_title">"Lokale Collection hinzufügen"</string>
+    <string name="collections_dialog_edit_local_collection_title">"Lokale Collection bearbeiten"</string>
+    <string name="collections_dialog_delete_local_title">"\"%1$s\" löschen?"</string>
+    <string name="collections_dialog_delete_local_message">"Durch das Löschen einer Collection werden auch alle Journale, Notizen und Aufgaben innerhalb dieser Collection gelöscht. Dies kann nicht rückgängig gemacht werden. Sind Sie sicher, dass Sie fortfahren möchten?"</string>
+    <string name="menu_collections_add_local">"Lokale Collection hinzufügen"</string>
 </resources>
