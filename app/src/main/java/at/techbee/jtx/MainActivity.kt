@@ -306,6 +306,9 @@ class MainActivity : AppCompatActivity()  {
 
                 R.id.nav_website ->
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx))))
+                
+                R.id.nav_website_news ->
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_news))))
 
                 R.id.nav_support ->
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_support))))
