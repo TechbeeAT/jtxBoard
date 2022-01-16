@@ -402,7 +402,7 @@ Global Strings -->
     <string name="collections_collection_menu">"Μενού συλλογής"</string>
     <string name="collections_dialog_add_local_collection_title">"Προσθήκη προσωπικής συλλογής"</string>
     <string name="collections_dialog_edit_local_collection_title">"Επεξεργασία προσωπικής συλλογής"</string>
-    <string name="collections_dialog_delete_local_title">"Διαγραφή"</string>
+    <string name="collections_dialog_delete_local_title">"Διαγραφή \"%1$s\";"</string>
     <string name="collections_dialog_delete_local_message">"Η διαγραφή μιας συλλογής θα διαγράψει επίσης όλα τα ημερολόγια, τις σημειώσεις και τις εργασίες σε αυτήν τη συλλογή. Η ενέργεια αυτή δεν θα μπορεί να αναιρεθεί. Είστε σίγουροι ότι θέλετε να συνεχίσετε;"</string>
     <string name="menu_collections_add_local">"Προσθήκη προσωπικής συλλογης"</string>
 
