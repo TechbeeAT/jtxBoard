@@ -393,9 +393,9 @@ Global Strings -->
     <!-- fragment_collections -->
     <string name="collections_local_collections">"Προσωπική συλλογή"</string>
     <string name="collections_remote_collections">"Απομακρυσμένη συλλογή"</string>
-    <string name="collections_journals_num">"Ημερολόγια:"</string>
-    <string name="collections_notes_num">"Σημειώσεις:"</string>
-    <string name="collections_tasks_num">"Εργασίες:"</string>
+    <string name="collections_journals_num">"Ημερολόγια: %1$s"</string>
+    <string name="collections_notes_num">"Σημειώσεις: %1$s"</string>
+    <string name="collections_tasks_num">"Εργασίες: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Δεν βρέθηκαν προσωπικές συλλογές"</string>
     <string name="collections_local_noremotecollections">"Δεν βρέθηκαν απομακρυσμένες συλλογές"</string>
     <string name="collections_info">"Οι συλλογές είναι μια συσσώρευση καταχωρήσεων όπως φακέλους με αρχεία.  Μπορείτε να δημιουργήσετε νέες προσωπικές συλλογές μέσω του μενού ή μπορείτε να ρυθμίσετε νέες απομακρυσμένες συλλογές για συγχρονισμό με το DAVx⁵."</string>
