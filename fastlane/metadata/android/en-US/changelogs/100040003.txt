@@ -1,0 +1,4 @@
++ Add alarms and receive notifications
++ Added support for Markdown
++ Add and edit local collections in a new collections overview
++ Added Russian language support
