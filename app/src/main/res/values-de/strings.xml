@@ -401,4 +401,5 @@ Global Strings -->
     <string name="collections_dialog_delete_local_title">"\"%1$s\" löschen?"</string>
     <string name="collections_dialog_delete_local_message">"Durch das Löschen einer Collection werden auch alle Journale, Notizen und Aufgaben innerhalb dieser Collection gelöscht. Dies kann nicht rückgängig gemacht werden. Sind Sie sicher, dass Sie fortfahren möchten?"</string>
     <string name="menu_collections_add_local">"Lokale Collection hinzufügen"</string>
+    <string name="navigation_drawer_website_news">"Neuigkeiten &amp; Update-Infos"</string>
 </resources>
