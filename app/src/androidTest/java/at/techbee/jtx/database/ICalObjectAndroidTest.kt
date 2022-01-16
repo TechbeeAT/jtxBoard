@@ -10,6 +10,8 @@ package at.techbee.jtx.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.view.View
+import android.widget.ImageView
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
@@ -336,5 +338,19 @@ class ICalObjectAndroidTest {
 
         assertNull(parentAfterUpdate!!.exdate)
         assertFalse(parentAfterUpdate.isRecurLinkedInstance)
+    }
+
+    @Test
+    fun applyColorOrHide_Test() {
+        val image = ImageView(context)
+        ICalObject.applyColorOrHide(image, 16777215)    // 16777215 = white
+        assertEquals(View.VISIBLE, image.visibility)
+    }
+
+    @Test
+    fun applyColorOrHide_ColorNull() {
+        val image = ImageView(context)
+        ICalObject.applyColorOrHide(image, null)
+        assertEquals(View.INVISIBLE, image.visibility)
     }
 }
