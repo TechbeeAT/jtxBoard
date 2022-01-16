@@ -416,7 +416,7 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="edit">"Modifica"</string>
     <string name="reset">"Resettare"</string>
     <string name="apply">"Applica"</string>
-    <string name="not_available_abbreviation"></string>
+    <string name="not_available_abbreviation">"n/d"</string>
     <string name="collection">"Collezione"</string>
     <string name="toolbar_text_collections">"Collezioni"</string>
     <string name="navigation_drawer_collections">"Collezioni"</string>
@@ -437,9 +437,9 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="alarms_after_start">"Dopo l'inizio"</string>
     <string name="alarms_before_due">"prima della scadenza"</string>
     <string name="alarms_after_due">"dopo la scadenza"</string>
-    <string name="alarms_minutes"></string>
-    <string name="alarms_hours"></string>
-    <string name="alarms_days"></string>
+    <string name="alarms_minutes">"minuti"</string>
+    <string name="alarms_hours">"ore"</string>
+    <string name="alarms_days">"giorni"</string>
 
     <!-- fragment_collections -->
     <string name="collections_local_collections">"Collezioni locali"</string>
@@ -456,4 +456,7 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="collections_dialog_delete_local_title">"Eliminare \"%1$s\"?"</string>
     <string name="collections_dialog_delete_local_message"></string>
     <string name="menu_collections_add_local">"Aggiungi collezione locale"</string>
+
+    <!-- Fuzzy -->
+    <string name="navigation_drawer_website_news">"Notizie e aggiornamenti"</string>
 </resources>
