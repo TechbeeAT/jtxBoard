@@ -1,3 +1,0 @@
-+ Add alarms and receive notifications
-+ Added support for Markdown
-+ Added Russian language support
