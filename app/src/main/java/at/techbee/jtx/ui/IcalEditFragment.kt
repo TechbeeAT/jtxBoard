@@ -21,6 +21,7 @@ import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.text.InputType
+import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
 import android.util.Size
 import android.view.*
@@ -72,6 +73,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
@@ -241,9 +243,12 @@ class IcalEditFragment : Fragment() {
                     .setSelection(zonedTimestamp.toInstant().toEpochMilli())
                     .build()
 
+            val clockFormat = if (is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+
             val timePicker =
                 MaterialTimePicker.Builder()
                     .setTitleText(R.string.edit_datepicker_dialog_select_time)
+                    .setTimeFormat(clockFormat)
                     .build()
 
             timePicker.addOnPositiveButtonClickListener {
@@ -1335,12 +1340,14 @@ class IcalEditFragment : Fragment() {
 
         val tzId = requireTzId(timezone)
         val presetUtcDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(presetValueUTC), tzId)
+        val clockFormat = if (is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
 
         val timePicker =
             MaterialTimePicker.Builder()
                 .setHour(presetUtcDateTime.hour)
                 .setMinute(presetUtcDateTime.minute)
                 .setTitleText(R.string.edit_datepicker_dialog_select_time)
+                .setTimeFormat(clockFormat)
                 .build()
 
         timePicker.addOnPositiveButtonClickListener {
