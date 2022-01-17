@@ -253,11 +253,7 @@ class IcalViewFragment : Fragment() {
                 attachmentBinding.viewAttachmentCardview.setOnClickListener {
                     attachment.openFile(requireContext())
                 }
-
-                if (attachment.filename?.isNotEmpty() == true)
-                    attachmentBinding.viewAttachmentTextview.text = attachment.filename
-                else
-                    attachmentBinding.viewAttachmentTextview.text = attachment.fmttype
+                attachmentBinding.viewAttachmentTextview.text = attachment.getFilenameOrLink()
 
                 val filesize = attachment.getFilesize(requireContext())
                 if (filesize == 0L)

@@ -1674,7 +1674,7 @@ class IcalEditFragment : Fragment() {
 
         val bindingAttachment =
             FragmentIcalEditAttachmentItemBinding.inflate(inflater, container, false)
-        bindingAttachment.editAttachmentItemTextview.text = "${attachment.filename}"
+        bindingAttachment.editAttachmentItemTextview.text = attachment.getFilenameOrLink()
 
         var thumbUri: Uri? = null
 

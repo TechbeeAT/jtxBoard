@@ -282,7 +282,15 @@ data class Attachment (
         }
     }
 
+    fun getFilenameOrLink(): String? {
 
+        return when {
+            uri?.startsWith("http") == true -> uri
+            filename?.isNotEmpty() == true -> filename
+            fmttype?.isNotEmpty() == true -> fmttype
+            else -> null
+        }
+    }
 }
 
 

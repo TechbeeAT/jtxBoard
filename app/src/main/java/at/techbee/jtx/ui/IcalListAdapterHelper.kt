@@ -172,12 +172,7 @@ class IcalListAdapterHelper {
                     attachment.openFile(context)
                 }
 
-
-                when {
-                    attachment.filename?.isNotEmpty() == true -> attachmentBinding.listItemAttachmentTextview.text = attachment.filename
-                    attachment.fmttype?.isNotEmpty() == true -> attachmentBinding.listItemAttachmentTextview.text = attachment.fmttype
-                    else -> attachmentBinding.listItemAttachmentTextview.text = ""
-                }
+                attachmentBinding.listItemAttachmentTextview.text = attachment.getFilenameOrLink()
 
                 val filesize = attachment.getFilesize(context)
                 if (filesize == 0L)
