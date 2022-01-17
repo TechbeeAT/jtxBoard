@@ -585,26 +585,19 @@ data class ICalEntity(
      */
     fun getIcalEntityCopy(moduleString: String?): ICalEntity {
 
-        /** TODO: the app keeps the reference of the the objects within the iCalEntity to the original objects (despite the copy()).
-         * In the worst case a user click on Copy as Task/Note/Journal, the objects get altered, the user is correctly forwarded to the edit fragment.
-         * But when he returns through the back button, the object does not get reset, so if he clicks on the edit button for the element
-         * the edit screen would open with the already altered values (e.g. the edit fragment of a task would open if he clicked on
-         * Copy as Task before
-         */
         val newModule = try { Module.valueOf(moduleString ?: "JOURNAL") } catch (e: IllegalArgumentException) { Module.JOURNAL }     // Fallback is Journal, but this should not happen anyway
-
         val newEntity = ICalEntity()
         newEntity.property = property.copy()
-        newEntity.attendees = attendees
-        newEntity.resources = resources
-        newEntity.categories = categories
-        newEntity.alarms = alarms
-        newEntity.attachments = attachments
-        newEntity.relatedto = relatedto
-        newEntity.ICalCollection = ICalCollection
-        newEntity.comments = comments
-        newEntity.organizer = organizer
-        newEntity.unknown = unknown
+        newEntity.attendees = attendees?.toList()     // using toList() to create a copy of the list
+        newEntity.resources = resources?.toList()
+        newEntity.categories = categories?.toList()
+        newEntity.alarms = alarms?.toList()
+        newEntity.attachments = attachments?.toList()
+        newEntity.relatedto = relatedto?.toList()
+        newEntity.ICalCollection = ICalCollection?.copy()
+        newEntity.comments = comments?.toList()
+        newEntity.organizer = organizer?.copy()
+        newEntity.unknown = unknown?.toList()
 
         return newEntity.apply {
 
@@ -666,7 +659,6 @@ data class ICalEntity(
             resources?.forEach { it.resourceId = 0L }
             alarms?.forEach { it.alarmId = 0L }
             unknown?.forEach { it.unknownId = 0L }
-
         }
     }
 }
