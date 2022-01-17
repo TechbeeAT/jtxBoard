@@ -281,7 +281,7 @@ class IcalListFragment : Fragment() {
             if(it)
                 binding.listSyncProgressIndicator.visibility = View.VISIBLE
             else
-                binding.listSyncProgressIndicator.visibility = View.GONE
+                binding.listSyncProgressIndicator.visibility = View.INVISIBLE
         }
 
 

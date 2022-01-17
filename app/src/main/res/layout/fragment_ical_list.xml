@@ -60,13 +60,6 @@
 
                 </com.google.android.material.tabs.TabLayout>
             </com.google.android.material.appbar.MaterialToolbar>
-        </com.google.android.material.appbar.AppBarLayout>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -77,17 +70,24 @@
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/list_sync_progress_indicator"
-                android:layout_below="@+id/list_progress_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/list_progress_indicator"
                 android:indeterminate="true"
-                android:visibility="gone" />
+                android:visibility="invisible" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/vjournal_list_items_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/list_sync_progress_indicator"
                 android:layout_marginEnd="8dp"
                 android:layoutAnimation="@anim/recyclerview_layout_animation"
                 android:orientation="vertical"

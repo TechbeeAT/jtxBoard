@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
         android:checkable="true"
         android:clickable="true"
         android:focusable="true">
@@ -364,7 +364,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/list_item_todo_card_view"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
         android:visibility="gone"/>
 
 </RelativeLayout>

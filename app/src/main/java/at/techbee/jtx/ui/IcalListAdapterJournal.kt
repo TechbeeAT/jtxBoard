@@ -11,16 +11,17 @@ package at.techbee.jtx.ui
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Paint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import at.techbee.jtx.*
+import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
@@ -33,7 +34,6 @@ import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
 import com.google.android.material.card.MaterialCardView
 import io.noties.markwon.Markwon
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
-import java.lang.IllegalArgumentException
 import java.util.*
 
 class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel) :
@@ -251,7 +251,7 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
         }
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
-        if(position%5 == 4 && AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.value == false)
+        if(position%3 == 2 && AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.value == false)
             AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.getInstance()?.unitIdBannerListJournal)
         else
             holder.adContainer.visibility = View.GONE
