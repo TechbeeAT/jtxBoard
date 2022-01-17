@@ -22,6 +22,7 @@ import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.database.properties.Comment
 import at.techbee.jtx.database.properties.Organizer
 import at.techbee.jtx.util.Css3Color
+import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.data.CalendarOutputter
 import net.fortuna.ical4j.data.DefaultParameterFactorySupplier
@@ -39,6 +40,7 @@ import java.net.URI
 import java.net.URISyntaxException
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.IllegalArgumentException
 import java.util.TimeZone
 
 
@@ -572,5 +574,99 @@ data class ICalEntity(
                 )
         }
         return builder.build()
+    }
+
+
+    /**
+     * This function creates a copy of the ICalEntity in the selected module.
+     * This also applies some transformations, e.g. when a task is copied to a note
+     * @param [moduleString] the new module of the copied entity
+     * @return The [ICalEntity] in transformed to the new module (or as journal, if the moduleString was faulty)
+     */
+    fun getIcalEntityCopy(moduleString: String?): ICalEntity {
+
+        /** TODO: the app keeps the reference of the the objects within the iCalEntity to the original objects (despite the copy()).
+         * In the worst case a user click on Copy as Task/Note/Journal, the objects get altered, the user is correctly forwarded to the edit fragment.
+         * But when he returns through the back button, the object does not get reset, so if he clicks on the edit button for the element
+         * the edit screen would open with the already altered values (e.g. the edit fragment of a task would open if he clicked on
+         * Copy as Task before
+         */
+        val newModule = try { Module.valueOf(moduleString ?: "JOURNAL") } catch (e: IllegalArgumentException) { Module.JOURNAL }     // Fallback is Journal, but this should not happen anyway
+
+        val newEntity = ICalEntity()
+        newEntity.property = property.copy()
+        newEntity.attendees = attendees
+        newEntity.resources = resources
+        newEntity.categories = categories
+        newEntity.alarms = alarms
+        newEntity.attachments = attachments
+        newEntity.relatedto = relatedto
+        newEntity.ICalCollection = ICalCollection
+        newEntity.comments = comments
+        newEntity.organizer = organizer
+        newEntity.unknown = unknown
+
+        return newEntity.apply {
+
+            property.id = 0L
+            property.module = newModule.name
+            property.dtstamp = System.currentTimeMillis()
+            property.created = System.currentTimeMillis()
+            property.lastModified = System.currentTimeMillis()
+            property.dtend = null
+            property.dtendTimezone = null
+            property.recurOriginalIcalObjectId = null
+            property.isRecurLinkedInstance = false
+            property.exdate = null
+            property.rdate = null
+            property.uid = ICalObject.generateNewUID()
+            property.dirty = true
+
+            property.flags = null
+            property.scheduleTag = null
+            property.eTag = null
+            property.fileName = null
+
+
+            if (newModule == Module.JOURNAL || newModule == Module.NOTE) {
+                property.component = Component.VJOURNAL.name
+
+                if (newModule == Module.JOURNAL && property.dtstart == null) {
+                    property.dtstart = DateTimeUtils.getTodayAsLong()
+                    property.dtstartTimezone = TZ_ALLDAY
+                }
+                if(newModule == Module.NOTE) {
+                    property.dtstart = null
+                    property.dtstartTimezone = null
+                }
+                property.due = null
+                property.dueTimezone = null
+                property.completed = null
+                property.completedTimezone = null
+                property.duration = null
+                property.priority = null
+                property.percent = null
+
+                if(property.status != StatusJournal.FINAL.name || property.status != StatusJournal.DRAFT.name || property.status != StatusJournal.CANCELLED.name)
+                    property.status = StatusJournal.FINAL.name
+
+            } else if (newModule == Module.TODO) {
+                property.component = Component.VTODO.name
+                if(property.status != StatusTodo.COMPLETED.name || property.status != StatusTodo.`IN-PROCESS`.name || property.status != StatusTodo.`NEEDS-ACTION`.name || property.status != StatusTodo.CANCELLED.name)
+                    property.status = StatusTodo.`NEEDS-ACTION`.name
+            }
+
+            // reset the ids of all list properties to make sure that they get inserted as new ones
+            attachments?.forEach { it.attachmentId = 0L }
+            attendees?.forEach { it.attendeeId = 0L }
+            categories?.forEach { it.categoryId = 0L }
+            comments?.forEach { it.commentId = 0L }
+            organizer?.organizerId = 0L
+            relatedto?.forEach { it.relatedtoId = 0L }
+            resources?.forEach { it.resourceId = 0L }
+            alarms?.forEach { it.alarmId = 0L }
+            unknown?.forEach { it.unknownId = 0L }
+
+        }
     }
 }

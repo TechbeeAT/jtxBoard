@@ -36,13 +36,10 @@ import androidx.preference.PreferenceManager
 import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
 import at.techbee.jtx.database.properties.*
-import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.*
 import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.monetization.BillingManager
-import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
@@ -568,7 +565,7 @@ class IcalViewFragment : Fragment() {
         binding.viewBottomBar.setOnMenuItemClickListener { menuItem ->
             when(menuItem.itemId) {
                 R.id.menu_view_bottom_copy -> this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(getIcalEntityCopy())
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value?.getIcalEntityCopy(icalViewViewModel.icalEntity.value?.property?.module) ?: return@setOnMenuItemClickListener false)
                 )
                 R.id.menu_view_bottom_delete -> deleteItem()
             }
@@ -805,15 +802,15 @@ class IcalViewFragment : Fragment() {
                 startActivity(Intent(shareIntent))
             }
             R.id.menu_view_copy_as_journal -> this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(getIcalEntityCopy(Module.JOURNAL))
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value?.getIcalEntityCopy(Module.JOURNAL.name) ?: return false)
                 )
 
             R.id.menu_view_copy_as_note -> this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(getIcalEntityCopy(Module.NOTE))
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value?.getIcalEntityCopy(Module.NOTE.name) ?: return false)
                 )
 
             R.id.menu_view_copy_as_todo -> this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(getIcalEntityCopy(Module.TODO))
+                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value?.getIcalEntityCopy(Module.TODO.name) ?: return false)
                 )
 
             R.id.menu_view_delete_item -> deleteItem()
@@ -962,140 +959,6 @@ class IcalViewFragment : Fragment() {
         builder.show()
     }
 
-
-    /**
-     * This function creates a copy of the ICalEntity in the same Module as the ICalEntity
-     * As the new ICalEntity needs some processing getIcalEntityCopy(...) is used to do this (e.g. give a new UID,...)
-     * @return The copy of the [ICalEntity] in the same Module
-     */
-    private fun getIcalEntityCopy(): ICalEntity {
-        return when (icalViewViewModel.icalEntity.value?.property?.module) {
-            Module.JOURNAL.name -> getIcalEntityCopy(Module.JOURNAL)
-            Module.NOTE.name -> getIcalEntityCopy(Module.NOTE)
-            Module.TODO.name -> getIcalEntityCopy(Module.TODO)
-            else -> getIcalEntityCopy(Module.JOURNAL)
-        }
-    }
-
-    /**
-     * This function creates a copy of the ICalEntity in the selected module.
-     * This also applies some transformations, e.g. when a task is copied to a note
-     * @return The [ICalEntity] in transformed to the new module
-     */
-    private fun getIcalEntityCopy(newModule: Module): ICalEntity {
-
-        /** TODO: the app keeps the reference of the the objects within the iCalEntity to the original objects (despite the copy()).
-         * In the worst case a user click on Copy as Task/Note/Journal, the objects get altered, the user is correctly forwarded to the edit fragment.
-         * But when he returns through the back button, the object does not get reset, so if he clicks on the edit button for the element
-         * the edit screen would open with the already altered values (e.g. the edit fragment of a task would open if he clicked on
-         * Copy as Task before
-         */
-
-        return icalViewViewModel.icalEntity.value!!.copy().apply {
-            property.id = 0L
-            property.dtstamp = System.currentTimeMillis()
-            property.created = System.currentTimeMillis()
-            property.lastModified = System.currentTimeMillis()
-            property.dtend = null
-            property.dtendTimezone = null
-            property.recurOriginalIcalObjectId = null
-            property.isRecurLinkedInstance = false
-            property.exdate = null
-            property.rdate = null
-            property.uid = ICalObject.generateNewUID()
-            property.dirty = true
-
-            property.flags = null
-            property.scheduleTag = null
-            property.eTag = null
-            property.fileName = null
-
-
-            if (newModule == Module.JOURNAL || newModule == Module.NOTE) {
-                property.component = Component.VJOURNAL.name
-
-                if (property.dtstart == null) {
-                    property.dtstart = DateTimeUtils.getTodayAsLong()
-                    property.dtstartTimezone = TZ_ALLDAY
-                } else {
-                    property.dtstart = icalViewViewModel.icalEntity.value?.property?.dtstart
-                    property.dtstartTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
-                }
-
-                property.due = null
-                property.dueTimezone = null
-                property.completed = null
-                property.completedTimezone = null
-                property.duration = null
-                property.priority = null
-
-                if(property.status == StatusTodo.CANCELLED.name || property.status == StatusTodo.`IN-PROCESS`.name || property.status == StatusTodo.COMPLETED.name || property.status == StatusTodo.`NEEDS-ACTION`.name)
-                    property.status = StatusJournal.FINAL.name
-                else
-                    property.status = icalViewViewModel.icalEntity.value?.property?.status
-                // else just take the copy as it was already a Journal/Note
-
-
-                // only if it is a note we have to handle dtstart additionally, the rest is handled the same way for notes and journals
-                if(newModule == Module.NOTE) {
-                    property.dtstart = null
-                    property.dtstartTimezone = null
-                } else {
-                    property.dtstart = icalViewViewModel.icalEntity.value?.property?.dtstart
-                    property.dtstartTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
-                }
-
-
-            } else if (newModule == Module.TODO) {
-                property.component = Component.VTODO.name
-
-                if(property.status == StatusJournal.CANCELLED.name || property.status == StatusJournal.DRAFT.name || property.status == StatusJournal.FINAL.name)
-                    property.status = StatusTodo.`NEEDS-ACTION`.name
-                else
-                    property.status = icalViewViewModel.icalEntity.value?.property?.status
-
-                if(icalViewViewModel.icalEntity.value?.property?.module == newModule.name) {                          // old and new module are the same, both are tasks
-                    property.dtstart = icalViewViewModel.icalEntity.value?.property?.dtstart
-                    property.dtstartTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
-                    property.due = icalViewViewModel.icalEntity.value?.property?.due
-                    property.dueTimezone = icalViewViewModel.icalEntity.value?.property?.dueTimezone
-                    property.due = icalViewViewModel.icalEntity.value?.property?.completed
-                    property.dueTimezone = icalViewViewModel.icalEntity.value?.property?.completedTimezone
-                } else {
-                    if(property.dtstart == null) {
-                        property.dtstart = null
-                        property.dtstartTimezone = TZ_ALLDAY
-                        property.due = null
-                        property.dueTimezone = TZ_ALLDAY
-                        property.completed = null
-                        property.completedTimezone = TZ_ALLDAY
-                    } else {
-                        property.dtstart = icalViewViewModel.icalEntity.value?.property?.dtstart
-                        property.dtstartTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
-                        property.due = null
-                        property.dueTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
-                        property.completed = null
-                        property.completedTimezone = icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
-                    }
-                }
-            }
-
-            // moved to the end, otherwise the newModule would also be applied to the original object/property
-            property.module = newModule.name
-
-            // reset the ids of all list properties to make sure that they get inserted as new ones
-            attachments?.forEach { it.attachmentId = 0L }
-            attendees?.forEach { it.attendeeId = 0L }
-            categories?.forEach { it.categoryId = 0L }
-            comments?.forEach { it.commentId = 0L }
-            organizer?.organizerId = 0L
-            relatedto?.forEach { it.relatedtoId = 0L }
-            resources?.forEach { it.resourceId = 0L }
-            alarms?.forEach { it.alarmId = 0L }
-            unknown?.forEach { it.unknownId = 0L }
-
-        }
-    }
 
     private fun hideEditingOptions() {
         binding.viewBottomBar.menu.findItem(R.id.menu_view_bottom_copy).isVisible = false
