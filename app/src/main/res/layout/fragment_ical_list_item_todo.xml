@@ -173,13 +173,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/list_item_todo_summary" />
 
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/list_item_todo_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="top"
-                tools:layout_editor_absoluteY="510dp" />
-
 
             <ImageView
                 android:id="@+id/list_item_todo_priority_icon"
@@ -203,86 +196,68 @@
 
 
             <LinearLayout
-                android:id="@+id/list_item_todo_attachments"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="start"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="@+id/list_item_todo_summary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/list_item_todo_barrier" />
-
-            <ImageView
-                android:id="@+id/list_item_todo_num_attendees_icon"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="4dp"
-                android:contentDescription="@string/list_num_attendees_contentdesc"
-                app:layout_constraintEnd_toStartOf="@+id/list_item_todo_num_attendees_text"
-                app:layout_constraintTop_toBottomOf="@+id/list_item_todo_priority"
-                app:srcCompat="@drawable/ic_attendee" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/list_item_todo_num_attendees_text"
+                android:id="@+id/list_item_todo_num_linlayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/list_item_todo_num_attendees_icon"
-                app:layout_constraintEnd_toStartOf="@+id/list_item_todo_num_attachments_icon"
-                app:layout_constraintTop_toTopOf="@+id/list_item_todo_num_attendees_icon"
-                tools:text="0" />
-
-            <ImageView
-                android:id="@+id/list_item_todo_num_attachments_icon"
-                android:layout_width="10dp"
-                android:layout_height="15dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="4dp"
-                android:contentDescription="@string/list_num_attachments_contentdesc"
-                app:layout_constraintEnd_toStartOf="@+id/list_item_todo_num_attachments_text"
-                app:layout_constraintTop_toBottomOf="@+id/list_item_todo_priority"
-                app:srcCompat="@drawable/ic_attachment" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/list_item_todo_num_attachments_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/list_item_todo_num_attachments_icon"
-                app:layout_constraintEnd_toStartOf="@+id/list_item_todo_num_comments_icon"
-                app:layout_constraintTop_toTopOf="@+id/list_item_todo_num_attachments_icon"
-                tools:text="0" />
-
-            <ImageView
-                android:id="@+id/list_item_todo_num_comments_icon"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="4dp"
-                android:contentDescription="@string/list_num_comments_contentdesc"
-                app:layout_constraintEnd_toStartOf="@+id/list_item_todo_num_comments_text"
-                app:layout_constraintTop_toBottomOf="@+id/list_item_todo_priority"
-                app:srcCompat="@drawable/ic_comments" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/list_item_todo_num_comments_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/list_item_todo_num_comments_icon"
+                android:gravity="top"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/list_item_todo_num_comments_icon"
-                tools:text="0" />
+                app:layout_constraintTop_toBottomOf="@+id/list_item_todo_priority" >
+
+                <ImageView
+                    android:id="@+id/list_item_todo_num_attendees_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="4dp"
+                    android:contentDescription="@string/list_num_attendees_contentdesc"
+                    app:srcCompat="@drawable/ic_attendee" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/list_item_todo_num_attendees_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="0" />
+
+                <ImageView
+                    android:id="@+id/list_item_todo_num_attachments_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="4dp"
+                    android:contentDescription="@string/list_num_attachments_contentdesc"
+                    app:srcCompat="@drawable/ic_attachment" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/list_item_todo_num_attachments_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="0" />
+
+                <ImageView
+                    android:id="@+id/list_item_todo_num_comments_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="4dp"
+                    android:contentDescription="@string/list_num_comments_contentdesc"
+                    app:srcCompat="@drawable/ic_comments" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/list_item_todo_num_comments_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="0" />
+
+            </LinearLayout>
 
 
             <com.google.android.material.textview.MaterialTextView
@@ -301,13 +276,13 @@
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="8dp"
                 android:stepSize="1.0"
                 android:valueFrom="0.0"
                 android:valueTo="100.0"
                 app:layout_constraintEnd_toStartOf="@+id/list_item_todo_progress_percent"
                 app:layout_constraintStart_toEndOf="@+id/list_item_todo_expand"
-                app:layout_constraintTop_toBottomOf="@+id/list_item_todo_priority" />
+                app:layout_constraintTop_toBottomOf="@+id/list_item_todo_num_linlayout" />
 
 
             <com.google.android.material.textview.MaterialTextView
@@ -339,7 +314,6 @@
                 android:layout_marginEnd="8dp"
                 android:divider="?android:dividerHorizontal"
                 android:orientation="vertical"
-                android:showDividers="middle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/list_item_todo_progress_slider" />
@@ -354,6 +328,32 @@
                 app:layout_constraintStart_toEndOf="@+id/list_item_todo_progress_label"
                 app:layout_constraintTop_toTopOf="@+id/list_item_todo_progress_label"
                 app:srcCompat="@drawable/ic_expand" />
+
+
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/list_item_todo_barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="top"
+                app:constraint_referenced_ids="list_item_todo_attachments"
+                tools:layout_editor_absoluteY="510dp" />
+
+
+            <LinearLayout
+                android:id="@+id/list_item_todo_attachments"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:gravity="start"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="@+id/list_item_todo_summary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/list_item_todo_subtasks_linearlayout" />
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

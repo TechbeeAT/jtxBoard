@@ -659,24 +659,10 @@
                     android:layout_marginEnd="8dp"
                     android:divider="?android:dividerHorizontal"
                     android:orientation="vertical"
-                    android:showDividers="middle"
                     android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_subtasks_header">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:clickable="true"
-                        android:focusable="true">
-
-
-                    </com.google.android.material.card.MaterialCardView>
-
-
-                </LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/view_subtasks_header" />
 
 
                 <com.google.android.material.chip.ChipGroup
@@ -1106,7 +1092,6 @@
                     android:layout_marginEnd="8dp"
                     android:divider="?android:dividerHorizontal"
                     android:orientation="vertical"
-                    android:showDividers="middle"
                     android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1126,7 +1111,7 @@
                     android:visibility="@{model.alarmsVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_alarm"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_relatedto" />
+                    app:layout_constraintTop_toBottomOf="@id/view_comments_linearlayout" />
 
 
                 <LinearLayout
@@ -1138,7 +1123,6 @@
                     android:layout_marginEnd="8dp"
                     android:divider="?android:dividerHorizontal"
                     android:orientation="vertical"
-                    android:showDividers="middle"
                     android:visibility="@{model.alarmsVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1171,13 +1155,10 @@
                     android:layout_marginEnd="8dp"
                     android:divider="?android:dividerHorizontal"
                     android:orientation="vertical"
-                    android:showDividers="middle"
                     android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_attachments_header">
-
-                </LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/view_attachments_header" />
 
 
                 <com.google.android.material.textview.MaterialTextView
@@ -1194,7 +1175,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_attachments_linearlayout" />
 
-
                 <LinearLayout
                     android:id="@+id/view_feedback_linearlayout"
                     android:layout_width="match_parent"
@@ -1204,12 +1184,9 @@
                     android:layout_marginEnd="8dp"
                     android:divider="?android:dividerHorizontal"
                     android:orientation="vertical"
-                    android:showDividers="middle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_feedback_header">
-
-                </LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/view_feedback_header" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/view_add_note"

@@ -216,50 +216,6 @@
             tools:layout_editor_absoluteY="510dp" />
 
 
-        <ImageView
-            android:id="@+id/list_item_journal_status_icon"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_journal_status"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_journal_status"
-            app:layout_constraintTop_toTopOf="@+id/list_item_journal_status"
-            app:srcCompat="@drawable/ic_status"
-            tools:ignore="ContentDescription" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/list_item_journal_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_journal_classification"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_journal_classification_icon"
-            app:layout_constraintTop_toTopOf="@+id/list_item_journal_classification"
-            tools:text="Final" />
-
-
-        <ImageView
-            android:id="@+id/list_item_journal_classification_icon"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_journal_classification"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_journal_classification"
-            app:layout_constraintTop_toTopOf="@+id/list_item_journal_classification"
-            app:srcCompat="@drawable/ic_classification"
-            tools:ignore="ContentDescription" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/list_item_journal_classification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_journal_attachments"
-            tools:text="Public" />
-
-
         <LinearLayout
             android:id="@+id/list_item_journal_attachments"
             android:layout_width="0dp"
@@ -273,89 +229,128 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/list_item_journal_barrier" />
 
-        <ImageView
-            android:id="@+id/list_item_journal_num_attendees_icon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:contentDescription="@string/list_num_attendees_contentdesc"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_journal_num_attendees_text"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_journal_classification"
-            app:srcCompat="@drawable/ic_attendee"  />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/list_item_journal_num_attendees_text"
+        <LinearLayout
+            android:id="@+id/list_item_journal_status_class_linlayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_journal_num_attendees_icon"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_journal_num_attachments_icon"
-            app:layout_constraintTop_toTopOf="@+id/list_item_journal_num_attendees_icon"
-            tools:text="0" />
-
-        <ImageView
-            android:id="@+id/list_item_journal_num_attachments_icon"
-            android:layout_width="10dp"
-            android:layout_height="15dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:contentDescription="@string/list_num_attachments_contentdesc"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_journal_num_attachments_text"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_journal_classification"
-            app:srcCompat="@drawable/ic_attachment" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/list_item_journal_num_attachments_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_journal_num_attachments_icon"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_journal_num_comments_icon"
-            app:layout_constraintTop_toTopOf="@+id/list_item_journal_num_attachments_icon"
-            tools:text="0" />
-
-        <ImageView
-            android:id="@+id/list_item_journal_num_comments_icon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:contentDescription="@string/list_num_comments_contentdesc"
-            app:layout_constraintEnd_toStartOf="@+id/list_item_journal_num_comments_text"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_journal_classification"
-            app:srcCompat="@drawable/ic_comments" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/list_item_journal_num_comments_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/list_item_journal_num_comments_icon"
+            android:gravity="top"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/list_item_journal_num_comments_icon"
-            tools:text="0" />
+            app:layout_constraintTop_toBottomOf="@+id/list_item_journal_attachments">
+
+            <ImageView
+                android:id="@+id/list_item_journal_status_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="4dp"
+                app:srcCompat="@drawable/ic_status"
+                tools:ignore="ContentDescription" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/list_item_journal_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Final" />
+
+            <ImageView
+                android:id="@+id/list_item_journal_classification_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                app:srcCompat="@drawable/ic_classification"
+                tools:ignore="ContentDescription" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/list_item_journal_classification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Public" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/list_item_todo_num_linlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="top"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_journal_status_class_linlayout" >
+
+            <ImageView
+                android:id="@+id/list_item_journal_num_attendees_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="4dp"
+                android:contentDescription="@string/list_num_attendees_contentdesc"
+                app:srcCompat="@drawable/ic_attendee" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/list_item_journal_num_attendees_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="0" />
+
+            <ImageView
+                android:id="@+id/list_item_journal_num_attachments_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="4dp"
+                android:contentDescription="@string/list_num_attachments_contentdesc"
+                app:srcCompat="@drawable/ic_attachment" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/list_item_journal_num_attachments_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="0" />
+
+            <ImageView
+                android:id="@+id/list_item_journal_num_comments_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="4dp"
+                android:contentDescription="@string/list_num_comments_contentdesc"
+                app:srcCompat="@drawable/ic_comments" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/list_item_journal_num_comments_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="0" />
+
+        </LinearLayout>
 
 
         <LinearLayout
             android:id="@+id/list_item_journal_subtasks_linearlayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:divider="?android:dividerHorizontal"
             android:orientation="vertical"
-            android:showDividers="middle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_item_journal_classification" />
+            app:layout_constraintTop_toBottomOf="@id/list_item_todo_num_linlayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

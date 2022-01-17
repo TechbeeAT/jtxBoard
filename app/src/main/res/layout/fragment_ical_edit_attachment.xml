@@ -50,22 +50,10 @@
         android:layout_marginEnd="8dp"
         android:divider="?android:dividerHorizontal"
         android:orientation="vertical"
-        android:showDividers="middle"
         android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_attachments_header">
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checkable="true"
-            android:clickable="true"
-            android:focusable="true">
-
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/edit_attachments_header" />
 
 
         <com.google.android.material.button.MaterialButton

@@ -17,7 +17,8 @@
     android:clickable="true"
     android:focusable="true"
     android:checkable="true"
-    android:id="@+id/view_subtask_cardview">
+    android:id="@+id/view_subtask_cardview"
+    android:layout_marginBottom="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
