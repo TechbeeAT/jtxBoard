@@ -24,7 +24,6 @@ import java.io.IOException
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
-import net.fortuna.ical4j.util.MapTimeZoneCache
 import java.lang.NumberFormatException
 
 
