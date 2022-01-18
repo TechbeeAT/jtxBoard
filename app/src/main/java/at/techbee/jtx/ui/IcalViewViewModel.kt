@@ -59,6 +59,8 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var relatedtoVisible: LiveData<Boolean>
     lateinit var progressVisible: LiveData<Boolean>
     lateinit var priorityVisible: LiveData<Boolean>
+    lateinit var classificationVisible: LiveData<Boolean>
+    lateinit var statusVisible: LiveData<Boolean>
     lateinit var subtasksVisible: LiveData<Boolean>
     lateinit var completedVisible: LiveData<Boolean>
     lateinit var startedVisible: LiveData<Boolean>
@@ -196,7 +198,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map !item?.resources.isNullOrEmpty()      // true if attendees is NOT null or empty
             }
             organizerVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.organizer != null      // true if organizer is NOT null or empty
+                return@map item?.organizer?.caladdress?.isNotEmpty()      // true if organizer caladdress is not empty
             }
             contactVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.property?.contact.isNullOrBlank()      // true if contact is NOT null or empty
@@ -222,6 +224,12 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
             priorityVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.priority != null      // true if priority is NOT null
+            }
+            classificationVisible = Transformations.map(icalEntity) { item ->
+                return@map item?.property?.classification?.isNotEmpty()
+            }
+            statusVisible = Transformations.map(icalEntity) { item ->
+                return@map item?.property?.status?.isNotEmpty()
             }
             completedVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.completed != null
