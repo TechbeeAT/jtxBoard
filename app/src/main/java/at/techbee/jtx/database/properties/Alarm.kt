@@ -378,13 +378,16 @@ data class Alarm (
                 .createPendingIntent()
 
             // this is the notification itself that will be put as an Extra into the notificationIntent
-            val notification = NotificationCompat.Builder(context, MainActivity.CHANNEL_REMINDER_DUE)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(summary)
-                .setContentText(description)
-                .setContentIntent(contentIntent)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            val notification = NotificationCompat.Builder(context, MainActivity.CHANNEL_REMINDER_DUE).apply {
+                setSmallIcon(R.drawable.ic_notification)
+                if(summary?.isNotEmpty() == true)
+                    setContentTitle(summary)
+                if(description != summary)
+                    setContentText(description)
+                setContentIntent(contentIntent)
+                setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
+            }
                 .build()
             notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL
 

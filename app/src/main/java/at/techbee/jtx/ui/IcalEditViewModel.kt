@@ -311,14 +311,11 @@ class IcalEditViewModel(
                     if(newAlarm.action.isNullOrEmpty())
                         newAlarm.action = AlarmAction.DISPLAY.name
 
-                    // VALARM with action DISPLAY must have a description. We try to set it to the summary, otherwise to the description. If the description was empty as well, it's set to an empty string.
-                    iCalObjectUpdated.value?.summary?.let {
-                        newAlarm.summary = it
-                        newAlarm.description = it
-                    }
+                    // VALARM with action DISPLAY must have a description!
+                    iCalObjectUpdated.value?.summary?.let { newAlarm.summary = it  }
                     iCalObjectUpdated.value?.description?.let { newAlarm.description = it }
                     if(newAlarm.description.isNullOrEmpty())
-                        newAlarm.description = ""
+                        newAlarm.description = newAlarm.summary ?: ""          // If no description was set, we try to set it to the summary, if also the summary is null, an empty string is set
                     newAlarm.alarmId = database.insertAlarm(newAlarm)
 
                     // take care of notifications
