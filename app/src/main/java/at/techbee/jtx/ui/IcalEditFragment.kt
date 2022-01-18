@@ -263,7 +263,8 @@ class IcalEditFragment : Fragment() {
             }
 
             datePicker.addOnPositiveButtonClickListener {
-                zonedTimestamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
+                val selectedUtcDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.of("UTC"))
+                zonedTimestamp = ZonedDateTime.of(selectedUtcDateTime.year, selectedUtcDateTime.monthValue, selectedUtcDateTime.dayOfMonth, 0, 0, 0, 0, ZoneId.systemDefault())
                 timePicker.show(parentFragmentManager, tag)
             }
             datePicker.show(parentFragmentManager, tag)
@@ -1311,7 +1312,7 @@ class IcalEditFragment : Fragment() {
 
         datePicker.addOnPositiveButtonClickListener {
             // Respond to positive button click.
-            val selectedUtcDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
+            val selectedUtcDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.of("UTC"))
             val zonedTimestamp = updatedUtcDateTime.withYear(selectedUtcDateTime.year).withMonth(selectedUtcDateTime.monthValue).withDayOfMonth(selectedUtcDateTime.dayOfMonth).toInstant().toEpochMilli()
 
             when (tag) {
