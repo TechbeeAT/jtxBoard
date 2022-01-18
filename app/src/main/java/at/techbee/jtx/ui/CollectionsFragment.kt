@@ -122,6 +122,9 @@ class CollectionsFragment : Fragment() {
                     val popup = PopupMenu(requireContext(), it)
                     val inflater: MenuInflater = popup.menuInflater
                     inflater.inflate(R.menu.menu_collection_popup, popup.menu)
+
+                    if(collectionsViewModel.localCollections.value?.size == 1)               // we don't allow the deletion of the last local collection
+                        popup.menu.findItem(R.id.menu_collection_popup_delete).isVisible = false
                     popup.show()
 
                     popup.setOnMenuItemClickListener { menuItem ->

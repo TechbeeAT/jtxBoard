@@ -149,6 +149,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             }
 
                             override fun onOpen(db: SupportSQLiteDatabase) {
+                                /*
                                 val cv = ContentValues()
                                 cv.put(COLUMN_COLLECTION_ID, "1")
                                 cv.put(COLUMN_COLLECTION_ACCOUNT_TYPE, ICalCollection.LOCAL_ACCOUNT_TYPE)
@@ -161,6 +162,7 @@ abstract class ICalDatabase : RoomDatabase() {
                                 cv.put(COLUMN_COLLECTION_READONLY, 0)
                                 db.insert(TABLE_NAME_COLLECTION, SQLiteDatabase.CONFLICT_IGNORE, cv)
                                 super.onOpen(db)
+                                 */
                             }
 
                         })
