@@ -498,6 +498,28 @@ class IcalEditFragment : Fragment() {
             updateToolbarText()
         }
 
+        binding.editColorItem.setOnClickListener {
+
+            val colorPickerBinding = FragmentIcalEditColorpickerDialogBinding.inflate(inflater)
+            icalEditViewModel.iCalObjectUpdated.value?.color?.let{ colorPickerBinding.colorPicker.color = it }
+            colorPickerBinding.colorPicker.showOldCenterColor = false
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.color)
+                .setView(colorPickerBinding.root)
+                .setIcon(R.drawable.ic_color)
+                .setPositiveButton(R.string.ok)  { _, _ ->
+                    icalEditViewModel.iCalObjectUpdated.value?.color = colorPickerBinding.colorPicker.color
+                    icalEditViewModel.iCalObjectUpdated.postValue(icalEditViewModel.iCalObjectUpdated.value)
+                }
+                .setNeutralButton(R.string.cancel)  { _, _ -> return@setNeutralButton  /* nothing to do */  }
+                .setNegativeButton(R.string.reset) { _, _ ->
+                    icalEditViewModel.iCalObjectUpdated.value?.color = null
+                    icalEditViewModel.iCalObjectUpdated.postValue(icalEditViewModel.iCalObjectUpdated.value)
+                }
+                .show()
+        }
+
         icalEditViewModel.savingClicked.observe(viewLifecycleOwner, {
             if (it == true) {
 
@@ -611,6 +633,8 @@ class IcalEditFragment : Fragment() {
 
             // update color for collection if possible
             updateCollectionColor()
+            // update color for item if possible
+            ICalObject.applyColorOrHide(binding.editColorbarItem, it.color)
 
             // update quick alarm options depending if dates are set
             if(it.dtstart == null)
@@ -1304,7 +1328,7 @@ class IcalEditFragment : Fragment() {
             collection.collectionId == icalEditViewModel.iCalObjectUpdated.value?.collectionId
         }
         // applying the color
-        ICalObject.applyColorOrHide(binding.editColorbar, selectedCollection?.color)
+        ICalObject.applyColorOrHide(binding.editColorbarCollection, selectedCollection?.color)
     }
 
     private fun showDatePicker(presetValueUTC: Long, timezone: String?, tag: String) {

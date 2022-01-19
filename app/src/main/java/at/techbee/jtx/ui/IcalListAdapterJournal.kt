@@ -141,7 +141,8 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
             }
 
             // applying the color
-            ICalObject.applyColorOrHide(holder.colorBar, iCal4ListItem.property.color)
+            ICalObject.applyColorOrHide(holder.colorBarCollection, iCal4ListItem.property.colorCollection)
+            ICalObject.applyColorOrHide(holder.colorBarItem, iCal4ListItem.property.colorItem)
 
             holder.dtstartDay.text = convertLongToDayString(iCal4ListItem.property.dtstart, iCal4ListItem.property.dtstartTimezone)
             holder.dtstartMonth.text = convertLongToMonthString(iCal4ListItem.property.dtstart, iCal4ListItem.property.dtstartTimezone)
@@ -282,7 +283,9 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
         var dtstartTime: TextView = itemView.findViewById(R.id.list_item_journal_dtstart_time)
         var dtstartTimeZone: TextView = itemView.findViewById(R.id.list_item_journal_dtstart_timezone)
 
-        var colorBar: ImageView = itemView.findViewById(R.id.list_item_journal_colorbar)
+        var colorBarCollection: ImageView = itemView.findViewById(R.id.list_item_journal_colorbar_collection)
+        var colorBarItem: ImageView = itemView.findViewById(R.id.list_item_journal_colorbar_item)
+
 
         var subtasksLinearLayout: LinearLayout = itemView.findViewById(R.id.list_item_journal_subtasks_linearlayout)
         var attachmentsLinearLayout: LinearLayout = itemView.findViewById(R.id.list_item_journal_attachments)

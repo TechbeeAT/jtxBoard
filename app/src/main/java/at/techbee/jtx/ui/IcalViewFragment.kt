@@ -308,7 +308,9 @@ class IcalViewFragment : Fragment() {
             }
 
             // applying the color
-            ICalObject.applyColorOrHide(binding.viewColorbar, it.ICalCollection?.color)
+            ICalObject.applyColorOrHide(binding.viewColorbarCollection, it.ICalCollection?.color)
+            ICalObject.applyColorOrHide(binding.viewColorbarCollectionItem, it.property.color)
+
 
             it.property.recurOriginalIcalObjectId?.let { origId ->
                 binding.viewRecurrenceGotooriginalButton.setOnClickListener { view ->

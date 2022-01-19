@@ -45,11 +45,12 @@ import at.techbee.jtx.database.views.ICal4ViewNote
         ICal4List::class,
         ICal4ViewNote::class,
         CollectionsView::class],
-    version = 4,
+    version = 5,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
-        AutoMigration (from = 3, to = 4)
+        AutoMigration (from = 3, to = 4),
+        AutoMigration (from = 4, to = 5)
         // no AutoMigrationSpec needed from 3 to 4
     ]
 )

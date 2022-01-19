@@ -129,8 +129,8 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
             }
 
             // applying the color
-            ICalObject.applyColorOrHide(holder.colorBar, iCal4ListItem.property.color)
-
+            ICalObject.applyColorOrHide(holder.colorBarCollection, iCal4ListItem.property.colorCollection)
+            ICalObject.applyColorOrHide(holder.colorBarItem, iCal4ListItem.property.colorItem)
 
             holder.status.text = StatusJournal.getStringResource(context, iCal4ListItem.property.status)
                         ?: iCal4ListItem.property.status       // if unsupported just show whatever is there
@@ -228,7 +228,9 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
         var classification: TextView = itemView.findViewById(R.id.list_item_note_classification)
         var classificationIcon: ImageView = itemView.findViewById(R.id.list_item_note_classification_icon)
 
-        var colorBar: ImageView = itemView.findViewById(R.id.list_item_note_colorbar)
+        var colorBarCollection: ImageView = itemView.findViewById(R.id.list_item_note_colorbar_collection)
+        var colorBarItem: ImageView = itemView.findViewById(R.id.list_item_note_colorbar_item)
+
 
         var subtasksLinearLayout: LinearLayout = itemView.findViewById(R.id.list_item_note_subtasks_linearlayout)
 

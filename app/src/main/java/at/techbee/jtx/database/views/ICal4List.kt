@@ -47,7 +47,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "main_icalobject.$COLUMN_DTSTAMP, " +
             "main_icalobject.$COLUMN_LAST_MODIFIED, " +
             "main_icalobject.$COLUMN_SEQUENCE, " +
-            "CASE WHEN main_icalobject.$COLUMN_COLOR IS NOT NULL THEN main_icalobject.$COLUMN_COLOR ELSE collection.$COLUMN_COLLECTION_COLOR END as color, " +             // take the color of the collection if there is no color given in the item. This is just for displaying in the list view.
+            "collection.$COLUMN_COLLECTION_COLOR as colorCollection, " +
+            "main_icalobject.$COLUMN_COLOR as colorItem, " +
             "main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID, " +
             "collection.$COLUMN_COLLECTION_ACCOUNT_NAME, " +
             "collection.$COLUMN_COLLECTION_DISPLAYNAME, " +
@@ -101,7 +102,9 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long,
     @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long,
 
-    @ColumnInfo(name = COLUMN_COLOR) var color: Int?,
+    @ColumnInfo var colorCollection: Int?,
+    @ColumnInfo var colorItem: Int?,
+
 
     @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long?,
     @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME) var accountName: String?,

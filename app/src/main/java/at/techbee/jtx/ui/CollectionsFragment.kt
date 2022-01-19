@@ -174,7 +174,7 @@ class CollectionsFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(title)
             .setView(dialogBinding.root)
-            .setIcon(R.drawable.ic_collection)
+            .setIcon(R.drawable.ic_color)
             .setPositiveButton(R.string.save)  { _, _ ->
                 collection.displayName = dialogBinding.collectionDialogEdittext.text.toString()
                 collection.color = dialogBinding.collectionDialogColorPicker.color

@@ -24,7 +24,7 @@
         android:focusable="true">
 
         <ImageView
-            android:id="@+id/list_item_todo_colorbar"
+            android:id="@+id/list_item_todo_colorbar_collection"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:alpha="0.5"
@@ -33,10 +33,22 @@
             app:srcCompat="@drawable/ic_card_colored_edge"
             app:tint="?attr/colorSurfaceVariant"
             tools:ignore="ContentDescription"
-            tools:tint="#FFF" />
+            tools:tint="#A3A539" />
+
+    <ImageView
+        android:id="@+id/list_item_todo_colorbar_item"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:alpha="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_card_colored_edge"
+        app:tint="?attr/colorSurfaceVariant"
+        tools:ignore="ContentDescription"
+        tools:tint="#13A539" />
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="8dp"

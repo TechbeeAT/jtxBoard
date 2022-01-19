@@ -49,6 +49,7 @@
     <string name="not_available_abbreviation">n/a</string>
 
     <string name="collection">Collection</string>
+    <string name="color">Color</string>
 
 
     <string name="toolbar_text_jtx_board" translatable="false">jtx Board</string>

@@ -107,7 +107,7 @@
                     tools:context=".ui.IcalEditFragment">
 
                     <ImageView
-                        android:id="@+id/edit_colorbar"
+                        android:id="@+id/edit_colorbar_collection"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:alpha="0.5"
@@ -116,6 +116,17 @@
                         app:srcCompat="@drawable/ic_card_colored_edge"
                         tools:ignore="ContentDescription"
                         tools:tint="#BC0D0D" />
+
+                    <ImageView
+                        android:id="@+id/edit_colorbar_item"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:alpha="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_card_colored_edge"
+                        tools:ignore="ContentDescription"
+                        tools:tint="#B5078D" />
 
 
                     <ImageView
@@ -139,10 +150,22 @@
                         android:drawableStart="@drawable/ic_collection"
                         android:drawablePadding="4dp"
                         android:visibility="@{model.collectionVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/edit_color_item"
                         app:layout_constraintStart_toEndOf="@+id/edit_collection_icon"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Collection" />
+
+                    <ImageView
+                        android:id="@+id/edit_color_item"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="8dp"
+                        android:scaleType="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/edit_collection_spinner"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/edit_collection_spinner"
+                        app:srcCompat="@drawable/ic_color"
+                        android:contentDescription="@string/color" />
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/edit_dtstart_card"

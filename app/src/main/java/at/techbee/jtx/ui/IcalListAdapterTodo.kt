@@ -126,7 +126,8 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
             }
 
             // applying the color
-            ICalObject.applyColorOrHide(holder.colorBar, iCal4ListItem.property.color)
+            ICalObject.applyColorOrHide(holder.colorBarCollection, iCal4ListItem.property.colorCollection)
+            ICalObject.applyColorOrHide(holder.colorBarItem, iCal4ListItem.property.colorItem)
 
             /* START handle subtasks */
             holder.progressSlider.value = iCal4ListItem.property.percent?.toFloat() ?: 0F
@@ -401,7 +402,9 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
         var start: TextView = itemView.findViewById(R.id.list_item_todo_start)
 
 
-        var colorBar: ImageView = itemView.findViewById(R.id.list_item_todo_colorbar)
+        var colorBarCollection: ImageView = itemView.findViewById(R.id.list_item_todo_colorbar_collection)
+        var colorBarItem: ImageView = itemView.findViewById(R.id.list_item_todo_colorbar_item)
+
 
         var expandSubtasks: ImageView = itemView.findViewById(R.id.list_item_todo_expand)
         var subtasksLinearLayout: LinearLayout =
