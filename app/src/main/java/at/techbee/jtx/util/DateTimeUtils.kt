@@ -215,4 +215,15 @@ object DateTimeUtils {
      */
     fun getTodayAsLong() = ZonedDateTime.of(ZonedDateTime.now().year, ZonedDateTime.now().monthValue, ZonedDateTime.now().dayOfMonth, 0, 0, 0, 0, ZoneId.systemDefault())
         .toInstant().toEpochMilli()
+
+    /**
+     * @param [date] of which the time should be removed
+     * @param [timezone] of the date (can be null, then local timezone is taken as default)
+     * @return the given date as UTC timestamp with the hour, minute, second and millis set to 0
+     */
+    fun getDateWithoutTime(date: Long, timezone: String?): Long {
+        val zonedDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+        return ZonedDateTime.of(zonedDate.year, zonedDate.monthValue, zonedDate.dayOfMonth, 0, 0, 0, 0, zonedDate.zone)
+            .toInstant().toEpochMilli()
+    }
 }

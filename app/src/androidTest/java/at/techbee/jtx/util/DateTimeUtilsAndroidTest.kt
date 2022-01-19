@@ -22,7 +22,7 @@ import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
-class UtilAndroidTest {
+class DateTimeUtilsAndroidTest {
 
 
     @Test

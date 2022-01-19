@@ -17,6 +17,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcel
 import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
@@ -61,6 +62,7 @@ import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_RECURRING
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_SUBTASKS
 import at.techbee.jtx.util.*
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
+import at.techbee.jtx.util.DateTimeUtils.getDateWithoutTime
 import at.techbee.jtx.util.DateTimeUtils.getLocalizedWeekdays
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.isLocalizedWeekstartMonday
@@ -68,6 +70,7 @@ import at.techbee.jtx.util.DateTimeUtils.isValidEmail
 import at.techbee.jtx.util.DateTimeUtils.isValidURL
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import com.google.android.material.chip.Chip
+import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
@@ -1304,10 +1307,41 @@ class IcalEditFragment : Fragment() {
         val tzId = requireTzId(timezone)
         val updatedUtcDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(presetValueUTC), tzId)
 
+        // make sure preset is according to constraints (due is after start)
+        val preset = when {
+            tag == TAG_PICKER_DUE && presetValueUTC < icalEditViewModel.iCalObjectUpdated.value?.dtstart?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis()
+            tag == TAG_PICKER_DTSTART && presetValueUTC > icalEditViewModel.iCalObjectUpdated.value?.due?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis()
+            else -> presetValueUTC
+        }
+
+        // Build constraints.
+        val constraints =
+            CalendarConstraints.Builder().apply {
+                if(tag == TAG_PICKER_DUE && icalEditViewModel.iCalObjectUpdated.value?.dtstart != null )
+                    setStart(icalEditViewModel.iCalObjectUpdated.value!!.dtstart!!)
+                if(tag == TAG_PICKER_DTSTART && icalEditViewModel.iCalObjectUpdated.value?.due != null )
+                    setStart(icalEditViewModel.iCalObjectUpdated.value!!.due!!)
+
+                // Create a custom date validator to only enable dates that are in the list
+                val customDateValidator = object : CalendarConstraints.DateValidator {
+                    override fun describeContents(): Int { return 0 }
+                    override fun writeToParcel(dest: Parcel?, flags: Int) {}
+                    override fun isValid(date: Long): Boolean {
+                        if(tag == TAG_PICKER_DUE && icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && date < getDateWithoutTime(icalEditViewModel.iCalObjectUpdated.value!!.dtstart!!, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone))
+                            return false
+                        if(tag == TAG_PICKER_DTSTART && icalEditViewModel.iCalObjectUpdated.value?.due != null && date > getDateWithoutTime(icalEditViewModel.iCalObjectUpdated.value!!.due!!, icalEditViewModel.iCalObjectUpdated.value?.dueTimezone))
+                            return false
+                        return true
+                    }
+                }
+                setValidator(customDateValidator)
+            }.build()
+
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText(R.string.edit_datepicker_dialog_select_date)
-                .setSelection(presetValueUTC)
+                .setSelection(preset)
+                .setCalendarConstraints(constraints)
                 .build()
 
         datePicker.addOnPositiveButtonClickListener {

@@ -12,6 +12,7 @@ import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
+import at.techbee.jtx.util.DateTimeUtils.getDateWithoutTime
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.getTodayAsLong
 import at.techbee.jtx.util.DateTimeUtils.isValidEmail
@@ -21,7 +22,7 @@ import org.junit.Test
 import java.time.Instant
 import java.time.ZoneId
 
-class UtilKtTest {
+class DateTimeUtilsTest {
 
     private val sampleDateTime = 1632395090107L   // = Thu Sep 23 2021 11:04:50 (UTC)
     private val sampleTimezone = "UTC+13"
@@ -94,4 +95,8 @@ class UtilKtTest {
         val todayUTC = today + offset.totalSeconds*1000
         assertTrue(todayUTC%86400000 == 0L)
     }
+
+    // test with itmezone null is not done as it would take the local timezone
+    @Test fun getDateWithoutTime_test_TZ_UTC() = assertEquals(1642550400000, getDateWithoutTime(1642590117816, "UTC"))
+    @Test fun getDateWithoutTime_TZ_Vienna() = assertEquals(1642546800000, getDateWithoutTime(1642590117816, "Europe/Vienna"))
 }
