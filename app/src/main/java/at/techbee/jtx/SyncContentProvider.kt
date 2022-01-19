@@ -22,7 +22,6 @@ import at.techbee.jtx.database.properties.*
 import java.io.File
 import java.io.IOException
 import android.webkit.MimeTypeMap
-import android.widget.Toast
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.lang.NumberFormatException
 
@@ -61,10 +60,7 @@ const val ACCOUNT_TYPE = "account_type"
 
 class SyncContentProvider : ContentProvider() {
 
-
     private lateinit var database: ICalDatabaseDao
-    //private lateinit var context: Context
-
 
     private val sUriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
         /* see https://github.com/android/architecture-components-samples/blob/4c606ccd83fded22a52d0d994b0cb043dafc6dd7/PersistenceContentProviderSample/app/src/main/java/com/example/android/contentprovidersample/provider/SampleContentProvider.java
@@ -171,7 +167,6 @@ class SyncContentProvider : ContentProvider() {
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_DIR)
             database.removeOrphans()    // remove orpahns (recurring instances of a deleted original item)
 
-
         return count
     }
 
@@ -218,7 +213,7 @@ class SyncContentProvider : ContentProvider() {
             }
         } catch (e: SQLiteConstraintException) {
             Log.e("ConstraintException", "The given insert caused a SQLiteConstraintException. This entry is skipped.\n$e")
-            Toast.makeText(context, R.string.synccontentprovider_sync_problem, Toast.LENGTH_LONG).show()
+            //Toast.makeText(context, R.string.synccontentprovider_sync_problem, Toast.LENGTH_LONG).show()
         }
 
         if (context == null)
@@ -258,7 +253,7 @@ class SyncContentProvider : ContentProvider() {
         if(context?.applicationContext == null)
             return false
 
-        database = ICalDatabase.getInstance(context!!.applicationContext).iCalDatabaseDao
+        database = ICalDatabase.getInstance(context!!).iCalDatabaseDao
         TimeZoneRegistryFactory.getInstance().createRegistry()
 
         return true
@@ -354,7 +349,6 @@ class SyncContentProvider : ContentProvider() {
                 }
             }
         }
-
         return result
     }
 
@@ -386,7 +380,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_ALARM_DIR -> queryString += "$TABLE_NAME_ALARM "
             CODE_UNKNOWN_DIR -> queryString += "$TABLE_NAME_UNKNOWN "
 
-
             CODE_ICALOBJECT_ITEM -> queryString += "$TABLE_NAME_ICALOBJECT "
             CODE_ATTENDEE_ITEM -> queryString += "$TABLE_NAME_ATTENDEE "
             CODE_CATEGORY_ITEM -> queryString += "$TABLE_NAME_CATEGORY "
@@ -398,7 +391,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_ATTACHMENT_ITEM -> queryString += "$TABLE_NAME_ATTACHMENT "
             CODE_ALARM_ITEM -> queryString += "$TABLE_NAME_ALARM "
             CODE_UNKNOWN_ITEM -> queryString += "$TABLE_NAME_UNKNOWN "
-
 
             else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
         }
@@ -439,7 +431,6 @@ class SyncContentProvider : ContentProvider() {
             CODE_ATTACHMENT_DIR -> queryString += "$COLUMN_ATTACHMENT_ICALOBJECT_ID IN ($subquery) "
             CODE_ALARM_DIR -> queryString += "$COLUMN_ALARM_ICALOBJECT_ID IN ($subquery) "
             CODE_UNKNOWN_DIR -> queryString += "$COLUMN_UNKNOWN_ICALOBJECT_ID IN ($subquery) "
-
 
             CODE_ICALOBJECT_ITEM -> queryString += "$COLUMN_ID IN ($subquery) AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID = ? "
             CODE_ATTENDEE_ITEM -> queryString += "$COLUMN_ATTENDEE_ICALOBJECT_ID IN ($subquery) AND $TABLE_NAME_ATTENDEE.$COLUMN_ATTENDEE_ID = ? "
