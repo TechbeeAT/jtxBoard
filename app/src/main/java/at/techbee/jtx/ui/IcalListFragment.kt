@@ -870,6 +870,10 @@ class IcalListFragment : Fragment() {
          */
         fun createNewQuickEntry() {
             val text = quickAddDialogBinding.listQuickaddDialogEdittext.text.toString()
+            if(text.isBlank()) {    // don't add the entry if no text was entered
+                Toast.makeText(context, R.string.list_quickadd_toast_no_summary_description, Toast.LENGTH_LONG).show()
+                return
+            }
             val newIcalObject = when(icalListViewModel.searchModule) {
                 Module.JOURNAL.name -> ICalObject.createJournal()
                 Module.NOTE.name -> ICalObject.createNote(null)

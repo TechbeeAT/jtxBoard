@@ -157,6 +157,7 @@
     <string name="list_quickadd_dialog_sr_start_listening">Speech-to-text engine is listening.</string>
     <string name="list_quickadd_dialog_sr_stop_listening">Speech-to-text engine stopped listening.</string>
     <string name="list_quickadd_dialog_sr_error">Sorry, Speech-to-text engine encountered an error. (%1$s)</string>
+    <string name="list_quickadd_toast_no_summary_description">Entry without summary/description cannot be created.</string>
 
     <string name="list_item_upload_pending">Upload pending</string>
     <string name="list_item_recurring">Recurring entry</string>
@@ -201,7 +202,7 @@
     <string name="view_add_audio_note">Add audio</string>
     <string name="view_fab_edit_entry_contentDesc">Edit entry</string>
     <string name="view_subtasks_header">Subtasks</string>
-    <string name="view_progress_label">Progress</string>
+    <string name="view_progress_label">Progress</string>1
     <string name="view_dialog_sure_to_delete_title">Delete \"%1$s\"?</string>
     <string name="view_dialog_sure_to_delete_message">Are you sure you want to delete \"%1$s\"?</string>
     <string name="view_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
@@ -213,6 +214,8 @@
     <string name="view_due">Due</string>
     <string name="view_completed">Completed</string>
     <string name="view_started">Start(ed)</string>
+    <string name="view_dialog_addnote_toast_no_summary_description">Note without text cannot be created.</string>
+
 
 
 

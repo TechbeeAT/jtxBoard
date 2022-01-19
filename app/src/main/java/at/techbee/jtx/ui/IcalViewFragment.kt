@@ -402,7 +402,11 @@ class IcalViewFragment : Fragment() {
             builder.setView(addnoteDialogBinding.root)
 
             builder.setPositiveButton(R.string.save) { _, _ ->
-                icalViewViewModel.insertRelated(addnoteDialogBinding.viewViewAddnoteDialogEdittext.text.toString(), null)
+                val text = addnoteDialogBinding.viewViewAddnoteDialogEdittext.text.toString()
+                if(text.isBlank())
+                    Toast.makeText(context, R.string.view_dialog_addnote_toast_no_summary_description, Toast.LENGTH_LONG).show()
+                else
+                    icalViewViewModel.insertRelated(addnoteDialogBinding.viewViewAddnoteDialogEdittext.text.toString(), null)
             }
 
             builder.setNegativeButton(R.string.cancel) { _, _ ->
