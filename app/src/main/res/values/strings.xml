@@ -243,6 +243,8 @@
     <string name="edit_attachment_add_dialog_hint">Your attachment-url (https://…)</string>
     <string name="edit_comment_add_dialog_hint">Your comment</string>
     <string name="edit_dialog_priority">Priority</string>
+    <string name="edit_dialog_status">Status</string>
+    <string name="edit_dialog_classification">Classification</string>
     <string name="edit_attachment_beta_info">* Please note that synchronizing attachments with DAVx⁵ is an experimental feature. Be aware that this might cause unexpected behaviour or errors. If you encounter any issues, please let us know through the support forums or a support request on the website!</string>
 
     <string name="edit_due">Due</string>

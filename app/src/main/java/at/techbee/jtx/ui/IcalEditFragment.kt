@@ -1168,7 +1168,7 @@ class IcalEditFragment : Fragment() {
         binding.editStatusChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Set status")
+                .setTitle(R.string.edit_dialog_status)
                 .setItems(statusItems) { _, which ->
                     // Respond to item chosen
                     if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name) {
@@ -1198,7 +1198,7 @@ class IcalEditFragment : Fragment() {
         binding.editClassificationChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Set classification")
+                .setTitle(R.string.edit_dialog_classification)
                 .setItems(classificationItems) { _, which ->
                     // Respond to item chosen
                     icalEditViewModel.iCalObjectUpdated.value!!.classification =
@@ -1209,6 +1209,11 @@ class IcalEditFragment : Fragment() {
                     )    // don't forget to update the UI
                 }
                 .setIcon(R.drawable.ic_classification)
+                .setNegativeButton(R.string.reset) { _, _ ->
+                    icalEditViewModel.iCalObjectUpdated.value!!.classification = null
+                    binding.editClassificationChip.text = ""
+                }
+                .setNeutralButton(R.string.cancel) { _, _ -> return@setNeutralButton }
                 .show()
         }
 

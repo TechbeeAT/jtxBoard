@@ -226,7 +226,7 @@ class IcalViewViewModel(private val icalItemId: Long,
                 return@map item?.property?.priority != null      // true if priority is NOT null
             }
             classificationVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.classification?.isNotEmpty()
+                return@map item?.property?.classification?.isNotEmpty() == true && item.property.classification != Classification.PUBLIC.name
             }
             statusVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property?.status?.isNotEmpty()
