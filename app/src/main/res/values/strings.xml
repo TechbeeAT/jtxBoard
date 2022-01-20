@@ -372,6 +372,7 @@
     <string name="menu_edit_clear_dates">Clear dates</string>
 
     <string name="menu_collections_add_local">Add local Collection</string>
+    <string name="menu_collections_add_remote">Add remote Collection (DAVx⁵)</string>
 
     <string name="menu_list_search">Search</string>
     <string name="menu_list_search_hint">Search</string>

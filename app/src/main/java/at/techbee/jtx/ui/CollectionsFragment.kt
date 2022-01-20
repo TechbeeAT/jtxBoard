@@ -22,6 +22,7 @@ import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.databinding.FragmentCollectionDialogBinding
 import at.techbee.jtx.databinding.FragmentCollectionItemBinding
 import at.techbee.jtx.databinding.FragmentCollectionsBinding
+import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ClassCastException
 
@@ -34,6 +35,7 @@ class CollectionsFragment : Fragment() {
     private lateinit var viewModelFactory: CollectionsViewModelFactory
     private lateinit var collectionsViewModel: CollectionsViewModel
     private lateinit var inflater: LayoutInflater
+    private var optionsMenu: Menu? = null
 
 
     override fun onCreateView(
@@ -68,10 +70,16 @@ class CollectionsFragment : Fragment() {
             addCollectionView(it, false)
         }
 
+        collectionsViewModel.isDavx5Available.observe(viewLifecycleOwner) {
+            optionsMenu?.findItem(R.id.menu_collections_add_remote)?.isVisible = it
+        }
+
         return binding.root
     }
 
     override fun onResume() {
+
+        collectionsViewModel.isDavx5Available.postValue(SyncUtil.isDAVx5Available(application))
 
         try {
             val activity = requireActivity() as MainActivity
@@ -143,12 +151,14 @@ class CollectionsFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_collections, menu)
+        optionsMenu = menu
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
             R.id.menu_collections_add_local -> showEditCollectionDialog(ICalCollection.createLocalCollection(application))
+            R.id.menu_collections_add_remote -> SyncUtil.openDAVx5AccountsActivity(context)
         }
         return super.onOptionsItemSelected(item)
     }

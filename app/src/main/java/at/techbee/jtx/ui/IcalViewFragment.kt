@@ -192,7 +192,7 @@ class IcalViewFragment : Fragment() {
 
             updateToolbarText()
 
-            if(!SyncUtil.isDAVx5Available(activity) || it.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE)
+            if(!SyncUtil.isDAVx5Available(application) || it.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE)
                 optionsMenu?.findItem(R.id.menu_view_syncnow)?.isVisible = false
 
 

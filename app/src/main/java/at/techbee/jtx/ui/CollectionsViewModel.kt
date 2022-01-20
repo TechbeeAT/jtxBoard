@@ -13,6 +13,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -22,6 +23,7 @@ class CollectionsViewModel(val database: ICalDatabaseDao,
 
     val localCollections = database.getLocalCollections()
     val remoteCollections = database.getRemoteCollections()
+    val isDavx5Available = MutableLiveData(SyncUtil.isDAVx5Available(application))
 
 
     /**

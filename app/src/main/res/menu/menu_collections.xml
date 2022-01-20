@@ -14,5 +14,8 @@
         android:id="@+id/menu_collections_add_local"
         android:title="@string/menu_collections_add_local"
         app:showAsAction="never" />
-
+    <item
+        android:id="@+id/menu_collections_add_remote"
+        android:title="@string/menu_collections_add_remote"
+        app:showAsAction="never" />
 </menu>
