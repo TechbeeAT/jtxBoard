@@ -950,7 +950,11 @@ class IcalEditFragment : Fragment() {
             if (value != 100F)
                 restoreProgress = value.toInt()
 
-            val statusBefore = icalEditViewModel.iCalObjectUpdated.value!!.status
+            val statusBefore = icalEditViewModel.iCalObjectUpdated.value?.status
+
+            // if the status was not set initially (=null), then we don't update it
+            if(icalEditViewModel.iCalObjectUpdated.value?.status.isNullOrEmpty())
+                return@addOnChangeListener
 
             when (value.toInt()) {
                 100 -> icalEditViewModel.iCalObjectUpdated.value!!.status =
@@ -1215,6 +1219,11 @@ class IcalEditFragment : Fragment() {
 
                 }
                 .setIcon(R.drawable.ic_status)
+                .setNegativeButton(R.string.reset) { _, _ ->
+                    icalEditViewModel.iCalObjectUpdated.value!!.status = null
+                    binding.editStatusChip.text = ""
+                }
+                .setNeutralButton(R.string.cancel) { _, _ -> return@setNeutralButton }
                 .show()
         }
 

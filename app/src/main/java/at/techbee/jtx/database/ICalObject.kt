@@ -489,7 +489,7 @@ data class ICalObject(
             component = Component.VTODO.name,
             module = Module.TODO.name,
             summary = summary,
-            status = StatusTodo.`NEEDS-ACTION`.name,
+            status = null,
             percent = null,
             priority = null,
             dueTimezone = TZ_ALLDAY,
@@ -703,12 +703,13 @@ data class ICalObject(
             return this
 
         percent = if(newPercent == 0) null else newPercent
-        status = when (newPercent) {
-            100 -> StatusTodo.COMPLETED.name
-            in 1..99 -> StatusTodo.`IN-PROCESS`.name
-            0 -> StatusTodo.`NEEDS-ACTION`.name
-            else -> StatusTodo.`NEEDS-ACTION`.name      // should never happen!
-        }
+        if(status?.isNotEmpty() == true)                   // we only update the status if it was set to a value, if it's null, we skip this part
+            status = when (newPercent) {
+                100 -> StatusTodo.COMPLETED.name
+                in 1..99 -> StatusTodo.`IN-PROCESS`.name
+                0 -> StatusTodo.`NEEDS-ACTION`.name
+                else -> StatusTodo.`NEEDS-ACTION`.name      // should never happen!
+            }
         lastModified = System.currentTimeMillis()
 
         if (completed == null && percent != null && percent!! == 100)
