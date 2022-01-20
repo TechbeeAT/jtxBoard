@@ -80,6 +80,7 @@ class IcalEditViewModel(
         mutableListOf("").also { it.addAll(TimeZone.getAvailableIDs().toList()) }
 
     var collectionVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var colorpickerVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var summaryVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var descriptionVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var dateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
@@ -176,6 +177,7 @@ class IcalEditViewModel(
     fun updateVisibility() {
 
         collectionVisible.postValue(selectedTab == TAB_GENERAL)
+        colorpickerVisible.postValue(selectedTab == TAB_GENERAL)
         summaryVisible.postValue(selectedTab == TAB_GENERAL)
         descriptionVisible.postValue(selectedTab == TAB_GENERAL)
         dateVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL))
