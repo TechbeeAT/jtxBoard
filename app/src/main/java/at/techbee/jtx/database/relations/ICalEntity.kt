@@ -631,6 +631,7 @@ data class ICalEntity(
                 if(newModule == Module.NOTE) {
                     property.dtstart = null
                     property.dtstartTimezone = null
+                    property.rrule = null
                 }
                 property.due = null
                 property.dueTimezone = null
