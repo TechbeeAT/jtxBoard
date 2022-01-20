@@ -743,21 +743,22 @@ class IcalViewFragment : Fragment() {
         when (item.itemId) {
             R.id.menu_view_share_text -> {
 
-                var shareText = "${convertLongToFullDateTimeString(icalViewViewModel.icalEntity.value!!.property.dtstart, icalViewViewModel.icalEntity.value!!.property.dtstartTimezone)}\n"
-                shareText += "${icalViewViewModel.icalEntity.value!!.property.summary}\n\n"
-                shareText += "${icalViewViewModel.icalEntity.value!!.property.description}\n\n"
+                var shareText = ""
+                icalViewViewModel.icalEntity.value?.property?.dtstart?.let { shareText += "${convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dtstartTimezone)}\n" }
+                icalViewViewModel.icalEntity.value?.property?.summary?.let { shareText += "${it}\n\n" }
+                icalViewViewModel.icalEntity.value?.property?.description?.let { shareText += "${it}\n\n" }
 
                 val categories: MutableList<String> = mutableListOf()
-                icalViewViewModel.icalEntity.value!!.categories?.forEach { categories.add(it.text) }
-                shareText += "# ${categories.joinToString(separator=", ")}"
+                icalViewViewModel.icalEntity.value?.categories?.forEach { categories.add(it.text) }
+                shareText += categories.joinToString(separator=", ")
 
                 val attendees: MutableList<String> = mutableListOf()
-                icalViewViewModel.icalEntity.value!!.attendees?.forEach { attendees.add(it.caladdress.removePrefix("mailto:")) }
+                icalViewViewModel.icalEntity.value?.attendees?.forEach { attendees.add(it.caladdress.removePrefix("mailto:")) }
 
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND_MULTIPLE
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_SUBJECT, icalViewViewModel.icalEntity.value!!.property.summary)
+                    icalViewViewModel.icalEntity.value?.property?.summary?.let { putExtra(Intent.EXTRA_SUBJECT, it) }
                     putExtra(Intent.EXTRA_TEXT, shareText)
                     putExtra(Intent.EXTRA_EMAIL, attendees.toTypedArray())
                 }
