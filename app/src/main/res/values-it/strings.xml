@@ -264,6 +264,8 @@ Global Strings -->
     <!-- menus -->
     <string name="menu_edit_delete">"Elimina"</string>
     <string name="menu_edit_clear_dates">"Cancella date"</string>
+    <string name="menu_filter_reset">"Resettare"</string>
+    <string name="menu_filter_apply">"Applica"</string>
     <string name="menu_list_search">"Ricerca"</string>
     <string name="menu_list_search_hint">"Ricerca"</string>
     <string name="menu_list_gotodate">"Vai alla data"</string>
@@ -442,8 +444,14 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <!-- fragment_collections -->
     <string name="collections_local_collections">"Collezioni locali"</string>
     <string name="collections_remote_collections">"Collezioni remote"</string>
+
+    <!-- Fuzzy -->
     <string name="collections_journals_num">"Diari: %1$s"</string>
+
+    <!-- Fuzzy -->
     <string name="collections_notes_num">"Note: %1$s"</string>
+
+    <!-- Fuzzy -->
     <string name="collections_tasks_num">"Attività: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Alcuna collezione locale trovato"</string>
     <string name="collections_local_noremotecollections">"Alcuna collezione remota trovato"</string>
@@ -457,4 +465,10 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
 
     <!-- Fuzzy -->
     <string name="navigation_drawer_website_news">"Notizie e aggiornamenti"</string>
+    <string name="list_quickadd_toast_no_summary_description"></string>
+    <string name="view_dialog_addnote_toast_no_summary_description"></string>
+    <string name="color">"Colore"</string>
+    <string name="edit_attendees_error"></string>
+    <string name="edit_dialog_status">"Stato"</string>
+    <string name="edit_dialog_classification">"Classificazione"</string>
 </resources>
