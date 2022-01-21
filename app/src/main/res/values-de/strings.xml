@@ -237,8 +237,6 @@ Global Strings -->
     <!-- menus -->
     <string name="menu_edit_delete">"Löschen"</string>
     <string name="menu_edit_clear_dates">"Datumsfelder löschen"</string>
-    <string name="menu_filter_reset">"Zurücksetzen"</string>
-    <string name="menu_filter_apply">"Anwenden"</string>
     <string name="menu_list_search">"Suchen"</string>
     <string name="menu_list_search_hint">"Suchen"</string>
     <string name="menu_list_gotodate">"Zu Datum gehen"</string>
