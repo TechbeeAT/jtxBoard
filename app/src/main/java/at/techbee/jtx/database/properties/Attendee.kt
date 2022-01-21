@@ -12,6 +12,7 @@ import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.annotation.Nullable
+import androidx.core.util.PatternsCompat
 import androidx.room.*
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
@@ -173,6 +174,30 @@ data class Attendee (
 
                         return Attendee().applyContentValues(values)
                 }
+
+                /**
+                 * @param [string] to be parsed
+                 * @return a new Attendee with the caladdress and (if available) the CN or null if the email-address was not a valid email
+                 * The function allows a string as e.g. "jtx@techbee.at <JTX Board>" -> the email-address is extracted and the name is extracted from within the < >
+                 * The function also allows email-address only, e.g. "jtx@techbee.at"
+                 */
+                fun fromString(string: String?): Attendee? {
+                        if(string.isNullOrEmpty())
+                                return null
+
+                        val attendee = Attendee()
+                        PatternsCompat.EMAIL_ADDRESS.toRegex().find(string)?.let { matchResult ->
+                                attendee.caladdress = "mailto:${matchResult.value}"
+                                string.substringBefore(matchResult.value).let { name ->
+                                        val cleanName = name.substringBefore("<").trim()
+                                        if(cleanName.isNotBlank())
+                                                attendee.cn = name.substringBefore("<").trim()
+                                }
+                        }
+                        return if(attendee.caladdress.isNotEmpty())
+                                attendee
+                        else null
+                }
         }
 
 
@@ -195,6 +220,18 @@ data class Attendee (
 
                 return this
 
+        }
+
+        /**
+         * Returns a string to display the attendee with its CN and Caladdress
+         * e.g. John Doe <john@doe.com>  if cn and caladdress are present
+         * e.g. john@doe.com  if only caladdress is present
+         * null if caladdress is empty
+         */
+        fun getDisplayString() = when {
+                        caladdress.removePrefix("mailto:").isNotEmpty() && cn?.isNotBlank() == true -> "$cn <${caladdress.removePrefix("mailto:")}>"
+                        caladdress.removePrefix("mailto:").isNotEmpty() -> caladdress.removePrefix("mailto:")
+                        else -> ""
         }
 }
 

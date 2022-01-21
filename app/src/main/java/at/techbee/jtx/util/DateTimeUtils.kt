@@ -82,8 +82,7 @@ object DateTimeUtils {
 
 
     fun isValidEmail(emailString: String?): Boolean {
-        return PatternsCompat.EMAIL_ADDRESS.matcher(emailString.toString()).matches()
-
+        return emailString?.isNotEmpty() == true && PatternsCompat.EMAIL_ADDRESS.matcher(emailString).matches()
     }
 
     fun isValidURL(urlString: String?): Boolean {

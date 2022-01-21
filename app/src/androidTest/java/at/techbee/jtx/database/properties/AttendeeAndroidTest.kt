@@ -14,7 +14,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-class AttendeeTest {
+class AttendeeAndroidTest {
 // Android Test as Content Values need Android libraries to run
 
     @Test
@@ -29,7 +29,6 @@ class AttendeeTest {
         conval.put(COLUMN_ATTENDEE_CALADDRESS, "mailto:test@test.com")
 
         val attendee = Attendee.fromContentValues(conval)
-
         assertEquals(attendee!!.icalObjectId, conval.get(COLUMN_ATTENDEE_ICALOBJECT_ID))
         assertEquals(attendee.caladdress, conval.get(COLUMN_ATTENDEE_CALADDRESS))
     }
@@ -252,8 +251,6 @@ class AttendeeTest {
         assertEquals(attendee, attendee2)
     }
 
-
-
     @Test
     fun createFromContentValues() {
 
@@ -295,28 +292,21 @@ class AttendeeTest {
         assertEquals(sampleAttendee, cvAttendee)
     }
 
-
-
     @Test
     fun createFromContentValuesWithoutIcalobjectId() {
 
         val cv = ContentValues().apply {
             put(COLUMN_ATTENDEE_CALADDRESS,  "info@techbee.at")
         }
-
-        val cvAttendee = Attendee.fromContentValues(cv)
-        assertNull(cvAttendee)
+        assertNull(Attendee.fromContentValues(cv))
     }
 
     @Test
     fun createFromContentValuesWithoutCaladdress() {
 
-
         val cv = ContentValues().apply {
             put(COLUMN_ATTENDEE_ICALOBJECT_ID, 1L)
         }
-
-        val cvAttendee = Attendee.fromContentValues(cv)
-        assertNull(cvAttendee)
+        assertNull(Attendee.fromContentValues(cv))
     }
 }

@@ -103,7 +103,8 @@ class IcalEditFragment : Fragment() {
     private var container: ViewGroup? = null
     private var menu: Menu? = null
 
-    private val allContactsMail: MutableList<String> = mutableListOf()
+    private val allContactsSpinner: MutableList<String> = mutableListOf()
+    private val allContactsAsAttendees: MutableList<Attendee> = mutableListOf()
     //private val allContactsNameAndMail: MutableList<String> = mutableListOf()
 
     private var photoUri: Uri? = null     // Uri for captured photo
@@ -1036,19 +1037,25 @@ class IcalEditFragment : Fragment() {
         }
 
         binding.editAttendeesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
-            binding.editAttendeesAddAutocomplete.setText(binding.editAttendeesAddAutocomplete.adapter.getItem(i).toString())
-            addNewAttendee()
+            val selection = binding.editAttendeesAddAutocomplete.adapter.getItem(i).toString()
+            val selectionPos = allContactsSpinner.indexOf(selection)
+            if(selectionPos == -1)
+                return@setOnItemClickListener
+            val attendee = allContactsAsAttendees[selectionPos]
+
+            //binding.editAttendeesAddAutocomplete.setText(binding.editAttendeesAddAutocomplete.adapter.getItem(i).toString())
+            addNewAttendee(attendee)
         }
 
         binding.editAttendeesAdd.setEndIconOnClickListener {
-            addNewAttendee()
+            addNewAttendee(Attendee.fromString(binding.editAttendeesAdd.editText?.text.toString()))
         }
 
         // Transform the category input into a chip when the Done button in the keyboard is clicked
         binding.editAttendeesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    addNewAttendee()
+                    addNewAttendee(Attendee.fromString(binding.editAttendeesAdd.editText?.text.toString()))
                     true
                 }
                 else -> false
@@ -1629,7 +1636,7 @@ class IcalEditFragment : Fragment() {
             binding.editAttendeesChipgroup,
             false
         ) as Chip
-        attendeeChip.text = attendee.caladdress.removePrefix("mailto:")
+        attendeeChip.text = attendee.getDisplayString()
         attendeeChip.chipIcon = ResourcesCompat.getDrawable(
             resources,
             Role.getDrawableResourceByName(attendee.role),
@@ -1926,23 +1933,21 @@ class IcalEditFragment : Fragment() {
         if (cur!!.count > 0) {
             while (cur.moveToNext()) {
 
-                //val name = cur.getString(1)    // according to projection 0 = DISPLAY_NAME, 1 = Email.DATA
-                val emlAddr = cur.getString(2)
-                //Log.println(Log.INFO, "cursor: ", "$name: $emlAddr")
-                allContactsMail.add(emlAddr)
-                //allContactsNameAndMail.add("$name ($emlAddr)")
-                //allContactsAsAttendee.add(VAttendee(cnparam = name, attendee = emlAddr))
-
+                val name = cur.getString(1)    // according to projection 0 = DISPLAY_NAME, 1 = Email.DATA
+                val email = cur.getString(2)
+                if(email.isNotBlank()) {
+                    val attendee = Attendee(cn = name, caladdress = "mailto:$email")
+                    allContactsAsAttendees.add(attendee)
+                    allContactsSpinner.add(attendee.getDisplayString())
+                }
             }
             cur.close()
         }
 
-        // TODO: Here it can be considered that also the cuname in the attendee is filled out based on the contacts entry.
-        //val arrayAdapterNameAndMail = ArrayAdapter<String>(application.applicationContext, android.R.layout.simple_list_item_1, allContactsNameAndMail)
         val arrayAdapterNameAndMail = ArrayAdapter(
             application.applicationContext,
             android.R.layout.simple_list_item_1,
-            allContactsMail
+            allContactsSpinner
         )
 
         binding.editContactAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
@@ -2257,13 +2262,12 @@ class IcalEditFragment : Fragment() {
         binding.editResourcesAdd.editText?.text?.clear()
     }
 
-    private fun addNewAttendee() {
-        val newAtt = Attendee(caladdress = "mailto:${binding.editAttendeesAdd.editText?.text}")
-        if ((newAtt.caladdress.isNotEmpty() && !isValidEmail(newAtt.caladdress.removePrefix("mailto:"))))
-            icalEditViewModel.attendeesError.value = "Please enter a valid email-address"
-        else if (!icalEditViewModel.attendeeUpdated.contains(newAtt)) {
-            addAttendeeChip(newAtt)
-            icalEditViewModel.attendeeUpdated.add(newAtt)
+    private fun addNewAttendee(attendee: Attendee?) {
+        if (attendee == null || !isValidEmail(attendee.caladdress.removePrefix("mailto:")))
+            icalEditViewModel.attendeesError.value = getString(R.string.edit_attendees_error)
+        else if (!icalEditViewModel.attendeeUpdated.contains(attendee)) {
+            addAttendeeChip(attendee)
+            icalEditViewModel.attendeeUpdated.add(attendee)
             binding.editAttendeesAddAutocomplete.text.clear()
         }
     }

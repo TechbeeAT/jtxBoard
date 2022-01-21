@@ -611,8 +611,6 @@ class IcalViewFragment : Fragment() {
         }
     }
 
-
-
     private fun addCategoryChip(category: Category) {
 
         if (category.text.isBlank())     // don't add empty categories
@@ -645,7 +643,7 @@ class IcalViewFragment : Fragment() {
     private fun addAttendeeChip(attendee: Attendee) {
 
         val attendeeChip = inflater.inflate(R.layout.fragment_ical_view_attendees_chip, binding.viewAttendeeChipgroup, false) as Chip
-        attendeeChip.text = attendee.caladdress.removePrefix("mailto:")
+        attendeeChip.text = attendee.getDisplayString()
         attendeeChip.chipIcon = ResourcesCompat.getDrawable(resources, Role.getDrawableResourceByName(attendee.role), null)
 
         binding.viewAttendeeChipgroup.addView(attendeeChip)
