@@ -237,6 +237,8 @@ Global Strings -->
     <!-- menus -->
     <string name="menu_edit_delete">"Löschen"</string>
     <string name="menu_edit_clear_dates">"Datumsfelder löschen"</string>
+    <string name="menu_filter_reset">"Zurücksetzen"</string>
+    <string name="menu_filter_apply">"Anwenden"</string>
     <string name="menu_list_search">"Suchen"</string>
     <string name="menu_list_search_hint">"Suchen"</string>
     <string name="menu_list_gotodate">"Zu Datum gehen"</string>
@@ -339,7 +341,7 @@ Global Strings -->
     <string name="about_translations_contribution_info">"Falls Sie auch Übersetzungen bearbeiten/hinzufügen wollen, freuen wir uns über Ihren Beitrag über die Platform POEditor.com:"</string>
     <string name="about_translations_contribution_button">"Mitmachen auf POEditor.com"</string>
     <string name="list_welcome_entry_journal_summary">"Glückwunsch, das ist Ihr erster Journaleintrag :-)"</string>
-    <string name="list_welcome_entry_journal_description">"Journale können genutzt werden um Ihre Notizen zu einem bestimmten Datum festzuhalten. Dies kann zum Beispiel für Protokolle, Versammlungsberichte, Tagebucheinträge und ähnliches genutzt werden. Wenn Sie diesen Beitrag bearbeiten, werfen Sie auch einen Blick auf die weiteren Optionen zum Eintragen von Kategorien, Teilnehmern, Anhängen, … Sie können diesen Eintrag jederzeit löschen!"</string>
+    <string name="list_welcome_entry_journal_description">"Journale können genutzt werden um Ihre Notizen zu einem bestimmten Datum festzuhalten. Dies kann zum Beispiel für Protokolle, Versammlungsberichte, Tagebucheinträge und ähnliches genutzt werden. Wenn Sie diesen Beitrag bearbeiten, werfen Sie auch einen Blick auf die weiteren Optionen zum Eintragen von Kategorien, Teilnehmern, Anhängen, ... Sie können diesen Eintrag jederzeit löschen!"</string>
     <string name="list_welcome_entry_note_summary">"Glückwunsch, das ist Ihr erster Notizeintrag :-)"</string>
     <string name="list_welcome_entry_note_description">"Notizen sind gewöhnliche Aufzeichnungen, die nicht an ein bestimmtes Datum gebunden sind. Wie Journale können ebenfalls Anhänge, Teilnehmer und mehr hinzugefügt werden. Übrigens können Sie auch Unteraufgaben zu jeder Art von Eintrag machen, egal ob Journal, Notiz oder Aufgabe!"</string>
     <string name="list_welcome_entry_todo_summary">"Glückwunsch, das ist Ihr erster Aufgabeneintrag :-)"</string>
@@ -387,8 +389,14 @@ Global Strings -->
     <!-- fragment_collections -->
     <string name="collections_local_collections">"Lokale Collections"</string>
     <string name="collections_remote_collections">"Remote Collections"</string>
+
+    <!-- Fuzzy -->
     <string name="collections_journals_num">"Journale: %1$s"</string>
+
+    <!-- Fuzzy -->
     <string name="collections_notes_num">"Notizen: %1$s"</string>
+
+    <!-- Fuzzy -->
     <string name="collections_tasks_num">"Aufgaben: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Keine lokalen Collections gefunden"</string>
     <string name="collections_local_noremotecollections">"Keine remote Collections gefunden"</string>
@@ -400,4 +408,10 @@ Global Strings -->
     <string name="collections_dialog_delete_local_message">"Durch das Löschen einer Collection werden auch alle Journale, Notizen und Aufgaben innerhalb dieser Collection gelöscht. Dies kann nicht rückgängig gemacht werden. Sind Sie sicher, dass Sie fortfahren möchten?"</string>
     <string name="menu_collections_add_local">"Lokale Collection hinzufügen"</string>
     <string name="navigation_drawer_website_news">"Neuigkeiten &amp; Update-Infos"</string>
+    <string name="list_quickadd_toast_no_summary_description">"Eintrag ohne Zusammenfassung/Beschreibung kann nicht erstellt werden."</string>
+    <string name="view_dialog_addnote_toast_no_summary_description">"Notiz ohne Text kann nicht erstellt werden."</string>
+    <string name="color">"Farbe"</string>
+    <string name="edit_attendees_error">"Bitte geben Sie eine gültige E-Mail-Adresse ein"</string>
+    <string name="edit_dialog_status">"Status"</string>
+    <string name="edit_dialog_classification">"Klassifizierung"</string>
 </resources>
