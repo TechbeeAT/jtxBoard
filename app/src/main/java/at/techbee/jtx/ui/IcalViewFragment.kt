@@ -83,13 +83,6 @@ class IcalViewFragment : Fragment() {
     private var audioMimetype: String = Attachment.FMTTYPE_AUDIO_3GPP
 
 
-    /*
-    val allContactsWithName: MutableList<String> = mutableListOf()
-    val allContactsWithNameAndMail: MutableList<String> = mutableListOf()
-    val allContactsAsAttendee: MutableList<Attendee> = mutableListOf()
-     */
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
@@ -192,7 +185,7 @@ class IcalViewFragment : Fragment() {
 
             updateToolbarText()
 
-            if(!SyncUtil.isDAVx5Available(application) || it.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE)
+            if(!SyncUtil.isDAVx5CompatibleWithJTX(application) || it.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE)
                 optionsMenu?.findItem(R.id.menu_view_syncnow)?.isVisible = false
 
 

@@ -23,7 +23,7 @@ class CollectionsViewModel(val database: ICalDatabaseDao,
 
     val localCollections = database.getLocalCollections()
     val remoteCollections = database.getRemoteCollections()
-    val isDavx5Available = MutableLiveData(SyncUtil.isDAVx5Available(application))
+    val isDavx5Compatible = MutableLiveData(SyncUtil.isDAVx5CompatibleWithJTX(application))
 
 
     /**

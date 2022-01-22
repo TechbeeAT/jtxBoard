@@ -14,10 +14,14 @@
         android:id="@+id/menu_collection_popup_edit"
         android:title="@string/edit"
         app:showAsAction="never" />
-
     <item
         android:id="@+id/menu_collection_popup_delete"
         android:title="@string/delete"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_collection_popup_show_in_davx5"
+        android:title="@string/menu_collection_popup_show_in_davx5"
+        app:showAsAction="never" />
+
 
 </menu>

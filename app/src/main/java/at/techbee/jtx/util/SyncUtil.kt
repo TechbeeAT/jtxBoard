@@ -18,6 +18,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -83,6 +84,22 @@ class SyncUtil {
             try {
                 application.packageManager?.getApplicationInfo(DAVX5_PACKAGE_NAME, 0) ?: return false
                 return true
+            } catch (e: PackageManager.NameNotFoundException) {
+                return false
+            }
+        }
+
+        /**
+         * @return true if DAVx5 was found and the versioon is compatible/includes jtx Board syncthrough the packageManager, else false
+         */
+        fun isDAVx5CompatibleWithJTX(application: Application): Boolean {
+            try {
+                val davx5Info = application.packageManager?.getPackageInfo(DAVX5_PACKAGE_NAME, 0) ?: return false
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    davx5Info.longVersionCode >= 402000000L
+                } else {
+                    davx5Info.versionCode >= 402000000
+                }
             } catch (e: PackageManager.NameNotFoundException) {
                 return false
             }

@@ -398,8 +398,9 @@
     <string name="menu_view_copy_item">Create copy</string>
     <string name="menu_view_syncnow">Sync now</string>
 
-
     <string name="menu_sync_syncnow">Sync now</string>
+
+    <string name="menu_collection_popup_show_in_davx5">Show in DAVx⁵</string>
 
 
     <!-- Notification channel for Reminders -->

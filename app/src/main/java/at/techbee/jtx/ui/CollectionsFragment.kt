@@ -23,6 +23,7 @@ import at.techbee.jtx.databinding.FragmentCollectionDialogBinding
 import at.techbee.jtx.databinding.FragmentCollectionItemBinding
 import at.techbee.jtx.databinding.FragmentCollectionsBinding
 import at.techbee.jtx.util.SyncUtil
+import at.techbee.jtx.util.SyncUtil.Companion.openDAVx5AccountsActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ClassCastException
 
@@ -70,7 +71,7 @@ class CollectionsFragment : Fragment() {
             addCollectionView(it, false)
         }
 
-        collectionsViewModel.isDavx5Available.observe(viewLifecycleOwner) {
+        collectionsViewModel.isDavx5Compatible.observe(viewLifecycleOwner) {
             optionsMenu?.findItem(R.id.menu_collections_add_remote)?.isVisible = it
         }
 
@@ -79,7 +80,7 @@ class CollectionsFragment : Fragment() {
 
     override fun onResume() {
 
-        collectionsViewModel.isDavx5Available.postValue(SyncUtil.isDAVx5Available(application))
+        collectionsViewModel.isDavx5Compatible.postValue(SyncUtil.isDAVx5CompatibleWithJTX(application))
 
         try {
             val activity = requireActivity() as MainActivity
@@ -123,28 +124,29 @@ class CollectionsFragment : Fragment() {
             // applying the color
             ICalObject.applyColorOrHide(collectionItemBinding.collectionColorbar, collection.color)
 
-            // for now we show the menu only for local collections
-            if(isLocal) {
-                collectionItemBinding.collectionMenu.setOnClickListener {
+            collectionItemBinding.collectionMenu.setOnClickListener {
+                val popup = PopupMenu(requireContext(), it)
+                val inflater: MenuInflater = popup.menuInflater
+                inflater.inflate(R.menu.menu_collection_popup, popup.menu)
 
-                    val popup = PopupMenu(requireContext(), it)
-                    val inflater: MenuInflater = popup.menuInflater
-                    inflater.inflate(R.menu.menu_collection_popup, popup.menu)
-
+                if(isLocal) {
+                    popup.menu.findItem(R.id.menu_collection_popup_show_in_davx5).isVisible = false
                     if(collectionsViewModel.localCollections.value?.size == 1)               // we don't allow the deletion of the last local collection
                         popup.menu.findItem(R.id.menu_collection_popup_delete).isVisible = false
-                    popup.show()
-
-                    popup.setOnMenuItemClickListener { menuItem ->
-                        when (menuItem.itemId) {
-                            R.id.menu_collection_popup_edit -> showEditCollectionDialog(collection.toICalCollection())
-                            R.id.menu_collection_popup_delete -> showDeleteCollectionDialog(collection.toICalCollection())
-                        }
-                        true
-                    }
+                } else {
+                    popup.menu.findItem(R.id.menu_collection_popup_delete).isVisible = false
+                    popup.menu.findItem(R.id.menu_collection_popup_edit).isVisible = false
                 }
-            } else {
-                collectionItemBinding.collectionMenu.visibility = View.GONE
+
+                popup.show()
+                popup.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.menu_collection_popup_edit -> showEditCollectionDialog(collection.toICalCollection())
+                        R.id.menu_collection_popup_delete -> showDeleteCollectionDialog(collection.toICalCollection())
+                        R.id.menu_collection_popup_show_in_davx5 -> openDAVx5AccountsActivity(context)                 // TODO: Replace by new intent to open the specific account
+                    }
+                    true
+                }
             }
         }
     }
@@ -158,7 +160,7 @@ class CollectionsFragment : Fragment() {
 
         when (item.itemId) {
             R.id.menu_collections_add_local -> showEditCollectionDialog(ICalCollection.createLocalCollection(application))
-            R.id.menu_collections_add_remote -> SyncUtil.openDAVx5AccountsActivity(context)
+            R.id.menu_collections_add_remote -> openDAVx5AccountsActivity(context)
         }
         return super.onOptionsItemSelected(item)
     }

@@ -37,7 +37,6 @@ class SyncFragment : Fragment() {
     private var optionsMenu: Menu? = null
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,15 +55,14 @@ class SyncFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        // TODO: Uncomment again once Sync with DAVx5 is ready
-        /*
         // don't show the sync menu if DAVx5 is not installed
         syncViewModel.isDavx5Available.observe(viewLifecycleOwner) {
             if(!it)
                 optionsMenu?.findItem(R.id.menu_sync_syncnow)?.isVisible = false
         }
 
-
+        /*
+        // TODO: Uncomment when DAVX5 is ready
         binding.syncButtonAddAccount.setOnClickListener {
             // open davx5
             val intent = Intent(Intent.ACTION_MAIN)
@@ -84,11 +82,11 @@ class SyncFragment : Fragment() {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${SyncUtil.DAVX5_PACKAGE_NAME}")))
             }
         }
+         */
 
         ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
             syncViewModel.showSyncProgressIndicator.postValue(SyncUtil.isJtxSyncRunning())
         }
-         */
 
         return binding.root
     }
@@ -102,9 +100,7 @@ class SyncFragment : Fragment() {
             Log.d("Cast not successful", e.toString())
             //This error will always happen for fragment testing, as the cast to Main Activity cannot be successful
         }
-
-        syncViewModel.isDavx5Available.postValue(SyncUtil.isDAVx5Available(application))
-
+        syncViewModel.isDavx5Available.postValue(SyncUtil.isDAVx5CompatibleWithJTX(application))
         super.onResume()
     }
 
