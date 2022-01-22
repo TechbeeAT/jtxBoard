@@ -103,7 +103,7 @@ class SyncFragment : Fragment() {
             //This error will always happen for fragment testing, as the cast to Main Activity cannot be successful
         }
 
-        syncViewModel.isDavx5Available.postValue(SyncUtil.isDAVx5Available(activity))
+        syncViewModel.isDavx5Available.postValue(SyncUtil.isDAVx5Available(application))
 
         super.onResume()
     }

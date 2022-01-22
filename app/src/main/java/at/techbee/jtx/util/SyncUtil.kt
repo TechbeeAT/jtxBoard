@@ -11,10 +11,17 @@ package at.techbee.jtx.util
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.app.Activity
+import android.app.Application
+import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import at.techbee.jtx.R
 import at.techbee.jtx.SYNC_PROVIDER_AUTHORITY
 import at.techbee.jtx.database.ICalCollection
 
@@ -72,12 +79,44 @@ class SyncUtil {
         /**
          * @return true if DAVx5 was found through the packageManager, else false
          */
-        fun isDAVx5Available(activity: Activity?): Boolean {
-            return try {
-                activity?.packageManager?.getApplicationInfo(DAVX5_PACKAGE_NAME, 0)
-                true
+        fun isDAVx5Available(application: Application): Boolean {
+            try {
+                application.packageManager?.getApplicationInfo(DAVX5_PACKAGE_NAME, 0) ?: return false
+                return true
             } catch (e: PackageManager.NameNotFoundException) {
-                false
+                return false
+            }
+        }
+
+        /**
+         * Starts an intent to open DAVx5 Login Activity (to add a new account)
+         */
+        fun openDAVx5LoginActivity(context: Context?) {
+            // open davx5
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.setClassName(DAVX5_PACKAGE_NAME,"${DAVX5_PACKAGE_NAME}.ui.setup.LoginActivity")
+            try {
+                context?.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
+                Log.w("SyncFragment", "DAVx5 should be there but opening the Activity failed. \n$e")
+            }
+        }
+
+
+        /**
+         * Starts an intent to open DAVx5 Accounts Activity (to add a new account)
+         */
+        fun openDAVx5AccountsActivity(context: Context?) {
+            // open davx5
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.setClassName(DAVX5_PACKAGE_NAME,"${DAVX5_PACKAGE_NAME}.ui.AccountsActivity")
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+            try {
+                context?.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
+                Log.w("SyncFragment", "DAVx5 should be there but opening the Activity failed. \n$e")
             }
         }
     }
