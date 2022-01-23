@@ -67,6 +67,9 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://developer.huawei.com/repo/' }  // Maven repository address for the HUAWEI Ads SDK.
+
+        // ical4android
+        maven { url 'https://jitpack.io' }
     }
 }
 

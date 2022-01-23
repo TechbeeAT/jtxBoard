@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.database
 
+import android.accounts.Account
 import android.content.ContentValues
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import org.junit.Test
@@ -15,7 +16,7 @@ import org.junit.Test
 import org.junit.Assert.*
 import java.lang.IllegalArgumentException
 
-class ICalCollectionTest {
+class ICalCollectionAndroidTest {
 // Android Test as Content Values need Android libraries to run
 
 
@@ -78,5 +79,15 @@ class ICalCollectionTest {
             put(COLUMN_COLLECTION_ACCOUNT_TYPE, sampleCollection.accountType)
         }
         ICalCollection.fromContentValues(cv)
+    }
+
+    @Test
+    fun getAccount() {
+        val account = Account("Test", LOCAL_ACCOUNT_TYPE)
+        val collection = ICalCollection().apply {
+            this.accountName = account.name
+            this.accountType = account.type
+        }
+        assertEquals(account, collection.getAccount())
     }
 }

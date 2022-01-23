@@ -17,8 +17,10 @@ import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4ViewNote
+import at.techbee.jtx.util.Ical4androidUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 import java.text.DateFormat
 import java.util.*
 
@@ -80,6 +82,9 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var recurrenceIsExceptionVisible: LiveData<Boolean>
     lateinit var recurrenceExceptionsVisible: LiveData<Boolean>
     lateinit var recurrenceAdditionsVisible: LiveData<Boolean>
+
+    var icsFormat: MutableLiveData<String?> = MutableLiveData(null)
+    var icsFileWritten: MutableLiveData<Boolean?> = MutableLiveData(null)
 
 
     lateinit var collectionText: LiveData<String?>
@@ -346,5 +351,27 @@ class IcalViewViewModel(private val icalItemId: Long,
         viewModelScope.launch(Dispatchers.IO) {
             ICalObject.deleteItemWithChildren(item.id, database)
         }
+    }
+
+    fun retrieveICSFormat() {
+
+        viewModelScope.launch(Dispatchers.IO)  {
+            val account = icalEntity.value?.ICalCollection?.getAccount() ?: return@launch
+            val collectionId = icalEntity.value?.property?.collectionId ?: return@launch
+            val iCalObjectId = icalEntity.value?.property?.id ?: return@launch
+            val ics = Ical4androidUtil.getICSFormatFromProvider(account, getApplication(), collectionId, iCalObjectId) ?: return@launch
+            icsFormat.postValue(ics)
+        }
+    }
+
+    fun writeICSFile(os: ByteArrayOutputStream) {
+
+        viewModelScope.launch(Dispatchers.IO)  {
+            val account = icalEntity.value?.ICalCollection?.getAccount() ?: return@launch
+            val collectionId = icalEntity.value?.property?.collectionId ?: return@launch
+            val iCalObjectId = icalEntity.value?.property?.id ?: return@launch
+            icsFileWritten.postValue(Ical4androidUtil.writeICSFormatFromProviderToOS(account, getApplication(), collectionId, iCalObjectId, os))
+        }
+
     }
 }

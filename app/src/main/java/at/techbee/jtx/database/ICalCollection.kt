@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.database
 
+import android.accounts.Account
 import android.content.ContentValues
 import android.content.Context
 import android.os.Parcelable
@@ -186,4 +187,9 @@ data class ICalCollection(
 
                 return this
         }
+
+        /**
+         * @return The account of the given collection as [Account]
+         */
+        fun getAccount(): Account = Account(accountName, accountType)
 }

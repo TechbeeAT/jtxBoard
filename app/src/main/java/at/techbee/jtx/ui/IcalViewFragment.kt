@@ -756,21 +756,10 @@ class IcalViewFragment : Fragment() {
                 }
                 val files = ArrayList<Uri>()
 
-                // prepare file attachment, the file is stored in the externalCacheDir and then provided through a FileProvider
-                try {
-                    val icsFileName = "${requireContext().externalCacheDir}/ics_file.ics"
-                    val icsFile = File(icsFileName).apply {
-                        val os = ByteArrayOutputStream()
-                        icalViewViewModel.icalEntity.value!!.writeIcalOutputStream(os)
-                        this.writeBytes(os.toByteArray())
-                        createNewFile()
-                    }
-                    val uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, icsFile)
-                    files.add(uri)
-                } catch (e: Exception) {
-                    Log.i("fileprovider", "Failed to attach ICS File")
-                    Toast.makeText(requireContext(), "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
-                }
+                // prepare output stream for the ics attachment, the file is stored in the externalCacheDir and then provided through a FileProvider
+                // further processing happens in the observer!
+                val os = ByteArrayOutputStream()
+                icalViewViewModel.writeICSFile(os)
 
                 icalViewViewModel.icalEntity.value?.attachments?.forEach {
                     try {
@@ -781,24 +770,48 @@ class IcalViewFragment : Fragment() {
                         Log.i("Attachment", "Attachment-File could not be accessed.")
                     }
                 }
-                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files)
 
-                Log.d("shareIntent", shareText)
-                startActivity(Intent(shareIntent))
+                icalViewViewModel.icsFileWritten.observe(viewLifecycleOwner) {
+                    if (it == true) {
+                        try {
+                            val icsFileName = "${requireContext().externalCacheDir}/ics_file.ics"
+                            val icsFile = File(icsFileName).apply {
+                                this.writeBytes(os.toByteArray())
+                                createNewFile()
+                            }
+                            val uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, icsFile)
+                            files.add(uri)
+                        } catch (e: Exception) {
+                            Log.i("fileprovider", "Failed to attach ICS File")
+                            Toast.makeText(requireContext(), "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
+                        }
+
+                        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files)
+                        Log.d("shareIntent", shareText)
+
+                        // start the intent when the file is ready
+                        startActivity(Intent(shareIntent))
+                        icalViewViewModel.icsFileWritten.removeObservers(viewLifecycleOwner)
+                        icalViewViewModel.icsFileWritten.postValue(null)
+                    }
+                }
             }
             R.id.menu_view_share_ics -> {
+                icalViewViewModel.retrieveICSFormat()
+                icalViewViewModel.icsFormat.observe(viewLifecycleOwner) { ics ->
+                    if(ics.isNullOrEmpty())
+                        return@observe
 
-                val shareText = icalViewViewModel.icalEntity.value!!.getIcalFormat().toString()
-                Log.d("iCalFileContent", shareText)
-
-                val shareIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    type = "text/calendar"
-                    putExtra(Intent.EXTRA_STREAM, shareText)
+                    val shareIntent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        type = "text/calendar"
+                        //putExtra(Intent.EXTRA_TEXT, ics)
+                        putExtra(Intent.EXTRA_STREAM, ics)
+                    }
+                    startActivity(Intent(shareIntent))
+                    icalViewViewModel.icsFormat.removeObservers(viewLifecycleOwner)
+                    icalViewViewModel.icsFormat.postValue(null)
                 }
-
-                Log.d("shareIntent", shareText)
-                startActivity(Intent(shareIntent))
             }
             R.id.menu_view_copy_as_journal -> this.findNavController().navigate(
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value?.getIcalEntityCopy(Module.JOURNAL.name) ?: return false)

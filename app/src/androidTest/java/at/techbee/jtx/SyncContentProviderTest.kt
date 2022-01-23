@@ -14,6 +14,7 @@ import android.content.ContentValues
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
@@ -42,6 +43,37 @@ class SyncContentProviderTest {
 
     private val fileContentProviderBaseUri = "content://${AUTHORITY_FILEPROVIDER}"
 
+    companion object {
+
+        @VisibleForTesting
+        fun insertCollection(account: Account, url: String?, displayname: String?, mContentResolver: ContentResolver?): Uri? {
+
+            // INSERT a new Collection
+            val collectionValues = ContentValues().apply {
+                put(JtxContract.JtxCollection.DISPLAYNAME, displayname)
+                put(JtxContract.JtxCollection.URL, url)
+                put(JtxContract.JtxCollection.ACCOUNT_NAME, account.name)
+                put(JtxContract.JtxCollection.ACCOUNT_TYPE, account.type)
+            }
+
+            val uriCollection = JtxContract.JtxCollection.CONTENT_URI.asSyncAdapter(account)
+
+            return mContentResolver?.insert(uriCollection, collectionValues)
+        }
+
+
+        @VisibleForTesting
+        fun insertIcalObject(account: Account, summary: String, collectionId: Long, mContentResolver: ContentResolver?): Uri? {
+            val contentValues = ContentValues()
+            contentValues.put(JtxContract.JtxICalObject.SUMMARY, summary)
+            contentValues.put(JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, collectionId)
+            val uriIcalobject = JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(account)
+
+            return mContentResolver?.insert(uriIcalobject, contentValues)
+
+        }
+    }
+
 
     @Before
     fun setUp() {
@@ -52,10 +84,10 @@ class SyncContentProviderTest {
         mContentResolver = context.contentResolver
 
         //prepare
-        defaultCollectionUri = insertCollection(defaultTestAccount, null, null)
+        defaultCollectionUri = insertCollection(defaultTestAccount, null, null, mContentResolver)
         defaultCollectionId = defaultCollectionUri?.lastPathSegment?.toLongOrNull()
 
-        defaultICalObjectUri = insertIcalObject(defaultTestAccount, "journal4attendee", defaultCollectionId!!)
+        defaultICalObjectUri = insertIcalObject(defaultTestAccount, "journal4attendee", defaultCollectionId!!, mContentResolver)
         defaultICalObjectId = defaultICalObjectUri?.lastPathSegment?.toLongOrNull()
     }
 
@@ -76,7 +108,7 @@ class SyncContentProviderTest {
     fun icalObject_insert_find_delete()  {
 
         //insert
-        val newICalObject = insertIcalObject(defaultTestAccount, "note2delete", defaultCollectionId!!)
+        val newICalObject = insertIcalObject(defaultTestAccount, "note2delete", defaultCollectionId!!, mContentResolver)
 
         //find
         mContentResolver?.query(newICalObject!!, arrayOf(JtxContract.JtxICalObject.ID, JtxContract.JtxICalObject.SUMMARY), null, null, null).use {
@@ -556,7 +588,7 @@ class SyncContentProviderTest {
     fun collection_insert_find_update_delete()  {
 
         // INSERT a new Collection
-        val newCollection = insertCollection(Account("testcollection", "testcollection"), "testcollection", "testcollection")
+        val newCollection = insertCollection(Account("testcollection", "testcollection"), "testcollection", "testcollection", mContentResolver)
         val newCollectionId = newCollection?.lastPathSegment?.toLongOrNull()
         Log.println(Log.INFO, "newCollectionUriId", newCollection.toString())
         assertNotNull(newCollectionId)
@@ -588,8 +620,8 @@ class SyncContentProviderTest {
     fun collection_query_all() {
         //prepare
         val account = Account("collection1", "collection1")
-        val col1 = insertCollection(account, null, "Collection1")
-        val col2 = insertCollection(account, null, "Collection2")
+        val col1 = insertCollection(account, null, "Collection1", mContentResolver)
+        val col2 = insertCollection(account, null, "Collection2", mContentResolver)
 
         mContentResolver?.query(JtxContract.JtxCollection.CONTENT_URI.asSyncAdapter(account), arrayOf(JtxContract.JtxCollection.ID), null, null, null).use {
             assertEquals(2, it!!.count)             // inserted object was found
@@ -675,62 +707,23 @@ class SyncContentProviderTest {
         mContentResolver?.insert(uri, contentValues)
     }
 
-
-
-    private fun insertCollection(account: Account, url: String?, displayname: String?): Uri? {
-
-        // INSERT a new Collection
-        val collectionValues = ContentValues().apply {
-            put(JtxContract.JtxCollection.DISPLAYNAME, displayname)
-            put(JtxContract.JtxCollection.URL, url)
-            put(JtxContract.JtxCollection.ACCOUNT_NAME, account.name)
-            put(JtxContract.JtxCollection.ACCOUNT_TYPE, account.type)
-        }
-
-        val uriCollection = JtxContract.JtxCollection.CONTENT_URI.asSyncAdapter(account)
-
-        return mContentResolver?.insert(uriCollection, collectionValues)
-    }
-
-
-    private fun insertIcalObject(account: Account, summary: String, collectionId: Long): Uri? {
-        val contentValues = ContentValues()
-        contentValues.put(JtxContract.JtxICalObject.SUMMARY, summary)
-        contentValues.put(JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, collectionId)
-        val uriIcalobject = JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(account)
-
-        return mContentResolver?.insert(uriIcalobject, contentValues)
-
-    }
-
-
-
-
-    /*
     @Test
-    fun delete() {
+    fun getAccountFromUri_remote() {
+        val account = Account("Example", "com.example")
+        val uri = JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(account)
+        assertEquals(account, SyncContentProvider().getAccountFromUri(uri))
     }
 
-    @Test
-    fun getType() {
+    @Test(expected = java.lang.IllegalArgumentException::class)
+    fun getAccountFromUri_empty() {
+        val account = Account(null, null)
+        val uri = JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(account)
+        SyncContentProvider().getAccountFromUri(uri)
     }
 
-    @Test
-    fun insert() {
+    @Test(expected = java.lang.IllegalArgumentException::class)
+    fun getAccountFromUri_missing() {
+        val uri = JtxContract.JtxICalObject.CONTENT_URI
+        SyncContentProvider().getAccountFromUri(uri)
     }
-
-    @Test
-    fun onCreate() {
-    }
-
-    @Test
-    fun query() {
-
-    }
-
-    @Test
-    fun update() {
-    }
-
-     */
 }

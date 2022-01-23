@@ -22,6 +22,7 @@ import at.techbee.jtx.database.properties.*
 import java.io.File
 import java.io.IOException
 import android.webkit.MimeTypeMap
+import androidx.annotation.VisibleForTesting
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.lang.NumberFormatException
 
@@ -525,10 +526,11 @@ class SyncContentProvider : ContentProvider() {
      * @return the Account with the extracted account name and type
      * @throws [IllegalArgumentException] if account type or name could not be extracted or if the local account type was used
      */
-    private fun getAccountFromUri(uri: Uri): Account {
+    @VisibleForTesting
+    fun getAccountFromUri(uri: Uri): Account {
         val accountName = uri.getQueryParameter(ACCOUNT_NAME) ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_NAME missing. Uri: ($uri)")
         val accountType = uri.getQueryParameter(ACCOUNT_TYPE) ?: throw java.lang.IllegalArgumentException("Query parameter $ACCOUNT_TYPE missing. Uri: ($uri)")
-        if (accountType == ICalCollection.LOCAL_ACCOUNT_TYPE)
+        if (accountType == ICalCollection.LOCAL_ACCOUNT_TYPE && this.callingPackage != BuildConfig.APPLICATION_ID)
             throw java.lang.IllegalArgumentException("Local collections cannot be used. Uri: ($uri)")
 
         return Account(accountName, accountType)
