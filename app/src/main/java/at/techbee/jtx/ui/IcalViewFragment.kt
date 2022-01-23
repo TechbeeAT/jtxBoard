@@ -735,13 +735,14 @@ class IcalViewFragment : Fragment() {
             R.id.menu_view_share_text -> {
 
                 var shareText = ""
-                icalViewViewModel.icalEntity.value?.property?.dtstart?.let { shareText += "${convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dtstartTimezone)}\n" }
-                icalViewViewModel.icalEntity.value?.property?.summary?.let { shareText += "${it}\n\n" }
-                icalViewViewModel.icalEntity.value?.property?.description?.let { shareText += "${it}\n\n" }
+                icalViewViewModel.icalEntity.value?.property?.dtstart?.let { shareText += convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dtstartTimezone) + System.lineSeparator() }
+                icalViewViewModel.icalEntity.value?.property?.summary?.let { shareText += it + System.lineSeparator() }
+                icalViewViewModel.icalEntity.value?.property?.description?.let { shareText += it + System.lineSeparator() + System.lineSeparator() }
 
                 val categories: MutableList<String> = mutableListOf()
                 icalViewViewModel.icalEntity.value?.categories?.forEach { categories.add(it.text) }
                 shareText += categories.joinToString(separator=", ")
+                shareText = shareText.trim()
 
                 val attendees: MutableList<String> = mutableListOf()
                 icalViewViewModel.icalEntity.value?.attendees?.forEach { attendees.add(it.caladdress.removePrefix("mailto:")) }
