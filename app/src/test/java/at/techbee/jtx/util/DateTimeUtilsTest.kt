@@ -10,6 +10,7 @@ package at.techbee.jtx.util
 
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
+import at.techbee.jtx.util.DateTimeUtils.convertLongToYYYYMMDDString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import at.techbee.jtx.util.DateTimeUtils.getDateWithoutTime
@@ -49,6 +50,7 @@ class DateTimeUtilsTest {
         assertEquals("2021", convertLongToYearString(sampleDateTime2, sampleTimezone2))
     }
 
+    @Test fun convertLongToYYYYMMDDString_test() = assertEquals("2022-01-24", convertLongToYYYYMMDDString(1643019619464L, "UTC"))
 
 
     @Test fun isValidEmail_testTrue() = assertTrue(isValidEmail("valid@email.com"))

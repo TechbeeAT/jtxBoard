@@ -45,6 +45,20 @@ object Ical4androidUtil {
         return null
     }
 
+
+    /**
+     * @param [account] to look up
+     * @param [context] to get the content provider client
+     * @param [collectionId] to look up
+     * @return a string with all the JtxICalObjects as iCalendar.
+     */
+    fun getICSFormatForCollectionFromProvider(account: Account, context: Context?, collectionId: Long): String? {
+        val collection = getCollection(account, context, collectionId) ?: return null
+        return collection.getICSForCollection()
+    }
+
+
+
     /**
      * @param [account] to look up
      * @param [context] to get the content provider client

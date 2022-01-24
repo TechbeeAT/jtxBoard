@@ -22,6 +22,8 @@
         android:id="@+id/menu_collection_popup_show_in_davx5"
         android:title="@string/menu_collection_popup_show_in_davx5"
         app:showAsAction="never" />
-
-
+    <item
+        android:id="@+id/menu_collection_popup_export_as_ics"
+        android:title="@string/menu_collection_popup_export_as_ics"
+        app:showAsAction="never" />
 </menu>

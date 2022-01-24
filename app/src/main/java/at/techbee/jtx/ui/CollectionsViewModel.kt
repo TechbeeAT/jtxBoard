@@ -10,9 +10,11 @@ package at.techbee.jtx.ui
 
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.*
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +26,8 @@ class CollectionsViewModel(val database: ICalDatabaseDao,
     val localCollections = database.getLocalCollections()
     val remoteCollections = database.getRemoteCollections()
     val isDavx5Compatible = MutableLiveData(SyncUtil.isDAVx5CompatibleWithJTX(application))
+
+    val collectionICS = MutableLiveData<String>(null)
 
 
     /**
@@ -44,6 +48,16 @@ class CollectionsViewModel(val database: ICalDatabaseDao,
         viewModelScope.launch(Dispatchers.IO) {
             database.deleteICalCollection(collection)
         }
+    }
+
+    fun requestICSForCollection(context: Context?, collection: ICalCollection) {
+
+        viewModelScope.launch(Dispatchers.IO)  {
+            val account = collection.getAccount()
+            val collectionId = collection.collectionId
+            collectionICS.postValue(Ical4androidUtil.getICSFormatForCollectionFromProvider(account, context, collectionId))
+        }
+
     }
 }
 

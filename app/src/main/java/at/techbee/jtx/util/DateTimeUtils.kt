@@ -80,6 +80,15 @@ object DateTimeUtils {
         return zonedDateTime.toLocalDateTime().format(formatter)
     }
 
+    fun convertLongToYYYYMMDDString(date: Long?, timezone: String?): String {
+        if (date == null || date == 0L)
+            return ""
+        val zonedDateTime =
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
+        return zonedDateTime.toLocalDateTime().format(formatter)
+    }
+
 
     fun isValidEmail(emailString: String?): Boolean {
         return emailString?.isNotEmpty() == true && PatternsCompat.EMAIL_ADDRESS.matcher(emailString).matches()

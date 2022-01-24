@@ -367,6 +367,8 @@
     <string name="collections_dialog_edit_local_collection_title">Edit local Collection</string>
     <string name="collections_dialog_delete_local_title">Delete \"%1$s\"?</string>
     <string name="collections_dialog_delete_local_message">Deleting a collection will also delete all journals, notes and tasks within this collection. This cannot be undone. Are you sure that you want to continue?</string>
+    <string name="collections_toast_export_ics_success">Exporting collection finished successfully.</string>
+    <string name="collections_toast_export_ics_error">An error occurred while exporting the selected collection.</string>
 
     <!-- menus -->
     <string name="menu_edit_delete">Delete</string>
@@ -401,6 +403,7 @@
     <string name="menu_sync_syncnow">Sync now</string>
 
     <string name="menu_collection_popup_show_in_davx5">Show in DAVx⁵</string>
+    <string name="menu_collection_popup_export_as_ics">Export as .ics</string>
 
 
     <!-- Notification channel for Reminders -->

@@ -26,6 +26,11 @@ import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.SyncUtil.Companion.openDAVx5AccountsActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ClassCastException
+import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
+import at.techbee.jtx.util.DateTimeUtils
+import java.io.IOException
+import java.io.OutputStream
 
 
 class CollectionsFragment : Fragment() {
@@ -38,6 +43,26 @@ class CollectionsFragment : Fragment() {
     private lateinit var inflater: LayoutInflater
     private var optionsMenu: Menu? = null
 
+    private var ics: String? = null
+    private val getFileUriForSavingICS = registerForActivityResult(ActivityResultContracts.CreateDocument()) { uri ->
+        if(ics.isNullOrEmpty() || uri == null) {
+            Toast.makeText(context, R.string.collections_toast_export_ics_error, Toast.LENGTH_LONG)
+            ics = null
+            return@registerForActivityResult
+        }
+
+        try {
+            val output: OutputStream? =
+                context?.contentResolver?.openOutputStream(uri)
+            output?.write(ics?.toByteArray())
+            output?.flush()
+            output?.close()
+            Toast.makeText(context, R.string.collections_toast_export_ics_success, Toast.LENGTH_LONG)
+        } catch (e: IOException) {
+            Toast.makeText(context, R.string.collections_toast_export_ics_error, Toast.LENGTH_LONG)
+        }
+        ics = null
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -144,6 +169,18 @@ class CollectionsFragment : Fragment() {
                         R.id.menu_collection_popup_edit -> showEditCollectionDialog(collection.toICalCollection())
                         R.id.menu_collection_popup_delete -> showDeleteCollectionDialog(collection.toICalCollection())
                         R.id.menu_collection_popup_show_in_davx5 -> openDAVx5AccountsActivity(context)                 // TODO: Replace by new intent to open the specific account
+                        R.id.menu_collection_popup_export_as_ics -> {
+                            collectionsViewModel.requestICSForCollection(context, collection.toICalCollection())
+                            collectionsViewModel.collectionICS.observe(viewLifecycleOwner) { ics ->
+                                if(ics.isNullOrEmpty())
+                                    return@observe
+                                this.ics = ics
+                                getFileUriForSavingICS.launch("${collection.displayName}_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(), null)}.ics")
+                                //Log.d("collectionICS", ics)
+                                collectionsViewModel.collectionICS.removeObservers(viewLifecycleOwner)
+                                collectionsViewModel.collectionICS.postValue(null)
+                            }
+                        }
                     }
                     true
                 }

@@ -349,6 +349,7 @@ class SyncContentProvider : ContentProvider() {
                     Log.i("attachment", "Uri not present or could not be parsed.")
                 }
             }
+            result?.moveToPosition(-1)   // reset to beginning
         }
         return result
     }
