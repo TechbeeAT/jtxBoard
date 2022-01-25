@@ -2281,6 +2281,9 @@ class IcalEditFragment : Fragment() {
             validationError += resources.getString(R.string.edit_validation_errors_summary_or_description_necessary) + "\n"
         if(icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && icalEditViewModel.iCalObjectUpdated.value?.due != null && icalEditViewModel.iCalObjectUpdated.value?.due!! < icalEditViewModel.iCalObjectUpdated.value?.dtstart!!)
             validationError += resources.getString(R.string.edit_validation_errors_dialog_due_date_before_dtstart) + "\n"
+        if((icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone?.isNotEmpty() == true && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone.isNullOrEmpty())
+            || (icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone.isNullOrEmpty() && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone?.isNotEmpty() == true))
+                validationError += resources.getString(R.string.edit_validation_errors_start_due_timezone_check) + "\n"
 
         if(binding.editCategoriesAddAutocomplete.text.isNotEmpty())
             validationError += resources.getString(R.string.edit_validation_errors_category_not_confirmed) + "\n"

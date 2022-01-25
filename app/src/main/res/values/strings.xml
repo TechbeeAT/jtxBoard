@@ -299,6 +299,7 @@
 
     <string name="edit_validation_errors_summary_or_description_necessary">A summary or description should be provided.</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">The Due date cannot be before the Start date.</string>
+    <string name="edit_validation_errors_start_due_timezone_check">Please choose a timezone for both, start and due, or deactivate timezones.</string>
     <string name="edit_validation_errors_category_not_confirmed">A category was entered but not confirmed. Please confirm or delete.</string>
     <string name="edit_validation_errors_comment_not_confirmed">A comment was entered but not confirmed. Please confirm or delete.</string>
     <string name="edit_validation_errors_resource_not_confirmed">A resource was entered but not confirmed. Please confirm or delete.</string>
