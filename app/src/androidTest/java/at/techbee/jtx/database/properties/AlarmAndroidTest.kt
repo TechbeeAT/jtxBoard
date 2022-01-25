@@ -11,7 +11,6 @@ package at.techbee.jtx.database.properties
 import android.content.ContentValues
 import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
-import at.techbee.jtx.JtxContract
 import at.techbee.jtx.R
 import org.junit.Assert
 import org.junit.Before
@@ -37,7 +36,7 @@ class AlarmAndroidTest {
             action = "AUDIO" ,
             description = "my description",
             triggerRelativeDuration = "-PT15M",
-            triggerRelativeTo = JtxContract.JtxAlarm.AlarmRelativeTo.START.name,
+            triggerRelativeTo = AlarmRelativeTo.START.name,
             triggerTime = 1641560551926L,
             triggerTimezone = "Europe/Vienna",
             summary = "summary",

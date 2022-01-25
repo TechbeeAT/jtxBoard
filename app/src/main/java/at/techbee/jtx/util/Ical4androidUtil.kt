@@ -17,8 +17,8 @@ import at.bitfire.ical4android.JtxCollectionFactory
 import at.bitfire.ical4android.JtxICalObject
 import at.bitfire.ical4android.JtxICalObjectFactory
 import at.bitfire.ical4android.MiscUtils.CursorHelper.toValues
-import at.techbee.jtx.JtxContract
-import at.techbee.jtx.JtxContract.asSyncAdapter
+import at.techbee.jtx.contract.JtxContract
+import at.techbee.jtx.contract.JtxContract.asSyncAdapter
 import java.io.OutputStream
 
 object Ical4androidUtil {

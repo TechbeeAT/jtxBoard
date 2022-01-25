@@ -18,7 +18,8 @@ import androidx.annotation.VisibleForTesting
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
-import at.techbee.jtx.JtxContract.asSyncAdapter
+import at.techbee.jtx.contract.JtxContract
+import at.techbee.jtx.contract.JtxContract.asSyncAdapter
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.TABLE_NAME_ICALOBJECT
 import at.techbee.jtx.database.properties.*
@@ -623,7 +624,9 @@ class SyncContentProviderTest {
         val col1 = insertCollection(account, null, "Collection1", mContentResolver)
         val col2 = insertCollection(account, null, "Collection2", mContentResolver)
 
-        mContentResolver?.query(JtxContract.JtxCollection.CONTENT_URI.asSyncAdapter(account), arrayOf(JtxContract.JtxCollection.ID), null, null, null).use {
+        mContentResolver?.query(
+            JtxContract.JtxCollection.CONTENT_URI.asSyncAdapter(account), arrayOf(
+                JtxContract.JtxCollection.ID), null, null, null).use {
             assertEquals(2, it!!.count)             // inserted object was found
         }
 
@@ -668,7 +671,9 @@ class SyncContentProviderTest {
             assertEquals(0, it!!.count)
         }
 
-        mContentResolver?.query(JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount), arrayOf(JtxContract.JtxICalObject.ID), null, null, null).use {
+        mContentResolver?.query(
+            JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount), arrayOf(
+                JtxContract.JtxICalObject.ID), null, null, null).use {
             assertTrue(it!!.count > 0)     // there must be entries! Delete must not be executed!
         }
     }

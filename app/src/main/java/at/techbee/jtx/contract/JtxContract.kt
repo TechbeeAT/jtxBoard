@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx
+package at.techbee.jtx.contract
 
 import android.accounts.Account
 import android.net.Uri
