@@ -783,6 +783,7 @@ class IcalEditFragment : Fragment() {
         icalEditViewModel.recurrenceChecked.observe(viewLifecycleOwner) {
             updateRRule()
             icalEditViewModel.updateVisibility()
+            binding.editAppbarlayoutTabs.setExpanded(true)
         }
 
 
