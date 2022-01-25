@@ -21,8 +21,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 100040013
-        versionName "1.00.04-rc13"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 100040014
+        versionName "1.00.04-rc14"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Banica\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
