@@ -55,16 +55,14 @@ android {
         dataBinding true
         viewBinding true
     }
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/*.md']
+            pickFirsts += ['META-INF/AL2.0', 'META-INF/LGPL2.1']
+        }
+    }
 
     //necessary for ical4j
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/*.md'
-
-        pickFirst 'META-INF/AL2.0'
-        pickFirst 'META-INF/LGPL2.1'
-    }
 
     flavorDimensions 'version'
     productFlavors {
@@ -100,9 +98,8 @@ android {
         // also good for ical4android
         coreLibraryDesugaringEnabled = true
     }
-
-    lintOptions{
-        disable 'MissingTranslation'   // do not fail lint check because of missing translations
+    lint {
+        disable 'MissingTranslation'
     }
 }
 
