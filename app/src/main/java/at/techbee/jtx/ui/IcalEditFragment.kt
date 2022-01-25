@@ -678,6 +678,9 @@ class IcalEditFragment : Fragment() {
             icalEditViewModel.alarmUpdated.forEach { singleAlarm ->
                 addAlarmView(singleAlarm)
             }
+
+            menu?.findItem(R.id.menu_edit_clear_dates)?.isVisible =
+                (it.dtstart != null || it.due != null || it.completed != null)   // don't show clear dates if no dates are set anyway
         }
 
 
