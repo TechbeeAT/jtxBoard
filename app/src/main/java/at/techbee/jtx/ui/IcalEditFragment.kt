@@ -1412,7 +1412,6 @@ class IcalEditFragment : Fragment() {
         }
 
         datePicker.show(parentFragmentManager, tag)
-
     }
 
 
@@ -1432,7 +1431,7 @@ class IcalEditFragment : Fragment() {
 
         timePicker.addOnPositiveButtonClickListener {
 
-            val zonedTimestamp = presetUtcDateTime.withHour(timePicker.hour).withMinute(timePicker.minute).toInstant().toEpochMilli()
+            val zonedTimestamp = presetUtcDateTime.withHour(timePicker.hour).withMinute(timePicker.minute).withSecond(0).withNano(0).toInstant().toEpochMilli()
 
             when (tag) {
                 TAG_PICKER_DTSTART -> icalEditViewModel.iCalObjectUpdated.value!!.dtstart = zonedTimestamp

@@ -735,7 +735,9 @@ class IcalViewFragment : Fragment() {
             R.id.menu_view_share_text -> {
 
                 var shareText = ""
-                icalViewViewModel.icalEntity.value?.property?.dtstart?.let { shareText += convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dtstartTimezone) + System.lineSeparator() }
+                icalViewViewModel.icalEntity.value?.property?.dtstart?.let { shareText += getString(R.string.view_started) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dtstartTimezone) + System.lineSeparator() }
+                icalViewViewModel.icalEntity.value?.property?.due?.let { shareText += getString(R.string.view_due) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dueTimezone) + System.lineSeparator() }
+                icalViewViewModel.icalEntity.value?.property?.completed?.let { shareText += getString(R.string.view_completed) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.completedTimezone) + System.lineSeparator() }
                 icalViewViewModel.icalEntity.value?.property?.summary?.let { shareText += it + System.lineSeparator() }
                 icalViewViewModel.icalEntity.value?.property?.description?.let { shareText += it + System.lineSeparator() + System.lineSeparator() }
 

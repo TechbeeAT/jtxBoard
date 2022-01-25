@@ -36,8 +36,8 @@ object DateTimeUtils {
             TZ_ALLDAY -> DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)   // only date
             else -> DateTimeFormatter.ofLocalizedDateTime(
                 FormatStyle.FULL,
-                FormatStyle.SHORT
-            )  // all full with long time info with timezone - for now without Timezone, TODO: Check solution without showing seconds
+                FormatStyle.LONG
+            )  // FormatStyle.LONG also shows seconds, maybe a solution could be found to remove this in the future
         }
         return zonedDateTime.format(formatter)
     }
