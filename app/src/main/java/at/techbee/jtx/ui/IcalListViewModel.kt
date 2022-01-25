@@ -41,6 +41,7 @@ class IcalListViewModel(
     var searchClassification: MutableList<Classification> = mutableListOf()
     var searchCollection: MutableList<String> = mutableListOf()
     var searchAccount: MutableList<String> = mutableListOf()
+    var isExcludeDone: Boolean = false
 
 
     var searchSettingShowAllSubtasksInTasklist: Boolean = false
@@ -144,6 +145,9 @@ class IcalListViewModel(
             queryString += ") "
         }
 
+        if (isExcludeDone)
+            queryString += "AND $COLUMN_PERCENT IS NOT 100 "
+
         // Query for the passed filter criteria from FilterFragment
         if (searchClassification.size > 0) {
             queryString += "AND $COLUMN_CLASSIFICATION IN ("
@@ -244,6 +248,7 @@ class IcalListViewModel(
         searchClassification.clear()
         searchCollection.clear()
         searchAccount.clear()
+        isExcludeDone = false
         updateSearch()
     }
 

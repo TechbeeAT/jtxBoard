@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
-import at.techbee.jtx.*
 import at.techbee.jtx.database.StatusTodo
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
@@ -63,7 +62,8 @@ class IcalListAdapterHelper {
                 if(model.searchStatusTodo.isNotEmpty() && !model.searchStatusTodo.contains(StatusTodo.getFromString(subtask.status)))
                     return@forEach
 
-                var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
+                if(model.isExcludeDone && subtask.percent == 100)          // if done tasks are excluded, we must also exclude the subtask and just skip here
+                    return@forEach
 
                 val subtaskBinding = FragmentIcalListItemSubtaskBinding.inflate(
                     LayoutInflater.from(context),
@@ -91,12 +91,13 @@ class IcalListAdapterHelper {
                 subtaskBinding.listItemSubtaskProgressSlider.addOnSliderTouchListener(object :
                     Slider.OnSliderTouchListener {
 
-                    override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
-                    }
+                    override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */ }
 
                     override fun onStopTrackingTouch(slider: Slider) {
-                        if (subtaskBinding.listItemSubtaskProgressSlider.value < 100)
-                            resetProgress = subtask.percent ?: 0
+                        subtaskBinding.listItemSubtaskProgressCheckbox.isChecked =
+                            subtaskBinding.listItemSubtaskProgressSlider.value == 100F
+
+                        subtaskBinding.listItemSubtaskProgressPercent.text = String.format("%.0f%%", subtaskBinding.listItemSubtaskProgressSlider.value)
 
                         model.updateProgress(
                             subtask.id,
@@ -111,7 +112,13 @@ class IcalListAdapterHelper {
                     if (checked)
                         subtaskBinding.listItemSubtaskProgressSlider.value = 100F
                     else
-                        subtaskBinding.listItemSubtaskProgressSlider.value = resetProgress.toFloat()
+                        subtaskBinding.listItemSubtaskProgressSlider.value =
+                            if(subtaskBinding.listItemSubtaskProgressSlider.value == 100F)
+                                0F
+                            else
+                                subtaskBinding.listItemSubtaskProgressSlider.value
+
+                    subtaskBinding.listItemSubtaskProgressPercent.text = String.format("%.0f%%", subtaskBinding.listItemSubtaskProgressSlider.value)
 
                     model.updateProgress(
                         subtask.id,

@@ -39,7 +39,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.work.*
 import at.techbee.jtx.*
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
@@ -60,7 +59,6 @@ import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_GENERAL
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_PEOPLE_RES
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_RECURRING
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_SUBTASKS
-import at.techbee.jtx.util.*
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getDateWithoutTime
 import at.techbee.jtx.util.DateTimeUtils.getLocalizedWeekdays
@@ -88,7 +86,6 @@ import java.lang.ClassCastException
 import java.lang.NumberFormatException
 import java.time.*
 import java.time.temporal.ChronoUnit
-import java.util.*
 
 
 class IcalEditFragment : Fragment() {
@@ -521,11 +518,11 @@ class IcalEditFragment : Fragment() {
                 .show()
         }
 
-        icalEditViewModel.savingClicked.observe(viewLifecycleOwner, {
+        icalEditViewModel.savingClicked.observe(viewLifecycleOwner) {
             if (it == true) {
 
                 // do some validation first
-                if(!isDataValid())
+                if (!isDataValid())
                     return@observe
 
                 icalEditViewModel.iCalObjectUpdated.value!!.percent =
@@ -537,11 +534,11 @@ class IcalEditFragment : Fragment() {
 
                 icalEditViewModel.update()
             }
-        })
+        }
 
-        icalEditViewModel.collectionNotFoundError.observe(viewLifecycleOwner, { error ->
+        icalEditViewModel.collectionNotFoundError.observe(viewLifecycleOwner) { error ->
 
-            if(!error)
+            if (!error)
                 return@observe
 
             // show a dialog to inform the user
@@ -549,28 +546,30 @@ class IcalEditFragment : Fragment() {
             builder.setTitle(getString(R.string.edit_dialog_collection_not_found_error_title))
             builder.setMessage(getString(R.string.edit_dialog_collection_not_found_error_message))
             builder.setIcon(R.drawable.ic_error)
-            builder.setPositiveButton(R.string.ok) { _, _ ->  }
+            builder.setPositiveButton(R.string.ok) { _, _ -> }
             builder.show()
-        })
+        }
 
-        icalEditViewModel.deleteClicked.observe(viewLifecycleOwner, {
+        icalEditViewModel.deleteClicked.observe(viewLifecycleOwner) {
             if (it == true) {
 
-                if(icalEditViewModel.iCalObjectUpdated.value?.id == 0L)
+                if (icalEditViewModel.iCalObjectUpdated.value?.id == 0L)
                     showDiscardMessage()
                 else
                     showDeleteMessage()
             }
-        })
+        }
 
-        icalEditViewModel.returnIcalObjectId.observe(viewLifecycleOwner, {
+        icalEditViewModel.returnIcalObjectId.observe(viewLifecycleOwner) {
 
             if (it != 0L) {
                 // saving is done now
                 hideKeyboard()
 
                 // show Ad if necessary
-                if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.value == false)
+                if (AdManager.getInstance()
+                        ?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.value == false
+                )
                     AdManager.getInstance()?.showInterstitialAd(requireActivity())
 
                 // return to list view
@@ -586,7 +585,7 @@ class IcalEditFragment : Fragment() {
                 this.findNavController().navigate(direction)
             }
             icalEditViewModel.savingClicked.value = false
-        })
+        }
 
 
         icalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {
@@ -837,7 +836,7 @@ class IcalEditFragment : Fragment() {
 
 
         // Set up items to suggest for categories
-        icalEditViewModel.allCategories.observe(viewLifecycleOwner, {
+        icalEditViewModel.allCategories.observe(viewLifecycleOwner) {
             // Create the adapter and set it to the AutoCompleteTextView
             if (icalEditViewModel.allCategories.value != null) {
                 val arrayAdapter = ArrayAdapter(
@@ -847,10 +846,10 @@ class IcalEditFragment : Fragment() {
                 )
                 binding.editCategoriesAddAutocomplete.setAdapter(arrayAdapter)
             }
-        })
+        }
 
         // Set up items to suggest for resources
-        icalEditViewModel.allResources.observe(viewLifecycleOwner, {
+        icalEditViewModel.allResources.observe(viewLifecycleOwner) {
             // Create the adapter and set it to the AutoCompleteTextView
             if (icalEditViewModel.allResources.value != null) {
                 val arrayAdapter = ArrayAdapter(
@@ -860,10 +859,10 @@ class IcalEditFragment : Fragment() {
                 )
                 binding.editResourcesAddAutocomplete.setAdapter(arrayAdapter)
             }
-        })
+        }
 
         // initialize allRelatedto
-        icalEditViewModel.allRelatedto.observe(viewLifecycleOwner, {
+        icalEditViewModel.allRelatedto.observe(viewLifecycleOwner) {
 
             // if the current item can be found as linkedICalObjectId and the reltype is CHILD, then it must be a child and changing the collection is not allowed
             // also making it recurring is not allowed
@@ -871,25 +870,25 @@ class IcalEditFragment : Fragment() {
                 binding.editCollectionSpinner.isEnabled = false
                 binding.editFragmentIcalEditRecur.editRecurSwitch.isEnabled = false
             }
-        })
+        }
 
-        icalEditViewModel.allCollections.observe(viewLifecycleOwner, {
+        icalEditViewModel.allCollections.observe(viewLifecycleOwner) {
 
             if (it.isNullOrEmpty())
                 return@observe
 
             // do not update anything about the collections anymore, as the user might have changed the selection and interference must be avoided!
-            if(icalEditViewModel.iCalObjectUpdated.value?.collectionId != null && icalEditViewModel.iCalObjectUpdated.value?.collectionId != icalEditViewModel.iCalEntity.property.collectionId)
+            if (icalEditViewModel.iCalObjectUpdated.value?.collectionId != null && icalEditViewModel.iCalObjectUpdated.value?.collectionId != icalEditViewModel.iCalEntity.property.collectionId)
                 return@observe
 
             // set up the adapter for the organizer spinner
             val spinner: Spinner = binding.editCollectionSpinner
             val allCollectionNames: MutableList<String> = mutableListOf()
             icalEditViewModel.allCollections.value?.forEach { collection ->
-                if(collection.displayName?.isNotEmpty() == true && collection.accountName?.isNotEmpty() == true)
+                if (collection.displayName?.isNotEmpty() == true && collection.accountName?.isNotEmpty() == true)
                     allCollectionNames.add(collection.displayName + " (" + collection.accountName + ")")
                 else
-                    allCollectionNames.add(collection.displayName?: "-")
+                    allCollectionNames.add(collection.displayName ?: "-")
             }
             val adapter = ArrayAdapter(
                 requireContext(),
@@ -902,16 +901,18 @@ class IcalEditFragment : Fragment() {
             // set the default selection for the spinner.
             val selectedCollectionPos: Int = if (icalEditViewModel.iCalEntity.property.id == 0L) {
                 val lastUsedCollectionId = prefs.getLong(PREFS_LAST_COLLECTION, 1L)
-                val lastUsedCollection = icalEditViewModel.allCollections.value?.find { colList -> colList.collectionId == lastUsedCollectionId }
+                val lastUsedCollection =
+                    icalEditViewModel.allCollections.value?.find { colList -> colList.collectionId == lastUsedCollectionId }
                 icalEditViewModel.allCollections.value?.indexOf(lastUsedCollection) ?: 0
             } else {
-                icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection)  ?: 0
+                icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection)
+                    ?: 0
             }
             binding.editCollectionSpinner.setSelection(selectedCollectionPos)
 
             //as loading the collections might take longer than loading the icalObject, we additionally set the color here
             updateCollectionColor()
-        })
+        }
 
 
         binding.editDtstartCard.setOnClickListener {
@@ -2285,8 +2286,9 @@ class IcalEditFragment : Fragment() {
             validationError += resources.getString(R.string.edit_validation_errors_summary_or_description_necessary) + "\n"
         if(icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && icalEditViewModel.iCalObjectUpdated.value?.due != null && icalEditViewModel.iCalObjectUpdated.value?.due!! < icalEditViewModel.iCalObjectUpdated.value?.dtstart!!)
             validationError += resources.getString(R.string.edit_validation_errors_dialog_due_date_before_dtstart) + "\n"
-        if((icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone?.isNotEmpty() == true && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone.isNullOrEmpty())
-            || (icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone.isNullOrEmpty() && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone?.isNotEmpty() == true))
+        if(icalEditViewModel.iCalObjectUpdated.value?.module == Module.TODO.name &&
+        ((icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone?.isNotEmpty() == true && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone.isNullOrEmpty())
+            || (icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone.isNullOrEmpty() && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone?.isNotEmpty() == true)))
                 validationError += resources.getString(R.string.edit_validation_errors_start_due_timezone_check) + "\n"
 
         if(binding.editCategoriesAddAutocomplete.text.isNotEmpty())

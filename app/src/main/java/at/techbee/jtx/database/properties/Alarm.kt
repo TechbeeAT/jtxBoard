@@ -385,7 +385,7 @@ data class Alarm (
                 if(description != summary)
                     setContentText(description)
                 setContentIntent(contentIntent)
-                setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                priority = NotificationCompat.PRIORITY_DEFAULT
                 //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
             }
                 .build()

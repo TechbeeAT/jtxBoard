@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -100,6 +101,8 @@ class IcalListFragment : Fragment() {
         const val PREFS_JOURNAL_CLASSIFICATION = "prefsJournalClassification"
         const val PREFS_JOURNAL_STATUS_JOURNAL = "prefsJournalStatusJournal"
         const val PREFS_JOURNAL_STATUS_TODO = "prefsJournalStatusTodo"
+        const val PREFS_JOURNAL_EXCLUDE_DONE = "prefsJournalExcludeDone"
+
         //Note
         const val PREFS_NOTE_COLLECTION = "prefsNoteCollection"
         const val PREFS_NOTE_ACCOUNT = "prefsNoteAccount"
@@ -107,6 +110,7 @@ class IcalListFragment : Fragment() {
         const val PREFS_NOTE_CLASSIFICATION = "prefsNoteClassification"
         const val PREFS_NOTE_STATUS_JOURNAL = "prefsNoteStatusJournal"
         const val PREFS_NOTE_STATUS_TODO = "prefsNoteStatusTodo"
+        const val PREFS_NOTE_EXCLUDE_DONE = "prefsNoteExcludeDone"
         //Todos
         const val PREFS_TODO_COLLECTION = "prefsTodoCollection"
         const val PREFS_TODO_ACCOUNT = "prefsTodoAccount"
@@ -114,6 +118,7 @@ class IcalListFragment : Fragment() {
         const val PREFS_TODO_CLASSIFICATION = "prefsTodoClassification"
         //const val PREFS_TODO_STATUS_JOURNAL = "prefsTodoStatusJournal"
         const val PREFS_TODO_STATUS_TODO = "prefsTodoStatusTodo"
+        const val PREFS_TODO_EXCLUDE_DONE = "prefsTodoExcludeDone"
 
         const val SETTINGS_SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_of_journals_and_todos_in_tasklist"
         const val SETTINGS_SHOW_SUBNOTES_IN_LIST = "settings_show_subnotes_of_journals_and_tasks_in_noteslist"
@@ -132,7 +137,6 @@ class IcalListFragment : Fragment() {
         // Get a reference to the binding object and inflate the fragment views.
         binding = FragmentIcalListBinding.inflate(inflater, container, false)
 
-        // set up DB DAO
         application = requireNotNull(this.activity).application
         dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
@@ -151,8 +155,6 @@ class IcalListFragment : Fragment() {
         // set up recycler view
         recyclerView = binding.vjournalListItemsRecyclerView
         linearLayoutManager = LinearLayoutManager(application.applicationContext)
-        //staggeredGridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-        //recyclerView?.layoutManager = staggeredGridLayoutManager
         recyclerView?.layoutManager = linearLayoutManager
         recyclerView?.setHasFixedSize(false)
 
@@ -171,56 +173,53 @@ class IcalListFragment : Fragment() {
         }
 
 
-        icalListViewModel.iCal4List.observe(viewLifecycleOwner, {
-
+        icalListViewModel.iCal4List.observe(viewLifecycleOwner) {
 
             updateMenuVisibilities()
             binding.listProgressIndicator.visibility = View.GONE
 
-
             // if the hash is the same as before, the list has not changed and we don't continue (such triggers happen regularly when DAVx5 is doing the sync)
             // searchStatusTodo needs special handling, if it was changed (although the basic list might be the same), the subtasks might change and they
             // need to be rebuilt with the new setting
-            if(lastIcal4ListHash == it.hashCode() && lastSearchStatusTodo == icalListViewModel.searchStatusTodo)
+            if (lastIcal4ListHash == it.hashCode() && lastSearchStatusTodo == icalListViewModel.searchStatusTodo)
                 return@observe
             lastIcal4ListHash = it.hashCode()
             lastSearchStatusTodo = icalListViewModel.searchStatusTodo
 
-
             //recyclerView?.adapter?.notifyDataSetChanged()
             // instead of notifyDataSetChanged, we initialize the recycler view from scratch in the observer (instead of onCreateView)
             // this seems to be more efficient and also makes sure that the list gets purged before it's rebuild and avoids strange layout behaviours
-            when(icalListViewModel.searchModule) {
+            when (icalListViewModel.searchModule) {
                 Module.JOURNAL.name -> recyclerView?.adapter = IcalListAdapterJournal(requireContext(), icalListViewModel)
                 Module.NOTE.name -> recyclerView?.adapter = IcalListAdapterNote(requireContext(), icalListViewModel)
                 Module.TODO.name -> recyclerView?.adapter = IcalListAdapterTodo(requireContext(), icalListViewModel)
             }
 
-            if(lastSearchModule != icalListViewModel.searchModule)          // we do the animation only if the module was changed. Otherwise animation would also be done when e.g. a progress is changed.
+            if (lastSearchModule != icalListViewModel.searchModule)          // we do the animation only if the module was changed. Otherwise animation would also be done when e.g. a progress is changed.
                 recyclerView?.scheduleLayoutAnimation()
             lastSearchModule = icalListViewModel.searchModule               // remember the last list size and search module
 
             updateMenuVisibilities()
 
-            if(icalListViewModel.scrollOnceId != null)
+            if (icalListViewModel.scrollOnceId != null)
                 scrollOnce()
 
-        })
+        }
 
         // This observer is needed in order to make sure that the Subtasks are retrieved!
-        icalListViewModel.allSubtasks.observe(viewLifecycleOwner, {
+        icalListViewModel.allSubtasks.observe(viewLifecycleOwner) {
             //if(it.isNotEmpty())
-                //recyclerView?.adapter?.notifyDataSetChanged()
+            //recyclerView?.adapter?.notifyDataSetChanged()
             // trying to skip this code. This might have the effect, that subtasks that are added during the sync might not be immediately available, but improves the performance as the list does not get updated all the time
-        })
+        }
 
 
         // observe to make sure that it gets updated
-        icalListViewModel.allRemoteCollections.observe(viewLifecycleOwner, {
+        icalListViewModel.allRemoteCollections.observe(viewLifecycleOwner) {
             // check if any accounts were removed, retrieve all DAVx5 Accounts
             val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
             icalListViewModel.removeDeletedAccounts(accounts)
-        })
+        }
 
 
         // observe the directEditEntity. This is set in the Adapter on long click through the model. On long click we forward the user directly to the edit fragment
@@ -264,8 +263,7 @@ class IcalListFragment : Fragment() {
                 R.id.menu_list_bottom_quick_journal -> showQuickAddDialog()
                 R.id.menu_list_bottom_quick_note -> showQuickAddDialog()
                 R.id.menu_list_bottom_quick_todo -> showQuickAddDialog()
-                R.id.menu_list_bottom_hide_completed_tasks -> applyQuickFilterTodo(mutableListOf(StatusTodo.`NEEDS-ACTION`, StatusTodo.`IN-PROCESS`))
-                R.id.menu_list_bottom_show_completed_tasks -> applyQuickFilterTodo(mutableListOf())
+                R.id.menu_list_bottom_toggle_completed_tasks -> toggleExcludeDone()
             }
             false
         }
@@ -361,12 +359,12 @@ class IcalListFragment : Fragment() {
             }
         }
 
-        if(isHideCompletedTasksFilterActive()) {
-            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = true
-            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = false
+        if(icalListViewModel.isExcludeDone) {
+            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_toggle_completed_tasks).icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_task_done_visibility_off)
+            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_toggle_completed_tasks).title = getString(R.string.menu_list_todo_hide_completed)
         } else {
-            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_show_completed_tasks).isVisible = false
-            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_hide_completed_tasks).isVisible = true
+            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_toggle_completed_tasks).icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_task_done_visibility_on)
+            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_toggle_completed_tasks).title = getString(R.string.menu_list_todo_show_completed)
         }
 
         // don't show the option to clear the filter if no filter was set
@@ -405,6 +403,7 @@ class IcalListFragment : Fragment() {
                 icalListViewModel.searchStatusJournal = arguments.statusJournal2filter?.toMutableList() ?: StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_STATUS_JOURNAL, null))
                 icalListViewModel.searchStatusTodo = arguments.statusTodo2filter?.toMutableList() ?: StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_STATUS_TODO, null))
                 icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_CLASSIFICATION, null))
+                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_JOURNAL_EXCLUDE_DONE, false)
             }
             Module.NOTE.name -> {
                 icalListViewModel.searchCategories = arguments.category2filter?.toMutableList() ?: prefs.getStringSet(PREFS_NOTE_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
@@ -413,7 +412,7 @@ class IcalListFragment : Fragment() {
                 icalListViewModel.searchStatusJournal = arguments.statusJournal2filter?.toMutableList() ?: StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_NOTE_STATUS_JOURNAL, null))
                 icalListViewModel.searchStatusTodo = arguments.statusTodo2filter?.toMutableList() ?: StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_NOTE_STATUS_TODO, null))
                 icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_NOTE_CLASSIFICATION, null))
-
+                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_NOTE_EXCLUDE_DONE, false)
             }
             Module.TODO.name -> {
                 icalListViewModel.searchCategories = arguments.category2filter?.toMutableList() ?: prefs.getStringSet(PREFS_TODO_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
@@ -422,6 +421,7 @@ class IcalListFragment : Fragment() {
                 //icalListViewModel.searchStatusJournal = arguments.statusJournal2filter?.toMutableList() ?: StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_TODO_STATUS_JOURNAL, null))
                 icalListViewModel.searchStatusTodo = arguments.statusTodo2filter?.toMutableList() ?: StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_TODO_STATUS_TODO, null))
                 icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_TODO_CLASSIFICATION, null))
+                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_TODO_EXCLUDE_DONE, false)
             }
         }
 
@@ -453,6 +453,7 @@ class IcalListFragment : Fragment() {
                 icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_STATUS_JOURNAL, null))
                 icalListViewModel.searchStatusTodo = StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_STATUS_TODO, null))
                 icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_CLASSIFICATION, null))
+                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_JOURNAL_EXCLUDE_DONE, false)
             }
             Module.NOTE.name -> {
                 icalListViewModel.searchCategories = prefs.getStringSet(PREFS_NOTE_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
@@ -461,7 +462,7 @@ class IcalListFragment : Fragment() {
                 icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_NOTE_STATUS_JOURNAL, null))
                 icalListViewModel.searchStatusTodo = StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_NOTE_STATUS_TODO, null))
                 icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(PREFS_NOTE_CLASSIFICATION, null))
-
+                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_NOTE_EXCLUDE_DONE, false)
             }
             Module.TODO.name -> {
                 icalListViewModel.searchCategories = prefs.getStringSet(PREFS_TODO_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
@@ -470,6 +471,7 @@ class IcalListFragment : Fragment() {
                 //icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_TODO_STATUS_JOURNAL, null))
                 icalListViewModel.searchStatusTodo = StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_TODO_STATUS_TODO, null))
                 icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(PREFS_TODO_CLASSIFICATION, null))
+                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_TODO_EXCLUDE_DONE, false)
             }
         }
     }
@@ -492,6 +494,7 @@ class IcalListFragment : Fragment() {
                 prefs.edit().putStringSet(PREFS_JOURNAL_STATUS_TODO, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
                 prefs.edit().putStringSet(PREFS_JOURNAL_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
                 prefs.edit().putStringSet(PREFS_JOURNAL_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
+                prefs.edit().putBoolean(PREFS_JOURNAL_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
             }
             Module.NOTE.name -> {
                 prefs.edit().putStringSet(PREFS_NOTE_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
@@ -500,6 +503,7 @@ class IcalListFragment : Fragment() {
                 prefs.edit().putStringSet(PREFS_NOTE_STATUS_TODO, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
                 prefs.edit().putStringSet(PREFS_NOTE_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
                 prefs.edit().putStringSet(PREFS_NOTE_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
+                prefs.edit().putBoolean(PREFS_NOTE_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
             }
             Module.TODO.name -> {
                 prefs.edit().putStringSet(PREFS_TODO_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
@@ -508,6 +512,7 @@ class IcalListFragment : Fragment() {
                 prefs.edit().putStringSet(PREFS_TODO_STATUS_TODO, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
                 prefs.edit().putStringSet(PREFS_TODO_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
                 prefs.edit().putStringSet(PREFS_TODO_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
+                prefs.edit().putBoolean(PREFS_TODO_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
             }
         }
         prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
@@ -565,6 +570,7 @@ class IcalListFragment : Fragment() {
      */
     private fun resetFilter() {
 
+        lastIcal4ListHash = 0    // make sure the whole view gets reloaded
         icalListViewModel.clearFilter()
 
         when (icalListViewModel.searchModule) {
@@ -575,6 +581,7 @@ class IcalListFragment : Fragment() {
                 prefs.edit().remove(PREFS_JOURNAL_STATUS_TODO).apply()
                 prefs.edit().remove(PREFS_JOURNAL_CLASSIFICATION).apply()
                 prefs.edit().remove(PREFS_JOURNAL_CATEGORIES).apply()
+                prefs.edit().remove(PREFS_JOURNAL_EXCLUDE_DONE).apply()
             }
             Module.NOTE.name -> {
                 prefs.edit().remove(PREFS_NOTE_COLLECTION).apply()
@@ -583,6 +590,7 @@ class IcalListFragment : Fragment() {
                 prefs.edit().remove(PREFS_NOTE_STATUS_TODO).apply()
                 prefs.edit().remove(PREFS_NOTE_CLASSIFICATION).apply()
                 prefs.edit().remove(PREFS_NOTE_CATEGORIES).apply()
+                prefs.edit().remove(PREFS_NOTE_EXCLUDE_DONE).apply()
             }
             Module.TODO.name -> {
                 prefs.edit().remove(PREFS_TODO_COLLECTION).apply()
@@ -591,6 +599,7 @@ class IcalListFragment : Fragment() {
                 prefs.edit().remove(PREFS_TODO_STATUS_TODO).apply()
                 prefs.edit().remove(PREFS_TODO_CLASSIFICATION).apply()
                 prefs.edit().remove(PREFS_TODO_CATEGORIES).apply()
+                prefs.edit().remove(PREFS_TODO_EXCLUDE_DONE).apply()
             }
         }
     }
@@ -622,17 +631,12 @@ class IcalListFragment : Fragment() {
     }
      */
 
-    private fun applyQuickFilterTodo(statusList: MutableList<StatusTodo>) {
 
-        icalListViewModel.searchStatusTodo = statusList
+    private fun toggleExcludeDone() {
+        icalListViewModel.isExcludeDone = !icalListViewModel.isExcludeDone
+        lastIcal4ListHash = 0     // makes the recycler view refresh everything (necessary for subtasks!)
         applyFilters()
     }
-
-    /**
-     * Returns true if the Filter for Status Todos "In process" and "Needs action" is active
-     */
-    private fun isHideCompletedTasksFilterActive() = icalListViewModel.searchStatusTodo.size == 2 && icalListViewModel.searchStatusTodo.containsAll(listOf(StatusTodo.`IN-PROCESS`, StatusTodo.`NEEDS-ACTION`))
-
 
 
     private fun showScrollToDate() {
@@ -707,11 +711,10 @@ class IcalListFragment : Fragment() {
                 icalListViewModel.scrollOnceId = null
             }
         }
-
     }
 
 
-    private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || (icalListViewModel.searchModule == Module.JOURNAL.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.NOTE.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.TODO.name && icalListViewModel.searchStatusTodo.isNotEmpty()) || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty() || icalListViewModel.searchAccount.isNotEmpty()
+    private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || (icalListViewModel.searchModule == Module.JOURNAL.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.NOTE.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.TODO.name && icalListViewModel.searchStatusTodo.isNotEmpty()) || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty() || icalListViewModel.searchAccount.isNotEmpty() || icalListViewModel.isExcludeDone
 
     private fun deleteVisible() {
 

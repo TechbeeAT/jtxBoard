@@ -27,12 +27,7 @@
             android:title="@string/menu_list_quick_todo"
             app:showAsAction="ifRoom" />
         <item
-            android:id="@+id/menu_list_bottom_hide_completed_tasks"
-            android:icon="@drawable/ic_task_done_visibility_off"
-            android:title="@string/menu_list_todo_hide_completed"
-            app:showAsAction="ifRoom" />
-        <item
-            android:id="@+id/menu_list_bottom_show_completed_tasks"
+            android:id="@+id/menu_list_bottom_toggle_completed_tasks"
             android:icon="@drawable/ic_task_done_visibility_on"
             android:title="@string/menu_list_todo_show_completed"
             app:showAsAction="ifRoom" />
