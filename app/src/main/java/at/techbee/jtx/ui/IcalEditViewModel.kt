@@ -531,7 +531,7 @@ class IcalEditViewModel(
                     database.insertComment(it)
                 }
 
-                if (item.organizer != null) {
+                if (item.organizer?.caladdress != null) {
                     item.organizer?.icalObjectId = newId
                     database.insertOrganizer(item.organizer!!)
                 }
