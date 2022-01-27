@@ -51,6 +51,36 @@
     <string name="collection">Collection</string>
     <string name="color">Color</string>
 
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">Draft</string>
+    <string name="journal_status_final">Final</string>
+    <string name="journal_status_cancelled">Cancelled</string>
+
+    <string name="todo_status_needsaction">Needs action</string>
+    <string name="todo_status_completed">Completed</string>
+    <string name="todo_status_inprocess">In process</string>
+    <string name="todo_status_cancelled">Cancelled</string>
+
+    <string name="classification_public">Public</string>
+    <string name="classification_private">Private</string>
+    <string name="classification_confidential">Confidential</string>
+
+    <string name="attendee_role_chair">Chair</string>
+    <string name="attendee_role_required_participant">Required participant</string>
+    <string name="attendee_role_optional_participant">Optional participant</string>
+    <string name="attendee_role_non_participant">Non-participant / Info</string>
+
+    <string name="priority_0_no_priority">No priority</string>
+    <string name="priority_1_highest">1 - Highest</string>
+    <string name="priority_2_higher">2 - Higher</string>
+    <string name="priority_3_high">3 - High</string>
+    <string name="priority_4_medium_high">4 - Medium high</string>
+    <string name="priority_5_medium">5 - Medium</string>
+    <string name="priority_6_medium_low">6 - Medium low</string>
+    <string name="priority_7_high">7 - High</string>
+    <string name="priority_8_higher">8 - Higher</string>
+    <string name="priority_9_highest">9 - Highest</string>
+
 
     <string name="toolbar_text_jtx_board" translatable="false">jtx Board</string>
     <string name="toolbar_text_jtx_board_journals_overview">Journals Overview</string>
@@ -84,27 +114,6 @@
     <string name="intent_dialog_add_note">Note</string>
     <string name="intent_dialog_add_task">Task</string>
 
-
-    <!-- Strings for values in properties of an ICalObject -->
-    <string name="journal_status_draft">Draft</string>
-    <string name="journal_status_final">Final</string>
-    <string name="journal_status_cancelled">Cancelled</string>
-
-    <string name="todo_status_needsaction">Needs action</string>
-    <string name="todo_status_completed">Completed</string>
-    <string name="todo_status_inprocess">In process</string>
-    <string name="todo_status_cancelled">Cancelled</string>
-
-
-
-    <string name="classification_public">Public</string>
-    <string name="classification_private">Private</string>
-    <string name="classification_confidential">Confidential</string>
-
-    <string name="attendee_role_chair">Chair</string>
-    <string name="attendee_role_required_participant">Required participant</string>
-    <string name="attendee_role_optional_participant">Optional participant</string>
-    <string name="attendee_role_non_participant">Non-participant / Info</string>
 
 
     <!-- Navigation Drawer  -->
@@ -278,6 +287,10 @@
     <string name="edit_recur_x_day_of_the_month">day of the month</string>
     <string name="edit_recur_x_times">times</string>
     <string name="edit_recur_toast_requires_start_date">Recurrence requires a start-date to be set!</string>
+    <string name="edit_recur_day">day(s)</string>
+    <string name="edit_recur_week">week(s)</string>
+    <string name="edit_recur_month">month(s)</string>
+    <string name="edit_recur_year">year(s)</string>
     <string name="edit_datepicker_dialog_select_date">Select date</string>
     <string name="edit_datepicker_dialog_select_time">Select time</string>
     <string name="edit_task_started_add">Pick started date/time</string>

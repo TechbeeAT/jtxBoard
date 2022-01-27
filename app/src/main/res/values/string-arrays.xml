@@ -8,22 +8,22 @@
 
 <resources>
     <string-array name="edit_recur_day_week_month_year">
-        <item>Day(s)</item>
-        <item>Week(s)</item>
-        <item>Month(s)</item>
-        <item>Year(s)</item>
+        <item>@string/edit_recur_day</item>
+        <item>@string/edit_recur_week</item>
+        <item>@string/edit_recur_month</item>
+        <item>@string/edit_recur_year</item>
     </string-array>
 
     <string-array name="priority">
-        <item>0 - No priority</item>
-        <item>1 - Highest</item>
-        <item>2 - Higher</item>
-        <item>3 - High</item>
-        <item>4 - Medium high</item>
-        <item>5 - Medium</item>
-        <item>6 - Medium low</item>
-        <item>7 - Low</item>
-        <item>8 - Lower</item>
-        <item>9 - Lowest</item>
+        <item>@string/priority_0_no_priority</item>
+        <item>@string/priority_1_highest</item>
+        <item>@string/priority_2_higher</item>
+        <item>@string/priority_3_high</item>
+        <item>@string/priority_4_medium_high</item>
+        <item>@string/priority_5_medium</item>
+        <item>@string/priority_6_medium_low</item>
+        <item>@string/priority_7_high</item>
+        <item>@string/priority_8_higher</item>
+        <item>@string/priority_9_highest</item>
     </string-array>
 </resources>
