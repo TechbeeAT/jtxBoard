@@ -380,15 +380,15 @@ class IcalEditFragmentTest {
         onView(withId(R.id.confirm_button)).perform(click())
 
         scenario.onFragment {
-            assertEquals(true, it.binding.editTaskDatesFragment.editTaskStartedDay.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editTaskStartedMonth.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editTaskStartedYear.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editTaskDueDay.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editTaskDueMonth.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editTaskDueYear.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editTaskCompletedDay.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editTaskCompletedMonth.text?.isNotEmpty())
-            assertEquals(true, it.binding.editTaskDatesFragment.editTaskCompletedYear.text?.isNotEmpty())
+            assertEquals(true, it.binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskStartedDay.text?.isNotEmpty())
+            assertEquals(true, it.binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskStartedMonth.text?.isNotEmpty())
+            assertEquals(true, it.binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskStartedYear.text?.isNotEmpty())
+            assertEquals(true, it.binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskDueDay.text?.isNotEmpty())
+            assertEquals(true, it.binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskDueMonth.text?.isNotEmpty())
+            assertEquals(true, it.binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskDueYear.text?.isNotEmpty())
+            assertEquals(true, it.binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskCompletedDay.text?.isNotEmpty())
+            assertEquals(true, it.binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskCompletedMonth.text?.isNotEmpty())
+            assertEquals(true, it.binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskCompletedYear.text?.isNotEmpty())
         }
     }
 
@@ -444,7 +444,7 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_categories_add_autocomplete)).perform(pressImeActionButton())
 
         scenario.onFragment {
-            assertTrue(it.binding.editCategoriesAddAutocomplete.text.isNullOrBlank())    // make sure that the edittext got cleared
+            assertTrue(it.binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.text.isNullOrBlank())    // make sure that the edittext got cleared
             assertTrue(it.icalEditViewModel.categoryUpdated.contains(Category(text = newCategory)))
         }
 
@@ -470,7 +470,7 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_attendees_add_autocomplete)).perform(pressImeActionButton())
 
         scenario.onFragment {
-            assertTrue(it.binding.editAttendeesAddAutocomplete.text.isNullOrBlank())    // make sure that the edittext got cleared
+            assertTrue(it.binding.editFragmentTabCar.editAttendeesAddAutocomplete.text.isNullOrBlank())    // make sure that the edittext got cleared
             assertTrue(it.icalEditViewModel.attendeeUpdated.contains(Attendee(caladdress = newAttendee)))
         }
 
@@ -496,7 +496,7 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_resources_add_autocomplete)).perform(pressImeActionButton())
 
         scenario.onFragment {
-            assertTrue(it.binding.editResourcesAddAutocomplete.text.isNullOrBlank())    // make sure that the edittext got cleared
+            assertTrue(it.binding.editFragmentTabCar.editResourcesAddAutocomplete.text.isNullOrBlank())    // make sure that the edittext got cleared
             assertTrue(it.icalEditViewModel.resourceUpdated.contains(Resource(text = newResource)))
         }
 
@@ -524,7 +524,7 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_comment_add_edittext)).perform(pressImeActionButton())
 
         scenario.onFragment {
-            assertTrue(it.binding.editCommentAddEdittext.text.isNullOrBlank())    // make sure that the edittext got cleared
+            assertTrue(it.binding.editFragmentTabUlc.editCommentAddEdittext.text.isNullOrBlank())    // make sure that the edittext got cleared
             assertTrue(it.icalEditViewModel.commentUpdated.contains(Comment(text = newComment)))
         }
 
@@ -551,7 +551,7 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_subtasks_add_edittext)).perform(pressImeActionButton())
 
         scenario.onFragment {
-            assertTrue(it.binding.editSubtasksAddEdittext.text.isNullOrBlank())    // make sure that the edittext got cleared
+            assertTrue(it.binding.editFragmentTabSubtasks.editSubtasksAddEdittext.text.isNullOrBlank())    // make sure that the edittext got cleared
             assertNotNull(it.icalEditViewModel.subtaskUpdated.find { subtask ->
                 subtask.summary == newSubtask
             })

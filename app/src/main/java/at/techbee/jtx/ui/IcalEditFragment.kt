@@ -160,7 +160,7 @@ class IcalEditFragment : Fragment() {
         // add markwon to description edittext
         val markwon = Markwon.create(requireContext())
         val markwonEditor = MarkwonEditor.create(markwon)
-        binding.editDescriptionEdittext.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(markwonEditor))
+        binding.editFragmentTabGeneral.editDescriptionEdittext.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(markwonEditor))
 
         // Check if the permission to read local contacts is already granted, otherwise make a dialog to ask for permission
         if (ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
@@ -214,7 +214,7 @@ class IcalEditFragment : Fragment() {
         if(icalEditViewModel.iCalEntity.property.component == Component.VJOURNAL.name)
             binding.icalEditTabs.getTabAt(TAB_ALARMS)?.view?.visibility = View.GONE
 
-        binding.editCollectionSpinner.onItemSelectedListener =
+        binding.editFragmentTabGeneral.editCollectionSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
 
                 override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
@@ -476,14 +476,14 @@ class IcalEditFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
                 when (tab?.position) {
-                    TAB_GENERAL -> icalEditViewModel.selectedTab = TAB_GENERAL
-                    TAB_PEOPLE_RES -> icalEditViewModel.selectedTab = TAB_PEOPLE_RES
-                    TAB_LOC_COMMENTS -> icalEditViewModel.selectedTab = TAB_LOC_COMMENTS
-                    TAB_ATTACHMENTS -> icalEditViewModel.selectedTab = TAB_ATTACHMENTS
-                    TAB_SUBTASKS -> icalEditViewModel.selectedTab = TAB_SUBTASKS
-                    TAB_RECURRING -> icalEditViewModel.selectedTab = TAB_RECURRING
-                    TAB_ALARMS -> icalEditViewModel.selectedTab = TAB_ALARMS
-                    else -> icalEditViewModel.selectedTab = TAB_GENERAL
+                    TAB_GENERAL -> icalEditViewModel.activeTab.postValue(TAB_GENERAL)
+                    TAB_PEOPLE_RES -> icalEditViewModel.activeTab.postValue(TAB_PEOPLE_RES)
+                    TAB_LOC_COMMENTS -> icalEditViewModel.activeTab.postValue(TAB_LOC_COMMENTS)
+                    TAB_ATTACHMENTS -> icalEditViewModel.activeTab.postValue(TAB_ATTACHMENTS)
+                    TAB_SUBTASKS -> icalEditViewModel.activeTab.postValue(TAB_SUBTASKS)
+                    TAB_RECURRING -> icalEditViewModel.activeTab.postValue(TAB_RECURRING)
+                    TAB_ALARMS -> icalEditViewModel.activeTab.postValue(TAB_ALARMS)
+                    else -> icalEditViewModel.activeTab.postValue(TAB_GENERAL)
                 }
                 hideKeyboard()
                 icalEditViewModel.updateVisibility()
@@ -492,11 +492,11 @@ class IcalEditFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
         })
 
-        binding.editSummaryEditTextinputfield.addTextChangedListener {
+        binding.editFragmentTabGeneral.editSummaryEditTextinputfield.addTextChangedListener {
             updateToolbarText()
         }
 
-        binding.editColorItem.setOnClickListener {
+        binding.editFragmentTabGeneral.editColorItem.setOnClickListener {
 
             val colorPickerBinding = FragmentIcalEditColorpickerDialogBinding.inflate(inflater)
             icalEditViewModel.iCalObjectUpdated.value?.color?.let{ colorPickerBinding.colorPicker.color = it }
@@ -526,7 +526,7 @@ class IcalEditFragment : Fragment() {
                     return@observe
 
                 icalEditViewModel.iCalObjectUpdated.value!!.percent =
-                    binding.editProgressSlider.value.toInt()
+                    binding.editFragmentTabGeneral.editProgressSlider.value.toInt()
                 prefs.edit().putLong(
                     PREFS_LAST_COLLECTION,
                     icalEditViewModel.iCalObjectUpdated.value!!.collectionId
@@ -592,23 +592,23 @@ class IcalEditFragment : Fragment() {
 
             updateToolbarText()
 
-            binding.editProgressPercent.text = String.format("%.0f%%", it.percent?.toFloat() ?: 0F)
+            binding.editFragmentTabGeneral.editProgressPercent.text = String.format("%.0f%%", it.percent?.toFloat() ?: 0F)
 
             // Set the default value of the priority Chip
             when (it.priority) {
-                null -> binding.editPriorityChip.text = priorityItems[0]
-                in 0..9 -> binding.editPriorityChip.text =
+                null -> binding.editFragmentTabGeneral.editPriorityChip.text = priorityItems[0]
+                in 0..9 -> binding.editFragmentTabGeneral.editPriorityChip.text =
                     priorityItems[it.priority!!]  // if supported show the priority according to the String Array
-                else -> binding.editPriorityChip.text = it.priority.toString()
+                else -> binding.editFragmentTabGeneral.editPriorityChip.text = it.priority.toString()
             }
 
             // Set the default value of the Status Chip
             when (it.component) {
-                Component.VTODO.name -> binding.editStatusChip.text =
+                Component.VTODO.name -> binding.editFragmentTabGeneral.editStatusChip.text =
                     StatusTodo.getStringResource(requireContext(), it.status) ?: it.status
-                Component.VJOURNAL.name -> binding.editStatusChip.text =
+                Component.VJOURNAL.name -> binding.editFragmentTabGeneral.editStatusChip.text =
                     StatusJournal.getStringResource(requireContext(), it.status) ?: it.status
-                else -> binding.editStatusChip.text = it.status
+                else -> binding.editFragmentTabGeneral.editStatusChip.text = it.status
             }       // if unsupported just show whatever is there
 
             // show the reset dates menu item if it is a to-do
@@ -624,7 +624,7 @@ class IcalEditFragment : Fragment() {
             }
 
             // Set the default value of the Classification Chip
-            binding.editClassificationChip.text =
+            binding.editFragmentTabGeneral.editClassificationChip.text =
                 Classification.getStringResource(requireContext(), it.classification)
                     ?: it.classification       // if unsupported just show whatever is there
 
@@ -634,7 +634,7 @@ class IcalEditFragment : Fragment() {
             // update color for collection if possible
             updateCollectionColor()
             // update color for item if possible
-            ICalObject.applyColorOrHide(binding.editColorbarItem, it.color)
+            ICalObject.applyColorOrHide(binding.editFragmentTabGeneral.editColorbarItem, it.color)
 
             // update quick alarm options depending if dates are set
             if(it.dtstart == null)
@@ -844,7 +844,7 @@ class IcalEditFragment : Fragment() {
                     android.R.layout.simple_list_item_1,
                     icalEditViewModel.allCategories.value!!
                 )
-                binding.editCategoriesAddAutocomplete.setAdapter(arrayAdapter)
+                binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.setAdapter(arrayAdapter)
             }
         }
 
@@ -857,7 +857,7 @@ class IcalEditFragment : Fragment() {
                     android.R.layout.simple_list_item_1,
                     icalEditViewModel.allResources.value!!
                 )
-                binding.editResourcesAddAutocomplete.setAdapter(arrayAdapter)
+                binding.editFragmentTabCar.editResourcesAddAutocomplete.setAdapter(arrayAdapter)
             }
         }
 
@@ -867,7 +867,7 @@ class IcalEditFragment : Fragment() {
             // if the current item can be found as linkedICalObjectId and the reltype is CHILD, then it must be a child and changing the collection is not allowed
             // also making it recurring is not allowed
             if (icalEditViewModel.iCalObjectUpdated.value?.id != 0L && it?.find { rel -> rel.linkedICalObjectId == icalEditViewModel.iCalObjectUpdated.value?.id && rel.reltype == Reltype.CHILD.name } != null) {
-                binding.editCollectionSpinner.isEnabled = false
+                binding.editFragmentTabGeneral.editCollectionSpinner.isEnabled = false
                 binding.editFragmentIcalEditRecur.editRecurSwitch.isEnabled = false
             }
         }
@@ -882,7 +882,7 @@ class IcalEditFragment : Fragment() {
                 return@observe
 
             // set up the adapter for the organizer spinner
-            val spinner: Spinner = binding.editCollectionSpinner
+            val spinner: Spinner = binding.editFragmentTabGeneral.editCollectionSpinner
             val allCollectionNames: MutableList<String> = mutableListOf()
             icalEditViewModel.allCollections.value?.forEach { collection ->
                 if (collection.displayName?.isNotEmpty() == true && collection.accountName?.isNotEmpty() == true)
@@ -908,14 +908,14 @@ class IcalEditFragment : Fragment() {
                 icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection)
                     ?: 0
             }
-            binding.editCollectionSpinner.setSelection(selectedCollectionPos)
+            binding.editFragmentTabGeneral.editCollectionSpinner.setSelection(selectedCollectionPos)
 
             //as loading the collections might take longer than loading the icalObject, we additionally set the color here
             updateCollectionColor()
         }
 
 
-        binding.editDtstartCard.setOnClickListener {
+        binding.editFragmentTabGeneral.editDtstartCard.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
                 icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone,
@@ -923,7 +923,7 @@ class IcalEditFragment : Fragment() {
             )
         }
 
-        binding.editTaskDatesFragment.editTaskDueCard.setOnClickListener {
+        binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskDueCard.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis(),
                 icalEditViewModel.iCalObjectUpdated.value?.dueTimezone,
@@ -931,7 +931,7 @@ class IcalEditFragment : Fragment() {
             )
         }
 
-        binding.editTaskDatesFragment.editTaskCompletedCard.setOnClickListener {
+        binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskCompletedCard.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.completed ?: System.currentTimeMillis(),
                 icalEditViewModel.iCalObjectUpdated.value?.completedTimezone,
@@ -939,7 +939,7 @@ class IcalEditFragment : Fragment() {
             )
         }
 
-        binding.editTaskDatesFragment.editTaskStartedCard.setOnClickListener {
+        binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskStartedCard.setOnClickListener {
             showDatePicker(
                 icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
                 icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone,
@@ -949,10 +949,10 @@ class IcalEditFragment : Fragment() {
 
         var restoreProgress = icalEditViewModel.iCalObjectUpdated.value?.percent ?: 0
 
-        binding.editProgressSlider.addOnChangeListener { _, value, _ ->
+        binding.editFragmentTabGeneral.editProgressSlider.addOnChangeListener { _, value, _ ->
             icalEditViewModel.iCalObjectUpdated.value?.percent = value.toInt()
-            binding.editProgressCheckbox.isChecked = value == 100F
-            binding.editProgressPercent.text = String.format("%.0f%%", value)   // takes care of localized representation of percentages (with 0 positions after the comma)
+            binding.editFragmentTabGeneral.editProgressCheckbox.isChecked = value == 100F
+            binding.editFragmentTabGeneral.editProgressPercent.text = String.format("%.0f%%", value)   // takes care of localized representation of percentages (with 0 positions after the comma)
             if (value != 100F)
                 restoreProgress = value.toInt()
 
@@ -974,38 +974,38 @@ class IcalEditFragment : Fragment() {
             // update the status only if it was actually changed, otherwise the performance sucks
             if (icalEditViewModel.iCalObjectUpdated.value!!.status != statusBefore) {
                 when (icalEditViewModel.iCalObjectUpdated.value!!.component) {
-                    Component.VTODO.name -> binding.editStatusChip.text =
+                    Component.VTODO.name -> binding.editFragmentTabGeneral.editStatusChip.text =
                         StatusTodo.getStringResource(
                             requireContext(),
                             icalEditViewModel.iCalObjectUpdated.value!!.status
                         ) ?: icalEditViewModel.iCalObjectUpdated.value!!.status
-                    Component.VJOURNAL.name -> binding.editStatusChip.text =
+                    Component.VJOURNAL.name -> binding.editFragmentTabGeneral.editStatusChip.text =
                         StatusJournal.getStringResource(
                             requireContext(),
                             icalEditViewModel.iCalObjectUpdated.value!!.status
                         ) ?: icalEditViewModel.iCalObjectUpdated.value!!.status
-                    else -> binding.editStatusChip.text =
+                    else -> binding.editFragmentTabGeneral.editStatusChip.text =
                         icalEditViewModel.iCalObjectUpdated.value!!.status
                 }       // if unsupported just show whatever is there
             }
         }
 
-        binding.editProgressCheckbox.setOnCheckedChangeListener { _, checked ->
+        binding.editFragmentTabGeneral.editProgressCheckbox.setOnCheckedChangeListener { _, checked ->
             val newProgress: Int = if (checked) 100
             else restoreProgress
 
-            binding.editProgressSlider.value =
+            binding.editFragmentTabGeneral.editProgressSlider.value =
                 newProgress.toFloat()    // This will also trigger saving through the listener!
         }
 
 
         // Transform the category input into a chip when the Add-Button is clicked
-        binding.editCategoriesAdd.setEndIconOnClickListener {
+        binding.editFragmentTabGeneral.editCategoriesAdd.setEndIconOnClickListener {
             addNewCategory()
         }
 
         // Transform the category input into a chip when the Done button in the keyboard is clicked
-        binding.editCategoriesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
+        binding.editFragmentTabGeneral.editCategoriesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     addNewCategory()
@@ -1015,18 +1015,18 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-        binding.editCategoriesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
-            binding.editCategoriesAddAutocomplete.setText(binding.editCategoriesAddAutocomplete.adapter?.getItem(i).toString())
+        binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
+            binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.setText(binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.adapter?.getItem(i).toString())
             addNewCategory()
         }
 
 
-        binding.editResourcesAdd.setEndIconOnClickListener {
+        binding.editFragmentTabCar.editResourcesAdd.setEndIconOnClickListener {
             addNewResource()
         }
 
         // Transform the resource input into a chip when the Done button in the keyboard is clicked
-        binding.editResourcesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
+        binding.editFragmentTabCar.editResourcesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     addNewResource()
@@ -1036,13 +1036,13 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-        binding.editResourcesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
-            binding.editResourcesAddAutocomplete.setText(binding.editResourcesAddAutocomplete.adapter?.getItem(i).toString())
+        binding.editFragmentTabCar.editResourcesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
+            binding.editFragmentTabCar.editResourcesAddAutocomplete.setText(binding.editFragmentTabCar.editResourcesAddAutocomplete.adapter?.getItem(i).toString())
             addNewResource()
         }
 
-        binding.editAttendeesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
-            val selection = binding.editAttendeesAddAutocomplete.adapter.getItem(i).toString()
+        binding.editFragmentTabCar.editAttendeesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
+            val selection = binding.editFragmentTabCar.editAttendeesAddAutocomplete.adapter.getItem(i).toString()
             val selectionPos = allContactsSpinner.indexOf(selection)
             if(selectionPos == -1)
                 return@setOnItemClickListener
@@ -1052,46 +1052,50 @@ class IcalEditFragment : Fragment() {
             addNewAttendee(attendee)
         }
 
-        binding.editAttendeesAdd.setEndIconOnClickListener {
-            addNewAttendee(Attendee.fromString(binding.editAttendeesAdd.editText?.text.toString()))
+        binding.editFragmentTabCar.editAttendeesAdd.setEndIconOnClickListener {
+            addNewAttendee(Attendee.fromString(binding.editFragmentTabCar.editAttendeesAdd.editText?.text.toString()))
         }
 
         // Transform the category input into a chip when the Done button in the keyboard is clicked
-        binding.editAttendeesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
+        binding.editFragmentTabCar.editAttendeesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    addNewAttendee(Attendee.fromString(binding.editAttendeesAdd.editText?.text.toString()))
+                    addNewAttendee(Attendee.fromString(binding.editFragmentTabCar.editAttendeesAdd.editText?.text.toString()))
                     true
                 }
                 else -> false
             }
         }
 
-        binding.editCommentAdd.setEndIconOnClickListener {
+        binding.editFragmentTabUlc.editCommentAdd.setEndIconOnClickListener {
             // Respond to end icon presses
-            val newComment = Comment(text = binding.editCommentAdd.editText?.text.toString())
+            if(binding.editFragmentTabUlc.editCommentAdd.editText?.text.isNullOrEmpty())
+                return@setEndIconOnClickListener
+            val newComment = Comment(text = binding.editFragmentTabUlc.editCommentAdd.editText?.text.toString())
             icalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
             addCommentView(newComment)      // add the new comment
-            binding.editCommentAdd.editText?.text?.clear()  // clear the field
+            binding.editFragmentTabUlc.editCommentAdd.editText?.text?.clear()  // clear the field
 
         }
 
         // Transform the comment input into a view when the Done button in the keyboard is clicked
-        binding.editCommentAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
-            return@setOnEditorActionListener when (actionId) {
+        binding.editFragmentTabUlc.editCommentAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
+                    if(binding.editFragmentTabUlc.editCommentAdd.editText?.text.isNullOrEmpty())
+                        return@setOnEditorActionListener false
                     val newComment =
-                        Comment(text = binding.editCommentAdd.editText?.text.toString())
+                        Comment(text = binding.editFragmentTabUlc.editCommentAdd.editText?.text.toString())
                     icalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
                     addCommentView(newComment)      // add the new comment
-                    binding.editCommentAdd.editText?.text?.clear()  // clear the field
+                    binding.editFragmentTabUlc.editCommentAdd.editText?.text?.clear()  // clear the field
                     true
                 }
                 else -> false
             }
         }
 
-        binding.editFragmentIcalEditAttachment.buttonAttachmentAdd.setOnClickListener {
+        binding.editFragmentTabAttachments.buttonAttachmentAdd.setOnClickListener {
             var chooseFile = Intent(Intent.ACTION_GET_CONTENT)
             chooseFile.type = "*/*"
             chooseFile = Intent.createChooser(chooseFile, "Choose a file")
@@ -1105,9 +1109,9 @@ class IcalEditFragment : Fragment() {
 
         // don't show the button if the device does not have a camera
         if (!requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY))
-            binding.editFragmentIcalEditAttachment.buttonAttachmentTakePicture.visibility = View.GONE
+            binding.editFragmentTabAttachments.buttonAttachmentTakePicture.visibility = View.GONE
 
-        binding.editFragmentIcalEditAttachment.buttonAttachmentTakePicture.setOnClickListener {
+        binding.editFragmentTabAttachments.buttonAttachmentTakePicture.setOnClickListener {
 
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
@@ -1131,7 +1135,7 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-        binding.editFragmentIcalEditAttachment.buttonAttachmentAddLink.setOnClickListener {
+        binding.editFragmentTabAttachments.buttonAttachmentAddLink.setOnClickListener {
 
             val addlinkBindingDialog = FragmentIcalEditAttachmentAddlinkDialogBinding.inflate(inflater)
 
@@ -1176,27 +1180,27 @@ class IcalEditFragment : Fragment() {
             builder.show()
         }
 
-        binding.editSubtasksAdd.setEndIconOnClickListener {
+        binding.editFragmentTabSubtasks.editSubtasksAdd.setEndIconOnClickListener {
             // Respond to end icon presses
-            if(binding.editSubtasksAdd.editText?.text.toString().isNotBlank()) {
+            if(binding.editFragmentTabSubtasks.editSubtasksAdd.editText?.text.toString().isNotBlank()) {
                 val newSubtask =
-                    ICalObject.createTask(summary = binding.editSubtasksAdd.editText?.text.toString())
+                    ICalObject.createTask(summary = binding.editFragmentTabSubtasks.editSubtasksAdd.editText?.text.toString())
                 icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
                 addSubtasksView(newSubtask)      // add the new comment
-                binding.editSubtasksAdd.editText?.text?.clear()  // clear the field
+                binding.editFragmentTabSubtasks.editSubtasksAdd.editText?.text?.clear()  // clear the field
             }
         }
 
         // Transform the comment input into a view when the Done button in the keyboard is clicked
-        binding.editSubtasksAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
+        binding.editFragmentTabSubtasks.editSubtasksAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    if(binding.editSubtasksAdd.editText?.text.toString().isNotBlank()) {
+                    if(binding.editFragmentTabSubtasks.editSubtasksAdd.editText?.text.toString().isNotBlank()) {
                         val newSubtask =
-                            ICalObject.createTask(summary = binding.editSubtasksAdd.editText?.text.toString())
+                            ICalObject.createTask(summary = binding.editFragmentTabSubtasks.editSubtasksAdd.editText?.text.toString())
                         icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
                         addSubtasksView(newSubtask)      // add the new comment
-                        binding.editSubtasksAdd.editText?.text?.clear()  // clear the field
+                        binding.editFragmentTabSubtasks.editSubtasksAdd.editText?.text?.clear()  // clear the field
                     }
                     true
                 }
@@ -1205,7 +1209,7 @@ class IcalEditFragment : Fragment() {
         }
 
 
-        binding.editStatusChip.setOnClickListener {
+        binding.editFragmentTabGeneral.editStatusChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.edit_dialog_status)
@@ -1214,7 +1218,7 @@ class IcalEditFragment : Fragment() {
                     if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name) {
                         icalEditViewModel.iCalObjectUpdated.value!!.status =
                             StatusTodo.values().getOrNull(which)!!.name
-                        binding.editStatusChip.text = StatusTodo.getStringResource(
+                        binding.editFragmentTabGeneral.editStatusChip.text = StatusTodo.getStringResource(
                             requireContext(),
                             icalEditViewModel.iCalObjectUpdated.value!!.status
                         )
@@ -1223,7 +1227,7 @@ class IcalEditFragment : Fragment() {
                     if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VJOURNAL.name) {
                         icalEditViewModel.iCalObjectUpdated.value!!.status =
                             StatusJournal.values().getOrNull(which)!!.name
-                        binding.editStatusChip.text = StatusJournal.getStringResource(
+                        binding.editFragmentTabGeneral.editStatusChip.text = StatusJournal.getStringResource(
                             requireContext(),
                             icalEditViewModel.iCalObjectUpdated.value!!.status
                         )
@@ -1233,14 +1237,14 @@ class IcalEditFragment : Fragment() {
                 .setIcon(R.drawable.ic_status)
                 .setNegativeButton(R.string.reset) { _, _ ->
                     icalEditViewModel.iCalObjectUpdated.value!!.status = null
-                    binding.editStatusChip.text = ""
+                    binding.editFragmentTabGeneral.editStatusChip.text = ""
                 }
                 .setNeutralButton(R.string.cancel) { _, _ -> return@setNeutralButton }
                 .show()
         }
 
 
-        binding.editClassificationChip.setOnClickListener {
+        binding.editFragmentTabGeneral.editClassificationChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.edit_dialog_classification)
@@ -1248,7 +1252,7 @@ class IcalEditFragment : Fragment() {
                     // Respond to item chosen
                     icalEditViewModel.iCalObjectUpdated.value!!.classification =
                         Classification.values().getOrNull(which)!!.name
-                    binding.editClassificationChip.text = Classification.getStringResource(
+                    binding.editFragmentTabGeneral.editClassificationChip.text = Classification.getStringResource(
                         requireContext(),
                         icalEditViewModel.iCalObjectUpdated.value!!.classification
                     )    // don't forget to update the UI
@@ -1256,21 +1260,21 @@ class IcalEditFragment : Fragment() {
                 .setIcon(R.drawable.ic_classification)
                 .setNegativeButton(R.string.reset) { _, _ ->
                     icalEditViewModel.iCalObjectUpdated.value!!.classification = null
-                    binding.editClassificationChip.text = ""
+                    binding.editFragmentTabGeneral.editClassificationChip.text = ""
                 }
                 .setNeutralButton(R.string.cancel) { _, _ -> return@setNeutralButton }
                 .show()
         }
 
 
-        binding.editPriorityChip.setOnClickListener {
+        binding.editFragmentTabGeneral.editPriorityChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.edit_dialog_priority)
                 .setItems(priorityItems) { _, which ->
                     // Respond to item chosen
                     icalEditViewModel.iCalObjectUpdated.value!!.priority = which
-                    binding.editPriorityChip.text =
+                    binding.editFragmentTabGeneral.editPriorityChip.text =
                         priorityItems[which]     // don't forget to update the UI
                 }
                 .setIcon(R.drawable.ic_priority)
@@ -1278,14 +1282,14 @@ class IcalEditFragment : Fragment() {
         }
 
 
-        binding.editUrlEdit.editText?.setOnFocusChangeListener { _, _ ->
-            if ((binding.editUrlEdit.editText?.text?.isNotBlank() == true && !isValidURL(binding.editUrlEdit.editText?.text.toString())))
+        binding.editFragmentTabUlc.editUrlEdit.editText?.setOnFocusChangeListener { _, _ ->
+            if ((binding.editFragmentTabUlc.editUrlEdit.editText?.text?.isNotBlank() == true && !isValidURL(binding.editFragmentTabUlc.editUrlEdit.editText?.text.toString())))
                 icalEditViewModel.urlError.value = "Please enter a valid URL"
         }
 
-        binding.editAttendeesAdd.editText?.setOnFocusChangeListener { _, _ ->
-            if ((binding.editAttendeesAdd.editText?.text?.isNotBlank() == true && !isValidEmail(
-                    binding.editAttendeesAdd.editText?.text.toString()
+        binding.editFragmentTabCar.editAttendeesAdd.editText?.setOnFocusChangeListener { _, _ ->
+            if ((binding.editFragmentTabCar.editAttendeesAdd.editText?.text?.isNotBlank() == true && !isValidEmail(
+                    binding.editFragmentTabCar.editAttendeesAdd.editText?.text.toString()
                 ))
             )
                 icalEditViewModel.attendeesError.value = "Please enter a valid E-Mail address"
@@ -1335,7 +1339,7 @@ class IcalEditFragment : Fragment() {
                 }
             }
 
-            activity.setToolbarTitle(toolbarText, binding.editSummaryEditTextinputfield.text.toString() )
+            activity.setToolbarTitle(toolbarText, binding.editFragmentTabGeneral.editSummaryEditTextinputfield.text.toString() )
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
@@ -1349,7 +1353,7 @@ class IcalEditFragment : Fragment() {
             collection.collectionId == icalEditViewModel.iCalObjectUpdated.value?.collectionId
         }
         // applying the color
-        ICalObject.applyColorOrHide(binding.editColorbarCollection, selectedCollection?.color)
+        ICalObject.applyColorOrHide(binding.editFragmentTabGeneral.editColorbarCollection, selectedCollection?.color)
     }
 
     private fun showDatePicker(presetValueUTC: Long, timezone: String?, tag: String) {
@@ -1580,11 +1584,11 @@ class IcalEditFragment : Fragment() {
 
         val categoryChip = inflater.inflate(
             R.layout.fragment_ical_edit_categories_chip,
-            binding.editCategoriesChipgroup,
+            binding.editFragmentTabGeneral.editCategoriesChipgroup,
             false
         ) as Chip
         categoryChip.text = category.text
-        binding.editCategoriesChipgroup.addView(categoryChip)
+        binding.editFragmentTabGeneral.editCategoriesChipgroup.addView(categoryChip)
         //displayedCategoryChips.add(category)
 
         categoryChip.setOnClickListener {
@@ -1609,12 +1613,11 @@ class IcalEditFragment : Fragment() {
 
         val resourceChip = inflater.inflate(
             R.layout.fragment_ical_edit_resource_chip,
-            binding.editResourcesChipgroup,
+            binding.editFragmentTabCar.editResourcesChipgroup,
             false
         ) as Chip
         resourceChip.text = resource.text
-        binding.editResourcesChipgroup.addView(resourceChip)
-        //displayedCategoryChips.add(resource)
+        binding.editFragmentTabCar.editResourcesChipgroup.addView(resourceChip)
 
         resourceChip.setOnClickListener {   }
 
@@ -1622,7 +1625,6 @@ class IcalEditFragment : Fragment() {
             icalEditViewModel.resourceUpdated.remove(resource)  // add the category to the list for categories to be deleted
             chip.visibility = View.GONE
         }
-
         resourceChip.setOnCheckedChangeListener { _, _ ->   }
     }
 
@@ -1637,7 +1639,7 @@ class IcalEditFragment : Fragment() {
 
         val attendeeChip = inflater.inflate(
             R.layout.fragment_ical_edit_attendees_chip,
-            binding.editAttendeesChipgroup,
+            binding.editFragmentTabCar.editAttendeesChipgroup,
             false
         ) as Chip
         attendeeChip.text = attendee.getDisplayString()
@@ -1646,7 +1648,7 @@ class IcalEditFragment : Fragment() {
             Role.getDrawableResourceByName(attendee.role),
             null
         )
-        binding.editAttendeesChipgroup.addView(attendeeChip)
+        binding.editFragmentTabCar.editAttendeesChipgroup.addView(attendeeChip)
 
 
         attendeeChip.setOnClickListener {
@@ -1686,7 +1688,7 @@ class IcalEditFragment : Fragment() {
         val bindingComment = FragmentIcalEditCommentBinding.inflate(inflater, container, false)
         bindingComment.editCommentTextview.text = comment.text
         //commentView.edit_comment_textview.text = comment.text
-        binding.editCommentsLinearlayout.addView(bindingComment.root)
+        binding.editFragmentTabUlc.editCommentsLinearlayout.addView(bindingComment.root)
 
         // set on Click Listener to open a dialog to update the comment
         bindingComment.root.setOnClickListener {
@@ -1799,7 +1801,7 @@ class IcalEditFragment : Fragment() {
 
 
 
-        binding.editFragmentIcalEditAttachment.editAttachmentsLinearlayout.addView(bindingAttachment.root)
+        binding.editFragmentTabAttachments.editAttachmentsLinearlayout.addView(bindingAttachment.root)
 
         // delete the attachment on click on the X
         bindingAttachment.editAttachmentItemDelete.setOnClickListener {
@@ -1851,7 +1853,7 @@ class IcalEditFragment : Fragment() {
         }
 
 
-        binding.editSubtasksLinearlayout.addView(bindingSubtask.root)
+        binding.editFragmentTabSubtasks.editSubtasksLinearlayout.addView(bindingSubtask.root)
 
         // set on Click Listener to open a dialog to update the comment
         bindingSubtask.root.setOnClickListener {
@@ -1954,8 +1956,8 @@ class IcalEditFragment : Fragment() {
             allContactsSpinner
         )
 
-        binding.editContactAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
-        binding.editAttendeesAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
+        binding.editFragmentTabCar.editContactAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
+        binding.editFragmentTabCar.editAttendeesAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
     }
 
 
@@ -2249,21 +2251,25 @@ class IcalEditFragment : Fragment() {
 
 
     private fun addNewCategory() {
-        val newCat = Category(text = binding.editCategoriesAdd.editText?.text.toString())
+        if(binding.editFragmentTabGeneral.editCategoriesAdd.editText?.text.isNullOrEmpty())
+            return
+        val newCat = Category(text = binding.editFragmentTabGeneral.editCategoriesAdd.editText?.text.toString())
         if (!icalEditViewModel.categoryUpdated.contains(newCat)) {
             icalEditViewModel.categoryUpdated.add(newCat)
             addCategoryChip(newCat)
         }
-        binding.editCategoriesAdd.editText?.text?.clear()
+        binding.editFragmentTabGeneral.editCategoriesAdd.editText?.text?.clear()
     }
 
     private fun addNewResource() {
-        val newRes = Resource(text = binding.editResourcesAdd.editText?.text.toString())
+        if(binding.editFragmentTabCar.editResourcesAdd.editText?.text.isNullOrEmpty())
+            return
+        val newRes = Resource(text = binding.editFragmentTabCar.editResourcesAdd.editText?.text.toString())
         if(!icalEditViewModel.resourceUpdated.contains(newRes)) {
             icalEditViewModel.resourceUpdated.add(newRes)
             addResourceChip(newRes)
         }
-        binding.editResourcesAdd.editText?.text?.clear()
+        binding.editFragmentTabCar.editResourcesAdd.editText?.text?.clear()
     }
 
     private fun addNewAttendee(attendee: Attendee?) {
@@ -2272,7 +2278,7 @@ class IcalEditFragment : Fragment() {
         else if (!icalEditViewModel.attendeeUpdated.contains(attendee)) {
             addAttendeeChip(attendee)
             icalEditViewModel.attendeeUpdated.add(attendee)
-            binding.editAttendeesAddAutocomplete.text.clear()
+            binding.editFragmentTabCar.editAttendeesAddAutocomplete.text.clear()
         }
     }
 
@@ -2291,15 +2297,15 @@ class IcalEditFragment : Fragment() {
             || (icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone.isNullOrEmpty() && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone?.isNotEmpty() == true)))
                 validationError += resources.getString(R.string.edit_validation_errors_start_due_timezone_check) + "\n"
 
-        if(binding.editCategoriesAddAutocomplete.text.isNotEmpty())
+        if(binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.text.isNotEmpty())
             validationError += resources.getString(R.string.edit_validation_errors_category_not_confirmed) + "\n"
-        if(binding.editAttendeesAddAutocomplete.text.isNotEmpty())
+        if(binding.editFragmentTabCar.editAttendeesAddAutocomplete.text.isNotEmpty())
             validationError += resources.getString(R.string.edit_validation_errors_attendee_not_confirmed) + "\n"
-        if(binding.editResourcesAddAutocomplete.text?.isNotEmpty() == true)
+        if(binding.editFragmentTabCar.editResourcesAddAutocomplete.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_resource_not_confirmed) + "\n"
-        if(binding.editCommentAddEdittext.text?.isNotEmpty() == true)
+        if(binding.editFragmentTabUlc.editCommentAddEdittext.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_comment_not_confirmed) + "\n"
-        if(binding.editSubtasksAddEdittext.text?.isNotEmpty() == true)
+        if(binding.editFragmentTabSubtasks.editSubtasksAddEdittext.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_subtask_not_confirmed) + "\n"
 /*
         if(binding.editTaskDatesFragment.editDueDateEdittext.text?.isNotEmpty() == true && binding.editTaskDatesFragment.editDueTimeEdittext.text.isNullOrBlank() && binding.editTaskDatesFragment.editTaskAddStartedAndDueTimeSwitch.isActivated)

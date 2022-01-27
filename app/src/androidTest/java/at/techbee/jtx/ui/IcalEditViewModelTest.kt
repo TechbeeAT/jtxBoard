@@ -19,6 +19,7 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.getOrAwaitValue
+import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_GENERAL
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.*
@@ -94,29 +95,15 @@ class IcalEditViewModelTest {
 
         // TODO: Make more tests like that when the tab assignments are final
         icalEditViewModel = IcalEditViewModel(ICalEntity(), database, application)
-        icalEditViewModel.selectedTab = IcalEditViewModel.TAB_GENERAL
+        icalEditViewModel.activeTab.postValue(TAB_GENERAL)
         icalEditViewModel.updateVisibility()
 
-        assertTrue(icalEditViewModel.collectionVisible.value!!)
-        assertTrue(icalEditViewModel.summaryVisible.value!!)
-        assertTrue(icalEditViewModel.descriptionVisible.value!!)
         assertFalse(icalEditViewModel.dateVisible.value!!)
         assertFalse(icalEditViewModel.timeVisible.value!!)
         assertFalse(icalEditViewModel.addTimeVisible.value!!)
         assertFalse(icalEditViewModel.timezoneVisible.value!!)
-        assertTrue(icalEditViewModel.statusVisible.value!!)
-        assertTrue(icalEditViewModel.classificationVisible.value!!)
-        assertFalse(icalEditViewModel.urlVisible.value!!)
-        assertFalse(icalEditViewModel.locationVisible.value!!)
-        assertTrue(icalEditViewModel.categoriesVisible.value!!)
-        assertFalse(icalEditViewModel.contactVisible.value!!)
-        assertFalse(icalEditViewModel.attendeesVisible.value!!)
-        assertFalse(icalEditViewModel.commentsVisible.value!!)
-        assertFalse(icalEditViewModel.attachmentsVisible.value!!)
-        assertFalse(icalEditViewModel.takePhotoVisible.value!!)
         assertFalse(icalEditViewModel.progressVisible.value!!)
         assertFalse(icalEditViewModel.priorityVisible.value!!)
-        assertFalse(icalEditViewModel.subtasksVisible.value!!)
         assertFalse(icalEditViewModel.duedateVisible.value!!)
         assertFalse(icalEditViewModel.duetimeVisible.value!!)
         assertFalse(icalEditViewModel.completeddateVisible.value!!)
