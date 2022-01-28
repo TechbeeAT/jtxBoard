@@ -112,10 +112,6 @@ Global Strings -->
     <string name="list_item_recurring">"Voce ricorrente"</string>
 
     <!-- fragment_ical_view -->
-    <string name="view_readyonly">"Sola lettura"</string>
-    <string name="view_upload_pending">"Caricamento in sospeso"</string>
-
-    <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Vai all'originale"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Istanza ricorrente"</string>
     <string name="view_recurrence_note_to_original">"Questa voce fa parte di una serie. Ogni modifica a questo elemento, farà in modo che venga disconnesso dalla serie, rendendolo un evento autonomo. Successive modifiche all'evento originale non avranno influenza su questo elemento. "</string>
@@ -221,9 +217,6 @@ Global Strings -->
     <string name="about_app_build_date">"Compilato tramite %s"</string>
     <string name="about_app_terms">"Termini e Condizioni"</string>
     <string name="about_thanks_ffg">"Un ringraziamento speciale a FFG per la fiducia e il supporto finanziario per la realizzazione di questo progetto."</string>
-
-    <!-- menus -->
-    <string name="menu_edit_delete">"Elimina"</string>
 
     <!-- menus -->
     <string name="menu_edit_clear_dates">"Cancella date"</string>
