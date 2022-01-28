@@ -239,6 +239,8 @@ Global Strings -->
     <!-- menus -->
     <string name="menu_edit_delete">"Διαγραφή"</string>
     <string name="menu_edit_clear_dates">"Καθαρισμός ημερομηνιών"</string>
+    <string name="menu_filter_reset">"Επαναφορά"</string>
+    <string name="menu_filter_apply">"Καταχώρηση"</string>
     <string name="menu_list_search">"Αναζήτηση"</string>
     <string name="menu_list_search_hint">"Αναζήτηση"</string>
     <string name="menu_list_gotodate">"Σε ημερομηνία"</string>
@@ -412,4 +414,24 @@ Global Strings -->
     <string name="edit_attendees_error">"Παρακαλώ πληκτρολογήστε ένα έγκυρο e-mail"</string>
     <string name="edit_dialog_status">"Κατάσταση"</string>
     <string name="edit_dialog_classification">"Ταξινόμηση"</string>
+    <string name="priority_0_no_priority"></string>
+    <string name="priority_1_highest"></string>
+    <string name="priority_2_higher"></string>
+    <string name="priority_3_high"></string>
+    <string name="priority_4_medium_high"></string>
+    <string name="priority_5_medium"></string>
+    <string name="priority_6_medium_low"></string>
+    <string name="priority_7_high"></string>
+    <string name="priority_8_higher"></string>
+    <string name="priority_9_highest"></string>
+    <string name="edit_recur_day"></string>
+    <string name="edit_recur_week"></string>
+    <string name="edit_recur_month"></string>
+    <string name="edit_recur_year"></string>
+    <string name="edit_validation_errors_start_due_timezone_check"></string>
+    <string name="collections_toast_export_ics_success"></string>
+    <string name="collections_toast_export_ics_error"></string>
+    <string name="menu_collections_add_remote"></string>
+    <string name="menu_collection_popup_show_in_davx5"></string>
+    <string name="menu_collection_popup_export_as_ics"></string>
 </resources>
