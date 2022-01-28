@@ -22,8 +22,8 @@
         <item>@string/priority_4_medium_high</item>
         <item>@string/priority_5_medium</item>
         <item>@string/priority_6_medium_low</item>
-        <item>@string/priority_7_high</item>
-        <item>@string/priority_8_higher</item>
-        <item>@string/priority_9_highest</item>
+        <item>@string/priority_7_low</item>
+        <item>@string/priority_8_lower</item>
+        <item>@string/priority_9_lowest</item>
     </string-array>
 </resources>

@@ -399,9 +399,9 @@ Global Strings -->
     <string name="priority_4_medium_high"></string>
     <string name="priority_5_medium"></string>
     <string name="priority_6_medium_low"></string>
-    <string name="priority_7_high"></string>
-    <string name="priority_8_higher"></string>
-    <string name="priority_9_highest"></string>
+    <string name="priority_7_low"></string>
+    <string name="priority_8_lower"></string>
+    <string name="priority_9_lowest"></string>
     <string name="edit_recur_day"></string>
     <string name="edit_recur_week"></string>
     <string name="edit_recur_month"></string>

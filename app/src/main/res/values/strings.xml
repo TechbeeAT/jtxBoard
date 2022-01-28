@@ -87,9 +87,9 @@
     <string name="priority_4_medium_high">4 - Medium high</string>
     <string name="priority_5_medium">5 - Medium</string>
     <string name="priority_6_medium_low">6 - Medium low</string>
-    <string name="priority_7_high">7 - High</string>
-    <string name="priority_8_higher">8 - Higher</string>
-    <string name="priority_9_highest">9 - Highest</string>
+    <string name="priority_7_low">7 - Low</string>
+    <string name="priority_8_lower">8 - Lower</string>
+    <string name="priority_9_lowest">9 - Lowest</string>
 
 
     <string name="readyonly">Read only</string>
