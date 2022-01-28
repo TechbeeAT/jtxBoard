@@ -97,10 +97,6 @@ Global Strings -->
     <string name="list_item_recurring">"Wiederkehrender Eintrag"</string>
 
     <!-- fragment_ical_view -->
-    <string name="view_readyonly">"Schreibgeschützt"</string>
-    <string name="view_upload_pending">"Hochladen aussändig"</string>
-
-    <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Zum Original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instanz von wiederkehrendem Eintrag"</string>
     <string name="view_recurrence_note_to_original">"Dieser Eintrag ist Teil einer Serie. Wenn Sie diesen Eintrag bearbeiten, wird die Verknüpfung zum Original entfernt, al s eigenständiger Eintrag weiter bestehen und Änderungen am Original werden nicht mehr auf diesen Eintrag übertragen. "</string>
@@ -198,9 +194,6 @@ Global Strings -->
     <string name="about_app_build_date">"Kompiliert am %s"</string>
     <string name="about_app_terms">"AGBs"</string>
     <string name="about_thanks_ffg">"Besonderer Dank gilt der FFG für Ihr Vertrauen und die finanzielle Unterstützung um dieses Projekt zu realisieren."</string>
-
-    <!-- menus -->
-    <string name="menu_edit_delete">"Löschen"</string>
 
     <!-- menus -->
     <string name="menu_edit_clear_dates">"Datumsfelder löschen"</string>
