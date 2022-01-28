@@ -97,10 +97,6 @@ Global Strings -->
     <string name="list_item_recurring">"Επαναλαμβανόμενη καταχώρηση"</string>
 
     <!-- fragment_ical_view -->
-    <string name="view_readyonly">"Μόνο για ανάγνωση"</string>
-    <string name="view_upload_pending">"Η μεταφόρτωση εκκρεμεί"</string>
-
-    <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Μεταφορά στο πρωτότυπο"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Περίπτωση επαναλαμβανόμενης"</string>
     <string name="view_recurrence_note_to_original">"Αυτή η καταχώρηση είναι μέρος μιας σειράς επαναλαμβανόμενων καταχωρήσεων. Η επεξεργασία αυτής της καταχώρισης θα την αποσυνδέσει από τη ακολουθία, θα συνεχιστεί ως αυτόνομο συμβάν και οι αλλαγές στο αρχικό συμβάν δεν θα επηρεάζουν πλέον αυτήν την καταχώριση."</string>
@@ -200,9 +196,6 @@ Global Strings -->
     <string name="about_app_build_date">"Συντάχθηκε στις %s"</string>
     <string name="about_app_terms">"Όροι &amp; Προϋποθέσεις"</string>
     <string name="about_thanks_ffg">"Ευχαριστούμε ιδιαιτέρως την FFG για την εμπιστοσύνη και την οικονομική τους υποστήριξη για την υλοποίηση αυτού του έργου."</string>
-
-    <!-- menus -->
-    <string name="menu_edit_delete">"Διαγραφή"</string>
 
     <!-- menus -->
     <string name="menu_edit_clear_dates">"Καθαρισμός ημερομηνιών"</string>
