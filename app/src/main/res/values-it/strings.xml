@@ -112,20 +112,22 @@ Global Strings -->
     <string name="list_item_recurring">"Voce ricorrente"</string>
 
     <!-- fragment_ical_view -->
-    <string name="readyonly">"Sola lettura"</string>
-    <string name="upload_pending">"Caricamento in sospeso"</string>
-    <string name="url">"URL"</string>
-    <string name="location">"Posizione"</string>
-    <string name="attendees">"Partecipanti"</string>
-    <string name="resources">"Risorse"</string>
-    <string name="organizer">"Organizzatore"</string>
-    <string name="contact">"Contatto"</string>
-    <string name="relatedto">"Relativo a"</string>
-    <string name="comments">"Commenti"</string>
-    <string name="attachments">"Allegati"</string>
-    <string name="recurrence">"Ricorrenza"</string>
-    <string name="recurrence_exceptions">"Eccezioni"</string>
-    <string name="recurrence_additions">"Aggiunte"</string>
+    <string name="view_readyonly">"Sola lettura"</string>
+    <string name="view_upload_pending">"Caricamento in sospeso"</string>
+    <string name="view_url_header">"URL"</string>
+    <string name="view_location_header">"Posizione"</string>
+    <string name="view_attendees_header">"Partecipanti"</string>
+    <string name="view_resources_header">"Risorse"</string>
+    <string name="view_organizer_header">"Organizzatore"</string>
+    <string name="view_contact_header">"Contatto"</string>
+    <string name="view_relatedto_header">"Relativo a"</string>
+    <string name="view_comments_header">"Commenti"</string>
+    <string name="view_attachments_header">"Allegati"</string>
+    <string name="view_recurrence_header">"Ricorrenza"</string>
+    <string name="view_recurrence_exceptions">"Eccezioni"</string>
+    <string name="view_recurrence_additions">"Aggiunte"</string>
+
+    <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Vai all'originale"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Istanza ricorrente"</string>
     <string name="view_recurrence_note_to_original">"Questa voce fa parte di una serie. Ogni modifica a questo elemento, farà in modo che venga disconnesso dalla serie, rendendolo un evento autonomo. Successive modifiche all'evento originale non avranno influenza su questo elemento. "</string>
@@ -159,14 +161,17 @@ Global Strings -->
     <string name="view_started">"Comincia(to)"</string>
 
     <!-- fragment_ical_edit -->
-    <string name="summary">"Riassunto"</string>
+    <string name="edit_summary_hint">"Riassunto"</string>
+
+    <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#miacategoria"</string>
     <string name="edit_add_category_helper">"Aggiungi una categoria"</string>
-    <string name="description">"Descrizione"</string>
+    <string name="edit_description_hint">"Descrizione"</string>
     <string name="edit_attendees_hint">"mario.rossi@esempio.com"</string>
     <string name="edit_attendees_helper">"Aggiungi un partecipante (indirizzo e-mail)"</string>
     <string name="edit_resources_hint">"Proiettore"</string>
     <string name="edit_resources_helper">"Aggiungi una risorsa"</string>
+    <string name="edit_organizer_hint">"Organizzatore"</string>
     <string name="edit_contact_hint">"Mario Rossi, +39 919 555 1234"</string>
     <string name="edit_contact_helper">"Informazioni di contatto del responsabile o del proprietario di questa voce"</string>
     <string name="edit_comment_hint">"Il tuo commento…"</string>
@@ -180,24 +185,32 @@ Global Strings -->
     <string name="edit_location_helper">"Aggiungi una posizione per questa voce"</string>
     <string name="edit_attachment_add_dialog_hint">"Il tuo allegato-url (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Il tuo commento"</string>
-    <string name="priority">"Priorità"</string>
+    <string name="edit_dialog_priority">"Priorità"</string>
     <string name="edit_attachment_beta_info">"* Si noti che la sincronizzazione degli allegati con DAVx⁵ è una funzionalità sperimentale. Tieni presente che ciò potrebbe causare comportamenti o errori imprevisti. Se riscontri problemi, faccelo sapere tramite i forum di supporto o una richiesta di supporto sul sito web!"</string>
-    <string name="due">"In scadenza"</string>
-    <string name="completed">"Completato"</string>
-    <string name="started">"Comincia"</string>
-    <string name="add_time_switch">"Aggiungi orario"</string>
-    <string name="add_timezone_switch">"Aggiungi fuso orario"</string>
+    <string name="edit_due">"In scadenza"</string>
+    <string name="edit_completed">"Completato"</string>
+    <string name="edit_started">"Comincia"</string>
+    <string name="edit_add_time_switch">"Aggiungi orario"</string>
+    <string name="edit_add_timezone_switch">"Aggiungi fuso orario"</string>
 
     <!-- Potrebbe anche andare bene "Avanzamento" che viene usata anche per monitorare lo stato di qualcosa che è in corso d'opera. -->
-    <string name="progress">"Progresso"</string>
-    <string name="subtasks">"Sottoattività"</string>
+    <string name="edit_progress">"Progresso"</string>
+    <string name="edit_subtasks_header">"Sottoattività"</string>
     <string name="edit_subtasks_add_hint">"La tua sottoattività"</string>
     <string name="edit_subtasks_add_helper">"Aggiungi una sottoattività"</string>
-    <string name="categories">"Categorie"</string>
+    <string name="edit_contact_header">"Contatto"</string>
+    <string name="edit_url_header">"URL"</string>
+    <string name="edit_location_header">"Posizione"</string>
+    <string name="edit_categories_header">"Categorie"</string>
+    <string name="edit_attendees_header">"Partecipanti"</string>
+    <string name="edit_resources_header">"Risorse"</string>
+    <string name="edit_recurrence_header">"Ricorrenza"</string>
     <string name="edit_attachment_delete_attachment">"Elimina allegato"</string>
     <string name="edit_attachment_add_link_dialog">"Aggiungi link allegato"</string>
     <string name="edit_recur_last_occurrence">"Ultima occorrenza"</string>
     <string name="edit_recur_all_occurrences">"Tutte le occorrenze"</string>
+    <string name="edit_recur_exceptions">"Eccezioni"</string>
+    <string name="edit_recur_additions">"Aggiunte"</string>
     <string name="edit_recur_repeat_every_x">"Ripeti ogni"</string>
     <string name="edit_recur_on_weekday">"in poi"</string>
     <string name="edit_recur_on_the_x_day_of_month">"sul"</string>
@@ -233,12 +246,15 @@ Global Strings -->
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"È stata rilevata una durata per questa voce in background. La gestione di una durata non è attualmente supportata da jtx Board. Utilizza invece la data di inizio, scadenza e fine. Se salvi questa voce, la durata esistente verrà eliminata."</string>
 
     <!-- fragment_ical_filter -->
-    <string name="account">"Account"</string>
+    <string name="filter_account">"Account"</string>
 
     <!-- Immagino qualsiasi riferimento a "Collection" sia rriferito ad una serie di elementi consecutivi. Lista in questo caso sarebbe più appropriato. -->
-    <string name="status">"Stato"</string>
-    <string name="classification">"Classificazione"</string>
-    <string name="category">"Categoria"</string>
+    <string name="filter_collection">"Lista"</string>
+    <string name="filter_status">"Stato"</string>
+    <string name="filter_classification">"Classificazione"</string>
+    <string name="filter_category">"Categoria"</string>
+
+    <!-- fragment_ical_filter -->
     <string name="filter_fab_apply_filter_contentdescription">"Applica filtro"</string>
     <string name="about_tabitem_translations">"Traduzioni"</string>
     <string name="about_tabitem_libraries">"Librerie"</string>
@@ -252,10 +268,16 @@ Global Strings -->
     <string name="about_thanks_ffg">"Un ringraziamento speciale a FFG per la fiducia e il supporto finanziario per la realizzazione di questo progetto."</string>
 
     <!-- menus -->
+    <string name="menu_edit_delete">"Elimina"</string>
+
+    <!-- menus -->
     <string name="menu_edit_clear_dates">"Cancella date"</string>
-    <string name="search">"Ricerca"</string>
+    <string name="menu_filter_reset">"Resettare"</string>
+    <string name="menu_filter_apply">"Applica"</string>
+    <string name="menu_list_search">"Ricerca"</string>
+    <string name="menu_list_search_hint">"Ricerca"</string>
     <string name="menu_list_gotodate">"Vai alla data"</string>
-    <string name="filter">"Filtro"</string>
+    <string name="menu_list_filter">"Filtro"</string>
     <string name="menu_list_clearfilter">"Resetta filtro"</string>
     <string name="menu_list_quick_journal">"Diario rapido"</string>
     <string name="menu_list_quick_note">"Nota rapida"</string>
@@ -269,14 +291,21 @@ Global Strings -->
     <string name="menu_view_copy_as_journal">"Copia come Diario"</string>
     <string name="menu_view_copy_as_todo">"Copia come Attività"</string>
     <string name="menu_view_copy_as_note">"Copia come Nota"</string>
+    <string name="menu_view_delete_item">"Eliminare"</string>
     <string name="menu_view_copy_item">"Crea copia"</string>
-    <string name="sync_now">"Sincronizza ora"</string>
+    <string name="menu_view_syncnow">"Sincronizza ora"</string>
+    <string name="menu_sync_syncnow">"Sincronizza ora"</string>
 
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">"Promemoria per attività scadente"</string>
 
     <!-- Cosa significa? -->
     <string name="notification_channel_reminder_description">"Notifica per Attività"</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_addJournal_shortLabel">"Diario"</string>
+    <string name="shortcut_addNote_shortLabel">"Nota"</string>
+    <string name="shortcut_addTodo_shortLabel">"Attività"</string>
 
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Aggiungi Diario"</string>
@@ -386,9 +415,9 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="permission_record_audio_granted">"Permesso di registrazione audio concessa"</string>
     <string name="permission_record_audio_denied">"Permesso di registrazione audio negato"</string>
     <string name="intent_dialog_title">"Aggiungere contenuto a un Diario, una Nota o un'Attività?"</string>
-    <string name="journal">"Diario"</string>
-    <string name="note">"Nota"</string>
-    <string name="task">"Attività"</string>
+    <string name="intent_dialog_add_journal">"Diario"</string>
+    <string name="intent_dialog_add_note">"Nota"</string>
+    <string name="intent_dialog_add_task">"Attività"</string>
 
     <!-- Fuzzy -->
     <string name="add">"Aggiungi"</string>
@@ -403,7 +432,8 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="navigation_drawer_collections">"Collezioni"</string>
 
     <!-- Fuzzy -->
-    <string name="alarms">"Notificazioni"</string>
+    <string name="view_alarms_header">"Notificazioni"</string>
+    <string name="edit_alarms_header">"Notificazioni"</string>
     <string name="edit_dialog_set_attendee_role"></string>
 
     <!-- alarms -->
@@ -449,6 +479,8 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="view_dialog_addnote_toast_no_summary_description"></string>
     <string name="color">"Colore"</string>
     <string name="edit_attendees_error"></string>
+    <string name="edit_dialog_status">"Stato"</string>
+    <string name="edit_dialog_classification">"Classificazione"</string>
     <string name="priority_0_no_priority"></string>
     <string name="priority_1_highest"></string>
     <string name="priority_2_higher"></string>
@@ -456,17 +488,55 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="priority_4_medium_high"></string>
     <string name="priority_5_medium"></string>
     <string name="priority_6_medium_low"></string>
-    <string name="priority_7_low"></string>
-    <string name="priority_8_lower"></string>
-    <string name="priority_9_lowest"></string>
-    <string name="edit_recur_day"></string>
-    <string name="edit_recur_week"></string>
-    <string name="edit_recur_month"></string>
-    <string name="edit_recur_year"></string>
+    <string name="edit_recur_day">"giorno/i"</string>
+    <string name="edit_recur_week">"settimana/e"</string>
+    <string name="edit_recur_month">"mese/i"</string>
+    <string name="edit_recur_year">"anno/i"</string>
     <string name="edit_validation_errors_start_due_timezone_check"></string>
     <string name="collections_toast_export_ics_success"></string>
     <string name="collections_toast_export_ics_error"></string>
     <string name="menu_collections_add_remote"></string>
     <string name="menu_collection_popup_show_in_davx5"></string>
     <string name="menu_collection_popup_export_as_ics"></string>
+    <string name="journal">"Diario"</string>
+    <string name="note">"Nota"</string>
+    <string name="task">"Attività"</string>
+    <string name="account">"Account"</string>
+    <string name="status">"Stato"</string>
+    <string name="classification">"Classificazione"</string>
+    <string name="category">"Categoria"</string>
+    <string name="priority">"Priorità"</string>
+    <string name="readyonly">"Sola lettura"</string>
+    <string name="upload_pending">"Caricamento in sospeso"</string>
+    <string name="url">"URL"</string>
+    <string name="location">"Posizione"</string>
+    <string name="attendees">"Partecipanti"</string>
+    <string name="resources">"Risorse"</string>
+    <string name="organizer">"Organizzatore"</string>
+    <string name="contact">"Contatto"</string>
+    <string name="relatedto">"Relativo a"</string>
+    <string name="comments">"Commenti"</string>
+    <string name="attachments">"Allegati"</string>
+
+    <!-- Fuzzy -->
+    <string name="alarms">"Notificazioni"</string>
+    <string name="recurrence">"Ricorrenza"</string>
+    <string name="recurrence_exceptions">"Eccezioni"</string>
+    <string name="recurrence_additions">"Aggiunte"</string>
+    <string name="summary">"Riassunto"</string>
+    <string name="description">"Descrizione"</string>
+    <string name="search">"Ricerca"</string>
+    <string name="filter">"Filtro"</string>
+    <string name="sync_now">"Sincronizza ora"</string>
+    <string name="due">"In scadenza"</string>
+    <string name="completed">"Completato"</string>
+    <string name="started">"Comincia"</string>
+    <string name="add_time_switch">"Aggiungi orario"</string>
+    <string name="add_timezone_switch">"Aggiungi fuso orario"</string>
+    <string name="progress">"Progresso"</string>
+    <string name="categories">"Categorie"</string>
+    <string name="subtasks">"Sottoattività"</string>
+    <string name="priority_7_low"></string>
+    <string name="priority_8_lower"></string>
+    <string name="priority_9_lowest"></string>
 </resources>
