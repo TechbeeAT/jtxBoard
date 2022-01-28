@@ -108,7 +108,7 @@
                     app:srcCompat="@drawable/ic_upload_pending"
                     android:visibility="@{model.uploadPendingVisible ? View.VISIBLE : View.GONE}"
                     tools:visibility="visible"
-                    android:contentDescription="@string/view_upload_pending"/>
+                    android:contentDescription="@string/upload_pending"/>
 
 
                 <ImageView
@@ -122,7 +122,7 @@
                     app:srcCompat="@drawable/ic_readonly"
                     android:visibility="gone"
                     tools:visibility="visible"
-                    android:contentDescription="@string/view_readyonly"/>
+                    android:contentDescription="@string/readyonly"/>
 
 
                 <com.google.android.material.card.MaterialCardView
@@ -748,7 +748,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
-                    android:text="@string/view_url_header"
+                    android:text="@string/url"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.urlVisible ? View.VISIBLE : View.GONE}"
@@ -778,7 +778,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:drawablePadding="8dp"
-                    android:text="@string/view_location_header"
+                    android:text="@string/location"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
@@ -808,7 +808,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
-                    android:text="@string/view_attendees_header"
+                    android:text="@string/attendees"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
@@ -840,7 +840,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
-                    android:text="@string/view_resources_header"
+                    android:text="@string/resources"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.resourcesVisible ? View.VISIBLE : View.GONE}"
@@ -871,7 +871,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
-                    android:text="@string/view_organizer_header"
+                    android:text="@string/organizer"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.organizerVisible ? View.VISIBLE : View.GONE}"
@@ -901,7 +901,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
-                    android:text="@string/view_contact_header"
+                    android:text="@string/contact"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.contactVisible ? View.VISIBLE : View.GONE}"
@@ -930,7 +930,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
-                    android:text="@string/view_recurrence_header"
+                    android:text="@string/recurrence"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.recurrenceVisible ? View.VISIBLE : View.GONE}"
@@ -965,7 +965,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/view_recurrence_header"
                     app:layout_constraintTop_toBottomOf="@+id/view_recurrence_items"
-                    android:text="@string/view_recurrence_exceptions" />
+                    android:text="@string/recurrence_exceptions" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_recurrence_exception_items"
@@ -993,7 +993,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/view_recurrence_header"
                     app:layout_constraintTop_toBottomOf="@+id/view_recurrence_exception_items"
-                    android:text="@string/view_recurrence_additions" />
+                    android:text="@string/recurrence_additions" />
 
 
                 <com.google.android.material.textview.MaterialTextView
@@ -1059,7 +1059,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
-                    android:text="@string/view_relatedto_header"
+                    android:text="@string/relatedto"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.relatedtoVisible ? View.VISIBLE : View.GONE}"
@@ -1087,7 +1087,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
-                    android:text="@string/view_comments_header"
+                    android:text="@string/comments"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.commentsVisible ? View.VISIBLE : View.GONE}"
@@ -1118,7 +1118,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
-                    android:text="@string/view_alarms_header"
+                    android:text="@string/alarms"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.alarmsVisible ? View.VISIBLE : View.GONE}"
@@ -1150,7 +1150,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
-                    android:text="@string/view_attachments_header"
+                    android:text="@string/attachments"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.attachmentsVisible ? View.VISIBLE : View.GONE}"

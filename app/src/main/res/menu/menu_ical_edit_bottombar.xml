@@ -14,7 +14,7 @@
         <item
             android:id="@+id/menu_edit_bottom_delete"
             android:icon="@drawable/ic_delete"
-            android:title="@string/menu_edit_delete"
+            android:title="@string/delete"
             app:showAsAction="always" />
     </group>
 </menu>

@@ -1212,7 +1212,7 @@ class IcalEditFragment : Fragment() {
         binding.editFragmentTabGeneral.editStatusChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.edit_dialog_status)
+                .setTitle(R.string.status)
                 .setItems(statusItems) { _, which ->
                     // Respond to item chosen
                     if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name) {
@@ -1247,7 +1247,7 @@ class IcalEditFragment : Fragment() {
         binding.editFragmentTabGeneral.editClassificationChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.edit_dialog_classification)
+                .setTitle(R.string.classification)
                 .setItems(classificationItems) { _, which ->
                     // Respond to item chosen
                     icalEditViewModel.iCalObjectUpdated.value!!.classification =
@@ -1270,7 +1270,7 @@ class IcalEditFragment : Fragment() {
         binding.editFragmentTabGeneral.editPriorityChip.setOnClickListener {
 
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.edit_dialog_priority)
+                .setTitle(R.string.priority)
                 .setItems(priorityItems) { _, which ->
                     // Respond to item chosen
                     icalEditViewModel.iCalObjectUpdated.value!!.priority = which

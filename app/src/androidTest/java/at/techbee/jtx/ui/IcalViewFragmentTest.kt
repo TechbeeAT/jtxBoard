@@ -201,19 +201,19 @@ class IcalViewFragmentTest {
         fragmentArgs.putLong("item2show", sampleJour.id)
         launchFragmentInContainer<IcalViewFragment>(fragmentArgs, R.style.AppTheme, Lifecycle.State.RESUMED)
 
-        onView(withId(R.id.view_attendee_header)).check(matches(withText(R.string.view_attendees_header)))
+        onView(withId(R.id.view_attendee_header)).check(matches(withText(R.string.attendees)))
         //onView(withText(sampleAttendee.caladdress)).check(matches(isDisplayed()))
 
-        onView(withText(R.string.view_comments_header)).check(matches(isDisplayed()))
+        onView(withText(R.string.comments)).check(matches(isDisplayed()))
         onView(withId(R.id.view_comment_textview)).check(matches(withText(sampleComment.text)))
 
-        onView(withText(R.string.view_attachments_header)).check(matches(isDisplayed()))
+        onView(withText(R.string.attachments)).check(matches(isDisplayed()))
         onView(withId(R.id.view_attachment_textview)).check(matches(withText(sampleAttachment.filename)))
 
-        onView(withId(R.id.view_organizer_header)).check(matches(withText(R.string.view_organizer_header)))
+        onView(withId(R.id.view_organizer_header)).check(matches(withText(R.string.organizer)))
         onView(withId(R.id.view_organizer)).check(matches(withText(sampleOrganizer.caladdress)))
 
-        onView(withId(R.id.view_contact_header)).check(matches(withText(R.string.view_contact_header)))
+        onView(withId(R.id.view_contact_header)).check(matches(withText(R.string.contact)))
         onView(withId(R.id.view_contact)).check(matches(withText(sampleJour.contact)))
     }
 

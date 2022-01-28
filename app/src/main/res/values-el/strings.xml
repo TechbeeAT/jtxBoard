@@ -97,20 +97,20 @@ Global Strings -->
     <string name="list_item_recurring">"Επαναλαμβανόμενη καταχώρηση"</string>
 
     <!-- fragment_ical_view -->
-    <string name="view_readyonly">"Μόνο για ανάγνωση"</string>
-    <string name="view_upload_pending">"Η μεταφόρτωση εκκρεμεί"</string>
-    <string name="view_url_header">"URL"</string>
-    <string name="view_location_header">"Τοποθεσία"</string>
-    <string name="view_attendees_header">"Συμμετέχοντες"</string>
-    <string name="view_resources_header">"Πηγές"</string>
-    <string name="view_organizer_header">"Διοργανωτής"</string>
-    <string name="view_contact_header">"Επαφές"</string>
-    <string name="view_relatedto_header">"Σχετικά με"</string>
-    <string name="view_comments_header">"Σχόλια"</string>
-    <string name="view_attachments_header">"Συνημμένα"</string>
-    <string name="view_recurrence_header">"Επανάληψη"</string>
-    <string name="view_recurrence_exceptions">"Εξαιρέσεις"</string>
-    <string name="view_recurrence_additions">"Προσθήκες"</string>
+    <string name="readyonly">"Μόνο για ανάγνωση"</string>
+    <string name="upload_pending">"Η μεταφόρτωση εκκρεμεί"</string>
+    <string name="url">"URL"</string>
+    <string name="location">"Τοποθεσία"</string>
+    <string name="attendees">"Συμμετέχοντες"</string>
+    <string name="resources">"Πηγές"</string>
+    <string name="organizer">"Διοργανωτής"</string>
+    <string name="contact">"Επαφές"</string>
+    <string name="relatedto">"Σχετικά με"</string>
+    <string name="comments">"Σχόλια"</string>
+    <string name="attachments">"Συνημμένα"</string>
+    <string name="recurrence">"Επανάληψη"</string>
+    <string name="recurrence_exceptions">"Εξαιρέσεις"</string>
+    <string name="recurrence_additions">"Προσθήκες"</string>
     <string name="view_recurrence_go_to_original_button">"Μεταφορά στο πρωτότυπο"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Περίπτωση επαναλαμβανόμενης"</string>
     <string name="view_recurrence_note_to_original">"Αυτή η καταχώρηση είναι μέρος μιας σειράς επαναλαμβανόμενων καταχωρήσεων. Η επεξεργασία αυτής της καταχώρισης θα την αποσυνδέσει από τη ακολουθία, θα συνεχιστεί ως αυτόνομο συμβάν και οι αλλαγές στο αρχικό συμβάν δεν θα επηρεάζουν πλέον αυτήν την καταχώριση."</string>
@@ -142,15 +142,14 @@ Global Strings -->
     <string name="view_started">"Έναρξη"</string>
 
     <!-- fragment_ical_edit -->
-    <string name="edit_summary_hint">"Περίληψη"</string>
+    <string name="summary">"Περίληψη"</string>
     <string name="edit_add_category_hint">"#ηκατηγοριαμου"</string>
     <string name="edit_add_category_helper">"Προσθήκη κατηγορίας"</string>
-    <string name="edit_description_hint">"Περιγραφή"</string>
+    <string name="description">"Περιγραφή"</string>
     <string name="edit_attendees_hint">"johanna@example.com"</string>
     <string name="edit_attendees_helper">"Προσθέστε έναν συμμετέχοντα (e-mail-address)"</string>
     <string name="edit_resources_hint">"Προβολέας"</string>
     <string name="edit_resources_helper">"Πηγή"</string>
-    <string name="edit_organizer_hint">"Διοργανωτής"</string>
     <string name="edit_contact_hint">"Jim Dolittle, +1 919 555 1234"</string>
     <string name="edit_contact_helper">"Στοιχεία επικοινωνίας του υπεύθυνου ή του κατόχου αυτής της καταχώρισης"</string>
     <string name="edit_comment_hint">"Το σχόλιό σου…"</string>
@@ -162,30 +161,22 @@ Global Strings -->
     <string name="edit_location_helper">"Προσθέστε μια τοποθεσία για αυτήν την καταχώρηση"</string>
     <string name="edit_attachment_add_dialog_hint">"Το συνημμένο-url σας (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Το σχόλιο σου"</string>
-    <string name="edit_dialog_priority">"Προτεραιότητα"</string>
+    <string name="priority">"Προτεραιότητα"</string>
     <string name="edit_attachment_beta_info">"*Λάβετε υπόψη σας ότι ο συγχρονισμός συνημμένων με το DAVx⁵ είναι μια πειραματική δυνατότητα και αυτό μπορεί να προκαλέσει κάποια απροσδόκητη συμπεριφορά ή σφάλματα. Εάν αντιμετωπίζετε προβλήματα, ενημερώστε μας μέσω των φόρουμ υποστήριξης ή ενός αιτήματος υποστήριξης στον ιστότοπο!"</string>
-    <string name="edit_due">"Μέχρι"</string>
-    <string name="edit_completed">"Ολοκληρώθηκε"</string>
-    <string name="edit_started">"Έναρξη"</string>
-    <string name="edit_add_time_switch">"Προσθήκη ώρας"</string>
-    <string name="edit_add_timezone_switch">"Προσθήκη ζώνη ώρας"</string>
-    <string name="edit_progress">"Πρόοδος"</string>
-    <string name="edit_subtasks_header">"Υποεργασίες"</string>
+    <string name="due">"Μέχρι"</string>
+    <string name="completed">"Ολοκληρώθηκε"</string>
+    <string name="started">"Έναρξη"</string>
+    <string name="add_time_switch">"Προσθήκη ώρας"</string>
+    <string name="add_timezone_switch">"Προσθήκη ζώνη ώρας"</string>
+    <string name="progress">"Πρόοδος"</string>
+    <string name="subtasks">"Υποεργασίες"</string>
     <string name="edit_subtasks_add_hint">"Η υποεργασία σας"</string>
     <string name="edit_subtasks_add_helper">"Προσθήκη υποεργασίας"</string>
-    <string name="edit_contact_header">"Επικοινωνία"</string>
-    <string name="edit_url_header">"URL"</string>
-    <string name="edit_location_header">"Τοποθεσία"</string>
-    <string name="edit_categories_header">"Κατηγορίες"</string>
-    <string name="edit_attendees_header">"Συμμετέχοντες"</string>
-    <string name="edit_resources_header">"Πόροι"</string>
-    <string name="edit_recurrence_header">"Επανάληψη"</string>
+    <string name="categories">"Κατηγορίες"</string>
     <string name="edit_attachment_delete_attachment">"Διαγραφή συνημμένου"</string>
     <string name="edit_attachment_add_link_dialog">"Προσθήκη συνημμένου συνδέσμου"</string>
     <string name="edit_recur_last_occurrence">"Τελευταία προβολή"</string>
     <string name="edit_recur_all_occurrences">"Όλες οι προβολές"</string>
-    <string name="edit_recur_exceptions">"Εξαιρέσεις"</string>
-    <string name="edit_recur_additions">"Προσθήκες"</string>
     <string name="edit_recur_repeat_every_x">"Επανάληψη κάθε"</string>
     <string name="edit_recur_on_weekday">"σε"</string>
     <string name="edit_recur_on_the_x_day_of_month">"στο"</string>
@@ -221,11 +212,10 @@ Global Strings -->
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Εντοπίστηκε μια διάρκεια για αυτήν την καταχώρηση στο παρασκήνιο. Ο χειρισμός μιας διάρκειας δεν υποστηρίζεται, προς το παρόν, από το jtx Board. Χρησιμοποιήστε την ημερομηνία έναρξης, κατά την διάρκεια και λήξης. Εάν αποθηκεύσετε αυτήν την καταχώρηση, η υπάρχουσα διάρκεια θα διαγραφεί."</string>
 
     <!-- fragment_ical_filter -->
-    <string name="filter_account">"Λογαριασμός"</string>
-    <string name="filter_collection">"Συλλογή"</string>
-    <string name="filter_status">"Κατάσταση"</string>
-    <string name="filter_classification">"Ταξινόμηση"</string>
-    <string name="filter_category">"Κατηγορία"</string>
+    <string name="account">"Λογαριασμός"</string>
+    <string name="status">"Κατάσταση"</string>
+    <string name="classification">"Ταξινόμηση"</string>
+    <string name="category">"Κατηγορία"</string>
     <string name="filter_fab_apply_filter_contentdescription">"Εφαρμογή φίλτρου"</string>
     <string name="about_tabitem_translations">"Μεταφράσεις"</string>
     <string name="about_tabitem_libraries">"Βιβλιοθήκες"</string>
@@ -237,14 +227,10 @@ Global Strings -->
     <string name="about_thanks_ffg">"Ευχαριστούμε ιδιαιτέρως την FFG για την εμπιστοσύνη και την οικονομική τους υποστήριξη για την υλοποίηση αυτού του έργου."</string>
 
     <!-- menus -->
-    <string name="menu_edit_delete">"Διαγραφή"</string>
     <string name="menu_edit_clear_dates">"Καθαρισμός ημερομηνιών"</string>
-    <string name="menu_filter_reset">"Επαναφορά"</string>
-    <string name="menu_filter_apply">"Καταχώρηση"</string>
-    <string name="menu_list_search">"Αναζήτηση"</string>
-    <string name="menu_list_search_hint">"Αναζήτηση"</string>
+    <string name="search">"Αναζήτηση"</string>
     <string name="menu_list_gotodate">"Σε ημερομηνία"</string>
-    <string name="menu_list_filter">"Φίλτρα"</string>
+    <string name="filter">"Φίλτρα"</string>
     <string name="menu_list_clearfilter">"Διαγραφή φίλτρων"</string>
     <string name="menu_list_quick_journal">"Γρήγορο ημερολόγιο"</string>
     <string name="menu_list_quick_note">"Γρήγορη σημείωση"</string>
@@ -258,19 +244,14 @@ Global Strings -->
     <string name="menu_view_copy_as_journal">"Αντιγραφή ως Ημερολόγιο"</string>
     <string name="menu_view_copy_as_todo">"Αντιγραφή ως Εργασία"</string>
     <string name="menu_view_copy_as_note">"Αντιγραφή ως Σημείωση"</string>
-    <string name="menu_view_delete_item">"Διαγραφή"</string>
     <string name="menu_view_copy_item">"Δημιουργία αντίγραφου"</string>
-    <string name="menu_view_syncnow">"Συγχρονισμός τώρα"</string>
-    <string name="menu_sync_syncnow">"Συγχρονισμός τώρα"</string>
+    <string name="sync_now">"Συγχρονισμός τώρα"</string>
 
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">"Επιθυμητή υπενθύμιση"</string>
     <string name="notification_channel_reminder_description">"Ειδοποίηση για εργασίες σε καθηστέρηση"</string>
 
     <!-- Shortcuts -->
-    <string name="shortcut_addJournal_shortLabel">"Ημερολόγιο"</string>
-    <string name="shortcut_addNote_shortLabel">"Σημείωση"</string>
-    <string name="shortcut_addTodo_shortLabel">"Εργασία"</string>
     <string name="shortcut_addJournal_longLabel">"Προσθήκη ημερολογίου"</string>
     <string name="shortcut_addNote_longLabel">"Προσθήκη σημείωσης"</string>
     <string name="shortcut_addTodo_longLabel">"Προσθήκη εργασίας"</string>
@@ -363,9 +344,9 @@ Global Strings -->
     <string name="permission_record_audio_granted">"Άδεια εγγραφής ομιλίας παραχωρήθηκε"</string>
     <string name="permission_record_audio_denied">"Η άδεια εγγραφής ομιλίας απορρίφθηκε"</string>
     <string name="intent_dialog_title">"Να προστεθεί το περιεχόμενο στο ημέρες λογικό, την σημείωση ή την εργασία;"</string>
-    <string name="intent_dialog_add_journal">"Ημερολόγιο"</string>
-    <string name="intent_dialog_add_note">"Σημείωση"</string>
-    <string name="intent_dialog_add_task">"Εργασία"</string>
+    <string name="journal">"Ημερολόγιο"</string>
+    <string name="note">"Σημείωση"</string>
+    <string name="task">"Εργασία"</string>
     <string name="add">"Προσθήκη"</string>
     <string name="edit">"Επεξεργασία"</string>
     <string name="reset">"Επαναφορά"</string>
@@ -374,8 +355,7 @@ Global Strings -->
     <string name="collection">"Συλλογή "</string>
     <string name="toolbar_text_collections">"Συλλογές"</string>
     <string name="navigation_drawer_collections">"Συλλογες"</string>
-    <string name="view_alarms_header">"Ειδοποιησεις"</string>
-    <string name="edit_alarms_header">"Ειδοποιήσεις"</string>
+    <string name="alarms">"Ειδοποιησεις"</string>
     <string name="edit_dialog_set_attendee_role">"Καθορισμός ρόλου"</string>
 
     <!-- alarms -->
@@ -412,8 +392,6 @@ Global Strings -->
     <string name="view_dialog_addnote_toast_no_summary_description">"Β σημειωση δεν μπορεί να δημιουργηθεί χωρίς κείμενο."</string>
     <string name="color">"Χρώμα"</string>
     <string name="edit_attendees_error">"Παρακαλώ πληκτρολογήστε ένα έγκυρο e-mail"</string>
-    <string name="edit_dialog_status">"Κατάσταση"</string>
-    <string name="edit_dialog_classification">"Ταξινόμηση"</string>
     <string name="priority_0_no_priority"></string>
     <string name="priority_1_highest"></string>
     <string name="priority_2_higher"></string>

@@ -602,7 +602,7 @@ class IcalEditFragmentTest {
             it.binding.icalEditTabs.selectTab(it.binding.icalEditTabs.getTabAt(IcalEditViewModel.TAB_RECURRING))
         }
 
-        onView(withText(R.string.edit_recurrence_header)).check(matches(isDisplayed()))
+        onView(withText(R.string.recurrence)).check(matches(isDisplayed()))
         onView(withId(R.id.edit_recur_switch)).check(matches(isDisplayed()))
 
         onView(withId(R.id.edit_recur_every_x)).check(matches(not(isDisplayed())))

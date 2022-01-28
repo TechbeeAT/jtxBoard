@@ -51,6 +51,15 @@
     <string name="collection">Collection</string>
     <string name="color">Color</string>
 
+    <string name="journal">Journal</string>
+    <string name="note">Note</string>
+    <string name="task">Task</string>
+
+    <string name="account">Account</string>
+    <string name="status">Status</string>
+    <string name="classification">Classification</string>
+    <string name="category">Category</string>
+
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">Draft</string>
     <string name="journal_status_final">Final</string>
@@ -70,6 +79,7 @@
     <string name="attendee_role_optional_participant">Optional participant</string>
     <string name="attendee_role_non_participant">Non-participant / Info</string>
 
+    <string name="priority">Priority</string>
     <string name="priority_0_no_priority">No priority</string>
     <string name="priority_1_highest">1 - Highest</string>
     <string name="priority_2_higher">2 - Higher</string>
@@ -80,6 +90,37 @@
     <string name="priority_7_high">7 - High</string>
     <string name="priority_8_higher">8 - Higher</string>
     <string name="priority_9_highest">9 - Highest</string>
+
+
+    <string name="readyonly">Read only</string>
+    <string name="upload_pending">Upload pending</string>
+    <string name="url">URL</string>
+    <string name="location">Location</string>
+    <string name="attendees">Attendees</string>
+    <string name="resources">Resources</string>
+    <string name="organizer">Organizer</string>
+    <string name="contact">Contact</string>
+    <string name="relatedto">Related to</string>
+    <string name="comments">Comments</string>
+    <string name="attachments">Attachments</string>
+    <string name="alarms">Alarms</string>
+    <string name="recurrence">Recurrence</string>
+    <string name="recurrence_exceptions">Exceptions</string>
+    <string name="recurrence_additions">Additions</string>
+    <string name="summary">Summary</string>
+    <string name="description">Description</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="sync_now">Sync now</string>
+
+    <string name="due">Due</string>
+    <string name="completed">Completed</string>
+    <string name="started">Start(ed)</string>
+    <string name="add_time_switch">Add time</string>
+    <string name="add_timezone_switch">Add timezone</string>
+    <string name="progress">Progress</string>
+    <string name="categories">Categories</string>
+    <string name="subtasks">Subtasks</string>
 
 
     <string name="toolbar_text_jtx_board" translatable="false">jtx Board</string>
@@ -110,10 +151,6 @@
 
 
     <string name="intent_dialog_title">Add content to a journal, note or task?</string>
-    <string name="intent_dialog_add_journal">Journal</string>
-    <string name="intent_dialog_add_note">Note</string>
-    <string name="intent_dialog_add_task">Task</string>
-
 
 
     <!-- Navigation Drawer  -->
@@ -182,21 +219,6 @@
 
 
     <!-- fragment_ical_view -->
-    <string name="view_readyonly">Read only</string>
-    <string name="view_upload_pending">Upload pending</string>
-    <string name="view_url_header">URL</string>
-    <string name="view_location_header">Location</string>
-    <string name="view_attendees_header">Attendees</string>
-    <string name="view_resources_header">Resources</string>
-    <string name="view_organizer_header">Organizer</string>
-    <string name="view_contact_header">Contact</string>
-    <string name="view_relatedto_header">Related to</string>
-    <string name="view_comments_header">Comments</string>
-    <string name="view_attachments_header">Attachments</string>
-    <string name="view_alarms_header">Alarms</string>
-    <string name="view_recurrence_header">Recurrence</string>
-    <string name="view_recurrence_exceptions">Exceptions</string>
-    <string name="view_recurrence_additions">Additions</string>
     <string name="view_recurrence_go_to_original_button">Go to original</string>
     <string name="view_recurrence_note_to_original_dialog_header">Instance of recurring</string>
     <string name="view_recurrence_note_to_original">"This entry is part of a series. Editing this entry will unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore. "</string>
@@ -230,16 +252,14 @@
 
 
     <!-- fragment_ical_edit -->
-    <string name="edit_summary_hint">Summary</string>
+
     <string name="edit_add_category_hint">#mycategory</string>
     <string name="edit_add_category_helper">Add a category</string>
-    <string name="edit_description_hint">Description</string>
     <string name="edit_attendees_hint">johanna@example.com</string>
     <string name="edit_attendees_helper">Add an attendee (e-mail-address)</string>
     <string name="edit_attendees_error">Please enter a valid email-address</string>
     <string name="edit_resources_hint">Projector</string>
     <string name="edit_resources_helper">Add a resource</string>
-    <string name="edit_organizer_hint">Organizer</string>
     <string name="edit_contact_hint">Jim Dolittle, +1 919 555 1234</string>
     <string name="edit_contact_helper">Contact information of the responsible or owner of this entry</string>
     <string name="edit_comment_hint">Your comment…</string>
@@ -253,34 +273,14 @@
     <string name="edit_location_helper">Add a location for this entry</string>
     <string name="edit_attachment_add_dialog_hint">Your attachment-url (https://…)</string>
     <string name="edit_comment_add_dialog_hint">Your comment</string>
-    <string name="edit_dialog_priority">Priority</string>
-    <string name="edit_dialog_status">Status</string>
-    <string name="edit_dialog_classification">Classification</string>
     <string name="edit_attachment_beta_info">* Please note that synchronizing attachments with DAVx⁵ is an experimental feature. Be aware that this might cause unexpected behaviour or errors. If you encounter any issues, please let us know through the support forums or a support request on the website!</string>
 
-    <string name="edit_due">Due</string>
-    <string name="edit_completed">Completed</string>
-    <string name="edit_started">Start(ed)</string>
-    <string name="edit_add_time_switch">Add time</string>
-    <string name="edit_add_timezone_switch">Add timezone</string>
-    <string name="edit_progress">Progress</string>
-    <string name="edit_subtasks_header">Subtasks</string>
     <string name="edit_subtasks_add_hint">Your subtask</string>
     <string name="edit_subtasks_add_helper">Add a subtask</string>
-    <string name="edit_contact_header">Contact</string>
-    <string name="edit_url_header">URL</string>
-    <string name="edit_location_header">Location</string>
-    <string name="edit_categories_header">Categories</string>
-    <string name="edit_attendees_header">Attendees</string>
-    <string name="edit_resources_header">Resources</string>
-    <string name="edit_recurrence_header">Recurrence</string>
-    <string name="edit_alarms_header">Alarms</string>
     <string name="edit_attachment_delete_attachment">Delete attachment</string>
     <string name="edit_attachment_add_link_dialog">Add attachment link</string>
     <string name="edit_recur_last_occurrence">Last occurrence</string>
     <string name="edit_recur_all_occurrences">All occurrences</string>
-    <string name="edit_recur_exceptions">Exceptions</string>
-    <string name="edit_recur_additions">Additions</string>
     <string name="edit_recur_repeat_every_x">Repeat every</string>
     <string name="edit_recur_on_weekday">on</string>
     <string name="edit_recur_on_the_x_day_of_month">on the</string>
@@ -341,11 +341,6 @@
 
 
     <!-- fragment_ical_filter -->
-    <string name="filter_account">Account</string>
-    <string name="filter_collection">Collection</string>
-    <string name="filter_status">Status</string>
-    <string name="filter_classification">Classification</string>
-    <string name="filter_category">Category</string>
     <string name="filter_fab_apply_filter_contentdescription">Apply filter</string>
 
     <!-- fragment_about -->
@@ -385,16 +380,12 @@
     <string name="collections_toast_export_ics_error">An error occurred while exporting the selected collection.</string>
 
     <!-- menus -->
-    <string name="menu_edit_delete">Delete</string>
     <string name="menu_edit_clear_dates">Clear dates</string>
 
     <string name="menu_collections_add_local">Add local Collection</string>
     <string name="menu_collections_add_remote">Add remote Collection (DAVx⁵)</string>
 
-    <string name="menu_list_search">Search</string>
-    <string name="menu_list_search_hint">Search</string>
     <string name="menu_list_gotodate">Go to date</string>
-    <string name="menu_list_filter">Filter</string>
     <string name="menu_list_clearfilter">Clear filter</string>
     <string name="menu_list_quick_journal">Quick Journal</string>
     <string name="menu_list_quick_note">Quick Note</string>
@@ -410,11 +401,7 @@
     <string name="menu_view_copy_as_journal">Copy as Journal</string>
     <string name="menu_view_copy_as_todo">Copy as Todo</string>
     <string name="menu_view_copy_as_note">Copy as Note</string>
-    <string name="menu_view_delete_item">Delete</string>
     <string name="menu_view_copy_item">Create copy</string>
-    <string name="menu_view_syncnow">Sync now</string>
-
-    <string name="menu_sync_syncnow">Sync now</string>
 
     <string name="menu_collection_popup_show_in_davx5">Show in DAVx⁵</string>
     <string name="menu_collection_popup_export_as_ics">Export as .ics</string>
@@ -425,9 +412,6 @@
     <string name="notification_channel_reminder_description">Notification for due todos</string>
 
     <!-- Shortcuts -->
-    <string name="shortcut_addJournal_shortLabel">Journal</string>
-    <string name="shortcut_addNote_shortLabel">Note</string>
-    <string name="shortcut_addTodo_shortLabel">Todo</string>
     <string name="shortcut_addJournal_longLabel">Add Journal</string>
     <string name="shortcut_addNote_longLabel">Add Note</string>
     <string name="shortcut_addTodo_longLabel">Add Todo</string>

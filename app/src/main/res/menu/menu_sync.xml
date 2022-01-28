@@ -13,7 +13,7 @@
     <item
         android:id="@+id/menu_sync_syncnow"
         android:icon="@drawable/ic_sync"
-        android:title="@string/menu_sync_syncnow"
+        android:title="@string/sync_now"
         app:showAsAction="always" />
 
 </menu>

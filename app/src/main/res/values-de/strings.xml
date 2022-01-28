@@ -97,20 +97,20 @@ Global Strings -->
     <string name="list_item_recurring">"Wiederkehrender Eintrag"</string>
 
     <!-- fragment_ical_view -->
-    <string name="view_readyonly">"Schreibgeschützt"</string>
-    <string name="view_upload_pending">"Hochladen aussändig"</string>
-    <string name="view_url_header">"URL"</string>
-    <string name="view_location_header">"Standort"</string>
-    <string name="view_attendees_header">"Teilnehmer"</string>
-    <string name="view_resources_header">"Materialien"</string>
-    <string name="view_organizer_header">"Organisator"</string>
-    <string name="view_contact_header">"Kontakt"</string>
-    <string name="view_relatedto_header">"Verknüpft mit"</string>
-    <string name="view_comments_header">"Kommentare"</string>
-    <string name="view_attachments_header">"Anhänge"</string>
-    <string name="view_recurrence_header">"Wiederkehrend"</string>
-    <string name="view_recurrence_exceptions">"Ausnahmen"</string>
-    <string name="view_recurrence_additions">"Ergänzungen"</string>
+    <string name="readyonly">"Schreibgeschützt"</string>
+    <string name="upload_pending">"Hochladen aussändig"</string>
+    <string name="url">"URL"</string>
+    <string name="location">"Standort"</string>
+    <string name="attendees">"Teilnehmer"</string>
+    <string name="resources">"Materialien"</string>
+    <string name="organizer">"Organisator"</string>
+    <string name="contact">"Kontakt"</string>
+    <string name="relatedto">"Verknüpft mit"</string>
+    <string name="comments">"Kommentare"</string>
+    <string name="attachments">"Anhänge"</string>
+    <string name="recurrence">"Wiederkehrend"</string>
+    <string name="recurrence_exceptions">"Ausnahmen"</string>
+    <string name="recurrence_additions">"Ergänzungen"</string>
     <string name="view_recurrence_go_to_original_button">"Zum Original"</string>
     <string name="view_recurrence_note_to_original_dialog_header">"Instanz von wiederkehrendem Eintrag"</string>
     <string name="view_recurrence_note_to_original">"Dieser Eintrag ist Teil einer Serie. Wenn Sie diesen Eintrag bearbeiten, wird die Verknüpfung zum Original entfernt, al s eigenständiger Eintrag weiter bestehen und Änderungen am Original werden nicht mehr auf diesen Eintrag übertragen. "</string>
@@ -140,15 +140,14 @@ Global Strings -->
     <string name="view_started">"Start"</string>
 
     <!-- fragment_ical_edit -->
-    <string name="edit_summary_hint">"Zusammenfassung"</string>
+    <string name="summary">"Zusammenfassung"</string>
     <string name="edit_add_category_hint">"#Kategorie"</string>
     <string name="edit_add_category_helper">"Kategorie hinzufügen"</string>
-    <string name="edit_description_hint">"Beschreibung"</string>
+    <string name="description">"Beschreibung"</string>
     <string name="edit_attendees_hint">"johanna@example.com"</string>
     <string name="edit_attendees_helper">"Teilnehmer hinzufügen (E-Mail-Adresse)"</string>
     <string name="edit_resources_hint">"Beamer"</string>
     <string name="edit_resources_helper">"Materialen hinzufügen"</string>
-    <string name="edit_organizer_hint">"Organisator"</string>
     <string name="edit_contact_hint">"Max Mustermann, +1 919 555 1234"</string>
     <string name="edit_contact_helper">"Kontaktdaten des Verantwortlichen für diesen Eintrag"</string>
     <string name="edit_comment_hint">"Ihr Kommentar …"</string>
@@ -160,30 +159,22 @@ Global Strings -->
     <string name="edit_location_helper">"Fügen Sie einen Standort hinzu"</string>
     <string name="edit_attachment_add_dialog_hint">"Ihre URL zum Anhang (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Ihr Kommentar"</string>
-    <string name="edit_dialog_priority">"Priorität"</string>
+    <string name="priority">"Priorität"</string>
     <string name="edit_attachment_beta_info">"* Bitte beachten Sie, dass sich die Synchronisierung von Anhängen mit DAVx⁵ in einem experimentellen Stadium befindet, das unerwünschtes Verhalten oder Fehler zur Folge haben kann. Sollten Sie Probleme feststellen, geben Sie uns bitte Bescheid über die Support-Foren oder eine Support-Anfrage auf der Website!"</string>
-    <string name="edit_due">"Fällig"</string>
-    <string name="edit_completed">"Fertiggestellt"</string>
-    <string name="edit_started">"Start"</string>
-    <string name="edit_add_time_switch">"Zeit hinzufügen"</string>
-    <string name="edit_add_timezone_switch">"Zeitzone hinzufügen"</string>
-    <string name="edit_progress">"Fortschritt"</string>
-    <string name="edit_subtasks_header">"Teilaufgaben"</string>
+    <string name="due">"Fällig"</string>
+    <string name="completed">"Fertiggestellt"</string>
+    <string name="started">"Start"</string>
+    <string name="add_time_switch">"Zeit hinzufügen"</string>
+    <string name="add_timezone_switch">"Zeitzone hinzufügen"</string>
+    <string name="progress">"Fortschritt"</string>
+    <string name="subtasks">"Teilaufgaben"</string>
     <string name="edit_subtasks_add_hint">"Ihre Teilaufgabe"</string>
     <string name="edit_subtasks_add_helper">"Teilaufgabe hinzufügen"</string>
-    <string name="edit_contact_header">"Kontakt"</string>
-    <string name="edit_url_header">"URL"</string>
-    <string name="edit_location_header">"Standort"</string>
-    <string name="edit_categories_header">"Kategorien"</string>
-    <string name="edit_attendees_header">"Teilnehmer"</string>
-    <string name="edit_resources_header">"Materialien"</string>
-    <string name="edit_recurrence_header">"Wiederholung"</string>
+    <string name="categories">"Kategorien"</string>
     <string name="edit_attachment_delete_attachment">"Anhang löschen"</string>
     <string name="edit_attachment_add_link_dialog">"Link zu Anhang hinzufügen"</string>
     <string name="edit_recur_last_occurrence">"Letzte Wiederholung"</string>
     <string name="edit_recur_all_occurrences">"Alle Wiederholungen"</string>
-    <string name="edit_recur_exceptions">"Ausnahmen"</string>
-    <string name="edit_recur_additions">"Ergänzungen"</string>
     <string name="edit_recur_repeat_every_x">"Wiederhole jede/n/s"</string>
     <string name="edit_recur_on_weekday">"am"</string>
     <string name="edit_recur_on_the_x_day_of_month">"am"</string>
@@ -219,11 +210,10 @@ Global Strings -->
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Eine Dauer wurde für diesen Eintrag festgestellt. Die Verwendung des Felder für Dauer wird aktuell nicht von jtx Board unterstützt. Bitte verwenden Sie das Start-, Fälligkeits- und Fertiggestellt-Datum stattdessen. Wenn Sie diesen Eintrag speichern, dann wird die aktuelle Dauer gelöscht/überschrieben"</string>
 
     <!-- fragment_ical_filter -->
-    <string name="filter_account">"Account"</string>
-    <string name="filter_collection">"Ordner"</string>
-    <string name="filter_status">"Status"</string>
-    <string name="filter_classification">"Klassifizierung"</string>
-    <string name="filter_category">"Kategorie"</string>
+    <string name="account">"Account"</string>
+    <string name="status">"Status"</string>
+    <string name="classification">"Klassifizierung"</string>
+    <string name="category">"Kategorie"</string>
     <string name="filter_fab_apply_filter_contentdescription">"Filter anwenden"</string>
     <string name="about_tabitem_translations">"Übersetzungen"</string>
     <string name="about_tabitem_libraries">"Bibliotheken"</string>
@@ -235,14 +225,10 @@ Global Strings -->
     <string name="about_thanks_ffg">"Besonderer Dank gilt der FFG für Ihr Vertrauen und die finanzielle Unterstützung um dieses Projekt zu realisieren."</string>
 
     <!-- menus -->
-    <string name="menu_edit_delete">"Löschen"</string>
     <string name="menu_edit_clear_dates">"Datumsfelder löschen"</string>
-    <string name="menu_filter_reset">"Zurücksetzen"</string>
-    <string name="menu_filter_apply">"Anwenden"</string>
-    <string name="menu_list_search">"Suchen"</string>
-    <string name="menu_list_search_hint">"Suchen"</string>
+    <string name="search">"Suchen"</string>
     <string name="menu_list_gotodate">"Zu Datum gehen"</string>
-    <string name="menu_list_filter">"Filter"</string>
+    <string name="filter">"Filter"</string>
     <string name="menu_list_clearfilter">"Filter löschen"</string>
     <string name="menu_list_quick_journal">"Schnell-Journal"</string>
     <string name="menu_list_quick_note">"Schnell-Notiz"</string>
@@ -256,19 +242,14 @@ Global Strings -->
     <string name="menu_view_copy_as_journal">"Als Journal kopieren"</string>
     <string name="menu_view_copy_as_todo">"Als Aufgabe kopieren"</string>
     <string name="menu_view_copy_as_note">"Als Notiz kopieren"</string>
-    <string name="menu_view_delete_item">"Löschen"</string>
     <string name="menu_view_copy_item">"Kopie anlegen"</string>
-    <string name="menu_view_syncnow">"Jetzt synchronisieren"</string>
-    <string name="menu_sync_syncnow">"Jetzt synchronisieren"</string>
+    <string name="sync_now">"Jetzt synchronisieren"</string>
 
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">"Aufgaben Fälligkeits-Erinnerung"</string>
     <string name="notification_channel_reminder_description">"Benachrichtigung für fällige Aufgaben"</string>
 
     <!-- Shortcuts -->
-    <string name="shortcut_addJournal_shortLabel">"Journal"</string>
-    <string name="shortcut_addNote_shortLabel">"Notiz"</string>
-    <string name="shortcut_addTodo_shortLabel">"Aufgabe"</string>
     <string name="shortcut_addJournal_longLabel">"Journal hinzufügen"</string>
     <string name="shortcut_addNote_longLabel">"Notiz hinzufügen"</string>
     <string name="shortcut_addTodo_longLabel">"Aufgabe hinzufügen"</string>
@@ -359,9 +340,9 @@ Global Strings -->
     <string name="permission_record_audio_granted">"Audio-Aufnahmeberechtigung erteilt"</string>
     <string name="permission_record_audio_denied">"Audio-Aufnahmeberechtigung abgelehnt"</string>
     <string name="intent_dialog_title">"Inhalt hinzufügen zu Journal, Notiz oder Aufgabe?"</string>
-    <string name="intent_dialog_add_journal">"Journal"</string>
-    <string name="intent_dialog_add_note">"Notiz"</string>
-    <string name="intent_dialog_add_task">"Aufgabe"</string>
+    <string name="journal">"Journal"</string>
+    <string name="note">"Notiz"</string>
+    <string name="task">"Aufgabe"</string>
     <string name="add">"Hinzufügen"</string>
     <string name="edit">"Bearbeiten"</string>
     <string name="reset">"Zurücksetzen"</string>
@@ -370,8 +351,7 @@ Global Strings -->
     <string name="collection">"Collection"</string>
     <string name="toolbar_text_collections">"Collections"</string>
     <string name="navigation_drawer_collections">"Collections"</string>
-    <string name="view_alarms_header">"Alarme"</string>
-    <string name="edit_alarms_header">"Alarme"</string>
+    <string name="alarms">"Alarme"</string>
     <string name="edit_dialog_set_attendee_role">"Teilnehmer-Rolle vergeben"</string>
 
     <!-- alarms -->
@@ -412,8 +392,6 @@ Global Strings -->
     <string name="view_dialog_addnote_toast_no_summary_description">"Notiz ohne Text kann nicht erstellt werden."</string>
     <string name="color">"Farbe"</string>
     <string name="edit_attendees_error">"Bitte geben Sie eine gültige E-Mail-Adresse ein"</string>
-    <string name="edit_dialog_status">"Status"</string>
-    <string name="edit_dialog_classification">"Klassifizierung"</string>
     <string name="priority_0_no_priority"></string>
     <string name="priority_1_highest"></string>
     <string name="priority_2_higher"></string>

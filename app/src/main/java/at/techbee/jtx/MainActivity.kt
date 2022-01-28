@@ -164,9 +164,9 @@ class MainActivity : AppCompatActivity()  {
                 Intent.ACTION_SEND -> {
 
                     val options = arrayOf(
-                        getString(R.string.intent_dialog_add_journal),
-                        getString(R.string.intent_dialog_add_note),
-                        getString(R.string.intent_dialog_add_task)
+                        getString(R.string.journal),
+                        getString(R.string.note),
+                        getString(R.string.task)
                     )
                     AlertDialog.Builder(this)
                         .setTitle(R.string.intent_dialog_title)

@@ -29,7 +29,7 @@
         <item
             android:id="@+id/menu_view_syncnow"
             android:icon="@drawable/ic_sync"
-            android:title="@string/menu_view_syncnow"
+            android:title="@string/sync_now"
             app:showAsAction="never" />
     </group>
 
@@ -53,7 +53,7 @@
     <group android:id="@+id/menugroup_view_delete">
         <item
             android:id="@+id/menu_view_delete_item"
-            android:title="@string/menu_view_delete_item"
+            android:title="@string/delete"
             app:showAsAction="never" />
     </group>
 

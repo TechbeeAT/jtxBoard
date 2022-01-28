@@ -33,7 +33,7 @@
             android:drawablePadding="8dp"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="@string/edit_subtasks_header"
+            android:text="@string/subtasks"
             app:drawableStartCompat="@drawable/ic_todo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

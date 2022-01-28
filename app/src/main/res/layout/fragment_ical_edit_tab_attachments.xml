@@ -34,7 +34,7 @@
             android:drawablePadding="8dp"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="@string/view_attachments_header"
+            android:text="@string/attachments"
             app:drawableStartCompat="@drawable/ic_attachment"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

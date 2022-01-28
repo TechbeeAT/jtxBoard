@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:drawablePadding="8dp"
-            android:text="@string/edit_alarms_header"
+            android:text="@string/alarms"
             android:textSize="18sp"
             android:textStyle="bold"
             app:drawableStartCompat="@drawable/ic_alarm"
