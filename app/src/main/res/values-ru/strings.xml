@@ -99,18 +99,6 @@ Global Strings -->
     <!-- fragment_ical_view -->
     <string name="view_readyonly">"Только для чтения"</string>
     <string name="view_upload_pending">"Ожидающие загрузки"</string>
-    <string name="view_url_header"></string>
-    <string name="view_location_header">"Местоположение"</string>
-    <string name="view_attendees_header">"Участники"</string>
-    <string name="view_resources_header">"Ресурсы"</string>
-    <string name="view_organizer_header">"Организатор"</string>
-    <string name="view_contact_header">"Контакт"</string>
-    <string name="view_relatedto_header">"Относится к"</string>
-    <string name="view_comments_header">"Комментарии"</string>
-    <string name="view_attachments_header">"Вложения"</string>
-    <string name="view_recurrence_header">"Повторение"</string>
-    <string name="view_recurrence_exceptions">"Исключения"</string>
-    <string name="view_recurrence_additions">"Дополнения"</string>
 
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Перейти к оригиналу"</string>
@@ -142,17 +130,12 @@ Global Strings -->
     <string name="view_started">"Начало(сь)"</string>
 
     <!-- fragment_ical_edit -->
-    <string name="edit_summary_hint">"Сводка"</string>
-
-    <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#моякатегория"</string>
     <string name="edit_add_category_helper">"Добавить категорию"</string>
-    <string name="edit_description_hint">"Описание"</string>
     <string name="edit_attendees_hint"></string>
     <string name="edit_attendees_helper">"Добавить участника (адрес электронной почты)"</string>
     <string name="edit_resources_hint"></string>
     <string name="edit_resources_helper">"Добавить ресурс"</string>
-    <string name="edit_organizer_hint">"Организатор"</string>
     <string name="edit_contact_hint"></string>
     <string name="edit_contact_helper">"Контактная информация ответственного лица или владельца данной записи"</string>
     <string name="edit_comment_hint">"Ваш комментарий…"</string>
@@ -164,30 +147,13 @@ Global Strings -->
     <string name="edit_location_helper">"Добавьте местоположение для этой записи"</string>
     <string name="edit_attachment_add_dialog_hint">"Ваш URL-адрес вложения (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Ваш комментарий"</string>
-    <string name="edit_dialog_priority">"Приоритет"</string>
     <string name="edit_attachment_beta_info">"* Обратите внимание, что синхронизация вложений с DAVx⁵ является экспериментальной функцией. Помните, что это может привести к неожиданному поведению или ошибкам. Если у вас возникнут какие-либо проблемы, сообщите нам об этом через форумы поддержки или запрос в службу поддержки на веб-сайте!"</string>
-    <string name="edit_due"></string>
-    <string name="edit_completed">"Завершено"</string>
-    <string name="edit_started">"Начало(сь)"</string>
-    <string name="edit_add_time_switch">"Добавить время"</string>
-    <string name="edit_add_timezone_switch">"Добавить часовой пояс"</string>
-    <string name="edit_progress">"Прогресс"</string>
-    <string name="edit_subtasks_header">"Подзадачи"</string>
     <string name="edit_subtasks_add_hint">"Ваша подзадача"</string>
     <string name="edit_subtasks_add_helper">"Добавить подзадачу"</string>
-    <string name="edit_contact_header">"Контакт"</string>
-    <string name="edit_url_header"></string>
-    <string name="edit_location_header">"Местоположение"</string>
-    <string name="edit_categories_header">"Категория"</string>
-    <string name="edit_attendees_header">"Участники"</string>
-    <string name="edit_resources_header">"Ресурсы"</string>
-    <string name="edit_recurrence_header">"Повторение"</string>
     <string name="edit_attachment_delete_attachment">"Удалить вложение"</string>
     <string name="edit_attachment_add_link_dialog">"Добавить ссылку на вложение"</string>
     <string name="edit_recur_last_occurrence"></string>
     <string name="edit_recur_all_occurrences"></string>
-    <string name="edit_recur_exceptions">"Исключения"</string>
-    <string name="edit_recur_additions">"Дополнения"</string>
     <string name="edit_recur_repeat_every_x">"Повторять каждые"</string>
     <string name="edit_recur_on_weekday"></string>
     <string name="edit_recur_on_the_x_day_of_month"></string>
@@ -223,13 +189,6 @@ Global Strings -->
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">"Для этой записи в фоновом режиме обнаружена продолжительность. В настоящее время jtx Board не поддерживает обработку продолжительности. Вместо этого используйте даты начала, срока и окончания. Если вы сохраните эту запись, существующая продолжительность будет удалена."</string>
 
     <!-- fragment_ical_filter -->
-    <string name="filter_account">"Аккаунт"</string>
-    <string name="filter_collection">"Коллекция"</string>
-    <string name="filter_status">"Статус"</string>
-    <string name="filter_classification">"Классификация"</string>
-    <string name="filter_category">"Категория"</string>
-
-    <!-- fragment_ical_filter -->
     <string name="filter_fab_apply_filter_contentdescription">"Применить фильтр"</string>
     <string name="about_tabitem_translations">"Переводы"</string>
     <string name="about_tabitem_libraries">"Библиотеки"</string>
@@ -245,12 +204,7 @@ Global Strings -->
 
     <!-- menus -->
     <string name="menu_edit_clear_dates">"Очистка дат"</string>
-    <string name="menu_filter_reset">"Сброс"</string>
-    <string name="menu_filter_apply">"Применить"</string>
-    <string name="menu_list_search">"Поиск"</string>
-    <string name="menu_list_search_hint">"Поиск"</string>
     <string name="menu_list_gotodate">"Переход к дате"</string>
-    <string name="menu_list_filter">"Фильтр"</string>
     <string name="menu_list_clearfilter">"Очистить фильтр"</string>
     <string name="menu_list_quick_journal">"Быстрый дневник"</string>
     <string name="menu_list_quick_note">"Быстрая заметка"</string>
@@ -264,19 +218,11 @@ Global Strings -->
     <string name="menu_view_copy_as_journal">"Скопировать как дневник"</string>
     <string name="menu_view_copy_as_todo">"Скопировать как задание"</string>
     <string name="menu_view_copy_as_note">"Скопировать как заметку"</string>
-    <string name="menu_view_delete_item">"Удалить"</string>
     <string name="menu_view_copy_item">"Создать копию"</string>
-    <string name="menu_view_syncnow">"Синхронизировать сейчас"</string>
-    <string name="menu_sync_syncnow">"Синхронизировать сейчас"</string>
 
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">"Напоминание о задачах"</string>
     <string name="notification_channel_reminder_description">"Уведомление о невыполненных задачах"</string>
-
-    <!-- Shortcuts -->
-    <string name="shortcut_addJournal_shortLabel">"Дневник"</string>
-    <string name="shortcut_addNote_shortLabel">"Заметка"</string>
-    <string name="shortcut_addTodo_shortLabel">"Задание"</string>
 
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Добавить дневник"</string>
@@ -371,9 +317,6 @@ Global Strings -->
     <string name="permission_record_audio_granted">"Разрешение на запись звука предоставлено"</string>
     <string name="permission_record_audio_denied">"Разрешение на запись звука отклонено"</string>
     <string name="intent_dialog_title">"Добавить вложение в журнал, заметку или задачу?"</string>
-    <string name="intent_dialog_add_journal">"Дневник"</string>
-    <string name="intent_dialog_add_note">"Заметка"</string>
-    <string name="intent_dialog_add_task">"Задача"</string>
     <string name="add">"Добавить"</string>
     <string name="edit">"Редактировать"</string>
     <string name="reset">"Сбросить"</string>
@@ -382,8 +325,6 @@ Global Strings -->
     <string name="collection">"Коллекция"</string>
     <string name="toolbar_text_collections">"Коллекции"</string>
     <string name="navigation_drawer_collections">"Коллекции"</string>
-    <string name="view_alarms_header">"Будильники"</string>
-    <string name="edit_alarms_header">"Будильники"</string>
     <string name="edit_dialog_set_attendee_role">"Установить роль участника"</string>
 
     <!-- alarms -->
@@ -418,8 +359,6 @@ Global Strings -->
     <string name="view_dialog_addnote_toast_no_summary_description">"Заметка без текста не может быть создана."</string>
     <string name="color">"Цвет"</string>
     <string name="edit_attendees_error">"Пожалуйста, введите действительный адрес электронной почты"</string>
-    <string name="edit_dialog_status">"Статус"</string>
-    <string name="edit_dialog_classification">"Классификация"</string>
     <string name="priority_0_no_priority"></string>
     <string name="priority_1_highest"></string>
     <string name="priority_2_higher"></string>
