@@ -1,450 +1,487 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) Techbee e.U.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the GNU Public License v3.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.gnu.org/licenses/gpl.html
+  -->
+
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- App title and fragment titles -->
-    <string name="app_name" translatable="false">"jtx Board"</string>
-    <string name="app_permission_label">"jtx Board sync Journals, Notes &amp; Tasks"</string>
-    <string name="app_permission_desc">"sync jtx Board content with other applications like DAVx⁵"</string>
+    <string name="app_name" translatable="false">jtx Board</string>
+    <string name="app_permission_label">jtx Board sync Journals, Notes &amp; Tasks</string>
+    <string name="app_permission_desc">sync jtx Board content with other applications like DAVx⁵</string>
 
     <!-- Reusable links in different contexts -->
-    <string name="link_davx5" translatable="false">"https://www.davx5.com/"</string>
-    <string name="link_ffg" translatable="false">"https://www.ffg.at"</string>
-    <string name="link_jtx" translatable="false">"https://jtx.techbee.at"</string>
-    <string name="link_jtx_sync" translatable="false">"https://jtx.techbee.at/sync-with-davx5"</string>
-    <string name="link_jtx_support" translatable="false">"https://jtx.techbee.at/support"</string>
-    <string name="link_jtx_privacy_policy" translatable="false">"https://jtx.techbee.at/privacy"</string>
-    <string name="link_jtx_twitter" translatable="false">"https://twitter.com/jtxBoard"</string>
-    <string name="link_techbee" translatable="false">"https://techbee.at"</string>
-    <string name="link_jtx_terms" translatable="false">"https://jtx.techbee.at/terms-conditions"</string>
-    <string name="twitter_account_name" translatable="false">"@jtxBoard"</string>
-
-    <!-- Possible audio formats for settings
-Global Strings -->
-    <string name="save">"Save"</string>
-    <string name="cancel">"Cancel"</string>
-    <string name="ok">"OK"</string>
-    <string name="delete">"Delete"</string>
-    <string name="discard">"Discard"</string>
-    <string name="gotit">"Got it"</string>
-    <string name="cont">"Continue"</string>
-    <string name="toolbar_text_jtx_board" translatable="false">"jtx Board"</string>
-    <string name="toolbar_text_jtx_board_journals_overview">"Journals Overview"</string>
-    <string name="toolbar_text_jtx_board_notes_overview">"Notes Overview"</string>
-    <string name="toolbar_text_jtx_board_tasks_overview">"Tasks Overview"</string>
-    <string name="toolbar_text_view_journal_details">"Journal Details"</string>
-    <string name="toolbar_text_view_note_details">"Note Details"</string>
-    <string name="toolbar_text_view_task_details">"Task Details"</string>
-    <string name="toolbar_text_add_journal">"Add Journal"</string>
-    <string name="toolbar_text_add_note">"Add Note"</string>
-    <string name="toolbar_text_add_task">"Add Task"</string>
-    <string name="toolbar_text_edit_journal">"Edit Journal"</string>
-    <string name="toolbar_text_edit_note">"Edit Note"</string>
-    <string name="toolbar_text_edit_task">"Edit Task"</string>
-    <string name="toolbar_text_filter">"Filter"</string>
-    <string name="toolbar_text_settings">"Settings"</string>
-    <string name="toolbar_text_about">"About"</string>
-    <string name="toolbar_text_sync">"Sync"</string>
-    <string name="toolbar_text_donate">"Donate"</string>
-    <string name="toolbar_text_adinfo">"Ad Info"</string>
-    <string name="default_local_collection_name">"Local"</string>
-    <string name="default_local_account_name">"Local"</string>
-
-    <!-- Strings for values in properties of an ICalObject -->
-    <string name="journal_status_draft">"Draft"</string>
-    <string name="journal_status_final">"Final"</string>
-    <string name="journal_status_cancelled">"Cancelled"</string>
-    <string name="todo_status_needsaction">"Needs action"</string>
-    <string name="todo_status_completed">"Completed"</string>
-    <string name="todo_status_inprocess">"In process"</string>
-    <string name="todo_status_cancelled">"Cancelled"</string>
-    <string name="classification_public">"Public"</string>
-    <string name="classification_private">"Private"</string>
-    <string name="classification_confidential">"Confidential"</string>
-    <string name="attendee_role_chair">"Chair"</string>
-    <string name="attendee_role_required_participant">"Required participant"</string>
-    <string name="attendee_role_optional_participant">"Optional participant"</string>
-    <string name="attendee_role_non_participant">"Non-participant / Info"</string>
-
-    <!-- Navigation Drawer -->
-    <string name="navigation_drawer_open">"Open navigation drawer"</string>
-    <string name="navigation_drawer_close">"Close navigation drawer"</string>
-    <string name="navigation_drawer_board">"Board"</string>
-    <string name="navigation_drawer_sync">"Sync with DAVx⁵"</string>
-    <string name="navigation_drawer_about">"About / License"</string>
-    <string name="navigation_drawer_subtitle">"journals, notes &amp; tasks for android"</string>
-    <string name="navigation_drawer_beta_feedback">"Beta feedback"</string>
-    <string name="navigation_drawer_settings">"Settings"</string>
-    <string name="navigation_drawer_news_updates">"News &amp; updates"</string>
-    <string name="navigation_drawer_external_links">"External links"</string>
-    <string name="navigation_drawer_website">"Website"</string>
-    <string name="navigation_drawer_support">"Support"</string>
-    <string name="navigation_drawer_donate">"Donate"</string>
-    <string name="navigation_drawer_adinfo">"Ad Info"</string>
-    <string name="navigation_drawer_privacy_policy">"Privacy Policy"</string>
-
-    <!-- fragment_ical_list -->
-    <string name="list_due_overdue">"Overdue"</string>
-    <string name="list_due_today">"Due today"</string>
-    <string name="list_due_tomorrow">"Due tomorrow"</string>
-    <string name="list_due_inXdays">"Due in %d days"</string>
-    <string name="list_due_inXhours">"Due in %d hours"</string>
-    <string name="list_start_past">"Start in past"</string>
-    <string name="list_start_today">"Planned start today"</string>
-    <string name="list_start_tomorrow">"Start tomorrow"</string>
-    <string name="list_start_inXhours">"Planned start in %d hours"</string>
-    <string name="list_start_inXdays">"Planned start in %d days"</string>
-    <string name="list_tabitem_journals">"Journals"</string>
-    <string name="list_tabitem_notes">"Notes"</string>
-    <string name="list_tabitem_todos">"Tasks"</string>
-    <string name="list_fab_add_contentdesc">"Add new item"</string>
-    <string name="list_progress">"Progress"</string>
-    <string name="list_expand">"Expand"</string>
-    <string name="list_dialog_contribution_title">"Note on advertisements"</string>
-    <string name="list_dialog_contribution_message">"This app is powered by advertisements by default. For more information please check out the Ad-Info section in the main menu!"</string>
-    <string name="list_dialog_contribution_more_information">"Find out more"</string>
-    <string name="list_num_attendees_contentdesc">"Number of attendees"</string>
-    <string name="list_num_attachments_contentdesc">"Number of attachments"</string>
-    <string name="list_num_comments_contentdesc">"Number of comments"</string>
-    <string name="list_dialog_delete_visible_title">"Delete all visible?"</string>
-    <string name="list_dialog_delete_visible_message">"This action deletes all visible entries (%1$d). Are you sure that you want to proceed? This operation cannot be undone!"</string>
-    <string name="list_quickadd_dialog_summary_description_hint">"Summary/Description"</string>
-    <string name="list_quickadd_dialog_summary_description_helper">"The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category)."</string>
-    <string name="list_item_upload_pending">"Upload pending"</string>
-    <string name="list_item_recurring">"Recurring entry"</string>
-
-    <!-- fragment_ical_view -->
-    <string name="view_readyonly">"Read only"</string>
-    <string name="view_upload_pending">"Upload pending"</string>
-
-    <!-- fragment_ical_view -->
-    <string name="view_recurrence_go_to_original_button">"Go to original"</string>
-    <string name="view_recurrence_note_to_original_dialog_header">"Instance of recurring"</string>
-    <string name="view_recurrence_note_to_original">"This entry is part of a series. Editing this entry will unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore. "</string>
-    <string name="view_fragment_audio_permission">"App Permission"</string>
-    <string name="view_fragment_audio_permission_message">"jtx Board needs the permission in order to record audio or use speech-to-text functionalities. Please grant the permission to use this feature."</string>
-    <string name="view_fragment_audio_dialog_add_audio_note">"Add Audio Note"</string>
-    <string name="view_comment_playbutton_content_desc">"Play audio comment"</string>
-    <string name="view_fragment_audio_start_stop_recording_contentdesc">"Start/Stop recording"</string>
-    <string name="view_fragment_audio_start_stop_playback_contentdesc">"Play audio comment"</string>
-    <string name="view_reccurrence_note_is_exception">"This item is an exception to a recurring entry."</string>
-    <string name="view_feedback_linked_notes">"Feedback / Linked Notes"</string>
-    <string name="view_add_note">"Add note"</string>
-    <string name="view_add_audio_note">"Add audio"</string>
-    <string name="view_fab_edit_entry_contentDesc">"Edit entry"</string>
-    <string name="view_subtasks_header">"Subtasks"</string>
-    <string name="view_progress_label">"Progress"</string>
-    <string name="view_dialog_sure_to_delete_title">"Delete \"%1$s\"?"</string>
-    <string name="view_dialog_sure_to_delete_message">"Are you sure you want to delete \"%1$s\"?"</string>
-    <string name="view_toast_deleted_successfully">"\"%1$s\" successfully deleted"</string>
-    <string name="view_dialog_add_note">"Add note"</string>
-    <string name="view_dialog_add_note_dialog_hint">"Add your note here"</string>
-    <string name="view_toast_entry_does_not_exist_anymore">"The requested entry does not exist (anymore)."</string>
-    <string name="view_created_text">"Created: %1$s"</string>
-    <string name="view_last_modified_text">"Last modified: %1$s"</string>
-    <string name="view_due">"Due"</string>
-    <string name="view_completed">"Completed"</string>
-    <string name="view_started">"Start(ed)"</string>
-
-    <!-- fragment_ical_edit -->
-    <string name="edit_add_category_hint">"#mycategory"</string>
-    <string name="edit_add_category_helper">"Add a category"</string>
-    <string name="edit_attendees_hint">"johanna@example.com"</string>
-    <string name="edit_attendees_helper">"Add an attendee (e-mail-address)"</string>
-    <string name="edit_resources_hint">"Projector"</string>
-    <string name="edit_resources_helper">"Add a resource"</string>
-    <string name="edit_contact_hint">"Jim Dolittle, +1 919 555 1234"</string>
-    <string name="edit_contact_helper">"Contact information of the responsible or owner of this entry"</string>
-    <string name="edit_comment_hint">"Your comment…"</string>
-    <string name="edit_comment_helper">"Add a comment"</string>
-    <string name="edit_attachment_button_text">"Add attachment"</string>
-    <string name="edit_take_picture_button_text">"Take picture"</string>
-    <string name="edit_add_link_button_text">"Add attachment link"</string>
-    <string name="edit_url_hint" translatable="false">"https://www.example.com"</string>
-    <string name="edit_url_helper">"URL related to this entry"</string>
-    <string name="edit_location_hint" translatable="false">"1CP Conference Room 4350"</string>
-    <string name="edit_location_helper">"Add a location for this entry"</string>
-    <string name="edit_attachment_add_dialog_hint">"Your attachment-url (https://…)"</string>
-    <string name="edit_comment_add_dialog_hint">"Your comment"</string>
-    <string name="edit_attachment_beta_info">"* Please note that synchronizing attachments with DAVx⁵ is an experimental feature. Be aware that this might cause unexpected behaviour or errors. If you encounter any issues, please let us know through the support forums or a support request on the website!"</string>
-    <string name="edit_subtasks_add_hint">"Your subtask"</string>
-    <string name="edit_subtasks_add_helper">"Add a subtask"</string>
-    <string name="edit_attachment_delete_attachment">"Delete attachment"</string>
-    <string name="edit_attachment_add_link_dialog">"Add attachment link"</string>
-    <string name="edit_recur_last_occurrence">"Last occurrence"</string>
-    <string name="edit_recur_all_occurrences">"All occurrences"</string>
-    <string name="edit_recur_repeat_every_x">"Repeat every"</string>
-    <string name="edit_recur_on_weekday">"on"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"on the"</string>
-    <string name="edit_recur_x_day_of_the_month">"day of the month"</string>
-    <string name="edit_recur_x_times">"times"</string>
-    <string name="edit_recur_toast_requires_start_date">"Recurrence requires a start-date to be set!"</string>
-    <string name="edit_datepicker_dialog_select_date">"Select date"</string>
-    <string name="edit_datepicker_dialog_select_time">"Select time"</string>
-    <string name="edit_task_started_add">"Pick started date/time"</string>
-    <string name="edit_task_due_add">"Pick due date/time"</string>
-    <string name="edit_task_completed_add">"Pick completed date/time"</string>
-    <string name="edit_dialog_sure_to_delete_title">"Delete \"%1$s\"?"</string>
-    <string name="edit_dialog_sure_to_discard_title">"Discard this entry?"</string>
-    <string name="edit_dialog_sure_to_delete_message">"Are you sure you want to delete \"%1$s\"?"</string>
-    <string name="edit_dialog_sure_to_discard_message">"Are you sure you want to discard this entry? This entry will not be saved."</string>
-    <string name="edit_toast_deleted_successfully">"\"%1$s\" successfully deleted"</string>
-    <string name="edit_dialog_collection_not_found_error_title">"Attention"</string>
-    <string name="edit_dialog_collection_not_found_error_message">"The selected collection cannot be found anymore, please select another one."</string>
-    <string name="edit_validation_errors_detected">"Please correct the following validation error(s):"</string>
-    <string name="edit_validation_errors_dialog_header">"Validation errors occurred"</string>
-    <string name="edit_validation_errors_summary_or_description_necessary">"A summary or description should be provided."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"The Due date cannot be before the Start date."</string>
-    <string name="edit_validation_errors_category_not_confirmed">"A category was entered but not confirmed. Please confirm or delete."</string>
-    <string name="edit_validation_errors_comment_not_confirmed">"A comment was entered but not confirmed. Please confirm or delete."</string>
-    <string name="edit_validation_errors_resource_not_confirmed">"A resource was entered but not confirmed. Please confirm or delete."</string>
-    <string name="edit_validation_errors_attendee_not_confirmed">"An attendee was entered but not confirmed. Please confirm or delete."</string>
-    <string name="edit_validation_errors_subtask_not_confirmed">"A subtask was entered but not confirmed. Please confirm or delete."</string>
-    <string name="edit_fragment_app_permission">"App permission"</string>
-    <string name="edit_fragment_app_permission_message">"jtx Board can suggest Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature."</string>
-    <string name="edit_fragment_recur_unknown_rrule_dialog_title">"Unsupported recurrence rule detected!"</string>
-    <string name="edit_fragment_recur_unknown_rrule_dialog_message">"An unknown or unsupported recurrence rule was detected. If you save this entry, the existing recurrence rule will be deleted/overwritten."</string>
-    <string name="edit_fragment_recur_unsupported_duration_dialog_title">"Unsupported value (Duration) detected!"</string>
-    <string name="edit_fragment_recur_unsupported_duration_dialog_message">"A duration was detected for this entry in the background. Handling a duration is currently not supported by jtx Board. Please use the start, due and end date instead. If you save this entry, the existing duration will be deleted."</string>
-
-    <!-- fragment_ical_filter -->
-    <string name="filter_fab_apply_filter_contentdescription">"Apply filter"</string>
-
-    <!-- fragment_about -->
-    <string name="about_tabitem_jtx" translatable="false">"jtx Board"</string>
-    <string name="about_tabitem_translations">"Translations"</string>
-    <string name="about_tabitem_libraries">"Libraries"</string>
-    <string name="about_tabitem_thanks">"Special thanks"</string>
-    <string name="about_app_version">"Version: %1$s (%2$d)"</string>
-    <string name="about_app_codename">"Codename: %1$s"</string>
-    <string name="about_app_build_date">"Compiled on %s"</string>
-    <string name="about_app_copyright" translatable="false">"© Techbee e.U."</string>
-    <string name="about_app_terms">"Terms &amp; Conditions"</string>
-    <string name="about_thanks_ffg">"Special thanks to FFG for their trust and financial support to realize this project."</string>
-
-    <!-- menus -->
-    <string name="menu_edit_delete">"Delete"</string>
-
-    <!-- menus -->
-    <string name="menu_edit_clear_dates">"Clear dates"</string>
-    <string name="menu_list_gotodate">"Go to date"</string>
-    <string name="menu_list_clearfilter">"Clear filter"</string>
-    <string name="menu_list_quick_journal">"Quick Journal"</string>
-    <string name="menu_list_quick_note">"Quick Note"</string>
-    <string name="menu_list_quick_todo">"Quick Todo"</string>
-    <string name="menu_list_delete_visible">"Delete visible"</string>
-    <string name="menu_list_todo_show_completed">"Show completed"</string>
-    <string name="menu_list_todo_hide_completed">"Hide completed"</string>
-    <string name="menu_list_syncnow">"Sync now"</string>
-    <string name="menu_view_share_text">"Share"</string>
-    <string name="menu_view_share_ics">"Share as .ics"</string>
-    <string name="menu_view_copy_as_journal">"Copy as Journal"</string>
-    <string name="menu_view_copy_as_todo">"Copy as Todo"</string>
-    <string name="menu_view_copy_as_note">"Copy as Note"</string>
-    <string name="menu_view_copy_item">"Create copy"</string>
-
-    <!-- Notification channel for Reminders -->
-    <string name="notification_channel_reminder_name">"Todo Due Reminder"</string>
-    <string name="notification_channel_reminder_description">"Notification for due todos"</string>
-
-    <!-- Shortcuts -->
-    <string name="shortcut_addJournal_longLabel">"Add Journal"</string>
-    <string name="shortcut_addNote_longLabel">"Add Note"</string>
-    <string name="shortcut_addTodo_longLabel">"Add Todo"</string>
-
-    <!-- Settings fragment -->
-    <string name="settings_enforce_dark_theme">"Enforce dark theme"</string>
-    <string name="settings_list">"Settings for the item list"</string>
-    <string name="settings_show_subtasks_in_list">"Show subtasks in list"</string>
-    <string name="settings_show_attachments_in_list">"Show attachments in list"</string>
-    <string name="settings_show_progress_for_subtasks_in_list">"Show progress for subtasks in list"</string>
-    <string name="settings_show_progress_for_maintasks_in_list">"Show progress for tasks in list"</string>
-    <string name="settings_group_settings_for_subentries">"Settings for subtasks, subnotes and subjournals"</string>
-    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Show subtasks of Journals and Notes in Tasklist"</string>
-    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Show subnotes of Journals and Tasks in Noteslist"</string>
-    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"Show subjournals of Notes and Tasks in Journallist"</string>
-    <string name="settings_app">"App Settings"</string>
-    <string name="settings_select_mimetype_for_audio">"Select Mimetype for audio notes"</string>
-
-    <!-- Sync fragment -->
-    <string name="sync_coming_soon_heading">"Sync with DAVx⁵ (coming soon)"</string>
-    <string name="sync_coming_soon_text">"jtx Board does not provide server-synchronisation itself, but will support synchronisation through DAVx⁵. This method will allow you to use a compatible CalDAV-server of your choice to store, backup and syncrhonise your data.
-This feature is still under development and will be released soon! Stay tuned on our website and on Twitter :-)"</string>
-    <string name="sync_with_davx5_heading">"Sync with DAVx⁵ (beta)*"</string>
-    <string name="sync_basic_info">"jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data. * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!"</string>
-    <string name="sync_congratulations">"Congratulations! :-)"</string>
-    <string name="sync_davx5_installed_but_no_collections_found">"We have detected DAVx⁵ on your phone. If you haven't set up any accounts yet, please follow the instructions on our website:"</string>
-    <string name="sync_davx5_installed_with_collections_found">"We have detected DAVx⁵ on your phone. If you have any troubles or doubts, please check out our website first:"</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"The following accounts (calendars) are currently synchronised:"</string>
-    <string name="sync_check_out_davx5">"Check out DAVx⁵!"</string>
-    <string name="sync_davx5_not_found">"We have not detected DAVx⁵ on your phone.
-For more information about the Sync please see:"</string>
-    <string name="sync_davx5_get_davx5_on">"or get DAVx⁵ on"</string>
-    <string name="sync_furhter_info_davx5">"For more information about DAVx⁵ please check out"</string>
-    <string name="sync_button_add_account_in_davx5">"Add account in DAVx⁵"</string>
-    <string name="sync_toast_intent_open_davx5_failed">"Failed opening DAVx⁵, please open the app manually."</string>
-    <string name="sync_toast_intent_start_davx5_sync">"Triggering sync in DAVx⁵ failed, please check in DAVx⁵."</string>
-
-    <!-- Donate fragment -->
-    <string name="donate_header_text">"The development of an app is a complex topic and development, maintenance and support is hard work. So if you like this app and if you would like to ensure continuous development, please consider a donation :-)"</string>
-    <string name="donate_thank_you">"Thank you!"</string>
-    <string name="donate_donate_with">"Donate with"</string>
-    <string name="donate_other_donation_methods">"If you would like to consier any other donation method, please check our website:"</string>
-
-    <!-- Adinfo fragment -->
-    <string name="adinfo_text">"The development of an app is a complex topic and development, maintenance and support is hard work. Your version of jtx Board is free and financed by advertisements. By accepting ads you contribute to the ongoing development and financing of this project."</string>
-    <string name="adinfo_huwei_only_non_personalized_text">"This version of jtx Board is using non-personalized ads."</string>
-    <string name="adinfo_adfree_text">"If you prefer this app without ads, please consider the following upgrade:"</string>
-    <string name="adinfo_adfree_purchase_header">"Upgrade to jtx Board Ad-free"</string>
-    <string name="adinfo_adfree_purchase_description">"Thank you for considering the ad-free upgrade of jtx Board. This upgrade removes the recurring ads from this app."</string>
-    <string name="adinfo_adfree_purchase_header_thankyou">"Thank you for buying jtx Board Ad-free"</string>
-    <string name="adinfo_adfree_purchase_description_thankyou">"Ads are now removed from the app. If you like this app and you would like to support the continuous development, please also consider the subscription."</string>
-    <string name="adinfo_adfree_subscribe_header">"Subscription for jtx Board Ad-free"</string>
-    <string name="adinfo_adfree_subscribe_description">"The subscription removes the recurring ads from this app and additionally you support the continuous development of this app."</string>
-    <string name="adinfo_adfree_subscribe_success_header">"Thank you for buying the jtx Board Ad-free Subscription"</string>
-    <string name="adinfo_adfree_subscribe_success_description">"Ads are now removed from the app. Thank you for your contribution to keep this project alive!"</string>
-    <string name="adinfo_adfree_subscribe_success_thankyou">"Thank you!"</string>
-    <string name="adinfo_adfree_subscribe_quarterly">"Quarterly"</string>
-    <string name="adinfo_button_reset_user_consent">"Reset user consent"</string>
-    <string name="adinfo_button_manage_subscriptions">"Manage subscription"</string>
-    <string name="adinfo_adfree_subscribe_purchase_date">"Purchased on %1$s"</string>
-    <string name="adinfo_adfree_subscribe_order_id">"Order ID: %1$s"</string>
-    <string name="attachment_error_on_retrieving_file">"Failed to retrieve file."</string>
-    <string name="attachment_error_no_app_found_to_open_file_or_uri">"No app was found to open this file/URL."</string>
-    <string name="toast_item_is_now_recu_exception">"Recurring item is now an exception."</string>
-    <string name="toast_adfree_for_a_week">"No more video-ads for a week now :-)"</string>
-
-    <!-- sync content provider -->
-    <string name="synccontentprovider_sync_problem">"Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again."</string>
-    <string name="link_jtx_poeditor" translatable="false">"https://poeditor.com/join/project?hash=4jaOOJSLxx"</string>
-    <string name="about_translations_thanks_to">"Thanks to"</string>
-    <string name="about_translations_for_contributions_in">"for contributions in"</string>
-    <string name="about_translations_basic_info">"jtx Board is an open source app that appreciates the participation and contribution of the open source community. On this page we would like to attribute the efforts of community members for translations."</string>
-    <string name="about_translations_contribution_info">"If you would like to edit/add translations or add new languages to this app, feel free to join the jtx Board project on the translation platform POEditor:"</string>
-    <string name="about_translations_contribution_button">"Join on POEditor.com"</string>
-    <string name="list_welcome_entry_journal_summary">"Congratulations, this is your first journal entry :-)"</string>
-    <string name="list_welcome_entry_journal_description">"Journals can be used to keep your notes for a specific date. Use this functionality for example for protocols, meeting minutes, diary entries and so on. If you edit this entry, you will see the options to add categories, attendees, attachments, … Feel free to delete this entry whenever you want!"</string>
-    <string name="list_welcome_entry_note_summary">"Congratulations, this is your first note entry :-)"</string>
-    <string name="list_welcome_entry_note_description">"Notes are traditional notes and not bound to a dedicated date. Like journals you can add attachments, attendees and more when editing or adding an entry. By the way you can also add subtasks to any entry, no matter if it's a journal, note or task!"</string>
-    <string name="list_welcome_entry_todo_summary">"Congratulations, this is your first task entry :-)"</string>
-    <string name="list_welcome_entry_todo_description">"Additionally to journals and notes, tasks can have a planned start, a due and a completed date. They can be checked when they are done or a progress can be set. Edit this entry to check out all options :-)"</string>
-    <string name="list_welcome_category">"#FirstSteps"</string>
-    <string name="save_and_edit">"Save &amp; edit"</string>
-    <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Use speech-to-text"</string>
-    <string name="list_quickadd_dialog_sr_start_listening">"Speech-to-text engine is listening."</string>
-    <string name="list_quickadd_dialog_sr_stop_listening">"Speech-to-text engine stopped listening."</string>
-    <string name="list_quickadd_dialog_sr_error">"Sorry, Speech-to-text engine encountered an error. (%1$s)"</string>
+    <string name="link_davx5" translatable="false">https://www.davx5.com/</string>
+    <string name="link_ffg" translatable="false">https://www.ffg.at</string>
+    <string name="link_jtx" translatable="false">https://jtx.techbee.at</string>
+    <string name="link_jtx_news" translatable="false">https://jtx.techbee.at/category/news</string>
+    <string name="link_jtx_sync" translatable="false">https://jtx.techbee.at/sync-with-davx5</string>
+    <string name="link_jtx_support" translatable="false">https://jtx.techbee.at/support</string>
+    <string name="link_jtx_privacy_policy" translatable="false">https://jtx.techbee.at/privacy</string>
+    <string name="link_jtx_twitter" translatable="false">https://twitter.com/jtxBoard</string>
+    <string name="link_techbee" translatable="false">https://techbee.at</string>
+    <string name="link_jtx_terms" translatable="false">https://jtx.techbee.at/terms-conditions</string>
+    <string name="link_jtx_poeditor" translatable="false">https://poeditor.com/join/project?hash=4jaOOJSLxx</string>
+    <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
 
     <!-- Permissions -->
-    <string name="permission_read_contacts_granted">"Read contacts permission granted"</string>
-    <string name="permission_read_contacts_denied">"Read contacts permission denied"</string>
-    <string name="permission_record_audio_granted">"Record audio permission granted"</string>
-    <string name="permission_record_audio_denied">"Record audio permission denied"</string>
-    <string name="intent_dialog_title">"Add content to a journal, note or task?"</string>
-    <string name="add">"Add"</string>
-    <string name="edit">"Edit"</string>
-    <string name="reset">"Reset"</string>
-    <string name="apply">"Apply"</string>
-    <string name="not_available_abbreviation">"n/a"</string>
-    <string name="collection">"Collection"</string>
-    <string name="toolbar_text_collections">"Collections"</string>
-    <string name="navigation_drawer_collections">"Collections"</string>
-    <string name="edit_dialog_set_attendee_role">"Set attendee role"</string>
+    <string name="permission_read_contacts_granted">Read contacts permission granted</string>
+    <string name="permission_read_contacts_denied">Read contacts permission denied</string>
+    <string name="permission_record_audio_granted">Record audio permission granted</string>
+    <string name="permission_record_audio_denied">Record audio permission denied</string>
+
+    <!-- Global Strings -->
+    <string name="save">Save</string>
+    <string name="save_and_edit">Save &amp; edit</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="delete">Delete</string>
+    <string name="discard">Discard</string>
+    <string name="gotit">Got it</string>
+    <string name="cont">Continue</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="reset">Reset</string>
+    <string name="apply">Apply</string>
+    <string name="not_available_abbreviation">n/a</string>
+
+    <string name="collection">Collection</string>
+    <string name="color">Color</string>
+
+    <string name="journal">Journal</string>
+    <string name="note">Note</string>
+    <string name="task">Task</string>
+
+    <string name="account">Account</string>
+    <string name="status">Status</string>
+    <string name="classification">Classification</string>
+    <string name="category">Category</string>
+
+    <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">Draft</string>
+    <string name="journal_status_final">Final</string>
+    <string name="journal_status_cancelled">Cancelled</string>
+
+    <string name="todo_status_needsaction">Needs action</string>
+    <string name="todo_status_completed">Completed</string>
+    <string name="todo_status_inprocess">In process</string>
+    <string name="todo_status_cancelled">Cancelled</string>
+
+    <string name="classification_public">Public</string>
+    <string name="classification_private">Private</string>
+    <string name="classification_confidential">Confidential</string>
+
+    <string name="attendee_role_chair">Chair</string>
+    <string name="attendee_role_required_participant">Required participant</string>
+    <string name="attendee_role_optional_participant">Optional participant</string>
+    <string name="attendee_role_non_participant">Non-participant / Info</string>
+
+    <string name="priority">Priority</string>
+    <string name="priority_0_no_priority">No priority</string>
+    <string name="priority_1_highest">1 - Highest</string>
+    <string name="priority_2_higher">2 - Higher</string>
+    <string name="priority_3_high">3 - High</string>
+    <string name="priority_4_medium_high">4 - Medium high</string>
+    <string name="priority_5_medium">5 - Medium</string>
+    <string name="priority_6_medium_low">6 - Medium low</string>
+    <string name="priority_7_low">7 - Low</string>
+    <string name="priority_8_lower">8 - Lower</string>
+    <string name="priority_9_lowest">9 - Lowest</string>
+
+
+    <string name="readyonly">Read only</string>
+    <string name="upload_pending">Upload pending</string>
+    <string name="url">URL</string>
+    <string name="location">Location</string>
+    <string name="attendees">Attendees</string>
+    <string name="resources">Resources</string>
+    <string name="organizer">Organizer</string>
+    <string name="contact">Contact</string>
+    <string name="relatedto">Related to</string>
+    <string name="comments">Comments</string>
+    <string name="attachments">Attachments</string>
+    <string name="alarms">Alarms</string>
+    <string name="recurrence">Recurrence</string>
+    <string name="recurrence_exceptions">Exceptions</string>
+    <string name="recurrence_additions">Additions</string>
+    <string name="summary">Summary</string>
+    <string name="description">Description</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="sync_now">Sync now</string>
+
+    <string name="due">Due</string>
+    <string name="completed">Completed</string>
+    <string name="started">Start(ed)</string>
+    <string name="add_time_switch">Add time</string>
+    <string name="add_timezone_switch">Add timezone</string>
+    <string name="progress">Progress</string>
+    <string name="categories">Categories</string>
+    <string name="subtasks">Subtasks</string>
+
+
+    <string name="toolbar_text_jtx_board" translatable="false">jtx Board</string>
+    <string name="toolbar_text_jtx_board_journals_overview">Journals Overview</string>
+    <string name="toolbar_text_jtx_board_notes_overview">Notes Overview</string>
+    <string name="toolbar_text_jtx_board_tasks_overview">Tasks Overview</string>
+    <string name="toolbar_text_view_journal_details">Journal Details</string>
+    <string name="toolbar_text_view_note_details">Note Details</string>
+    <string name="toolbar_text_view_task_details">Task Details</string>
+    <string name="toolbar_text_add_journal">Add Journal</string>
+    <string name="toolbar_text_add_note">Add Note</string>
+    <string name="toolbar_text_add_task">Add Task</string>
+    <string name="toolbar_text_edit_journal">Edit Journal</string>
+    <string name="toolbar_text_edit_note">Edit Note</string>
+    <string name="toolbar_text_edit_task">Edit Task</string>
+
+    <string name="toolbar_text_filter">Filter</string>
+    <string name="toolbar_text_settings">Settings</string>
+    <string name="toolbar_text_about">About</string>
+    <string name="toolbar_text_sync">Sync</string>
+    <string name="toolbar_text_donate">Donate</string>
+    <string name="toolbar_text_adinfo">Ad Info</string>
+    <string name="toolbar_text_collections">Collections</string>
+
+
+    <string name="default_local_collection_name">Local</string>
+    <string name="default_local_account_name">Local</string>
+
+
+    <string name="intent_dialog_title">Add content to a journal, note or task?</string>
+
+
+    <!-- Navigation Drawer  -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_board">Board</string>
+    <string name="navigation_drawer_collections">Collections</string>
+    <string name="navigation_drawer_sync">Sync with DAVx⁵</string>
+    <string name="navigation_drawer_about">About / License</string>
+    <string name="navigation_drawer_subtitle">journals, notes &amp; tasks for android</string>
+    <string name="navigation_drawer_beta_feedback">Beta feedback</string>
+    <string name="navigation_drawer_settings">Settings</string>
+    <string name="navigation_drawer_news_updates">News &amp; updates</string>
+    <string name="navigation_drawer_external_links">External links</string>
+    <string name="navigation_drawer_website">Website</string>
+    <string name="navigation_drawer_website_news">News &amp; Release Notes</string>
+    <string name="navigation_drawer_support">Support</string>
+    <string name="navigation_drawer_donate">Donate</string>
+    <string name="navigation_drawer_adinfo">Ad Info</string>
+    <string name="navigation_drawer_privacy_policy">Privacy Policy</string>
+
+
+    <!-- fragment_ical_list -->
+    <string name="list_due_overdue">Overdue</string>
+    <string name="list_due_today">Due today</string>
+    <string name="list_due_tomorrow">Due tomorrow</string>
+    <string name="list_due_inXdays" tools:ignore="PluralsCandidate">Due in %d days</string>
+    <string name="list_due_inXhours" tools:ignore="PluralsCandidate">Due in %d hours</string>
+    <string name="list_start_past">Start in past</string>
+    <string name="list_start_today">Planned start today</string>
+    <string name="list_start_tomorrow">Start tomorrow</string>
+    <string name="list_start_inXhours" tools:ignore="PluralsCandidate">Planned start in %d hours</string>
+    <string name="list_start_inXdays" tools:ignore="PluralsCandidate">Planned start in %d days</string>
+    <string name="list_tabitem_journals">Journals</string>
+    <string name="list_tabitem_notes">Notes</string>
+    <string name="list_tabitem_todos">Tasks</string>
+    <string name="list_fab_add_contentdesc">Add new item</string>
+    <string name="list_progress">Progress</string>
+    <string name="list_expand">Expand</string>
+    <string name="list_dialog_contribution_title">Note on advertisements</string>
+    <string name="list_dialog_contribution_message">This app is powered by advertisements by default. For more information please check out the Ad-Info section in the main menu!</string>
+    <string name="list_dialog_contribution_more_information">Find out more</string>
+    <string name="list_num_attendees_contentdesc">Number of attendees</string>
+    <string name="list_num_attachments_contentdesc">Number of attachments</string>
+    <string name="list_num_comments_contentdesc">Number of comments</string>
+    <string name="list_dialog_delete_visible_title">Delete all visible?</string>
+    <string name="list_dialog_delete_visible_message">This action deletes all visible entries (%1$d). Are you sure that you want to proceed? This operation cannot be undone!</string>
+    <string name="list_quickadd_dialog_summary_description_hint">Summary/Description</string>
+    <string name="list_quickadd_dialog_summary_description_helper">The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category).</string>
+    <string name="list_quickadd_dialog_sr_endicon_contentdesc">Use speech-to-text</string>
+    <string name="list_quickadd_dialog_sr_start_listening">Speech-to-text engine is listening.</string>
+    <string name="list_quickadd_dialog_sr_stop_listening">Speech-to-text engine stopped listening.</string>
+    <string name="list_quickadd_dialog_sr_error">Sorry, Speech-to-text engine encountered an error. (%1$s)</string>
+    <string name="list_quickadd_toast_no_summary_description">Entry without summary/description cannot be created.</string>
+
+    <string name="list_item_upload_pending">Upload pending</string>
+    <string name="list_item_recurring">Recurring entry</string>
+
+    <string name="list_welcome_entry_journal_summary">Congratulations, this is your first journal entry :-)</string>
+    <string name="list_welcome_entry_journal_description">Journals can be used to keep your notes for a specific date. Use this functionality for example for protocols, meeting minutes, diary entries and so on. If you edit this entry, you will see the options to add categories, attendees, attachments, … Feel free to delete this entry whenever you want!</string>
+    <string name="list_welcome_entry_note_summary">Congratulations, this is your first note entry :-)</string>
+    <string name="list_welcome_entry_note_description">Notes are traditional notes and not bound to a dedicated date. Like journals you can add attachments, attendees and more when editing or adding an entry. By the way you can also add subtasks to any entry, no matter if it\'s a journal, note or task!</string>
+    <string name="list_welcome_entry_todo_summary">Congratulations, this is your first task entry :-)</string>
+    <string name="list_welcome_entry_todo_description">Additionally to journals and notes, tasks can have a planned start, a due and a completed date. They can be checked when they are done or a progress can be set. Edit this entry to check out all options :-)</string>
+    <string name="list_welcome_category">#FirstSteps</string>
+
+
+    <!-- fragment_ical_view -->
+    <string name="view_recurrence_go_to_original_button">Go to original</string>
+    <string name="view_recurrence_note_to_original_dialog_header">Instance of recurring</string>
+    <string name="view_recurrence_note_to_original">"This entry is part of a series. Editing this entry will unlink it from the series, it will continue as a standalone event and changes on the original event will not affect this entry anymore. "</string>
+    <string name="view_fragment_audio_permission">App Permission</string>
+    <string name="view_fragment_audio_permission_message">jtx Board needs the permission in order to record audio or use speech-to-text functionalities. Please grant the permission to use this feature.</string>
+    <string name="view_fragment_audio_dialog_add_audio_note">Add Audio Note</string>
+    <string name="view_comment_playbutton_content_desc">Play audio comment</string>
+    <string name="view_fragment_audio_start_stop_recording_contentdesc">Start/Stop recording</string>
+    <string name="view_fragment_audio_start_stop_playback_contentdesc">Play audio comment</string>
+    <string name="view_reccurrence_note_is_exception">This item is an exception to a recurring entry.</string>
+    <string name="view_feedback_linked_notes">Feedback / Linked Notes</string>
+    <string name="view_add_note">Add note</string>
+    <string name="view_add_audio_note">Add audio</string>
+    <string name="view_fab_edit_entry_contentDesc">Edit entry</string>
+    <string name="view_subtasks_header">Subtasks</string>
+    <string name="view_progress_label">Progress</string>1
+    <string name="view_dialog_sure_to_delete_title">Delete \"%1$s\"?</string>
+    <string name="view_dialog_sure_to_delete_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="view_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
+    <string name="view_dialog_add_note">Add note</string>
+    <string name="view_dialog_add_note_dialog_hint">Add your note here</string>
+    <string name="view_toast_entry_does_not_exist_anymore">The requested entry does not exist (anymore).</string>
+    <string name="view_created_text">Created: %1$s</string>
+    <string name="view_last_modified_text">Last modified: %1$s</string>
+    <string name="view_due">Due</string>
+    <string name="view_completed">Completed</string>
+    <string name="view_started">Start(ed)</string>
+    <string name="view_dialog_addnote_toast_no_summary_description">Note without text cannot be created.</string>
+
+
+
+
+    <!-- fragment_ical_edit -->
+
+    <string name="edit_add_category_hint">#mycategory</string>
+    <string name="edit_add_category_helper">Add a category</string>
+    <string name="edit_attendees_hint">johanna@example.com</string>
+    <string name="edit_attendees_helper">Add an attendee (e-mail-address)</string>
+    <string name="edit_attendees_error">Please enter a valid email-address</string>
+    <string name="edit_resources_hint">Projector</string>
+    <string name="edit_resources_helper">Add a resource</string>
+    <string name="edit_contact_hint">Jim Dolittle, +1 919 555 1234</string>
+    <string name="edit_contact_helper">Contact information of the responsible or owner of this entry</string>
+    <string name="edit_comment_hint">Your comment…</string>
+    <string name="edit_comment_helper">Add a comment</string>
+    <string name="edit_attachment_button_text">Add attachment</string>
+    <string name="edit_take_picture_button_text">Take picture</string>
+    <string name="edit_add_link_button_text">Add attachment link</string>
+    <string name="edit_url_hint" translatable="false">https://www.example.com</string>
+    <string name="edit_url_helper">URL related to this entry</string>
+    <string name="edit_location_hint" translatable="false">1CP Conference Room 4350</string>
+    <string name="edit_location_helper">Add a location for this entry</string>
+    <string name="edit_attachment_add_dialog_hint">Your attachment-url (https://…)</string>
+    <string name="edit_comment_add_dialog_hint">Your comment</string>
+    <string name="edit_attachment_beta_info">* Please note that synchronizing attachments with DAVx⁵ is an experimental feature. Be aware that this might cause unexpected behaviour or errors. If you encounter any issues, please let us know through the support forums or a support request on the website!</string>
+
+    <string name="edit_subtasks_add_hint">Your subtask</string>
+    <string name="edit_subtasks_add_helper">Add a subtask</string>
+    <string name="edit_attachment_delete_attachment">Delete attachment</string>
+    <string name="edit_attachment_add_link_dialog">Add attachment link</string>
+    <string name="edit_recur_last_occurrence">Last occurrence</string>
+    <string name="edit_recur_all_occurrences">All occurrences</string>
+    <string name="edit_recur_repeat_every_x">Repeat every</string>
+    <string name="edit_recur_on_weekday">on</string>
+    <string name="edit_recur_on_the_x_day_of_month">on the</string>
+    <string name="edit_recur_x_day_of_the_month">day of the month</string>
+    <string name="edit_recur_x_times">times</string>
+    <string name="edit_recur_toast_requires_start_date">Recurrence requires a start-date to be set!</string>
+    <string name="edit_recur_day">day(s)</string>
+    <string name="edit_recur_week">week(s)</string>
+    <string name="edit_recur_month">month(s)</string>
+    <string name="edit_recur_year">year(s)</string>
+    <string name="edit_datepicker_dialog_select_date">Select date</string>
+    <string name="edit_datepicker_dialog_select_time">Select time</string>
+    <string name="edit_task_started_add">Pick started date/time</string>
+    <string name="edit_task_due_add">Pick due date/time</string>
+    <string name="edit_task_completed_add">Pick completed date/time</string>
+
+    <string name="edit_dialog_sure_to_delete_title">Delete \"%1$s\"?</string>
+    <string name="edit_dialog_sure_to_discard_title">Discard this entry?</string>
+    <string name="edit_dialog_sure_to_delete_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="edit_dialog_sure_to_discard_message">Are you sure you want to discard this entry? This entry will not be saved.</string>
+    <string name="edit_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
+    <string name="edit_dialog_set_attendee_role">Set attendee role</string>
+
+    <string name="edit_dialog_collection_not_found_error_title">Attention</string>
+    <string name="edit_dialog_collection_not_found_error_message">The selected collection cannot be found anymore, please select another one.</string>
+
+    <string name="edit_validation_errors_detected">Please correct the following validation error(s):</string>
+    <string name="edit_validation_errors_dialog_header">Validation errors occurred</string>
+
+    <string name="edit_validation_errors_summary_or_description_necessary">A summary or description should be provided.</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">The Due date cannot be before the Start date.</string>
+    <string name="edit_validation_errors_start_due_timezone_check">Please choose a timezone for both, start and due, or deactivate timezones.</string>
+    <string name="edit_validation_errors_category_not_confirmed">A category was entered but not confirmed. Please confirm or delete.</string>
+    <string name="edit_validation_errors_comment_not_confirmed">A comment was entered but not confirmed. Please confirm or delete.</string>
+    <string name="edit_validation_errors_resource_not_confirmed">A resource was entered but not confirmed. Please confirm or delete.</string>
+    <string name="edit_validation_errors_attendee_not_confirmed">An attendee was entered but not confirmed. Please confirm or delete.</string>
+    <string name="edit_validation_errors_subtask_not_confirmed">A subtask was entered but not confirmed. Please confirm or delete.</string>
+    <string name="edit_fragment_app_permission">App permission</string>
+    <string name="edit_fragment_app_permission_message">jtx Board can suggest Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
+    <string name="edit_fragment_recur_unknown_rrule_dialog_title">Unsupported recurrence rule detected!</string>
+    <string name="edit_fragment_recur_unknown_rrule_dialog_message">An unknown or unsupported recurrence rule was detected. If you save this entry, the existing recurrence rule will be deleted/overwritten.</string>
+    <string name="edit_fragment_recur_unsupported_duration_dialog_title">Unsupported value (Duration) detected!</string>
+    <string name="edit_fragment_recur_unsupported_duration_dialog_message">A duration was detected for this entry in the background. Handling a duration is currently not supported by jtx Board. Please use the start, due and end date instead. If you save this entry, the existing duration will be deleted.</string>
 
     <!-- alarms -->
-    <string name="alarms_onstart">"On start"</string>
-    <string name="alarms_ondue">"On due"</string>
-    <string name="alarms_custom">"Custom"</string>
-    <string name="alarms_before_start">"before Start"</string>
-    <string name="alarms_after_start">"after Start"</string>
-    <string name="alarms_before_due">"before Due"</string>
-    <string name="alarms_after_due">"after Due"</string>
-    <string name="alarms_minutes">"Minute(s)"</string>
-    <string name="alarms_hours">"Hour(s)"</string>
-    <string name="alarms_days">"Day(s)"</string>
-    <string name="alarms_duration_full_string" translatable="false">"%1$d %2$s %3$s"</string>
-    <string name="alarms_default_number" translatable="false">"15"</string>
+    <string name="alarms_onstart">On start</string>
+    <string name="alarms_ondue">On due</string>
+    <string name="alarms_custom">Custom</string>
+    <string name="alarms_before_start">before Start</string>
+    <string name="alarms_after_start">after Start</string>
+    <string name="alarms_before_due">before Due</string>
+    <string name="alarms_after_due">after Due</string>
+    <string name="alarms_minutes">Minute(s)</string>
+    <string name="alarms_hours">Hour(s)</string>
+    <string name="alarms_days">Day(s)</string>
+    <string name="alarms_duration_full_string" translatable="false">%1$d %2$s %3$s</string>
+    <string name="alarms_default_number" translatable="false">15</string>
+
+
+    <!-- fragment_ical_filter -->
+    <string name="filter_fab_apply_filter_contentdescription">Apply filter</string>
+
+    <!-- fragment_about -->
+    <string name="about_tabitem_jtx" translatable="false">jtx Board</string>
+    <string name="about_tabitem_translations">Translations</string>
+    <string name="about_tabitem_libraries">Libraries</string>
+    <string name="about_tabitem_thanks">Special thanks</string>
+    <string name="about_app_version">Version: %1$s (%2$d)</string>
+    <string name="about_app_codename">Codename: "%1$s"</string>
+
+    <string name="about_app_build_date">Compiled on %s</string>
+    <string name="about_app_copyright" translatable="false">© Techbee e.U.</string>
+    <string name="about_app_terms">Terms &amp; Conditions</string>
+
+    <string name="about_thanks_ffg">Special thanks to FFG for their trust and financial support to realize this project.</string>
+    <string name="about_translations_thanks_to">Thanks to</string>
+    <string name="about_translations_for_contributions_in">for contributions in</string>
+    <string name="about_translations_basic_info">jtx Board is an open source app that appreciates the participation and contribution of the open source community. On this page we would like to attribute the efforts of community members for translations.</string>
+    <string name="about_translations_contribution_info">If you would like to edit/add translations or add new languages to this app, feel free to join the jtx Board project on the translation platform POEditor:</string>
+    <string name="about_translations_contribution_button">Join on POEditor.com</string>
 
     <!-- fragment_collections -->
-    <string name="collections_local_collections">"Local Collections"</string>
-    <string name="collections_remote_collections">"Remote Collections"</string>
+    <string name="collections_local_collections">Local Collections</string>
+    <string name="collections_remote_collections">Remote Collections</string>
+    <string name="collections_journals_num">Journals: %1$s</string>
+    <string name="collections_notes_num">Notes: %1$s</string>
+    <string name="collections_tasks_num">Tasks: %1$s</string>
+    <string name="collections_local_nolocalcollections">No local Collections found</string>
+    <string name="collections_local_noremotecollections">No remote Collections found</string>
+    <string name="collections_info">Collections are an accumulation of entries like folders with files. You can create new local collections through the menu or you can set up new remote collections to synchronize through DAVx⁵.</string>
+    <string name="collections_collection_menu">Collection menu</string>
+    <string name="collections_dialog_add_local_collection_title">Add local Collection</string>
+    <string name="collections_dialog_edit_local_collection_title">Edit local Collection</string>
+    <string name="collections_dialog_delete_local_title">Delete \"%1$s\"?</string>
+    <string name="collections_dialog_delete_local_message">Deleting a collection will also delete all journals, notes and tasks within this collection. This cannot be undone. Are you sure that you want to continue?</string>
+    <string name="collections_toast_export_ics_success">Exporting collection finished successfully.</string>
+    <string name="collections_toast_export_ics_error">An error occurred while exporting the selected collection.</string>
 
-    <!-- Fuzzy -->
-    <string name="collections_journals_num">"Journals: %1$s"</string>
+    <!-- menus -->
+    <string name="menu_edit_clear_dates">Clear dates</string>
 
-    <!-- Fuzzy -->
-    <string name="collections_notes_num">"Notes: %1$s"</string>
+    <string name="menu_collections_add_local">Add local Collection</string>
+    <string name="menu_collections_add_remote">Add remote Collection (DAVx⁵)</string>
 
-    <!-- Fuzzy -->
-    <string name="collections_tasks_num">"Tasks: %1$s"</string>
-    <string name="collections_local_nolocalcollections">"No local Collections found"</string>
-    <string name="collections_local_noremotecollections">"No remote Collections found"</string>
-    <string name="collections_info">"Collections are an accumulation of entries like folders with files. You can create new local collections through the menu or you can set up new remote collections to synchronize through DAVx⁵."</string>
-    <string name="collections_collection_menu">"Collection menu"</string>
-    <string name="collections_dialog_add_local_collection_title">"Add local Collection"</string>
-    <string name="collections_dialog_edit_local_collection_title">"Edit local Collection"</string>
-    <string name="collections_dialog_delete_local_title">"Delete \"%1$s\"?"</string>
-    <string name="collections_dialog_delete_local_message">"Deleting a collection will also delete all journals, notes and tasks within this collection. This cannot be undone. Are you sure that you want to continue?"</string>
-    <string name="menu_collections_add_local">"Add local Collection"</string>
-    <string name="link_jtx_news" translatable="false">"https://jtx.techbee.at/category/news"</string>
-    <string name="navigation_drawer_website_news">"News &amp; Release Notes"</string>
-    <string name="list_quickadd_toast_no_summary_description">"Entry without summary/description cannot be created."</string>
-    <string name="view_dialog_addnote_toast_no_summary_description">"Note without text cannot be created."</string>
-    <string name="color">"Color"</string>
-    <string name="edit_attendees_error">"Please enter a valid email-address"</string>
-    <string name="priority_0_no_priority">"No priority"</string>
-    <string name="priority_1_highest">"1 - Highest"</string>
-    <string name="priority_2_higher">"2 - Higher"</string>
-    <string name="priority_3_high">"3 - High"</string>
-    <string name="priority_4_medium_high">"4 - Medium high"</string>
-    <string name="priority_5_medium">"5 - Medium"</string>
-    <string name="priority_6_medium_low">"6 - Medium low"</string>
-    <string name="edit_recur_day">"day(s)"</string>
-    <string name="edit_recur_week">"week(s)"</string>
-    <string name="edit_recur_month">"month(s)"</string>
-    <string name="edit_recur_year">"year(s)"</string>
-    <string name="edit_validation_errors_start_due_timezone_check">"Please choose a timezone for both, start and due, or deactivate timezones."</string>
-    <string name="collections_toast_export_ics_success">"Exporting collection finished successfully."</string>
-    <string name="collections_toast_export_ics_error">"An error occurred while exporting the selected collection."</string>
-    <string name="menu_collections_add_remote">"Add remote Collection (DAVx⁵)"</string>
-    <string name="menu_collection_popup_show_in_davx5">"Show in DAVx⁵"</string>
-    <string name="menu_collection_popup_export_as_ics">"Export as .ics"</string>
-    <string name="journal">"Journal"</string>
-    <string name="note">"Note"</string>
-    <string name="task">"Task"</string>
-    <string name="account">"Account"</string>
-    <string name="status">"Status"</string>
-    <string name="classification">"Classification"</string>
-    <string name="category">"Category"</string>
-    <string name="priority">"Priority"</string>
-    <string name="readyonly">"Read only"</string>
-    <string name="upload_pending">"Upload pending"</string>
-    <string name="url">"URL"</string>
-    <string name="location">"Location"</string>
-    <string name="attendees">"Attendees"</string>
-    <string name="resources">"Resources"</string>
-    <string name="organizer">"Organizer"</string>
-    <string name="contact">"Contact"</string>
-    <string name="relatedto">"Related to"</string>
-    <string name="comments">"Comments"</string>
-    <string name="attachments">"Attachments"</string>
-    <string name="alarms">"Alarms"</string>
-    <string name="recurrence">"Recurrence"</string>
-    <string name="recurrence_exceptions">"Exceptions"</string>
-    <string name="recurrence_additions">"Additions"</string>
-    <string name="summary">"Summary"</string>
-    <string name="description">"Description"</string>
-    <string name="search">"Search"</string>
-    <string name="filter">"Filter"</string>
-    <string name="sync_now">"Sync now"</string>
-    <string name="due">"Due"</string>
-    <string name="completed">"Completed"</string>
-    <string name="started">"Start(ed)"</string>
-    <string name="add_time_switch">"Add time"</string>
-    <string name="add_timezone_switch">"Add timezone"</string>
-    <string name="progress">"Progress"</string>
-    <string name="categories">"Categories"</string>
-    <string name="subtasks">"Subtasks"</string>
-    <string name="priority_7_low">"7 - Low"</string>
-    <string name="priority_8_lower">"8 - Lower"</string>
-    <string name="priority_9_lowest">"9 - Lowest"</string>
+    <string name="menu_list_gotodate">Go to date</string>
+    <string name="menu_list_clearfilter">Clear filter</string>
+    <string name="menu_list_quick_journal">Quick Journal</string>
+    <string name="menu_list_quick_note">Quick Note</string>
+    <string name="menu_list_quick_todo">Quick Todo</string>
+    <string name="menu_list_delete_visible">Delete visible</string>
+    <string name="menu_list_todo_show_completed">Show completed</string>
+    <string name="menu_list_todo_hide_completed">Hide completed</string>
+    <string name="menu_list_syncnow">Sync now</string>
+
+
+    <string name="menu_view_share_text">Share</string>
+    <string name="menu_view_share_ics">Share as .ics</string>
+    <string name="menu_view_copy_as_journal">Copy as Journal</string>
+    <string name="menu_view_copy_as_todo">Copy as Todo</string>
+    <string name="menu_view_copy_as_note">Copy as Note</string>
+    <string name="menu_view_copy_item">Create copy</string>
+
+    <string name="menu_collection_popup_show_in_davx5">Show in DAVx⁵</string>
+    <string name="menu_collection_popup_export_as_ics">Export as .ics</string>
+
+
+    <!-- Notification channel for Reminders -->
+    <string name="notification_channel_reminder_name">Todo Due Reminder</string>
+    <string name="notification_channel_reminder_description">Notification for due todos</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_addJournal_longLabel">Add Journal</string>
+    <string name="shortcut_addNote_longLabel">Add Note</string>
+    <string name="shortcut_addTodo_longLabel">Add Todo</string>
+
+
+    <!-- Settings fragment -->
+    <string name="settings_enforce_dark_theme">Enforce dark theme</string>
+    <string name="settings_list">Settings for the item list</string>
+    <string name="settings_show_subtasks_in_list">Show subtasks in list</string>
+    <string name="settings_show_attachments_in_list">Show attachments in list</string>
+    <string name="settings_show_progress_for_subtasks_in_list">Show progress for subtasks in list</string>
+    <string name="settings_show_progress_for_maintasks_in_list">Show progress for tasks in list</string>
+    <string name="settings_group_settings_for_subentries">Settings for subtasks, subnotes and subjournals</string>
+    <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">Show subtasks of Journals and Notes in Tasklist</string>
+    <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">Show subnotes of Journals and Tasks in Noteslist</string>
+    <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">Show subjournals of Notes and Tasks in Journallist</string>
+    <string name="settings_app">App Settings</string>
+    <string name="settings_select_mimetype_for_audio">Select Mimetype for audio notes</string>
+
+
+    <!-- Sync fragment -->
+    <string name="sync_coming_soon_heading">Sync with DAVx⁵ (coming soon)</string>
+    <string name="sync_coming_soon_text">jtx Board does not provide server-synchronisation itself, but will support synchronisation through DAVx⁵. This method will allow you to use a compatible CalDAV-server of your choice to store, backup and syncrhonise your data. \nThis feature is still under development and will be released soon! Stay tuned on our website and on Twitter :-)</string>
+    <string name="sync_with_davx5_heading">Sync with DAVx⁵ (beta)*</string>
+    <string name="sync_basic_info">jtx Board does not provide server-synchronisation itself, but supports synchronisation through DAVx⁵. This method allows you to use any compatible CalDAV-server of your choice to store, backup and syncrhonise your data.  * Please note that this functionality is still considered as beta. Although this functionality has been tested, issues might still occur. If you encounter any problem, we would appreciate your feedback!</string>
+    <string name="sync_congratulations">Congratulations! :-)</string>
+    <string name="sync_davx5_installed_but_no_collections_found">We have detected DAVx⁵ on your phone. If you haven\'t set up any accounts yet, please follow the instructions on our website:</string>
+    <string name="sync_davx5_installed_with_collections_found">We have detected DAVx⁵ on your phone. If you have any troubles or doubts, please check out our website first:</string>
+    <string name="sync_davx5_installed_with_collections_synched_collections">The following accounts (calendars) are currently synchronised:</string>
+    <string name="sync_check_out_davx5">Check out DAVx⁵!</string>
+    <string name="sync_davx5_not_found">We have not detected DAVx⁵ on your phone.\nFor more information about the Sync please see:</string>
+    <string name="sync_davx5_get_davx5_on">or get DAVx⁵ on</string>
+    <string name="sync_furhter_info_davx5">For more information about DAVx⁵ please check out</string>
+    <string name="sync_button_add_account_in_davx5">Add account in DAVx⁵</string>
+    <string name="sync_toast_intent_open_davx5_failed">Failed opening DAVx⁵, please open the app manually.</string>
+    <string name="sync_toast_intent_start_davx5_sync">Triggering sync in DAVx⁵ failed, please check in DAVx⁵.</string>
+
+
+    <!-- Donate fragment -->
+    <string name="donate_header_text">The development of an app is a complex topic and development, maintenance and support is hard work. So if you like this app and if you would like to ensure continuous development, please consider a donation :-)</string>
+    <string name="donate_thank_you">Thank you!</string>
+    <string name="donate_donate_with">Donate with</string>
+    <string name="donate_other_donation_methods">If you would like to consier any other donation method, please check our website:</string>
+
+    <!-- Adinfo fragment -->
+    <string name="adinfo_text">The development of an app is a complex topic and development, maintenance and support is hard work. Your version of jtx Board is free and financed by advertisements. By accepting ads you contribute to the ongoing development and financing of this project.</string>
+    <string name="adinfo_huwei_only_non_personalized_text">This version of jtx Board is using non-personalized ads.</string>
+    <string name="adinfo_adfree_text">If you prefer this app without ads, please consider the following upgrade:</string>
+    <string name="adinfo_adfree_purchase_header">Upgrade to jtx Board Ad-free</string>
+    <string name="adinfo_adfree_purchase_description">Thank you for considering the ad-free upgrade of jtx Board. This upgrade removes the recurring ads from this app.</string>
+    <string name="adinfo_adfree_purchase_header_thankyou">Thank you for buying jtx Board Ad-free</string>
+    <string name="adinfo_adfree_purchase_description_thankyou">Ads are now removed from the app. If you like this app and you would like to support the continuous development, please also consider the subscription.</string>
+    <string name="adinfo_adfree_subscribe_header">Subscription for jtx Board Ad-free</string>
+    <string name="adinfo_adfree_subscribe_description">The subscription removes the recurring ads from this app and additionally you support the continuous development of this app.</string>
+    <string name="adinfo_adfree_subscribe_success_header">Thank you for buying the jtx Board Ad-free Subscription</string>
+    <string name="adinfo_adfree_subscribe_success_description">Ads are now removed from the app. Thank you for your contribution to keep this project alive!</string>
+    <string name="adinfo_adfree_subscribe_success_thankyou">Thank you!</string>
+    <string name="adinfo_adfree_subscribe_quarterly">Quarterly</string>
+    <string name="adinfo_button_reset_user_consent">Reset user consent</string>
+    <string name="adinfo_button_manage_subscriptions">Manage subscription</string>
+    <string name="adinfo_adfree_subscribe_purchase_date">Purchased on %1$s</string>
+    <string name="adinfo_adfree_subscribe_order_id">Order ID: %1$s</string>
+
+    <string name="attachment_error_on_retrieving_file">Failed to retrieve file.</string>
+    <string name="attachment_error_no_app_found_to_open_file_or_uri">No app was found to open this file/URL.</string>
+
+    <string name="toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
+    <string name="toast_adfree_for_a_week">No more video-ads for a week now :-)</string>
+
+    <!-- sync content provider -->
+    <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again.</string>
+
 </resources>
