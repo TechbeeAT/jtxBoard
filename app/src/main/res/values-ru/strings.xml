@@ -97,10 +97,6 @@ Global Strings -->
     <string name="list_item_recurring"></string>
 
     <!-- fragment_ical_view -->
-    <string name="view_readyonly">"Только для чтения"</string>
-    <string name="view_upload_pending">"Ожидающие загрузки"</string>
-
-    <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Перейти к оригиналу"</string>
     <string name="view_recurrence_note_to_original_dialog_header"></string>
     <string name="view_recurrence_note_to_original">"Эта запись — часть серии. Редактирование этой записи отсоединит ее от серии, она будет продолжаться как отдельное событие, и изменения в исходном событии больше не повлияют на эту запись."</string>
@@ -198,9 +194,6 @@ Global Strings -->
     <string name="about_app_build_date">"Скомпилировано %s"</string>
     <string name="about_app_terms">"Условия пользования."</string>
     <string name="about_thanks_ffg">"Особая благодарность FFG за их доверие и финансовую поддержку для реализации этого проекта."</string>
-
-    <!-- menus -->
-    <string name="menu_edit_delete">"Удаление"</string>
 
     <!-- menus -->
     <string name="menu_edit_clear_dates">"Очистка дат"</string>
