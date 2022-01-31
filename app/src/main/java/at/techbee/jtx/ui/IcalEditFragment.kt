@@ -59,6 +59,7 @@ import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_GENERAL
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_PEOPLE_RES
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_RECURRING
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_SUBTASKS
+import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getDateWithoutTime
 import at.techbee.jtx.util.DateTimeUtils.getLocalizedWeekdays
@@ -917,7 +918,7 @@ class IcalEditFragment : Fragment() {
 
         binding.editFragmentTabGeneral.editDtstartCard.setOnClickListener {
             showDatePicker(
-                icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
+                icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: DateTimeUtils.getTodayAsLong(),
                 icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone,
                 TAG_PICKER_DTSTART
             )
@@ -925,7 +926,7 @@ class IcalEditFragment : Fragment() {
 
         binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskDueCard.setOnClickListener {
             showDatePicker(
-                icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis(),
+                icalEditViewModel.iCalObjectUpdated.value?.due ?: DateTimeUtils.getTodayAsLong(),
                 icalEditViewModel.iCalObjectUpdated.value?.dueTimezone,
                 TAG_PICKER_DUE
             )
@@ -933,7 +934,7 @@ class IcalEditFragment : Fragment() {
 
         binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskCompletedCard.setOnClickListener {
             showDatePicker(
-                icalEditViewModel.iCalObjectUpdated.value?.completed ?: System.currentTimeMillis(),
+                icalEditViewModel.iCalObjectUpdated.value?.completed ?: DateTimeUtils.getTodayAsLong(),
                 icalEditViewModel.iCalObjectUpdated.value?.completedTimezone,
                 TAG_PICKER_COMPLETED
             )
@@ -941,7 +942,7 @@ class IcalEditFragment : Fragment() {
 
         binding.editFragmentTabGeneral.editTaskDatesFragment.editTaskStartedCard.setOnClickListener {
             showDatePicker(
-                icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis(),
+                icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: DateTimeUtils.getTodayAsLong(),
                 icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone,
                 TAG_PICKER_DTSTART
             )
@@ -1363,8 +1364,8 @@ class IcalEditFragment : Fragment() {
 
         // make sure preset is according to constraints (due is after start)
         val preset = when {
-            tag == TAG_PICKER_DUE && presetValueUTC < icalEditViewModel.iCalObjectUpdated.value?.dtstart?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis()
-            tag == TAG_PICKER_DTSTART && presetValueUTC > icalEditViewModel.iCalObjectUpdated.value?.due?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.due ?: System.currentTimeMillis()
+            tag == TAG_PICKER_DUE && presetValueUTC < icalEditViewModel.iCalObjectUpdated.value?.dtstart?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: icalEditViewModel.iCalObjectUpdated.value?.due?: System.currentTimeMillis()
+            tag == TAG_PICKER_DTSTART && presetValueUTC > icalEditViewModel.iCalObjectUpdated.value?.due?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.due ?: icalEditViewModel.iCalObjectUpdated.value?.dtstart?: System.currentTimeMillis()
             else -> presetValueUTC
         }
 

@@ -208,14 +208,15 @@ object DateTimeUtils {
      * The ZoneId of the given String or "UTC" if the string could not be parsed
      */
     fun requireTzId(timezone: String?): ZoneId {
-        return if (timezone == null || timezone == TZ_ALLDAY)
-            ZoneId.systemDefault()
-        else
-            try {
+        return when(timezone) {
+            null -> ZoneId.systemDefault()
+            TZ_ALLDAY -> ZoneId.of("UTC")
+            else -> try {
                 ZoneId.of(timezone)
             } catch (e: DateTimeException) {
                 ZoneId.of("UTC")
             }
+        }
     }
 
     /**
