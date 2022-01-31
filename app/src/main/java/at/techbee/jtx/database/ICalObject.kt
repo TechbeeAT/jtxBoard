@@ -18,8 +18,8 @@ import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
 import androidx.room.*
-import at.techbee.jtx.*
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
@@ -563,7 +563,7 @@ data class ICalObject(
                     makeRecurringException(item.property, database)   // if the current item
                     database.deleteICalObjectsbyId(id)
                 }
-                item.property.collectionId == 1L -> database.deleteICalObjectsbyId(item.property.id) // Elements in local collection are physically deleted
+                item.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE -> database.deleteICalObjectsbyId(item.property.id) // Elements in local collection are physically deleted
                 else -> database.updateToDeleted(item.property.id, System.currentTimeMillis())
             }
         }
