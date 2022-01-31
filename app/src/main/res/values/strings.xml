@@ -247,7 +247,9 @@
     <string name="view_completed">Completed</string>
     <string name="view_started">Start(ed)</string>
     <string name="view_dialog_addnote_toast_no_summary_description">Note without text cannot be created.</string>
-
+    <string name="view_share_part_of_series">This entry is part of a series.</string>
+    <string name="view_share_exception_of_series">This entry is an exception of a series.</string>
+    <string name="view_share_repeats">This entry repeats every</string>
 
 
 

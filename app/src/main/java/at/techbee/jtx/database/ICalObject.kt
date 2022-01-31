@@ -33,6 +33,7 @@ import net.fortuna.ical4j.model.property.DtStart
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.ZonedDateTime
+import java.time.format.TextStyle
 import java.util.*
 import java.util.TimeZone
 import kotlin.IllegalArgumentException
@@ -941,6 +942,64 @@ data class ICalObject(
             if (it.size >= 2)
                 this.description = it[1]
         }
+    }
+
+    fun getRecurInfo(context: Context?): String? {
+        if(context == null)
+            return null
+
+        var recurInfo = ""
+
+        if(recurOriginalIcalObjectId != null && !this.isRecurLinkedInstance)
+            recurInfo += context.getString(R.string.view_share_exception_of_series) + System.lineSeparator()
+        else if (recurOriginalIcalObjectId != null && this.isRecurLinkedInstance)
+            recurInfo += context.getString(R.string.view_share_part_of_series) + System.lineSeparator()
+
+        val recur: Recur
+        try {
+            recur = Recur(this.rrule)
+        } catch (e: Exception) {
+            return if(recurInfo.isEmpty())
+                null
+            else
+                recurInfo + System.lineSeparator()
+        }
+
+        recurInfo += context.getString(R.string.view_share_repeats) + " "
+        recurInfo += recur.interval.toString() + " "
+        when (recur.frequency) {
+            Recur.Frequency.YEARLY -> recurInfo += context.getString(R.string.edit_recur_year) + " "
+            Recur.Frequency.MONTHLY -> {
+                recurInfo += context.getString(R.string.edit_recur_month) + " "
+                recurInfo += context.getString(R.string.edit_recur_on_the_x_day_of_month) + recur.monthDayList.first().toString() + context.getString(R.string.edit_recur_x_day_of_the_month)
+            }
+            Recur.Frequency.WEEKLY -> {
+                recurInfo += context.getString(R.string.edit_recur_week) + " "
+                recurInfo += context.getString(R.string.edit_recur_on_weekday) + " "
+                val dayList = mutableListOf<String>()
+                recur.dayList.forEach { weekday ->
+                    when(weekday) {
+                        WeekDay.MO -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
+                        WeekDay.TU -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
+                        WeekDay.WE -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
+                        WeekDay.TH -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
+                        WeekDay.FR -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
+                        WeekDay.SA -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
+                        WeekDay.SU -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
+                    }
+                }
+                recurInfo += dayList.joinToString(separator = ", ")
+            }
+            Recur.Frequency.DAILY -> recurInfo += context.getString(R.string.edit_recur_day) + " "
+            else -> return null
+        }
+        recurInfo += recur.count.toString() + " " + context.getString(R.string.edit_recur_x_times)
+
+        //TODO: Consider also Exceptions and additions in the future?
+        return if(recurInfo.isEmpty())
+            null
+        else
+            recurInfo + System.lineSeparator()
     }
 }
 

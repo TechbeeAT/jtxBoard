@@ -16,6 +16,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
+import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.getOrAwaitValue
@@ -352,5 +353,30 @@ class ICalObjectAndroidTest {
         val image = ImageView(context)
         ICalObject.applyColorOrHide(image, null)
         assertEquals(View.INVISIBLE, image.visibility)
+    }
+
+    @Test
+    fun getRecurInfo_linkedToSeries() {
+        val item = ICalObject.createJournal("Test")
+        item.isRecurLinkedInstance = true
+        item.recurOriginalIcalObjectId = 1L
+        assertTrue(item.getRecurInfo(context)?.contains(context.getString(R.string.view_share_part_of_series))==true)
+    }
+
+
+    @Test
+    fun getRecurInfo_exceptionToSeries() {
+        val item = ICalObject.createJournal("Test")
+        item.isRecurLinkedInstance = false
+        item.recurOriginalIcalObjectId = 1L
+        assertTrue(item.getRecurInfo(context)?.contains(context.getString(R.string.view_share_exception_of_series))==true)
+    }
+
+    @Test
+    fun getRecurInfo_ruleDesc() {
+        val item = ICalObject.createJournal("Test")
+        item.rrule = "FREQ=DAILY;COUNT=5;INTERVAL=1"
+        val expectedString = context.getString(R.string.view_share_repeats) + " 1 " + context.getString(R.string.edit_recur_day) + " 5 " + context.getString(R.string.edit_recur_x_times)
+        assertTrue(item.getRecurInfo(context)?.contains(expectedString)==true)
     }
 }

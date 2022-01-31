@@ -738,12 +738,13 @@ class IcalViewFragment : Fragment() {
                 icalViewViewModel.icalEntity.value?.property?.dtstart?.let { shareText += getString(R.string.view_started) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dtstartTimezone) + System.lineSeparator() }
                 icalViewViewModel.icalEntity.value?.property?.due?.let { shareText += getString(R.string.view_due) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dueTimezone) + System.lineSeparator() }
                 icalViewViewModel.icalEntity.value?.property?.completed?.let { shareText += getString(R.string.view_completed) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.completedTimezone) + System.lineSeparator() }
+                icalViewViewModel.icalEntity.value?.property?.getRecurInfo(context)?.let { shareText += it }
                 icalViewViewModel.icalEntity.value?.property?.summary?.let { shareText += it + System.lineSeparator() }
                 icalViewViewModel.icalEntity.value?.property?.description?.let { shareText += it + System.lineSeparator() + System.lineSeparator() }
 
                 val categories: MutableList<String> = mutableListOf()
                 icalViewViewModel.icalEntity.value?.categories?.forEach { categories.add(it.text) }
-                shareText += categories.joinToString(separator=", ")
+                shareText += getString(R.string.categories) + ": " + categories.joinToString(separator=", ")
                 shareText = shareText.trim()
 
                 val attendees: MutableList<String> = mutableListOf()
