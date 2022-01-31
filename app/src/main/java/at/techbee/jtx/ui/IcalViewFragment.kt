@@ -136,13 +136,14 @@ class IcalViewFragment : Fragment() {
         }
 
         // set up observers
-        icalViewViewModel.editingClicked.observe(viewLifecycleOwner, {
+        icalViewViewModel.editingClicked.observe(viewLifecycleOwner) {
             if (it) {
                 icalViewViewModel.editingClicked.value = false
 
                 // if the item is an instance of a recurring entry, make sure that the user is aware of this
-                val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
-                if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                val originalId =
+                    icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
+                if (originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
 
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
@@ -150,42 +151,52 @@ class IcalViewFragment : Fragment() {
                         .setPositiveButton("Continue") { _, _ ->
                             icalViewViewModel.icalEntity.value?.let { entity ->
                                 this.findNavController().navigate(
-                                IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(entity)
-                            )
+                                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(
+                                        entity
+                                    )
+                                )
 
                             }
                         }
                         .setNegativeButton("Go to Original") { _, _ ->
                             this.findNavController().navigate(
-                                IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(originalId)
+                                IcalViewFragmentDirections.actionIcalViewFragmentSelf()
+                                    .setItem2show(originalId)
                             )
                         }
                         .show()
                 } else {
                     icalViewViewModel.icalEntity.value?.let { entity ->
                         this.findNavController().navigate(
-                            IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(entity)
+                            IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(
+                                entity
+                            )
                         )
                     }
                 }
             }
-        })
+        }
 
-        icalViewViewModel.icalEntity.observe(viewLifecycleOwner, {
+        icalViewViewModel.icalEntity.observe(viewLifecycleOwner) {
 
-            if(it == null) {
-                Toast.makeText(context, R.string.view_toast_entry_does_not_exist_anymore, Toast.LENGTH_LONG).show()
-                view?.findNavController()?.navigate(IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment())
+            if (it == null) {
+                Toast.makeText(
+                    context,
+                    R.string.view_toast_entry_does_not_exist_anymore,
+                    Toast.LENGTH_LONG
+                ).show()
+                view?.findNavController()
+                    ?.navigate(IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment())
                 return@observe   // just make sure that nothing else happens
             }
 
-            if(it.ICalCollection?.readonly == true)
+            if (it.ICalCollection?.readonly == true)
                 hideEditingOptions()
 
 
             updateToolbarText()
 
-            if(!SyncUtil.isDAVx5CompatibleWithJTX(application) || it.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE)
+            if (!SyncUtil.isDAVx5CompatibleWithJTX(application) || it.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE)
                 optionsMenu?.findItem(R.id.menu_view_syncnow)?.isVisible = false
 
 
@@ -212,10 +223,10 @@ class IcalViewFragment : Fragment() {
             val priorityArray = resources.getStringArray(R.array.priority)
             if (it.property.priority in 0..9)
                 binding.viewPriorityChip.text =
-                    priorityArray[icalViewViewModel.icalEntity.value?.property?.priority?:0]
+                    priorityArray[icalViewViewModel.icalEntity.value?.property?.priority ?: 0]
 
             // don't show the option to add notes if VJOURNAL is not supported (only relevant if the current entry is a VTODO)
-            if(it.ICalCollection?.supportsVJOURNAL != true) {
+            if (it.ICalCollection?.supportsVJOURNAL != true) {
                 binding.viewAddNote.visibility = View.GONE
                 binding.viewAddAudioNote.visibility = View.GONE
             }
@@ -273,7 +284,10 @@ class IcalViewFragment : Fragment() {
                     } catch (e: FileNotFoundException) {
                         Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
                     } catch (e: ImageDecoder.DecodeException) {
-                        Log.i("ImageThumbnail", "Could not retrieve image thumbnail from file ${attachment.uri}")
+                        Log.i(
+                            "ImageThumbnail",
+                            "Could not retrieve image thumbnail from file ${attachment.uri}"
+                        )
                     }
                 }
 
@@ -315,38 +329,45 @@ class IcalViewFragment : Fragment() {
 
             var allExceptionsString = ""
             getLongListfromCSVString(it.property.exdate).forEach { exdate ->
-                allExceptionsString += convertLongToFullDateTimeString(exdate, it.property.dtstartTimezone) + "\n"
+                allExceptionsString += convertLongToFullDateTimeString(
+                    exdate,
+                    it.property.dtstartTimezone
+                ) + "\n"
             }
             binding.viewRecurrenceExceptionItems.text = allExceptionsString
 
             var allAdditionsString = ""
             getLongListfromCSVString(it.property.rdate).forEach { rdate ->
-                allAdditionsString += convertLongToFullDateTimeString(rdate, it.property.dtstartTimezone) + "\n"
+                allAdditionsString += convertLongToFullDateTimeString(
+                    rdate,
+                    it.property.dtstartTimezone
+                ) + "\n"
             }
             binding.viewRecurrenceAdditionsItems.text = allAdditionsString
 
-        })
+        }
 
-        icalViewViewModel.subtasksCountList.observe(viewLifecycleOwner, { })
+        icalViewViewModel.subtasksCountList.observe(viewLifecycleOwner) { }
 
-        icalViewViewModel.relatedNotes.observe(viewLifecycleOwner, {
+        icalViewViewModel.relatedNotes.observe(viewLifecycleOwner) {
 
-            if(playing)             // don't interrupt if audio is currently played
+            if (playing)             // don't interrupt if audio is currently played
                 return@observe
 
             if (it?.size != 0) {
                 binding.viewFeedbackLinearlayout.removeAllViews()
                 it.forEach { relatedNote ->
-                    if(relatedNote == null)
+                    if (relatedNote == null)
                         return@forEach
 
-                    val commentBinding = FragmentIcalViewCommentBinding.inflate(inflater, container, false)
-                    if(relatedNote.summary?.isNotEmpty() == true)
+                    val commentBinding =
+                        FragmentIcalViewCommentBinding.inflate(inflater, container, false)
+                    if (relatedNote.summary?.isNotEmpty() == true)
                         commentBinding.viewCommentTextview.text = relatedNote.summary
                     else
                         commentBinding.viewCommentTextview.visibility = View.GONE
 
-                    if(relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_MP4_AAC || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_3GPP || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_OGG) {
+                    if (relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_MP4_AAC || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_3GPP || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_OGG) {
                         commentBinding.viewCommentPlaybutton.visibility = View.VISIBLE
                         commentBinding.viewCommentProgressbar.visibility = View.VISIBLE
 
@@ -354,19 +375,25 @@ class IcalViewFragment : Fragment() {
                         commentBinding.viewCommentPlaybutton.setOnClickListener {
 
                             val uri = Uri.parse(relatedNote.attachmentUri)
-                            togglePlayback(commentBinding.viewCommentProgressbar, commentBinding.viewCommentPlaybutton, uri)
+                            togglePlayback(
+                                commentBinding.viewCommentProgressbar,
+                                commentBinding.viewCommentPlaybutton,
+                                uri
+                            )
 
                         }
 
                     }
                     commentBinding.root.setOnClickListener { view ->
                         view.findNavController().navigate(
-                                IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(relatedNote.id))
+                            IcalViewFragmentDirections.actionIcalViewFragmentSelf()
+                                .setItem2show(relatedNote.id)
+                        )
                     }
                     binding.viewFeedbackLinearlayout.addView(commentBinding.root)
                 }
             }
-        })
+        }
 
         icalViewViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
