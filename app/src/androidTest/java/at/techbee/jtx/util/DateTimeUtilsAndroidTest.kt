@@ -70,13 +70,13 @@ class DateTimeUtilsAndroidTest {
 
         val weekdays = getLocalizedWeekdays()
 
-        assertEquals("Mo", weekdays[0])
-        assertEquals("Di", weekdays[1])
-        assertEquals("Mi", weekdays[2])
-        assertEquals("Do", weekdays[3])
-        assertEquals("Fr", weekdays[4])
-        assertEquals("Sa", weekdays[5])
-        assertEquals("So", weekdays[6])
+        assertEquals("Mo.", weekdays[0])
+        assertEquals("Di.", weekdays[1])
+        assertEquals("Mi.", weekdays[2])
+        assertEquals("Do.", weekdays[3])
+        assertEquals("Fr.", weekdays[4])
+        assertEquals("Sa.", weekdays[5])
+        assertEquals("So.", weekdays[6])
     }
 
     @Test

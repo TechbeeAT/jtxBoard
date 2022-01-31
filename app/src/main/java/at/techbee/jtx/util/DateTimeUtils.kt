@@ -140,7 +140,7 @@ object DateTimeUtils {
         val day: DayOfWeek = wf.firstDayOfWeek
         for (i in 0L..6L) {
             weekdays.add(
-                day.plus(i).getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
+                day.plus(i).getDisplayName(TextStyle.SHORT, Locale.getDefault())
             )
         }
 
