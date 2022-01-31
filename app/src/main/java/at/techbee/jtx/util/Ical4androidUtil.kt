@@ -77,7 +77,13 @@ object Ical4androidUtil {
 
         val collection = getCollection(account, context, collectionId) ?: return false
 
-        collection.client.query(JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(account),null, "${JtxContract.JtxICalObject.ID} = ?", arrayOf(iCalObjectId.toString()),null)?.use {
+        val uri = JtxContract.JtxICalObject.CONTENT_URI
+            .asSyncAdapter(account)
+            .buildUpon()
+            .appendPath(iCalObjectId.toString())
+            .build()
+
+        collection.client.query(uri,null, null, null, null)?.use {
             if(!it.moveToFirst())
                 return false
             val iCalObject = JtxICalObject(collection)

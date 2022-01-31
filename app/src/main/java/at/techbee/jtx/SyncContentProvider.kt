@@ -272,12 +272,13 @@ class SyncContentProvider : ContentProvider() {
         if (uri.pathSegments.size >= 2)
             args.add(uri.pathSegments[1].toLong().toString())      // add first argument (must be Long! String is expected, toLong would make other values null
 
-        val subquery = "SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
+        var subquery = "SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
                 "FROM $TABLE_NAME_ICALOBJECT " +
                 "INNER JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID " +
                 "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME = ? " +
-                "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? " +
-                "AND $TABLE_NAME_ICALOBJECT.$COLUMN_RECUR_ISLINKEDINSTANCE = 0"
+                "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_TYPE = ? "
+        if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)                 // only if we try to access single entries directly we allow access to recurring instances, for access on DIR of ICalObjects we filter recurring instances
+                subquery += "AND $TABLE_NAME_ICALOBJECT.$COLUMN_RECUR_ISLINKEDINSTANCE = 0"
 
         var queryString = "SELECT "
         queryString += if (projection.isNullOrEmpty())
