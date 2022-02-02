@@ -177,6 +177,7 @@
     <string name="list_due_overdue">Overdue</string>
     <string name="list_due_today">Due today</string>
     <string name="list_due_tomorrow">Due tomorrow</string>
+    <string name="list_due_future">Due in future</string>
     <string name="list_due_inXdays" tools:ignore="PluralsCandidate">Due in %d days</string>
     <string name="list_due_inXhours" tools:ignore="PluralsCandidate">Due in %d hours</string>
     <string name="list_start_past">Start in past</string>
@@ -388,7 +389,8 @@
     <string name="menu_collections_add_remote">Add remote Collection (DAVx⁵)</string>
 
     <string name="menu_list_gotodate">Go to date</string>
-    <string name="menu_list_clearfilter">Clear filter</string>
+    <string name="menu_list_clearfilter">Clear filter</string>>
+
     <string name="menu_list_quick_journal">Quick Journal</string>
     <string name="menu_list_quick_note">Quick Note</string>
     <string name="menu_list_quick_todo">Quick Todo</string>

@@ -26,6 +26,7 @@ import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 
 class IcalListViewModel(
@@ -42,7 +43,10 @@ class IcalListViewModel(
     var searchCollection: MutableList<String> = mutableListOf()
     var searchAccount: MutableList<String> = mutableListOf()
     var isExcludeDone: Boolean = false
-
+    var isFilterOverdue: Boolean = true
+    var isFilterDueToday: Boolean = true
+    var isFilterDueTomorrow: Boolean = true
+    var isFilterDueFuture: Boolean = true
 
     var searchSettingShowAllSubtasksInTasklist: Boolean = false
     var searchSettingShowAllSubnotesInNoteslist: Boolean = false
@@ -148,6 +152,18 @@ class IcalListViewModel(
         if (isExcludeDone)
             queryString += "AND $COLUMN_PERCENT IS NOT 100 "
 
+        val dueQuery = mutableListOf<String>()
+        if (isFilterOverdue)
+            dueQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
+        if (isFilterDueToday)
+            dueQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)-1}")
+        if (isFilterDueTomorrow)
+            dueQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)} AND ${DateTimeUtils.getTodayAsLong() + TimeUnit.DAYS.toMillis(2)-1}")
+        if (isFilterDueFuture)
+            dueQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
+        if(dueQuery.isNotEmpty())
+            queryString += " AND (${dueQuery.joinToString(separator = " OR ")}) "
+
         // Query for the passed filter criteria from FilterFragment
         if (searchClassification.size > 0) {
             queryString += "AND $COLUMN_CLASSIFICATION IN ("
@@ -249,6 +265,10 @@ class IcalListViewModel(
         searchCollection.clear()
         searchAccount.clear()
         isExcludeDone = false
+        isFilterOverdue = false
+        isFilterDueToday = false
+        isFilterDueTomorrow = false
+        isFilterDueFuture = false
         updateSearch()
     }
 

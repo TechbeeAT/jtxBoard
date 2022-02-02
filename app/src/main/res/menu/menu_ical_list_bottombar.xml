@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) Techbee e.U.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the GNU Public License v3.0
@@ -7,10 +6,9 @@
   ~ http://www.gnu.org/licenses/gpl.html
   -->
 
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-    <group android:id="@+id/menugroup_filter" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group>
         <item
             android:id="@+id/menu_list_bottom_quick_journal"
             android:icon="@drawable/ic_add_quick"
@@ -26,11 +24,10 @@
             android:icon="@drawable/ic_add_quick"
             android:title="@string/menu_list_quick_todo"
             app:showAsAction="ifRoom" />
-        <item
-            android:id="@+id/menu_list_bottom_toggle_completed_tasks"
-            android:icon="@drawable/ic_task_done_visibility_on"
-            android:title="@string/menu_list_todo_show_completed"
-            app:showAsAction="ifRoom" />
+    </group>
+
+    <group>
+
         <item
             android:id="@+id/menu_list_bottom_filter"
             android:icon="@drawable/ic_filter"
@@ -38,9 +35,36 @@
             app:showAsAction="ifRoom" />
         <item
             android:id="@+id/menu_list_bottom_clearfilter"
-            android:title="@string/menu_list_clearfilter"
             android:icon="@drawable/ic_filter_delete"
+            android:title="@string/menu_list_clearfilter"
             app:showAsAction="ifRoom" />
+    </group>
+
+    <group android:checkableBehavior="all">
+        <item
+            android:id="@+id/menu_list_bottom_toggle_completed_tasks"
+            android:title="@string/menu_list_todo_hide_completed"
+            app:showAsAction="never" />
+    </group>
+    <group
+        android:id="@+id/menu_list_bottom_duefilters"
+        android:checkableBehavior="all">
+        <item
+            android:id="@+id/menu_list_bottom_filter_overdue"
+            android:title="@string/list_due_overdue"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_list_bottom_filter_due_today"
+            android:title="@string/list_due_today"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_list_bottom_filter_due_tomorrow"
+            android:title="@string/list_due_tomorrow"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_list_bottom_filter_due_in_future"
+            android:title="@string/list_due_future"
+            app:showAsAction="never" />
     </group>
 
 </menu>
