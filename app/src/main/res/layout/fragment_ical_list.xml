@@ -8,7 +8,7 @@
   ~ http://www.gnu.org/licenses/gpl.html
   -->
 
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -32,34 +32,13 @@
                 app:layout_scrollFlags="scroll|enterAlways|snap">
 
                 <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tablayout_journalnotestodos"
+                    android:id="@+id/list_tablayout_journalnotestodos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:tabMode="fixed"
-                    app:tabTextAppearance="@style/jtx.TabLabel">
+                    app:tabTextAppearance="@style/jtx.TabLabel"/>
+                <!-- Tabs are added programmatically -->
 
-                    <com.google.android.material.tabs.TabItem
-                        android:id="@+id/journals_tab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:icon="@drawable/ic_journals"
-                        android:text="@string/list_tabitem_journals" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:id="@+id/notes_tab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:icon="@drawable/ic_note"
-                        android:text="@string/list_tabitem_notes" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:id="@+id/todos_tab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:icon="@drawable/ic_todo"
-                        android:text="@string/list_tabitem_todos" />
-
-                </com.google.android.material.tabs.TabLayout>
             </com.google.android.material.appbar.MaterialToolbar>
 
 
@@ -85,19 +64,11 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/vjournal_list_items_recycler_view"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/list_viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layoutAnimation="@anim/recyclerview_layout_animation"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/fragment_ical_list_item_journal">
-
-
-            </androidx.recyclerview.widget.RecyclerView>
-
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp" />
 
         </RelativeLayout>
 

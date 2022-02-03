@@ -29,9 +29,9 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 
-class IcalListViewModel(
-        val database: ICalDatabaseDao,
-        application: Application) : AndroidViewModel(application) {
+open class IcalListViewModel(application: Application) : AndroidViewModel(application) {
+
+    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
     var searchModule: String = Module.JOURNAL.name
     var searchText: String = ""
@@ -70,9 +70,9 @@ class IcalListViewModel(
             else -> database.getAllCollections() // should not happen!
         }
     }
-    var quickInsertedEntity = MutableLiveData<ICalEntity?>(null)
-    var directEditEntity = MutableLiveData<ICalEntity?>(null)
-    var scrollOnceId: Long? = null
+    val quickInsertedEntity = MutableLiveData<ICalEntity?>(null)
+    val directEditEntity = MutableLiveData<ICalEntity?>(null)
+    val scrollOnceId = MutableLiveData<Long?>(null)
 
     val showSyncProgressIndicator = MutableLiveData(false)
 
@@ -225,18 +225,13 @@ class IcalListViewModel(
             }
         }
 
-
         when (searchModule) {
             Module.JOURNAL.name -> queryString += "ORDER BY $COLUMN_DTSTART ASC, $COLUMN_CREATED ASC "
             Module.NOTE.name -> queryString += "ORDER BY $COLUMN_LAST_MODIFIED DESC, $COLUMN_CREATED ASC "
             Module.TODO.name -> queryString += "ORDER BY $COLUMN_DUE ASC, $COLUMN_CREATED ASC "
         }
-
-
-
         //Log.println(Log.INFO, "queryString", queryString)
         //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
-
 
         return SimpleSQLiteQuery(queryString, args.toArray())
     }
@@ -338,8 +333,7 @@ class IcalListViewModel(
                 it.icalObjectId = newId
                 database.insertCategory(it)
             }
-
-            scrollOnceId = newId
+            scrollOnceId.postValue(newId)
             quickInsertedEntity.postValue(database.getSync(newId))
         }
     }

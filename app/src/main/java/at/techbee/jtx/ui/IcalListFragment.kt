@@ -28,13 +28,13 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.PermissionsHelper
@@ -51,7 +51,7 @@ import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import java.lang.ClassCastException
 import java.time.Instant
 import java.time.ZoneId
@@ -61,11 +61,7 @@ import java.util.*
 
 class IcalListFragment : Fragment() {
 
-    private var recyclerView: RecyclerView? = null
-    private var linearLayoutManager: LinearLayoutManager? = null
-    //private var staggeredGridLayoutManager: StaggeredGridLayoutManager? = null
-
-    private lateinit var icalListViewModel: IcalListViewModel
+    private val icalListViewModel: IcalListViewModel by activityViewModels()
     private lateinit var binding: FragmentIcalListBinding
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
@@ -78,11 +74,7 @@ class IcalListFragment : Fragment() {
     private lateinit var prefs: SharedPreferences
     private lateinit var arguments: IcalListFragmentArgs
 
-    private var lastScrolledFocusItemId: Long? = null
-
-    private var lastSearchModule = ""
-    private var lastSearchStatusTodo = mutableListOf<StatusTodo>()
-    private var lastIcal4ListHash: Int = 0
+    //private var lastIcal4ListHash: Int = 0
 
 
 
@@ -92,37 +84,6 @@ class IcalListFragment : Fragment() {
         const val PREFS_LAST_USED_COLLECTION = "lastUsedCollection"
         const val PREFS_MODULE = "prefsModule"
         const val PREFS_ISFIRSTRUN = "isFirstRun"
-
-        //Journal
-        const val PREFS_JOURNAL_COLLECTION = "prefsJournalCollection"
-        const val PREFS_JOURNAL_ACCOUNT = "prefsJournalAccount"
-        const val PREFS_JOURNAL_CATEGORIES = "prefsJournalCategories"
-        const val PREFS_JOURNAL_CLASSIFICATION = "prefsJournalClassification"
-        const val PREFS_JOURNAL_STATUS_JOURNAL = "prefsJournalStatusJournal"
-        const val PREFS_JOURNAL_STATUS_TODO = "prefsJournalStatusTodo"
-        const val PREFS_JOURNAL_EXCLUDE_DONE = "prefsJournalExcludeDone"
-
-        //Note
-        const val PREFS_NOTE_COLLECTION = "prefsNoteCollection"
-        const val PREFS_NOTE_ACCOUNT = "prefsNoteAccount"
-        const val PREFS_NOTE_CATEGORIES = "prefsNoteCategories"
-        const val PREFS_NOTE_CLASSIFICATION = "prefsNoteClassification"
-        const val PREFS_NOTE_STATUS_JOURNAL = "prefsNoteStatusJournal"
-        const val PREFS_NOTE_STATUS_TODO = "prefsNoteStatusTodo"
-        const val PREFS_NOTE_EXCLUDE_DONE = "prefsNoteExcludeDone"
-        //Todos
-        const val PREFS_TODO_COLLECTION = "prefsTodoCollection"
-        const val PREFS_TODO_ACCOUNT = "prefsTodoAccount"
-        const val PREFS_TODO_CATEGORIES = "prefsTodoCategories"
-        const val PREFS_TODO_CLASSIFICATION = "prefsTodoClassification"
-        //const val PREFS_TODO_STATUS_JOURNAL = "prefsTodoStatusJournal"
-        const val PREFS_TODO_STATUS_TODO = "prefsTodoStatusTodo"
-        const val PREFS_TODO_EXCLUDE_DONE = "prefsTodoExcludeDone"
-        const val PREFS_TODO_FILTER_OVERDUE = "prefsTodoFilterOverdue"
-        const val PREFS_TODO_FILTER_DUE_TODAY = "prefsTodoFilterToday"
-        const val PREFS_TODO_FILTER_DUE_TOMORROW = "prefsTodoFilterTomorrow"
-        const val PREFS_TODO_FILTER_DUE_FUTURE = "prefsTodoFilterFuture"
-
 
         const val SETTINGS_SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_of_journals_and_todos_in_tasklist"
         const val SETTINGS_SHOW_SUBNOTES_IN_LIST = "settings_show_subnotes_of_journals_and_tasks_in_noteslist"
@@ -138,35 +99,17 @@ class IcalListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        // Get a reference to the binding object and inflate the fragment views.
         binding = FragmentIcalListBinding.inflate(inflater, container, false)
-
         application = requireNotNull(this.activity).application
         dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
-
-
-        // create the view model through the view model factory
-        val viewModelFactory = IcalListViewModelFactory(dataSource, application)
-        icalListViewModel = ViewModelProvider(this, viewModelFactory)[IcalListViewModel::class.java]
-
         binding.lifecycleOwner = viewLifecycleOwner
 
         // add menu
         setHasOptionsMenu(true)
 
         settings = PreferenceManager.getDefaultSharedPreferences(context)
-
-        // set up recycler view
-        recyclerView = binding.vjournalListItemsRecyclerView
-        linearLayoutManager = LinearLayoutManager(application.applicationContext)
-        recyclerView?.layoutManager = linearLayoutManager
-        recyclerView?.setHasFixedSize(false)
-
-
         arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
         prefs = requireActivity().getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)
-
-        loadFilterArgsAndPrefs()
 
         // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
         val firstInstall = context?.packageManager?.getPackageInfo(requireContext().packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
@@ -176,38 +119,45 @@ class IcalListFragment : Fragment() {
             prefs.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
         }
 
+        binding.listViewpager.adapter = object : FragmentStateAdapter(this) {
+            override fun getItemCount(): Int = 3
+
+            override fun createFragment(position: Int): Fragment {
+                return when(position) {
+                    0 -> IcalListFragmentJournals()
+                    1 -> IcalListFragmentNotes()
+                    2 -> IcalListFragmentTodos()
+                    else -> IcalListFragmentJournals()
+                }
+            }
+        }
+
+        TabLayoutMediator(binding.listTablayoutJournalnotestodos, binding.listViewpager) { tab, position ->
+            when(position) {
+                0 -> {
+                    tab.text = getString(R.string.list_tabitem_journals)
+                    tab.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_journals)
+                }
+                1 -> {
+                    tab.text = getString(R.string.list_tabitem_notes)
+                    tab.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_note)
+                }
+                2 -> {
+                    tab.text = getString(R.string.list_tabitem_todos)
+                    tab.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_todo)
+                }
+            }
+            binding.listProgressIndicator.visibility = View.VISIBLE
+            //lastScrolledFocusItemId = null
+            //applyFilters()
+        }.attach()
+
+        loadFilterArgsAndPrefs()
+
 
         icalListViewModel.iCal4List.observe(viewLifecycleOwner) {
-
-            //updateMenuVisibilities()
             binding.listProgressIndicator.visibility = View.GONE
-
-            // if the hash is the same as before, the list has not changed and we don't continue (such triggers happen regularly when DAVx5 is doing the sync)
-            // searchStatusTodo needs special handling, if it was changed (although the basic list might be the same), the subtasks might change and they
-            // need to be rebuilt with the new setting
-            if (lastIcal4ListHash == it.hashCode() && lastSearchStatusTodo == icalListViewModel.searchStatusTodo)
-                return@observe
-            lastIcal4ListHash = it.hashCode()
-            lastSearchStatusTodo = icalListViewModel.searchStatusTodo
-
-            //recyclerView?.adapter?.notifyDataSetChanged()
-            // instead of notifyDataSetChanged, we initialize the recycler view from scratch in the observer (instead of onCreateView)
-            // this seems to be more efficient and also makes sure that the list gets purged before it's rebuild and avoids strange layout behaviours
-            when (icalListViewModel.searchModule) {
-                Module.JOURNAL.name -> recyclerView?.adapter = IcalListAdapterJournal(requireContext(), icalListViewModel)
-                Module.NOTE.name -> recyclerView?.adapter = IcalListAdapterNote(requireContext(), icalListViewModel)
-                Module.TODO.name -> recyclerView?.adapter = IcalListAdapterTodo(requireContext(), icalListViewModel)
-            }
-
-            if (lastSearchModule != icalListViewModel.searchModule)          // we do the animation only if the module was changed. Otherwise animation would also be done when e.g. a progress is changed.
-                recyclerView?.scheduleLayoutAnimation()
-            lastSearchModule = icalListViewModel.searchModule               // remember the last list size and search module
-
             updateMenuVisibilities()
-
-            if (icalListViewModel.scrollOnceId != null)
-                scrollOnce()
-
         }
 
         // This observer is needed in order to make sure that the Subtasks are retrieved!
@@ -235,29 +185,6 @@ class IcalListFragment : Fragment() {
             this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(it))
         }
 
-
-        binding.tablayoutJournalnotestodos.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-
-                binding.listProgressIndicator.visibility = View.VISIBLE
-                //resetFilter(false)
-
-                when (tab?.position) {
-                    TAB_INDEX_JOURNAL -> icalListViewModel.searchModule = Module.JOURNAL.name
-                    TAB_INDEX_NOTE -> icalListViewModel.searchModule = Module.NOTE.name
-                    TAB_INDEX_TODO -> icalListViewModel.searchModule = Module.TODO.name
-                }
-
-                loadFiltersFromPrefs()
-                lastScrolledFocusItemId = null
-
-                applyFilters()
-
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab?) { }    // nothing to do
-            override fun onTabReselected(tab: TabLayout.Tab?) { }
-        })
 
         binding.listBottomBar.setOnMenuItemClickListener { menuitem ->
 
@@ -295,23 +222,21 @@ class IcalListFragment : Fragment() {
     }
 
 
-
     override fun onResume() {
 
         icalListViewModel.searchSettingShowAllSubtasksInTasklist = settings?.getBoolean(SETTINGS_SHOW_SUBTASKS_IN_LIST, false) ?: false
         icalListViewModel.searchSettingShowAllSubnotesInNoteslist = settings?.getBoolean(SETTINGS_SHOW_SUBNOTES_IN_LIST, false) ?: false
         icalListViewModel.searchSettingShowAllSubjournalsinJournallist = settings?.getBoolean(SETTINGS_SHOW_SUBJOURNALS_IN_LIST, false) ?: false
 
-        applyFilters()
+        //applyFilters()
         updateMenuVisibilities()
 
-        when(icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> recyclerView?.adapter = IcalListAdapterJournal(requireContext(), icalListViewModel)
-            Module.NOTE.name -> recyclerView?.adapter = IcalListAdapterNote(requireContext(), icalListViewModel)
-            Module.TODO.name -> recyclerView?.adapter = IcalListAdapterTodo(requireContext(), icalListViewModel)
-        }
-
         super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
     }
 
     private fun updateToolbarText() {
@@ -324,13 +249,11 @@ class IcalListFragment : Fragment() {
                 Module.TODO.name -> getString(R.string.toolbar_text_jtx_board_tasks_overview)
                 else -> null
             }
-
             activity.setToolbarTitle(toolbarText, toolbarSubtitle )
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
     }
-
 
     /**
      * This function hides/shows the relevant menu entries for the active module.
@@ -393,157 +316,22 @@ class IcalListFragment : Fragment() {
         //icalListViewModel.searchModule = arguments.module2show ?: prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
         icalListViewModel.searchModule = prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
 
-        when(icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> {
-                icalListViewModel.searchCategories = arguments.category2filter?.toMutableList() ?: prefs.getStringSet(PREFS_JOURNAL_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchCollection = arguments.collection2filter?.toMutableList() ?: prefs.getStringSet(PREFS_JOURNAL_COLLECTION, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchAccount = arguments.account2filter?.toMutableList() ?: prefs.getStringSet(PREFS_JOURNAL_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchStatusJournal = arguments.statusJournal2filter?.toMutableList() ?: StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_STATUS_JOURNAL, null))
-                icalListViewModel.searchStatusTodo = arguments.statusTodo2filter?.toMutableList() ?: StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_STATUS_TODO, null))
-                icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_CLASSIFICATION, null))
-                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_JOURNAL_EXCLUDE_DONE, false)
-                icalListViewModel.isFilterOverdue = false
-                icalListViewModel.isFilterDueToday = false
-                icalListViewModel.isFilterDueTomorrow = false
-                icalListViewModel.isFilterDueFuture = false
-            }
-            Module.NOTE.name -> {
-                icalListViewModel.searchCategories = arguments.category2filter?.toMutableList() ?: prefs.getStringSet(PREFS_NOTE_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchCollection = arguments.collection2filter?.toMutableList() ?: prefs.getStringSet(PREFS_NOTE_COLLECTION, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchAccount = arguments.account2filter?.toMutableList() ?: prefs.getStringSet(PREFS_NOTE_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchStatusJournal = arguments.statusJournal2filter?.toMutableList() ?: StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_NOTE_STATUS_JOURNAL, null))
-                icalListViewModel.searchStatusTodo = arguments.statusTodo2filter?.toMutableList() ?: StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_NOTE_STATUS_TODO, null))
-                icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_NOTE_CLASSIFICATION, null))
-                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_NOTE_EXCLUDE_DONE, false)
-                icalListViewModel.isFilterOverdue = false
-                icalListViewModel.isFilterDueToday = false
-                icalListViewModel.isFilterDueTomorrow = false
-                icalListViewModel.isFilterDueFuture = false
-            }
-            Module.TODO.name -> {
-                icalListViewModel.searchCategories = arguments.category2filter?.toMutableList() ?: prefs.getStringSet(PREFS_TODO_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchCollection = arguments.collection2filter?.toMutableList() ?: prefs.getStringSet(PREFS_TODO_COLLECTION, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchAccount = arguments.account2filter?.toMutableList() ?: prefs.getStringSet(PREFS_TODO_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
-                //icalListViewModel.searchStatusJournal = arguments.statusJournal2filter?.toMutableList() ?: StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_TODO_STATUS_JOURNAL, null))
-                icalListViewModel.searchStatusTodo = arguments.statusTodo2filter?.toMutableList() ?: StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_TODO_STATUS_TODO, null))
-                icalListViewModel.searchClassification = arguments.classification2filter?.toMutableList() ?: Classification.getListFromStringList(prefs.getStringSet(PREFS_TODO_CLASSIFICATION, null))
-                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_TODO_EXCLUDE_DONE, false)
-                icalListViewModel.isFilterOverdue = prefs.getBoolean(PREFS_TODO_FILTER_OVERDUE, false)
-                icalListViewModel.isFilterDueToday = prefs.getBoolean(PREFS_TODO_FILTER_DUE_TODAY, false)
-                icalListViewModel.isFilterDueTomorrow = prefs.getBoolean(PREFS_TODO_FILTER_DUE_TOMORROW, false)
-                icalListViewModel.isFilterDueFuture = prefs.getBoolean(PREFS_TODO_FILTER_DUE_FUTURE, false)
-            }
-        }
-
-        icalListViewModel.scrollOnceId = arguments.item2focus    // or null
+        icalListViewModel.scrollOnceId.postValue(arguments.item2focus)    // or null
 
         // activate the right tab according to the searchModule
         when (icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> binding.tablayoutJournalnotestodos.getTabAt(TAB_INDEX_JOURNAL)?.select()
-            Module.NOTE.name -> binding.tablayoutJournalnotestodos.getTabAt(TAB_INDEX_NOTE)?.select()
-            Module.TODO.name -> binding.tablayoutJournalnotestodos.getTabAt(TAB_INDEX_TODO)?.select()
-        }
-    }
-
-    /**
-     * This function loads and sets the filter criteria saved in the preferences for the active module.
-     * This makes sure that for each module the last used filter is applied again until the user
-     * deletes them. This method can be called on every tab change (unlike loadFilterArgsAndPrefs() that
-     * also checks if there are filter criteria in the arguments)
-     */
-    private fun loadFiltersFromPrefs() {
-
-        prefs = requireActivity().getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)
-
-        when(icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> {
-                icalListViewModel.searchCategories = prefs.getStringSet(PREFS_JOURNAL_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchCollection = prefs.getStringSet(PREFS_JOURNAL_COLLECTION, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchAccount = prefs.getStringSet(PREFS_JOURNAL_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_STATUS_JOURNAL, null))
-                icalListViewModel.searchStatusTodo = StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_STATUS_TODO, null))
-                icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(PREFS_JOURNAL_CLASSIFICATION, null))
-                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_JOURNAL_EXCLUDE_DONE, false)
-                icalListViewModel.isFilterOverdue = false
-                icalListViewModel.isFilterDueToday = false
-                icalListViewModel.isFilterDueTomorrow = false
-                icalListViewModel.isFilterDueFuture = false
-            }
-            Module.NOTE.name -> {
-                icalListViewModel.searchCategories = prefs.getStringSet(PREFS_NOTE_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchCollection = prefs.getStringSet(PREFS_NOTE_COLLECTION, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchAccount = prefs.getStringSet(PREFS_NOTE_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_NOTE_STATUS_JOURNAL, null))
-                icalListViewModel.searchStatusTodo = StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_NOTE_STATUS_TODO, null))
-                icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(PREFS_NOTE_CLASSIFICATION, null))
-                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_NOTE_EXCLUDE_DONE, false)
-                icalListViewModel.isFilterOverdue = false
-                icalListViewModel.isFilterDueToday = false
-                icalListViewModel.isFilterDueTomorrow = false
-                icalListViewModel.isFilterDueFuture = false
-            }
-            Module.TODO.name -> {
-                icalListViewModel.searchCategories = prefs.getStringSet(PREFS_TODO_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchCollection = prefs.getStringSet(PREFS_TODO_COLLECTION, null)?.toMutableList() ?: mutableListOf()
-                icalListViewModel.searchAccount = prefs.getStringSet(PREFS_TODO_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
-                //icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(prefs.getStringSet(PREFS_TODO_STATUS_JOURNAL, null))
-                icalListViewModel.searchStatusTodo = StatusTodo.getListFromStringList(prefs.getStringSet(PREFS_TODO_STATUS_TODO, null))
-                icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(PREFS_TODO_CLASSIFICATION, null))
-                icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_TODO_EXCLUDE_DONE, false)
-                icalListViewModel.isFilterOverdue = prefs.getBoolean(PREFS_TODO_FILTER_OVERDUE, false)
-                icalListViewModel.isFilterDueToday = prefs.getBoolean(PREFS_TODO_FILTER_DUE_TODAY, false)
-                icalListViewModel.isFilterDueTomorrow = prefs.getBoolean(PREFS_TODO_FILTER_DUE_TOMORROW, false)
-                icalListViewModel.isFilterDueFuture = prefs.getBoolean(PREFS_TODO_FILTER_DUE_FUTURE, false)
-            }
+            Module.JOURNAL.name -> binding.listViewpager.currentItem = TAB_INDEX_JOURNAL
+            Module.NOTE.name -> binding.listViewpager.currentItem = TAB_INDEX_NOTE
+            Module.TODO.name -> binding.listViewpager.currentItem = TAB_INDEX_TODO
         }
     }
 
 
     fun applyFilters() {
-
         binding.listProgressIndicator.visibility = View.VISIBLE
         updateToolbarText()
         icalListViewModel.updateSearch()
-        savePrefs()
     }
-
-    private fun savePrefs() {
-        when (icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> {
-                prefs.edit().putStringSet(PREFS_JOURNAL_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
-                prefs.edit().putStringSet(PREFS_JOURNAL_ACCOUNT, icalListViewModel.searchAccount.toSet()).apply()
-                prefs.edit().putStringSet(PREFS_JOURNAL_STATUS_JOURNAL, StatusJournal.getStringSetFromList(icalListViewModel.searchStatusJournal)).apply()
-                prefs.edit().putStringSet(PREFS_JOURNAL_STATUS_TODO, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
-                prefs.edit().putStringSet(PREFS_JOURNAL_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
-                prefs.edit().putStringSet(PREFS_JOURNAL_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
-                prefs.edit().putBoolean(PREFS_JOURNAL_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
-            }
-            Module.NOTE.name -> {
-                prefs.edit().putStringSet(PREFS_NOTE_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
-                prefs.edit().putStringSet(PREFS_NOTE_ACCOUNT, icalListViewModel.searchAccount.toSet()).apply()
-                prefs.edit().putStringSet(PREFS_NOTE_STATUS_JOURNAL, StatusJournal.getStringSetFromList(icalListViewModel.searchStatusJournal)).apply()
-                prefs.edit().putStringSet(PREFS_NOTE_STATUS_TODO, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
-                prefs.edit().putStringSet(PREFS_NOTE_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
-                prefs.edit().putStringSet(PREFS_NOTE_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
-                prefs.edit().putBoolean(PREFS_NOTE_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
-            }
-            Module.TODO.name -> {
-                prefs.edit().putStringSet(PREFS_TODO_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
-                prefs.edit().putStringSet(PREFS_TODO_ACCOUNT, icalListViewModel.searchAccount.toSet()).apply()
-                //prefs.edit().putStringSet(PREFS_TODO_STATUS_JOURNAL, StatusJournal.getStringSetFromList(icalListViewModel.searchStatusJournal)).apply()
-                prefs.edit().putStringSet(PREFS_TODO_STATUS_TODO, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
-                prefs.edit().putStringSet(PREFS_TODO_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
-                prefs.edit().putStringSet(PREFS_TODO_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
-                prefs.edit().putBoolean(PREFS_TODO_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
-                prefs.edit().putBoolean(PREFS_TODO_FILTER_OVERDUE, icalListViewModel.isFilterOverdue).apply()
-                prefs.edit().putBoolean(PREFS_TODO_FILTER_DUE_TODAY, icalListViewModel.isFilterDueToday).apply()
-                prefs.edit().putBoolean(PREFS_TODO_FILTER_DUE_TOMORROW, icalListViewModel.isFilterDueTomorrow).apply()
-                prefs.edit().putBoolean(PREFS_TODO_FILTER_DUE_FUTURE, icalListViewModel.isFilterDueFuture).apply()
-            }
-        }
-        prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
-    }
-
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_ical_list, menu)
@@ -584,7 +372,6 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_delete_visible -> deleteVisible()
             R.id.menu_list_syncnow -> SyncUtil.syncAllAccounts(requireContext())
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -595,44 +382,8 @@ class IcalListFragment : Fragment() {
      * Clears the preferences with the saved search criteria
      */
     private fun resetFilter() {
-
-        lastIcal4ListHash = 0    // make sure the whole view gets reloaded
+        //lastIcal4ListHash = 0    // make sure the whole view gets reloaded
         icalListViewModel.clearFilter()
-
-        when (icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> {
-                prefs.edit().remove(PREFS_JOURNAL_COLLECTION).apply()
-                prefs.edit().remove(PREFS_JOURNAL_ACCOUNT).apply()
-                prefs.edit().remove(PREFS_JOURNAL_STATUS_JOURNAL).apply()
-                prefs.edit().remove(PREFS_JOURNAL_STATUS_TODO).apply()
-                prefs.edit().remove(PREFS_JOURNAL_CLASSIFICATION).apply()
-                prefs.edit().remove(PREFS_JOURNAL_CATEGORIES).apply()
-                prefs.edit().remove(PREFS_JOURNAL_EXCLUDE_DONE).apply()
-            }
-            Module.NOTE.name -> {
-                prefs.edit().remove(PREFS_NOTE_COLLECTION).apply()
-                prefs.edit().remove(PREFS_NOTE_ACCOUNT).apply()
-                prefs.edit().remove(PREFS_NOTE_STATUS_JOURNAL).apply()
-                prefs.edit().remove(PREFS_NOTE_STATUS_TODO).apply()
-                prefs.edit().remove(PREFS_NOTE_CLASSIFICATION).apply()
-                prefs.edit().remove(PREFS_NOTE_CATEGORIES).apply()
-                prefs.edit().remove(PREFS_NOTE_EXCLUDE_DONE).apply()
-            }
-            Module.TODO.name -> {
-                prefs.edit().remove(PREFS_TODO_COLLECTION).apply()
-                prefs.edit().remove(PREFS_TODO_ACCOUNT).apply()
-                //prefs.edit().remove(PREFS_TODO_STATUS_JOURNAL).apply()
-                prefs.edit().remove(PREFS_TODO_STATUS_TODO).apply()
-                prefs.edit().remove(PREFS_TODO_CLASSIFICATION).apply()
-                prefs.edit().remove(PREFS_TODO_CATEGORIES).apply()
-                prefs.edit().remove(PREFS_TODO_EXCLUDE_DONE).apply()
-                prefs.edit().remove(PREFS_TODO_FILTER_OVERDUE).apply()
-                prefs.edit().remove(PREFS_TODO_FILTER_DUE_TODAY).apply()
-                prefs.edit().remove(PREFS_TODO_FILTER_DUE_TOMORROW).apply()
-                prefs.edit().remove(PREFS_TODO_FILTER_DUE_FUTURE).apply()
-
-            }
-        }
     }
 
     private fun goToFilter() {
@@ -653,16 +404,6 @@ class IcalListFragment : Fragment() {
         this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(iCalObject))
     }
 
-    /*
-    private fun applyQuickFilterJournal(statusList: MutableList<StatusJournal>) {
-
-        //resetFilter(false)
-        icalListViewModel.searchStatusJournal = statusList
-        applyFilters()
-    }
-     */
-
-
     private fun toggleMenuCheckboxFilter(menuitem: MenuItem) {
         when (menuitem.itemId) {
             R.id.menu_list_bottom_toggle_completed_tasks -> icalListViewModel.isExcludeDone = !icalListViewModel.isExcludeDone
@@ -672,7 +413,7 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_bottom_filter_due_in_future -> icalListViewModel.isFilterDueFuture = !icalListViewModel.isFilterDueFuture
             else -> return
         }
-        lastIcal4ListHash = 0     // makes the recycler view refresh everything (necessary for subtasks!)
+        //lastIcal4ListHash = 0     // makes the recycler view refresh everything (necessary for subtasks!)
         applyFilters()
     }
 
@@ -686,7 +427,6 @@ class IcalListFragment : Fragment() {
 
             override fun writeToParcel(dest: Parcel?, flags: Int) {}
             override fun isValid(date: Long): Boolean {
-
                 icalListViewModel.iCal4List.value?.forEach {
                     val zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.property.dtstart?:0L), requireTzId(it.property.dtstartTimezone))
                     val zonedSelection = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault())
@@ -728,27 +468,13 @@ class IcalListFragment : Fragment() {
                 val zonedMatch = ZonedDateTime.ofInstant(Instant.ofEpochMilli(item.property.dtstart ?: 0L), requireTzId(item.property.dtstartTimezone))
                 zonedSelection.dayOfMonth == zonedMatch.dayOfMonth && zonedSelection.monthValue == zonedMatch.monthValue && zonedSelection.year == zonedMatch.year
             }
-            if (matchedItem != null) {
-                icalListViewModel.scrollOnceId = matchedItem.property.id
-                scrollOnce()
-            }
+            if (matchedItem != null)
+                icalListViewModel.scrollOnceId.postValue(matchedItem.property.id)
         }
 
         datePicker.show(parentFragmentManager, "menu_list_gotodate")
     }
 
-    private fun scrollOnce() {
-
-        icalListViewModel.scrollOnceId?.let { scrollOnceId ->
-            val scrollToItem = icalListViewModel.iCal4List.value?.find { listItem -> listItem.property.id == scrollOnceId }
-            val scrollToItemPos = icalListViewModel.iCal4List.value?.indexOf(scrollToItem)
-
-            scrollToItemPos?.let { pos ->
-                linearLayoutManager?.scrollToPositionWithOffset(pos, 0)
-                icalListViewModel.scrollOnceId = null
-            }
-        }
-    }
 
 
     private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || (icalListViewModel.searchModule == Module.JOURNAL.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.NOTE.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.TODO.name && icalListViewModel.searchStatusTodo.isNotEmpty()) || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty() || icalListViewModel.searchAccount.isNotEmpty() || icalListViewModel.isExcludeDone || icalListViewModel.isFilterOverdue || icalListViewModel.isFilterDueToday || icalListViewModel.isFilterDueTomorrow || icalListViewModel.isFilterDueFuture
