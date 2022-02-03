@@ -293,10 +293,10 @@ class IcalListFragment : Fragment() {
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_tomorrow).isVisible = icalListViewModel.searchModule == Module.TODO.name
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_in_future).isVisible = icalListViewModel.searchModule == Module.TODO.name
 
-
         // don't show the option to clear the filter if no filter was set
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.isVisible = !isFilterActive()
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_clearfilter)?.isVisible = isFilterActive()
+        optionsMenu?.findItem(R.id.menu_list_clearfilter)?.isVisible = isFilterActive()
 
         if(!SyncUtil.isDAVx5CompatibleWithJTX(application))
             optionsMenu?.findItem(R.id.menu_list_syncnow)?.isVisible = false
