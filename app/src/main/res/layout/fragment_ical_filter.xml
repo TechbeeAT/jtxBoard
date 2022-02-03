@@ -14,13 +14,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <data>
-
-        <variable
-            name="model"
-            type="at.techbee.jtx.ui.IcalFilterViewModel" />
-    </data>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -214,30 +207,35 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="80dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/category_filter_label"
-                    app:layout_constraintTop_toBottomOf="@+id/category_filter_label">
+                    app:layout_constraintTop_toBottomOf="@+id/category_filter_label"
+                    app:layout_constraintVertical_bias="0.0">
 
                 </com.google.android.material.chip.ChipGroup>
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         </ScrollView>
-
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/filter_fab_applyfilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
+            android:layout_gravity="bottom|center"
             android:layout_marginBottom="16dp"
+            android:layout_marginStart="80dp"
             app:srcCompat="@drawable/ic_save"
             android:contentDescription="@string/filter_fab_apply_filter_contentdescription" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/filter_fab_resetfilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginEnd="80dp"
+            android:layout_marginBottom="16dp"
+            app:srcCompat="@drawable/ic_filter_delete"
+            android:contentDescription="@string/menu_list_clearfilter"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
 </layout>

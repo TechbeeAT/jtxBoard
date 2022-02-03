@@ -61,8 +61,11 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
         // TODO maybe retrieve all subtasks only when subtasks are needed!
     val allSubtasks: LiveData<List<ICal4List?>> = database.getAllSubtasks()
 
+    val allCategories = database.getAllCategories()   // filter FragmentDialog
+    val allCollections = database.getAllCollections() // filter FragmentDialog
+
     val allRemoteCollections = database.getAllRemoteCollections()
-    val allCollections = Transformations.switchMap(listQuery) {               // allCollections reacts on listQuery, but does not depend on it!
+    val allWriteableCollections = Transformations.switchMap(listQuery) {               // allCollections reacts on listQuery, but does not depend on it!
         when (searchModule) {
             Module.TODO.name -> database.getAllWriteableVTODOCollections()
             Module.NOTE.name -> database.getAllWriteableVJOURNALCollections()

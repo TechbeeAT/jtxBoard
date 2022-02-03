@@ -28,7 +28,6 @@ class IcalListFragmentJournals : Fragment() {
 
     private lateinit var binding: FragmentIcalListRecyclerBinding
     private val icalListViewModel: IcalListViewModel by activityViewModels()
-    private val layoutManager = LinearLayoutManager(context)
 
     companion object {
         const val PREFS_LIST_JOURNALS = "prefsListJournals"
@@ -46,7 +45,7 @@ class IcalListFragmentJournals : Fragment() {
                               savedInstanceState: Bundle?): View {
 
         binding = FragmentIcalListRecyclerBinding.inflate(inflater, container, false)
-        binding.listRecycler.layoutManager = layoutManager
+        binding.listRecycler.layoutManager = LinearLayoutManager(context)
         binding.listRecycler.setHasFixedSize(false)
         return binding.root
     }
@@ -83,6 +82,8 @@ class IcalListFragmentJournals : Fragment() {
                 else
                     binding.listRecycler.adapter?.notifyDataSetChanged()
                 icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
+            } else {      // if the list is empty, we remove the recycler
+                binding.listRecycler.adapter = null
             }
         }
 
@@ -93,18 +94,17 @@ class IcalListFragmentJournals : Fragment() {
             val scrollToItem = icalListViewModel.iCal4List.value?.find { listItem -> listItem.property.id == it }
             val scrollToItemPos = icalListViewModel.iCal4List.value?.indexOf(scrollToItem)
             scrollToItemPos?.let { pos ->
-                layoutManager.scrollToPositionWithOffset(pos, 0)
+                binding.listRecycler.layoutManager?.scrollToPosition(pos)
                 icalListViewModel.scrollOnceId.postValue(null)
             }
         }
-
-
     }
 
     override fun onPause() {
         super.onPause()
         binding.listRecycler.adapter = null
         icalListViewModel.iCal4List.removeObservers(viewLifecycleOwner)
+        icalListViewModel.scrollOnceId.removeObservers(viewLifecycleOwner)
 
         val prefs = requireActivity().getSharedPreferences(PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
 

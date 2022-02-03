@@ -30,6 +30,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
+import androidx.fragment.app.DialogFragment.STYLE_NORMAL
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -388,16 +389,13 @@ class IcalListFragment : Fragment() {
 
     private fun goToFilter() {
 
-        this.findNavController().navigate(
-            IcalListFragmentDirections.actionIcalListFragmentToIcalFilterFragment().apply {
-                this.category2preselect = icalListViewModel.searchCategories.toTypedArray()
-                this.statusJournal2preselect = icalListViewModel.searchStatusJournal.toTypedArray()
-                this.statusTodo2preselect = icalListViewModel.searchStatusTodo.toTypedArray()
-                this.classification2preselect = icalListViewModel.searchClassification.toTypedArray()
-                this.collection2preselect = icalListViewModel.searchCollection.toTypedArray()
-                this.account2preselect = icalListViewModel.searchAccount.toTypedArray()
-                this.module2preselect = icalListViewModel.searchModule
-            })
+        val filterFragment = IcalFilterFragment()
+        filterFragment.setStyle(STYLE_NORMAL, R.style.AppTheme)
+        val transaction = childFragmentManager.beginTransaction()
+        transaction.apply {
+            add(0, filterFragment)
+            commit()
+        }
     }
 
     private fun goToEdit(iCalObject: ICalEntity) {
@@ -523,13 +521,13 @@ class IcalListFragment : Fragment() {
         /**
          * Add the observer for the collections
          */
-        icalListViewModel.allCollections.observe(viewLifecycleOwner) {
+        icalListViewModel.allWriteableCollections.observe(viewLifecycleOwner) {
 
             if(it.isEmpty())
                 return@observe
 
             val allCollectionNames: MutableList<String> = mutableListOf()
-            icalListViewModel.allCollections.value?.forEach { collection ->
+            icalListViewModel.allWriteableCollections.value?.forEach { collection ->
                 if(collection.displayName?.isNotEmpty() == true && collection.accountName?.isNotEmpty() == true)
                     allCollectionNames.add(collection.displayName + " (" + collection.accountName + ")")
                 else
@@ -539,8 +537,8 @@ class IcalListFragment : Fragment() {
 
             // set the default selection for the spinner.
             val lastUsedCollectionId = prefs.getLong(PREFS_LAST_USED_COLLECTION, 1L)
-            val lastUsedCollection = icalListViewModel.allCollections.value?.find { colllections -> colllections.collectionId == lastUsedCollectionId }
-            selectedCollectionPos = icalListViewModel.allCollections.value?.indexOf(lastUsedCollection) ?: 0
+            val lastUsedCollection = icalListViewModel.allWriteableCollections.value?.find { colllections -> colllections.collectionId == lastUsedCollectionId }
+            selectedCollectionPos = icalListViewModel.allWriteableCollections.value?.indexOf(lastUsedCollection) ?: 0
             quickAddDialogBinding.listQuickaddDialogCollectionSpinner.setSelection(selectedCollectionPos)
 
 
@@ -549,12 +547,12 @@ class IcalListFragment : Fragment() {
 
                     override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
 
-                        icalListViewModel.allCollections.removeObservers(viewLifecycleOwner)     // remove the observer, the live data must NOT change the data in the background anymore! (esp. the item positions)
+                        icalListViewModel.allWriteableCollections.removeObservers(viewLifecycleOwner)     // remove the observer, the live data must NOT change the data in the background anymore! (esp. the item positions)
                         selectedCollectionPos = pos
 
                         // update color of colorbar
                         try {
-                        icalListViewModel.allCollections.value?.get(pos)?.color.let { color ->
+                        icalListViewModel.allWriteableCollections.value?.get(pos)?.color.let { color ->
                             if(color == null)
                                 quickAddDialogBinding.listQuickaddDialogColorbar.visibility = View.INVISIBLE
                             else {quickAddDialogBinding.listQuickaddDialogColorbar.visibility = View.VISIBLE
@@ -648,7 +646,7 @@ class IcalListFragment : Fragment() {
             }
             newIcalObject?.let {
                 it.parseSummaryAndDescription(text)
-                it.collectionId = icalListViewModel.allCollections.value?.get(selectedCollectionPos)?.collectionId ?: 1L
+                it.collectionId = icalListViewModel.allWriteableCollections.value?.get(selectedCollectionPos)?.collectionId ?: 1L
                 val categories = Category.extractHashtagsFromText(text)
 
                 prefs.edit().putLong(PREFS_LAST_USED_COLLECTION, it.collectionId).apply()       // save last used collection for next time
