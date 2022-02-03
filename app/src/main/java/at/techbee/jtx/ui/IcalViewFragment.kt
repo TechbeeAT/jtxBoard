@@ -639,14 +639,6 @@ class IcalViewFragment : Fragment() {
         val categoryChip = inflater.inflate(R.layout.fragment_ical_view_categories_chip, binding.viewCategoriesChipgroup, false) as Chip
         categoryChip.text = category.text
         binding.viewCategoriesChipgroup.addView(categoryChip)
-
-        categoryChip.setOnClickListener {
-            val selectedCategoryArray = arrayOf(category.text)     // convert to array
-            // Responds to chip click
-            this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment().setCategory2filter(selectedCategoryArray)
-            )
-        }
     }
 
     private fun addResourceChip(resource: Resource) {
