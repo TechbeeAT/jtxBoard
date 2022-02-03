@@ -771,7 +771,14 @@ class IcalViewFragment : Fragment() {
 
                 val categories: MutableList<String> = mutableListOf()
                 icalViewViewModel.icalEntity.value?.categories?.forEach { categories.add(it.text) }
-                shareText += getString(R.string.categories) + ": " + categories.joinToString(separator=", ")
+                if(categories.isNotEmpty())
+                    shareText += getString(R.string.categories) + ": " + categories.joinToString(separator=", ") + System.lineSeparator()
+
+                val resources: MutableList<String> = mutableListOf()
+                icalViewViewModel.icalEntity.value?.resources?.forEach { resource -> resource.text?.let { resources.add(it) } }
+                if(resources.isNotEmpty())
+                    shareText += getString(R.string.resources) + ": " + resources.joinToString(separator=", ") + System.lineSeparator()
+
                 shareText = shareText.trim()
 
                 val attendees: MutableList<String> = mutableListOf()
