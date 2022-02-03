@@ -39,7 +39,7 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
     private var settingShowSubtasks = true
     private var settingShowAttachments = true
     private var settingShowProgressSubtasks = true
-    private var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = model.iCal4List
+    private var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = model.iCal4ListNotes
     private var allSubtasks: LiveData<List<ICal4List?>> = model.allSubtasks
     private var markwon = Markwon.builder(context)
         .usePlugin(StrikethroughPlugin.create())

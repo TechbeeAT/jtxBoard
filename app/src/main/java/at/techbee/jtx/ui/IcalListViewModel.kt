@@ -53,8 +53,16 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     var searchSettingShowAllSubjournalsinJournallist: Boolean = false
 
 
-    var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQuery) {
+    var listQueryJournals: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    var listQueryNotes: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    var listQueryTodos: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    var iCal4ListJournals: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQueryJournals) {
+        database.getIcalObjectWithRelatedto(it)
+    }
+    var iCal4ListNotes: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQueryNotes) {
+        database.getIcalObjectWithRelatedto(it)
+    }
+    var iCal4ListTodos: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQueryTodos) {
         database.getIcalObjectWithRelatedto(it)
     }
 
@@ -65,14 +73,9 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     val allCollections = database.getAllCollections() // filter FragmentDialog
 
     val allRemoteCollections = database.getAllRemoteCollections()
-    val allWriteableCollections = Transformations.switchMap(listQuery) {               // allCollections reacts on listQuery, but does not depend on it!
-        when (searchModule) {
-            Module.TODO.name -> database.getAllWriteableVTODOCollections()
-            Module.NOTE.name -> database.getAllWriteableVJOURNALCollections()
-            Module.JOURNAL.name -> database.getAllWriteableVJOURNALCollections()
-            else -> database.getAllCollections() // should not happen!
-        }
-    }
+    val allWriteableCollectionsVJournal = database.getAllWriteableVJOURNALCollections()
+    val allWriteableCollectionsVTodo = database.getAllWriteableVTODOCollections()
+
     val quickInsertedEntity = MutableLiveData<ICalEntity?>(null)
     val directEditEntity = MutableLiveData<ICalEntity?>(null)
     val scrollOnceId = MutableLiveData<Long?>(null)
@@ -246,8 +249,11 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
      */
     fun updateSearch() {
         val newQuery = constructQuery()
-        if(listQuery.value != newQuery)
-            listQuery.postValue(newQuery)         // only update if the query was actually changed!
+            when(searchModule) {
+                Module.JOURNAL.name -> listQueryJournals.postValue(newQuery)
+                Module.NOTE.name -> listQueryNotes.postValue(newQuery)
+                Module.TODO.name -> listQueryTodos.postValue(newQuery)
+        }
     }
 
 

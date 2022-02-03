@@ -47,6 +47,9 @@ class IcalListFragmentJournals : Fragment() {
         binding = FragmentIcalListRecyclerBinding.inflate(inflater, container, false)
         binding.listRecycler.layoutManager = LinearLayoutManager(context)
         binding.listRecycler.setHasFixedSize(false)
+        binding.listRecycler.adapter = IcalListAdapterJournal(requireContext(), icalListViewModel)
+        binding.listRecycler.scheduleLayoutAnimation()
+
         return binding.root
     }
 
@@ -73,26 +76,17 @@ class IcalListFragmentJournals : Fragment() {
 
         icalListViewModel.updateSearch()
 
-        icalListViewModel.iCal4List.observe(viewLifecycleOwner) {
-            if(it.firstOrNull()?.property?.module == Module.JOURNAL.name) {
-                if(binding.listRecycler.adapter == null) {
-                    binding.listRecycler.adapter = IcalListAdapterJournal(requireContext(), icalListViewModel)
-                    binding.listRecycler.scheduleLayoutAnimation()
-                }
-                else
-                    binding.listRecycler.adapter?.notifyDataSetChanged()
-                icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
-            } else {      // if the list is empty, we remove the recycler
-                binding.listRecycler.adapter = null
-            }
+        icalListViewModel.iCal4ListJournals.observe(viewLifecycleOwner) {
+            binding.listRecycler.adapter?.notifyDataSetChanged()
+            icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
         }
 
         icalListViewModel.scrollOnceId.observe(viewLifecycleOwner) {
             if (it == null)
                 return@observe
 
-            val scrollToItem = icalListViewModel.iCal4List.value?.find { listItem -> listItem.property.id == it }
-            val scrollToItemPos = icalListViewModel.iCal4List.value?.indexOf(scrollToItem)
+            val scrollToItem = icalListViewModel.iCal4ListJournals.value?.find { listItem -> listItem.property.id == it }
+            val scrollToItemPos = icalListViewModel.iCal4ListJournals.value?.indexOf(scrollToItem)
             scrollToItemPos?.let { pos ->
                 binding.listRecycler.layoutManager?.scrollToPosition(pos)
                 icalListViewModel.scrollOnceId.postValue(null)
@@ -102,12 +96,8 @@ class IcalListFragmentJournals : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        binding.listRecycler.adapter = null
-        icalListViewModel.iCal4List.removeObservers(viewLifecycleOwner)
-        icalListViewModel.scrollOnceId.removeObservers(viewLifecycleOwner)
 
         val prefs = requireActivity().getSharedPreferences(PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
-
         prefs.edit().putStringSet(PREFS_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
         prefs.edit().putStringSet(PREFS_ACCOUNT, icalListViewModel.searchAccount.toSet()).apply()
         prefs.edit().putStringSet(PREFS_STATUS_JOURNAL, StatusJournal.getStringSetFromList(icalListViewModel.searchStatusJournal)).apply()

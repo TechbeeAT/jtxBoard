@@ -75,6 +75,8 @@ class IcalListFragment : Fragment() {
     private lateinit var prefs: SharedPreferences
     private lateinit var arguments: IcalListFragmentArgs
 
+    var currentWriteableCollections = listOf<ICalCollection>()
+
     //private var lastIcal4ListHash: Int = 0
 
 
@@ -156,10 +158,21 @@ class IcalListFragment : Fragment() {
         loadFilterArgsAndPrefs()
 
 
-        icalListViewModel.iCal4List.observe(viewLifecycleOwner) {
+        icalListViewModel.iCal4ListJournals.observe(viewLifecycleOwner) {
             binding.listProgressIndicator.visibility = View.GONE
             updateMenuVisibilities()
         }
+        icalListViewModel.iCal4ListNotes.observe(viewLifecycleOwner) {
+            binding.listProgressIndicator.visibility = View.GONE
+            updateMenuVisibilities()
+        }
+        icalListViewModel.iCal4ListTodos.observe(viewLifecycleOwner) {
+            binding.listProgressIndicator.visibility = View.GONE
+            updateMenuVisibilities()
+        }
+
+        icalListViewModel.allWriteableCollectionsVJournal.observe(viewLifecycleOwner) {   }
+        icalListViewModel.allWriteableCollectionsVTodo.observe(viewLifecycleOwner) {   }
 
         // This observer is needed in order to make sure that the Subtasks are retrieved!
         icalListViewModel.allSubtasks.observe(viewLifecycleOwner) {
@@ -328,7 +341,7 @@ class IcalListFragment : Fragment() {
     }
 
 
-    fun applyFilters() {
+    private fun applyFilters() {
         binding.listProgressIndicator.visibility = View.VISIBLE
         updateToolbarText()
         icalListViewModel.updateSearch()
@@ -425,7 +438,7 @@ class IcalListFragment : Fragment() {
 
             override fun writeToParcel(dest: Parcel?, flags: Int) {}
             override fun isValid(date: Long): Boolean {
-                icalListViewModel.iCal4List.value?.forEach {
+                icalListViewModel.iCal4ListJournals.value?.forEach {
                     val zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.property.dtstart?:0L), requireTzId(it.property.dtstartTimezone))
                     val zonedSelection = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault())
 
@@ -440,8 +453,8 @@ class IcalListFragment : Fragment() {
         val constraintsBuilder =
             CalendarConstraints.Builder().apply {
 
-                val startItem = icalListViewModel.iCal4List.value?.firstOrNull()
-                val endItem = icalListViewModel.iCal4List.value?.lastOrNull()
+                val startItem = icalListViewModel.iCal4ListJournals.value?.firstOrNull()
+                val endItem = icalListViewModel.iCal4ListJournals.value?.lastOrNull()
 
                 if (startItem?.property?.dtstart != null && endItem?.property?.dtstart != null) {
                     setStart(startItem.property.dtstart!!)
@@ -462,7 +475,7 @@ class IcalListFragment : Fragment() {
             val zonedSelection = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
 
             // find the item with the same date
-            val matchedItem = icalListViewModel.iCal4List.value?.find { item ->
+            val matchedItem = icalListViewModel.iCal4ListJournals.value?.find { item ->
                 val zonedMatch = ZonedDateTime.ofInstant(Instant.ofEpochMilli(item.property.dtstart ?: 0L), requireTzId(item.property.dtstartTimezone))
                 zonedSelection.dayOfMonth == zonedMatch.dayOfMonth && zonedSelection.monthValue == zonedMatch.monthValue && zonedSelection.year == zonedMatch.year
             }
@@ -480,7 +493,13 @@ class IcalListFragment : Fragment() {
     private fun deleteVisible() {
 
         val itemIds = mutableListOf<Long>()
-        icalListViewModel.iCal4List.value?.forEach {
+        val baseList = when(icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> icalListViewModel.iCal4ListJournals.value
+            Module.NOTE.name -> icalListViewModel.iCal4ListNotes.value
+            Module.TODO.name -> icalListViewModel.iCal4ListTodos.value
+            else -> emptyList()
+        }
+        baseList?.forEach {
             if(!it.property.isLinkedRecurringInstance)
                 itemIds.add(it.property.id)
         }
@@ -515,59 +534,53 @@ class IcalListFragment : Fragment() {
             Module.TODO.name -> getString(R.string.menu_list_quick_todo)
             else -> ""
         }
-        var selectedCollectionPos = 0
+        var selectedCollectionPos: Int
+
+        if(icalListViewModel.searchModule == Module.JOURNAL.name || icalListViewModel.searchModule == Module.NOTE.name)
+            currentWriteableCollections = icalListViewModel.allWriteableCollectionsVJournal.value ?: emptyList()
+        else if(icalListViewModel.searchModule == Module.TODO.name)
+            currentWriteableCollections = icalListViewModel.allWriteableCollectionsVTodo.value ?: emptyList()
+
+        val allCollectionNames: MutableList<String> = mutableListOf()
+        currentWriteableCollections.forEach { collection ->
+            if(collection.displayName?.isNotEmpty() == true && collection.accountName?.isNotEmpty() == true)
+                allCollectionNames.add(collection.displayName + " (" + collection.accountName + ")")
+            else
+                allCollectionNames.add(collection.displayName?: "-")
+        }
+        quickAddDialogBinding.listQuickaddDialogCollectionSpinner.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, allCollectionNames)
+
+        // set the default selection for the spinner.
+        val lastUsedCollectionId = prefs.getLong(PREFS_LAST_USED_COLLECTION, 1L)
+        val lastUsedCollection = currentWriteableCollections.find { colllections -> colllections.collectionId == lastUsedCollectionId }
+        selectedCollectionPos = currentWriteableCollections.indexOf(lastUsedCollection)
+        quickAddDialogBinding.listQuickaddDialogCollectionSpinner.setSelection(selectedCollectionPos)
 
 
-        /**
-         * Add the observer for the collections
-         */
-        icalListViewModel.allWriteableCollections.observe(viewLifecycleOwner) {
+        quickAddDialogBinding.listQuickaddDialogCollectionSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
 
-            if(it.isEmpty())
-                return@observe
+                override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
 
-            val allCollectionNames: MutableList<String> = mutableListOf()
-            icalListViewModel.allWriteableCollections.value?.forEach { collection ->
-                if(collection.displayName?.isNotEmpty() == true && collection.accountName?.isNotEmpty() == true)
-                    allCollectionNames.add(collection.displayName + " (" + collection.accountName + ")")
-                else
-                    allCollectionNames.add(collection.displayName?: "-")
-            }
-            quickAddDialogBinding.listQuickaddDialogCollectionSpinner.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, allCollectionNames)
+                    selectedCollectionPos = pos
 
-            // set the default selection for the spinner.
-            val lastUsedCollectionId = prefs.getLong(PREFS_LAST_USED_COLLECTION, 1L)
-            val lastUsedCollection = icalListViewModel.allWriteableCollections.value?.find { colllections -> colllections.collectionId == lastUsedCollectionId }
-            selectedCollectionPos = icalListViewModel.allWriteableCollections.value?.indexOf(lastUsedCollection) ?: 0
-            quickAddDialogBinding.listQuickaddDialogCollectionSpinner.setSelection(selectedCollectionPos)
-
-
-            quickAddDialogBinding.listQuickaddDialogCollectionSpinner.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-
-                    override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
-
-                        icalListViewModel.allWriteableCollections.removeObservers(viewLifecycleOwner)     // remove the observer, the live data must NOT change the data in the background anymore! (esp. the item positions)
-                        selectedCollectionPos = pos
-
-                        // update color of colorbar
-                        try {
-                        icalListViewModel.allWriteableCollections.value?.get(pos)?.color.let { color ->
-                            if(color == null)
-                                quickAddDialogBinding.listQuickaddDialogColorbar.visibility = View.INVISIBLE
-                            else {quickAddDialogBinding.listQuickaddDialogColorbar.visibility = View.VISIBLE
-                                quickAddDialogBinding.listQuickaddDialogColorbar.setColorFilter(color)
-                            }
-                        }
-                        } catch (e: IllegalArgumentException) {
-                            //Log.i("Invalid color","Invalid Color cannot be parsed: ${color}")
+                    // update color of colorbar
+                    try {
+                        currentWriteableCollections[pos].color.let { color ->
+                        if(color == null)
                             quickAddDialogBinding.listQuickaddDialogColorbar.visibility = View.INVISIBLE
+                        else {quickAddDialogBinding.listQuickaddDialogColorbar.visibility = View.VISIBLE
+                            quickAddDialogBinding.listQuickaddDialogColorbar.setColorFilter(color)
                         }
                     }
-
-                    override fun onNothingSelected(p0: AdapterView<*>?) {}
+                    } catch (e: IllegalArgumentException) {
+                        //Log.i("Invalid color","Invalid Color cannot be parsed: ${color}")
+                        quickAddDialogBinding.listQuickaddDialogColorbar.visibility = View.INVISIBLE
+                    }
                 }
-        }
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
+            }
+
 
 
         val sr: SpeechRecognizer? = when {
@@ -646,7 +659,7 @@ class IcalListFragment : Fragment() {
             }
             newIcalObject?.let {
                 it.parseSummaryAndDescription(text)
-                it.collectionId = icalListViewModel.allWriteableCollections.value?.get(selectedCollectionPos)?.collectionId ?: 1L
+                it.collectionId = currentWriteableCollections[selectedCollectionPos].collectionId
                 val categories = Category.extractHashtagsFromText(text)
 
                 prefs.edit().putLong(PREFS_LAST_USED_COLLECTION, it.collectionId).apply()       // save last used collection for next time
@@ -671,6 +684,7 @@ class IcalListFragment : Fragment() {
                 icalListViewModel.quickInsertedEntity.observe(viewLifecycleOwner) { entity ->
                     if(entity == null)
                         return@observe
+                    icalListViewModel.scrollOnceId.postValue(entity.property.id)
                     icalListViewModel.quickInsertedEntity.removeObservers(viewLifecycleOwner)
                     icalListViewModel.quickInsertedEntity.value = null     // invalidate so that on click on back, the value is empty and doesn't create unexpected behaviour!
                 }
