@@ -412,4 +412,8 @@ Global Strings -->
     <string name="priority_7_low">"7 - Χαμηλή"</string>
     <string name="priority_8_lower">"8 - Πολύ χαμηλή"</string>
     <string name="priority_9_lowest">"9 - Χαμηλότερη"</string>
+    <string name="list_due_future">"Μέχρι μελλοντικά"</string>
+    <string name="view_share_part_of_series">"Αυτή η εγγραφή είναι μέρος μιας ακολουθίας."</string>
+    <string name="view_share_exception_of_series">"Αυτή η εγγραφή δεν αποτελεί μέρος κάποιας ακολουθίας."</string>
+    <string name="view_share_repeats">"Η εγγραφή επαναλαμβάνεται κάθε"</string>
 </resources>
