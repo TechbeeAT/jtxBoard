@@ -22,6 +22,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
 import at.techbee.jtx.databinding.FragmentIcalListRecyclerBinding
+import at.techbee.jtx.util.SyncUtil
 
 
 class IcalListFragmentNotes : Fragment() {
@@ -50,6 +51,29 @@ class IcalListFragmentNotes : Fragment() {
         binding.listRecycler.adapter = IcalListAdapterNote(requireContext(), icalListViewModel)
         binding.listRecycler.scheduleLayoutAnimation()
 
+
+        binding.listSwiperefresh.setOnRefreshListener {
+            SyncUtil.syncAllAccounts(requireContext())
+            binding.listSwiperefresh.isRefreshing = false
+        }
+
+        icalListViewModel.iCal4ListNotes.observe(viewLifecycleOwner) {
+            binding.listRecycler.adapter?.notifyDataSetChanged()
+            icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
+        }
+
+        icalListViewModel.scrollOnceId.observe(viewLifecycleOwner) {
+            if (it == null)
+                return@observe
+
+            val scrollToItem = icalListViewModel.iCal4ListNotes.value?.find { listItem -> listItem.property.id == it }
+            val scrollToItemPos = icalListViewModel.iCal4ListNotes.value?.indexOf(scrollToItem)
+            scrollToItemPos?.let { pos ->
+                binding.listRecycler.layoutManager?.scrollToPosition(pos)
+                icalListViewModel.scrollOnceId.postValue(null)
+            }
+        }
+
         return binding.root
     }
 
@@ -75,23 +99,6 @@ class IcalListFragmentNotes : Fragment() {
         icalListViewModel.isFilterDueFuture = false
 
         icalListViewModel.updateSearch()
-
-        icalListViewModel.iCal4ListNotes.observe(viewLifecycleOwner) {
-            binding.listRecycler.adapter?.notifyDataSetChanged()
-            icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
-        }
-
-        icalListViewModel.scrollOnceId.observe(viewLifecycleOwner) {
-            if (it == null)
-                return@observe
-
-            val scrollToItem = icalListViewModel.iCal4ListNotes.value?.find { listItem -> listItem.property.id == it }
-            val scrollToItemPos = icalListViewModel.iCal4ListNotes.value?.indexOf(scrollToItem)
-            scrollToItemPos?.let { pos ->
-                binding.listRecycler.layoutManager?.scrollToPosition(pos)
-                icalListViewModel.scrollOnceId.postValue(null)
-            }
-        }
     }
 
     override fun onPause() {

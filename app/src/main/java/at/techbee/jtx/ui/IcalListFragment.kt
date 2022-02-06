@@ -150,25 +150,27 @@ class IcalListFragment : Fragment() {
                     tab.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_todo)
                 }
             }
-            binding.listProgressIndicator.visibility = View.VISIBLE
-            //lastScrolledFocusItemId = null
-            //applyFilters()
+            icalListViewModel.isLoadingOrSynchronizing.postValue(true)
         }.attach()
 
         loadFilterArgsAndPrefs()
 
 
+        icalListViewModel.isLoadingOrSynchronizing.observe(viewLifecycleOwner) {
+            binding.listProgressIndicator.visibility = if(it) View.VISIBLE else View.INVISIBLE
+        }
+
         icalListViewModel.iCal4ListJournals.observe(viewLifecycleOwner) {
-            binding.listProgressIndicator.visibility = View.GONE
             updateMenuVisibilities()
+            icalListViewModel.isLoadingOrSynchronizing.postValue(false)
         }
         icalListViewModel.iCal4ListNotes.observe(viewLifecycleOwner) {
-            binding.listProgressIndicator.visibility = View.GONE
             updateMenuVisibilities()
+            icalListViewModel.isLoadingOrSynchronizing.postValue(false)
         }
         icalListViewModel.iCal4ListTodos.observe(viewLifecycleOwner) {
-            binding.listProgressIndicator.visibility = View.GONE
             updateMenuVisibilities()
+            icalListViewModel.isLoadingOrSynchronizing.postValue(false)
         }
 
         icalListViewModel.allWriteableCollectionsVJournal.observe(viewLifecycleOwner) {   }
@@ -199,7 +201,6 @@ class IcalListFragment : Fragment() {
             this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(it))
         }
 
-
         binding.listBottomBar.setOnMenuItemClickListener { menuitem ->
 
             when (menuitem.itemId) {
@@ -217,20 +218,9 @@ class IcalListFragment : Fragment() {
             false
         }
 
-
         ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
-            icalListViewModel.showSyncProgressIndicator.postValue(
-                ContentResolver.getCurrentSyncs().isNotEmpty()
-            )
+            icalListViewModel.isLoadingOrSynchronizing.postValue(ContentResolver.getCurrentSyncs().isNotEmpty())
         }
-
-        icalListViewModel.showSyncProgressIndicator.observe(viewLifecycleOwner) {
-            if(it)
-                binding.listSyncProgressIndicator.visibility = View.VISIBLE
-            else
-                binding.listSyncProgressIndicator.visibility = View.INVISIBLE
-        }
-
 
         return binding.root
     }
@@ -342,7 +332,6 @@ class IcalListFragment : Fragment() {
 
 
     private fun applyFilters() {
-        binding.listProgressIndicator.visibility = View.VISIBLE
         updateToolbarText()
         icalListViewModel.updateSearch()
     }

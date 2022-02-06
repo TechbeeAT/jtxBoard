@@ -53,9 +53,9 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     var searchSettingShowAllSubjournalsinJournallist: Boolean = false
 
 
-    var listQueryJournals: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var listQueryNotes: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var listQueryTodos: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    private var listQueryJournals: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    private var listQueryNotes: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    private var listQueryTodos: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
     var iCal4ListJournals: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQueryJournals) {
         database.getIcalObjectWithRelatedto(it)
     }
@@ -80,8 +80,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     val directEditEntity = MutableLiveData<ICalEntity?>(null)
     val scrollOnceId = MutableLiveData<Long?>(null)
 
-    val showSyncProgressIndicator = MutableLiveData(false)
-
+    val isLoadingOrSynchronizing = MutableLiveData(true)
 
 
     private fun constructQuery(): SimpleSQLiteQuery {
@@ -248,6 +247,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
      * observer in the fragment.
      */
     fun updateSearch() {
+        isLoadingOrSynchronizing.postValue(true)
         val newQuery = constructQuery()
             when(searchModule) {
                 Module.JOURNAL.name -> listQueryJournals.postValue(newQuery)
