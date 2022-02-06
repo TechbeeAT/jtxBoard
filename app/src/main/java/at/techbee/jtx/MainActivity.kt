@@ -15,7 +15,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -80,17 +79,11 @@ class MainActivity : AppCompatActivity()  {
     private var lastProcessedIntentHash: Int? = null
 
 
-
-    override fun onApplyThemeResource(theme: Resources.Theme?, resid: Int, first: Boolean) {
-        // use dynamic color chosen by user
-        DynamicColors.applyToActivitiesIfAvailable(this.application)
-        super.onApplyThemeResource(theme, resid, first)
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+
+        DynamicColors.applyToActivitiesIfAvailable(application)
         setContentView(R.layout.activity_main)
 
         //load settings
