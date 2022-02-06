@@ -408,4 +408,8 @@ Global Strings -->
     <string name="priority_7_low"></string>
     <string name="priority_8_lower"></string>
     <string name="priority_9_lowest"></string>
+    <string name="list_due_future"></string>
+    <string name="view_share_part_of_series"></string>
+    <string name="view_share_exception_of_series"></string>
+    <string name="view_share_repeats"></string>
 </resources>
