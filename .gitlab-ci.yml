@@ -34,7 +34,7 @@ lintDebug:
 assembleDebug:
   stage: build
   script:
-  - ./gradlew assembleDebug
+  - ./gradlew assembleGplayDebug
   artifacts:
     paths:
     - app/build/outputs/
