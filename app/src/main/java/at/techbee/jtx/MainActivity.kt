@@ -266,9 +266,11 @@ class MainActivity : AppCompatActivity()  {
             // Handle menu item selected
             when (menuItem.itemId) {
 
-                R.id.nav_board ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_icalListFragment)
+                R.id.nav_board -> {
+                    if(findNavController(R.id.nav_host_fragment).currentDestination?.label != "icalListFragment")
+                        findNavController(R.id.nav_host_fragment)
+                            .navigate(R.id.action_global_icalListFragment)
+                }
 
                 R.id.nav_collections ->
                     findNavController(R.id.nav_host_fragment)
