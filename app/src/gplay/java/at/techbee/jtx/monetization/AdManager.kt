@@ -62,6 +62,8 @@ class AdManager: AdManagerDefinition {
     private var adViewListTodoCache = mutableListOf<AdView>()
     private var adViewViewCache = mutableListOf<AdView>()
 
+    private var adViewRegistry = mutableListOf<AdView>()
+
 
     /**
      *  Loads the consent form and takes care of the response. If everything was okay (or the consent was not needed), the ads are set up
@@ -232,6 +234,7 @@ class AdManager: AdManagerDefinition {
         else
             unitId ?: unitIdBannerView
         adView.loadAd(AdRequest.Builder().build())
+        adViewRegistry.add(adView)
         return adView
     }
 
@@ -257,5 +260,17 @@ class AdManager: AdManagerDefinition {
         adViewList.removeFirst()
         adViewList.add(getNewAdView(context, unitId))
         return first
+    }
+
+    override fun pauseAds() {
+        adViewRegistry.forEach {
+            it.pause()
+        }
+    }
+
+    override fun resumeAds() {
+        adViewRegistry.forEach {
+            it.resume()
+        }
     }
 }

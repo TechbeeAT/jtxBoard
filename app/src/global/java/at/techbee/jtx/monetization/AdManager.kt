@@ -57,6 +57,13 @@ class AdManager: AdManagerDefinition {
     private var consentForm: ConsentForm? = null
     private var interstitialAd: InterstitialAd? = null
 
+    private var adViewListJournalCache = mutableListOf<AdView>()
+    private var adViewListNoteCache = mutableListOf<AdView>()
+    private var adViewListTodoCache = mutableListOf<AdView>()
+    private var adViewViewCache = mutableListOf<AdView>()
+
+    private var adViewRegistry = mutableListOf<AdView>()
+
 
     /**
      *  Loads the consent form and takes care of the response. If everything was okay (or the consent was not needed), the ads are set up
@@ -131,10 +138,19 @@ class AdManager: AdManagerDefinition {
 
             override fun onAdShowedFullScreenContent() {
                 Log.d("InterstitalAd", "Ad showed fullscreen content.")
-                interstitialAd = null
-                loadAds(context)
             }
         }
+
+        // Load a few banners
+        for (i in 1..5)
+            adViewListJournalCache.add(getNewAdView(context, unitIdBannerListJournal))
+        for (i in 1..5)
+            adViewListNoteCache.add(getNewAdView(context, unitIdBannerListNote))
+        for (i in 1..5)
+            adViewListTodoCache.add(getNewAdView(context, unitIdBannerListTodo))
+        for (i in 1..2)
+            adViewViewCache.add(getNewAdView(context, unitIdBannerView))
+
     }
 
     override fun isAdFlavor() = true
@@ -185,13 +201,32 @@ class AdManager: AdManagerDefinition {
     }
 
     override fun showInterstitialAd(activity: Activity) {
+
+        // don't show an interstitial on the day when the app was installed
+        if(!BuildConfig.DEBUG && activity.packageManager.getPackageInfo("at.techbee.jtx", 0).firstInstallTime < System.currentTimeMillis() + 86400000) // = one day
+            return
+
         if (interstitialAd != null)
             interstitialAd?.show(activity)
         else
             Log.d("AdLoader", "The interstitial ad wasn't ready yet.")
+
+        interstitialAd = null
+        loadAds(activity)
     }
 
     override fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?) {
+
+        linearLayout.removeAllViews()
+        linearLayout.addView(getAdFromListAdCache(context, unitId))
+        linearLayout.visibility = View.VISIBLE
+    }
+
+    /**
+     * @param [unitId] for the ad to be shown
+     * @return a new adview with the given unitId or a test ad if the Build type is DEBUG
+     */
+    private fun getNewAdView(context: Context, unitId: String?): AdView {
         val adView = AdView(context)
         adView.adSize = AdSize.BANNER
         adView.adUnitId = if(BuildConfig.DEBUG)
@@ -199,9 +234,43 @@ class AdManager: AdManagerDefinition {
         else
             unitId ?: unitIdBannerView
         adView.loadAd(AdRequest.Builder().build())
+        adViewRegistry.add(adView)
+        return adView
+    }
 
-        linearLayout.removeAllViews()
-        linearLayout.addView(adView)
-        linearLayout.visibility = View.VISIBLE
+    /**
+     * takes an ad view from the cache and ads a new one
+     * @param [unitId] for the ad to be shown
+     * @return the to ad in the list
+     */
+    private fun getAdFromListAdCache(context: Context, unitId: String?): AdView {
+
+        val adViewList = when(unitId) {
+            unitIdBannerListJournal -> adViewListJournalCache
+            unitIdBannerListNote -> adViewListNoteCache
+            unitIdBannerListTodo -> adViewListTodoCache
+            unitIdBannerView -> adViewViewCache
+            else -> adViewViewCache
+        }
+
+        if(adViewList.isEmpty())
+            adViewList.add(getNewAdView(context, unitId))
+
+        val first = adViewList.first()
+        adViewList.removeFirst()
+        adViewList.add(getNewAdView(context, unitId))
+        return first
+    }
+
+    override fun pauseAds() {
+        adViewRegistry.forEach {
+            it.pause()
+        }
+    }
+
+    override fun resumeAds() {
+        adViewRegistry.forEach {
+            it.resume()
+        }
     }
 }

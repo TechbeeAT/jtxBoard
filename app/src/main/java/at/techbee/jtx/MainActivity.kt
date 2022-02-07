@@ -121,6 +121,7 @@ class MainActivity : AppCompatActivity()  {
 
     override fun onResume() {
         super.onResume()
+        AdManager.getInstance()?.resumeAds()
 
         //hanlde intents, but only if it wasn't already handled
         if(intent.hashCode() != lastProcessedIntentHash) {
@@ -227,6 +228,11 @@ class MainActivity : AppCompatActivity()  {
             }
             lastProcessedIntentHash = intent.hashCode()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        AdManager.getInstance()?.pauseAds()
     }
 
     private fun adaptMenuToBuildFlavor() {

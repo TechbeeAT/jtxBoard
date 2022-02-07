@@ -50,4 +50,6 @@ class AdManager : AdManagerDefinition {
     override fun resetUserConsent(activity: MainActivity, context: Context) { /* nothing to do for ose */  }
     override fun showInterstitialAd(activity: Activity) { /* nothing to do for ose */  }
     override fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?) { /* nothing to do for ose */  }
+    override fun pauseAds() { /* nothing to do for ose */  }
+    override fun resumeAds() { /* nothing to do for ose */  }
 }

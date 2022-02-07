@@ -57,6 +57,8 @@ class AdManager : AdManagerDefinition {
     override val unitIdBannerListNote = "o02sczyyg9"
     override val unitIdBannerListTodo = "d1cbvsvy7j"
 
+    val adRegistry = mutableListOf<BannerView>()
+
     override fun isAdFlavor() = true
     override fun isConsentRequired() = false  // consent is not required for huawei as personalized ads get deactivated if required
 
@@ -85,10 +87,24 @@ class AdManager : AdManagerDefinition {
         // Create an ad request to load an ad.
         val adParam = AdParam.Builder().build()
         bannerView.loadAd(adParam)
+        adRegistry.add(bannerView)
+
 
         linearLayout.removeAllViews()
         linearLayout.addView(bannerView)
         linearLayout.visibility = View.VISIBLE
+    }
+
+    override fun pauseAds() {
+        adRegistry.forEach {
+            it.pause()
+        }
+    }
+
+    override fun resumeAds() {
+        adRegistry.forEach {
+            it.resume()
+        }
     }
 
     private fun checkConsentStatus(activity: MainActivity) {
