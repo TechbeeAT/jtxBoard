@@ -21,7 +21,6 @@ import android.os.Parcel
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
-import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -36,8 +35,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import at.techbee.jtx.monetization.AdManager
-import at.techbee.jtx.MainActivity
 import at.techbee.jtx.PermissionsHelper
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
@@ -46,6 +43,7 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.FragmentIcalListBinding
 import at.techbee.jtx.databinding.FragmentIcalListQuickaddDialogBinding
+import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import at.techbee.jtx.util.SyncUtil
@@ -53,7 +51,6 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
-import java.lang.ClassCastException
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -232,7 +229,6 @@ class IcalListFragment : Fragment() {
         icalListViewModel.searchSettingShowAllSubnotesInNoteslist = settings?.getBoolean(SETTINGS_SHOW_SUBNOTES_IN_LIST, false) ?: false
         icalListViewModel.searchSettingShowAllSubjournalsinJournallist = settings?.getBoolean(SETTINGS_SHOW_SUBJOURNALS_IN_LIST, false) ?: false
 
-        //applyFilters()
         updateMenuVisibilities()
 
         super.onResume()
@@ -243,21 +239,7 @@ class IcalListFragment : Fragment() {
         prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
     }
 
-    private fun updateToolbarText() {
-        try {
-            val activity = requireActivity() as MainActivity
-            val toolbarText = getString(R.string.toolbar_text_jtx_board)
-            val toolbarSubtitle = when(icalListViewModel.searchModule) {
-                Module.JOURNAL.name -> getString(R.string.toolbar_text_jtx_board_journals_overview)
-                Module.NOTE.name -> getString(R.string.toolbar_text_jtx_board_notes_overview)
-                Module.TODO.name -> getString(R.string.toolbar_text_jtx_board_tasks_overview)
-                else -> null
-            }
-            activity.setToolbarTitle(toolbarText, toolbarSubtitle )
-        } catch (e: ClassCastException) {
-            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
-        }
-    }
+
 
     /**
      * This function hides/shows the relevant menu entries for the active module.
@@ -328,12 +310,6 @@ class IcalListFragment : Fragment() {
             Module.NOTE.name -> binding.listViewpager.currentItem = TAB_INDEX_NOTE
             Module.TODO.name -> binding.listViewpager.currentItem = TAB_INDEX_TODO
         }
-    }
-
-
-    private fun applyFilters() {
-        updateToolbarText()
-        icalListViewModel.updateSearch()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -414,7 +390,7 @@ class IcalListFragment : Fragment() {
             else -> return
         }
         //lastIcal4ListHash = 0     // makes the recycler view refresh everything (necessary for subtasks!)
-        applyFilters()
+        icalListViewModel.updateSearch()
     }
 
     private fun showScrollToDate() {

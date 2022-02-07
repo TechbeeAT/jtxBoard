@@ -11,18 +11,22 @@ package at.techbee.jtx.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import at.techbee.jtx.MainActivity
+import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
 import at.techbee.jtx.databinding.FragmentIcalListRecyclerBinding
 import at.techbee.jtx.util.SyncUtil
+import java.lang.ClassCastException
 
 
 class IcalListFragmentNotes : Fragment() {
@@ -97,6 +101,15 @@ class IcalListFragmentNotes : Fragment() {
         icalListViewModel.isFilterDueToday = false
         icalListViewModel.isFilterDueTomorrow = false
         icalListViewModel.isFilterDueFuture = false
+
+        try {
+            val activity = requireActivity() as MainActivity
+            val toolbarText = getString(R.string.toolbar_text_jtx_board)
+            val toolbarSubtitle = getString(R.string.toolbar_text_jtx_board_notes_overview)
+            activity.setToolbarTitle(toolbarText, toolbarSubtitle )
+        } catch (e: ClassCastException) {
+            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
+        }
 
         icalListViewModel.updateSearch()
     }
