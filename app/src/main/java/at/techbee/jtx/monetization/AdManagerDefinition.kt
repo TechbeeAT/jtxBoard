@@ -60,4 +60,14 @@ interface AdManagerDefinition {
      */
     fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?)
 
+    /**
+     * Function to pause all banner ads to not make any more network requests to refresh (necessary onPause()!)
+     */
+    fun pauseAds()
+
+    /**
+     * Resumes ad refreshing after pauseAds(), should be done in onResume()
+     */
+    fun resumeAds()
+
 }
