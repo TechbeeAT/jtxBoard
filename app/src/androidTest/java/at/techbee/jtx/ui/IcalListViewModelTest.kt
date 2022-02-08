@@ -19,6 +19,7 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Organizer
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
+import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
@@ -45,16 +46,16 @@ class IcalListViewModelTest {
     @Before
     fun setup()   {
         context = InstrumentationRegistry.getInstrumentation().targetContext
-        database = ICalDatabase.getInMemoryDB(context).iCalDatabaseDao
+        ICalDatabase.switchToInMemory(context)
+        application = context.applicationContext as Application
+        icalListViewModel = IcalListViewModel(application)
+        database = ICalDatabase.getInstance(context).iCalDatabaseDao
         database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests"))
-        application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
-        icalListViewModel = IcalListViewModel(database, application)
-
     }
 
     @After
     fun closeDb() {
-        ICalDatabase.getInMemoryDB(context).close()
+        ICalDatabase.getInstance(context).close()
     }
 
 
@@ -62,7 +63,7 @@ class IcalListViewModelTest {
     fun setFocusItem() {
         // covered by getFocusItemPosition()
     }
-
+/*
     @Test
     fun updateSearch() {
         // Basic Test
@@ -73,39 +74,47 @@ class IcalListViewModelTest {
 
         assertNotEquals(searchBefore, icalListViewModel.listQuery.value)
     }
+ */
 
     @Test
-    fun updateSearch_filter_Module() = runBlockingTest {
+    fun updateSearch_filter_Module_Journal() = runBlockingTest {
 
-        icalListViewModel.iCal4List.observeForever {  }
-
-        //inserting 3 Tasks, 2 Journals and 1 Note
-        database.insertICalObject(ICalObject.createTask("Task1"))
-        database.insertICalObject(ICalObject.createTask("Task2"))
-        database.insertICalObject(ICalObject.createTask("Task3"))
+        icalListViewModel.iCal4ListJournals.observeForever {  }
         database.insertICalObject(ICalObject.createJournal())
         database.insertICalObject(ICalObject.createJournal())
-        database.insertICalObject(ICalObject.createNote("Note1"))
-
-        icalListViewModel.searchModule = Module.TODO.name
-        icalListViewModel.updateSearch()
-        assertEquals(3, icalListViewModel.iCal4List.value?.size)
 
         icalListViewModel.searchModule = Module.JOURNAL.name
         icalListViewModel.updateSearch()
-        assertEquals(2, icalListViewModel.iCal4List.value?.size)
+        assertEquals(2, icalListViewModel.iCal4ListJournals.getOrAwaitValue(100).size)
+    }
 
+    @Test
+    fun updateSearch_filter_Module_Note() = runBlockingTest {
+
+        icalListViewModel.iCal4ListNotes.observeForever {  }
+        database.insertICalObject(ICalObject.createNote("Note1"))
         icalListViewModel.searchModule = Module.NOTE.name
         icalListViewModel.updateSearch()
-        assertEquals(1, icalListViewModel.iCal4List.value?.size)
+        assertEquals(1, icalListViewModel.iCal4ListNotes.value?.size)
+    }
+
+
+    @Test
+    fun updateSearch_filter_Module_Todo() = runBlockingTest {
+
+        icalListViewModel.iCal4ListTodos.observeForever {  }
+        database.insertICalObject(ICalObject.createTask("Task1"))
+        database.insertICalObject(ICalObject.createTask("Task2"))
+        database.insertICalObject(ICalObject.createTask("Task3"))
+        icalListViewModel.searchModule = Module.TODO.name
+        icalListViewModel.updateSearch()
+        assertEquals(3, icalListViewModel.iCal4ListTodos.value?.size)
     }
 
     @Test
     fun updateSearch_filter_Text() = runBlockingTest {
 
-        icalListViewModel.iCal4List.observeForever {  }
-
-        //inserting 3 Tasks, 2 Journals and 1 Note
+        icalListViewModel.iCal4ListTodos.observeForever {  }
         database.insertICalObject(ICalObject.createTask("Task1_abc_Text"))
         database.insertICalObject(ICalObject.createTask("Task2_asdf_Text"))
         database.insertICalObject(ICalObject.createTask("Task3_abc"))
@@ -113,15 +122,17 @@ class IcalListViewModelTest {
         icalListViewModel.searchModule = Module.TODO.name
         icalListViewModel.searchText = "%abc%"
         icalListViewModel.updateSearch()
-        assertEquals(2, icalListViewModel.iCal4List.value?.size)
+        assertEquals(2, icalListViewModel.iCal4ListTodos.value?.size)
     }
 
     @Test
     fun updateSearch_filter_Categories() = runBlockingTest {
 
-        icalListViewModel.iCal4List.observeForever {  }
+        icalListViewModel.iCal4ListTodos.observeForever {  }
+        icalListViewModel.iCal4ListNotes.observeForever {  }
+        icalListViewModel.iCal4ListJournals.observeForever {  }
 
-        //inserting 3 Tasks, 2 Journals and 1 Note
+
         val id1 = database.insertICalObject(ICalObject.createTask("Task1"))
         database.insertCategory(Category(icalObjectId = id1, text = "Test1"))
         val id2 = database.insertICalObject(ICalObject.createTask("Task2"))
@@ -137,11 +148,11 @@ class IcalListViewModelTest {
         icalListViewModel.searchModule = Module.TODO.name
         icalListViewModel.searchCategories.add("Test1")
         icalListViewModel.updateSearch()
-        assertEquals(2, icalListViewModel.iCal4List.value?.size)
+        assertEquals(2, icalListViewModel.iCal4ListTodos.value?.size)
 
         icalListViewModel.searchCategories.add("Whatever")
         icalListViewModel.updateSearch()
-        assertEquals(3, icalListViewModel.iCal4List.value?.size)
+        assertEquals(3, icalListViewModel.iCal4ListTodos.value?.size)
     }
 
 
@@ -149,7 +160,7 @@ class IcalListViewModelTest {
     @Test
     fun updateSearch_filter_Collections() = runBlockingTest {
 
-        icalListViewModel.iCal4List.observeForever {  }
+        icalListViewModel.iCal4ListNotes.observeForever {  }
 
         val col1 = database.insertCollectionSync(ICalCollection(displayName = "ABC"))
         val col2 = database.insertCollectionSync(ICalCollection(displayName = "XYZ"))
@@ -161,24 +172,24 @@ class IcalListViewModelTest {
         icalListViewModel.searchModule = Module.NOTE.name
         icalListViewModel.searchCollection.add("ABC")
         icalListViewModel.updateSearch()
-        assertEquals(2, icalListViewModel.iCal4List.value?.size)
+        assertEquals(2, icalListViewModel.iCal4ListNotes.value?.size)
 
         icalListViewModel.searchModule = Module.NOTE.name
         icalListViewModel.searchCollection.add("XYZ")
         icalListViewModel.updateSearch()
-        assertEquals(3, icalListViewModel.iCal4List.value?.size)
+        assertEquals(3, icalListViewModel.iCal4ListNotes.value?.size)
 
         icalListViewModel.searchModule = Module.NOTE.name
         icalListViewModel.searchCollection.clear()
         icalListViewModel.searchCollection.add("XYZ")
         icalListViewModel.updateSearch()
-        assertEquals(1, icalListViewModel.iCal4List.value?.size)
+        assertEquals(1, icalListViewModel.iCal4ListNotes.value?.size)
     }
 
     @Test
     fun updateSearch_filter_Organizer() = runBlockingTest {
 
-        icalListViewModel.iCal4List.observeForever {  }
+        icalListViewModel.iCal4ListTodos.observeForever {  }
 
         val id1 = database.insertICalObject(ICalObject.createTask("Task1"))
         database.insertOrganizer(Organizer(icalObjectId = id1, caladdress = "Organizer1@techbee.at"))
@@ -193,17 +204,17 @@ class IcalListViewModelTest {
         icalListViewModel.searchModule = Module.TODO.name
         icalListViewModel.searchOrganizer.add("Organizer1@techbee.at")
         icalListViewModel.updateSearch()
-        assertEquals(2, icalListViewModel.iCal4List.value?.size)
+        assertEquals(2, icalListViewModel.iCal4ListTodos.value?.size)
 
         icalListViewModel.searchOrganizer.add("rezinagrO@techbee.at")
         icalListViewModel.updateSearch()
-        assertEquals(3, icalListViewModel.iCal4List.value?.size)
+        assertEquals(3, icalListViewModel.iCal4ListTodos.value?.size)
     }
 
     @Test
     fun updateSearch_filter_StatusJournal() = runBlockingTest {
 
-        icalListViewModel.iCal4List.observeForever {  }
+        icalListViewModel.iCal4ListNotes.observeForever {  }
 
         database.insertICalObject(ICalObject(summary="Note1", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = StatusJournal.CANCELLED.name))
         database.insertICalObject(ICalObject(summary="Note2", module = Module.NOTE.name, component = Component.VJOURNAL.name, status = StatusJournal.DRAFT.name))
@@ -213,21 +224,21 @@ class IcalListViewModelTest {
         icalListViewModel.searchModule = Module.NOTE.name
         icalListViewModel.searchStatusJournal.add(StatusJournal.DRAFT)
         icalListViewModel.updateSearch()
-        assertEquals(1, icalListViewModel.iCal4List.value?.size)
+        assertEquals(1, icalListViewModel.iCal4ListNotes.value?.size)
 
         icalListViewModel.searchStatusJournal.add(StatusJournal.CANCELLED)
         icalListViewModel.updateSearch()
-        assertEquals(3, icalListViewModel.iCal4List.value?.size)
+        assertEquals(3, icalListViewModel.iCal4ListNotes.value?.size)
 
         icalListViewModel.searchStatusJournal.add(StatusJournal.FINAL)
         icalListViewModel.updateSearch()
-        assertEquals(4, icalListViewModel.iCal4List.value?.size)
+        assertEquals(4, icalListViewModel.iCal4ListNotes.value?.size)
     }
 
     @Test
     fun updateSearch_filter_StatusTodo() = runBlockingTest {
 
-        icalListViewModel.iCal4List.observeForever {  }
+        icalListViewModel.iCal4ListTodos.observeForever {  }
 
         database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, status = StatusTodo.CANCELLED.name))
         database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  status = StatusTodo.`NEEDS-ACTION`.name))
@@ -238,21 +249,21 @@ class IcalListViewModelTest {
         icalListViewModel.searchModule = Module.TODO.name
         icalListViewModel.searchStatusTodo.add(StatusTodo.`NEEDS-ACTION`)
         icalListViewModel.updateSearch()
-        assertEquals(1, icalListViewModel.iCal4List.value?.size)
+        assertEquals(1, icalListViewModel.iCal4ListTodos.value?.size)
 
         icalListViewModel.searchStatusTodo.add(StatusTodo.`IN-PROCESS`)
         icalListViewModel.updateSearch()
-        assertEquals(3, icalListViewModel.iCal4List.value?.size)
+        assertEquals(3, icalListViewModel.iCal4ListTodos.value?.size)
 
         icalListViewModel.searchStatusTodo.add(StatusTodo.COMPLETED)
         icalListViewModel.updateSearch()
-        assertEquals(4, icalListViewModel.iCal4List.value?.size)
+        assertEquals(4, icalListViewModel.iCal4ListTodos.value?.size)
     }
 
     @Test
     fun updateSearch_filter_Classification() = runBlockingTest {
 
-        icalListViewModel.iCal4List.observeForever {  }
+        icalListViewModel.iCal4ListTodos.observeForever {  }
 
         database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, classification = Classification.PUBLIC.name))
         database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  classification = Classification.PUBLIC.name))
@@ -263,19 +274,16 @@ class IcalListViewModelTest {
         icalListViewModel.searchModule = Module.TODO.name
         icalListViewModel.searchClassification.add(Classification.PUBLIC)
         icalListViewModel.updateSearch()
-        assertEquals(2, icalListViewModel.iCal4List.value?.size)
+        assertEquals(2, icalListViewModel.iCal4ListTodos.value?.size)
 
         icalListViewModel.searchClassification.add(Classification.PRIVATE)
         icalListViewModel.updateSearch()
-        assertEquals(4, icalListViewModel.iCal4List.value?.size)
+        assertEquals(4, icalListViewModel.iCal4ListTodos.value?.size)
 
         icalListViewModel.searchClassification.add(Classification.CONFIDENTIAL)
         icalListViewModel.updateSearch()
-        assertEquals(5, icalListViewModel.iCal4List.value?.size)
+        assertEquals(5, icalListViewModel.iCal4ListTodos.value?.size)
     }
-
-
-
 
     @Test
     fun clearFilter() {
@@ -333,7 +341,7 @@ class IcalListViewModelTest {
     @Test
     fun deleteVisible() = runBlockingTest {
 
-        icalListViewModel.iCal4List.observeForever {  }
+        icalListViewModel.iCal4ListTodos.observeForever {  }
 
         val id1 = database.insertICalObject(ICalObject(summary="Task1", module = Module.TODO.name, component = Component.VTODO.name, classification = Classification.PUBLIC.name))
         val id2 = database.insertICalObject(ICalObject(summary="Task4", module = Module.TODO.name, component = Component.VTODO.name,  classification = Classification.PUBLIC.name))
@@ -344,13 +352,40 @@ class IcalListViewModelTest {
         icalListViewModel.searchModule = Module.TODO.name
         icalListViewModel.searchClassification.add(Classification.PUBLIC)
         icalListViewModel.updateSearch()
-        assertEquals(2, icalListViewModel.iCal4List.value?.size)
+        assertEquals(2, icalListViewModel.iCal4ListTodos.value?.size)
 
         icalListViewModel.delete(listOf(id1, id2))
         Thread.sleep(100)
 
         icalListViewModel.searchClassification.clear()
         icalListViewModel.updateSearch()
-        assertEquals(3, icalListViewModel.iCal4List.value?.size)
+        assertEquals(3, icalListViewModel.iCal4ListTodos.value?.size)
+    }
+
+    @Test
+    fun getAllCollections() {
+
+        icalListViewModel.allCollections.observeForever {  }
+        assertEquals(1, icalListViewModel.allCollections.value?.size)
+    }
+
+    @Test
+    fun getAllCategories() = runBlockingTest {
+
+        icalListViewModel.allCategories.observeForever {  }
+
+        val id1 = database.insertICalObject(ICalObject.createTask("Task1"))
+        database.insertCategory(Category(icalObjectId = id1, text = "Test1"))
+        val id2 = database.insertICalObject(ICalObject.createTask("Task2"))
+        database.insertCategory(Category(icalObjectId = id2, text = "Test1"))
+        database.insertCategory(Category(icalObjectId = id2, text = "Whatever"))
+        database.insertCategory(Category(icalObjectId = id2, text = "No matter"))
+        val id3 = database.insertICalObject(ICalObject.createTask("Task3"))
+        database.insertCategory(Category(icalObjectId = id3, text = "Whatever"))
+        database.insertCategory(Category(icalObjectId = id3, text = "No matter"))
+        database.insertICalObject(ICalObject.createTask("Task4"))   // val id4 =
+
+        // only 3 should be returned as the query selects only DISTINCT values!
+        assertEquals(3, icalListViewModel.allCategories.value?.size)
     }
 }

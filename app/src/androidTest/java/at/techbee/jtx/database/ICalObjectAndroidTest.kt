@@ -21,6 +21,7 @@ import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import org.junit.Assert.*
@@ -37,7 +38,7 @@ class ICalObjectAndroidTest {
 
 
     @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var database: ICalDatabaseDao
     private lateinit var context: Context
@@ -284,6 +285,42 @@ class ICalObjectAndroidTest {
         assertNull(database.getSync(idParent)?.property)
     }
 
+    @Test
+    fun updateCollectionWithChildren_test() = runBlocking {
+        val idParent = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 1L })
+        val idChild1 = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 1L })
+        val idChild2 = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 1L })
+        val idChild3 = database.insertICalObject(ICalObject.createJournal().apply { this.collectionId = 1L })
+
+        database.insertRelatedto(Relatedto().apply {
+            icalObjectId = idParent
+            linkedICalObjectId = idChild1
+            reltype = Reltype.CHILD.name
+        })
+        database.insertRelatedto(Relatedto().apply {
+            icalObjectId = idParent
+            linkedICalObjectId = idChild2
+            reltype = Reltype.CHILD.name
+        })
+        database.insertRelatedto(Relatedto().apply {
+            icalObjectId = idChild1
+            linkedICalObjectId = idChild3
+            reltype = Reltype.CHILD.name
+        })
+
+        //make sure everything was correctly inserted
+        assertEquals(3,database.getAllRelatedto().getOrAwaitValue().size)
+
+        val newParentId = ICalObject.updateCollectionWithChildren(idParent, null, 2L, database)
+
+        val newParent = database.getSync(newParentId)
+        assertEquals(2L, newParent?.ICalCollection?.collectionId)
+        val newChild1 = database.getSync(newParent?.relatedto?.get(0)?.linkedICalObjectId?:0L)
+        assertEquals(2L, newChild1?.ICalCollection?.collectionId)
+        val newChild2 = database.getSync(newParent?.relatedto?.get(0)?.linkedICalObjectId?:0L)
+        assertEquals(2L, newChild2?.ICalCollection?.collectionId)
+    }
+
 
     @Test
     fun makeRecurringException_Test() = runBlockingTest {
@@ -379,4 +416,6 @@ class ICalObjectAndroidTest {
         val expectedString = context.getString(R.string.view_share_repeats) + " 1 " + context.getString(R.string.edit_recur_day) + " 5 " + context.getString(R.string.edit_recur_x_times)
         assertTrue(item.getRecurInfo(context)?.contains(expectedString)==true)
     }
+
+
 }
