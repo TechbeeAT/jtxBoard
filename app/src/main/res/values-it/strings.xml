@@ -50,7 +50,6 @@ Global Strings -->
     <string name="classification_confidential">"Confidenziale"</string>
 
     <!-- Chair é considerato un ruolo con privilegi di amministratore, giusto? -->
-    <!-- Fuzzy -->
     <string name="attendee_role_chair">"Amministratore"</string>
     <string name="attendee_role_required_participant">"Partecipante richiesto"</string>
     <string name="attendee_role_optional_participant">"Partecipante opzionale"</string>
@@ -164,6 +163,8 @@ Global Strings -->
     <string name="edit_location_helper">"Aggiungi una posizione per questa voce"</string>
     <string name="edit_attachment_add_dialog_hint">"Il tuo allegato-url (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Il tuo commento"</string>
+
+    <!-- Fuzzy -->
     <string name="edit_attachment_beta_info">"* Si noti che la sincronizzazione degli allegati con DAVx⁵ è una funzionalità sperimentale. Tieni presente che ciò potrebbe causare comportamenti o errori imprevisti. Se riscontri problemi, faccelo sapere tramite i forum di supporto o una richiesta di supporto sul sito web!"</string>
     <string name="edit_subtasks_add_hint">"La tua sottoattività"</string>
     <string name="edit_subtasks_add_helper">"Aggiungi una sottoattività"</string>
@@ -323,38 +324,19 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="list_welcome_entry_todo_summary">"Congratulazioni, questa è la tua prima voce di Attività :-)"</string>
     <string name="list_welcome_entry_todo_description">"Oltre ai Diari e alle Note, le Attività possono avere un inizio pianificato, una data di scadenza e una data di completamento. Possono essere verificati al termine o è possibile impostare un avanzamento. Modifica questa voce per controllare tutte le opzioni :-)"</string>
     <string name="list_welcome_category">"#PrimiPassi"</string>
-
-    <!-- Fuzzy -->
     <string name="save_and_edit">"Salva e modifica"</string>
-
-    <!-- Fuzzy -->
     <string name="list_quickadd_dialog_sr_endicon_contentdesc">"Usa la sintesi vocale"</string>
-
-    <!-- Fuzzy -->
     <string name="list_quickadd_dialog_sr_start_listening">"La sintesi vocale è in ascolto."</string>
-
-    <!-- Fuzzy -->
     <string name="list_quickadd_dialog_sr_stop_listening">"La sintesi vocale ha smesso di ascoltare."</string>
-
-    <!-- Fuzzy -->
     <string name="list_quickadd_dialog_sr_error">"Spiacenti, la sintesi vocale ha riscontrato un errore. (%1$s)"</string>
 
     <!-- Permissions -->
-    <!-- Fuzzy -->
     <string name="permission_read_contacts_granted">"Permesso di lettura dei contatti concesso"</string>
-
-    <!-- Fuzzy -->
     <string name="permission_read_contacts_denied">"Permesso di lettura dei contatti negato"</string>
-
-    <!-- Fuzzy -->
     <string name="permission_record_audio_granted">"Permesso di registrazione audio concessa"</string>
     <string name="permission_record_audio_denied">"Permesso di registrazione audio negato"</string>
     <string name="intent_dialog_title">"Aggiungere contenuto a un Diario, una Nota o un'Attività?"</string>
-
-    <!-- Fuzzy -->
     <string name="add">"Aggiungi"</string>
-
-    <!-- Fuzzy -->
     <string name="edit">"Modifica"</string>
     <string name="reset">"Resettare"</string>
     <string name="apply">"Applica"</string>
@@ -365,13 +347,10 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="edit_dialog_set_attendee_role"></string>
 
     <!-- alarms -->
-    <!-- Fuzzy -->
     <string name="alarms_onstart">"All'inizio"</string>
     <string name="alarms_ondue">"Alla scadenza"</string>
     <string name="alarms_custom">"Individuale"</string>
-
-    <!-- Fuzzy -->
-    <string name="alarms_before_start">"Prima dell'inizio"</string>
+    <string name="alarms_before_start">"prima dell'inizio"</string>
     <string name="alarms_after_start">"Dopo l'inizio"</string>
     <string name="alarms_before_due">"prima della scadenza"</string>
     <string name="alarms_after_due">"dopo la scadenza"</string>
@@ -382,14 +361,8 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <!-- fragment_collections -->
     <string name="collections_local_collections">"Collezioni locali"</string>
     <string name="collections_remote_collections">"Collezioni remote"</string>
-
-    <!-- Fuzzy -->
     <string name="collections_journals_num">"Diari: %1$s"</string>
-
-    <!-- Fuzzy -->
     <string name="collections_notes_num">"Note: %1$s"</string>
-
-    <!-- Fuzzy -->
     <string name="collections_tasks_num">"Attività: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Alcuna collezione locale trovato"</string>
     <string name="collections_local_noremotecollections">"Alcuna collezione remota trovato"</string>
@@ -400,8 +373,6 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="collections_dialog_delete_local_title">"Eliminare \"%1$s\"?"</string>
     <string name="collections_dialog_delete_local_message"></string>
     <string name="menu_collections_add_local">"Aggiungi collezione locale"</string>
-
-    <!-- Fuzzy -->
     <string name="navigation_drawer_website_news">"Notizie e aggiornamenti"</string>
     <string name="list_quickadd_toast_no_summary_description"></string>
     <string name="view_dialog_addnote_toast_no_summary_description"></string>
@@ -443,8 +414,6 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="relatedto">"Relativo a"</string>
     <string name="comments">"Commenti"</string>
     <string name="attachments">"Allegati"</string>
-
-    <!-- Fuzzy -->
     <string name="alarms">"Notificazioni"</string>
     <string name="recurrence">"Ricorrenza"</string>
     <string name="recurrence_exceptions">"Eccezioni"</string>
@@ -465,4 +434,8 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="priority_7_low"></string>
     <string name="priority_8_lower"></string>
     <string name="priority_9_lowest"></string>
+    <string name="list_due_future"></string>
+    <string name="view_share_part_of_series"></string>
+    <string name="view_share_exception_of_series"></string>
+    <string name="view_share_repeats"></string>
 </resources>

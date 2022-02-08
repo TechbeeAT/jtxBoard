@@ -143,7 +143,9 @@ Global Strings -->
     <string name="edit_location_helper">"Fügen Sie einen Standort hinzu"</string>
     <string name="edit_attachment_add_dialog_hint">"Ihre URL zum Anhang (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Ihr Kommentar"</string>
-    <string name="edit_attachment_beta_info">"* Bitte beachten Sie, dass sich die Synchronisierung von Anhängen mit DAVx⁵ in einem experimentellen Stadium befindet, das unerwünschtes Verhalten oder Fehler zur Folge haben kann. Sollten Sie Probleme feststellen, geben Sie uns bitte Bescheid über die Support-Foren oder eine Support-Anfrage auf der Website!"</string>
+
+    <!-- Fuzzy -->
+    <string name="edit_attachment_beta_info">"* Bitte beachten Sie, dass sich die Synchronisierung von Anhängen mit DAVx⁵ in einem experimentellen Stadium befindet, das unerwünschtes Verhalten oder Fehler zur Folge haben kann. Aktuell werden nur kleine Anhänge (bis zu 100 KB) als .ics exportiert und über DAVx⁵ synchronisiert. Sollten Sie Probleme feststellen, geben Sie uns bitte Bescheid über die Support-Foren oder eine Support-Anfrage auf der Website!"</string>
     <string name="edit_subtasks_add_hint">"Ihre Teilaufgabe"</string>
     <string name="edit_subtasks_add_helper">"Teilaufgabe hinzufügen"</string>
     <string name="edit_attachment_delete_attachment">"Anhang löschen"</string>
@@ -333,14 +335,8 @@ Global Strings -->
     <!-- fragment_collections -->
     <string name="collections_local_collections">"Lokale Collections"</string>
     <string name="collections_remote_collections">"Remote Collections"</string>
-
-    <!-- Fuzzy -->
     <string name="collections_journals_num">"Journale: %1$s"</string>
-
-    <!-- Fuzzy -->
     <string name="collections_notes_num">"Notizen: %1$s"</string>
-
-    <!-- Fuzzy -->
     <string name="collections_tasks_num">"Aufgaben: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Keine lokalen Collections gefunden"</string>
     <string name="collections_local_noremotecollections">"Keine remote Collections gefunden"</string>
