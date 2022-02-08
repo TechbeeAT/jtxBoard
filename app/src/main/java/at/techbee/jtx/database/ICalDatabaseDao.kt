@@ -103,6 +103,12 @@ SELECTs (global selects without parameter)
     @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW WHERE $COLUMN_COLLECTION_ACCOUNT_TYPE NOT IN ('LOCAL') ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getRemoteCollections(): LiveData<List<CollectionsView>>
 
+    /**
+     * Retrieve a list of ICalObjectIds that are parents within a given Collection
+     */
+    @Transaction
+    @Query("SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ICALOBJECT_COLLECTIONID = :collectionId AND $COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_RELTYPE = 'CHILD')")
+    suspend fun getICalObjectIdsWithinCollection(collectionId: Long): List<Long>
 
 
     /**
@@ -535,8 +541,8 @@ DELETEs by Object
 
     // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
     @Transaction
-    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'CHILD'" )
-    fun getRelatedChildren(parentKey: Long): List<ICalObject?>
+    @Query("SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID from $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'CHILD'" )
+    suspend fun getRelatedChildren(parentKey: Long): List<Long>
 
     @Transaction
     @Query("SELECT * from $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectid AND $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = :linkedid AND $COLUMN_RELATEDTO_RELTYPE = :reltype")

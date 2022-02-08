@@ -18,7 +18,6 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import net.fortuna.ical4j.model.Recur
 import java.util.*
 
@@ -395,8 +394,7 @@ class IcalEditViewModel(
             iCalEntity.ICalCollection!!.collectionId != iCalObjectUpdated.value!!.collectionId -> {
 
                 val oldId = iCalEntity.property.id
-
-                val newId = updateCollectionWithChildren(iCalObjectUpdated.value!!.id, null)
+                val newId = ICalObject.updateCollectionWithChildren(iCalObjectUpdated.value!!.id, null, iCalObjectUpdated.value!!.collectionId, database)
 
                 // possible changes must still be updated
                 iCalObjectUpdated.value!!.id = newId
@@ -425,119 +423,6 @@ class IcalEditViewModel(
             )
         }
     }
-
-
-    /**
-     * @param [id] the id of the item for which the collection needs to be updated
-     * @param [parentId] is needed for the recursive call in order to provide it for the movItemToNewCollection(...) function. For the initial call this would be null as the function should initially always be called from the top parent.
-     *
-     * this function takes care of
-     * 1. moving the item to a new collection (by copying and deleting the current item)
-     * 2. determining the children of this item and calling itself recusively to to the same again for each child.
-     *
-     * @return The new id of the item in the new collection
-     */
-    private suspend fun updateCollectionWithChildren(id: Long, parentId: Long?): Long {
-
-        val newParentId = moveItemToNewCollection(id, parentId)
-
-        // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
-        val children =
-            allRelatedto.value?.filter { it.icalObjectId == id && it.reltype == Reltype.CHILD.name }
-        children?.forEach {
-            it.linkedICalObjectId?.let { linkedICalObjectId ->
-                updateCollectionWithChildren(
-                    linkedICalObjectId,
-                    newParentId
-                )
-            }
-        }
-        return newParentId
-    }
-
-    /**
-     * @param [id] is the id of the original item that should be moved to another collection. On the recursive call this is the id of the original child.
-     * @param [newParentId] is the id of the parent that was already copied into the new collection. This is needed in order to re-create the relation between the parent and the child.
-     *
-     * This function creates a copy of an item with all it's children in the new collection and then
-     * deletes (or marks as deleted) the original item.
-     *
-     * @return the new id of the item that was inserted (that becomes the newParentId)
-     *
-     */
-    private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?): Long =
-        withContext(Dispatchers.IO) {
-            val item = database.getSync(id)
-            if (item != null) {
-
-                item.property.id = 0L
-                item.property.collectionId = iCalObjectUpdated.value!!.collectionId
-                item.property.sequence = 0
-                item.property.dirty = true
-                item.property.lastModified = System.currentTimeMillis()
-                item.property.created = System.currentTimeMillis()
-                item.property.dtstamp = System.currentTimeMillis()
-                item.property.uid = ICalObject.generateNewUID()
-                item.property.flags = null
-                item.property.scheduleTag = null
-                item.property.eTag = null
-                item.property.fileName = null
-
-                val newId = database.insertICalObject(item.property)
-
-                item.attendees?.forEach {
-                    it.icalObjectId = newId
-                    database.insertAttendee(it)
-                }
-
-                item.resources?.forEach {
-                    it.icalObjectId = newId
-                    database.insertResource(it)
-                }
-
-                item.categories?.forEach {
-                    it.icalObjectId = newId
-                    database.insertCategory(it)
-                }
-
-                item.comments?.forEach {
-                    it.icalObjectId = newId
-                    database.insertComment(it)
-                }
-
-                if (item.organizer?.caladdress != null) {
-                    item.organizer?.icalObjectId = newId
-                    database.insertOrganizer(item.organizer!!)
-                }
-
-                item.attachments?.forEach {
-                    it.icalObjectId = newId
-                    database.insertAttachment(it)
-                }
-
-                // relations need to be rebuilt from the new parent to the child
-                // relations need to be rebuilt from the new child to the parent
-                if (newParentId != null) {
-                    val relChild2Parent = Relatedto()
-                    relChild2Parent.icalObjectId = newParentId
-                    relChild2Parent.linkedICalObjectId = newId
-                    relChild2Parent.reltype = Reltype.CHILD.name
-                    relChild2Parent.text = item.property.uid
-                    database.insertRelatedto(relChild2Parent)
-
-                    val parent = database.getSync(newParentId)
-                    val relParent2Child = Relatedto()
-                    relParent2Child.icalObjectId = newId
-                    relParent2Child.linkedICalObjectId = newParentId
-                    relParent2Child.reltype = Reltype.PARENT.name
-                    relParent2Child.text = parent?.property?.uid
-                    database.insertRelatedto(relParent2Child)
-                }
-
-                return@withContext newId
-            }
-            return@withContext 0L
-        }
 
 
     fun clearUrlError() {
