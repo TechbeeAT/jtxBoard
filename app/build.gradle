@@ -35,6 +35,13 @@ android {
             unitTests.includeAndroidResources = true
             unitTests.returnDefaultValues = true
         }
+        // defining the room.schemaLocation explicitly allows AutoMigrations
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
+
     }
     buildTypes {
         release {
@@ -109,12 +116,6 @@ aboutLibraries {
     }
 }
 
-// defining the room.schemaLocation explicitly allows AutoMigrations
-kapt {
-    arguments {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
-}
 
 dependencies {
 

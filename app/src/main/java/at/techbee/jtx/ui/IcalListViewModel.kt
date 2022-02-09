@@ -43,10 +43,10 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     var searchCollection: MutableList<String> = mutableListOf()
     var searchAccount: MutableList<String> = mutableListOf()
     var isExcludeDone: Boolean = false
-    var isFilterOverdue: Boolean = true
-    var isFilterDueToday: Boolean = true
-    var isFilterDueTomorrow: Boolean = true
-    var isFilterDueFuture: Boolean = true
+    var isFilterOverdue: Boolean = false
+    var isFilterDueToday: Boolean = false
+    var isFilterDueTomorrow: Boolean = false
+    var isFilterDueFuture: Boolean = false
 
     var searchSettingShowAllSubtasksInTasklist: Boolean = false
     var searchSettingShowAllSubnotesInNoteslist: Boolean = false

@@ -13,49 +13,74 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.*
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class CollectionsViewModel(val database: ICalDatabaseDao,
-                           application: Application) : AndroidViewModel(application) {
+class CollectionsViewModel(application: Application) : AndroidViewModel(application) {
 
+    val database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
     val localCollections = database.getLocalCollections()
     val remoteCollections = database.getRemoteCollections()
     val isDavx5Compatible = MutableLiveData(SyncUtil.isDAVx5CompatibleWithJTX(application))
+    val app = application
 
     val collectionICS = MutableLiveData<String>(null)
-
+    val isProcessing = MutableLiveData(false)
 
     /**
      * saves the given collection with the new values or inserts a new collection if collectionId == 0L
      * @param [collection] to be saved
      */
     fun saveCollection(collection: ICalCollection) {
+        isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
 
             if(collection.collectionId == 0L)
                 database.insertCollectionSync(collection)
             else
                 database.updateCollection(collection)
+
+            isProcessing.postValue(false)
         }
     }
 
     fun deleteCollection(collection: ICalCollection) {
+        isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             database.deleteICalCollection(collection)
+            isProcessing.postValue(false)
+        }
+    }
+
+    fun moveCollectionItems(oldCollectionId: Long, newCollectionId: Long) {
+        isProcessing.postValue(true)
+        viewModelScope.launch(Dispatchers.IO) {
+            val objectsToMove = database.getICalObjectIdsWithinCollection(oldCollectionId)
+            objectsToMove.forEach {
+                val newId = ICalObject.updateCollectionWithChildren(it, null, newCollectionId, database)
+                database.getICalObjectByIdSync(newId)?.recreateRecurring(database, app)
+            }
+            objectsToMove.forEach {
+                ICalObject.deleteItemWithChildren(it, database)
+            }
+            isProcessing.postValue(false)
         }
     }
 
     fun requestICSForCollection(context: Context?, collection: ICalCollection) {
+        isProcessing.postValue(true)
 
         viewModelScope.launch(Dispatchers.IO)  {
             val account = collection.getAccount()
             val collectionId = collection.collectionId
             collectionICS.postValue(Ical4androidUtil.getICSFormatForCollectionFromProvider(account, context, collectionId))
+            isProcessing.postValue(false)
         }
 
     }

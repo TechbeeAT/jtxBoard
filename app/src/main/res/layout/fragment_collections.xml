@@ -9,6 +9,14 @@
 
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="at.techbee.jtx.ui.CollectionsViewModel" />
+    </data>
+
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -16,6 +24,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/collections_progress_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="@{model.isProcessing() ? View.VISIBLE : View.INVISIBLE}" />
 
     <TextView
         android:id="@+id/collections_info"

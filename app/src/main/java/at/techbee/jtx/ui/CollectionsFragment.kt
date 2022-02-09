@@ -13,21 +13,21 @@ import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.CollectionsView
-import at.techbee.jtx.databinding.FragmentCollectionDialogBinding
-import at.techbee.jtx.databinding.FragmentCollectionItemBinding
-import at.techbee.jtx.databinding.FragmentCollectionsBinding
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.SyncUtil.Companion.openDAVx5AccountsActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ClassCastException
 import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import at.techbee.jtx.databinding.*
 import at.techbee.jtx.util.DateTimeUtils
 import java.io.IOException
 import java.io.OutputStream
@@ -38,8 +38,8 @@ class CollectionsFragment : Fragment() {
     lateinit var binding: FragmentCollectionsBinding
     lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
-    private lateinit var viewModelFactory: CollectionsViewModelFactory
-    private lateinit var collectionsViewModel: CollectionsViewModel
+    private val collectionsViewModel: CollectionsViewModel by activityViewModels()
+
     private lateinit var inflater: LayoutInflater
     private var optionsMenu: Menu? = null
 
@@ -77,14 +77,8 @@ class CollectionsFragment : Fragment() {
         // add menu
         setHasOptionsMenu(true)
 
-        this.viewModelFactory = CollectionsViewModelFactory(dataSource, application)
-        collectionsViewModel =
-            ViewModelProvider(
-                this, viewModelFactory
-            )[CollectionsViewModel::class.java]
-
-        //binding.model = collectionsViewModel
-        //binding.lifecycleOwner = viewLifecycleOwner
+        binding.model = collectionsViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         collectionsViewModel.localCollections.observe(viewLifecycleOwner) {
             binding.collectionsLocalNolocalcollections.visibility = if(it.isEmpty()) View.VISIBLE else View.GONE
@@ -181,6 +175,7 @@ class CollectionsFragment : Fragment() {
                                 collectionsViewModel.collectionICS.postValue(null)
                             }
                         }
+                        R.id.menu_collections_popup_move_entries -> showMoveEntriesDialog(collection)
                     }
                     true
                 }
@@ -243,6 +238,80 @@ class CollectionsFragment : Fragment() {
                 collectionsViewModel.deleteCollection(collection)
             }
             .setNeutralButton(R.string.cancel)  { _, _ -> /* nothing to do */  }
+            .show()
+    }
+
+    private fun showMoveEntriesDialog(currentCollection: CollectionsView) {
+
+        /**
+         * PREPARE DIALOG
+         */
+        val collectionMoveDialogBinding = FragmentCollectionMoveDialogBinding.inflate(layoutInflater)
+
+        val title = getString(R.string.collections_dialog_move_title, currentCollection.displayName)
+        val allCollections = mutableListOf<CollectionsView>()
+        allCollections.addAll(collectionsViewModel.localCollections.value ?: emptyList())
+        allCollections.addAll(collectionsViewModel.remoteCollections.value ?: emptyList())
+        val possibleCollections = mutableListOf<ICalCollection>()
+        val possibleCollectionsNames = mutableListOf<String>()
+
+        allCollections.forEach {
+            when {
+                it.readonly -> return@forEach
+                currentCollection.numJournals?:0 > 0 && !it.supportsVJOURNAL -> return@forEach
+                currentCollection.numNotes?:0 > 0 && !it.supportsVJOURNAL -> return@forEach
+                currentCollection.numTodos?:0 > 0 && !it.supportsVTODO -> return@forEach
+                currentCollection.collectionId == it.collectionId -> return@forEach
+                else -> possibleCollections.add(it.toICalCollection())
+            }
+        }
+
+        possibleCollections.forEach { collection ->
+            if(collection.displayName?.isNotEmpty() == true && collection.accountName?.isNotEmpty() == true)
+                possibleCollectionsNames.add(collection.displayName + " (" + collection.accountName + ")")
+            else
+                possibleCollectionsNames.add(collection.displayName?: "-")
+        }
+
+        var selectedCollectionPos = 0
+
+        collectionMoveDialogBinding.collectionMoveDialogCollectionSpinner.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, possibleCollectionsNames)
+        collectionMoveDialogBinding.collectionMoveDialogCollectionSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+
+                override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
+
+                    selectedCollectionPos = pos
+
+                    // update color of colorbar
+                    try {
+                        possibleCollections[pos].color.let { color ->
+                            if(color == null)
+                                collectionMoveDialogBinding.collectionMoveDialogColorbar.visibility = View.INVISIBLE
+                            else {collectionMoveDialogBinding.collectionMoveDialogColorbar.visibility = View.VISIBLE
+                                collectionMoveDialogBinding.collectionMoveDialogColorbar.setColorFilter(color)
+                            }
+                        }
+                    } catch (e: IllegalArgumentException) {
+                        //Log.i("Invalid color","Invalid Color cannot be parsed: ${color}")
+                        collectionMoveDialogBinding.collectionMoveDialogColorbar.visibility = View.INVISIBLE
+                    }
+                }
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
+            }
+
+
+        /**
+         * SHOW DIALOG
+         * The result is taken care of in the observer
+         */
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(title)
+            .setView(collectionMoveDialogBinding.root)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                collectionsViewModel.moveCollectionItems(currentCollection.collectionId, possibleCollections[selectedCollectionPos].collectionId)
+            }
+            .setNeutralButton(R.string.cancel) { _, _ ->  }
             .show()
     }
 }
