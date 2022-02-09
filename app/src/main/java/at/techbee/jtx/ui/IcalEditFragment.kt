@@ -778,9 +778,13 @@ class IcalEditFragment : Fragment() {
             if (icalEditViewModel.savingClicked.value == true)    // don't do anything if saving was clicked, saving could interfere here!
                 return@observe
 
+            if(it.isNullOrEmpty())
+                return@observe
+
             it.forEach { singleSubtask ->
                 addSubtasksView(singleSubtask)
             }
+            icalEditViewModel.relatedSubtasks.removeObservers(viewLifecycleOwner)
         }
 
         icalEditViewModel.recurrenceChecked.observe(viewLifecycleOwner) {
@@ -1186,8 +1190,8 @@ class IcalEditFragment : Fragment() {
             if(binding.editFragmentTabSubtasks.editSubtasksAdd.editText?.text.toString().isNotBlank()) {
                 val newSubtask =
                     ICalObject.createTask(summary = binding.editFragmentTabSubtasks.editSubtasksAdd.editText?.text.toString())
-                icalEditViewModel.subtaskUpdated.add(newSubtask)    // store the comment for saving
-                addSubtasksView(newSubtask)      // add the new comment
+                icalEditViewModel.subtaskUpdated.add(newSubtask)
+                addSubtasksView(newSubtask)
                 binding.editFragmentTabSubtasks.editSubtasksAdd.editText?.text?.clear()  // clear the field
             }
         }
