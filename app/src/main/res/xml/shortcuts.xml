@@ -9,10 +9,9 @@
 
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_todo">
+        android:icon="@drawable/ic_shortcut_add_task">
         <intent
             android:action="addTodo"
             android:targetPackage="at.techbee.jtx"
@@ -21,7 +20,7 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_note">
+        android:icon="@drawable/ic_shortcut_add_note">
         <intent
             android:action="addNote"
             android:targetPackage="at.techbee.jtx"
@@ -30,7 +29,7 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_journals">
+        android:icon="@drawable/ic_shortcut_add_journal">
         <intent
             android:action="addJournal"
             android:targetPackage="at.techbee.jtx"

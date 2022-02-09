@@ -13,7 +13,7 @@
     <shortcut
         android:shortcutId="addTodo"
         android:enabled="true"
-        android:icon="@drawable/ic_add"
+        android:icon="@drawable/ic_shortcut_add_task"
         android:shortcutShortLabel="@string/task"
         android:shortcutLongLabel="@string/shortcut_addTodo_longLabel">
         <intent
@@ -25,7 +25,7 @@
     <shortcut
         android:shortcutId="addNote"
         android:enabled="true"
-        android:icon="@drawable/ic_add"
+        android:icon="@drawable/ic_shortcut_add_note"
         android:shortcutShortLabel="@string/note"
         android:shortcutLongLabel="@string/shortcut_addNote_longLabel">
         <intent
@@ -37,7 +37,7 @@
     <shortcut
         android:shortcutId="addJournal"
         android:enabled="true"
-        android:icon="@drawable/ic_add"
+        android:icon="@drawable/ic_shortcut_add_journal"
         android:shortcutShortLabel="@string/journal"
         android:shortcutLongLabel="@string/shortcut_addJournal_longLabel">
         <intent
