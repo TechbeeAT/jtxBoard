@@ -61,8 +61,6 @@ class SyncFragment : Fragment() {
                 optionsMenu?.findItem(R.id.menu_sync_syncnow)?.isVisible = false
         }
 
-        /*
-        // TODO: Uncomment when DAVX5 is ready
         binding.syncButtonAddAccount.setOnClickListener {
             // open davx5
             val intent = Intent(Intent.ACTION_MAIN)
@@ -82,7 +80,6 @@ class SyncFragment : Fragment() {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${SyncUtil.DAVX5_PACKAGE_NAME}")))
             }
         }
-         */
 
         ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
             syncViewModel.showSyncProgressIndicator.postValue(SyncUtil.isJtxSyncRunning())
