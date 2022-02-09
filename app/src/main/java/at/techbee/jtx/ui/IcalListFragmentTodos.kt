@@ -116,7 +116,7 @@ class IcalListFragmentTodos : Fragment() {
         }
 
         icalListViewModel.updateSearch()
-
+        binding.listRecycler.adapter?.notifyDataSetChanged()
     }
 
     override fun onPause() {
