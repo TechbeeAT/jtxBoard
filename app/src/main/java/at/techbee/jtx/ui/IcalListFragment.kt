@@ -47,6 +47,7 @@ import at.techbee.jtx.monetization.AdManager
 import at.techbee.jtx.monetization.BillingManager
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import at.techbee.jtx.util.SyncUtil
+import at.techbee.jtx.util.UiUtil.reduceDragSensitivity
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -119,6 +120,7 @@ class IcalListFragment : Fragment() {
             prefs.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
         }
 
+        binding.listViewpager.reduceDragSensitivity()
         binding.listViewpager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = 3
 
