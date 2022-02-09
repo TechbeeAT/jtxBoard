@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            app:hideOnScroll="true"
+            app:hideOnScroll="false"
             app:menu="@menu/menu_ical_list_bottombar"
             />
 
@@ -78,7 +78,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/list_fab_add_contentdesc"
-            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
             app:layout_anchor="@id/list_bottom_bar"
             app:srcCompat="@drawable/ic_add"
             />
