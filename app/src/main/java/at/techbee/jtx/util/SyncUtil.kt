@@ -61,7 +61,8 @@ class SyncUtil {
             extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
 
             accounts.forEach { account ->
-                ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
+                if(!ContentResolver.isSyncActive(account, SYNC_PROVIDER_AUTHORITY))
+                    ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
             }
         }
 
@@ -74,7 +75,8 @@ class SyncUtil {
             val extras = Bundle(2)
             extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)        // manual sync
             extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
-            ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
+            if(!ContentResolver.isSyncActive(account, SYNC_PROVIDER_AUTHORITY))
+                ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
         }
 
         /**
