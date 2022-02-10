@@ -10,7 +10,6 @@ package at.techbee.jtx.util
 
 import android.accounts.Account
 import android.accounts.AccountManager
-import android.app.Activity
 import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.ContentResolver
@@ -79,17 +78,6 @@ class SyncUtil {
                 ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
         }
 
-        /**
-         * @return true if DAVx5 was found through the packageManager, else false
-         */
-        fun isDAVx5Available(application: Application): Boolean {
-            try {
-                application.packageManager?.getApplicationInfo(DAVX5_PACKAGE_NAME, 0) ?: return false
-                return true
-            } catch (e: PackageManager.NameNotFoundException) {
-                return false
-            }
-        }
 
         /**
          * @return true if DAVx5 was found and the versioon is compatible/includes jtx Board syncthrough the packageManager, else false

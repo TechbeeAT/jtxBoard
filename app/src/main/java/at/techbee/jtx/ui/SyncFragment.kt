@@ -22,7 +22,6 @@ import at.techbee.jtx.database.ICalDatabaseDao
 import android.content.Intent
 import android.net.Uri
 import android.view.*
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import at.techbee.jtx.util.SyncUtil
 
@@ -62,15 +61,7 @@ class SyncFragment : Fragment() {
         }
 
         binding.syncButtonAddAccount.setOnClickListener {
-            // open davx5
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.setClassName(SyncUtil.DAVX5_PACKAGE_NAME,"${SyncUtil.DAVX5_PACKAGE_NAME}.ui.setup.LoginActivity")
-            try {
-                startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
-                Log.w("SyncFragment", "DAVx5 should be there but opening the Activity failed. \n$e")
-            }
+            SyncUtil.openDAVx5LoginActivity(context)
         }
 
         binding.syncButtonPlaystore.setOnClickListener {
@@ -113,5 +104,4 @@ class SyncFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 }
