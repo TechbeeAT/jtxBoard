@@ -149,27 +149,22 @@ class IcalListFragment : Fragment() {
                     tab.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_todo)
                 }
             }
-            icalListViewModel.isLoadingOrSynchronizing.postValue(true)
         }.attach()
 
         loadFilterArgsAndPrefs()
 
-
-        icalListViewModel.isLoadingOrSynchronizing.observe(viewLifecycleOwner) {
+        icalListViewModel.isSynchronizing.observe(viewLifecycleOwner) {
             binding.listProgressIndicator.visibility = if(it) View.VISIBLE else View.INVISIBLE
         }
 
         icalListViewModel.iCal4ListJournals.observe(viewLifecycleOwner) {
             updateMenuVisibilities()
-            icalListViewModel.isLoadingOrSynchronizing.postValue(false)
         }
         icalListViewModel.iCal4ListNotes.observe(viewLifecycleOwner) {
             updateMenuVisibilities()
-            icalListViewModel.isLoadingOrSynchronizing.postValue(false)
         }
         icalListViewModel.iCal4ListTodos.observe(viewLifecycleOwner) {
             updateMenuVisibilities()
-            icalListViewModel.isLoadingOrSynchronizing.postValue(false)
         }
 
         icalListViewModel.allWriteableCollectionsVJournal.observe(viewLifecycleOwner) {   }
@@ -218,7 +213,7 @@ class IcalListFragment : Fragment() {
         }
 
         ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
-            icalListViewModel.isLoadingOrSynchronizing.postValue(ContentResolver.getCurrentSyncs().isNotEmpty())
+            icalListViewModel.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning())
         }
 
         return binding.root

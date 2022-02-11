@@ -67,23 +67,6 @@ class IcalListFragmentNotes : Fragment() {
         super.onResume()
         icalListViewModel.searchModule = Module.NOTE.name
 
-        icalListViewModel.iCal4ListNotes.observe(viewLifecycleOwner) {
-            binding.listRecycler.adapter?.notifyDataSetChanged()
-            icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
-        }
-
-        icalListViewModel.scrollOnceId.observe(viewLifecycleOwner) {
-            if (it == null)
-                return@observe
-
-            val scrollToItem = icalListViewModel.iCal4ListNotes.value?.find { listItem -> listItem.property.id == it }
-            val scrollToItemPos = icalListViewModel.iCal4ListNotes.value?.indexOf(scrollToItem)
-            scrollToItemPos?.let { pos ->
-                binding.listRecycler.layoutManager?.scrollToPosition(pos)
-                icalListViewModel.scrollOnceId.postValue(null)
-            }
-        }
-
         val prefs = requireActivity().getSharedPreferences(PREFS_LIST_NOTES, Context.MODE_PRIVATE)
 
         icalListViewModel.searchCategories = prefs.getStringSet(PREFS_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
@@ -110,14 +93,13 @@ class IcalListFragmentNotes : Fragment() {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
 
+        addObservers()
         icalListViewModel.updateSearch()
     }
 
     override fun onPause() {
         super.onPause()
-
-        icalListViewModel.iCal4ListTodos.removeObservers(viewLifecycleOwner)
-        icalListViewModel.scrollOnceId.removeObservers(viewLifecycleOwner)
+        removeObservers()
 
         val prefs = requireActivity().getSharedPreferences(PREFS_LIST_NOTES, Context.MODE_PRIVATE)
         prefs.edit().putStringSet(PREFS_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
@@ -127,5 +109,30 @@ class IcalListFragmentNotes : Fragment() {
         prefs.edit().putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
         prefs.edit().putStringSet(PREFS_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
         prefs.edit().putBoolean(PREFS_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
+    }
+
+    private fun addObservers() {
+
+        icalListViewModel.iCal4ListNotes.observe(viewLifecycleOwner) {
+            binding.listRecycler.adapter?.notifyDataSetChanged()
+            icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
+        }
+
+        icalListViewModel.scrollOnceId.observe(viewLifecycleOwner) {
+            if (it == null)
+                return@observe
+
+            val scrollToItem = icalListViewModel.iCal4ListNotes.value?.find { listItem -> listItem.property.id == it }
+            val scrollToItemPos = icalListViewModel.iCal4ListNotes.value?.indexOf(scrollToItem)
+            scrollToItemPos?.let { pos ->
+                binding.listRecycler.layoutManager?.scrollToPosition(pos)
+                icalListViewModel.scrollOnceId.postValue(null)
+            }
+        }
+    }
+
+    private fun removeObservers() {
+        icalListViewModel.iCal4ListNotes.removeObservers(viewLifecycleOwner)
+        icalListViewModel.scrollOnceId.removeObservers(viewLifecycleOwner)
     }
 }

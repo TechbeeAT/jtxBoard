@@ -80,7 +80,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     val directEditEntity = MutableLiveData<ICalEntity?>(null)
     val scrollOnceId = MutableLiveData<Long?>(null)
 
-    val isLoadingOrSynchronizing = MutableLiveData(true)
+    val isSynchronizing = MutableLiveData(false)
 
 
     private fun constructQuery(): SimpleSQLiteQuery {
@@ -247,7 +247,6 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
      * observer in the fragment.
      */
     fun updateSearch() {
-        isLoadingOrSynchronizing.postValue(true)
         val newQuery = constructQuery()
             when(searchModule) {
                 Module.JOURNAL.name -> listQueryJournals.postValue(newQuery)
