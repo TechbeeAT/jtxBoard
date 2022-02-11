@@ -55,11 +55,17 @@ class IcalListFragmentNotes : Fragment() {
         binding.listRecycler.adapter = IcalListAdapterNote(requireContext(), icalListViewModel)
         binding.listRecycler.scheduleLayoutAnimation()
 
-
         binding.listSwiperefresh.setOnRefreshListener {
             SyncUtil.syncAllAccounts(requireContext())
             binding.listSwiperefresh.isRefreshing = false
         }
+
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        icalListViewModel.searchModule = Module.NOTE.name
 
         icalListViewModel.iCal4ListNotes.observe(viewLifecycleOwner) {
             binding.listRecycler.adapter?.notifyDataSetChanged()
@@ -77,13 +83,6 @@ class IcalListFragmentNotes : Fragment() {
                 icalListViewModel.scrollOnceId.postValue(null)
             }
         }
-
-        return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        icalListViewModel.searchModule = Module.NOTE.name
 
         val prefs = requireActivity().getSharedPreferences(PREFS_LIST_NOTES, Context.MODE_PRIVATE)
 
@@ -112,11 +111,13 @@ class IcalListFragmentNotes : Fragment() {
         }
 
         icalListViewModel.updateSearch()
-        binding.listRecycler.adapter?.notifyDataSetChanged()
     }
 
     override fun onPause() {
         super.onPause()
+
+        icalListViewModel.iCal4ListTodos.removeObservers(viewLifecycleOwner)
+        icalListViewModel.scrollOnceId.removeObservers(viewLifecycleOwner)
 
         val prefs = requireActivity().getSharedPreferences(PREFS_LIST_NOTES, Context.MODE_PRIVATE)
         prefs.edit().putStringSet(PREFS_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()

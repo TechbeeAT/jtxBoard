@@ -60,6 +60,13 @@ class IcalListFragmentJournals : Fragment() {
             binding.listSwiperefresh.isRefreshing = false
         }
 
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        icalListViewModel.searchModule = Module.JOURNAL.name
+
         icalListViewModel.iCal4ListJournals.observe(viewLifecycleOwner) {
             binding.listRecycler.adapter?.notifyDataSetChanged()
             icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
@@ -76,13 +83,6 @@ class IcalListFragmentJournals : Fragment() {
                 icalListViewModel.scrollOnceId.postValue(null)
             }
         }
-
-        return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        icalListViewModel.searchModule = Module.JOURNAL.name
 
         val prefs = requireActivity().getSharedPreferences(PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
 
@@ -111,11 +111,13 @@ class IcalListFragmentJournals : Fragment() {
         }
 
         icalListViewModel.updateSearch()
-        binding.listRecycler.adapter?.notifyDataSetChanged()
     }
 
     override fun onPause() {
         super.onPause()
+
+        icalListViewModel.iCal4ListTodos.removeObservers(viewLifecycleOwner)
+        icalListViewModel.scrollOnceId.removeObservers(viewLifecycleOwner)
 
         val prefs = requireActivity().getSharedPreferences(PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
         prefs.edit().putStringSet(PREFS_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
