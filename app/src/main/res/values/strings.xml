@@ -259,7 +259,7 @@
     <string name="edit_add_category_hint">#mycategory</string>
     <string name="edit_add_category_helper">Add a category</string>
     <string name="edit_attendees_hint">johanna@example.com</string>
-    <string name="edit_attendees_helper">Add an attendee (e-mail-address)</string>
+    <string name="edit_attendees_helper">Add an attendee (e-mail-address). Attention: Servers might automatically process attendees e.g. by sending iMIP messages.</string>
     <string name="edit_attendees_error">Please enter a valid email-address</string>
     <string name="edit_resources_hint">Projector</string>
     <string name="edit_resources_helper">Add a resource</string>

@@ -194,10 +194,6 @@
                 android:popupBackground="@color/design_default_color_surface"
                 android:singleLine="true" />
 
-
         </com.google.android.material.textfield.TextInputLayout>
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
