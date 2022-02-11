@@ -82,8 +82,7 @@ class MainActivity : AppCompatActivity()  {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-
-        DynamicColors.applyToActivitiesIfAvailable(application)
+        DynamicColors.applyIfAvailable(this)
         setContentView(R.layout.activity_main)
 
         //load settings
