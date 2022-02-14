@@ -56,7 +56,7 @@ class IcalListFragmentJournals : Fragment() {
         binding.listRecycler.scheduleLayoutAnimation()
 
         binding.listSwiperefresh.setOnRefreshListener {
-            SyncUtil.syncAllAccounts(requireContext())
+            //SyncUtil.syncAllAccounts(requireContext())
             binding.listSwiperefresh.isRefreshing = false
         }
 
