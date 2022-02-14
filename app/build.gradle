@@ -155,7 +155,7 @@ dependencies {
     // Material.io
     implementation "com.google.android.material:material:$version_material"
 
-    implementation "androidx.preference:preference-ktx:1.1.1"
+    implementation "androidx.preference:preference-ktx:1.2.0"
 
     // Volley for simple network requests
     implementation("com.android.volley:volley:1.2.1")
@@ -200,7 +200,7 @@ dependencies {
 
 
     //Fragment Testing
-    debugImplementation('androidx.fragment:fragment-testing:1.4.0') {
+    debugImplementation('androidx.fragment:fragment-testing:1.4.1') {
         // exclude androidx.test:core while fragment_testing depends on 1.1.0
         exclude group: 'androidx.test', module: 'core'
     }
