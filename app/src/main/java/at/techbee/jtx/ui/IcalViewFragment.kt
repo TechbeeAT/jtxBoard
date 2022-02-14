@@ -102,7 +102,7 @@ class IcalViewFragment : Fragment() {
         // add menu
         setHasOptionsMenu(true)
 
-        settings = PreferenceManager.getDefaultSharedPreferences(context)
+        settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val settingMimetype = settings.getString("setting_audio_format", Attachment.FMTTYPE_AUDIO_3GPP) ?: Attachment.FMTTYPE_AUDIO_3GPP
         if(settingMimetype == Attachment.FMTTYPE_AUDIO_MP4_AAC) {
             audioFileExtension = "aac"
