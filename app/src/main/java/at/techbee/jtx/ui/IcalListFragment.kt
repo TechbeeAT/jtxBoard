@@ -108,7 +108,7 @@ class IcalListFragment : Fragment() {
         // add menu
         setHasOptionsMenu(true)
 
-        settings = PreferenceManager.getDefaultSharedPreferences(context)
+        settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
         arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
         prefs = requireActivity().getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)
 
