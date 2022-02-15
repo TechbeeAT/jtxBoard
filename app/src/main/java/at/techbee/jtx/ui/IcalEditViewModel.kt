@@ -16,6 +16,7 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
+import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.fortuna.ical4j.model.Recur
@@ -377,6 +378,7 @@ class IcalEditViewModel(
                         )
                     }
                 }
+                SyncUtil.notifyContentObservers(getApplication())
             }
 
             returnIcalObjectId.value = insertedOrUpdatedItemId
@@ -384,12 +386,9 @@ class IcalEditViewModel(
     }
 
     private suspend fun insertOrUpdateICalObject(): Long {
-        return when {
+        val newId = when {
             iCalObjectUpdated.value!!.id == 0L -> {
-
-                //Log.println(Log.INFO, "VJournalItemViewModel", "creating a new one")
                 database.insertICalObject(iCalObjectUpdated.value!!)
-                //Log.println(Log.INFO, "vJournalItemViewModel", vJournalItemUpdate.id.toString())
             }
             iCalEntity.ICalCollection!!.collectionId != iCalObjectUpdated.value!!.collectionId -> {
 
@@ -403,24 +402,24 @@ class IcalEditViewModel(
                 // once the newId is there, the local entries can be deleted (or marked as deleted)
                 viewModelScope.launch(Dispatchers.IO) {
                     ICalObject.deleteItemWithChildren(oldId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+                    SyncUtil.notifyContentObservers(getApplication())
                 }
-
-                return newId
+                newId
             }
             else -> {
                 database.update(iCalObjectUpdated.value!!)
                 iCalObjectUpdated.value!!.id
             }
         }
+        SyncUtil.notifyContentObservers(getApplication())
+        return newId
     }
 
 
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
-            ICalObject.deleteItemWithChildren(
-                iCalObjectUpdated.value!!.id,
-                database
-            )
+            ICalObject.deleteItemWithChildren(iCalObjectUpdated.value!!.id, database)
+            SyncUtil.notifyContentObservers(getApplication())
         }
     }
 

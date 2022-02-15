@@ -24,6 +24,7 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.util.DateTimeUtils
+import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -283,7 +284,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             ICalObject.makeRecurringException(currentItem!!, database)
             val item = database.getSync(itemId)!!.property
             database.update(item.setUpdatedProgress(newPercent))
-
+            SyncUtil.notifyContentObservers(getApplication())
         }
         if(isLinkedRecurringInstance)
             Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_LONG).show()

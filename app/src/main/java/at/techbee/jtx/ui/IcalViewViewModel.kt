@@ -18,6 +18,7 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4ViewNote
 import at.techbee.jtx.util.Ical4androidUtil
+import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
@@ -324,6 +325,7 @@ class IcalViewViewModel(private val icalItemId: Long,
             }
 
             database.updateSetDirty(icalItemId, System.currentTimeMillis())
+            SyncUtil.notifyContentObservers(getApplication())
         }
     }
 
@@ -333,6 +335,7 @@ class IcalViewViewModel(private val icalItemId: Long,
         makeRecurringExceptionIfNecessary(item)
         viewModelScope.launch(Dispatchers.IO) {
             database.update(item.setUpdatedProgress(newPercent))
+            SyncUtil.notifyContentObservers(getApplication())
         }
     }
 
@@ -341,6 +344,7 @@ class IcalViewViewModel(private val icalItemId: Long,
         if(item.isRecurLinkedInstance) {
             viewModelScope.launch(Dispatchers.IO) {
                 ICalObject.makeRecurringException(item, database)
+                SyncUtil.notifyContentObservers(getApplication())
             }
             Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
         }
@@ -350,6 +354,7 @@ class IcalViewViewModel(private val icalItemId: Long,
 
         viewModelScope.launch(Dispatchers.IO) {
             ICalObject.deleteItemWithChildren(item.id, database)
+            SyncUtil.notifyContentObservers(getApplication())
         }
     }
 

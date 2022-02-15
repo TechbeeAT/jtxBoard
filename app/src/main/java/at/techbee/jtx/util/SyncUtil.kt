@@ -23,6 +23,7 @@ import android.util.Log
 import android.widget.Toast
 import at.techbee.jtx.R
 import at.techbee.jtx.SYNC_PROVIDER_AUTHORITY
+import at.techbee.jtx.contract.JtxContract
 import at.techbee.jtx.database.ICalCollection
 
 class SyncUtil {
@@ -124,6 +125,14 @@ class SyncUtil {
             } catch (e: ActivityNotFoundException) {
                 Toast.makeText(context, R.string.sync_toast_intent_open_davx5_failed, Toast.LENGTH_LONG).show()
                 Log.w("SyncFragment", "DAVx5 should be there but opening the Activity failed. \n$e")
+            }
+        }
+
+        fun notifyContentObservers(context: Context?) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                context?.contentResolver?.notifyChange(JtxContract.JtxICalObject.CONTENT_URI, null, ContentResolver.NOTIFY_SYNC_TO_NETWORK)
+            } else {
+                context?.contentResolver?.notifyChange(JtxContract.JtxICalObject.CONTENT_URI, null, true)
             }
         }
     }

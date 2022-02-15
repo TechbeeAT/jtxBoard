@@ -69,6 +69,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
             objectsToMove.forEach {
                 ICalObject.deleteItemWithChildren(it, database)
             }
+            SyncUtil.notifyContentObservers(getApplication())
             isProcessing.postValue(false)
         }
     }
