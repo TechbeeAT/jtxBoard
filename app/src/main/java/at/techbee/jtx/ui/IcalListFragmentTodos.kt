@@ -25,7 +25,6 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
 import at.techbee.jtx.databinding.FragmentIcalListRecyclerBinding
-import at.techbee.jtx.util.SyncUtil
 import java.lang.ClassCastException
 
 
@@ -58,11 +57,6 @@ class IcalListFragmentTodos : Fragment() {
         binding.listRecycler.setHasFixedSize(false)
         binding.listRecycler.adapter = IcalListAdapterTodo(requireContext(), icalListViewModel)
         binding.listRecycler.scheduleLayoutAnimation()
-
-        binding.listSwiperefresh.setOnRefreshListener {
-            //SyncUtil.syncAllAccounts(requireContext())
-            binding.listSwiperefresh.isRefreshing = false
-        }
 
         return binding.root
     }
