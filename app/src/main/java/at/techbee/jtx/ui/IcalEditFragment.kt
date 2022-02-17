@@ -648,9 +648,9 @@ class IcalEditFragment : Fragment() {
                 binding.editFragmentIcalEditAlarm.editAlarmsButtonOndue.visibility = View.VISIBLE
 
             if(it.dtstart == null && it.due == null)
-                binding.editFragmentIcalEditAlarm.editAlarmsScrollviewRelativeAlarm.visibility = View.GONE
+                binding.editFragmentIcalEditAlarm.editAlarmsRelativeAlarmBlock.visibility = View.GONE
             else
-                binding.editFragmentIcalEditAlarm.editAlarmsScrollviewRelativeAlarm.visibility = View.VISIBLE
+                binding.editFragmentIcalEditAlarm.editAlarmsRelativeAlarmBlock.visibility = View.VISIBLE
 
             val adapterMinutesHoursDays = ArrayAdapter(
                 requireContext(),
