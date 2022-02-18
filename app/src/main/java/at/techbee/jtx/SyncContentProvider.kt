@@ -213,7 +213,7 @@ class SyncContentProvider : ContentProvider() {
                 else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
             }
         } catch (e: SQLiteConstraintException) {
-            Log.e("ConstraintException", "The given insert caused a SQLiteConstraintException. This entry is skipped.\n$e")
+            Log.e("ConstraintException", "The given insert caused a SQLiteConstraintException. This entry is skipped.\nUri: $uri\nValues:${values.toString()}\n$e")
             //Toast.makeText(context, R.string.synccontentprovider_sync_problem, Toast.LENGTH_LONG).show()
         }
 
