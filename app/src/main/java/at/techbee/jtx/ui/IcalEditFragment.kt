@@ -2293,7 +2293,7 @@ class IcalEditFragment : Fragment() {
         var isValid = true
         var validationError = ""
 
-        if(icalEditViewModel.iCalObjectUpdated.value?.summary == null && icalEditViewModel.iCalObjectUpdated.value?.description == null)
+        if(icalEditViewModel.iCalObjectUpdated.value?.summary.isNullOrBlank() && icalEditViewModel.iCalObjectUpdated.value?.description.isNullOrBlank())
             validationError += resources.getString(R.string.edit_validation_errors_summary_or_description_necessary) + "\n"
         if(icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && icalEditViewModel.iCalObjectUpdated.value?.due != null && icalEditViewModel.iCalObjectUpdated.value?.due!! < icalEditViewModel.iCalObjectUpdated.value?.dtstart!!)
             validationError += resources.getString(R.string.edit_validation_errors_dialog_due_date_before_dtstart) + "\n"
