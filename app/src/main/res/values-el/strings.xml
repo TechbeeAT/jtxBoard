@@ -103,7 +103,7 @@ Global Strings -->
     <string name="view_fragment_audio_permission">"Άδεια εφαρμογής"</string>
 
     <!-- Fuzzy -->
-    <string name="view_fragment_audio_permission_message">"Η εφαρμογή jtx Board χρειάζεται την άδεια για την εγγραφή ήχου. Παρακαλούμε παραχωρήστε την άδεια χρήσης αυτής της δυνατότητας."</string>
+    <string name="view_fragment_audio_permission_message">"Η εφαρμογή jtx Board χρειάζεται την άδεια σας για την εγγραφή ήχου. Παρακαλούμε παραχωρήστε την άδεια χρήσης αυτής της δυνατότητας."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Προσθήκη ηχητικής σημείωσης"</string>
     <string name="view_comment_playbutton_content_desc">"Αναπαραγωγή ηχητικής σημείωσης"</string>
     <string name="view_fragment_audio_start_stop_recording_contentdesc">"Έναρξη/διακοπή ηχογράφησης"</string>
@@ -119,7 +119,7 @@ Global Strings -->
     <string name="view_dialog_sure_to_delete_message">"Είστε σίγουροι πως θέλετε να διαγράψετε το \"%1$s\"?"</string>
     <string name="view_toast_deleted_successfully">"\"%1$s\" Επιτυχής διαγραφή"</string>
     <string name="view_dialog_add_note">"Προσθήκη σημείωσης"</string>
-    <string name="view_dialog_add_note_dialog_hint">"Προσθέστε την σημείωση σας εδώ"</string>
+    <string name="view_dialog_add_note_dialog_hint">"Προσθέστε εδώ την σημείωση σας"</string>
     <string name="view_toast_entry_does_not_exist_anymore">"Η καταχώρηση που ζητήθηκε δεν υπάρχει (πλέον)."</string>
     <string name="view_created_text">"Δημιουργήθηκε: %1$s"</string>
     <string name="view_last_modified_text">"Τελευταία επεξεργασία: %1$s"</string>
@@ -131,21 +131,23 @@ Global Strings -->
     <string name="edit_add_category_hint">"#ηκατηγοριαμου"</string>
     <string name="edit_add_category_helper">"Προσθήκη κατηγορίας"</string>
     <string name="edit_attendees_hint">"johanna@example.com"</string>
-    <string name="edit_attendees_helper">"Προσθέστε έναν συμμετέχοντα (e-mail-address)"</string>
-    <string name="edit_resources_hint">"Προβολέας"</string>
-    <string name="edit_resources_helper">"Πηγή"</string>
+    <string name="edit_attendees_helper">"Προσθέστε συμμετέχοντες (e-mail)"</string>
+    <string name="edit_resources_hint">"Εξοπλισμός"</string>
+    <string name="edit_resources_helper">"Προσθήκη εξοπλισμού"</string>
     <string name="edit_contact_hint">"Jim Dolittle, +1 919 555 1234"</string>
     <string name="edit_contact_helper">"Στοιχεία επικοινωνίας του υπεύθυνου ή του κατόχου αυτής της καταχώρισης"</string>
     <string name="edit_comment_hint">"Το σχόλιό σου…"</string>
-    <string name="edit_comment_helper">"Προσθήκη σχολίου"</string>
+    <string name="edit_comment_helper">"Προσθήκη σχολίων"</string>
     <string name="edit_attachment_button_text">"Προσθήκη συνημμένου"</string>
-    <string name="edit_take_picture_button_text">"Φωτογραφία"</string>
+    <string name="edit_take_picture_button_text">"Προσθήκη φωτογραφίας"</string>
     <string name="edit_add_link_button_text">"Προσθήκη link"</string>
     <string name="edit_url_helper">"Σχετικό URL με αυτή την εγγραφή"</string>
-    <string name="edit_location_helper">"Προσθέστε μια τοποθεσία για αυτήν την καταχώρηση"</string>
+    <string name="edit_location_helper">"Γι’ αυτή την καταχώρηση προσθέστε μια τοποθεσία"</string>
     <string name="edit_attachment_add_dialog_hint">"Το συνημμένο-url σας (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Το σχόλιο σου"</string>
-    <string name="edit_attachment_beta_info">"*Λάβετε υπόψη σας ότι ο συγχρονισμός συνημμένων με το DAVx⁵ είναι μια πειραματική δυνατότητα και αυτό μπορεί να προκαλέσει κάποια απροσδόκητη συμπεριφορά ή σφάλματα. Εάν αντιμετωπίζετε προβλήματα, ενημερώστε μας μέσω των φόρουμ υποστήριξης ή ενός αιτήματος υποστήριξης στον ιστότοπο!"</string>
+
+    <!-- Fuzzy -->
+    <string name="edit_attachment_beta_info">"*Λάβετε υπόψη σας ότι ο συγχρονισμός συνημμένων με το DAVx⁵ είναι μια πειραματική δυνατότητα και αυτό μπορεί να προκαλέσει κάποια απροσδόκητη συμπεριφορά ή σφάλματα. Εάν αντιμετωπίζετε προβλήματα, ενημερώστε μας μέσω του φόρουμ υποστήριξης ή ενός αιτήματος υποστήριξης στον ιστότοπο!"</string>
     <string name="edit_subtasks_add_hint">"Η υποεργασία σας"</string>
     <string name="edit_subtasks_add_helper">"Προσθήκη υποεργασίας"</string>
     <string name="edit_attachment_delete_attachment">"Διαγραφή συνημμένου"</string>
@@ -272,7 +274,7 @@ Global Strings -->
     <string name="adinfo_adfree_purchase_header_thankyou">"Σας ευχαριστούμε που αγοράσατε το jtx Board χωρίς διαφημίσεις"</string>
     <string name="adinfo_adfree_purchase_description_thankyou">"Οι διαφημίσεις έχουν πλέον καταργηθεί από την εφαρμογή. Εάν σας αρέσει αυτή η εφαρμογή και θέλετε να υποστηρίξετε τη συνεχή ανάπτυξη, εξετάστε επίσης τη συνδρομή."</string>
     <string name="adinfo_adfree_subscribe_header">"Συνδρομή για jtx Board xωρίς διαφημίσεις"</string>
-    <string name="adinfo_adfree_subscribe_description">"Η συνδρομή αφαιρεί τις επαναλαμβανόμενες διαφημίσεις από αυτήν την εφαρμογή και επιπλέον υποστηρίζετε τη συνεχή ανάπτυξη αυτής της εφαρμογής."</string>
+    <string name="adinfo_adfree_subscribe_description">"Η συνδρομή αφαιρεί τις επαναλαμβανόμενες διαφημίσεις από αυτήν την εφαρμογή και επιπλέον υποστηρίζετε τη συνεχή ανάπτυξη αυτής."</string>
     <string name="adinfo_adfree_subscribe_success_header">"Σας ευχαριστούμε που αγοράσατε τη συνδρομή jtx Board χωρίς διαφημίσεις"</string>
     <string name="adinfo_adfree_subscribe_success_description">"Οι διαφημίσεις έχουν πλέον καταργηθεί από την εφαρμογή. Σας ευχαριστούμε για τη συνεισφορά σας για να κρατήσετε αυτό το έργο ζωντανό!"</string>
     <string name="adinfo_adfree_subscribe_success_thankyou">"Ευχαριστούμε!"</string>
@@ -342,7 +344,7 @@ Global Strings -->
     <string name="collections_tasks_num">"Εργασίες: %1$s"</string>
     <string name="collections_local_nolocalcollections">"Δεν βρέθηκαν προσωπικές συλλογές"</string>
     <string name="collections_local_noremotecollections">"Δεν βρέθηκαν απομακρυσμένες συλλογές"</string>
-    <string name="collections_info">"Οι συλλογές είναι μια συσσώρευση καταχωρήσεων όπως φακέλους με αρχεία.  Μπορείτε να δημιουργήσετε νέες προσωπικές συλλογές μέσω του μενού ή μπορείτε να ρυθμίσετε νέες απομακρυσμένες συλλογές για συγχρονισμό με το DAVx⁵."</string>
+    <string name="collections_info">"Οι συλλογές είναι μια συσσώρευση καταχωρήσεων όπως φάκελοι με αρχεία.  Μπορείτε να δημιουργήσετε νέες προσωπικές συλλογές μέσω του μενού ή να ρυθμίσετε νέες απομακρυσμένες συλλογές για συγχρονισμό με το DAVx⁵."</string>
     <string name="collections_collection_menu">"Μενού συλλογής"</string>
     <string name="collections_dialog_add_local_collection_title">"Προσθήκη προσωπικής συλλογής"</string>
     <string name="collections_dialog_edit_local_collection_title">"Επεξεργασία προσωπικής συλλογής"</string>
@@ -353,7 +355,7 @@ Global Strings -->
     <!-- Fuzzy -->
     <string name="navigation_drawer_website_news">"Νέα &amp; ενημερώσεις"</string>
     <string name="list_quickadd_toast_no_summary_description">"Η εγγραφη δεν μπορεί να δημιουργηθεί χωρίς περίληψη/περιγραφή."</string>
-    <string name="view_dialog_addnote_toast_no_summary_description">"Β σημειωση δεν μπορεί να δημιουργηθεί χωρίς κείμενο."</string>
+    <string name="view_dialog_addnote_toast_no_summary_description">"Η σημείωση δεν μπορεί να δημιουργηθεί χωρίς κείμενο."</string>
     <string name="color">"Χρώμα"</string>
     <string name="edit_attendees_error">"Παρακαλώ πληκτρολογήστε ένα έγκυρο e-mail"</string>
     <string name="priority_0_no_priority">"Χωρίς προτεραιότητα"</string>
@@ -386,7 +388,7 @@ Global Strings -->
     <string name="url">"URL"</string>
     <string name="location">"Τοποθεσία"</string>
     <string name="attendees">"Συμμετέχοντες"</string>
-    <string name="resources">"Πηγές"</string>
+    <string name="resources">"Απαραίτητος εξοπλισμός"</string>
     <string name="organizer">"Διοργανωτής"</string>
     <string name="contact">"Επαφές"</string>
     <string name="relatedto">"Σχετικά με"</string>
@@ -396,16 +398,16 @@ Global Strings -->
     <string name="recurrence">"Επανάληψη"</string>
     <string name="recurrence_exceptions">"Εξαιρέσεις"</string>
     <string name="recurrence_additions">"Προσθήκες"</string>
-    <string name="summary">"Περίληψη"</string>
+    <string name="summary">"Τίτλος"</string>
     <string name="description">"Περιγραφή"</string>
     <string name="search">"Αναζήτηση"</string>
     <string name="filter">"Φίλτρα"</string>
     <string name="sync_now">"Συγχρονισμός τώρα"</string>
-    <string name="due">"Μέχρι"</string>
+    <string name="due">"Λήξη"</string>
     <string name="completed">"Ολοκληρώθηκε"</string>
     <string name="started">"Έναρξη"</string>
     <string name="add_time_switch">"Προσθήκη ώρας"</string>
-    <string name="add_timezone_switch">"Προσθήκη ζώνη ώρας"</string>
+    <string name="add_timezone_switch">"Ζώνη ώρας"</string>
     <string name="progress">"Πρόοδος"</string>
     <string name="categories">"Κατηγορίες"</string>
     <string name="subtasks">"Υποεργασίες"</string>
