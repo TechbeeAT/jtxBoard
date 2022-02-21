@@ -152,6 +152,8 @@ class IcalListFragment : Fragment() {
         }.attach()
 
         loadFilterArgsAndPrefs()
+        if(arguments.item2focus != 0L)
+            icalListViewModel.scrollOnceId.postValue(arguments.item2focus)
 
         icalListViewModel.isSynchronizing.observe(viewLifecycleOwner) {
             binding.listProgressIndicator.visibility = if(it) View.VISIBLE else View.INVISIBLE
@@ -298,8 +300,6 @@ class IcalListFragment : Fragment() {
         // The next line is commented out as it has become less useful to use the searchModule from the args. It might make more sense to only use the value in the shared preferences to always return to the list where the user got deeper into details.
         //icalListViewModel.searchModule = arguments.module2show ?: prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
         icalListViewModel.searchModule = prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
-
-        icalListViewModel.scrollOnceId.postValue(arguments.item2focus)    // or null
 
         // activate the right tab according to the searchModule
         when (icalListViewModel.searchModule) {

@@ -106,10 +106,10 @@ class IcalListFragmentNotes : Fragment() {
     }
 
     private fun addObservers() {
-
         icalListViewModel.iCal4ListNotes.observe(viewLifecycleOwner) {
             binding.listRecycler.adapter?.notifyDataSetChanged()
-            icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
+            if(icalListViewModel.scrollOnceId.value?:-1L > 0L)
+                icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
         }
 
         icalListViewModel.scrollOnceId.observe(viewLifecycleOwner) {
@@ -118,9 +118,9 @@ class IcalListFragmentNotes : Fragment() {
 
             val scrollToItem = icalListViewModel.iCal4ListNotes.value?.find { listItem -> listItem.property.id == it }
             val scrollToItemPos = icalListViewModel.iCal4ListNotes.value?.indexOf(scrollToItem)
-            scrollToItemPos?.let { pos ->
-                binding.listRecycler.layoutManager?.scrollToPosition(pos)
-                icalListViewModel.scrollOnceId.postValue(null)
+            if(scrollToItemPos != null && scrollToItemPos >= 0) {
+                binding.listRecycler.layoutManager?.scrollToPosition(scrollToItemPos)
+                icalListViewModel.scrollOnceId.value = null
             }
         }
     }
