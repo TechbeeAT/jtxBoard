@@ -239,10 +239,22 @@ class IcalEditFragment : Fragment() {
         binding.editFragmentIcalEditAlarm.editAlarmsButtonCustom.setOnClickListener {
             var zonedTimestamp = ZonedDateTime.now()
 
+            // Build constraints.
+            // Create a custom date validator to only enable dates that are in the list
+            val onlyFutureDatesValidator = object : CalendarConstraints.DateValidator {
+                override fun describeContents(): Int { return 0 }
+                override fun writeToParcel(dest: Parcel?, flags: Int) {}
+                override fun isValid(date: Long): Boolean = date >= DateTimeUtils.getTodayAsLong()
+            }
+            val constraints = CalendarConstraints.Builder().apply {
+                setStart(zonedTimestamp.toInstant().toEpochMilli())
+                setValidator(onlyFutureDatesValidator)
+            }.build()
             val datePicker =
                 MaterialDatePicker.Builder.datePicker()
                     .setTitleText(R.string.edit_datepicker_dialog_select_date)
                     .setSelection(zonedTimestamp.toInstant().toEpochMilli())
+                    .setCalendarConstraints(constraints)
                     .build()
 
             val clockFormat = if (is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
