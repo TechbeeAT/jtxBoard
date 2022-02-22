@@ -298,8 +298,8 @@ class IcalEditViewModel(
                     val triggerTime = when {
                         newAlarm.triggerTime != null -> newAlarm.triggerTime
                         newAlarm.triggerRelativeDuration != null && newAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> newAlarm.getDatetimeFromTriggerDuration(
-                            iCalObjectUpdated.value?.due)
-                        newAlarm.triggerRelativeDuration != null -> newAlarm.getDatetimeFromTriggerDuration(iCalObjectUpdated.value?.dtstart)
+                            iCalObjectUpdated.value?.due, iCalObjectUpdated.value?.dueTimezone)
+                        newAlarm.triggerRelativeDuration != null -> newAlarm.getDatetimeFromTriggerDuration(iCalObjectUpdated.value?.dtstart, iCalObjectUpdated.value?.dtstartTimezone)
                         else -> null
                     }
                     triggerTime?.let { newAlarm.scheduleNotification(getApplication(), it) }

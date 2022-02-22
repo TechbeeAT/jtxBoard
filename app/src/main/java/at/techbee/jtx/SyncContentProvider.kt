@@ -239,8 +239,8 @@ class SyncContentProvider : ContentProvider() {
             val triggerTime = when {
                 alarm.triggerTime != null -> alarm.triggerTime
                 alarm.triggerRelativeDuration != null && alarm.triggerRelativeTo == AlarmRelativeTo.END.name -> alarm.getDatetimeFromTriggerDuration(
-                    icalobject.due)
-                alarm.triggerRelativeDuration != null -> alarm.getDatetimeFromTriggerDuration(icalobject.dtstart)
+                    icalobject.due, icalobject.dueTimezone)
+                alarm.triggerRelativeDuration != null -> alarm.getDatetimeFromTriggerDuration(icalobject.dtstart, icalobject.dtstartTimezone)
                 else -> null
             }
             triggerTime?.let { trigger -> alarm.scheduleNotification(context!!, trigger) }

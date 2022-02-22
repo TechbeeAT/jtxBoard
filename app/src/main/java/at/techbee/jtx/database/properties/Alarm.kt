@@ -34,10 +34,13 @@ import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
 import at.techbee.jtx.databinding.CardAlarmBinding
 import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.parcelize.Parcelize
 import java.time.Duration
+import java.time.Instant
+import java.time.ZoneId
 import java.time.format.DateTimeParseException
 
 /** The name of the the table for Alarms that are linked to an ICalObject.
@@ -269,12 +272,18 @@ data class Alarm (
 
     /**
      * @param [referenceDate] to which the trigger duration should be added
+     * @param [timezone] to determine if it is an allday entry
      * @return the timestamp of the referenceDate before/after the triggerDuration
      */
-    fun getDatetimeFromTriggerDuration(referenceDate: Long?): Long? {
+    fun getDatetimeFromTriggerDuration(referenceDate: Long?, timezone: String?): Long? {
         if(referenceDate == null)
             return null
-        getTriggerAsDuration()?.let { return referenceDate + it.toMillis() } ?: return null
+        val offset = if(timezone == TZ_ALLDAY)
+            ZoneId.systemDefault().rules.getOffset(Instant.ofEpochMilli(referenceDate)).totalSeconds * 1000
+        else
+            0
+
+        getTriggerAsDuration()?.let { return referenceDate + it.toMillis() - offset } ?: return null
     }
 
     /**
@@ -350,7 +359,7 @@ data class Alarm (
                 return null
 
             bindingAlarm.cardAlarmDate.text = DateTimeUtils.convertLongToFullDateTimeString(
-                getDatetimeFromTriggerDuration(referenceDate), referenceTZ
+                getDatetimeFromTriggerDuration(referenceDate, referenceTZ), referenceTZ
             )
             bindingAlarm.cardAlarmDuration.text = getTriggerDurationAsString(inflater.context)
         }

@@ -1022,8 +1022,8 @@ data class ICalObject(
                     val triggerTime = when {
                         it.triggerTime != null -> it.triggerTime
                         it.triggerRelativeDuration != null && it.triggerRelativeTo == AlarmRelativeTo.END.name -> it.getDatetimeFromTriggerDuration(
-                            instance.property.due)
-                        it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(instance.property.dtstart)
+                            instance.property.due, instance.property.dueTimezone)
+                        it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(instance.property.dtstart, instance.property.dtstartTimezone)
                         else -> null
                     }
                     triggerTime?.let { trigger -> it.scheduleNotification(context, trigger) }

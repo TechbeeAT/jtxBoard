@@ -20,8 +20,7 @@ import at.techbee.jtx.util.DateTimeUtils.isValidEmail
 import at.techbee.jtx.util.DateTimeUtils.isValidURL
 import org.junit.Assert.*
 import org.junit.Test
-import java.time.Instant
-import java.time.ZoneId
+
 
 class DateTimeUtilsTest {
 
@@ -93,9 +92,7 @@ class DateTimeUtilsTest {
     // one day in millis is 86400000, we get the UTC time so the UTC time divided by 86400000 must always have 0 rest
     @Test fun getTodayAsLong_test() {
         val today = getTodayAsLong()
-        val offset = ZoneId.systemDefault().rules.getOffset(Instant.now())
-        val todayUTC = today + offset.totalSeconds*1000
-        assertTrue(todayUTC%86400000 == 0L)
+        assertEquals(0L, today%(1000*60*60*24))
     }
 
     // test with itmezone null is not done as it would take the local timezone

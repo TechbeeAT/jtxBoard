@@ -222,7 +222,7 @@ object DateTimeUtils {
     /**
      * @return the current day as Long (the hour, minute, second and millisecond of the current datetime is set to 0)
      */
-    fun getTodayAsLong() = ZonedDateTime.of(ZonedDateTime.now().year, ZonedDateTime.now().monthValue, ZonedDateTime.now().dayOfMonth, 0, 0, 0, 0, ZoneId.systemDefault())
+    fun getTodayAsLong() = ZonedDateTime.of(ZonedDateTime.now().year, ZonedDateTime.now().monthValue, ZonedDateTime.now().dayOfMonth, 0, 0, 0, 0, ZoneId.of("UTC"))
         .toInstant().toEpochMilli()
 
     /**
