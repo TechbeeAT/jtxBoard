@@ -143,6 +143,8 @@ Global Strings -->
     <string name="edit_location_helper">"Добавьте местоположение для этой записи"</string>
     <string name="edit_attachment_add_dialog_hint">"Ваш URL-адрес вложения (https://…)"</string>
     <string name="edit_comment_add_dialog_hint">"Ваш комментарий"</string>
+
+    <!-- Fuzzy -->
     <string name="edit_attachment_beta_info">"* Обратите внимание, что синхронизация вложений с DAVx⁵ является экспериментальной функцией. Помните, что это может привести к неожиданному поведению или ошибкам. Если у вас возникнут какие-либо проблемы, сообщите нам об этом через форумы поддержки или запрос в службу поддержки на веб-сайте!"</string>
     <string name="edit_subtasks_add_hint">"Ваша подзадача"</string>
     <string name="edit_subtasks_add_helper">"Добавить подзадачу"</string>
