@@ -311,15 +311,15 @@ data class Alarm (
         // The final structure should be "xx minutes/hours/days before/after-start/due
         // "%1$d %2$s %3$s", e.g. 7 days before start
         val param1Value = when {
-            dur.abs().toMinutes() in 1..60 -> dur.abs().toMinutes()
-            dur.abs().toHours() in 1..23 -> dur.abs().toHours()
-            dur.abs().toDays() in 1..365 -> dur.abs().toDays()
+            dur.abs().toMinutes()%(24*60) == 0L -> dur.abs().toDays()      // if minutes modulo (24h * 60m) has no rest, we have full days and show days
+            dur.abs().toMinutes()%(60) == 0L -> dur.abs().toHours()      // if minutes modulo (60m) has no rest, we have full hours and show hours
+            dur.abs().toMinutes() > 0L -> dur.abs().toMinutes()      // if minutes modulo (24h * 60m) has no rest, we have full days and show days
             else -> null
         }
         val param2Unit = when {
-            dur.abs().toMinutes() in 1..60 -> context.getString(R.string.alarms_minutes)
-            dur.abs().toHours() in 1..23 -> context.getString(R.string.alarms_hours)
-            dur.abs().toDays() in 1..365 -> context.getString(R.string.alarms_days)
+            dur.abs().toMinutes()%(24*60) == 0L -> context.getString(R.string.alarms_days)
+            dur.abs().toMinutes()%(60) == 0L -> context.getString(R.string.alarms_hours)
+            dur.abs().toMinutes() > 0L -> context.getString(R.string.alarms_minutes)
             else -> null
         }
         val param3BeforeAfterStartDue = when {
@@ -348,19 +348,14 @@ data class Alarm (
 
         if(triggerTime != null) {
             bindingAlarm.cardAlarmDate.text =
-                DateTimeUtils.convertLongToFullDateTimeString(
-                    triggerTime,
-                    triggerTimezone
-                )
+                DateTimeUtils.convertLongToFullDateTimeString(triggerTime, triggerTimezone)
             bindingAlarm.cardAlarmDuration.visibility = View.GONE
         }
         else if(triggerRelativeDuration?.isNotEmpty() == true) {
             if(referenceDate == null)
                 return null
 
-            bindingAlarm.cardAlarmDate.text = DateTimeUtils.convertLongToFullDateTimeString(
-                getDatetimeFromTriggerDuration(referenceDate, referenceTZ), referenceTZ
-            )
+            bindingAlarm.cardAlarmDate.text = DateTimeUtils.convertLongToFullDateTimeString(getDatetimeFromTriggerDuration(referenceDate, referenceTZ), referenceTZ)
             bindingAlarm.cardAlarmDuration.text = getTriggerDurationAsString(inflater.context)
         }
         return bindingAlarm
