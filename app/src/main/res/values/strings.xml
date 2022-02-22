@@ -473,14 +473,14 @@
     <string name="adinfo_adfree_purchase_description_thankyou">Ads are now removed from the app. If you like this app and you would like to support the continuous development, please also consider the subscription.</string>
     <string name="adinfo_adfree_subscribe_header">Subscription for jtx Board Ad-free</string>
     <string name="adinfo_adfree_subscribe_description">The subscription removes the recurring ads from this app and additionally you support the continuous development of this app.</string>
-    <string name="adinfo_adfree_subscribe_success_header">Thank you for buying the jtx Board Ad-free Subscription</string>
-    <string name="adinfo_adfree_subscribe_success_description">Ads are now removed from the app. Thank you for your contribution to keep this project alive!</string>
-    <string name="adinfo_adfree_subscribe_success_thankyou">Thank you!</string>
+    <string name="adinfo_adfree_success_header">Thank you for buying the jtx Board Ad-free!</string>
+    <string name="adinfo_adfree_success_description">Ads are now removed from the app. Thank you for your contribution to keep this project alive!</string>
+    <string name="adinfo_adfree_success_thankyou">Thank you!</string>
     <string name="adinfo_adfree_subscribe_quarterly">Quarterly</string>
     <string name="adinfo_button_reset_user_consent">Reset user consent</string>
     <string name="adinfo_button_manage_subscriptions">Manage subscription</string>
-    <string name="adinfo_adfree_subscribe_purchase_date">Purchased on %1$s</string>
-    <string name="adinfo_adfree_subscribe_order_id">Order ID: %1$s</string>
+    <string name="adinfo_adfree_purchase_date">Purchased on %1$s</string>
+    <string name="adinfo_adfree_order_id">Order ID: %1$s</string>
 
     <string name="attachment_error_on_retrieving_file">Failed to retrieve file.</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">No app was found to open this file/URL.</string>

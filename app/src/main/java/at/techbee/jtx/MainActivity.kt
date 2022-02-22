@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity()  {
         checkThemeSetting()
 
         BillingManager.getInstance()?.initialise(this)
-        BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.observe(this) {
+        BillingManager.getInstance()?.isAdFreePurchased?.observe(this) {
             if(it)
                 AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)
         }

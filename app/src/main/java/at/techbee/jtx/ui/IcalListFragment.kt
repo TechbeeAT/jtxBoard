@@ -628,7 +628,7 @@ class IcalListFragment : Fragment() {
 
                 icalListViewModel.insertQuickItem(it, categories)
 
-                if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.value == false)
+                if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreePurchased?.value == false)
                     AdManager.getInstance()?.showInterstitialAd(requireActivity())     // don't forget to show an ad if applicable ;-)
             }
         }

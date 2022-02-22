@@ -88,7 +88,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/adinfo_button_userconsent" />
 
-<!--
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/adinfo_card_purchase"
                 android:layout_width="match_parent"
@@ -160,8 +160,8 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>
--->
 
+<!--
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/adinfo_card_subscribe"
                 android:layout_width="match_parent"
@@ -245,10 +245,10 @@
                         app:layout_constraintTop_toBottomOf="@+id/adinfo_card_subscribe_price" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
-
+-->
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/adinfo_card_subscribe_success"
+                android:id="@+id/adinfo_card_success"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -259,67 +259,67 @@
                 android:focusable="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/adinfo_card_subscribe">
+                app:layout_constraintTop_toBottomOf="@id/adinfo_card_purchase">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/adinfo_card_subscribe_success_logo"
+                        android:id="@+id/adinfo_card_success_logo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        app:layout_constraintBottom_toBottomOf="@+id/adinfo_card_subscribe_success_description"
+                        app:layout_constraintBottom_toBottomOf="@+id/adinfo_card_success_description"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/adinfo_card_subscribe_success_header"
+                        app:layout_constraintTop_toTopOf="@+id/adinfo_card_success_header"
                         app:srcCompat="@mipmap/ic_launcher"
                         tools:ignore="ContentDescription" />
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/adinfo_card_subscribe_success_header"
+                        android:id="@+id/adinfo_card_success_header"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="8dp"
-                        android:text="@string/adinfo_adfree_subscribe_success_header"
+                        android:text="@string/adinfo_adfree_success_header"
                         android:textStyle="bold"
                         app:flow_horizontalBias="0.0"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/adinfo_card_subscribe_success_logo"
+                        app:layout_constraintStart_toEndOf="@+id/adinfo_card_success_logo"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/adinfo_card_subscribe_success_description"
+                        android:id="@+id/adinfo_card_success_description"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="16dp"
-                        android:text="@string/adinfo_adfree_subscribe_success_description"
+                        android:text="@string/adinfo_adfree_success_description"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/adinfo_card_subscribe_success_header"
-                        app:layout_constraintTop_toBottomOf="@+id/adinfo_card_subscribe_success_header" />
+                        app:layout_constraintStart_toStartOf="@+id/adinfo_card_success_header"
+                        app:layout_constraintTop_toBottomOf="@+id/adinfo_card_success_header" />
 
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/adinfo_card_subscribe_success_purchase_date"
+                        android:id="@+id/adinfo_card_success_purchase_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/adinfo_card_subscribe_success_header"
-                        app:layout_constraintTop_toBottomOf="@+id/adinfo_card_subscribe_success_description"
+                        app:layout_constraintStart_toStartOf="@+id/adinfo_card_success_header"
+                        app:layout_constraintTop_toBottomOf="@+id/adinfo_card_success_description"
                         tools:text="Purchased on date" />
 
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/adinfo_card_subscribe_success_order_number"
+                        android:id="@+id/adinfo_card_success_order_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -328,14 +328,14 @@
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/adinfo_card_subscribe_success_header"
-                        app:layout_constraintTop_toBottomOf="@+id/adinfo_card_subscribe_success_purchase_date"
+                        app:layout_constraintStart_toStartOf="@+id/adinfo_card_success_header"
+                        app:layout_constraintTop_toBottomOf="@+id/adinfo_card_success_purchase_date"
                         tools:text="Order ID: GPA.3335-4045-7996-83659" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-
+<!--
             <Button
                 android:id="@+id/adinfo_button_manage_subscriptions"
                 android:layout_width="wrap_content"
@@ -346,20 +346,20 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/adinfo_card_subscribe_success" />
-
+-->
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/adinfo_thankyou_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/adinfo_adfree_subscribe_success_thankyou"
+                android:text="@string/adinfo_adfree_success_thankyou"
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/adinfo_button_manage_subscriptions" />
+                app:layout_constraintTop_toBottomOf="@+id/adinfo_card_success" />
 
 
             <ImageView

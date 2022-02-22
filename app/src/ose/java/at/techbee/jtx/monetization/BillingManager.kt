@@ -36,11 +36,11 @@ class BillingManager :
         }
     }
 
-    override var isAdFreeSubscriptionPurchased: LiveData<Boolean> = MutableLiveData(true)   // always true for OSE flavor
-    override val adFreeSubscriptionPrice = MutableLiveData<String?>(null)
-    override val adFreeSubscriptionPurchaseDate = MutableLiveData<String?>(null)
-    override val adFreeSubscriptionOrderId = MutableLiveData<String?>(null)
+    override var isAdFreePurchased: LiveData<Boolean> = MutableLiveData(true)   // always true for OSE flavor
+    override val adFreePrice = MutableLiveData<String?>(null)
+    override val adFreePurchaseDate = MutableLiveData<String?>(null)
+    override val adFreeOrderId = MutableLiveData<String?>(null)
 
     override fun initialise(activity: Activity) { /* nothing to do for this flavor */ }
-    override fun launchSubscriptionBillingFlow(activity: Activity) { /* nothing to do for this flavor */ }
+    override fun launchBillingFlow(activity: Activity) { /* nothing to do for this flavor */ }
 }

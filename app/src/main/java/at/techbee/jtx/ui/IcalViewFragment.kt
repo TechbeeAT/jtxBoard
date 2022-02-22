@@ -599,7 +599,7 @@ class IcalViewFragment : Fragment() {
         }
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only)
-        if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.value == false)
+        if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreePurchased?.value == false)
             AdManager.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), AdManager.getInstance()?.unitIdBannerView)
         else
             binding.viewAdContainer.visibility = View.GONE

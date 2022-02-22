@@ -13,11 +13,11 @@ import androidx.lifecycle.LiveData
 
 interface BillingManagerDefinition {
 
-    var isAdFreeSubscriptionPurchased: LiveData<Boolean>
+    var isAdFreePurchased: LiveData<Boolean>
 
-    val adFreeSubscriptionPrice: LiveData<String?>
-    val adFreeSubscriptionPurchaseDate: LiveData<String?>
-    val adFreeSubscriptionOrderId: LiveData<String?>
+    val adFreePrice: LiveData<String?>
+    val adFreePurchaseDate: LiveData<String?>
+    val adFreeOrderId: LiveData<String?>
 
     /**
      * Initialises the billing client (if not initialised yet)
@@ -29,8 +29,8 @@ interface BillingManagerDefinition {
     /**
      * This function launches the billing flow from Google Play.
      * It shows a bar on the bototm of the page where the user can buy the item.
-     * The passed skuDetails are currently [BillingManager.adfreeSubscriptionSkuDetails].
+     * The passed skuDetails are currently [BillingManager.adfreeSkuDetails].
      */
-    fun launchSubscriptionBillingFlow(activity: Activity)
+    fun launchBillingFlow(activity: Activity)
 
 }

@@ -200,7 +200,7 @@ class IcalListAdapterNote(var context: Context, var model: IcalListViewModel) :
 
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
-        if(position%3 == 2 && AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.value == false)
+        if(position%3 == 2 && AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreePurchased?.value == false)
             AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.getInstance()?.unitIdBannerListNote)
         else
             holder.adContainer.visibility = View.GONE

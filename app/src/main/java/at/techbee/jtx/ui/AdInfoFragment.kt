@@ -9,8 +9,6 @@
 package at.techbee.jtx.ui
 
 import android.app.Application
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,12 +27,6 @@ class AdInfoFragment : Fragment() {
 
     lateinit var binding: FragmentAdinfoBinding
     lateinit var application: Application
-    private lateinit var inflater: LayoutInflater
-
-    companion object {
-        private const val MANAGE_SUBSCRIPTIONS_LINK = "https://play.google.com/store/account/subscriptions"
-    }
-
 
 
     override fun onCreateView(
@@ -42,25 +34,23 @@ class AdInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        // Get a reference to the binding object and inflate the fragment views.
-        this.inflater = inflater
         this.binding = FragmentAdinfoBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
-        BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.observe(viewLifecycleOwner) {
+        BillingManager.getInstance()?.isAdFreePurchased?.observe(viewLifecycleOwner) {
             updateFragmentContent()
         }
 
-        BillingManager.getInstance()?.adFreeSubscriptionPrice?.observe(viewLifecycleOwner) {
-            binding.adinfoCardSubscribePrice.text = it ?: ""
+        BillingManager.getInstance()?.adFreePrice?.observe(viewLifecycleOwner) {
+            binding.adinfoCardPurchasePrice.text = it ?: ""
         }
 
-        BillingManager.getInstance()?.adFreeSubscriptionOrderId?.observe(viewLifecycleOwner) {
-            binding.adinfoCardSubscribeSuccessOrderNumber.text = getString(R.string.adinfo_adfree_subscribe_order_id, it)
+        BillingManager.getInstance()?.adFreeOrderId?.observe(viewLifecycleOwner) {
+            binding.adinfoCardSuccessOrderNumber.text = getString(R.string.adinfo_adfree_order_id, it)
         }
 
-        BillingManager.getInstance()?.adFreeSubscriptionPurchaseDate?.observe(viewLifecycleOwner) {
-            binding.adinfoCardSubscribeSuccessPurchaseDate.text = getString(R.string.adinfo_adfree_subscribe_purchase_date, it)
+        BillingManager.getInstance()?.adFreePurchaseDate?.observe(viewLifecycleOwner) {
+            binding.adinfoCardSuccessPurchaseDate.text = getString(R.string.adinfo_adfree_purchase_date, it)
         }
 
         return binding.root
@@ -100,28 +90,31 @@ class AdInfoFragment : Fragment() {
 
         if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY) {
 
-            if (BillingManager.getInstance()?.isAdFreeSubscriptionPurchased?.value == true) {      // change text if item was already bought
-                binding.adinfoCardSubscribeSuccess.setOnClickListener { return@setOnClickListener }   // actually we remove the listener
-                binding.adinfoCardSubscribe.visibility = View.GONE
+            if (BillingManager.getInstance()?.isAdFreePurchased?.value == true) {      // change text if item was already bought
+                binding.adinfoCardSuccess.setOnClickListener { return@setOnClickListener }   // actually we remove the listener
+                binding.adinfoCardPurchase.visibility = View.GONE
                 binding.adinfoAdfreeText.visibility = View.GONE
                 binding.adinfoButtonUserconsent.visibility = View.GONE
                 binding.adinfoText.visibility = View.GONE
-                binding.adinfoCardSubscribeSuccess.visibility = View.VISIBLE
+                binding.adinfoCardSuccess.visibility = View.VISIBLE
                 binding.adinfoThankyouImage.visibility = View.VISIBLE
                 binding.adinfoThankyouText.visibility = View.VISIBLE
-                binding.adinfoButtonManageSubscriptions.visibility = View.VISIBLE
+                /* binding.adinfoButtonManageSubscriptions.visibility = View.VISIBLE
                 binding.adinfoButtonManageSubscriptions.setOnClickListener {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(MANAGE_SUBSCRIPTIONS_LINK)))
-                }
+                } */
             } else {
-                binding.adinfoCardSubscribeSuccess.visibility = View.GONE
+                binding.adinfoCardSuccess.visibility = View.GONE
                 binding.adinfoThankyouImage.visibility = View.GONE
                 binding.adinfoThankyouText.visibility = View.GONE
-                binding.adinfoButtonManageSubscriptions.visibility = View.GONE
+                /* binding.adinfoButtonManageSubscriptions.visibility = View.GONE
                 binding.adinfoCardSubscribe.setOnClickListener {
-                    BillingManager.getInstance()?.launchSubscriptionBillingFlow(requireActivity())
+                    BillingManager.getInstance()?.launchBillingFlow(requireActivity())
+                } */
+                binding.adinfoCardPurchase.setOnClickListener {
+                    BillingManager.getInstance()?.launchBillingFlow(requireActivity())
                 }
-                binding.adinfoCardSubscribe.visibility = View.VISIBLE
+                binding.adinfoCardPurchase.visibility = View.VISIBLE
                 binding.adinfoAdfreeText.visibility = View.VISIBLE
                 binding.adinfoText.visibility = View.VISIBLE
 
@@ -131,12 +124,12 @@ class AdInfoFragment : Fragment() {
                     binding.adinfoButtonUserconsent.visibility = View.GONE
             }
         } else {
-            binding.adinfoCardSubscribe.visibility = View.GONE
+            binding.adinfoCardPurchase.visibility = View.GONE
             binding.adinfoAdfreeText.visibility = View.GONE
-            binding.adinfoCardSubscribeSuccess.visibility = View.GONE
+            binding.adinfoCardSuccess.visibility = View.GONE
             binding.adinfoThankyouImage.visibility = View.GONE
             binding.adinfoThankyouText.visibility = View.GONE
-            binding.adinfoButtonManageSubscriptions.visibility = View.GONE
+            //binding.adinfoButtonManageSubscriptions.visibility = View.GONE
 
             // we don't show the button to reset the user consent for the HUAWEI flavor. Currently there is no user consent implemented for HUAWEI.
             // If a user consent would be required, we only show non-personalized ads, additionally we show this as an info.

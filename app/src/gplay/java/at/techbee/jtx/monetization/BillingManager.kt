@@ -29,11 +29,10 @@ class BillingManager :
         @Volatile
         private var INSTANCE: BillingManager? = null
 
-        private const val IN_APP_PRODUCT_SUBSCRIPTION = "jtx_adfree_sub_quarterly"
+        private const val IN_APP_PRODUCT_ADFREE = "adfree"
 
         private const val PREFS_BILLING = "sharedPreferencesBilling"
-        private const val PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE =
-            "prefsBillingSubscriptionPurchaseState"
+        private const val PREFS_BILLING_PURCHASE_STATE = "prefsBillingPurchaseState"
 
         fun getInstance(): BillingManager? {
             synchronized(this) {
@@ -50,21 +49,21 @@ class BillingManager :
     }
 
     private var billingClient: BillingClient? = null
-    private var adfreeSubscriptionSkuDetails: MutableLiveData<SkuDetails?> =
+    private var adfreeSkuDetails: MutableLiveData<SkuDetails?> =
         MutableLiveData<SkuDetails?>(null)
-    private var adfreeSubscriptionPurchase: MutableLiveData<Purchase?> =
+    private var adfreePurchase: MutableLiveData<Purchase?> =
         MutableLiveData<Purchase?>(null)
 
 
-    override lateinit var isAdFreeSubscriptionPurchased: LiveData<Boolean>
+    override lateinit var isAdFreePurchased: LiveData<Boolean>
 
-    override val adFreeSubscriptionPrice = Transformations.map(adfreeSubscriptionSkuDetails) {
+    override val adFreePrice = Transformations.map(adfreeSkuDetails) {
         it?.price
     }
-    override val adFreeSubscriptionPurchaseDate = Transformations.map(adfreeSubscriptionPurchase) {
+    override val adFreePurchaseDate = Transformations.map(adfreePurchase) {
         DateTimeUtils.convertLongToFullDateTimeString(it?.purchaseTime, null)
     }
-    override val adFreeSubscriptionOrderId = Transformations.map(adfreeSubscriptionPurchase) {
+    override val adFreeOrderId = Transformations.map(adfreePurchase) {
         it?.orderId
     }
 
@@ -90,7 +89,7 @@ class BillingManager :
 
         // initialisation is done already, just return and do nothing
         //if(billingClient != null && adfreeOneTimeSkuDetails.value != null && adfreeSubscriptionSkuDetails.value != null) {
-        if (billingClient != null && adfreeSubscriptionSkuDetails.value != null) {
+        if (billingClient != null && adfreeSkuDetails.value != null) {
             // if everything is initialised we doublecheck if we missed a purchase and update it if necessary
             updatePurchases()
             return
@@ -105,12 +104,10 @@ class BillingManager :
          * If the user has no subscription or it expired, the item would not be returned in the purchase list.
          * See also https://developer.android.com/google/play/billing/subscriptions#lifecycle
          */
-        isAdFreeSubscriptionPurchased =
-            Transformations.map(adfreeSubscriptionPurchase) { purchase ->
-                purchase?.purchaseState == Purchase.PurchaseState.PURCHASED || billingPrefs?.getString(
-                    PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE,
-                    null
-                ) == Purchase.PurchaseState.PURCHASED.toString()
+        isAdFreePurchased =
+            Transformations.map(adfreePurchase) { purchase ->
+                purchase?.purchaseState == Purchase.PurchaseState.PURCHASED
+                    || billingPrefs?.getString(PREFS_BILLING_PURCHASE_STATE, null) == Purchase.PurchaseState.PURCHASED.toString()
             }
 
         billingClient = BillingClient.newBuilder(activity)
@@ -149,17 +146,17 @@ class BillingManager :
     private suspend fun querySkuDetails() {
 
         // now query subscriptions
-        val paramsSub = SkuDetailsParams.newBuilder().apply {
-            this.setSkusList(arrayListOf(IN_APP_PRODUCT_SUBSCRIPTION))
-            this.setType(BillingClient.SkuType.SUBS)
+        val params = SkuDetailsParams.newBuilder().apply {
+            this.setSkusList(arrayListOf(IN_APP_PRODUCT_ADFREE))
+            this.setType(BillingClient.SkuType.INAPP)
         }.build()
 
         withContext(Dispatchers.IO) {
             //Log.d("Billing Client", "Querying subscriptions")
-            val queryResult = billingClient?.querySkuDetails(paramsSub)
+            val queryResult = billingClient?.querySkuDetails(params)
             queryResult?.skuDetailsList?.forEach {
-                if (it.sku == IN_APP_PRODUCT_SUBSCRIPTION)
-                    adfreeSubscriptionSkuDetails.postValue(it)
+                if (it.sku == IN_APP_PRODUCT_ADFREE)
+                    adfreeSkuDetails.postValue(it)
             }
             // once everything is initialised we doublecheck if we missed a purchase and update it if necessary
             updatePurchases()
@@ -170,14 +167,14 @@ class BillingManager :
     /**
      * This function launches the billing flow from Google Play.
      * It shows a bar on the bototm of the page where the user can buy the item.
-     * The passed skuDetails are currently [BillingManager.adfreeSubscriptionSkuDetails].
+     * The passed skuDetails are currently [BillingManager.adfreeSkuDetails].
      */
-    override fun launchSubscriptionBillingFlow(activity: Activity) {
+    override fun launchBillingFlow(activity: Activity) {
 
-        if (billingClient != null && adfreeSubscriptionSkuDetails.value != null) {
+        if (billingClient != null && adfreeSkuDetails.value != null) {
             // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
             val flowParams = BillingFlowParams.newBuilder()
-                .setSkuDetails(adfreeSubscriptionSkuDetails.value!!)
+                .setSkuDetails(adfreeSkuDetails.value!!)
                 .build()
             //val responseCode = billingClient?.launchBillingFlow(activity, flowParams)?.responseCode
             billingClient?.launchBillingFlow(activity, flowParams)
@@ -198,19 +195,14 @@ class BillingManager :
     private fun updatePurchases() {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val subscriptionPurchases =
-                billingClient?.queryPurchasesAsync(BillingClient.SkuType.SUBS)
-            if (subscriptionPurchases?.purchasesList?.isEmpty() == true) {
-                billingPrefs?.edit()?.remove(PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE)?.apply()
-                adfreeSubscriptionPurchase.postValue(null)
+            val inAppPurchases =
+                billingClient?.queryPurchasesAsync(BillingClient.SkuType.INAPP)
+            if (inAppPurchases?.purchasesList?.isEmpty() == true) {
+                billingPrefs?.edit()?.remove(PREFS_BILLING_PURCHASE_STATE)?.apply()
+                adfreePurchase.postValue(null)
             }
 
-            val allPurchases = mutableListOf<Purchase>().apply {
-                //addAll(inappPurchases?.purchasesList ?: emptyList())
-                addAll(subscriptionPurchases?.purchasesList ?: emptyList())
-            }
-
-            allPurchases.forEach { purchase ->
+            inAppPurchases?.purchasesList?.forEach { purchase ->
                 handlePurchase(purchase)
             }
         }
@@ -231,17 +223,14 @@ class BillingManager :
             }
         }
 
-        if (purchase.skus.contains(IN_APP_PRODUCT_SUBSCRIPTION)) {
-            if (adfreeSubscriptionPurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
-                adfreeSubscriptionPurchase.postValue(purchase)
-            billingPrefs?.edit()?.putString(
-                PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE,
-                purchase.purchaseState.toString()
-            )?.apply()
+        if (purchase.skus.contains(IN_APP_PRODUCT_ADFREE)) {
+            if (adfreePurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
+                adfreePurchase.postValue(purchase)
+            billingPrefs?.edit()?.putString(PREFS_BILLING_PURCHASE_STATE, purchase.purchaseState.toString())?.apply()
         } else {
-            billingPrefs?.edit()?.remove(PREFS_BILLING_SUBSCRIPTION_PURCHASE_STATE)?.apply()
-            if (adfreeSubscriptionPurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
-                adfreeSubscriptionPurchase.postValue(purchase)
+            billingPrefs?.edit()?.remove(PREFS_BILLING_PURCHASE_STATE)?.apply()
+            if (adfreePurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
+                adfreePurchase.postValue(purchase)
         }
     }
 }
