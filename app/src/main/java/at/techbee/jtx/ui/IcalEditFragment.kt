@@ -689,45 +689,29 @@ class IcalEditFragment : Fragment() {
             if (icalEditViewModel.iCalObjectUpdated.value == null)     // don't do anything if the object was not initialized yet
                 return@observe
 
+            val oldDtstart = icalEditViewModel.iCalObjectUpdated.value?.dtstart?.let{ ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)) }
+            val oldDue = icalEditViewModel.iCalObjectUpdated.value?.due?.let{ ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dueTimezone)) }
+            val oldCompleted = icalEditViewModel.iCalObjectUpdated.value?.completed?.let{ ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.completedTimezone)) }
+
             if (addTime) {
                 icalEditViewModel.iCalObjectUpdated.value!!.dtstartTimezone = null
                 icalEditViewModel.iCalObjectUpdated.value!!.dueTimezone = null
                 icalEditViewModel.iCalObjectUpdated.value!!.completedTimezone = null
-                //binding.editTimezoneSpinner.setSelection(0)
-
             } else {
                 icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone = ICalObject.TZ_ALLDAY
                 icalEditViewModel.iCalObjectUpdated.value?.dueTimezone = ICalObject.TZ_ALLDAY
                 icalEditViewModel.iCalObjectUpdated.value?.completedTimezone = ICalObject.TZ_ALLDAY
+            }
 
-                // make sure that the time gets reset to 0 (if it was set before)
-                icalEditViewModel.iCalObjectUpdated.value?.dtstart?.let {
-                    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone))
-                        .withHour(0)
-                        .withMinute(0)
-                        .withSecond(0)
-                        .withNano(0)
-                    icalEditViewModel.iCalObjectUpdated.value?.dtstart = zonedDateTime.toInstant().toEpochMilli()
-                }
-
-                icalEditViewModel.iCalObjectUpdated.value?.due?.let {
-                    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dueTimezone))
-                        .withHour(0)
-                        .withMinute(0)
-                        .withSecond(0)
-                        .withNano(0)
-                    icalEditViewModel.iCalObjectUpdated.value?.due = zonedDateTime.toInstant().toEpochMilli()
-                }
-
-                icalEditViewModel.iCalObjectUpdated.value?.completed?.let {
-                    val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.completedTimezone))
-                        .withHour(0)
-                        .withMinute(0)
-                        .withSecond(0)
-                        .withNano(0)
-                    icalEditViewModel.iCalObjectUpdated.value?.completed = zonedDateTime.toInstant().toEpochMilli()
-                }
-
+            // make sure that the day stays the same when we add time
+            icalEditViewModel.iCalObjectUpdated.value?.dtstart = oldDtstart?.let {
+                ZonedDateTime.of(it.year, it.monthValue, it.dayOfMonth, 0, 0, 0, 0, requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)).toInstant().toEpochMilli()
+            }
+            icalEditViewModel.iCalObjectUpdated.value?.due = oldDue?.let {
+                ZonedDateTime.of(it.year, it.monthValue, it.dayOfMonth, 0, 0, 0, 0, requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dueTimezone)).toInstant().toEpochMilli()
+            }
+            icalEditViewModel.iCalObjectUpdated.value?.completed = oldCompleted?.let {
+                ZonedDateTime.of(it.year, it.monthValue, it.dayOfMonth, 0, 0, 0, 0, requireTzId(icalEditViewModel.iCalObjectUpdated.value?.completedTimezone)).toInstant().toEpochMilli()
             }
 
             // post itself to update UI
