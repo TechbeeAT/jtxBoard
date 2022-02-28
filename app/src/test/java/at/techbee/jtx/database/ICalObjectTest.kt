@@ -48,7 +48,8 @@ class ICalObjectTest {
 
         assertEquals("setUpdatedProgress_no_change", task.summary)
         assertNull(task.percent)
-        assertEquals(StatusTodo.`NEEDS-ACTION`.name, task.status)
+        assertNull(task.status)
+        //assertEquals(StatusTodo.`NEEDS-ACTION`.name, task.status)
         //assertNull(task.dtstart)
         //assertNull(task.completed)
         assertNotNull(task.lastModified)
@@ -60,6 +61,7 @@ class ICalObjectTest {
     @Test
     fun setUpdatedProgress_needs_action() {
         val task = ICalObject.createTask("setUpdatedProgress_needs_action_in_Progress")
+        task.status = StatusTodo.`NEEDS-ACTION`.name
         task.setUpdatedProgress(1)
         task.setUpdatedProgress(0)
 
@@ -80,7 +82,8 @@ class ICalObjectTest {
 
         assertEquals("setUpdatedProgress_in_Progress", task.summary)
         assertEquals(50, task.percent)
-        assertEquals(StatusTodo.`IN-PROCESS`.name, task.status)
+        //assertEquals(StatusTodo.`IN-PROCESS`.name, task.status)
+        assertNull(task.status)
         //assertNotNull(task.dtstart)
         //assertNull(task.completed)
         assertNotNull(task.lastModified)
@@ -91,6 +94,7 @@ class ICalObjectTest {
     @Test
     fun setUpdatedProgress_completed() {
         val task = ICalObject.createTask("setUpdatedProgress_completed")
+        task.status = StatusTodo.`NEEDS-ACTION`.name
         task.setUpdatedProgress(100)
 
         assertEquals("setUpdatedProgress_completed", task.summary)
@@ -190,7 +194,7 @@ class ICalObjectTest {
         val createdObject = ICalObject(
             component = Component.VTODO.name,
             module = Module.TODO.name,
-            status = StatusTodo.`NEEDS-ACTION`.name,
+            status = null,
             percent = null,
             priority = null,
             dueTimezone = TZ_ALLDAY,
@@ -214,7 +218,7 @@ class ICalObjectTest {
         val createdObject = ICalObject(
             component = Component.VTODO.name,
             module = Module.TODO.name,
-            status = StatusTodo.`NEEDS-ACTION`.name,
+            //status = StatusTodo.`NEEDS-ACTION`.name,
             percent = null,
             priority = null,
             dueTimezone = TZ_ALLDAY,
