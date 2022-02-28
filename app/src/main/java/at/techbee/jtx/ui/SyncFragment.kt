@@ -22,17 +22,17 @@ import at.techbee.jtx.database.ICalDatabaseDao
 import android.content.Intent
 import android.net.Uri
 import android.view.*
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import at.techbee.jtx.util.SyncUtil
 
 
 class SyncFragment : Fragment() {
 
+    private val syncViewModel: SyncViewModel by activityViewModels()
     lateinit var binding: FragmentSyncBinding
     lateinit var application: Application
     private lateinit var inflater: LayoutInflater
     private lateinit var dataSource: ICalDatabaseDao
-    private lateinit var syncViewModel: SyncViewModel
     private var optionsMenu: Menu? = null
 
 
@@ -47,8 +47,6 @@ class SyncFragment : Fragment() {
         this.application = requireNotNull(this.activity).application
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-        val viewModelFactory = SyncViewModelFactory(dataSource, application)
-        syncViewModel = ViewModelProvider(this, viewModelFactory)[SyncViewModel::class.java]
         binding.lifecycleOwner = viewLifecycleOwner
         binding.model = syncViewModel
 
