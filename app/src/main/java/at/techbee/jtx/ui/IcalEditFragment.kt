@@ -219,8 +219,7 @@ class IcalEditFragment : Fragment() {
             object : AdapterView.OnItemSelectedListener {
 
                 override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
-                    icalEditViewModel.iCalObjectUpdated.value?.collectionId =
-                        icalEditViewModel.allCollections.value?.get(pos)?.collectionId ?: 1L
+                    icalEditViewModel.selectedCollectionId = icalEditViewModel.allCollections.value?.get(pos)?.collectionId ?: 1L
                     updateCollectionColor()
 
                     //Don't show the subtasks tab if the collection doesn't support VTODO
@@ -542,7 +541,7 @@ class IcalEditFragment : Fragment() {
                     binding.editFragmentTabGeneral.editProgressSlider.value.toInt()
                 prefs.edit().putLong(
                     PREFS_LAST_COLLECTION,
-                    icalEditViewModel.iCalObjectUpdated.value!!.collectionId
+                    icalEditViewModel.selectedCollectionId ?: icalEditViewModel.iCalObjectUpdated.value!!.collectionId
                 ).apply()
 
                 icalEditViewModel.update()
@@ -879,7 +878,7 @@ class IcalEditFragment : Fragment() {
                 return@observe
 
             // do not update anything about the collections anymore, as the user might have changed the selection and interference must be avoided!
-            if (icalEditViewModel.iCalObjectUpdated.value?.collectionId != null && icalEditViewModel.iCalObjectUpdated.value?.collectionId != icalEditViewModel.iCalEntity.property.collectionId)
+            if (icalEditViewModel.selectedCollectionId != null)
                 return@observe
 
             // set up the adapter for the organizer spinner
@@ -1351,7 +1350,7 @@ class IcalEditFragment : Fragment() {
      */
     private fun updateCollectionColor() {
         val selectedCollection = icalEditViewModel.allCollections.value?.find { collection ->
-            collection.collectionId == icalEditViewModel.iCalObjectUpdated.value?.collectionId
+            collection.collectionId == icalEditViewModel.selectedCollectionId ?: icalEditViewModel.iCalObjectUpdated.value?.collectionId
         }
         // applying the color
         ICalObject.applyColorOrHide(binding.editFragmentTabGeneral.editColorbarCollection, selectedCollection?.color)

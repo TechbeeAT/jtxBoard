@@ -65,6 +65,7 @@ class IcalEditViewModel(
 
     var iCalObjectUpdated: MutableLiveData<ICalObject> =
         MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property) }
+    var selectedCollectionId: Long? = null
 
     var categoryUpdated: MutableList<Category> = mutableListOf()
     var commentUpdated: MutableList<Comment> = mutableListOf()
@@ -225,23 +226,23 @@ class IcalEditViewModel(
         if(iCalObjectUpdated.value!!.percent == 0)
             iCalObjectUpdated.value!!.percent = null
 
-        viewModelScope.launch {
-
-            try {
-                insertedOrUpdatedItemId = insertOrUpdateICalObject()
-                iCalObjectUpdated.value!!.id = insertedOrUpdatedItemId
-            } catch (e: SQLiteConstraintException) {
-                collectionNotFoundError.value = true
-                savingClicked.value = false
-                return@launch
-            }
-
-            // the case that an item gets deleted at the same time the user was already editing this item, is currently not handled.
-            // On save the user would not get an error, he would return to the overview with the deleted item missing
-
-
-            // do the rest in a background thread
             viewModelScope.launch(Dispatchers.IO) {
+                // the case that an item gets deleted at the same time the user was already editing this item, is currently not handled.
+                // On save the user would not get an error, he would return to the overview with the deleted item missing
+                try {
+                    // we insert or update - if the collection was changed, we still update the current entry and move the item to the new collection at the end
+                    insertedOrUpdatedItemId = if(iCalObjectUpdated.value!!.id == 0L)
+                            database.insertICalObject(iCalObjectUpdated.value!!)
+                        else {
+                            database.update(iCalObjectUpdated.value!!)
+                            iCalObjectUpdated.value!!.id
+                        }
+                    iCalObjectUpdated.value!!.id = insertedOrUpdatedItemId
+                } catch (e: SQLiteConstraintException) {
+                    collectionNotFoundError.value = true
+                    savingClicked.value = false
+                    return@launch
+                }
 
                 // delete the list attributes, then insert again the once that are still in the list (or were added)
                 database.deleteCategories(insertedOrUpdatedItemId)
@@ -378,43 +379,21 @@ class IcalEditViewModel(
                         )
                     }
                 }
-                SyncUtil.notifyContentObservers(getApplication())
-            }
 
-            returnIcalObjectId.value = insertedOrUpdatedItemId
-        }
-    }
+                if(iCalEntity.ICalCollection?.collectionId != selectedCollectionId && selectedCollectionId != null) {
+                    val newId = ICalObject.updateCollectionWithChildren(iCalEntity.property.id, null, selectedCollectionId!!, database)
 
-    private suspend fun insertOrUpdateICalObject(): Long {
-        val newId = when {
-            iCalObjectUpdated.value!!.id == 0L -> {
-                database.insertICalObject(iCalObjectUpdated.value!!)
-            }
-            iCalEntity.ICalCollection!!.collectionId != iCalObjectUpdated.value!!.collectionId -> {
-
-                val oldId = iCalEntity.property.id
-                val newId = ICalObject.updateCollectionWithChildren(iCalObjectUpdated.value!!.id, null, iCalObjectUpdated.value!!.collectionId, database)
-
-                // possible changes must still be updated
-                iCalObjectUpdated.value!!.id = newId
-                database.update(iCalObjectUpdated.value!!)
-
-                // once the newId is there, the local entries can be deleted (or marked as deleted)
-                viewModelScope.launch(Dispatchers.IO) {
-                    ICalObject.deleteItemWithChildren(oldId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
-                    SyncUtil.notifyContentObservers(getApplication())
+                    // once the newId is there, the local entries can be deleted (or marked as deleted)
+                    viewModelScope.launch(Dispatchers.IO) {
+                        ICalObject.deleteItemWithChildren(iCalEntity.property.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+                        SyncUtil.notifyContentObservers(getApplication())
+                    }
+                    insertedOrUpdatedItemId = newId
                 }
-                newId
+                SyncUtil.notifyContentObservers(getApplication())
+                returnIcalObjectId.postValue(insertedOrUpdatedItemId)
             }
-            else -> {
-                database.update(iCalObjectUpdated.value!!)
-                iCalObjectUpdated.value!!.id
-            }
-        }
-        SyncUtil.notifyContentObservers(getApplication())
-        return newId
     }
-
 
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
