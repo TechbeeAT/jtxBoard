@@ -69,14 +69,10 @@ class IcalListFragment : Fragment() {
     private var gotodateMenuItem: MenuItem? = null
 
     private var settings: SharedPreferences? = null
-
     private lateinit var prefs: SharedPreferences
     private lateinit var arguments: IcalListFragmentArgs
 
     var currentWriteableCollections = listOf<ICalCollection>()
-
-    //private var lastIcal4ListHash: Int = 0
-
 
 
     companion object {
@@ -179,14 +175,12 @@ class IcalListFragment : Fragment() {
             // trying to skip this code. This might have the effect, that subtasks that are added during the sync might not be immediately available, but improves the performance as the list does not get updated all the time
         }
 
-
         // observe to make sure that it gets updated
         icalListViewModel.allRemoteCollections.observe(viewLifecycleOwner) {
             // check if any accounts were removed, retrieve all DAVx5 Accounts
             val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
             icalListViewModel.removeDeletedAccounts(accounts)
         }
-
 
         // observe the directEditEntity. This is set in the Adapter on long click through the model. On long click we forward the user directly to the edit fragment
         icalListViewModel.directEditEntity.observe(viewLifecycleOwner) {
@@ -214,7 +208,7 @@ class IcalListFragment : Fragment() {
             false
         }
 
-        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
+        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
             icalListViewModel.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning())
         }
 

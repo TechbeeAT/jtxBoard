@@ -123,7 +123,7 @@ class IcalViewFragment : Fragment() {
         binding.model = icalViewViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
+        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
             icalViewViewModel.showSyncProgressIndicator.postValue(
                 SyncUtil.isJtxSyncRunningForAccount(
                     Account(icalViewViewModel.icalEntity.value?.ICalCollection?.accountName, icalViewViewModel.icalEntity.value?.ICalCollection?.accountType)

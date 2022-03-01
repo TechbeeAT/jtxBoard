@@ -70,7 +70,7 @@ class SyncFragment : Fragment() {
             }
         }
 
-        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE or ContentResolver.SYNC_OBSERVER_TYPE_PENDING) {
+        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
             syncViewModel.showSyncProgressIndicator.postValue(SyncUtil.isJtxSyncRunning())
         }
 
