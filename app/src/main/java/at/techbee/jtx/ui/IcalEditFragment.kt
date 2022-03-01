@@ -9,7 +9,9 @@
 package at.techbee.jtx.ui
 
 import android.Manifest
-import android.app.*
+import android.app.Activity
+import android.app.AlertDialog
+import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -29,7 +31,10 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -37,12 +42,13 @@ import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import at.techbee.jtx.*
+import at.techbee.jtx.AUTHORITY_FILEPROVIDER
+import at.techbee.jtx.CONTACT_READ_PERMISSION_CODE
+import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.databinding.*
 import at.techbee.jtx.monetization.AdManager
@@ -54,8 +60,8 @@ import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_WEEK
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_YEAR
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_ALARMS
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_ATTACHMENTS
-import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_LOC_COMMENTS
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_GENERAL
+import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_LOC_COMMENTS
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_PEOPLE_RES
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_RECURRING
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_SUBTASKS
@@ -79,12 +85,13 @@ import com.google.android.material.timepicker.TimeFormat
 import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
-import net.fortuna.ical4j.model.*
+import net.fortuna.ical4j.model.NumberList
+import net.fortuna.ical4j.model.Recur
+import net.fortuna.ical4j.model.WeekDay
+import net.fortuna.ical4j.model.WeekDayList
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.lang.ClassCastException
-import java.lang.NumberFormatException
 import java.time.*
 import java.time.temporal.ChronoUnit
 
@@ -95,7 +102,6 @@ class IcalEditFragment : Fragment() {
 
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
-    private lateinit var viewModelFactory: IcalEditViewModelFactory
     lateinit var icalEditViewModel: IcalEditViewModel
     private lateinit var inflater: LayoutInflater
     private var container: ViewGroup? = null
@@ -147,13 +153,10 @@ class IcalEditFragment : Fragment() {
         this.binding = FragmentIcalEditBinding.inflate(inflater, container, false)
         this.container = container
         this.application = requireNotNull(this.activity).application
-
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
         val arguments = IcalEditFragmentArgs.fromBundle((requireArguments()))
-
         val prefs = activity?.getSharedPreferences(PREFS_EDIT_VIEW, Context.MODE_PRIVATE)!!
-
 
         // add menu
         setHasOptionsMenu(true)
@@ -179,14 +182,8 @@ class IcalEditFragment : Fragment() {
                 .show()
         }
 
-
-        this.viewModelFactory =
-            IcalEditViewModelFactory(arguments.icalentity, dataSource, application)
-        icalEditViewModel =
-            ViewModelProvider(
-                this, viewModelFactory
-            )[IcalEditViewModel::class.java]
-
+        val model: IcalEditViewModel by viewModels { IcalEditViewModelFactory(application, arguments.icalentity) }
+        icalEditViewModel = model
         binding.model = icalEditViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 

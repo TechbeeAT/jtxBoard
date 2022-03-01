@@ -24,9 +24,8 @@ import java.util.*
 
 
 class IcalEditViewModel(
-    val iCalEntity: ICalEntity,
-    val database: ICalDatabaseDao,
-    application: Application
+    application: Application,
+    val iCalEntity: ICalEntity
 ) : AndroidViewModel(application) {
 
     companion object {
@@ -44,6 +43,8 @@ class IcalEditViewModel(
         const val RECURRENCE_MODE_MONTH = 2
         const val RECURRENCE_MODE_YEAR = 3
     }
+
+    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allResources: LiveData<List<String>>
