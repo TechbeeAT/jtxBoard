@@ -29,7 +29,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
@@ -61,7 +61,6 @@ class IcalViewFragment : Fragment() {
     lateinit var application: Application
     private lateinit var inflater: LayoutInflater
     private lateinit var dataSource: ICalDatabaseDao
-    private lateinit var viewModelFactory: IcalViewViewModelFactory
     lateinit var icalViewViewModel: IcalViewViewModel
     private var optionsMenu: Menu? = null
 
@@ -118,13 +117,9 @@ class IcalViewFragment : Fragment() {
             audioEncoder = MediaRecorder.AudioEncoder.AMR_NB
         }
 
-
         // set up view model
-        viewModelFactory = IcalViewViewModelFactory(application, arguments.item2show)
-        icalViewViewModel =
-            ViewModelProvider(
-                this, viewModelFactory)[IcalViewViewModel::class.java]
-
+        val model: IcalViewViewModel by viewModels { IcalViewViewModelFactory(application, arguments.item2show) }
+        icalViewViewModel = model
         binding.model = icalViewViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
