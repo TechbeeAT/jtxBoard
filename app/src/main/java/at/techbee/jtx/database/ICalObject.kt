@@ -808,10 +808,7 @@ data class ICalObject(
     }
 
 
-    fun setUpdatedProgress(newPercent: Int): ICalObject {
-
-        if (percent == newPercent || (percent == null && newPercent == 0))
-            return this
+    fun setUpdatedProgress(newPercent: Int?) {
 
         percent = if(newPercent == 0) null else newPercent
         if(status?.isNotEmpty() == true)                   // we only update the status if it was set to a value, if it's null, we skip this part
@@ -823,15 +820,22 @@ data class ICalObject(
             }
         lastModified = System.currentTimeMillis()
 
-        if (completed == null && percent != null && percent!! == 100)
-            completed = System.currentTimeMillis()
+        if (completed == null && percent == 100) {
+            completedTimezone = dueTimezone?:dtstartTimezone
+            completed = if(completedTimezone == TZ_ALLDAY)
+                DateTimeUtils.getTodayAsLong()
+            else
+                System.currentTimeMillis()
+        } else if (completed != null && percent != 100) {
+            completed = null
+            completedTimezone = null
+        }
 
         sequence++
         dirty = true
-
         isRecurLinkedInstance = false     // in any case on update of the progress, the item becomes an exception
 
-        return this
+        return
     }
 
 

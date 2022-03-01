@@ -333,7 +333,8 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
 
         makeRecurringExceptionIfNecessary(item)
         viewModelScope.launch(Dispatchers.IO) {
-            database.update(item.setUpdatedProgress(newPercent))
+            item.setUpdatedProgress(newPercent)
+            database.update(item)
             SyncUtil.notifyContentObservers(getApplication())
         }
     }

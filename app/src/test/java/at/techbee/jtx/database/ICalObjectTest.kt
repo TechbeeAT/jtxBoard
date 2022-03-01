@@ -49,14 +49,9 @@ class ICalObjectTest {
         assertEquals("setUpdatedProgress_no_change", task.summary)
         assertNull(task.percent)
         assertNull(task.status)
-        //assertEquals(StatusTodo.`NEEDS-ACTION`.name, task.status)
-        //assertNull(task.dtstart)
-        //assertNull(task.completed)
         assertNotNull(task.lastModified)
-        assertEquals(0, task.sequence)
         assertEquals(true, task.dirty)
     }
-
 
     @Test
     fun setUpdatedProgress_needs_action() {
@@ -107,6 +102,38 @@ class ICalObjectTest {
         assertEquals(true, task.dirty)
     }
 
+    @Test
+    fun setUpdatedProgress_completed1() {
+        val task = ICalObject.createTask("setUpdatedProgress")
+        task.dtstartTimezone = null
+        task.dtstart = null
+        task.dueTimezone = null
+        task.due = null
+        task.setUpdatedProgress(100)
+        assertNull(task.completedTimezone)
+        assertNotNull(task.completed)
+    }
+
+    @Test
+    fun setUpdatedProgress_completed2() {
+        val task = ICalObject.createTask("setUpdatedProgress")
+        task.dtstartTimezone = TZ_ALLDAY
+        task.setUpdatedProgress(100)
+        assertEquals(TZ_ALLDAY, task.completedTimezone)
+        assertNotNull(task.completed)
+    }
+
+    @Test
+    fun setUpdatedProgress_completed_reset() {
+        val task = ICalObject.createTask("setUpdatedProgress")
+        task.dtstartTimezone = TZ_ALLDAY
+        task.setUpdatedProgress(100)
+        assertEquals(TZ_ALLDAY, task.completedTimezone)
+        assertNotNull(task.completed)
+        task.setUpdatedProgress(32)
+        assertNull(task.completedTimezone)
+        assertNull(task.completed)
+    }
 
 
     @Test

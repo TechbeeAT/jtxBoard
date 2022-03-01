@@ -224,176 +224,164 @@ class IcalEditViewModel(
         if (iCalObjectUpdated.value!!.collectionId != 1L)
             iCalObjectUpdated.value!!.dirty = true
 
-        if(iCalObjectUpdated.value!!.percent == 0)
-            iCalObjectUpdated.value!!.percent = null
+        if(iCalObjectUpdated.value!!.module == Module.TODO.name)
+            iCalObjectUpdated.value!!.setUpdatedProgress(iCalObjectUpdated.value!!.percent)
 
-            viewModelScope.launch(Dispatchers.IO) {
-                // the case that an item gets deleted at the same time the user was already editing this item, is currently not handled.
-                // On save the user would not get an error, he would return to the overview with the deleted item missing
-                try {
-                    // we insert or update - if the collection was changed, we still update the current entry and move the item to the new collection at the end
-                    insertedOrUpdatedItemId = if(iCalObjectUpdated.value!!.id == 0L)
-                            database.insertICalObject(iCalObjectUpdated.value!!)
-                        else {
-                            database.update(iCalObjectUpdated.value!!)
-                            iCalObjectUpdated.value!!.id
-                        }
-                    iCalObjectUpdated.value!!.id = insertedOrUpdatedItemId
-                } catch (e: SQLiteConstraintException) {
-                    collectionNotFoundError.value = true
-                    savingClicked.value = false
-                    return@launch
-                }
-
-                // delete the list attributes, then insert again the once that are still in the list (or were added)
-                database.deleteCategories(insertedOrUpdatedItemId)
-                database.deleteComments(insertedOrUpdatedItemId)
-                database.deleteAttachments(insertedOrUpdatedItemId)
-                database.deleteAttendees(insertedOrUpdatedItemId)
-                database.deleteResources(insertedOrUpdatedItemId)
-                database.deleteAlarms(insertedOrUpdatedItemId)
-
-                subtaskDeleted.forEach { subtask2del ->
-                    viewModelScope.launch(Dispatchers.IO) {
-                        ICalObject.deleteItemWithChildren(subtask2del.id, database)
+        viewModelScope.launch(Dispatchers.IO) {
+            // the case that an item gets deleted at the same time the user was already editing this item, is currently not handled.
+            // On save the user would not get an error, he would return to the overview with the deleted item missing
+            try {
+                // we insert or update - if the collection was changed, we still update the current entry and move the item to the new collection at the end
+                insertedOrUpdatedItemId = if(iCalObjectUpdated.value!!.id == 0L)
+                        database.insertICalObject(iCalObjectUpdated.value!!)
+                    else {
+                        database.update(iCalObjectUpdated.value!!)
+                        iCalObjectUpdated.value!!.id
                     }
-                    Log.println(Log.INFO, "Subtask", "${subtask2del.summary} deleted")
-                }
-
-                // now insert or update the item and take care of all attributes
-                // insert new Categories
-                categoryUpdated.forEach { newCategory ->
-                    newCategory.icalObjectId = insertedOrUpdatedItemId
-                    database.insertCategory(newCategory)
-                }
-                commentUpdated.forEach { newComment ->
-                    newComment.icalObjectId =
-                        insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
-                    database.insertComment(newComment)
-                }
-                attachmentUpdated.forEach { newAttachment ->
-                    newAttachment.icalObjectId =
-                        insertedOrUpdatedItemId                    //Update the foreign key for newly added attachments
-                    database.insertAttachment(newAttachment)
-                }
-                attendeeUpdated.forEach { newAttendee ->
-                    newAttendee.icalObjectId = insertedOrUpdatedItemId
-                    database.insertAttendee(newAttendee)
-                }
-                resourceUpdated.forEach { newResource ->
-                    newResource.icalObjectId = insertedOrUpdatedItemId
-                    database.insertResource(newResource)
-                }
-                alarmUpdated.forEach { newAlarm ->
-                    newAlarm.icalObjectId = insertedOrUpdatedItemId
-                    if(newAlarm.action.isNullOrEmpty())
-                        newAlarm.action = AlarmAction.DISPLAY.name
-
-                    // VALARM with action DISPLAY must have a description!
-                    iCalObjectUpdated.value?.summary?.let { newAlarm.summary = it  }
-                    iCalObjectUpdated.value?.description?.let { newAlarm.description = it }
-                    if(newAlarm.description.isNullOrEmpty())
-                        newAlarm.description = newAlarm.summary ?: ""          // If no description was set, we try to set it to the summary, if also the summary is null, an empty string is set
-                    newAlarm.alarmId = database.insertAlarm(newAlarm)
-
-                    // take care of notifications
-                    val triggerTime = when {
-                        newAlarm.triggerTime != null -> newAlarm.triggerTime
-                        newAlarm.triggerRelativeDuration != null && newAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> newAlarm.getDatetimeFromTriggerDuration(
-                            iCalObjectUpdated.value?.due, iCalObjectUpdated.value?.dueTimezone)
-                        newAlarm.triggerRelativeDuration != null -> newAlarm.getDatetimeFromTriggerDuration(iCalObjectUpdated.value?.dtstart, iCalObjectUpdated.value?.dtstartTimezone)
-                        else -> null
-                    }
-                    triggerTime?.let { newAlarm.scheduleNotification(getApplication(), it) }
-                }
-
-                // if a collection was selected that doesn't support VTODO, we do not update/insert any subtasks
-                // deleting a subtask in the DB is not necessary before, as the insertion should never have been possible for VTODOs
-                val currentCollection = allCollections.value?.find { col -> col.collectionId == iCalObjectUpdated.value?.collectionId }
-                if(currentCollection?.supportsVTODO == false)
-                    subtaskUpdated.clear()
-
-                subtaskUpdated.forEach { subtask ->
-                    subtask.sequence++
-                    subtask.lastModified = System.currentTimeMillis()
-                    subtask.dirty = true
-                    subtask.collectionId = iCalObjectUpdated.value?.collectionId!!
-                    when(subtask.percent) {
-                        in 1..99 -> subtask.status = StatusTodo.`IN-PROCESS`.name
-                        100 -> subtask.status = StatusTodo.COMPLETED.name
-                        else -> subtask.status = StatusTodo.`NEEDS-ACTION`.name
-                    }
-                    if(subtask.percent == 0)
-                        subtask.percent = null
-                    subtask.id = database.insertSubtask(subtask)
-                    Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
-
-
-                    // upsert relation from the Parent to the Child
-
-                    // check if the relation is there, if not we insert
-                    val childRelation = database.findRelatedTo(insertedOrUpdatedItemId, subtask.id, Reltype.CHILD.name)
-                    if(childRelation == null) {
-                        database.insertRelatedto(
-                            Relatedto(
-                                icalObjectId = insertedOrUpdatedItemId,
-                                linkedICalObjectId = subtask.id,
-                                reltype = Reltype.CHILD.name,
-                                text = subtask.uid
-                            )
-                        )
-                    }
-
-                    // upsert relation from the Child to the Parent
-                    // check if the relation is there, if not we insert
-                    val parentRelation = database.findRelatedTo(subtask.id, insertedOrUpdatedItemId, Reltype.PARENT.name)
-                    if(parentRelation == null) {
-                        database.insertRelatedto(
-                            Relatedto(
-                                icalObjectId = subtask.id,
-                                linkedICalObjectId = insertedOrUpdatedItemId,
-                                reltype = Reltype.PARENT.name,
-                                text = iCalObjectUpdated.value!!.uid
-                            )
-                        )
-                    }
-                }
-
-                if (recurrenceList.size > 0 || iCalObjectUpdated.value!!.id != 0L)    // recreateRecurring if the recurrenceList is not empty, but also when it is an update, as the recurrence might have been deactivated and it is necessary to delete instances
-                    launch(Dispatchers.IO) {
-                        iCalObjectUpdated.value?.recreateRecurring(database, getApplication())
-                    }
-
-
-                if (iCalObjectUpdated.value?.recurOriginalIcalObjectId != null && iCalObjectUpdated.value?.isRecurLinkedInstance == false) {
-                    viewModelScope.launch(Dispatchers.IO) {
-
-                        val newExceptionList = addLongToCSVString(
-                            database.getRecurExceptions(iCalObjectUpdated.value?.recurOriginalIcalObjectId!!),
-                            iCalObjectUpdated.value!!.dtstart
-                        )
-
-                        database.setRecurExceptions(
-                            iCalObjectUpdated.value?.recurOriginalIcalObjectId!!,
-                            newExceptionList,
-                            System.currentTimeMillis()
-                        )
-                    }
-                }
-
-                if(iCalEntity.ICalCollection?.collectionId != selectedCollectionId && selectedCollectionId != null) {
-                    val newId = ICalObject.updateCollectionWithChildren(iCalEntity.property.id, null, selectedCollectionId!!, database)
-
-                    // once the newId is there, the local entries can be deleted (or marked as deleted)
-                    viewModelScope.launch(Dispatchers.IO) {
-                        ICalObject.deleteItemWithChildren(iCalEntity.property.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
-                        SyncUtil.notifyContentObservers(getApplication())
-                    }
-                    insertedOrUpdatedItemId = newId
-                }
-                SyncUtil.notifyContentObservers(getApplication())
-                returnIcalObjectId.postValue(insertedOrUpdatedItemId)
+                iCalObjectUpdated.value!!.id = insertedOrUpdatedItemId
+            } catch (e: SQLiteConstraintException) {
+                collectionNotFoundError.value = true
+                savingClicked.value = false
+                return@launch
             }
+
+            // delete the list attributes, then insert again the once that are still in the list (or were added)
+            database.deleteCategories(insertedOrUpdatedItemId)
+            database.deleteComments(insertedOrUpdatedItemId)
+            database.deleteAttachments(insertedOrUpdatedItemId)
+            database.deleteAttendees(insertedOrUpdatedItemId)
+            database.deleteResources(insertedOrUpdatedItemId)
+            database.deleteAlarms(insertedOrUpdatedItemId)
+
+            subtaskDeleted.forEach { subtask2del ->
+                viewModelScope.launch(Dispatchers.IO) {
+                    ICalObject.deleteItemWithChildren(subtask2del.id, database)
+                }
+                Log.println(Log.INFO, "Subtask", "${subtask2del.summary} deleted")
+            }
+
+            // now insert or update the item and take care of all attributes
+            // insert new Categories
+            categoryUpdated.forEach { newCategory ->
+                newCategory.icalObjectId = insertedOrUpdatedItemId
+                database.insertCategory(newCategory)
+            }
+            commentUpdated.forEach { newComment ->
+                newComment.icalObjectId =
+                    insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
+                database.insertComment(newComment)
+            }
+            attachmentUpdated.forEach { newAttachment ->
+                newAttachment.icalObjectId =
+                    insertedOrUpdatedItemId                    //Update the foreign key for newly added attachments
+                database.insertAttachment(newAttachment)
+            }
+            attendeeUpdated.forEach { newAttendee ->
+                newAttendee.icalObjectId = insertedOrUpdatedItemId
+                database.insertAttendee(newAttendee)
+            }
+            resourceUpdated.forEach { newResource ->
+                newResource.icalObjectId = insertedOrUpdatedItemId
+                database.insertResource(newResource)
+            }
+            alarmUpdated.forEach { newAlarm ->
+                newAlarm.icalObjectId = insertedOrUpdatedItemId
+                if(newAlarm.action.isNullOrEmpty())
+                    newAlarm.action = AlarmAction.DISPLAY.name
+
+                // VALARM with action DISPLAY must have a description!
+                iCalObjectUpdated.value?.summary?.let { newAlarm.summary = it  }
+                iCalObjectUpdated.value?.description?.let { newAlarm.description = it }
+                if(newAlarm.description.isNullOrEmpty())
+                    newAlarm.description = newAlarm.summary ?: ""          // If no description was set, we try to set it to the summary, if also the summary is null, an empty string is set
+                newAlarm.alarmId = database.insertAlarm(newAlarm)
+
+                // take care of notifications
+                val triggerTime = when {
+                    newAlarm.triggerTime != null -> newAlarm.triggerTime
+                    newAlarm.triggerRelativeDuration != null && newAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> newAlarm.getDatetimeFromTriggerDuration(
+                        iCalObjectUpdated.value?.due, iCalObjectUpdated.value?.dueTimezone)
+                    newAlarm.triggerRelativeDuration != null -> newAlarm.getDatetimeFromTriggerDuration(iCalObjectUpdated.value?.dtstart, iCalObjectUpdated.value?.dtstartTimezone)
+                    else -> null
+                }
+                triggerTime?.let { newAlarm.scheduleNotification(getApplication(), it) }
+            }
+
+            // if a collection was selected that doesn't support VTODO, we do not update/insert any subtasks
+            // deleting a subtask in the DB is not necessary before, as the insertion should never have been possible for VTODOs
+            val currentCollection = allCollections.value?.find { col -> col.collectionId == iCalObjectUpdated.value?.collectionId }
+            if(currentCollection?.supportsVTODO == false)
+                subtaskUpdated.clear()
+
+            subtaskUpdated.forEach { subtask ->
+                subtask.setUpdatedProgress(subtask.percent?:0)
+                subtask.id = database.insertSubtask(subtask)
+                Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
+
+                // upsert relation from the Parent to the Child
+                // check if the relation is there, if not we insert
+                val childRelation = database.findRelatedTo(insertedOrUpdatedItemId, subtask.id, Reltype.CHILD.name)
+                if(childRelation == null) {
+                    database.insertRelatedto(
+                        Relatedto(
+                            icalObjectId = insertedOrUpdatedItemId,
+                            linkedICalObjectId = subtask.id,
+                            reltype = Reltype.CHILD.name,
+                            text = subtask.uid
+                        )
+                    )
+                }
+
+                // upsert relation from the Child to the Parent
+                // check if the relation is there, if not we insert
+                val parentRelation = database.findRelatedTo(subtask.id, insertedOrUpdatedItemId, Reltype.PARENT.name)
+                if(parentRelation == null) {
+                    database.insertRelatedto(
+                        Relatedto(
+                            icalObjectId = subtask.id,
+                            linkedICalObjectId = insertedOrUpdatedItemId,
+                            reltype = Reltype.PARENT.name,
+                            text = iCalObjectUpdated.value!!.uid
+                        )
+                    )
+                }
+            }
+
+            if (recurrenceList.size > 0 || iCalObjectUpdated.value!!.id != 0L)    // recreateRecurring if the recurrenceList is not empty, but also when it is an update, as the recurrence might have been deactivated and it is necessary to delete instances
+                launch(Dispatchers.IO) {
+                    iCalObjectUpdated.value?.recreateRecurring(database, getApplication())
+                }
+
+
+            if (iCalObjectUpdated.value?.recurOriginalIcalObjectId != null && iCalObjectUpdated.value?.isRecurLinkedInstance == false) {
+                viewModelScope.launch(Dispatchers.IO) {
+
+                    val newExceptionList = addLongToCSVString(
+                        database.getRecurExceptions(iCalObjectUpdated.value?.recurOriginalIcalObjectId!!),
+                        iCalObjectUpdated.value!!.dtstart
+                    )
+
+                    database.setRecurExceptions(
+                        iCalObjectUpdated.value?.recurOriginalIcalObjectId!!,
+                        newExceptionList,
+                        System.currentTimeMillis()
+                    )
+                }
+            }
+
+            if(iCalEntity.ICalCollection?.collectionId != selectedCollectionId && selectedCollectionId != null) {
+                val newId = ICalObject.updateCollectionWithChildren(iCalEntity.property.id, null, selectedCollectionId!!, database)
+
+                // once the newId is there, the local entries can be deleted (or marked as deleted)
+                viewModelScope.launch(Dispatchers.IO) {
+                    ICalObject.deleteItemWithChildren(iCalEntity.property.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+                    SyncUtil.notifyContentObservers(getApplication())
+                }
+                insertedOrUpdatedItemId = newId
+            }
+            SyncUtil.notifyContentObservers(getApplication())
+            returnIcalObjectId.postValue(insertedOrUpdatedItemId)
+        }
     }
 
     fun delete() {

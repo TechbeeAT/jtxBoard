@@ -283,7 +283,8 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             val currentItem = database.getICalObjectById(itemId)
             ICalObject.makeRecurringException(currentItem!!, database)
             val item = database.getSync(itemId)!!.property
-            database.update(item.setUpdatedProgress(newPercent))
+            item.setUpdatedProgress(newPercent)
+            database.update(item)
             SyncUtil.notifyContentObservers(getApplication())
         }
         if(isLinkedRecurringInstance)
