@@ -120,7 +120,7 @@ class IcalViewFragment : Fragment() {
 
 
         // set up view model
-        viewModelFactory = IcalViewViewModelFactory(arguments.item2show, dataSource, application)
+        viewModelFactory = IcalViewViewModelFactory(application, arguments.item2show)
         icalViewViewModel =
             ViewModelProvider(
                 this, viewModelFactory)[IcalViewViewModel::class.java]

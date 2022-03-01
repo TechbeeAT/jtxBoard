@@ -26,9 +26,9 @@ import java.text.DateFormat
 import java.util.*
 
 
-class IcalViewViewModel(private val icalItemId: Long,
-                        val database: ICalDatabaseDao,
-                        application: Application) : AndroidViewModel(application) {
+class IcalViewViewModel(application: Application, private val icalItemId: Long) : AndroidViewModel(application) {
+
+    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
     lateinit var icalEntity: LiveData<ICalEntity?>
     lateinit var relatedNotes: LiveData<List<ICal4ViewNote?>>
@@ -41,7 +41,6 @@ class IcalViewViewModel(private val icalItemId: Long,
     lateinit var lastModifiedFormatted: LiveData<String>
     lateinit var progressFormatted: LiveData<String>
     lateinit var organizerFormatted: LiveData<String>
-
 
 
     lateinit var progressIndicatorVisible: LiveData<Boolean>

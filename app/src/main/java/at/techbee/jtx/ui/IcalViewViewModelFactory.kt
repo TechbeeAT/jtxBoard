@@ -11,17 +11,15 @@ package at.techbee.jtx.ui
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import at.techbee.jtx.database.ICalDatabaseDao
 
 
 class IcalViewViewModelFactory (
-        private val vJournalItemId: Long,
-        private val dataSource: ICalDatabaseDao,
-        private val application: Application) : ViewModelProvider.Factory {
+    private val application: Application,
+        private val vJournalItemId: Long) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(IcalViewViewModel::class.java)) {
-            return IcalViewViewModel(vJournalItemId, dataSource, application) as T
+            return IcalViewViewModel(application, vJournalItemId) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

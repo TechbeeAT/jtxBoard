@@ -45,9 +45,10 @@ class IcalViewViewModelTest {
     @Before
     fun setup()  {
         context = InstrumentationRegistry.getInstrumentation().targetContext
-        database = ICalDatabase.getInMemoryDB(context).iCalDatabaseDao
-        database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests"))
         application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
+        ICalDatabase.switchToInMemory(context)
+        database = ICalDatabase.getInstance(context).iCalDatabaseDao
+        database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests"))
 
     }
 
@@ -62,7 +63,7 @@ class IcalViewViewModelTest {
         val preparedEntry = ICalObject.createJournal()
         preparedEntry.id = database.insertICalObject(preparedEntry)
 
-        icalViewViewModel = IcalViewViewModel(preparedEntry.id, database, application)
+        icalViewViewModel = IcalViewViewModel(application, preparedEntry.id)
         Thread.sleep(100)
         icalViewViewModel.icalEntity.getOrAwaitValue()
 
@@ -77,7 +78,7 @@ class IcalViewViewModelTest {
         val preparedEntry = ICalObject.createJournal()
         preparedEntry.id = database.insertICalObject(preparedEntry)
 
-        icalViewViewModel = IcalViewViewModel(preparedEntry.id, database, application)
+        icalViewViewModel = IcalViewViewModel(application, preparedEntry.id)
         Thread.sleep(100)
         icalViewViewModel.icalEntity.getOrAwaitValue()
         icalViewViewModel.icalEntity.observeForever {}
@@ -100,7 +101,7 @@ class IcalViewViewModelTest {
         val preparedEntry = ICalObject.createJournal()
         preparedEntry.id = database.insertICalObject(preparedEntry)
 
-        icalViewViewModel = IcalViewViewModel(preparedEntry.id, database, application)
+        icalViewViewModel = IcalViewViewModel(application, preparedEntry.id)
         Thread.sleep(100)
         icalViewViewModel.icalEntity.getOrAwaitValue()
         icalViewViewModel.icalEntity.observeForever {}
@@ -125,16 +126,13 @@ class IcalViewViewModelTest {
         val preparedEntry = ICalObject.createTask("myTestTask")
         preparedEntry.id = database.insertICalObject(preparedEntry)
 
-
-        icalViewViewModel = IcalViewViewModel(preparedEntry.id, database, application)
+        icalViewViewModel = IcalViewViewModel(application, preparedEntry.id)
         Thread.sleep(100)
         icalViewViewModel.icalEntity.getOrAwaitValue()
 
         icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, 88)
 
-        val retrievedObject = database.getICalObjectById(icalViewViewModel.icalEntity.value!!.property.id)
-
-        assertNotNull(icalViewViewModel.icalEntity.value!!.property.dtstart)
+        database.getICalObjectById(icalViewViewModel.icalEntity.value!!.property.id)
         assertEquals(88, icalViewViewModel.icalEntity.value!!.property.percent)
     }
 
@@ -145,7 +143,7 @@ class IcalViewViewModelTest {
         preparedEntry.id = database.insertICalObject(preparedEntry)
 
 
-        icalViewViewModel = IcalViewViewModel(preparedEntry.id, database, application)
+        icalViewViewModel = IcalViewViewModel(application, preparedEntry.id)
         Thread.sleep(100)
         icalViewViewModel.icalEntity.getOrAwaitValue()
 
@@ -160,14 +158,14 @@ class IcalViewViewModelTest {
         assertEquals(false, icalViewViewModel.timeVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.urlVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.attendeesVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.organizerVisible.getOrAwaitValue())
+        //assertEquals(false, icalViewViewModel.organizerVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.contactVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.commentsVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.attachmentsVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.alarmsVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.relatedtoVisible.getOrAwaitValue())
         assertEquals(true, icalViewViewModel.progressVisible.getOrAwaitValue())
-        assertEquals(true, icalViewViewModel.priorityVisible.getOrAwaitValue())
+        assertEquals(false, icalViewViewModel.priorityVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.subtasksVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.completedVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.startedVisible.getOrAwaitValue())
