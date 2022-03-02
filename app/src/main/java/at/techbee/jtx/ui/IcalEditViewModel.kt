@@ -240,8 +240,8 @@ class IcalEditViewModel(
                     }
                 iCalObjectUpdated.value!!.id = insertedOrUpdatedItemId
             } catch (e: SQLiteConstraintException) {
-                collectionNotFoundError.value = true
-                savingClicked.value = false
+                collectionNotFoundError.postValue(true)
+                savingClicked.postValue(false)
                 return@launch
             }
 
@@ -315,6 +315,7 @@ class IcalEditViewModel(
 
             subtaskUpdated.forEach { subtask ->
                 subtask.setUpdatedProgress(subtask.percent?:0)
+                subtask.collectionId = iCalObjectUpdated.value!!.collectionId
                 subtask.id = database.insertSubtask(subtask)
                 Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
 

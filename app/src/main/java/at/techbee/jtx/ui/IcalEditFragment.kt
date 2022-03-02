@@ -909,6 +909,9 @@ class IcalEditFragment : Fragment() {
 
             //as loading the collections might take longer than loading the icalObject, we additionally set the color here
             updateCollectionColor()
+
+            //don't observe anymore when steps are done
+            icalEditViewModel.allCollections.removeObservers(viewLifecycleOwner)
         }
 
 
