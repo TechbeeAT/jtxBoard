@@ -83,7 +83,7 @@ class IcalViewViewModelTest {
         icalViewViewModel.icalEntity.getOrAwaitValue()
         icalViewViewModel.icalEntity.observeForever {}
 
-        icalViewViewModel.insertRelated("RelatedNote", null)
+        icalViewViewModel.insertRelated(ICalObject.createNote("RelatedNote"), null)
         Thread.sleep(100)
 
         val childEntry = database.get(icalViewViewModel.icalEntity.value?.relatedto?.get(0)?.linkedICalObjectId!!)
@@ -106,7 +106,7 @@ class IcalViewViewModelTest {
         icalViewViewModel.icalEntity.getOrAwaitValue()
         icalViewViewModel.icalEntity.observeForever {}
 
-        icalViewViewModel.insertRelated(null, Attachment(uri = "https://10.0.0.138"))
+        icalViewViewModel.insertRelated(ICalObject.createNote(), Attachment(uri = "https://10.0.0.138"))
         Thread.sleep(100)
 
         val childEntry = database.get(icalViewViewModel.icalEntity.value?.relatedto?.get(0)?.linkedICalObjectId!!)
@@ -117,7 +117,29 @@ class IcalViewViewModelTest {
         assertTrue(icalViewViewModel.icalEntity.value?.relatedto?.size!! > 0)
         assertNotNull(childEntry)
         assertTrue(childEntry.value?.attachments?.size!! > 0)
+    }
 
+    @Test
+    fun testInsertRelatedTask() = runBlockingTest {
+
+        val preparedEntry = ICalObject.createJournal()
+        preparedEntry.id = database.insertICalObject(preparedEntry)
+
+        icalViewViewModel = IcalViewViewModel(application, preparedEntry.id)
+        Thread.sleep(100)
+        icalViewViewModel.icalEntity.getOrAwaitValue()
+        icalViewViewModel.icalEntity.observeForever {}
+
+        icalViewViewModel.insertRelated(ICalObject.createTask("RelatedTask"), null)
+        Thread.sleep(100)
+
+        val childEntry = database.get(icalViewViewModel.icalEntity.value?.relatedto?.get(0)?.linkedICalObjectId!!)
+        childEntry.getOrAwaitValue()
+
+        assertEquals(true, icalViewViewModel.icalEntity.value?.property?.dirty)
+        assertEquals(1L,  icalViewViewModel.icalEntity.value?.property?.sequence)
+        assertTrue(icalViewViewModel.icalEntity.value?.relatedto?.size!! > 0)
+        assertNotNull(childEntry)
     }
 
     @Test
