@@ -223,7 +223,7 @@ class IcalViewFragment : Fragment() {
 
             // don't show the option to add notes if VJOURNAL is not supported (only relevant if the current entry is a VTODO)
             if (it.ICalCollection?.supportsVJOURNAL != true) {
-                binding.viewAddNote.visibility = View.GONE
+                binding.viewAddNoteTextinputlayout.visibility = View.GONE
                 binding.viewAddAudioNote.visibility = View.GONE
             }
 
@@ -410,8 +410,23 @@ class IcalViewFragment : Fragment() {
         }
 
 
-        binding.viewAddNote.setOnClickListener {
-            openAddNoteDialog()
+        binding.viewAddNoteTextinputlayout.setEndIconOnClickListener {
+            if(binding.viewAddNoteEdittext.text.toString().isNotEmpty())
+                icalViewViewModel.insertRelated(ICalObject.createNote(binding.viewAddNoteEdittext.text.toString()), null)
+            binding.viewAddNoteEdittext.text?.clear()
+        }
+
+        binding.viewAddNoteTextinputlayout.editText?.setOnEditorActionListener { _, actionId, _ ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    if(binding.viewAddNoteEdittext.text.toString().isNotEmpty()) {
+                        icalViewViewModel.insertRelated(ICalObject.createNote(binding.viewAddNoteEdittext.text.toString()),null)
+                        binding.viewAddNoteEdittext.text?.clear()
+                    }
+                    true
+                }
+                else -> false
+            }
         }
 
         // handling audio recording
@@ -879,56 +894,11 @@ class IcalViewFragment : Fragment() {
         binding.viewBottomBar.menu.findItem(R.id.menu_view_bottom_delete).isVisible = false
         binding.viewFabEdit.visibility = View.GONE
         optionsMenu?.findItem(R.id.menu_view_delete_item)?.isVisible = false
-        binding.viewAddNote.visibility = View.GONE
+        binding.viewAddNoteTextinputlayout.visibility = View.GONE
         binding.viewAddAudioNote.visibility = View.GONE
         binding.viewReadyonly.visibility = View.VISIBLE
     }
 
-    private fun openAddNoteDialog() {
-
-        val addnoteDialogBinding = FragmentIcalViewAddnoteDialogBinding.inflate(inflater)
-
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(R.string.view_dialog_add_note)
-        builder.setIcon(R.drawable.ic_comment_add)
-        builder.setView(addnoteDialogBinding.root)
-
-        builder.setPositiveButton(R.string.save) { _, _ ->
-            val text = addnoteDialogBinding.viewViewAddnoteDialogEdittext.text.toString()
-            if(text.isBlank())
-                Toast.makeText(context, R.string.view_dialog_addnote_toast_no_summary_description, Toast.LENGTH_LONG).show()
-            else
-                icalViewViewModel.insertRelated(ICalObject.createNote(addnoteDialogBinding.viewViewAddnoteDialogEdittext.text.toString()), null)
-        }
-
-        builder.setNegativeButton(R.string.cancel) { _, _ ->
-            // Do nothing, just close the message
-        }
-        //builder is shown on positiveButton after unlinking or immediately (after the recur-check)
-
-        // if the item is an instance of a recurring entry, make sure that the user is aware of this
-        val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
-        if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
-
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
-                .setMessage(getString(R.string.view_recurrence_note_to_original))
-                .setPositiveButton(R.string.cont) { _, _ ->
-                    builder.show()
-                }
-                .setNegativeButton(R.string.view_recurrence_go_to_original_button) { _, _ ->
-                    this.findNavController().navigate(
-                        IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
-                            originalId
-                        )
-                    )
-                }
-                .show()
-        } else {
-            builder.show()
-            addnoteDialogBinding.viewViewAddnoteDialogEdittext.requestFocus()
-        }
-    }
 
     private fun openAddAudioNoteDialog() {
 
