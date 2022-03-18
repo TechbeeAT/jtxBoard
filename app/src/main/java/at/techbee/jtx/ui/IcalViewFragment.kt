@@ -22,6 +22,7 @@ import android.os.*
 import android.util.Log
 import android.util.Size
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
@@ -410,153 +411,30 @@ class IcalViewFragment : Fragment() {
 
 
         binding.viewAddNote.setOnClickListener {
-
-            val addnoteDialogBinding = FragmentIcalViewAddnoteDialogBinding.inflate(inflater)
-
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle(R.string.view_dialog_add_note)
-            builder.setIcon(R.drawable.ic_comment_add)
-            builder.setView(addnoteDialogBinding.root)
-
-            builder.setPositiveButton(R.string.save) { _, _ ->
-                val text = addnoteDialogBinding.viewViewAddnoteDialogEdittext.text.toString()
-                if(text.isBlank())
-                    Toast.makeText(context, R.string.view_dialog_addnote_toast_no_summary_description, Toast.LENGTH_LONG).show()
-                else
-                    icalViewViewModel.insertRelated(addnoteDialogBinding.viewViewAddnoteDialogEdittext.text.toString(), null)
-            }
-
-            builder.setNegativeButton(R.string.cancel) { _, _ ->
-                // Do nothing, just close the message
-            }
-            //builder is shown on positiveButton after unlinking or immediately (after the recur-check)
-
-            // if the item is an instance of a recurring entry, make sure that the user is aware of this
-            val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
-            if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
-
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
-                    .setMessage(getString(R.string.view_recurrence_note_to_original))
-                    .setPositiveButton(R.string.cont) { _, _ ->
-                        builder.show()
-                    }
-                    .setNegativeButton(R.string.view_recurrence_go_to_original_button) { _, _ ->
-                        this.findNavController().navigate(
-                            IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
-                                originalId
-                            )
-                        )
-                    }
-                    .show()
-            } else {
-                builder.show()
-                addnoteDialogBinding.viewViewAddnoteDialogEdittext.requestFocus()
-            }
+            openAddNoteDialog()
         }
-
 
         // handling audio recording
         binding.viewAddAudioNote.setOnClickListener {
+            openAddAudioNoteDialog()
+        }
 
-            // Check if the permission to record audio is already granted, otherwise make a dialog to ask for permission
-            if (PermissionsHelper.checkPermissionRecordAudio(requireActivity())) {
+        binding.viewSubtasksAdd.setEndIconOnClickListener {
+            if(binding.viewSubtasksAddEdittext.text.toString().isNotEmpty())
+                icalViewViewModel.insertRelated(ICalObject.createTask(binding.viewSubtasksAddEdittext.text.toString()), null)
+            binding.viewSubtasksAddEdittext.text?.clear()
+        }
 
-                val audioDialogBinding = FragmentIcalViewAudioDialogBinding.inflate(inflater, container, false)
-
-                audioDialogBinding.viewAudioDialogStartrecordingFab.setOnClickListener {
-
-                    if(!recording) {
-                        fileName = Uri.parse("${requireContext().cacheDir}/recorded.$audioFileExtension")
-                        audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
-                        startRecording()
-                        audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = false
-                        recording = true
-                    } else {
-                        stopRecording()
-                        audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_microphone))
-                        audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = true
-                        recording = false
-
-                        player?.duration?.let { audioDialogBinding.viewAudioDialogProgressbar.max = it }
-                        player?.currentPosition?.let { audioDialogBinding.viewAudioDialogProgressbar.progress = it }
+        binding.viewSubtasksAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    if(binding.viewSubtasksAddEdittext.text.toString().isNotEmpty()) {
+                        icalViewViewModel.insertRelated(ICalObject.createTask(binding.viewSubtasksAddEdittext.text.toString()),null)
+                        binding.viewSubtasksAddEdittext.text?.clear()
                     }
+                    true
                 }
-
-                audioDialogBinding.viewAudioDialogStartplayingFab.setOnClickListener {
-                    togglePlayback(audioDialogBinding.viewAudioDialogProgressbar, audioDialogBinding.viewAudioDialogStartplayingFab, fileName)
-                }
-
-                audioDialogBinding.viewAudioDialogProgressbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                        if (fromUser)
-                            player?.seekTo(progress)
-                    }
-                    override fun onStartTrackingTouch(seekBar: SeekBar?) {   }
-                    override fun onStopTrackingTouch(seekBar: SeekBar?)  {   }
-                })
-
-                //Prepare the builder to open dialog to record audio
-                val audioRecorderAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(getString(R.string.view_fragment_audio_dialog_add_audio_note))
-                    //.setMessage(getString(R.string.view_fragment_audio_permission_message))
-                    .setView(audioDialogBinding.root)
-                    .setPositiveButton(R.string.save) { _, _ ->
-                        stopRecording()
-                        stopPlaying()
-
-                        if(fileName != null) {
-
-                            try {
-                                val cachedFile = File(fileName.toString())
-                                val newFilename = "${System.currentTimeMillis()}.$audioFileExtension"
-                                val newFile = File(
-                                    Attachment.getAttachmentDirectory(requireContext()),
-                                    newFilename
-                                )
-                                newFile.createNewFile()
-                                newFile.writeBytes(cachedFile.readBytes())
-
-                                val newAttachment = Attachment(
-                                    fmttype = audioMimetype,
-                                    uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, newFile).toString(),
-                                    filename = newFilename,
-                                    extension = audioFileExtension,
-                                )
-                                icalViewViewModel.insertRelated(null, newAttachment)
-
-
-                            } catch (e: IOException) {
-                                Log.e("IOException", "Failed to process file\n$e")
-                            }
-                        }
-                    }
-                    .setNegativeButton(R.string.discard) { _, _ ->
-                        stopRecording()
-                        stopPlaying()
-                    }
-
-                // if the item is an instance of a recurring entry, make sure that the user is aware of this
-                val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
-                if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
-
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
-                        .setMessage(getString(R.string.view_recurrence_note_to_original))
-                        .setPositiveButton(R.string.cont) { _, _ ->
-                            audioRecorderAlertDialogBuilder.show()
-                        }
-                        .setNegativeButton(R.string.view_recurrence_go_to_original_button) { _, _ ->
-                            this.findNavController().navigate(
-                                IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
-                                    originalId
-                                )
-                            )
-                        }
-                        .show()
-                } else {
-                    audioRecorderAlertDialogBuilder.show()
-                }
+                else -> false
             }
         }
 
@@ -1004,6 +882,154 @@ class IcalViewFragment : Fragment() {
         binding.viewAddNote.visibility = View.GONE
         binding.viewAddAudioNote.visibility = View.GONE
         binding.viewReadyonly.visibility = View.VISIBLE
+    }
+
+    private fun openAddNoteDialog() {
+
+        val addnoteDialogBinding = FragmentIcalViewAddnoteDialogBinding.inflate(inflater)
+
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(R.string.view_dialog_add_note)
+        builder.setIcon(R.drawable.ic_comment_add)
+        builder.setView(addnoteDialogBinding.root)
+
+        builder.setPositiveButton(R.string.save) { _, _ ->
+            val text = addnoteDialogBinding.viewViewAddnoteDialogEdittext.text.toString()
+            if(text.isBlank())
+                Toast.makeText(context, R.string.view_dialog_addnote_toast_no_summary_description, Toast.LENGTH_LONG).show()
+            else
+                icalViewViewModel.insertRelated(ICalObject.createNote(addnoteDialogBinding.viewViewAddnoteDialogEdittext.text.toString()), null)
+        }
+
+        builder.setNegativeButton(R.string.cancel) { _, _ ->
+            // Do nothing, just close the message
+        }
+        //builder is shown on positiveButton after unlinking or immediately (after the recur-check)
+
+        // if the item is an instance of a recurring entry, make sure that the user is aware of this
+        val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
+        if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
+                .setMessage(getString(R.string.view_recurrence_note_to_original))
+                .setPositiveButton(R.string.cont) { _, _ ->
+                    builder.show()
+                }
+                .setNegativeButton(R.string.view_recurrence_go_to_original_button) { _, _ ->
+                    this.findNavController().navigate(
+                        IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
+                            originalId
+                        )
+                    )
+                }
+                .show()
+        } else {
+            builder.show()
+            addnoteDialogBinding.viewViewAddnoteDialogEdittext.requestFocus()
+        }
+    }
+
+    private fun openAddAudioNoteDialog() {
+
+        // Check if the permission to record audio is already granted, otherwise make a dialog to ask for permission
+        if (PermissionsHelper.checkPermissionRecordAudio(requireActivity())) {
+
+            val audioDialogBinding = FragmentIcalViewAudioDialogBinding.inflate(inflater)
+
+            audioDialogBinding.viewAudioDialogStartrecordingFab.setOnClickListener {
+
+                if(!recording) {
+                    fileName = Uri.parse("${requireContext().cacheDir}/recorded.$audioFileExtension")
+                    audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
+                    startRecording()
+                    audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = false
+                    recording = true
+                } else {
+                    stopRecording()
+                    audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_microphone))
+                    audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = true
+                    recording = false
+
+                    player?.duration?.let { audioDialogBinding.viewAudioDialogProgressbar.max = it }
+                    player?.currentPosition?.let { audioDialogBinding.viewAudioDialogProgressbar.progress = it }
+                }
+            }
+
+            audioDialogBinding.viewAudioDialogStartplayingFab.setOnClickListener {
+                togglePlayback(audioDialogBinding.viewAudioDialogProgressbar, audioDialogBinding.viewAudioDialogStartplayingFab, fileName)
+            }
+
+            audioDialogBinding.viewAudioDialogProgressbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    if (fromUser)
+                        player?.seekTo(progress)
+                }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {   }
+                override fun onStopTrackingTouch(seekBar: SeekBar?)  {   }
+            })
+
+            //Prepare the builder to open dialog to record audio
+            val audioRecorderAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.view_fragment_audio_dialog_add_audio_note))
+                //.setMessage(getString(R.string.view_fragment_audio_permission_message))
+                .setView(audioDialogBinding.root)
+                .setPositiveButton(R.string.save) { _, _ ->
+                    stopRecording()
+                    stopPlaying()
+
+                    if(fileName != null) {
+
+                        try {
+                            val cachedFile = File(fileName.toString())
+                            val newFilename = "${System.currentTimeMillis()}.$audioFileExtension"
+                            val newFile = File(
+                                Attachment.getAttachmentDirectory(requireContext()),
+                                newFilename
+                            )
+                            newFile.createNewFile()
+                            newFile.writeBytes(cachedFile.readBytes())
+
+                            val newAttachment = Attachment(
+                                fmttype = audioMimetype,
+                                uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, newFile).toString(),
+                                filename = newFilename,
+                                extension = audioFileExtension,
+                            )
+                            icalViewViewModel.insertRelated(ICalObject.createNote(), newAttachment)
+
+                        } catch (e: IOException) {
+                            Log.e("IOException", "Failed to process file\n$e")
+                        }
+                    }
+                }
+                .setNegativeButton(R.string.discard) { _, _ ->
+                    stopRecording()
+                    stopPlaying()
+                }
+
+            // if the item is an instance of a recurring entry, make sure that the user is aware of this
+            val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
+            if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
+
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
+                    .setMessage(getString(R.string.view_recurrence_note_to_original))
+                    .setPositiveButton(R.string.cont) { _, _ ->
+                        audioRecorderAlertDialogBuilder.show()
+                    }
+                    .setNegativeButton(R.string.view_recurrence_go_to_original_button) { _, _ ->
+                        this.findNavController().navigate(
+                            IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
+                                originalId
+                            )
+                        )
+                    }
+                    .show()
+            } else {
+                audioRecorderAlertDialogBuilder.show()
+            }
+        }
     }
 }
 

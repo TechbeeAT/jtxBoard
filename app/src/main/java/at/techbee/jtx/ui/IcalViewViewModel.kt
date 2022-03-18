@@ -301,21 +301,18 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     }
 
 
-    fun insertRelated(noteText: String?, attachment: Attachment?) {
+    fun insertRelated(newIcalObject: ICalObject, attachment: Attachment?) {
 
         this.icalEntity.value?.property?.let {
             makeRecurringExceptionIfNecessary(it)
         }
 
         viewModelScope.launch {
-            val newNote = ICalObject.createNote()
-            if(noteText != null)
-                newNote.summary = noteText
-            newNote.collectionId = icalEntity.value?.ICalCollection?.collectionId ?: 1L
-            val newNoteId = database.insertICalObject(newNote)
+            newIcalObject.collectionId = icalEntity.value?.ICalCollection?.collectionId ?: 1L
+            val newNoteId = database.insertICalObject(newIcalObject)
 
             // We insert both directions in the database
-            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newNote.uid))
+            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newIcalObject.uid))
             database.insertRelatedto(Relatedto(linkedICalObjectId = icalEntity.value!!.property.id, icalObjectId = newNoteId, reltype = Reltype.PARENT.name, text = icalEntity.value!!.property.uid))
 
             if(attachment != null) {
