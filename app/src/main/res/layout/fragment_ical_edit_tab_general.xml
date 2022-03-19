@@ -245,7 +245,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textWebEditText|textMultiLine|textCapSentences|textImeMultiLine"
-                android:maxLines="8"
                 android:minLines="3"
                 android:overScrollMode="always"
                 android:scrollbarStyle="insideInset"
