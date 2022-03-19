@@ -675,6 +675,31 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_subtasks_header" />
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/view_subtasks_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:hint="@string/edit_subtasks_add_hint"
+                    app:endIconContentDescription="Add subtask"
+                    app:endIconDrawable="@drawable/ic_todo_add"
+                    app:endIconMode="custom"
+                    app:helperText="@string/edit_subtasks_add_helper"
+                    app:helperTextEnabled="true"
+                    android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_subtasks_linearlayout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/view_subtasks_add_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:inputType="textCapSentences" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/view_spc_chipgroup"
@@ -682,7 +707,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_subtasks_linearlayout">
+                    app:layout_constraintTop_toBottomOf="@+id/view_subtasks_add">
 
 
                     <com.google.android.material.chip.Chip
@@ -1201,19 +1226,31 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_feedback_header" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/view_add_note"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/view_add_note_textinputlayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:text="@string/view_add_note"
-                    app:icon="@drawable/ic_comment_add"
+                    android:hint="@string/view_dialog_add_note_dialog_hint"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_comments"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_feedback_linearlayout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/view_add_note_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapSentences"
+                        android:maxLines="8"
+                        android:singleLine="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/view_add_audio_note"
@@ -1226,7 +1263,7 @@
                     app:icon="@drawable/ic_microphone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_add_note" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_add_note_textinputlayout" />
 
 
                 <com.google.android.material.textview.MaterialTextView
