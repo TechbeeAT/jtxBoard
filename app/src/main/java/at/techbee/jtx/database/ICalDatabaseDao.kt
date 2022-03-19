@@ -118,7 +118,7 @@ SELECTs (global selects without parameter)
      * @return a list of VTODO-[Collection] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVTODO = 1 AND $COLUMN_COLLECTION_READONLY = 0 ORDER BY _id ASC")
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVTODO = '1' AND $COLUMN_COLLECTION_READONLY = '0' ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllWriteableVTODOCollections(): LiveData<List<ICalCollection>>
 
     /**
@@ -128,7 +128,7 @@ SELECTs (global selects without parameter)
      * @return a list of VJOURNAL-[Collection] as LiveData<List<String>>
      */
     @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVJOURNAL = 1  AND $COLUMN_COLLECTION_READONLY = 0 ORDER BY _id ASC")
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVJOURNAL = '1'  AND $COLUMN_COLLECTION_READONLY = '0' ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllWriteableVJOURNALCollections(): LiveData<List<ICalCollection>>
 
     /**
