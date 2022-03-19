@@ -309,7 +309,8 @@ class CollectionsFragment : Fragment() {
             .setTitle(title)
             .setView(collectionMoveDialogBinding.root)
             .setPositiveButton(R.string.ok) { _, _ ->
-                collectionsViewModel.moveCollectionItems(currentCollection.collectionId, possibleCollections[selectedCollectionPos].collectionId)
+                if(!collectionMoveDialogBinding.collectionMoveDialogCollectionSpinner.adapter.isEmpty)       // we only do something if there were actually entries
+                    collectionsViewModel.moveCollectionItems(currentCollection.collectionId, possibleCollections[selectedCollectionPos].collectionId)
             }
             .setNeutralButton(R.string.cancel) { _, _ ->  }
             .show()
