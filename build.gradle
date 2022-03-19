@@ -32,7 +32,7 @@ buildscript {
         version_appcompat = "1.4.1"
         version_work = "2.7.1"
         version_fragment = "1.4.0-alpha09"
-        version_billing = "4.0.0"
+        version_billing = "4.1.0"
         version_markwon = "4.6.2"
     }
 
