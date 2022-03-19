@@ -168,6 +168,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:maxLines="6"
                 android:ellipsize="end"
                 app:flow_verticalAlign="top"
                 app:layout_constraintBottom_toTopOf="@id/list_item_todo_barrier"
