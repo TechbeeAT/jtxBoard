@@ -1,0 +1,3 @@
+Bugfixes and minor improvements
+- description edittext now grows with the text
+- subtasks can be added easily in view fragment
