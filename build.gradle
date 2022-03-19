@@ -26,7 +26,7 @@ buildscript {
         version_kotlin = "1.6.10"
         version_lifecycle_extensions = "2.2.0"
         version_lifecycle = "2.4.1"
-        version_navigation = '2.4.0-rc01'
+        version_navigation = '2.4.1'
         version_room = '2.4.2'
         version_material = '1.6.0-alpha03'
         version_appcompat = "1.4.1"
