@@ -903,6 +903,8 @@ class IcalViewFragment : Fragment() {
         binding.viewAddAudioNote.visibility = View.GONE
         binding.viewReadyonly.visibility = View.VISIBLE
 
+        binding.viewSubtasksAdd.isEnabled = false
+        binding.viewAddNoteTextinputlayout.isEnabled = false
         binding.viewProgressSlider.isEnabled = false
         binding.viewProgressCheckbox.isEnabled = false
     }
