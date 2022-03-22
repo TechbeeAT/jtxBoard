@@ -627,7 +627,12 @@ class IcalViewFragment : Fragment() {
                     IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(subtask.id))
         }
 
-            linearLayout.addView(subtaskBinding.root)
+        if(icalViewViewModel.icalEntity.value?.ICalCollection?.readonly == true) {
+            subtaskBinding.viewSubtaskProgressCheckbox.isEnabled = false
+            subtaskBinding.viewSubtaskProgressSlider.isEnabled = false
+        }
+
+        linearLayout.addView(subtaskBinding.root)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -897,6 +902,9 @@ class IcalViewFragment : Fragment() {
         binding.viewAddNoteTextinputlayout.visibility = View.GONE
         binding.viewAddAudioNote.visibility = View.GONE
         binding.viewReadyonly.visibility = View.VISIBLE
+
+        binding.viewProgressSlider.isEnabled = false
+        binding.viewProgressCheckbox.isEnabled = false
     }
 
 
