@@ -1,0 +1,2 @@
+Bugfixes and minor improvements
+- fixed/improved handling for read-only collections
