@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.monetization
+package at.techbee.jtx.flavored
 
 import android.app.Activity
 import android.content.Context

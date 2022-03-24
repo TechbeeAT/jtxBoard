@@ -39,8 +39,8 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.databinding.*
-import at.techbee.jtx.monetization.AdManager
-import at.techbee.jtx.monetization.BillingManager
+import at.techbee.jtx.flavored.AdManager
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString

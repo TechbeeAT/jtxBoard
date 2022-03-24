@@ -51,8 +51,8 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.databinding.*
-import at.techbee.jtx.monetization.AdManager
-import at.techbee.jtx.monetization.BillingManager
+import at.techbee.jtx.flavored.AdManager
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_DAY
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_MONTH
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_UNSUPPORTED

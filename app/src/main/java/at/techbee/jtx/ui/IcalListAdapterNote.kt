@@ -25,8 +25,8 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.monetization.AdManager
-import at.techbee.jtx.monetization.BillingManager
+import at.techbee.jtx.flavored.AdManager
+import at.techbee.jtx.flavored.BillingManager
 import com.google.android.material.card.MaterialCardView
 import io.noties.markwon.Markwon
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin

@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.monetization
+package at.techbee.jtx.flavored
 
 import android.app.Activity
 import androidx.lifecycle.LifecycleObserver
@@ -36,7 +36,7 @@ class BillingManager :
         }
     }
 
-    override var isAdFreePurchased: LiveData<Boolean> = MutableLiveData(true)   // always true for OSE flavor
+    override var isAdFreePurchased: LiveData<Boolean> = MutableLiveData(false)   // always false for global flavor
     override val adFreePrice = MutableLiveData<String?>(null)
     override val adFreePurchaseDate = MutableLiveData<String?>(null)
     override val adFreeOrderId = MutableLiveData<String?>(null)

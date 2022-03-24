@@ -28,8 +28,8 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.StatusTodo
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.monetization.AdManager
-import at.techbee.jtx.monetization.BillingManager
+import at.techbee.jtx.flavored.AdManager
+import at.techbee.jtx.flavored.BillingManager
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
 import io.noties.markwon.Markwon

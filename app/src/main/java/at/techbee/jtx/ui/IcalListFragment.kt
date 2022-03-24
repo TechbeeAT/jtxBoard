@@ -43,8 +43,8 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.databinding.FragmentIcalListBinding
 import at.techbee.jtx.databinding.FragmentIcalListQuickaddDialogBinding
-import at.techbee.jtx.monetization.AdManager
-import at.techbee.jtx.monetization.BillingManager
+import at.techbee.jtx.flavored.AdManager
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.UiUtil.reduceDragSensitivity

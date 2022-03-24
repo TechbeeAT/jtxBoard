@@ -19,8 +19,8 @@ import at.techbee.jtx.*
 import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_HUAWEI
 import at.techbee.jtx.databinding.FragmentAdinfoBinding
-import at.techbee.jtx.monetization.AdManager
-import at.techbee.jtx.monetization.BillingManager
+import at.techbee.jtx.flavored.AdManager
+import at.techbee.jtx.flavored.BillingManager
 
 
 class AdInfoFragment : Fragment() {
