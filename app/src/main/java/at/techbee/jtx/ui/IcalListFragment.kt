@@ -211,6 +211,7 @@ class IcalListFragment : Fragment() {
                 R.id.menu_list_bottom_filter_due_today -> toggleMenuCheckboxFilter(menuitem)
                 R.id.menu_list_bottom_filter_due_tomorrow -> toggleMenuCheckboxFilter(menuitem)
                 R.id.menu_list_bottom_filter_due_in_future -> toggleMenuCheckboxFilter(menuitem)
+                R.id.menu_list_bottom_filter_no_dates_set -> toggleMenuCheckboxFilter(menuitem)
             }
             false
         }
@@ -276,11 +277,13 @@ class IcalListFragment : Fragment() {
             binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_today).isChecked = icalListViewModel.isFilterDueToday
             binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_tomorrow).isChecked = icalListViewModel.isFilterDueTomorrow
             binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_in_future).isChecked = icalListViewModel.isFilterDueFuture
+            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_no_dates_set).isChecked = icalListViewModel.isFilterNoDatesSet
         }
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_overdue).isVisible = icalListViewModel.searchModule == Module.TODO.name
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_today).isVisible = icalListViewModel.searchModule == Module.TODO.name
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_tomorrow).isVisible = icalListViewModel.searchModule == Module.TODO.name
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_in_future).isVisible = icalListViewModel.searchModule == Module.TODO.name
+        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_no_dates_set).isVisible = icalListViewModel.searchModule == Module.TODO.name
 
         // don't show the option to clear the filter if no filter was set
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.isVisible = !isFilterActive()
@@ -363,7 +366,6 @@ class IcalListFragment : Fragment() {
      * Clears the preferences with the saved search criteria
      */
     private fun resetFilter() {
-        //lastIcal4ListHash = 0    // make sure the whole view gets reloaded
         icalListViewModel.clearFilter()
     }
 
@@ -389,6 +391,7 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_bottom_filter_due_today -> icalListViewModel.isFilterDueToday = !icalListViewModel.isFilterDueToday
             R.id.menu_list_bottom_filter_due_tomorrow -> icalListViewModel.isFilterDueTomorrow = !icalListViewModel.isFilterDueTomorrow
             R.id.menu_list_bottom_filter_due_in_future -> icalListViewModel.isFilterDueFuture = !icalListViewModel.isFilterDueFuture
+            R.id.menu_list_bottom_filter_no_dates_set -> icalListViewModel.isFilterNoDatesSet = !icalListViewModel.isFilterNoDatesSet
             else -> return
         }
         //lastIcal4ListHash = 0     // makes the recycler view refresh everything (necessary for subtasks!)
@@ -454,8 +457,20 @@ class IcalListFragment : Fragment() {
     }
 
 
-
-    private fun isFilterActive() = icalListViewModel.searchCategories.isNotEmpty() || icalListViewModel.searchOrganizer.isNotEmpty() || (icalListViewModel.searchModule == Module.JOURNAL.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.NOTE.name && icalListViewModel.searchStatusJournal.isNotEmpty()) || (icalListViewModel.searchModule == Module.TODO.name && icalListViewModel.searchStatusTodo.isNotEmpty()) || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty() || icalListViewModel.searchAccount.isNotEmpty() || icalListViewModel.isExcludeDone || icalListViewModel.isFilterOverdue || icalListViewModel.isFilterDueToday || icalListViewModel.isFilterDueTomorrow || icalListViewModel.isFilterDueFuture
+    private fun isFilterActive() =
+        icalListViewModel.searchCategories.isNotEmpty()
+                || icalListViewModel.searchOrganizer.isNotEmpty()
+                || (icalListViewModel.searchModule == Module.JOURNAL.name && icalListViewModel.searchStatusJournal.isNotEmpty())
+                || (icalListViewModel.searchModule == Module.NOTE.name && icalListViewModel.searchStatusJournal.isNotEmpty())
+                || (icalListViewModel.searchModule == Module.TODO.name && icalListViewModel.searchStatusTodo.isNotEmpty())
+                || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
+                || icalListViewModel.searchAccount.isNotEmpty()
+                || icalListViewModel.isExcludeDone
+                || icalListViewModel.isFilterOverdue
+                || icalListViewModel.isFilterDueToday
+                || icalListViewModel.isFilterDueTomorrow
+                || icalListViewModel.isFilterDueFuture
+                || icalListViewModel.isFilterNoDatesSet
 
     private fun deleteVisible() {
 

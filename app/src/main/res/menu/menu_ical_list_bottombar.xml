@@ -65,6 +65,10 @@
             android:id="@+id/menu_list_bottom_filter_due_in_future"
             android:title="@string/list_due_future"
             app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_list_bottom_filter_no_dates_set"
+            android:title="@string/list_no_dates_set"
+            app:showAsAction="never" />
     </group>
 
 </menu>

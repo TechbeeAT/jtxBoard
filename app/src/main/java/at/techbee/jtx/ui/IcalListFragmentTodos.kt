@@ -49,6 +49,7 @@ class IcalListFragmentTodos : Fragment() {
         const val PREFS_FILTER_DUE_TODAY = "prefsFilterToday"
         const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
         const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
+        const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -83,6 +84,7 @@ class IcalListFragmentTodos : Fragment() {
         icalListViewModel.isFilterDueToday = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
         icalListViewModel.isFilterDueTomorrow = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
         icalListViewModel.isFilterDueFuture = prefs.getBoolean(PREFS_FILTER_DUE_FUTURE, false)
+        icalListViewModel.isFilterNoDatesSet = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
 
         try {
             val activity = requireActivity() as MainActivity
@@ -114,6 +116,7 @@ class IcalListFragmentTodos : Fragment() {
         prefs.edit().putBoolean(PREFS_FILTER_DUE_TODAY, icalListViewModel.isFilterDueToday).apply()
         prefs.edit().putBoolean(PREFS_FILTER_DUE_TOMORROW, icalListViewModel.isFilterDueTomorrow).apply()
         prefs.edit().putBoolean(PREFS_FILTER_DUE_FUTURE, icalListViewModel.isFilterDueFuture).apply()
+        prefs.edit().putBoolean(PREFS_FILTER_NO_DATES_SET, icalListViewModel.isFilterNoDatesSet).apply()
     }
 
     override fun onDestroyView() {

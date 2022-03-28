@@ -48,6 +48,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     var isFilterDueToday: Boolean = false
     var isFilterDueTomorrow: Boolean = false
     var isFilterDueFuture: Boolean = false
+    var isFilterNoDatesSet: Boolean = false
 
     var searchSettingShowAllSubtasksInTasklist: Boolean = false
     var searchSettingShowAllSubnotesInNoteslist: Boolean = false
@@ -170,6 +171,9 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
         if(dueQuery.isNotEmpty())
             queryString += " AND (${dueQuery.joinToString(separator = " OR ")}) "
 
+        if(isFilterNoDatesSet)
+            queryString += "AND $COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL "
+
         // Query for the passed filter criteria from FilterFragment
         if (searchClassification.size > 0) {
             queryString += "AND $COLUMN_CLASSIFICATION IN ("
@@ -273,6 +277,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
         isFilterDueToday = false
         isFilterDueTomorrow = false
         isFilterDueFuture = false
+        isFilterNoDatesSet = false
         updateSearch()
     }
 

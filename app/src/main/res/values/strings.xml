@@ -178,6 +178,7 @@
     <string name="list_due_today">Due today</string>
     <string name="list_due_tomorrow">Due tomorrow</string>
     <string name="list_due_future">Due in future</string>
+    <string name="list_no_dates_set">No dates set</string>
     <string name="list_due_inXdays" tools:ignore="PluralsCandidate">Due in %d days</string>
     <string name="list_due_inXhours" tools:ignore="PluralsCandidate">Due in %d hours</string>
     <string name="list_start_past">Start in past</string>

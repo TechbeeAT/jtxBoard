@@ -409,6 +409,7 @@ Global Strings -->
     <string name="priority_8_lower">"8 - Niedriger"</string>
     <string name="priority_9_lowest">"9 - Niedrigste"</string>
     <string name="list_due_future">"Fällig in der Zukunft"</string>
+    <string name="list_no_dates_set">Ohne Datumsangaben</string>
     <string name="view_share_part_of_series">"Dieser Eintrag ist Teil einer Serie."</string>
     <string name="view_share_exception_of_series">"Dieser Eintrag ist eine Ausnahme einer Serie."</string>
     <string name="view_share_repeats">"Dieser Eintrag wiederholt sich"</string>
