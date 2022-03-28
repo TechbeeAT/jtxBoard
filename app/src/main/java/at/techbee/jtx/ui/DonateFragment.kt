@@ -23,7 +23,8 @@ import at.techbee.jtx.databinding.FragmentDonateBinding
 
 class DonateFragment : Fragment() {
 
-    lateinit var binding: FragmentDonateBinding
+    private var _binding: FragmentDonateBinding? = null
+    private val binding get() = _binding!!
     private lateinit var inflater: LayoutInflater
 
     companion object {
@@ -40,7 +41,7 @@ class DonateFragment : Fragment() {
 
         // Get a reference to the binding object and inflate the fragment views.
         this.inflater = inflater
-        this.binding = FragmentDonateBinding.inflate(inflater, container, false)
+        this._binding = FragmentDonateBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -62,4 +63,8 @@ class DonateFragment : Fragment() {
         super.onResume()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

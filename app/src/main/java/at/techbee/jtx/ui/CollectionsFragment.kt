@@ -35,7 +35,9 @@ import java.io.OutputStream
 
 class CollectionsFragment : Fragment() {
 
-    lateinit var binding: FragmentCollectionsBinding
+    private var _binding: FragmentCollectionsBinding? = null
+    private val binding get() = _binding!!
+
     lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
     private val collectionsViewModel: CollectionsViewModel by activityViewModels()
@@ -70,7 +72,7 @@ class CollectionsFragment : Fragment() {
     ): View {
 
         this.inflater = inflater
-        this.binding = FragmentCollectionsBinding.inflate(inflater, container, false)
+        this._binding = FragmentCollectionsBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
@@ -109,6 +111,12 @@ class CollectionsFragment : Fragment() {
         }
         super.onResume()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
     private fun addCollectionView(collections: List<CollectionsView>, isLocal: Boolean) {
 

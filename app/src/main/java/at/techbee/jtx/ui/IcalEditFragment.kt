@@ -98,7 +98,8 @@ import java.time.temporal.ChronoUnit
 
 class IcalEditFragment : Fragment() {
 
-    lateinit var binding: FragmentIcalEditBinding
+    private var _binding: FragmentIcalEditBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
@@ -150,7 +151,7 @@ class IcalEditFragment : Fragment() {
         // Get a reference to the binding object and inflate the fragment views.
 
         this.inflater = inflater
-        this.binding = FragmentIcalEditBinding.inflate(inflater, container, false)
+        this._binding = FragmentIcalEditBinding.inflate(inflater, container, false)
         this.container = container
         this.application = requireNotNull(this.activity).application
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
@@ -1307,17 +1308,14 @@ class IcalEditFragment : Fragment() {
     }
 
     override fun onResume() {
-
         updateToolbarText()
-
-        /*
-        icalEditViewModel.isLandscape =
-            resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-         */
         icalEditViewModel.updateVisibility()
-
-
         super.onResume()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun updateToolbarText() {

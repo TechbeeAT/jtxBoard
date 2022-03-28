@@ -24,7 +24,9 @@ import com.google.android.material.chip.ChipGroup
 
 class IcalFilterFragment : DialogFragment() {
 
-    lateinit var binding: FragmentIcalFilterBinding
+    private var _binding: FragmentIcalFilterBinding? = null
+    private val binding get() = _binding!!
+
     private val icalListViewModel: IcalListViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -32,7 +34,7 @@ class IcalFilterFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentIcalFilterBinding.inflate(inflater, container, false)
+        _binding = FragmentIcalFilterBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
 
         // add menu
@@ -188,8 +190,12 @@ class IcalFilterFragment : DialogFragment() {
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
-
         super.onResume()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

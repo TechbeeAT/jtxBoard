@@ -36,7 +36,9 @@ import kotlin.collections.HashMap
 
 class AboutFragment : Fragment() {
 
-    lateinit var binding: FragmentAboutBinding
+    private var _binding: FragmentAboutBinding? = null
+    private val binding get() = _binding!!
+
     lateinit var application: Application
     private lateinit var inflater: LayoutInflater
 
@@ -55,7 +57,7 @@ class AboutFragment : Fragment() {
 
         // Get a reference to the binding object and inflate the fragment views.
         this.inflater = inflater
-        this.binding = FragmentAboutBinding.inflate(inflater, container, false)
+        _binding = FragmentAboutBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
         val bindingAboutJtx = FragmentAboutJtxBinding.inflate(inflater, container, false)
@@ -141,6 +143,12 @@ class AboutFragment : Fragment() {
 
         super.onResume()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
     /**
      * This method queries the translators from the POEditor API and adds the name and languages to the linear layout

@@ -30,7 +30,9 @@ import java.lang.ClassCastException
 
 class IcalListFragmentTodos : Fragment() {
 
-    private lateinit var binding: FragmentIcalListRecyclerBinding
+    private var _binding: FragmentIcalListRecyclerBinding? = null
+    private val binding get() = _binding!!
+
     private val icalListViewModel: IcalListViewModel by activityViewModels()
 
     companion object {
@@ -52,7 +54,7 @@ class IcalListFragmentTodos : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        binding = FragmentIcalListRecyclerBinding.inflate(inflater, container, false)
+        _binding = FragmentIcalListRecyclerBinding.inflate(inflater, container, false)
         binding.listRecycler.layoutManager = LinearLayoutManager(context)
         binding.listRecycler.setHasFixedSize(false)
         binding.listRecycler.adapter = IcalListAdapterTodo(requireContext(), icalListViewModel)
@@ -112,6 +114,11 @@ class IcalListFragmentTodos : Fragment() {
         prefs.edit().putBoolean(PREFS_FILTER_DUE_TODAY, icalListViewModel.isFilterDueToday).apply()
         prefs.edit().putBoolean(PREFS_FILTER_DUE_TOMORROW, icalListViewModel.isFilterDueTomorrow).apply()
         prefs.edit().putBoolean(PREFS_FILTER_DUE_FUTURE, icalListViewModel.isFilterDueFuture).apply()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun addObservers() {

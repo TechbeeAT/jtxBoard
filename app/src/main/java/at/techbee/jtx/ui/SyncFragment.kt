@@ -29,7 +29,9 @@ import at.techbee.jtx.util.SyncUtil
 class SyncFragment : Fragment() {
 
     private val syncViewModel: SyncViewModel by activityViewModels()
-    lateinit var binding: FragmentSyncBinding
+    private var _binding: FragmentSyncBinding? = null
+    private val binding get() = _binding!!
+
     lateinit var application: Application
     private lateinit var inflater: LayoutInflater
     private lateinit var dataSource: ICalDatabaseDao
@@ -43,7 +45,7 @@ class SyncFragment : Fragment() {
 
         // Get a reference to the binding object and inflate the fragment views.
         this.inflater = inflater
-        this.binding = FragmentSyncBinding.inflate(inflater, container, false)
+        this._binding = FragmentSyncBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
@@ -88,6 +90,11 @@ class SyncFragment : Fragment() {
         }
         syncViewModel.isDavx5Available.postValue(SyncUtil.isDAVx5CompatibleWithJTX(application))
         super.onResume()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

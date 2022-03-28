@@ -25,7 +25,8 @@ import at.techbee.jtx.flavored.BillingManager
 
 class AdInfoFragment : Fragment() {
 
-    lateinit var binding: FragmentAdinfoBinding
+    private var _binding: FragmentAdinfoBinding? = null
+    private val binding get() = _binding!!
     lateinit var application: Application
 
 
@@ -34,7 +35,7 @@ class AdInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        this.binding = FragmentAdinfoBinding.inflate(inflater, container, false)
+        this._binding = FragmentAdinfoBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
         BillingManager.getInstance()?.isAdFreePurchased?.observe(viewLifecycleOwner) {
@@ -67,8 +68,12 @@ class AdInfoFragment : Fragment() {
         }
 
         updateFragmentContent()
-
         super.onResume()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

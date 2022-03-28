@@ -42,13 +42,15 @@ class IcalListFragmentNotes : Fragment() {
         const val PREFS_EXCLUDE_DONE = "prefsExcludeDone"
     }
 
-    private lateinit var binding: FragmentIcalListRecyclerBinding
+    private var _binding: FragmentIcalListRecyclerBinding? = null
+    private val binding get() = _binding!!
+
     private val icalListViewModel: IcalListViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        binding = FragmentIcalListRecyclerBinding.inflate(inflater, container, false)
+        _binding = FragmentIcalListRecyclerBinding.inflate(inflater, container, false)
         binding.listRecycler.layoutManager = LinearLayoutManager(context)
         binding.listRecycler.setHasFixedSize(false)
         binding.listRecycler.adapter = IcalListAdapterNote(requireContext(), icalListViewModel)
@@ -103,6 +105,11 @@ class IcalListFragmentNotes : Fragment() {
         prefs.edit().putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
         prefs.edit().putStringSet(PREFS_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
         prefs.edit().putBoolean(PREFS_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun addObservers() {

@@ -58,7 +58,9 @@ import java.lang.NullPointerException
 
 class IcalViewFragment : Fragment() {
 
-    lateinit var binding: FragmentIcalViewBinding
+    private var _binding: FragmentIcalViewBinding? = null
+    private val binding get() = _binding!!
+
     lateinit var application: Application
     private lateinit var inflater: LayoutInflater
     private lateinit var dataSource: ICalDatabaseDao
@@ -88,7 +90,7 @@ class IcalViewFragment : Fragment() {
 
         // Get a reference to the binding object and inflate the fragment views.
         this.inflater = inflater
-        this.binding = FragmentIcalViewBinding.inflate(inflater, container, false)
+        this._binding = FragmentIcalViewBinding.inflate(inflater, container, false)
         this.application = requireNotNull(this.activity).application
 
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
@@ -502,7 +504,10 @@ class IcalViewFragment : Fragment() {
         super.onResume()
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     private fun updateToolbarText() {
         try {

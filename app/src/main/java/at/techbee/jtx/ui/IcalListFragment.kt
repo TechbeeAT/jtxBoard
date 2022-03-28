@@ -61,7 +61,9 @@ import java.util.*
 class IcalListFragment : Fragment() {
 
     private val icalListViewModel: IcalListViewModel by activityViewModels()
-    private lateinit var binding: FragmentIcalListBinding
+    private var _binding: FragmentIcalListBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
 
@@ -96,7 +98,7 @@ class IcalListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        binding = FragmentIcalListBinding.inflate(inflater, container, false)
+        _binding = FragmentIcalListBinding.inflate(inflater, container, false)
         application = requireNotNull(this.activity).application
         dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
         binding.lifecycleOwner = viewLifecycleOwner
@@ -237,6 +239,10 @@ class IcalListFragment : Fragment() {
         prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 
     /**
