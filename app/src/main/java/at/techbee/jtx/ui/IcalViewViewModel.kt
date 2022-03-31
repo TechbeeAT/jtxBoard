@@ -275,7 +275,9 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
                 return@map (item?.property?.rrule != null)
             }
             recurrenceLinkedVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.recurOriginalIcalObjectId != null && item.property.isRecurLinkedInstance)
+                return@map (item?.property?.recurOriginalIcalObjectId != null
+                        && item.property.isRecurLinkedInstance
+                        && item.ICalCollection?.readonly == false)    // we don't show the text for read only items
             }
             recurrenceGoToOriginalVisible = Transformations.map(icalEntity) { item ->
                 return@map (item?.property?.recurOriginalIcalObjectId != null)
