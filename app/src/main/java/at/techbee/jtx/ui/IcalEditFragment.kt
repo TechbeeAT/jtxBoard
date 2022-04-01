@@ -1354,16 +1354,16 @@ class IcalEditFragment : Fragment() {
         ICalObject.applyColorOrHide(binding.editFragmentTabGeneral.editColorbarCollection, selectedCollection?.color)
     }
 
-    private fun showDatePicker(presetValueUTC: Long, timezone: String?, tag: String) {
+    private fun showDatePicker(presetTime: Long, timezone: String?, tag: String) {
 
         val tzId = requireTzId(timezone)
-        val updatedUtcDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(presetValueUTC), tzId)
+        val presetValueUTC = ZonedDateTime.ofInstant(Instant.ofEpochMilli(presetTime), tzId)
 
         // make sure preset is according to constraints (due is after start)
         val preset = when {
-            tag == TAG_PICKER_DUE && presetValueUTC < icalEditViewModel.iCalObjectUpdated.value?.dtstart?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: icalEditViewModel.iCalObjectUpdated.value?.due?: System.currentTimeMillis()
-            tag == TAG_PICKER_DTSTART && presetValueUTC > icalEditViewModel.iCalObjectUpdated.value?.due?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.due ?: icalEditViewModel.iCalObjectUpdated.value?.dtstart?: System.currentTimeMillis()
-            else -> presetValueUTC
+            tag == TAG_PICKER_DUE && icalEditViewModel.iCalObjectUpdated.value?.dtstart != null &&  presetValueUTC.toInstant().toEpochMilli() < icalEditViewModel.iCalObjectUpdated.value?.dtstart?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: icalEditViewModel.iCalObjectUpdated.value?.due?: System.currentTimeMillis()
+            tag == TAG_PICKER_DTSTART && icalEditViewModel.iCalObjectUpdated.value?.due != null && presetValueUTC.toInstant().toEpochMilli() > icalEditViewModel.iCalObjectUpdated.value?.due?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.due ?: icalEditViewModel.iCalObjectUpdated.value?.dtstart?: System.currentTimeMillis()
+            else -> presetValueUTC.toInstant().toEpochMilli()
         }
 
         // Build constraints.
@@ -1399,7 +1399,7 @@ class IcalEditFragment : Fragment() {
         datePicker.addOnPositiveButtonClickListener {
             // Respond to positive button click.
             val selectedUtcDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.of("UTC"))
-            val zonedTimestamp = updatedUtcDateTime.withYear(selectedUtcDateTime.year).withMonth(selectedUtcDateTime.monthValue).withDayOfMonth(selectedUtcDateTime.dayOfMonth).toInstant().toEpochMilli()
+            val zonedTimestamp = presetValueUTC.withYear(selectedUtcDateTime.year).withMonth(selectedUtcDateTime.monthValue).withDayOfMonth(selectedUtcDateTime.dayOfMonth).toInstant().toEpochMilli()
 
             when (tag) {
                 TAG_PICKER_DTSTART -> icalEditViewModel.iCalObjectUpdated.value!!.dtstart = zonedTimestamp
