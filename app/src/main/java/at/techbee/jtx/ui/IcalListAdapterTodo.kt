@@ -30,10 +30,13 @@ import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.util.DateTimeUtils
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.slider.Slider
 import io.noties.markwon.Markwon
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
 class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
@@ -155,10 +158,14 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 holder.due.visibility = View.GONE
             else {
                 holder.due.visibility = View.VISIBLE
-                var millisLeft = iCal4ListItem.property.due!! - System.currentTimeMillis()
-                if (iCal4ListItem.property.dueTimezone == ICalObject.TZ_ALLDAY)
-                    millisLeft =
-                        millisLeft + TimeUnit.DAYS.toMillis(1) - 1        // if it's due on the same day, then add 1 day minus 1 millisecond to consider the end of the day
+                val zonedDue = ZonedDateTime.ofInstant(
+                    Instant.ofEpochMilli(iCal4ListItem.property.due!!),
+                    DateTimeUtils.requireTzId(iCal4ListItem.property.dueTimezone)).toInstant().toEpochMilli()
+                val millisLeft = if(iCal4ListItem.property.dueTimezone == ICalObject.TZ_ALLDAY)
+                    zonedDue - DateTimeUtils.getTodayAsLong()
+                else
+                    zonedDue - System.currentTimeMillis()
+
                 val daysLeft =
                     TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
                 val hoursLeft =
@@ -183,14 +190,17 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 holder.start.visibility = View.GONE
             else {
                 holder.start.visibility = View.VISIBLE
-                var millisLeft = iCal4ListItem.property.dtstart!! - System.currentTimeMillis()
-                if (iCal4ListItem.property.dtstartTimezone == ICalObject.TZ_ALLDAY)
-                    millisLeft =
-                        millisLeft + TimeUnit.DAYS.toMillis(1) - 1        // if it's due on the same day, then add 1 day minus 1 millisecond to consider the end of the day
-                val daysLeft =
-                    TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
-                val hoursLeft =
-                    TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
+
+                val zonedStart = ZonedDateTime.ofInstant(
+                    Instant.ofEpochMilli(iCal4ListItem.property.dtstart!!),
+                    DateTimeUtils.requireTzId(iCal4ListItem.property.dtstartTimezone)).toInstant().toEpochMilli()
+                val millisLeft = if(iCal4ListItem.property.dtstartTimezone == ICalObject.TZ_ALLDAY)
+                    zonedStart - DateTimeUtils.getTodayAsLong()
+                else
+                    zonedStart - System.currentTimeMillis()
+
+                val daysLeft = TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
+                val hoursLeft = TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
 
                 when {
                     millisLeft < 0L -> holder.start.text =
