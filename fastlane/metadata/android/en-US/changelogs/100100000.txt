@@ -1,0 +1,4 @@
+"Sync now" start synchronization immediately
+Minor improvements and bugfixes
+- timezone-handling
+- editing description with longer texts does not jump around anymore

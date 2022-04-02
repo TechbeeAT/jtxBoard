@@ -1,0 +1,2 @@
+Memory handling improvements
+Filter Tasks with no date set
