@@ -217,7 +217,7 @@ class IcalListFragment : Fragment() {
         }
 
         ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-            icalListViewModel.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning())
+            icalListViewModel.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning(context))
         }
 
         return binding.root

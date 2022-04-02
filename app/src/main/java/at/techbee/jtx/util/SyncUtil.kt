@@ -36,9 +36,9 @@ class SyncUtil {
         /**
          * @return true if a sync is running for the JTX Sync Provider Authority (no matter which account)
          */
-        fun isJtxSyncRunning(): Boolean {
-            val allJtxSyncs = ContentResolver.getCurrentSyncs().filter { it.authority == SYNC_PROVIDER_AUTHORITY }
-            return allJtxSyncs.isNotEmpty()
+        fun isJtxSyncRunning(context: Context?): Boolean {
+            val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
+            return accounts.any { ContentResolver.isSyncActive(it, SYNC_PROVIDER_AUTHORITY) }   // else false
         }
 
         /**
@@ -55,14 +55,8 @@ class SyncUtil {
         fun syncAllAccounts(context: Context) {
 
             val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
-
-            val extras = Bundle(2)
-            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)        // manual sync
-            //extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
-
             accounts.forEach { account ->
-                if(!ContentResolver.isSyncActive(account, SYNC_PROVIDER_AUTHORITY))
-                    ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
+                syncAccount(account)
             }
         }
 
@@ -74,7 +68,7 @@ class SyncUtil {
 
             val extras = Bundle(2)
             extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)        // manual sync
-            //extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
             if(!ContentResolver.isSyncActive(account, SYNC_PROVIDER_AUTHORITY))
                 ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
         }

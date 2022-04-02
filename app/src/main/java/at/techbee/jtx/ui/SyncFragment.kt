@@ -73,7 +73,7 @@ class SyncFragment : Fragment() {
         }
 
         ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-            syncViewModel.showSyncProgressIndicator.postValue(SyncUtil.isJtxSyncRunning())
+            syncViewModel.showSyncProgressIndicator.postValue(SyncUtil.isJtxSyncRunning(context))
         }
 
         return binding.root
