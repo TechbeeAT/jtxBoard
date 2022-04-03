@@ -59,7 +59,7 @@ import java.lang.NullPointerException
 class IcalViewFragment : Fragment() {
 
     private var _binding: FragmentIcalViewBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     lateinit var application: Application
     private lateinit var inflater: LayoutInflater

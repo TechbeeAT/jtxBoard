@@ -99,7 +99,7 @@ import java.time.temporal.ChronoUnit
 class IcalEditFragment : Fragment() {
 
     private var _binding: FragmentIcalEditBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao

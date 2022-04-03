@@ -62,7 +62,7 @@ class IcalListFragment : Fragment() {
 
     private val icalListViewModel: IcalListViewModel by activityViewModels()
     private var _binding: FragmentIcalListBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
