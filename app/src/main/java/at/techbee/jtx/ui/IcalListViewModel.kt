@@ -49,6 +49,8 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     var isFilterDueTomorrow: Boolean = false
     var isFilterDueFuture: Boolean = false
     var isFilterNoDatesSet: Boolean = false
+    var orderBy: OrderBy = OrderBy.CREATED   // default, overwritten by Shared Prefs
+    var sortOrder: SortOrder = SortOrder.DESC // default, overwritten by Shared Prefs
 
     var searchSettingShowAllSubtasksInTasklist: Boolean = false
     var searchSettingShowAllSubnotesInNoteslist: Boolean = false
@@ -235,11 +237,9 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             }
         }
 
-        when (searchModule) {
-            Module.JOURNAL.name -> queryString += "ORDER BY $COLUMN_DTSTART ASC, $COLUMN_CREATED ASC "
-            Module.NOTE.name -> queryString += "ORDER BY $COLUMN_LAST_MODIFIED DESC, $COLUMN_CREATED ASC "
-            Module.TODO.name -> queryString += "ORDER BY $COLUMN_DUE ASC, $COLUMN_CREATED ASC "
-        }
+        queryString += orderBy.queryAppendix
+        sortOrder.let { queryString += it.queryAppendix }
+
         //Log.println(Log.INFO, "queryString", queryString)
         //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
 
@@ -411,4 +411,19 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             })
         }
     }
+}
+
+
+enum class OrderBy(val stringResource: Int, val queryAppendix: String, val compatibleModules: List<Module>) {
+    START(R.string.started, "ORDER BY $COLUMN_DTSTART ", listOf(Module.JOURNAL, Module.TODO)),
+    DUE(R.string.due, "ORDER BY $COLUMN_DUE ", listOf(Module.TODO)),
+    COMPLETED(R.string.completed, "ORDER BY $COLUMN_COMPLETED ", listOf(Module.TODO)),
+    CREATED(R.string.filter_created, "ORDER BY $COLUMN_CREATED ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO)),
+    LAST_MODIFIED(R.string.filter_last_modified, "ORDER BY $COLUMN_LAST_MODIFIED ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO)),
+    SUMMARY(R.string.summary, "ORDER BY $COLUMN_SUMMARY ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO))
+}
+
+enum class SortOrder(val stringResource: Int, val queryAppendix: String) {
+    ASC(R.string.filter_asc, "ASC "),
+    DESC(R.string.filter_desc, "DESC ")
 }

@@ -50,6 +50,8 @@ class IcalListFragmentTodos : Fragment() {
         const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
         const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
         const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
+        const val PREFS_ORDERBY = "prefsOrderBy"
+        const val PREFS_SORTORDER = "prefsSortOrder"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -85,6 +87,8 @@ class IcalListFragmentTodos : Fragment() {
         icalListViewModel.isFilterDueTomorrow = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
         icalListViewModel.isFilterDueFuture = prefs.getBoolean(PREFS_FILTER_DUE_FUTURE, false)
         icalListViewModel.isFilterNoDatesSet = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
+        icalListViewModel.orderBy = prefs.getString(PREFS_ORDERBY, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.DUE
+        icalListViewModel.sortOrder = prefs.getString(PREFS_SORTORDER, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.ASC
 
         try {
             val activity = requireActivity() as MainActivity
@@ -117,6 +121,9 @@ class IcalListFragmentTodos : Fragment() {
         prefs.edit().putBoolean(PREFS_FILTER_DUE_TOMORROW, icalListViewModel.isFilterDueTomorrow).apply()
         prefs.edit().putBoolean(PREFS_FILTER_DUE_FUTURE, icalListViewModel.isFilterDueFuture).apply()
         prefs.edit().putBoolean(PREFS_FILTER_NO_DATES_SET, icalListViewModel.isFilterNoDatesSet).apply()
+
+        prefs.edit().putString(PREFS_SORTORDER, icalListViewModel.sortOrder.name).apply()
+        prefs.edit().putString(PREFS_ORDERBY, icalListViewModel.orderBy.name).apply()
     }
 
     override fun onDestroyView() {

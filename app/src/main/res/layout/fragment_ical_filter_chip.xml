@@ -18,7 +18,6 @@
     android:clickable="true"
     android:focusable="true"
     app:checkedIconEnabled="true"
-    app:chipIcon="@drawable/ic_category"
     app:chipIconVisible="false"
     app:closeIconVisible="false"
     tools:text="Chip #1"
