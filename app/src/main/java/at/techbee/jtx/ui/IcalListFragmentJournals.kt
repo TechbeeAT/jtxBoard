@@ -45,6 +45,8 @@ class IcalListFragmentJournals : Fragment() {
         const val PREFS_STATUS_JOURNAL = "prefsStatusJournal"
         const val PREFS_STATUS_TODO = "prefsStatusTodo"
         const val PREFS_EXCLUDE_DONE = "prefsExcludeDone"
+        const val PREFS_ORDERBY = "prefsOrderBy"
+        const val PREFS_SORTORDER = "prefsSortOrder"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -80,6 +82,8 @@ class IcalListFragmentJournals : Fragment() {
         icalListViewModel.isFilterDueToday = false
         icalListViewModel.isFilterDueTomorrow = false
         icalListViewModel.isFilterDueFuture = false
+        icalListViewModel.orderBy = prefs.getString(PREFS_ORDERBY, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.START
+        icalListViewModel.sortOrder = prefs.getString(PREFS_SORTORDER, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.DESC
 
         try {
             val activity = requireActivity() as MainActivity
@@ -107,6 +111,9 @@ class IcalListFragmentJournals : Fragment() {
         prefs.edit().putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
         prefs.edit().putStringSet(PREFS_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
         prefs.edit().putBoolean(PREFS_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
+
+        prefs.edit().putString(PREFS_SORTORDER, icalListViewModel.sortOrder.name).apply()
+        prefs.edit().putString(PREFS_ORDERBY, icalListViewModel.orderBy.name).apply()
     }
 
     override fun onDestroyView() {

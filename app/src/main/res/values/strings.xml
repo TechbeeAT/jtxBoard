@@ -346,6 +346,11 @@
 
     <!-- fragment_ical_filter -->
     <string name="filter_fab_apply_filter_contentdescription">Apply filter</string>
+    <string name="filter_order_by">Order by</string>
+    <string name="filter_asc">Ascending</string>
+    <string name="filter_desc">Descending</string>
+    <string name="filter_created">Created</string>
+    <string name="filter_last_modified">Last modified</string>
 
     <!-- fragment_about -->
     <string name="about_tabitem_jtx" translatable="false">jtx Board</string>

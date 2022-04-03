@@ -207,14 +207,74 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="80dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/category_filter_label"
                     app:layout_constraintTop_toBottomOf="@+id/category_filter_label"
-                    app:layout_constraintVertical_bias="0.0">
+                    app:layout_constraintVertical_bias="0.0"/>
 
-                </com.google.android.material.chip.ChipGroup>
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/filter_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/category_filter_chipgroup"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginTop="16dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/filter_orderbyicon"
+                    android:layout_width="24sp"
+                    android:layout_height="24sp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/filter_orderbylabel"
+                    app:srcCompat="@drawable/ic_sort"
+                    tools:ignore="ContentDescription" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/filter_orderbylabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/filter_order_by"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/filter_orderbyicon"
+                    app:layout_constraintTop_toBottomOf="@id/filter_divider" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/filter_orderby_chipgroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/filter_orderbylabel"
+                    app:layout_constraintTop_toBottomOf="@+id/filter_orderbylabel"
+                    app:layout_constraintVertical_bias="0.0"/>
+
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/filter_sortorder_chipgroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="80dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/filter_orderby_chipgroup"
+                    app:layout_constraintTop_toBottomOf="@+id/filter_orderby_chipgroup"
+                    app:layout_constraintVertical_bias="0.0" />
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 

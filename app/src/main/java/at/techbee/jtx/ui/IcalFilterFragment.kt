@@ -42,59 +42,86 @@ class IcalFilterFragment : DialogFragment() {
 
         Classification.values().forEach { classification ->
             val chip = inflater.inflate(R.layout.fragment_ical_filter_chip, binding.classificationFilterChipgroup, false) as Chip
-            val chiptext = getString(classification.stringResource)
-            chip.text = chiptext
-            if(!isChiptextPresentInChipgroup(binding.classificationFilterChipgroup, chiptext)) {
-                binding.classificationFilterChipgroup.addView(chip)
+            chip.text = getString(classification.stringResource)
+            binding.classificationFilterChipgroup.addView(chip)
 
-                if(icalListViewModel.searchClassification.contains(classification))
-                    chip.isChecked = true
+            if(icalListViewModel.searchClassification.contains(classification))
+                chip.isChecked = true
 
-                chip.setOnCheckedChangeListener { _, isChecked ->
-                    if(isChecked)
-                        icalListViewModel.searchClassification.add(classification)
-                    else
-                        icalListViewModel.searchClassification.remove(classification)
-                    icalListViewModel.updateSearch()
-                }
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                if(isChecked)
+                    icalListViewModel.searchClassification.add(classification)
+                else
+                    icalListViewModel.searchClassification.remove(classification)
+                icalListViewModel.updateSearch()
             }
         }
 
         StatusJournal.values().forEach { statusJournal ->
             val chip = inflater.inflate(R.layout.fragment_ical_filter_chip, binding.statusJournalFilterChipgroup, false) as Chip
-            val chiptext = getString(statusJournal.stringResource)
-            chip.text = chiptext
-            if(!isChiptextPresentInChipgroup(binding.statusJournalFilterChipgroup, chiptext)) {
-                binding.statusJournalFilterChipgroup.addView(chip)
+            chip.text = getString(statusJournal.stringResource)
+            binding.statusJournalFilterChipgroup.addView(chip)
 
-                if(icalListViewModel.searchStatusJournal.contains(statusJournal))
-                    chip.isChecked = true
+            if(icalListViewModel.searchStatusJournal.contains(statusJournal))
+                chip.isChecked = true
 
-                chip.setOnCheckedChangeListener { _, isChecked ->
-                    if(isChecked)
-                        icalListViewModel.searchStatusJournal.add(statusJournal)
-                    else
-                        icalListViewModel.searchStatusJournal.remove(statusJournal)
-                    icalListViewModel.updateSearch()
-                }
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                if(isChecked)
+                    icalListViewModel.searchStatusJournal.add(statusJournal)
+                else
+                    icalListViewModel.searchStatusJournal.remove(statusJournal)
+                icalListViewModel.updateSearch()
             }
         }
 
         StatusTodo.values().forEach { statusTodo ->
             val chip = inflater.inflate(R.layout.fragment_ical_filter_chip, binding.statusTodoFilterChipgroup, false) as Chip
-            val chiptext = getString(statusTodo.stringResource)
-            chip.text = chiptext
-            if(!isChiptextPresentInChipgroup(binding.statusTodoFilterChipgroup, chiptext)) {
-                binding.statusTodoFilterChipgroup.addView(chip)
+            chip.text = getString(statusTodo.stringResource)
+            binding.statusTodoFilterChipgroup.addView(chip)
 
-                if(icalListViewModel.searchStatusTodo.contains(statusTodo))
-                    chip.isChecked = true
+            if(icalListViewModel.searchStatusTodo.contains(statusTodo))
+                chip.isChecked = true
 
-                chip.setOnCheckedChangeListener { _, isChecked ->
-                    if(isChecked)
-                        icalListViewModel.searchStatusTodo.add(statusTodo)
-                    else
-                        icalListViewModel.searchStatusTodo.remove(statusTodo)
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                if(isChecked)
+                    icalListViewModel.searchStatusTodo.add(statusTodo)
+                else
+                    icalListViewModel.searchStatusTodo.remove(statusTodo)
+                icalListViewModel.updateSearch()
+            }
+        }
+
+        OrderBy.values().forEach {
+
+            if(!it.compatibleModules.contains(Module.valueOf(icalListViewModel.searchModule)))
+                return@forEach
+            val chip = inflater.inflate(R.layout.fragment_ical_filter_chip, binding.filterOrderbyChipgroup, false) as Chip
+            chip.text = getString(it.stringResource)
+            binding.filterOrderbyChipgroup.addView(chip)
+
+            if(icalListViewModel.orderBy == it)
+                chip.isChecked = true
+
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                if(isChecked) {
+                    icalListViewModel.orderBy = it
+                    icalListViewModel.updateSearch()
+                }
+            }
+        }
+
+        SortOrder.values().forEach {
+
+            val chip = inflater.inflate(R.layout.fragment_ical_filter_chip, binding.filterSortorderChipgroup, false) as Chip
+            chip.text = getString(it.stringResource)
+            binding.filterSortorderChipgroup.addView(chip)
+
+            if(icalListViewModel.sortOrder == it)
+                chip.isChecked = true
+
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                if(isChecked) {
+                    icalListViewModel.sortOrder = it
                     icalListViewModel.updateSearch()
                 }
             }

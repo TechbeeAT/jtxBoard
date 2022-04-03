@@ -40,6 +40,8 @@ class IcalListFragmentNotes : Fragment() {
         const val PREFS_STATUS_JOURNAL = "prefsStatusJournal"
         const val PREFS_STATUS_TODO = "prefsStatusTodo"
         const val PREFS_EXCLUDE_DONE = "prefsExcludeDone"
+        const val PREFS_ORDERBY = "prefsOrderBy"
+        const val PREFS_SORTORDER = "prefsSortOrder"
     }
 
     private var _binding: FragmentIcalListRecyclerBinding? = null
@@ -79,6 +81,8 @@ class IcalListFragmentNotes : Fragment() {
         icalListViewModel.isFilterDueToday = false
         icalListViewModel.isFilterDueTomorrow = false
         icalListViewModel.isFilterDueFuture = false
+        icalListViewModel.orderBy = prefs.getString(PREFS_ORDERBY, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.LAST_MODIFIED
+        icalListViewModel.sortOrder = prefs.getString(PREFS_SORTORDER, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.ASC
 
         try {
             val activity = requireActivity() as MainActivity
@@ -105,6 +109,9 @@ class IcalListFragmentNotes : Fragment() {
         prefs.edit().putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
         prefs.edit().putStringSet(PREFS_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
         prefs.edit().putBoolean(PREFS_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
+
+        prefs.edit().putString(PREFS_SORTORDER, icalListViewModel.sortOrder.name).apply()
+        prefs.edit().putString(PREFS_ORDERBY, icalListViewModel.orderBy.name).apply()
     }
 
     override fun onDestroyView() {
