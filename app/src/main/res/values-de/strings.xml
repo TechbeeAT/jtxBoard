@@ -271,14 +271,9 @@ Global Strings -->
     <string name="adinfo_adfree_purchase_description_thankyou">"Werbung ist nun von dieser App entfernt. Falls Sie diese App und die kontinuierliche Entwicklung weiter unterstützen möchten, ziehen Sie bitte auch ein regelmäßiges Abo in Erwägung."</string>
     <string name="adinfo_adfree_subscribe_header">"Abo für jtx Board werbefrei"</string>
     <string name="adinfo_adfree_subscribe_description">"Dieses Abo entfernt die wiederkehrende Werbung von dieser App. Außerdem unterstützen Sie die fortlaufende Entwicklung dieser App."</string>
-    <string name="adinfo_adfree_subscribe_success_header">"Vielen Dank für den Abschluss des Abos"</string>
-    <string name="adinfo_adfree_subscribe_success_description">"Die Werbung ist jetzt von dieser App entfernt. Vielen Dank für Ihren Beitrag um dieses Projekt am Laufen zu halten!"</string>
-    <string name="adinfo_adfree_subscribe_success_thankyou">"Dankeschön!"</string>
     <string name="adinfo_adfree_subscribe_quarterly">"pro Quartal"</string>
     <string name="adinfo_button_reset_user_consent">"Werbezustimmung zurücksetzen"</string>
     <string name="adinfo_button_manage_subscriptions">"Abo verwalten"</string>
-    <string name="adinfo_adfree_subscribe_purchase_date">"Gekauft am %1$s"</string>
-    <string name="adinfo_adfree_subscribe_order_id">"Bestellnummer: %1$s"</string>
     <string name="attachment_error_on_retrieving_file">"Die Datei konnte nicht geladen werden."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Es wurde keine App gefunden um diese Datei/URL zu öffnen."</string>
     <string name="toast_item_is_now_recu_exception">"Wiederkehrender Eintrag ist jetzt eine Ausnahme."</string>
