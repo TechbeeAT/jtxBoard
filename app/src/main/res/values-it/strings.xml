@@ -297,14 +297,9 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="adinfo_adfree_purchase_description_thankyou">"Gli annunci vengono ora rimossi dall'app. Se ti piace questa app e desideri supportarne lo sviluppo continuo, considera anche l'abbonamento."</string>
     <string name="adinfo_adfree_subscribe_header">"Abbonamento per jtx Board senza pubblicità"</string>
     <string name="adinfo_adfree_subscribe_description">"L'abbonamento rimuove gli annunci ricorrenti da questa app e inoltre sostieni il continuo sviluppo di questa app."</string>
-    <string name="adinfo_adfree_subscribe_success_header">"Grazie per aver acquistato l'abbonamento senza pubblicità jtx Board"</string>
-    <string name="adinfo_adfree_subscribe_success_description">"Gli annunci vengono ora rimossi dall'app. Grazie per il tuo contributo per mantenere vivo questo progetto!"</string>
-    <string name="adinfo_adfree_subscribe_success_thankyou">"Grazie!"</string>
     <string name="adinfo_adfree_subscribe_quarterly">"Trimestrale"</string>
     <string name="adinfo_button_reset_user_consent">"Resetta il consenso dell'utente"</string>
     <string name="adinfo_button_manage_subscriptions">"Gestisci abbonamento"</string>
-    <string name="adinfo_adfree_subscribe_purchase_date">"Acquistato su %1$s"</string>
-    <string name="adinfo_adfree_subscribe_order_id">"ID ordine: %1$s"</string>
     <string name="attachment_error_on_retrieving_file">"Impossibile recuperare il file."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nessuna app trovata per aprire questo file/URL."</string>
     <string name="toast_item_is_now_recu_exception">"L'elemento ricorrente è ora un'eccezione."</string>
