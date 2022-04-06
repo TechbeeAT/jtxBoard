@@ -271,14 +271,9 @@ Pour plus d'informations sur le Sync, veuillez consulter :"</string>
     <string name="adinfo_adfree_purchase_description_thankyou">"Les publicités sont maintenant supprimées de l'application. Si vous aimez cette application et que vous souhaitez soutenir le développement continu, veuillez également envisager l'abonnement."</string>
     <string name="adinfo_adfree_subscribe_header">"Abonnement pour jtx Board Sans publicité"</string>
     <string name="adinfo_adfree_subscribe_description">"L'abonnement permet de supprimer les publicités récurrentes de cette application et de soutenir le développement continu de cette application."</string>
-    <string name="adinfo_adfree_subscribe_success_header">"Merci d'avoir acheté l'abonnement au conseil d'administration de jtx sans publicité."</string>
-    <string name="adinfo_adfree_subscribe_success_description">"Les publicités sont maintenant supprimées de l'application. Merci de votre contribution pour maintenir ce projet en vie !"</string>
-    <string name="adinfo_adfree_subscribe_success_thankyou">"Merci !"</string>
     <string name="adinfo_adfree_subscribe_quarterly">"Trimestrielle"</string>
     <string name="adinfo_button_reset_user_consent">"Réinitialiser le consentement de l'utilisateur"</string>
     <string name="adinfo_button_manage_subscriptions">"Gérer l'abonnement"</string>
-    <string name="adinfo_adfree_subscribe_purchase_date">"Acheté le %1$s"</string>
-    <string name="adinfo_adfree_subscribe_order_id">"ID de la commande : %1$s"</string>
     <string name="attachment_error_on_retrieving_file">"Échec de la récupération du fichier."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Aucune application n'a été trouvée pour ouvrir ce fichier/URL."</string>
     <string name="toast_item_is_now_recu_exception">"L'élément récurrent est maintenant une exception."</string>
