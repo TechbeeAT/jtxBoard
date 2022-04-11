@@ -420,7 +420,8 @@ enum class OrderBy(val stringResource: Int, val queryAppendix: String, val compa
     COMPLETED(R.string.completed, "ORDER BY $COLUMN_COMPLETED ", listOf(Module.TODO)),
     CREATED(R.string.filter_created, "ORDER BY $COLUMN_CREATED ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO)),
     LAST_MODIFIED(R.string.filter_last_modified, "ORDER BY $COLUMN_LAST_MODIFIED ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO)),
-    SUMMARY(R.string.summary, "ORDER BY $COLUMN_SUMMARY ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO))
+    SUMMARY(R.string.summary, "ORDER BY $COLUMN_SUMMARY ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO)),
+    PRIORITY(R.string.priority, "ORDER BY $COLUMN_PRIORITY ", listOf(Module.TODO))
 }
 
 enum class SortOrder(val stringResource: Int, val queryAppendix: String) {
