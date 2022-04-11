@@ -33,6 +33,9 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
     val collectionICS = MutableLiveData<String>(null)
     val isProcessing = MutableLiveData(false)
 
+    val resultInsertedFromICS = MutableLiveData<Pair<Int, Int>?>(null)
+
+
     /**
      * saves the given collection with the new values or inserts a new collection if collectionId == 0L
      * @param [collection] to be saved
@@ -83,7 +86,16 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
             collectionICS.postValue(Ical4androidUtil.getICSFormatForCollectionFromProvider(account, context, collectionId))
             isProcessing.postValue(false)
         }
-
     }
+
+
+    fun insertICSFromReader(context: Context?, collection: ICalCollection, ics: String) {
+
+        viewModelScope.launch(Dispatchers.IO)  {
+            val resultPair = Ical4androidUtil.insertFromReader(collection.getAccount(), context, collection.collectionId, ics.reader())
+            resultInsertedFromICS.postValue(resultPair)
+        }
+    }
+
 }
 

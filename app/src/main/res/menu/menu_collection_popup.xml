@@ -27,6 +27,10 @@
         android:title="@string/menu_collection_popup_export_as_ics"
         app:showAsAction="never" />
     <item
+        android:id="@+id/menu_collection_popup_import_from_ics"
+        android:title="@string/menu_collection_popup_import_from_ics"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/menu_collections_popup_move_entries"
         android:title="@string/menu_collections_popup_move_entries"
         app:showAsAction="never" />

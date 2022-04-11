@@ -10,9 +10,9 @@ package at.techbee.jtx.util
 
 import android.accounts.Account
 import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
 import androidx.test.platform.app.InstrumentationRegistry
-import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.SyncContentProviderTest
 import at.techbee.jtx.database.ICalDatabase
 import org.junit.Assert.*
@@ -31,13 +31,12 @@ class Ical4androidUtilTest {
     private var defaultICalObjectUri: Uri? = null
     private var defaultICalObjectId: Long? = null
 
-    private val fileContentProviderBaseUri = "content://$AUTHORITY_FILEPROVIDER"
+    private lateinit var context: Context
 
 
     @Before
     fun setUp() {
-        //val context: Context = ApplicationProvider.getApplicationContext()
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        context = InstrumentationRegistry.getInstrumentation().targetContext
 
         ICalDatabase.switchToInMemory(context)
         mContentResolver = context.contentResolver
@@ -64,7 +63,7 @@ class Ical4androidUtilTest {
 
     @Test
     fun getICSFormatFromProvider() {
-        val ics = Ical4androidUtil.getICSFormatFromProvider(defaultTestAccount, InstrumentationRegistry.getInstrumentation().targetContext, defaultCollectionId!!, defaultICalObjectId!!)
+        val ics = Ical4androidUtil.getICSFormatFromProvider(defaultTestAccount, context, defaultCollectionId!!, defaultICalObjectId!!)
         assertTrue(ics?.contains("BEGIN:VCALENDAR") == true)
         assertTrue(ics?.contains("BEGIN:VJOURNAL") == true)
         assertTrue(ics?.contains("SUMMARY:summary") == true)
@@ -75,7 +74,7 @@ class Ical4androidUtilTest {
     @Test
     fun writeICSFormatFromProviderToOS() {
         val os = ByteArrayOutputStream()
-        Ical4androidUtil.writeICSFormatFromProviderToOS(defaultTestAccount, InstrumentationRegistry.getInstrumentation().targetContext, defaultCollectionId!!, defaultICalObjectId!!, os)
+        Ical4androidUtil.writeICSFormatFromProviderToOS(defaultTestAccount, context, defaultCollectionId!!, defaultICalObjectId!!, os)
 
         val ics = os.toString()
         assertTrue(ics.contains("BEGIN:VCALENDAR"))
@@ -83,5 +82,78 @@ class Ical4androidUtilTest {
         assertTrue(ics.contains("SUMMARY:summary"))
         assertTrue(ics.contains("END:VJOURNAL"))
         assertTrue(ics.contains("END:VCALENDAR"))
+    }
+
+
+    @Test
+    fun insertFromReader_test() {
+        val ics = "BEGIN:VCALENDAR\n" +
+                "VERSION:2.0\n" +
+                "PRODID:-//hacksw/handcal//NONSGML v1.0//EN\n" +
+                "BEGIN:VJOURNAL\n" +
+                "UID:all-day-1day@example.com\n" +
+                "DTSTAMP:20140101T000000Z\n" +
+                "DTSTART;VALUE=DATE:19970714\n" +
+                "SUMMARY:All-Day 1 Day\n" +
+                "END:VJOURNAL\n" +
+                "END:VCALENDAR\n"
+        val num = Ical4androidUtil.insertFromReader(defaultTestAccount, context, defaultCollectionId!!, ics.reader())
+        assertEquals(1, num.first)
+        assertEquals(0, num.second)
+    }
+
+    @Test
+    fun insertFromReader_test_2entries() {
+        val ics = "BEGIN:VCALENDAR\n" +
+                "VERSION:2.0\n" +
+                "PRODID:-//hacksw/handcal//NONSGML v1.0//EN\n" +
+                "BEGIN:VJOURNAL\n" +
+                "UID:all-day-1day@example.com\n" +
+                "DTSTAMP:20140101T000000Z\n" +
+                "DTSTART;VALUE=DATE:19970714\n" +
+                "SUMMARY:All-Day 1 Day\n" +
+                "END:VJOURNAL\n" +
+                // second entry
+                "BEGIN:VTODO\n" +
+                "UID:asdf@example.com\n" +
+                "DTSTAMP:20140101T000000Z\n" +
+                "DTSTART;VALUE=DATE:19970714\n" +
+                "SUMMARY:Second entry\n" +
+                "END:VTODO\n" +
+                "END:VCALENDAR\n"
+        val num = Ical4androidUtil.insertFromReader(defaultTestAccount, context, defaultCollectionId!!, ics.reader())
+        assertEquals(2, num.first)
+        assertEquals(0, num.second)
+    }
+
+    @Test
+    fun insertFromReader_test_2entries_1skipped() {
+        val ics = "BEGIN:VCALENDAR\n" +
+                "VERSION:2.0\n" +
+                "PRODID:-//hacksw/handcal//NONSGML v1.0//EN\n" +
+                "BEGIN:VJOURNAL\n" +
+                "UID:all-day-1day@example.com\n" +
+                "DTSTAMP:20140101T000000Z\n" +
+                "DTSTART;VALUE=DATE:19970714\n" +
+                "SUMMARY:All-Day 1 Day\n" +
+                "END:VJOURNAL\n" +
+                // second entry
+                "BEGIN:VTODO\n" +
+                "UID:asdf@example.com\n" +
+                "DTSTAMP:20140101T000000Z\n" +
+                "DTSTART;VALUE=DATE:19970714\n" +
+                "SUMMARY:Second entry\n" +
+                "END:VTODO\n" +
+                // second entry again
+                "BEGIN:VTODO\n" +
+                "UID:asdf@example.com\n" +
+                "DTSTAMP:20140101T000000Z\n" +
+                "DTSTART;VALUE=DATE:19970714\n" +
+                "SUMMARY:Second entry\n" +
+                "END:VTODO\n" +
+                "END:VCALENDAR\n"
+        val num = Ical4androidUtil.insertFromReader(defaultTestAccount, context, defaultCollectionId!!, ics.reader())
+        assertEquals(2, num.first)
+        assertEquals(1, num.second)
     }
 }
