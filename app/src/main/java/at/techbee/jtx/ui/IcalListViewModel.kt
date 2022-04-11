@@ -272,12 +272,6 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
         searchClassification.clear()
         searchCollection.clear()
         searchAccount.clear()
-        isExcludeDone = false
-        isFilterOverdue = false
-        isFilterDueToday = false
-        isFilterDueTomorrow = false
-        isFilterDueFuture = false
-        isFilterNoDatesSet = false
         updateSearch()
     }
 

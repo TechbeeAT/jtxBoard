@@ -465,12 +465,6 @@ class IcalListFragment : Fragment() {
                 || (icalListViewModel.searchModule == Module.TODO.name && icalListViewModel.searchStatusTodo.isNotEmpty())
                 || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
                 || icalListViewModel.searchAccount.isNotEmpty()
-                || icalListViewModel.isExcludeDone
-                || icalListViewModel.isFilterOverdue
-                || icalListViewModel.isFilterDueToday
-                || icalListViewModel.isFilterDueTomorrow
-                || icalListViewModel.isFilterDueFuture
-                || icalListViewModel.isFilterNoDatesSet
 
     private fun deleteVisible() {
 
