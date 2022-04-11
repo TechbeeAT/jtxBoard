@@ -74,11 +74,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     val allSubtasks: LiveData<List<ICal4List?>> = database.getAllSubtasks()
 
     val allCategories = database.getAllCategories()   // filter FragmentDialog
-    val allCollections = database.getAllCollections() // filter FragmentDialog
-
-    val allRemoteCollections = database.getAllRemoteCollections()
-    val allWriteableCollectionsVJournal = database.getAllWriteableVJOURNALCollections()
-    val allWriteableCollectionsVTodo = database.getAllWriteableVTODOCollections()
+    val allCollections = database.getAllCollections()
 
     val quickInsertedEntity = MutableLiveData<ICalEntity?>(null)
     val directEditEntity = MutableLiveData<ICalEntity?>(null)
@@ -299,10 +295,12 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     fun removeDeletedAccounts(allDavx5Accounts: Array<Account>) {
 
         Log.d("checkForDeletedAccounts", "Found accounts: $allDavx5Accounts")
-        allRemoteCollections.value?.forEach { collection ->
+        allCollections.value?.forEach { collection ->
 
+            // Local collections STAY UNTOUCHED!
             // The Test account type should not be deleted, otherwise the tests will fail!
-            if(collection.accountType == ICalCollection.TEST_ACCOUNT_TYPE )
+            if(collection.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE
+                || collection.accountType == ICalCollection.TEST_ACCOUNT_TYPE )
                 return@forEach
 
             val found = allDavx5Accounts.find { account ->

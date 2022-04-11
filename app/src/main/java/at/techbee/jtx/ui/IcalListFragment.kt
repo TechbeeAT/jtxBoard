@@ -74,8 +74,8 @@ class IcalListFragment : Fragment() {
     private lateinit var prefs: SharedPreferences
     private lateinit var arguments: IcalListFragmentArgs
 
+    var allCollections = listOf<ICalCollection>()
     var currentWriteableCollections = listOf<ICalCollection>()
-
 
     companion object {
         const val PREFS_LIST_VIEW = "sharedPreferencesListView"
@@ -167,26 +167,15 @@ class IcalListFragment : Fragment() {
             updateMenuVisibilities()
         }
 
-        icalListViewModel.allWriteableCollectionsVJournal.observe(viewLifecycleOwner) {
-            return@observe
-        }
-        icalListViewModel.allWriteableCollectionsVTodo.observe(viewLifecycleOwner) {
-            return@observe
-        }
-
         // This observer is needed in order to make sure that the Subtasks are retrieved!
         icalListViewModel.allSubtasks.observe(viewLifecycleOwner) {
             //if(it.isNotEmpty())
             //recyclerView?.adapter?.notifyDataSetChanged()
             // trying to skip this code. This might have the effect, that subtasks that are added during the sync might not be immediately available, but improves the performance as the list does not get updated all the time
-            return@observe
         }
 
-        // observe to make sure that it gets updated
-        icalListViewModel.allRemoteCollections.observe(viewLifecycleOwner) {
-            // check if any accounts were removed, retrieve all DAVx5 Accounts
-            val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
-            icalListViewModel.removeDeletedAccounts(accounts)
+        icalListViewModel.allCollections.observe(viewLifecycleOwner) {
+            allCollections = it
         }
 
         // observe the directEditEntity. This is set in the Adapter on long click through the model. On long click we forward the user directly to the edit fragment
@@ -231,6 +220,10 @@ class IcalListFragment : Fragment() {
         icalListViewModel.searchSettingShowAllSubjournalsinJournallist = settings?.getBoolean(SETTINGS_SHOW_SUBJOURNALS_IN_LIST, false) ?: false
 
         updateMenuVisibilities()
+
+        // check if any accounts were removed, retrieve all DAVx5 Accounts
+        val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
+        icalListViewModel.removeDeletedAccounts(accounts)
 
         super.onResume()
     }
@@ -513,9 +506,13 @@ class IcalListFragment : Fragment() {
         var selectedCollectionPos: Int
 
         if(icalListViewModel.searchModule == Module.JOURNAL.name || icalListViewModel.searchModule == Module.NOTE.name)
-            currentWriteableCollections = icalListViewModel.allWriteableCollectionsVJournal.value ?: emptyList()
+            currentWriteableCollections = allCollections.filter {
+                it.supportsVJOURNAL && !it.readonly
+            }
         else if(icalListViewModel.searchModule == Module.TODO.name)
-            currentWriteableCollections = icalListViewModel.allWriteableCollectionsVTodo.value ?: emptyList()
+            currentWriteableCollections = allCollections.filter {
+                it.supportsVTODO && !it.readonly
+            }
 
         val allCollectionNames: MutableList<String> = mutableListOf()
         currentWriteableCollections.forEach { collection ->
