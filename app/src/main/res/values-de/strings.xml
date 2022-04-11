@@ -84,7 +84,7 @@ Global Strings -->
     <string name="list_progress">"Fortschritt"</string>
     <string name="list_expand">"Erweitern"</string>
     <string name="list_dialog_contribution_title">"Information zur Werbung"</string>
-    <string name="list_dialog_contribution_message">"Diese App wird standardmäßig durch Werbung finanziert. Als Alternative bieten wir ein Abo um die Werbung zu entfernen. Für weitere Informationen schauen Sie bitte in den Werbeinformation-Bereich im Hauptmenü."</string>
+    <string name="list_dialog_contribution_message">"Diese App wird standardmäßig durch Werbung finanziert. Für weitere Informationen schauen Sie bitte in den Werbeinformation-Bereich im Hauptmenü."</string>
     <string name="list_dialog_contribution_more_information">"Mehr erfahren"</string>
     <string name="list_num_attendees_contentdesc">"Anzahl der Teilnehmer"</string>
     <string name="list_num_attachments_contentdesc">"Anzahl der Anhänge"</string>
