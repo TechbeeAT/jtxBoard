@@ -1,0 +1,1 @@
+- jtx Board is now a registered .ics-handler, import compatible .ics-files from anywhere in Android

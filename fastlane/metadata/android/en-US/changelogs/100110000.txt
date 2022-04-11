@@ -1,0 +1,1 @@
+- Change the sort order of journals, notes and task list
