@@ -9,7 +9,10 @@
 package at.techbee.jtx.ui
 
 
+import android.app.Activity
 import android.app.Application
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -29,6 +32,7 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import at.techbee.jtx.databinding.*
 import at.techbee.jtx.util.DateTimeUtils
+import com.google.android.material.snackbar.Snackbar
 import java.io.IOException
 import java.io.OutputStream
 
@@ -44,6 +48,9 @@ class CollectionsFragment : Fragment() {
 
     private lateinit var inflater: LayoutInflater
     private var optionsMenu: Menu? = null
+
+    private var iCalString2Import: String? = null
+    private var iCalImportSnackbar: Snackbar? = null
 
     private var ics: String? = null
     private val getFileUriForSavingICS = registerForActivityResult(ActivityResultContracts.CreateDocument()) { uri ->
@@ -66,6 +73,21 @@ class CollectionsFragment : Fragment() {
         ics = null
     }
 
+    var icsFilepickerTargetCollection: CollectionsView? = null
+    val icsFilepickerLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                //processFileAttachment(result.data?.data)
+                val ics = result.data?.data ?: return@registerForActivityResult
+                val icsString = context?.contentResolver?.openInputStream(ics)?.readBytes()?.decodeToString() ?: return@registerForActivityResult
+
+                icsFilepickerTargetCollection?.let {
+                    collectionsViewModel.isProcessing.postValue(true)
+                    collectionsViewModel.insertICSFromReader(context, it.toICalCollection(), icsString)
+                }
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -82,6 +104,9 @@ class CollectionsFragment : Fragment() {
         binding.model = collectionsViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        val arguments = CollectionsFragmentArgs.fromBundle((requireArguments()))
+        arguments.iCalString?.let { iCalString2Import = it }
+
         collectionsViewModel.localCollections.observe(viewLifecycleOwner) {
             binding.collectionsLocalNolocalcollections.visibility = if(it.isEmpty()) View.VISIBLE else View.GONE
             addCollectionView(it, true)
@@ -96,12 +121,25 @@ class CollectionsFragment : Fragment() {
             optionsMenu?.findItem(R.id.menu_collections_add_remote)?.isVisible = it
         }
 
+        collectionsViewModel.resultInsertedFromICS.observe(viewLifecycleOwner) {
+            if(it == null)
+                return@observe
+            Snackbar.make(this.requireView(), getString(R.string.collections_snackbar_x_items_added, it.first, it.second), Snackbar.LENGTH_LONG).show()
+            collectionsViewModel.isProcessing.postValue(false)
+            collectionsViewModel.resultInsertedFromICS.postValue(null)
+        }
+
         return binding.root
     }
 
     override fun onResume() {
 
         collectionsViewModel.isDavx5Compatible.postValue(SyncUtil.isDAVx5CompatibleWithJTX(application))
+
+        if(iCalString2Import?.isNotEmpty() == true ) {
+            iCalImportSnackbar = Snackbar.make(this.requireView(), R.string.collections_snackbar_select_collection_for_ics_import, Snackbar.LENGTH_INDEFINITE)
+            iCalImportSnackbar?.show()
+        }
 
         try {
             val activity = requireActivity() as MainActivity
@@ -184,10 +222,23 @@ class CollectionsFragment : Fragment() {
                             }
                         }
                         R.id.menu_collections_popup_move_entries -> showMoveEntriesDialog(collection)
+                        R.id.menu_collection_popup_import_from_ics -> importFromICS(collection)
                     }
                     true
                 }
             }
+
+
+            // only if we have an iCalString2Import we would react on the click
+            collectionItemBinding.root.setOnClickListener {
+                iCalString2Import?.let {
+                    collectionsViewModel.isProcessing.postValue(true)
+                    collectionsViewModel.insertICSFromReader(context, collection.toICalCollection(), it)
+                    iCalString2Import = null
+                    iCalImportSnackbar?.dismiss()
+                }
+            }
+
         }
     }
 
@@ -322,6 +373,20 @@ class CollectionsFragment : Fragment() {
             }
             .setNeutralButton(R.string.cancel) { _, _ ->  }
             .show()
+    }
+
+    private fun importFromICS(currentCollection: CollectionsView) {
+
+        var chooseFile = Intent(Intent.ACTION_GET_CONTENT)
+        chooseFile.type = "text/calendar"
+        chooseFile = Intent.createChooser(chooseFile, "Choose a file")
+        icsFilepickerTargetCollection = currentCollection
+        try {
+            icsFilepickerLauncher.launch(chooseFile)
+        } catch (e: ActivityNotFoundException) {
+            Log.e("chooseFileIntent", "Failed to open filepicker\n$e")
+            Toast.makeText(context, "Failed to open filepicker", Toast.LENGTH_LONG).show()
+        }
     }
 }
 

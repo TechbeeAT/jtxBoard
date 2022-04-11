@@ -44,7 +44,7 @@ Global Strings -->
     <string name="classification_public">"Public"</string>
     <string name="classification_private">"Privé"</string>
     <string name="classification_confidential">"Confidentiel"</string>
-    <string name="attendee_role_chair">"Président"</string>
+    <string name="attendee_role_chair">"Organisateur"</string>
     <string name="attendee_role_required_participant">"Participant obligatoire"</string>
     <string name="attendee_role_optional_participant">"Participant facultatif"</string>
     <string name="attendee_role_non_participant">"Non-participant / Info"</string>
@@ -52,7 +52,7 @@ Global Strings -->
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Ouvrir le tiroir de navigation"</string>
     <string name="navigation_drawer_close">"Fermer le tiroir de navigation"</string>
-    <string name="navigation_drawer_board">"Conseil d'administration"</string>
+    <string name="navigation_drawer_board">"Tableau de bord"</string>
     <string name="navigation_drawer_sync">"Synchronisation avec DAVx⁵"</string>
     <string name="navigation_drawer_about">"À propos / Licence"</string>
     <string name="navigation_drawer_subtitle">"journaux, notes et tâches pour android"</string>
@@ -61,7 +61,7 @@ Global Strings -->
     <string name="navigation_drawer_news_updates">"Nouvelles et mises à jour"</string>
     <string name="navigation_drawer_external_links">"Liens externes"</string>
     <string name="navigation_drawer_website">"Site web"</string>
-    <string name="navigation_drawer_support">"Soutien"</string>
+    <string name="navigation_drawer_support">"Aide"</string>
     <string name="navigation_drawer_donate">"Faire un don"</string>
     <string name="navigation_drawer_adinfo">"Information sur la publicité"</string>
     <string name="navigation_drawer_privacy_policy">"Politique de confidentialité"</string>
@@ -81,8 +81,8 @@ Global Strings -->
     <string name="list_tabitem_notes">"Notes"</string>
     <string name="list_tabitem_todos">"Tâches"</string>
     <string name="list_fab_add_contentdesc">"Ajouter un nouvel élément"</string>
-    <string name="list_progress">"Progrès"</string>
-    <string name="list_expand">"Développez"</string>
+    <string name="list_progress">"Progression"</string>
+    <string name="list_expand">"Développer"</string>
     <string name="list_dialog_contribution_title">"Note sur les publicités"</string>
     <string name="list_dialog_contribution_message">"Cette application est alimentée par des publicités par défaut. Pour plus d'informations, veuillez consulter la section Informations sur la publicité dans le menu principal !"</string>
     <string name="list_dialog_contribution_more_information">"Savoir plus"</string>
@@ -101,21 +101,23 @@ Global Strings -->
     <string name="view_recurrence_note_to_original_dialog_header">"Instance d'une entrée récurrence"</string>
     <string name="view_recurrence_note_to_original">"Cette entrée fait partie d'une série. L'édition de cette entrée la dissociera de la série, elle continuera en tant qu'événement autonome et les modifications apportées à l'événement original n'affecteront plus cette entrée."</string>
     <string name="view_fragment_audio_permission">"Autorisation de l'application"</string>
-    <string name="view_fragment_audio_permission_message">"jtx Board a besoin de la permission afin d'enregistrer de l'audio ou d'utiliser les fonctionnalités de synthèse vocale. Veuillez accorder la permission d'utiliser cette fonctionnalité."</string>
+    <string name="view_fragment_audio_permission_message">"jtx Board a besoin de la permission d'enregistrer l'audio ou d'utiliser les fonctionnalités de synthèse vocale. Veuillez accorder la permission d'utiliser cette fonctionnalité."</string>
     <string name="view_fragment_audio_dialog_add_audio_note">"Ajouter une note audio"</string>
     <string name="view_comment_playbutton_content_desc">"Lire le commentaire audio"</string>
     <string name="view_fragment_audio_start_stop_recording_contentdesc">"Démarrer/arrêter l'enregistrement"</string>
     <string name="view_fragment_audio_start_stop_playback_contentdesc">"Lire le commentaire audio"</string>
-    <string name="view_reccurrence_note_is_exception">"Ce poste est une exception à une écriture récurrente."</string>
+    <string name="view_reccurrence_note_is_exception">"Cet élément est une exception à une entrée récurrente."</string>
     <string name="view_feedback_linked_notes">"Commentaires / Notes liées"</string>
     <string name="view_add_note">"Ajouter une note"</string>
-    <string name="view_add_audio_note">"Ajouter le son"</string>
+    <string name="view_add_audio_note">"Ajouter une note audio"</string>
     <string name="view_fab_edit_entry_contentDesc">"Modifier l'entrée"</string>
     <string name="view_subtasks_header">"Sous-tâches"</string>
-    <string name="view_progress_label">"Progrès"</string>
+    <string name="view_progress_label">"Progression"</string>
     <string name="view_dialog_sure_to_delete_title">"Supprimer \"%1$s\" ?"</string>
     <string name="view_dialog_sure_to_delete_message">"Êtes-vous sûr de vouloir supprimer \"%1$s\" ?"</string>
-    <string name="view_toast_deleted_successfully">"\"%1$s\" a été supprimé avec succès"</string>
+
+    <!-- Added "(s)" in case of multiple deletion. -->
+    <string name="view_toast_deleted_successfully">"\"%1$s\" supprimé(s) avec succès"</string>
     <string name="view_dialog_add_note">"Ajouter une note"</string>
     <string name="view_dialog_add_note_dialog_hint">"Ajoutez votre note ici"</string>
     <string name="view_toast_entry_does_not_exist_anymore">"L'entrée demandée n'existe pas (plus)."</string>
@@ -123,13 +125,16 @@ Global Strings -->
     <string name="view_last_modified_text">"Dernière modification : %1$s"</string>
     <string name="view_due">"Due"</string>
     <string name="view_completed">"Complété"</string>
-    <string name="view_started">"Début(s)"</string>
+    <string name="view_started">"Début"</string>
 
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#catégorie"</string>
     <string name="edit_add_category_helper">"Ajouter une catégorie"</string>
     <string name="edit_attendees_hint">"johanna@example.com"</string>
     <string name="edit_attendees_helper">"Ajouter un participant (adresse e-mail). Attention : Les serveurs peuvent traiter automatiquement les participants, par exemple en envoyant des messages iMIP."</string>
+
+    <!-- Not clear to me. What is this field for ? -->
+    <!-- Fuzzy -->
     <string name="edit_resources_hint">"Projecteur"</string>
     <string name="edit_resources_helper">"Ajouter une ressource"</string>
     <string name="edit_contact_hint">"Jean Dupont, +1 919 555 1234"</string>
@@ -158,23 +163,23 @@ Global Strings -->
     <string name="edit_recur_toast_requires_start_date">"La récurrence nécessite qu'une date de début soit fixée !"</string>
     <string name="edit_datepicker_dialog_select_date">"Sélectionnez la date"</string>
     <string name="edit_datepicker_dialog_select_time">"Sélectionner l'heure"</string>
-    <string name="edit_task_started_add">"Date et heure de début du prélèvement"</string>
-    <string name="edit_task_due_add">"Date/heure d'échéance du choix"</string>
-    <string name="edit_task_completed_add">"Date/heure de fin du prélèvement"</string>
+    <string name="edit_task_started_add">"Sélectionner la date / l'heure de début"</string>
+    <string name="edit_task_due_add">"Sélectionner la date / l'heure d'échéance"</string>
+    <string name="edit_task_completed_add">"Sélectionner la date / l'heure de fin"</string>
     <string name="edit_dialog_sure_to_delete_title">"Supprimer \"%1$s\" ?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Rejeter cette entrée ?"</string>
     <string name="edit_dialog_sure_to_delete_message">"Êtes-vous sûr de vouloir supprimer \"%1$s\" ?"</string>
-    <string name="edit_dialog_sure_to_discard_message">"Êtes-vous sûr de vouloir supprimer cette entrée ? Cette entrée ne sera pas sauvegardée."</string>
-    <string name="edit_toast_deleted_successfully">"\"%1$s\" a été supprimé avec succès"</string>
+    <string name="edit_dialog_sure_to_discard_message">"Êtes-vous sûr de vouloir supprimer cette entrée ? Cette entrée ne sera pas enregistrée."</string>
+    <string name="edit_toast_deleted_successfully">"\"%1$s\" supprimé avec succès"</string>
     <string name="edit_dialog_collection_not_found_error_title">"Attention"</string>
-    <string name="edit_dialog_collection_not_found_error_message">"La collection sélectionnée ne peut plus être trouvée, veuillez en sélectionner une autre."</string>
+    <string name="edit_dialog_collection_not_found_error_message">"La collection sélectionnée n'a pas pu être trouvée, veuillez en sélectionner une autre."</string>
     <string name="edit_validation_errors_detected">"Veuillez corriger la ou les erreurs de validation suivantes :"</string>
     <string name="edit_validation_errors_dialog_header">"Des erreurs de validation se sont produites"</string>
     <string name="edit_validation_errors_summary_or_description_necessary">"Un résumé ou une description doit être fourni."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La date d'échéance ne peut pas être antérieure à la date de début."</string>
-    <string name="edit_validation_errors_category_not_confirmed">"Une catégorie a été saisie mais n'a pas été confirmée. Veuillez confirmer ou supprimer."</string>
+    <string name="edit_validation_errors_category_not_confirmed">"Une catégorie a été saisie mais pas confirmée. Veuillez la confirmer ou la supprimer."</string>
     <string name="edit_validation_errors_comment_not_confirmed">"Un commentaire a été saisi mais n'a pas été confirmé. Veuillez confirmer ou supprimer."</string>
-    <string name="edit_validation_errors_resource_not_confirmed">"Une ressource a été saisie mais n'a pas été confirmée. Veuillez confirmer ou supprimer."</string>
+    <string name="edit_validation_errors_resource_not_confirmed">"Une ressource a été saisie mais pas été confirmée. Veuillez la confirmer ou la supprimer."</string>
     <string name="edit_validation_errors_attendee_not_confirmed">"Un participant a été saisi mais n'a pas été confirmé. Veuillez confirmer ou supprimer."</string>
     <string name="edit_validation_errors_subtask_not_confirmed">"Une sous-tâche a été saisie mais pas confirmée. Veuillez confirmer ou supprimer."</string>
     <string name="edit_fragment_app_permission">"Autorisation de l'application"</string>
@@ -188,7 +193,7 @@ Global Strings -->
     <string name="filter_fab_apply_filter_contentdescription">"Appliquer le filtre"</string>
     <string name="about_tabitem_translations">"Traductions"</string>
     <string name="about_tabitem_libraries">"Bibliothèques"</string>
-    <string name="about_tabitem_thanks">"Remerciements particuliers"</string>
+    <string name="about_tabitem_thanks">"Remerciements"</string>
     <string name="about_app_version">"Version : %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nom de code : %1$s"</string>
     <string name="about_app_build_date">"Compilé le %s"</string>
@@ -209,7 +214,7 @@ Global Strings -->
     <string name="menu_view_share_text">"Partager"</string>
     <string name="menu_view_share_ics">"Partager en .ics"</string>
     <string name="menu_view_copy_as_journal">"Copie en tant que journal"</string>
-    <string name="menu_view_copy_as_todo">"Copier en tant que Todo"</string>
+    <string name="menu_view_copy_as_todo">"Copie en tant que tâche"</string>
     <string name="menu_view_copy_as_note">"Copie en tant que note"</string>
     <string name="menu_view_copy_item">"Créer une copie"</string>
 
@@ -229,7 +234,7 @@ Global Strings -->
     <string name="settings_show_attachments_in_list">"Afficher les pièces jointes dans la liste"</string>
     <string name="settings_show_progress_for_subtasks_in_list">"Afficher le progrès des sous-tâches dans la liste"</string>
     <string name="settings_show_progress_for_maintasks_in_list">"Afficher le progrès des tâches dans la liste"</string>
-    <string name="settings_group_settings_for_subentries">"Paramètres pour les sous-tâches, les notes secondaires et les sous-journaux"</string>
+    <string name="settings_group_settings_for_subentries">"Paramètres pour les sous-tâches, les sous-notes et les sous-journaux"</string>
     <string name="settings_show_subtasks_of_journals_and_todos_in_tasklist">"Afficher les sous-tâches des journaux et des notes dans la liste des tâches"</string>
     <string name="settings_show_subnotes_of_journals_and_tasks_in_noteslist">"Afficher les sous-notes des journaux et des tâches dans la liste des notes"</string>
     <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">"Afficher les sous-journaux de notes et de tâches dans la liste des journaux"</string>
@@ -238,18 +243,18 @@ Global Strings -->
 
     <!-- Sync fragment -->
     <string name="sync_coming_soon_heading">"Synchronisation avec DAVx⁵"</string>
-    <string name="sync_coming_soon_text">"jtx Board n'assure pas lui-même la synchronisation avec le serveur, mais prend en charge la synchronisation via DAVx⁵. Cette méthode vous permettra d'utiliser un serveur CalDAV compatible de votre choix pour stocker, sauvegarder et synchroniser vos données.
+    <string name="sync_coming_soon_text">"jtx Board n'assure pas lui-même la synchronisation serveur, mais prend en charge la synchronisation via DAVx⁵. Cette méthode vous permettra d'utiliser un serveur CalDAV compatible de votre choix pour stocker, sauvegarder et synchroniser vos données.
 Cette fonctionnalité est encore en cours de développement et sera bientôt disponible ! Restez à l'écoute sur notre site web et sur Twitter :-)"</string>
     <string name="sync_with_davx5_heading">"Sync with DAVx⁵ (beta)*"</string>
-    <string name="sync_basic_info">"jtx Board ne fournit pas de synchronisation de serveur lui-même, mais supporte la synchronisation par DAVx⁵. Cette méthode vous permet d'utiliser n'importe quel serveur CalDAV compatible de votre choix pour stocker, sauvegarder et synchroniser vos données. * Veuillez noter que cette fonctionnalité est encore considérée comme une version bêta. Bien que cette fonctionnalité ait été testée, des problèmes peuvent encore survenir. Si vous rencontrez un problème, nous vous remercions de nous en faire part !"</string>
+    <string name="sync_basic_info">"jtx Board n'assure pas lui-même la synchronisation serveur, mais prend en charge la synchronisation via DAVx⁵. Cette méthode vous permet d'utiliser un serveur CalDAV compatible de votre choix pour stocker, sauvegarder et synchroniser vos données. * Veuillez noter que cette fonctionnalité est version bêta. Bien que cette fonctionnalité ait été testée, des problèmes peuvent encore survenir. Si vous rencontrez un problème, nous vous remercions de nous en faire part !"</string>
     <string name="sync_congratulations">"Félicitations ! :-)"</string>
     <string name="sync_davx5_installed_but_no_collections_found">"Nous avons détecté DAVx⁵ sur votre téléphone. Si vous n'avez pas encore configuré de comptes, veuillez suivre les instructions sur notre site Web :"</string>
     <string name="sync_davx5_installed_with_collections_found">"Nous avons détecté DAVx⁵ sur votre téléphone. Si vous avez des problèmes ou des doutes, veuillez d'abord consulter notre site Web :"</string>
-    <string name="sync_davx5_installed_with_collections_synched_collections">"Les comptes (calendriers) suivants sont actuellement synchronisés :"</string>
-    <string name="sync_check_out_davx5">"Regardez DAVx⁵ !"</string>
-    <string name="sync_davx5_not_found">"Nous n'avons pas détecté de DAVx⁵ sur votre téléphone.
-Pour plus d'informations sur le Sync, veuillez consulter :"</string>
-    <string name="sync_davx5_get_davx5_on">"ou obtenez DAVx⁵ on"</string>
+    <string name="sync_davx5_installed_with_collections_synched_collections">"Les comptes (calendriers) suivants sont synchronisés :"</string>
+    <string name="sync_check_out_davx5">"Vérifer DAVx⁵ !"</string>
+    <string name="sync_davx5_not_found">"Nous n'avons pas détecté DAVx⁵ sur votre appareil.
+Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
+    <string name="sync_davx5_get_davx5_on">"ou obtenez DAVx⁵ sur"</string>
     <string name="sync_furhter_info_davx5">"Pour plus d'informations sur DAVx⁵, veuillez consulter le site suivant"</string>
     <string name="sync_button_add_account_in_davx5">"Ajouter un compte à DAVx⁵"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Impossible d'ouvrir DAVx⁵, veuillez ouvrir l'application manuellement."</string>
@@ -264,26 +269,26 @@ Pour plus d'informations sur le Sync, veuillez consulter :"</string>
     <!-- Adinfo fragment -->
     <string name="adinfo_text">"Le développement d'une application est un sujet complexe et le développement, la maintenance et le support sont des tâches difficiles. Votre version de jtx Board est gratuite et financée par des publicités. En acceptant les publicités, vous contribuez au développement continu et au financement de ce projet."</string>
     <string name="adinfo_huwei_only_non_personalized_text">"Cette version de jtx Board utilise des publicités non personnalisées."</string>
-    <string name="adinfo_adfree_text">"Si vous préférez cette application sans publicité, veuillez envisager la mise à niveau suivante :"</string>
+    <string name="adinfo_adfree_text">"Si vous souhaitez masquer la publicité, vous pouvez mettre à niveau l'applcation :"</string>
     <string name="adinfo_adfree_purchase_header">"Mise à niveau vers jtx Board sans publicité"</string>
     <string name="adinfo_adfree_purchase_description">"Merci d'envisager la mise à niveau sans publicité de jtx Board. Cette mise à niveau supprime les publicités récurrentes de cette application."</string>
     <string name="adinfo_adfree_purchase_header_thankyou">"Merci d'avoir acheté jtx Board sans publicité"</string>
-    <string name="adinfo_adfree_purchase_description_thankyou">"Les publicités sont maintenant supprimées de l'application. Si vous aimez cette application et que vous souhaitez soutenir le développement continu, veuillez également envisager l'abonnement."</string>
+    <string name="adinfo_adfree_purchase_description_thankyou">"Les publicités ont été supprimées de l'application. Si vous aimez cette application et que vous souhaitez soutenir son développement, vous pouvez aussi vous abonner."</string>
     <string name="adinfo_adfree_subscribe_header">"Abonnement pour jtx Board Sans publicité"</string>
-    <string name="adinfo_adfree_subscribe_description">"L'abonnement permet de supprimer les publicités récurrentes de cette application et de soutenir le développement continu de cette application."</string>
+    <string name="adinfo_adfree_subscribe_description">"L'abonnement permet de supprimer les publicités de cette application et de soutenir le développement de cette application."</string>
     <string name="adinfo_adfree_subscribe_quarterly">"Trimestrielle"</string>
-    <string name="adinfo_button_reset_user_consent">"Réinitialiser le consentement de l'utilisateur"</string>
+    <string name="adinfo_button_reset_user_consent">"Réinitialiser le consentement utilisateur"</string>
     <string name="adinfo_button_manage_subscriptions">"Gérer l'abonnement"</string>
     <string name="attachment_error_on_retrieving_file">"Échec de la récupération du fichier."</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Aucune application n'a été trouvée pour ouvrir ce fichier/URL."</string>
     <string name="toast_item_is_now_recu_exception">"L'élément récurrent est maintenant une exception."</string>
-    <string name="toast_adfree_for_a_week">"Plus de publicités vidéo depuis une semaine :-)"</string>
+    <string name="toast_adfree_for_a_week">"Plus de publicités vidéo pendant une semaine :-)"</string>
 
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">"Désolé, jtx Board a du mal à se synchroniser. Veuillez fermer DAVx⁵ et recommencer la synchronisation."</string>
     <string name="about_translations_thanks_to">"Merci à"</string>
-    <string name="about_translations_for_contributions_in">"pour les contributions en"</string>
-    <string name="about_translations_basic_info">"jtx Board est une application open source qui apprécie la participation et la contribution de la communauté open source. Sur cette page, nous aimerions attribuer les efforts des membres de la communauté pour les traductions."</string>
+    <string name="about_translations_for_contributions_in">"en contribution à"</string>
+    <string name="about_translations_basic_info">"jtx Board est une application open source qui apprécie la participation et la contribution de la communauté open source. Sur cette page, nous aimerions remercier les efforts des membres de la communauté pour les traductions."</string>
     <string name="about_translations_contribution_info">"Si vous souhaitez modifier/ajouter des traductions ou ajouter des nouvelles langues à cette application, n'hésitez pas à rejoindre le projet jtx Board sur la plateforme de traduction POEditor :"</string>
     <string name="about_translations_contribution_button">"Rejoignez-nous sur POEditor.com"</string>
     <string name="list_welcome_entry_journal_summary">"Félicitations, c'est votre premier journal :-)"</string>
