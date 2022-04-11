@@ -215,7 +215,13 @@
         android:id="@+id/collectionsFragment"
         android:name="at.techbee.jtx.ui.CollectionsFragment"
         android:label="CollectionsFragment"
-        tools:layout="@layout/fragment_collections"/>
+        tools:layout="@layout/fragment_collections">
+        <argument
+            android:name="iCalString"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
     <action
         android:id="@+id/action_global_collectionsFragment"
         app:destination="@id/collectionsFragment"

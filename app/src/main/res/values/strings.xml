@@ -389,6 +389,9 @@
     <string name="collections_toast_export_ics_error">An error occurred while exporting the selected collection.</string>
     <string name="collections_dialog_move_title">Move all entries from \"%1$s\" to</string>
     <string name="collection_dialog_move_info">Please note: Only writeable collections and collections with support for the same components (Journals, Notes, Tasks) can be selected.</string>
+    <string name="collections_snackbar_select_collection_for_ics_import">Please click on the collection to which the entry/entries should be added!</string>
+    <string name="collections_snackbar_x_items_added">%1$d added, %2$d skipped. (Exclusive instances of recurring entries.)</string>
+
 
     <!-- menus -->
     <string name="menu_edit_clear_dates">Clear dates</string>
@@ -417,6 +420,7 @@
 
     <string name="menu_collection_popup_show_in_davx5">Show in DAVx⁵</string>
     <string name="menu_collection_popup_export_as_ics">Export as .ics</string>
+    <string name="menu_collection_popup_import_from_ics">Import from .ics</string>
     <string name="menu_collections_popup_move_entries">Move entries</string>
 
 

@@ -155,74 +155,18 @@ class MainActivity : AppCompatActivity()  {
                 }
                 // Take data also from other sharing intents
                 Intent.ACTION_SEND -> {
-
-                    val options = arrayOf(
-                        getString(R.string.journal),
-                        getString(R.string.note),
-                        getString(R.string.task)
-                    )
-                    AlertDialog.Builder(this)
-                        .setTitle(R.string.intent_dialog_title)
-                        .setIcon(R.drawable.ic_fromshareintent)
-                        .setItems(
-                            options
-                        ) { _, selection ->
-                            val iCalObject = when (selection) {
-                                0 -> ICalObject.createJournal()
-                                1 -> ICalObject.createNote()
-                                2 -> ICalObject.createTodo()
-                                else -> return@setItems
-                            }
-                            val entity = ICalEntity(iCalObject)
-                            if (intent.type == "text/plain") {
-                                val text = intent.getStringExtra(Intent.EXTRA_TEXT)
-                                iCalObject.parseSummaryAndDescription(text)
-                                val categories = Category.extractHashtagsFromText(text)
-                                entity.categories = categories
-                            } else if (intent.type?.startsWith("image/") == true || intent.type == "application/pdf") {
-                                (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
-
-                                    try {
-                                        val extension = MimeTypeMap.getSingleton()
-                                            .getExtensionFromMimeType(intent.type)
-                                        val filename = "${System.currentTimeMillis()}.$extension"
-                                        val newFile =
-                                            File(Attachment.getAttachmentDirectory(this), filename)
-                                        newFile.createNewFile()
-
-                                        val attachmentDescriptor =
-                                            this.contentResolver.openFileDescriptor(it, "r")
-                                        val attachmentBytes =
-                                            ParcelFileDescriptor.AutoCloseInputStream(
-                                                attachmentDescriptor
-                                            ).readBytes()
-                                        newFile.writeBytes(attachmentBytes)
-
-                                        val newAttachment = Attachment(
-                                            uri = FileProvider.getUriForFile(
-                                                this,
-                                                AUTHORITY_FILEPROVIDER,
-                                                newFile
-                                            ).toString(),
-                                            filename = newFile.name,
-                                            extension = newFile.extension,
-                                            fmttype = intent.type
-                                        )
-                                        entity.attachments = listOf(newAttachment)
-
-                                    } catch (e: IOException) {
-                                        Log.e("IOException", "Failed to process file\n$e")
-                                    }
-                                }
-                            }
-                            findNavController(R.id.nav_host_fragment)
-                                .navigate(
-                                    IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
-                                        entity
-                                    )
-                                )
-                        }
-                        .show()
+                    if(intent.type == "text/plain" || intent.type?.startsWith("image/") == true || intent.type == "application/pdf")
+                        showAddContentDialog()
+                }
+                Intent.ACTION_VIEW -> {
+                    if (intent.type == "text/calendar") {
+                        val ics = intent.data ?: return
+                        val icsString = this.contentResolver.openInputStream(ics)?.readBytes()?.decodeToString()
+                        findNavController(R.id.nav_host_fragment).navigate(
+                            NavigationDirections.actionGlobalCollectionsFragment().apply {
+                                this.iCalString = icsString
+                            })
+                    }
                 }
             }
             lastProcessedIntentHash = intent.hashCode()
@@ -413,5 +357,77 @@ class MainActivity : AppCompatActivity()  {
             AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)
             Log.d("AdInfoShown", "AdInfo was shown, loading consent form if necessary")
         }
+    }
+
+
+    private fun showAddContentDialog() {
+
+        val options = arrayOf(
+            getString(R.string.toolbar_text_add_journal),
+            getString(R.string.toolbar_text_add_note),
+            getString(R.string.toolbar_text_add_task)
+        )
+        AlertDialog.Builder(this)
+            .setTitle(R.string.intent_dialog_title)
+            .setIcon(R.drawable.ic_fromshareintent)
+            .setItems(
+                options
+            ) { _, selection ->
+                val iCalObject = when (selection) {
+                    0 -> ICalObject.createJournal()
+                    1 -> ICalObject.createNote()
+                    2 -> ICalObject.createTodo()
+                    else -> return@setItems
+                }
+                val entity = ICalEntity(iCalObject)
+                if (intent.type == "text/plain") {
+                    val text = intent.getStringExtra(Intent.EXTRA_TEXT)
+                    iCalObject.parseSummaryAndDescription(text)
+                    val categories = Category.extractHashtagsFromText(text)
+                    entity.categories = categories
+                } else if (intent.type?.startsWith("image/") == true || intent.type == "application/pdf") {
+                    (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
+
+                        try {
+                            val extension = MimeTypeMap.getSingleton()
+                                .getExtensionFromMimeType(intent.type)
+                            val filename = "${System.currentTimeMillis()}.$extension"
+                            val newFile =
+                                File(Attachment.getAttachmentDirectory(this), filename)
+                            newFile.createNewFile()
+
+                            val attachmentDescriptor =
+                                this.contentResolver.openFileDescriptor(it, "r")
+                            val attachmentBytes =
+                                ParcelFileDescriptor.AutoCloseInputStream(
+                                    attachmentDescriptor
+                                ).readBytes()
+                            newFile.writeBytes(attachmentBytes)
+
+                            val newAttachment = Attachment(
+                                uri = FileProvider.getUriForFile(
+                                    this,
+                                    AUTHORITY_FILEPROVIDER,
+                                    newFile
+                                ).toString(),
+                                filename = newFile.name,
+                                extension = newFile.extension,
+                                fmttype = intent.type
+                            )
+                            entity.attachments = listOf(newAttachment)
+
+                        } catch (e: IOException) {
+                            Log.e("IOException", "Failed to process file\n$e")
+                        }
+                    }
+                }
+                findNavController(R.id.nav_host_fragment)
+                    .navigate(
+                        IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
+                            entity
+                        )
+                    )
+            }
+            .show()
     }
 }

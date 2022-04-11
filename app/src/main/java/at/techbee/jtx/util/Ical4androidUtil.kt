@@ -20,6 +20,7 @@ import at.bitfire.ical4android.MiscUtils.CursorHelper.toValues
 import at.techbee.jtx.contract.JtxContract
 import at.techbee.jtx.contract.JtxContract.asSyncAdapter
 import java.io.OutputStream
+import java.io.Reader
 
 object Ical4androidUtil {
 
@@ -102,7 +103,7 @@ object Ical4androidUtil {
      */
     private fun getCollection(account: Account,
                               context: Context?,
-                              collectionId: Long,): JtxCollection<JtxICalObject>? {
+                              collectionId: Long): JtxCollection<JtxICalObject>? {
 
         val client =
             context?.contentResolver?.acquireContentProviderClient(JtxContract.AUTHORITY)
@@ -113,7 +114,52 @@ object Ical4androidUtil {
         else
             collections.first()
     }
- }
+
+
+    /**
+     * @param [account] to look up
+     * @param [context]
+     * @param [collectionId] where the parsed items should be inserted
+     * @return A pair with <number of added entries, number of skipped entries>
+     */
+    fun insertFromReader(account: Account,
+                         context: Context?,
+                         collectionId: Long,
+                         reader: Reader
+    ): Pair<Int, Int> {
+
+        val client = context?.contentResolver?.acquireContentProviderClient(JtxContract.AUTHORITY) ?: return Pair(0,0)
+        val collections = JtxCollection.find(account, client, context, LocalJtxCollection.Factory, "${JtxContract.JtxCollection.ID} = ?", arrayOf(collectionId.toString()))
+        if (collections.size != 1)
+            return Pair(0,0)
+        val collection = collections.first()
+
+        var numAdded = 0
+        var numSkipped = 0
+
+        val jtxICalObjects = JtxICalObject.fromReader(reader, collection)
+        jtxICalObjects.forEach {
+
+            //Check if UID already exists. If yes, check sequence and delete (to insert) or skip entry
+            val foundCV = collection.queryByUID(it.uid)
+            if(foundCV != null) {
+                val found = JtxICalObject(collection)
+                found.populateFromContentValues(foundCV)
+                if(it.sequence > found.sequence)
+                    found.delete()
+                else {
+                    numSkipped += 1
+                    return@forEach
+                }
+            }
+            it.add()
+            numAdded += 1
+        }
+
+        collection.updateRelatedTo()
+        return Pair(numAdded, numSkipped)
+    }
+}
 
 
 
