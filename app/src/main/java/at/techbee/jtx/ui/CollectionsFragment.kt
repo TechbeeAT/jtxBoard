@@ -274,13 +274,23 @@ class CollectionsFragment : Fragment() {
         }
         dialogBinding.collectionDialogColorPicker.showOldCenterColor = false
 
+        dialogBinding.collectionDialogColorPicker.visibility = if(collection.color != null) View.VISIBLE else View.GONE
+        dialogBinding.collectionDialogAddColor.isChecked = collection.color != null
+        dialogBinding.collectionDialogAddColor.setOnCheckedChangeListener { _, checked ->
+            dialogBinding.collectionDialogColorPicker.visibility = if(checked) View.VISIBLE else View.GONE
+        }
+
+
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(title)
             .setView(dialogBinding.root)
             .setIcon(R.drawable.ic_color)
             .setPositiveButton(R.string.save)  { _, _ ->
                 collection.displayName = dialogBinding.collectionDialogEdittext.text.toString()
-                collection.color = dialogBinding.collectionDialogColorPicker.color
+                if(dialogBinding.collectionDialogAddColor.isChecked)
+                    collection.color = dialogBinding.collectionDialogColorPicker.color
+                else
+                    collection.color = null
                 collectionsViewModel.saveCollection(collection)
             }
             .setNeutralButton(R.string.cancel)  { _, _ -> /* nothing to do */  }
