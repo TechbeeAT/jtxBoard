@@ -221,8 +221,7 @@ class IcalEditViewModel(
         if(iCalObjectUpdated.value!!.duration != null)
             iCalObjectUpdated.value!!.duration = null     // we make sure that the unsupported duration is set to null, the user was warned before
 
-        if (iCalObjectUpdated.value!!.collectionId != 1L)
-            iCalObjectUpdated.value!!.dirty = true
+        iCalObjectUpdated.value!!.dirty = true
 
         if(iCalObjectUpdated.value!!.module == Module.TODO.name)
             iCalObjectUpdated.value!!.setUpdatedProgress(iCalObjectUpdated.value!!.percent)
@@ -240,8 +239,11 @@ class IcalEditViewModel(
                     }
                 iCalObjectUpdated.value!!.id = insertedOrUpdatedItemId
             } catch (e: SQLiteConstraintException) {
+                Log.d("SQLConstraint", e.toString())
+                Log.d("SQLConstraint", iCalObjectUpdated.value.toString())
                 collectionNotFoundError.postValue(true)
                 savingClicked.postValue(false)
+                collectionNotFoundError.postValue(false)
                 return@launch
             }
 

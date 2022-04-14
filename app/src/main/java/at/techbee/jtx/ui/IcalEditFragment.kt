@@ -217,7 +217,8 @@ class IcalEditFragment : Fragment() {
             object : AdapterView.OnItemSelectedListener {
 
                 override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
-                    icalEditViewModel.selectedCollectionId = icalEditViewModel.allCollections.value?.get(pos)?.collectionId ?: 1L
+                    icalEditViewModel.selectedCollectionId = icalEditViewModel.allCollections.value?.get(pos)?.collectionId ?: return
+                    icalEditViewModel.iCalObjectUpdated.value?.collectionId = icalEditViewModel.selectedCollectionId ?: icalEditViewModel.allCollections.value?.first()?.collectionId ?: return
                     updateCollectionColor()
 
                     //Don't show the subtasks tab if the collection doesn't support VTODO
