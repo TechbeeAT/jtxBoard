@@ -390,6 +390,7 @@ data class Alarm (
                     setContentText(description)
                 setContentIntent(contentIntent)
                 priority = NotificationCompat.PRIORITY_DEFAULT
+                setCategory(NotificationCompat.CATEGORY_ALARM)     //  CATEGORY_REMINDER might also be an alternative
                 //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
             }
                 .build()
