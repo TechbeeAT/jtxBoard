@@ -1,2 +1,4 @@
 - jtx Board is now a registered .ics-handler, import compatible .ics-files from anywhere in Android
 - added french language support
+- sort tasks by priority
+- bugfixes
