@@ -426,4 +426,10 @@ Pour plus d'informations sur la synchronisation, veuillez consulter :"</string>
     <string name="filter_desc">"Descendant"</string>
     <string name="filter_created">"Créé"</string>
     <string name="filter_last_modified">"Dernière modification"</string>
+    <string name="collections_snackbar_select_collection_for_ics_import">"Veuillez cliquer sur la collection à laquelle l'entrée/les entrées doivent être ajoutées !"</string>
+    <string name="collections_snackbar_x_items_added">"%1$d ajouté, %2$d ignoré. (Instances exclusives d'entrées récurrentes.)"</string>
+    <string name="menu_collection_popup_import_from_ics">"Importation à partir de .ics"</string>
+    <string name="notification_done">"Terminé"</string>
+    <string name="notification_add_1h">"+ 1 heure"</string>
+    <string name="notification_add_1d">"+ 1 jour"</string>
 </resources>
