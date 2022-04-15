@@ -421,4 +421,10 @@ Global Strings -->
     <string name="filter_desc">"Absteigend"</string>
     <string name="filter_created">"Erstellt"</string>
     <string name="filter_last_modified">"Zuletzt bearbeitet"</string>
+    <string name="collections_snackbar_select_collection_for_ics_import">"Bitte klicken Sie auf die Collection zu der die Einträge hinzugefügt werden sollen!"</string>
+    <string name="collections_snackbar_x_items_added">"%1$d hinzugefügt, %2$d übersprungen. (Exklusive Instanzen von wiederkehrenden Einträgen)"</string>
+    <string name="menu_collection_popup_import_from_ics">"Von .ics importieren"</string>
+    <string name="notification_done">"Erledigt"</string>
+    <string name="notification_add_1h">"+ 1 Stunde"</string>
+    <string name="notification_add_1d">"+ 1 Tag"</string>
 </resources>
