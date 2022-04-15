@@ -381,6 +381,32 @@ data class Alarm (
                 .setArguments(args)
                 .createPendingIntent()
 
+
+            // SNOOZE OPTIONS - Alarm after one day
+            val snooze1dIntent = Intent(context, NotificationPublisher::class.java).apply {
+                action = NotificationPublisher.ACTION_SNOOZE_1D
+                putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
+            }
+            val snooze1dPendingIntent: PendingIntent =
+                PendingIntent.getBroadcast(context, alarmId.toInt(), snooze1dIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
+            // SNOOZE OPTIONS - Alarm after one hour
+            val snooze1hIntent = Intent(context, NotificationPublisher::class.java).apply {
+                action = NotificationPublisher.ACTION_SNOOZE_1H
+                putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
+            }
+            val snooze1hPendingIntent: PendingIntent =
+                PendingIntent.getBroadcast(context, alarmId.toInt(), snooze1hIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
+            // DONE OPTION - Set icalobject as done
+            val doneIntent = Intent(context, NotificationPublisher::class.java).apply {
+                action = NotificationPublisher.ACTION_DONE
+                putExtra(NotificationPublisher.NOTIFICATION_ID, alarmId)
+            }
+            val donePendingIntent: PendingIntent =
+                PendingIntent.getBroadcast(context, alarmId.toInt(), doneIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
+
             // this is the notification itself that will be put as an Extra into the notificationIntent
             val notification = NotificationCompat.Builder(context, MainActivity.CHANNEL_REMINDER_DUE).apply {
                 setSmallIcon(R.drawable.ic_notification)
@@ -389,9 +415,12 @@ data class Alarm (
                 if(description != summary)
                     setContentText(description)
                 setContentIntent(contentIntent)
-                priority = NotificationCompat.PRIORITY_DEFAULT
+                priority = NotificationCompat.PRIORITY_HIGH
                 setCategory(NotificationCompat.CATEGORY_ALARM)     //  CATEGORY_REMINDER might also be an alternative
                 //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
+                addAction(R.drawable.ic_snooze, context.getString(R.string.notification_add_1h), snooze1hPendingIntent)
+                addAction(R.drawable.ic_snooze, context.getString(R.string.notification_add_1d), snooze1dPendingIntent)
+                addAction(R.drawable.ic_todo, context.getString(R.string.notification_done), donePendingIntent)
             }
                 .build()
             notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL

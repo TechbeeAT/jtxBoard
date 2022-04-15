@@ -427,6 +427,10 @@
     <!-- Notification channel for Reminders -->
     <string name="notification_channel_reminder_name">Todo Due Reminder</string>
     <string name="notification_channel_reminder_description">Notification for due todos</string>
+    <string name="notification_done">Done</string>
+    <string name="notification_add_1h">+ 1 hour</string>
+    <string name="notification_add_1d">+ 1 day</string>
+
 
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">Add Journal</string>
