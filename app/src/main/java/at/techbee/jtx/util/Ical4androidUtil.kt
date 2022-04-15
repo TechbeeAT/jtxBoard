@@ -152,6 +152,7 @@ object Ical4androidUtil {
                     return@forEach
                 }
             }
+            it.dirty = true
             it.add()
             numAdded += 1
         }

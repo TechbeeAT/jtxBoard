@@ -10,9 +10,9 @@ package at.techbee.jtx.ui
 
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.*
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.ICalObject
@@ -77,22 +77,24 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun requestICSForCollection(context: Context?, collection: ICalCollection) {
+    fun requestICSForCollection(collection: ICalCollection) {
         isProcessing.postValue(true)
 
         viewModelScope.launch(Dispatchers.IO)  {
             val account = collection.getAccount()
             val collectionId = collection.collectionId
-            collectionICS.postValue(Ical4androidUtil.getICSFormatForCollectionFromProvider(account, context, collectionId))
+            collectionICS.postValue(Ical4androidUtil.getICSFormatForCollectionFromProvider(account, getApplication(), collectionId))
             isProcessing.postValue(false)
         }
     }
 
 
-    fun insertICSFromReader(context: Context?, collection: ICalCollection, ics: String) {
+    fun insertICSFromReader(collection: ICalCollection, ics: String) {
 
         viewModelScope.launch(Dispatchers.IO)  {
-            val resultPair = Ical4androidUtil.insertFromReader(collection.getAccount(), context, collection.collectionId, ics.reader())
+            val resultPair = Ical4androidUtil.insertFromReader(collection.getAccount(), getApplication(), collection.collectionId, ics.reader())
+            if(collection.accountType != LOCAL_ACCOUNT_TYPE)
+                SyncUtil.notifyContentObservers(getApplication())
             resultInsertedFromICS.postValue(resultPair)
         }
     }

@@ -83,7 +83,7 @@ class CollectionsFragment : Fragment() {
 
                 icsFilepickerTargetCollection?.let {
                     collectionsViewModel.isProcessing.postValue(true)
-                    collectionsViewModel.insertICSFromReader(context, it.toICalCollection(), icsString)
+                    collectionsViewModel.insertICSFromReader(it.toICalCollection(), icsString)
                 }
             }
         }
@@ -210,7 +210,7 @@ class CollectionsFragment : Fragment() {
                         R.id.menu_collection_popup_delete -> showDeleteCollectionDialog(collection.toICalCollection())
                         R.id.menu_collection_popup_show_in_davx5 -> openDAVx5AccountsActivity(context)                 // TODO: Replace by new intent to open the specific account
                         R.id.menu_collection_popup_export_as_ics -> {
-                            collectionsViewModel.requestICSForCollection(context, collection.toICalCollection())
+                            collectionsViewModel.requestICSForCollection(collection.toICalCollection())
                             collectionsViewModel.collectionICS.observe(viewLifecycleOwner) { ics ->
                                 if(ics.isNullOrEmpty())
                                     return@observe
@@ -233,7 +233,7 @@ class CollectionsFragment : Fragment() {
             collectionItemBinding.root.setOnClickListener {
                 iCalString2Import?.let {
                     collectionsViewModel.isProcessing.postValue(true)
-                    collectionsViewModel.insertICSFromReader(context, collection.toICalCollection(), it)
+                    collectionsViewModel.insertICSFromReader(collection.toICalCollection(), it)
                     iCalString2Import = null
                     iCalImportSnackbar?.dismiss()
                 }
