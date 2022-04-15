@@ -447,4 +447,10 @@ Per ulteriori informazioni sulla sincronizzazione, vedere:"</string>
     <string name="filter_desc">"Discendente"</string>
     <string name="filter_created">"Creato"</string>
     <string name="filter_last_modified">"Ultima modifica"</string>
+    <string name="collections_snackbar_select_collection_for_ics_import">"Per favore, clicca sulla collezione a cui le voci devono essere aggiunte!"</string>
+    <string name="collections_snackbar_x_items_added">"%1$d aggiunto, %2$d saltato. (Istanze esclusive di voci ricorrenti)."</string>
+    <string name="menu_collection_popup_import_from_ics">"Importazione da .ics"</string>
+    <string name="notification_done">"Fatto"</string>
+    <string name="notification_add_1h">"+ 1 ora"</string>
+    <string name="notification_add_1d">"+ 1 giorno"</string>
 </resources>
