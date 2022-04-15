@@ -372,8 +372,10 @@ class IcalEditViewModel(
                 }
             }
 
-            if(iCalEntity.ICalCollection?.collectionId != selectedCollectionId && selectedCollectionId != null) {
-                val newId = ICalObject.updateCollectionWithChildren(iCalEntity.property.id, null, selectedCollectionId!!, database)
+            if(iCalEntity.ICalCollection?.collectionId != selectedCollectionId
+                && selectedCollectionId != null
+                && iCalEntity.property.id != 0L) {
+                val newId = ICalObject.updateCollectionWithChildren(iCalEntity.property.id, null, selectedCollectionId!!, getApplication())
 
                 // once the newId is there, the local entries can be deleted (or marked as deleted)
                 viewModelScope.launch(Dispatchers.IO) {

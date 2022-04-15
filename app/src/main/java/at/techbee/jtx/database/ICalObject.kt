@@ -582,14 +582,14 @@ data class ICalObject(
          *
          * @return The new id of the item in the new collection
          */
-        suspend fun updateCollectionWithChildren(id: Long, parentId: Long?, newCollectionId: Long, database: ICalDatabaseDao): Long {
+        suspend fun updateCollectionWithChildren(id: Long, parentId: Long?, newCollectionId: Long, context: Context): Long {
 
-            val newParentId = moveItemToNewCollection(id, parentId, newCollectionId, database)
+            val newParentId = moveItemToNewCollection(id, parentId, newCollectionId, context)
 
             // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
-            val children = database.getRelatedChildren(id)
+            val children = ICalDatabase.getInstance(context).iCalDatabaseDao.getRelatedChildren(id)
             children.forEach { childId ->
-                updateCollectionWithChildren(childId, newParentId, newCollectionId, database)
+                updateCollectionWithChildren(childId, newParentId, newCollectionId, context)
             }
             return newParentId
         }
@@ -605,8 +605,11 @@ data class ICalObject(
          * @return the new id of the item that was inserted (that becomes the newParentId)
          *
          */
-        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, database: ICalDatabaseDao): Long =
+        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, context: Context): Long =
             withContext(Dispatchers.IO) {
+
+                val database = ICalDatabase.getInstance(context).iCalDatabaseDao
+
                 val item = database.getSync(id)
                 if (item != null) {
 
@@ -653,6 +656,20 @@ data class ICalObject(
                     item.attachments?.forEach {
                         it.icalObjectId = newId
                         database.insertAttachment(it)
+                    }
+
+                    item.alarms?.forEach {
+                        it.icalObjectId = newId
+                        database.insertAlarm(it)
+                        // take care of notifications
+                        val triggerTime = when {
+                            it.triggerTime != null -> it.triggerTime
+                            it.triggerRelativeDuration != null && it.triggerRelativeTo == AlarmRelativeTo.END.name -> it.getDatetimeFromTriggerDuration(
+                                item.property.due, item.property.dueTimezone)
+                            it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(item.property.dtstart, item.property.dtstartTimezone)
+                            else -> null
+                        }
+                        triggerTime?.let { trigger ->  it.scheduleNotification(context, trigger) }
                     }
 
                     // relations need to be rebuilt from the new parent to the child

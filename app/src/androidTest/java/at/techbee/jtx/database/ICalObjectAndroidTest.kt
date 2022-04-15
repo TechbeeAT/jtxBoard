@@ -311,7 +311,7 @@ class ICalObjectAndroidTest {
         //make sure everything was correctly inserted
         assertEquals(3,database.getAllRelatedto().getOrAwaitValue().size)
 
-        val newParentId = ICalObject.updateCollectionWithChildren(idParent, null, 2L, database)
+        val newParentId = ICalObject.updateCollectionWithChildren(idParent, null, 2L, context)
 
         val newParent = database.getSync(newParentId)
         assertEquals(2L, newParent?.ICalCollection?.collectionId)

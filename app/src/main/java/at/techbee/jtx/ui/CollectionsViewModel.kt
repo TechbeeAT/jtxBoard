@@ -66,7 +66,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch(Dispatchers.IO) {
             val objectsToMove = database.getICalObjectIdsWithinCollection(oldCollectionId)
             objectsToMove.forEach {
-                val newId = ICalObject.updateCollectionWithChildren(it, null, newCollectionId, database)
+                val newId = ICalObject.updateCollectionWithChildren(it, null, newCollectionId, getApplication())
                 database.getICalObjectByIdSync(newId)?.recreateRecurring(database, app)
             }
             objectsToMove.forEach {
