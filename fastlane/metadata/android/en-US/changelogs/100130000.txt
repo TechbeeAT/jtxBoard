@@ -1,0 +1,3 @@
+- Postpone or complete tasks out of notification
+- Create local collections without color
+- Bugfixes
