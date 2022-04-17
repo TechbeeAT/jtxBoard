@@ -36,10 +36,15 @@ class NotificationPublisher : BroadcastReceiver() {
                 ACTION_SNOOZE_1D -> System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1)
                 ACTION_SNOOZE_1H -> System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)
                 else -> null
-            }
+            } ?: return
+
             CoroutineScope(Dispatchers.IO).launch {
                 val alarm = ICalDatabase.getInstance(context).iCalDatabaseDao.getAlarmSync(id) ?: return@launch
-                nextAlarm?.let { alarm.scheduleNotification(context, it) }
+                alarm.alarmId = 0L   //  we insert a new alarm
+                alarm.triggerTime = nextAlarm
+                ICalDatabase.getInstance(context).iCalDatabaseDao.insertAlarm(alarm)
+                ICalDatabase.getInstance(context).iCalDatabaseDao.updateSetDirty(alarm.icalObjectId, System.currentTimeMillis())
+                alarm.scheduleNotification(context, nextAlarm)
             }
         } else if (intent.action == ACTION_DONE) {
             notificationManager.cancel(id.toInt())
