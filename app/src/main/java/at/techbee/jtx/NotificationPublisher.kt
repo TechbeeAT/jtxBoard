@@ -29,6 +29,9 @@ class NotificationPublisher : BroadcastReceiver() {
         val notification = intent.getParcelableExtra<Notification>(NOTIFICATION)
         val id = intent.getLongExtra(NOTIFICATION_ID, 0L)
 
+        if(id == 0L)
+            return
+
         // onReceive is triggered when the Alarm Manager calls it (the initial notification, action is null)
         // but also when one of the actions is clicked in the notification (action is one of the defined actions)
         if(intent.action == ACTION_SNOOZE_1D || intent.action == ACTION_SNOOZE_1H) {
