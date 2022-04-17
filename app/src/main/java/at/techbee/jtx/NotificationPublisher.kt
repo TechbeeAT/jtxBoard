@@ -46,7 +46,7 @@ class NotificationPublisher : BroadcastReceiver() {
                 val alarm = ICalDatabase.getInstance(context).iCalDatabaseDao.getAlarmSync(id) ?: return@launch
                 alarm.alarmId = 0L   //  we insert a new alarm
                 alarm.triggerTime = nextAlarm
-                ICalDatabase.getInstance(context).iCalDatabaseDao.insertAlarm(alarm)
+                alarm.alarmId = ICalDatabase.getInstance(context).iCalDatabaseDao.insertAlarm(alarm)
                 ICalDatabase.getInstance(context).iCalDatabaseDao.updateSetDirty(alarm.icalObjectId, System.currentTimeMillis())
                 SyncUtil.notifyContentObservers(context)
                 alarm.scheduleNotification(context, nextAlarm)
