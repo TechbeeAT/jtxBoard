@@ -14,6 +14,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,6 +45,7 @@ class NotificationPublisher : BroadcastReceiver() {
                 alarm.triggerTime = nextAlarm
                 ICalDatabase.getInstance(context).iCalDatabaseDao.insertAlarm(alarm)
                 ICalDatabase.getInstance(context).iCalDatabaseDao.updateSetDirty(alarm.icalObjectId, System.currentTimeMillis())
+                SyncUtil.notifyContentObservers(context)
                 alarm.scheduleNotification(context, nextAlarm)
             }
         } else if (intent.action == ACTION_DONE) {
@@ -53,6 +55,7 @@ class NotificationPublisher : BroadcastReceiver() {
                 val icalobject = ICalDatabase.getInstance(context).iCalDatabaseDao.getICalObjectByIdSync(alarm.icalObjectId) ?: return@launch
                 icalobject.setUpdatedProgress(100)
                 ICalDatabase.getInstance(context).iCalDatabaseDao.update(icalobject)
+                SyncUtil.notifyContentObservers(context)
             }
         } else {
             // no action, so here we notify
