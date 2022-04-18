@@ -105,7 +105,7 @@ class SyncFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.menu_sync_syncnow -> SyncUtil.syncAllAccounts(requireContext())
+            R.id.menu_sync_syncnow -> SyncUtil.syncAllAccounts(context)
         }
         return super.onOptionsItemSelected(item)
     }

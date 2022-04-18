@@ -206,7 +206,7 @@ class IcalListFragment : Fragment() {
         }
 
         ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-            icalListViewModel.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning(context))
+            icalListViewModel.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning(requireContext()))
         }
 
         return binding.root
@@ -347,7 +347,7 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_filter -> goToFilter()
             R.id.menu_list_clearfilter -> resetFilter()
             R.id.menu_list_delete_visible -> deleteVisible()
-            R.id.menu_list_syncnow -> SyncUtil.syncAllAccounts(requireContext())
+            R.id.menu_list_syncnow -> SyncUtil.syncAllAccounts(context)
         }
         return super.onOptionsItemSelected(item)
     }

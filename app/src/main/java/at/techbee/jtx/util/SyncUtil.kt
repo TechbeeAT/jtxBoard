@@ -52,7 +52,10 @@ class SyncUtil {
         /**
          * Immediately starts Sync for all Accounts for the JTX Sync Provider Authority
          */
-        fun syncAllAccounts(context: Context) {
+        fun syncAllAccounts(context: Context?) {
+
+            if(context == null)
+                return
 
             val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
             accounts.forEach { account ->
@@ -69,8 +72,7 @@ class SyncUtil {
             val extras = Bundle(2)
             extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)        // manual sync
             extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
-            if(!ContentResolver.isSyncActive(account, SYNC_PROVIDER_AUTHORITY))
-                ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
+            ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
         }
 
 
