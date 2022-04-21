@@ -18,4 +18,10 @@
         android:id="@+id/menu_collections_add_remote"
         android:title="@string/menu_collections_add_remote"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_collections_export_all"
+        android:title="@string/menu_collections_export_all"
+        app:showAsAction="never" />
+
 </menu>

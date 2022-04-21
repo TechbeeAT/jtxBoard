@@ -18,23 +18,26 @@ import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.CollectionsView
+import at.techbee.jtx.databinding.*
+import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.SyncUtil.Companion.openDAVx5AccountsActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.lang.ClassCastException
-import androidx.activity.result.contract.ActivityResultContracts
-import android.widget.Toast
-import androidx.fragment.app.activityViewModels
-import at.techbee.jtx.databinding.*
-import at.techbee.jtx.util.DateTimeUtils
 import com.google.android.material.snackbar.Snackbar
+import java.io.BufferedOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.util.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 
 class CollectionsFragment : Fragment() {
@@ -73,8 +76,35 @@ class CollectionsFragment : Fragment() {
         ics = null
     }
 
+    private var allExportIcs: MutableList<Pair<String, String>> = mutableListOf()  // first of pair is filename, second is ics
+    private val getFileUriForSavingAllCollections = registerForActivityResult(ActivityResultContracts.CreateDocument()) { uri ->
+        if(allExportIcs.isNullOrEmpty() || uri == null) {
+            Toast.makeText(context, R.string.collections_toast_export_all_ics_error, Toast.LENGTH_LONG)
+            allExportIcs.clear()
+            return@registerForActivityResult
+        }
+        try {
+            val output: OutputStream? = context?.contentResolver?.openOutputStream(uri)
+            val bos = BufferedOutputStream(output)
+            ZipOutputStream(bos).use { zos ->
+                allExportIcs.forEach { ics ->
+                    // not available on BufferedOutputStream
+                    zos.putNextEntry(ZipEntry("${ics.first}.ics"))
+                    zos.write(ics.second.toByteArray())
+                    zos.closeEntry()
+                }
+            }
+            output?.flush()
+            output?.close()
+            Toast.makeText(context, R.string.collections_toast_export_all_ics_success, Toast.LENGTH_LONG)
+        } catch (e: IOException) {
+            Toast.makeText(context, R.string.collections_toast_export_all_ics_error, Toast.LENGTH_LONG)
+        }
+        allExportIcs.clear()
+    }
+
     var icsFilepickerTargetCollection: CollectionsView? = null
-    val icsFilepickerLauncher =
+    private val icsFilepickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 //processFileAttachment(result.data?.data)
@@ -252,6 +282,7 @@ class CollectionsFragment : Fragment() {
         when (item.itemId) {
             R.id.menu_collections_add_local -> showEditCollectionDialog(ICalCollection.createLocalCollection(application))
             R.id.menu_collections_add_remote -> openDAVx5AccountsActivity(context)
+            R.id.menu_collections_export_all -> exportAll()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -396,6 +427,28 @@ class CollectionsFragment : Fragment() {
         } catch (e: ActivityNotFoundException) {
             Log.e("chooseFileIntent", "Failed to open filepicker\n$e")
             Toast.makeText(context, "Failed to open filepicker", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun exportAll() {
+
+        val allCollections: MutableList<ICalCollection> = mutableListOf()
+        collectionsViewModel.localCollections.value?.forEach { collection ->
+            allCollections.add(collection.toICalCollection())
+        }
+        collectionsViewModel.remoteCollections.value?.forEach { collection ->
+            allCollections.add(collection.toICalCollection())
+        }
+
+        collectionsViewModel.requestAllForExport(allCollections)
+
+        collectionsViewModel.allCollectionICS.observe(viewLifecycleOwner) { allIcs ->
+            if(allIcs.isNullOrEmpty())
+                return@observe
+            this.allExportIcs.addAll(allIcs)
+            getFileUriForSavingAllCollections.launch("jtxBoard_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(), TimeZone.getDefault().id)}.zip")
+            collectionsViewModel.allCollectionICS.removeObservers(viewLifecycleOwner)
+            collectionsViewModel.allCollectionICS.postValue(null)
         }
     }
 }

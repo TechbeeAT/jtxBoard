@@ -387,6 +387,8 @@
     <string name="collections_dialog_delete_local_message">Deleting a collection will also delete all journals, notes and tasks within this collection. This cannot be undone. Are you sure that you want to continue?</string>
     <string name="collections_toast_export_ics_success">Exporting collection finished successfully.</string>
     <string name="collections_toast_export_ics_error">An error occurred while exporting the selected collection.</string>
+    <string name="collections_toast_export_all_ics_success">Exporting all collections finished successfully.</string>
+    <string name="collections_toast_export_all_ics_error">An error occurred while exporting all collections.</string>
     <string name="collections_dialog_move_title">Move all entries from \"%1$s\" to</string>
     <string name="collection_dialog_move_info">Please note: Only writeable collections and collections with support for the same components (Journals, Notes, Tasks) can be selected.</string>
     <string name="collections_snackbar_select_collection_for_ics_import">Please click on the collection to which the entry/entries should be added!</string>
@@ -398,6 +400,8 @@
 
     <string name="menu_collections_add_local">Add local Collection</string>
     <string name="menu_collections_add_remote">Add remote Collection (DAVx⁵)</string>
+    <string name="menu_collections_export_all">Export all</string>
+
 
     <string name="menu_list_gotodate">Go to date</string>
     <string name="menu_list_clearfilter">Clear filter</string>>
