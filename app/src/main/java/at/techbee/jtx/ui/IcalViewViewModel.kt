@@ -91,7 +91,7 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
 
     lateinit var subtasksCountList: LiveData<List<SubtaskCount>>
 
-    var editingClicked: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { postValue(false) }
+    var entryToEdit = MutableLiveData<ICalEntity?>().apply { postValue(null) }
 
 
     init {
@@ -299,7 +299,15 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     }
 
     fun editingClicked() {
-        editingClicked.value = true
+        entryToEdit.postValue(icalEntity.value)
+    }
+
+    fun retrieveSubEntryToEdit(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.getSync(id)?.let {
+                entryToEdit.postValue(it)
+            }
+        }
     }
 
 

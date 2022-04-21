@@ -134,9 +134,9 @@ class IcalViewFragment : Fragment() {
         }
 
         // set up observers
-        icalViewViewModel.editingClicked.observe(viewLifecycleOwner) {
-            if (it) {
-                icalViewViewModel.editingClicked.value = false
+        icalViewViewModel.entryToEdit.observe(viewLifecycleOwner) {
+            if (it != null) {
+                icalViewViewModel.entryToEdit.value = null
 
                 // if the item is an instance of a recurring entry, make sure that the user is aware of this
                 val originalId =
@@ -164,13 +164,9 @@ class IcalViewFragment : Fragment() {
                         }
                         .show()
                 } else {
-                    icalViewViewModel.icalEntity.value?.let { entity ->
-                        this.findNavController().navigate(
-                            IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(
-                                entity
-                            )
-                        )
-                    }
+                    this.findNavController().navigate(
+                        IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(it)
+                    )
                 }
             }
         }
@@ -387,6 +383,10 @@ class IcalViewFragment : Fragment() {
                             IcalViewFragmentDirections.actionIcalViewFragmentSelf()
                                 .setItem2show(relatedNote.id)
                         )
+                    }
+                    commentBinding.root.setOnLongClickListener {
+                        icalViewViewModel.retrieveSubEntryToEdit(relatedNote.id)
+                        true
                     }
                     binding.viewFeedbackLinearlayout.addView(commentBinding.root)
                 }
@@ -630,6 +630,11 @@ class IcalViewFragment : Fragment() {
         subtaskBinding.root.setOnClickListener {
             it.findNavController().navigate(
                     IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(subtask.id))
+        }
+
+        subtaskBinding.root.setOnLongClickListener {
+            icalViewViewModel.retrieveSubEntryToEdit(subtask.id)
+            true
         }
 
         if(icalViewViewModel.icalEntity.value?.ICalCollection?.readonly == true) {
