@@ -160,7 +160,7 @@ SELECTs (global selects without parameter)
      */
     @Transaction
     @Query("SELECT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO'")
-    fun getAllSubtasks(): LiveData<List<ICal4List?>>
+    fun getAllSubtasks(): LiveData<List<ICal4List>>
 
     /**
      * Retrieve an list the number of Subtasks of an [ICalObject] as a [SubtaskCount].

@@ -41,6 +41,7 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
+import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.databinding.FragmentIcalListBinding
 import at.techbee.jtx.databinding.FragmentIcalListQuickaddDialogBinding
 import at.techbee.jtx.flavored.AdManager
@@ -76,6 +77,9 @@ class IcalListFragment : Fragment() {
 
     var allCollections = listOf<ICalCollection>()
     var currentWriteableCollections = listOf<ICalCollection>()
+
+    var allSubtasks: List<ICal4List> = listOf()
+
 
     companion object {
         const val PREFS_LIST_VIEW = "sharedPreferencesListView"
@@ -169,6 +173,7 @@ class IcalListFragment : Fragment() {
 
         // This observer is needed in order to make sure that the Subtasks are retrieved!
         icalListViewModel.allSubtasks.observe(viewLifecycleOwner) {
+            this.allSubtasks = it     // give observer something to do
             //if(it.isNotEmpty())
             //recyclerView?.adapter?.notifyDataSetChanged()
             // trying to skip this code. This might have the effect, that subtasks that are added during the sync might not be immediately available, but improves the performance as the list does not get updated all the time
