@@ -49,7 +49,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
     private var settingShowProgressSubtasks = true
     private var settingShowProgressMaintasks = false
     private var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = model.iCal4ListTodos
-    private var allSubtasks: LiveData<List<ICal4List?>> = model.allSubtasks
+    private var allSubtasks: LiveData<List<ICal4List>> = model.allSubtasks
     private var markwon = Markwon.builder(context)
         .usePlugin(StrikethroughPlugin.create())
         .build()
@@ -345,7 +345,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 )
             }
 
-            val itemSubtasks = allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub?.id } != null } ?: emptyList()
+            val itemSubtasks = allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub.id } != null } ?: emptyList()
             IcalListAdapterHelper.addSubtasksView(model, itemSubtasks.distinct(), holder.subtasksLinearLayout, context, parent)
 
             IcalListAdapterHelper.addAttachmentView(iCal4ListItem.attachment, holder.attachmentsLinearLayout, context, parent)
