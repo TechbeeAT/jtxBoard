@@ -1,0 +1,3 @@
+- Export all collections at once
+- Long click open edit view
+- Bugfixes
