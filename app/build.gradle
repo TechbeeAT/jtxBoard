@@ -21,8 +21,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 100150001
-        versionName "1.00.15-rc01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 100160001
+        versionName "1.00.16-rc01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Stop Putin's war\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -179,7 +179,7 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
     androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0-alpha05'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0-alpha06'
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
     androidTestImplementation "androidx.test:runner:1.4.0"
@@ -187,13 +187,13 @@ dependencies {
 
     // Testing-only dependencies
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
-    androidTestImplementation 'androidx.test:core-ktx:1.4.1-alpha05'
+    androidTestImplementation 'androidx.test:core-ktx:1.4.1-alpha06'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.room:room-testing:$version_room"
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
-    testImplementation 'androidx.test:core-ktx:1.4.1-alpha05'
+    testImplementation 'androidx.test:core-ktx:1.4.1-alpha06'
     // Required -- JUnit 4 framework
     testImplementation 'androidx.test.ext:junit-ktx:1.1.3'
     testImplementation("org.mockito:mockito-core:3.9.0")
