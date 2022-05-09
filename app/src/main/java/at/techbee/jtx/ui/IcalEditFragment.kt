@@ -373,7 +373,7 @@ class IcalEditFragment : Fragment() {
 
         binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.wrapSelectorWheel = false
         binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.minValue = 1
-        binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.maxValue = 100
+        binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.maxValue = ICalObject.DEFAULT_MAX_RECUR_INSTANCES
         binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.setOnValueChangedListener { _, _, _ -> updateRRule() }
 
         binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.wrapSelectorWheel = false
@@ -418,24 +418,17 @@ class IcalEditFragment : Fragment() {
 
                 val recur = Recur(icalEditViewModel.iCalEntity.property.rrule)
 
-                if(recur.interval == -1 || recur.count == -1)
-                    throw Exception("Interval or count not set")
-
                 if(icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_UNSUPPORTED)
                     throw Exception("Unsupported recurrence mode detected")
-
-                if(recur.until != null)
-                    throw Exception("Until value is currently not supported")
 
                 if(recur.experimentalValues.isNotEmpty() || recur.hourList.isNotEmpty() || recur.minuteList.isNotEmpty() || recur.monthList.isNotEmpty() || recur.secondList.isNotEmpty() || recur.setPosList.isNotEmpty() || recur.skip != null || recur.weekNoList.isNotEmpty() || recur.weekStartDay != null || recur.yearDayList.isNotEmpty())
                     throw Exception("Unsupported values detected")
 
-                binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.value =
-                    recur.interval
-
                 binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.value =
-                    recur.count
+                    icalEditViewModel.iCalEntity.property.retrieveCount()
 
+                binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.value =
+                    if(recur.interval <1) 1 else recur.interval
 
                 //pre-check the weekday-chips according to the rrule
                 if (icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_WEEK) {
@@ -2084,7 +2077,6 @@ class IcalEditFragment : Fragment() {
             return
         }
 
-
         val recurBuilder = Recur.Builder()
         when( binding.editFragmentIcalEditRecur.editRecurDaysMonthsSpinner.selectedItemPosition) {
             RECURRENCE_MODE_DAY ->  {
@@ -2206,8 +2198,8 @@ class IcalEditFragment : Fragment() {
             }
             else -> return
         }
-        recurBuilder.interval(binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.value)
         recurBuilder.count(binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.value)
+        recurBuilder.interval(binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.value)
         val recur = recurBuilder.build()
 
         Log.d("recur", recur.toString())

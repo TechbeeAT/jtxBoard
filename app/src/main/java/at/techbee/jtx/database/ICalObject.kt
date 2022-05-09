@@ -465,6 +465,7 @@ data class ICalObject(
     companion object Factory {
 
         const val TZ_ALLDAY = "ALLDAY"
+        const val DEFAULT_MAX_RECUR_INSTANCES = 100
 
         fun createJournal() = createJournal(null)
 
@@ -867,9 +868,9 @@ data class ICalObject(
 
         try {
             val rRule = Recur(this.rrule)
-            val interval = rRule.interval.toLong()                       //interval and count MUST be present
-            val count = rRule.count
             var zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart?:0L), requireTzId(dtstartTimezone))
+            val interval = if(rRule.interval < 1) 1L else rRule.interval.toLong()
+            val count = retrieveCount()
 
             when (rRule.frequency)
             {
@@ -942,6 +943,32 @@ data class ICalObject(
         recurList.addAll(additions)
 
         return recurList
+    }
+
+    fun retrieveCount(): Int {
+        val rRule = Recur(this.rrule)
+        val zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart?:0L), requireTzId(dtstartTimezone))
+        val interval = if(rRule.interval < 1) 1L else rRule.interval.toLong()
+
+        return if(rRule.count >= 1)
+            rRule.count
+        else if (rRule.count == -1 && rRule.until != null && rRule.until.time > zonedDtstart.toInstant().toEpochMilli()) {
+            var counter = 1
+            var date = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart?:0L), requireTzId(dtstartTimezone))
+            while (Instant.ofEpochMilli(rRule.until.time).isAfter(date.toInstant())) {
+                counter += 1
+                date = when(rRule.frequency) {
+                    Recur.Frequency.DAILY -> date.plusDays(1*interval)
+                    Recur.Frequency.WEEKLY -> date.plusWeeks(1*interval)
+                    Recur.Frequency.MONTHLY -> date.plusMonths(1*interval)
+                    Recur.Frequency.YEARLY -> date.plusYears(1*interval)
+                    else -> return 1
+                }
+            }
+            counter
+        }
+        else
+            DEFAULT_MAX_RECUR_INSTANCES
     }
 
 

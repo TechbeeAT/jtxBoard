@@ -623,4 +623,34 @@ class ICalObjectTest {
         assertEquals(textSummary, journal.summary)
         assertEquals(textDescription, journal.description)
     }
+
+    @Test
+    fun retrieveCount_count_present() {
+        val todo = ICalObject.createTodo()
+        todo.rrule = "FREQ=DAILY;COUNT=4;INTERVAL=5"
+        assertEquals(4, todo.retrieveCount())
+    }
+
+    @Test
+    fun retrieveCount_only_FREQ_and_interval() {
+        val todo = ICalObject.createTodo()
+        todo.rrule = "FREQ=DAILY;INTERVAL=5"
+        assertEquals(ICalObject.DEFAULT_MAX_RECUR_INSTANCES, todo.retrieveCount())
+    }
+
+    @Test
+    fun retrieveCount_until_and_interval_daily() {
+        val todo = ICalObject.createTodo()
+        todo.dtstart = 1652117734839L
+        todo.rrule = "FREQ=DAILY;UNTIL=20220621T070000Z;INTERVAL=2"
+        assertEquals(23, todo.retrieveCount())
+    }
+
+    @Test
+    fun retrieveCount_until_and_interval_monthly() {
+        val todo = ICalObject.createTodo()
+        todo.dtstart = 1652117734839L
+        todo.rrule = "FREQ=MONTHLY;UNTIL=20220621T070000Z;INTERVAL=2"
+        assertEquals(2, todo.retrieveCount())
+    }
 }
