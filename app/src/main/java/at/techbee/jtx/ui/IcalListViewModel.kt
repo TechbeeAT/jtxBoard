@@ -318,9 +318,8 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     }
 
     fun delete(itemIds: List<Long>) {
-
-        itemIds.forEach { id ->
-            viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
+            itemIds.forEach { id ->
                 ICalObject.deleteItemWithChildren(id, database)
             }
         }

@@ -16,7 +16,6 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
-import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.fortuna.ical4j.model.Recur
@@ -60,6 +59,8 @@ class IcalEditViewModel(
     var savingClicked: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(false)
     var deleteClicked: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(false)
+    var entryDeleted: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(false)
     var collectionNotFoundError: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(false)
@@ -256,9 +257,7 @@ class IcalEditViewModel(
             database.deleteAlarms(insertedOrUpdatedItemId)
 
             subtaskDeleted.forEach { subtask2del ->
-                viewModelScope.launch(Dispatchers.IO) {
-                    ICalObject.deleteItemWithChildren(subtask2del.id, database)
-                }
+                ICalObject.deleteItemWithChildren(subtask2del.id, database)
                 Log.println(Log.INFO, "Subtask", "${subtask2del.summary} deleted")
             }
 
@@ -350,26 +349,17 @@ class IcalEditViewModel(
                 }
             }
 
-            if (recurrenceList.size > 0 || iCalObjectUpdated.value!!.id != 0L)    // recreateRecurring if the recurrenceList is not empty, but also when it is an update, as the recurrence might have been deactivated and it is necessary to delete instances
-                launch(Dispatchers.IO) {
-                    iCalObjectUpdated.value?.recreateRecurring(database, getApplication())
-                }
-
 
             if (iCalObjectUpdated.value?.recurOriginalIcalObjectId != null && iCalObjectUpdated.value?.isRecurLinkedInstance == false) {
-                viewModelScope.launch(Dispatchers.IO) {
-
-                    val newExceptionList = addLongToCSVString(
-                        database.getRecurExceptions(iCalObjectUpdated.value?.recurOriginalIcalObjectId!!),
-                        iCalObjectUpdated.value!!.dtstart
-                    )
-
-                    database.setRecurExceptions(
-                        iCalObjectUpdated.value?.recurOriginalIcalObjectId!!,
-                        newExceptionList,
-                        System.currentTimeMillis()
-                    )
-                }
+                val newExceptionList = addLongToCSVString(
+                    database.getRecurExceptions(iCalObjectUpdated.value?.recurOriginalIcalObjectId!!),
+                    iCalObjectUpdated.value!!.dtstart
+                )
+                database.setRecurExceptions(
+                    iCalObjectUpdated.value?.recurOriginalIcalObjectId!!,
+                    newExceptionList,
+                    System.currentTimeMillis()
+                )
             }
 
             if(iCalEntity.ICalCollection?.collectionId != selectedCollectionId
@@ -378,13 +368,15 @@ class IcalEditViewModel(
                 val newId = ICalObject.updateCollectionWithChildren(iCalEntity.property.id, null, selectedCollectionId!!, getApplication())
 
                 // once the newId is there, the local entries can be deleted (or marked as deleted)
-                viewModelScope.launch(Dispatchers.IO) {
-                    ICalObject.deleteItemWithChildren(iCalEntity.property.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
-                    SyncUtil.notifyContentObservers(getApplication())
-                }
+                ICalObject.deleteItemWithChildren(iCalEntity.property.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
                 insertedOrUpdatedItemId = newId
             }
-            SyncUtil.notifyContentObservers(getApplication())
+
+            iCalObjectUpdated.value!!.id = insertedOrUpdatedItemId
+            if (recurrenceList.size > 0 || iCalObjectUpdated.value!!.id != 0L)    // recreateRecurring if the recurrenceList is not empty, but also when it is an update, as the recurrence might have been deactivated and it is necessary to delete instances
+                iCalObjectUpdated.value?.recreateRecurring(database, getApplication())
+
+
             returnIcalObjectId.postValue(insertedOrUpdatedItemId)
         }
     }
@@ -392,7 +384,7 @@ class IcalEditViewModel(
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
             ICalObject.deleteItemWithChildren(iCalObjectUpdated.value!!.id, database)
-            SyncUtil.notifyContentObservers(getApplication())
+            entryDeleted.postValue(true)
         }
     }
 

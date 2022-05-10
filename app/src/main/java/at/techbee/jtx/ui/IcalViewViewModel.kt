@@ -86,6 +86,7 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     var icsFormat: MutableLiveData<String?> = MutableLiveData(null)
     var icsFileWritten: MutableLiveData<Boolean?> = MutableLiveData(null)
 
+    var entryDeleted: MutableLiveData<Boolean> = MutableLiveData(false)
 
     lateinit var collectionText: LiveData<String?>
 
@@ -361,7 +362,7 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
 
         viewModelScope.launch(Dispatchers.IO) {
             ICalObject.deleteItemWithChildren(item.id, database)
-            SyncUtil.notifyContentObservers(getApplication())
+            entryDeleted.postValue(true)
         }
     }
 

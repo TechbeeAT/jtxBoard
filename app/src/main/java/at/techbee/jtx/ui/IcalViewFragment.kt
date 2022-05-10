@@ -76,6 +76,8 @@ class IcalViewFragment : Fragment() {
     private var recording: Boolean = false
     private var playing: Boolean = false
 
+    private var summary2delete: String = ""
+
     private lateinit var settings: SharedPreferences
 
     // set default audio format (might be overwritten by settings)
@@ -169,6 +171,21 @@ class IcalViewFragment : Fragment() {
                     )
                 }
             }
+        }
+
+        icalViewViewModel.entryDeleted.observe(viewLifecycleOwner) {
+            if(it) {
+                Attachment.scheduleCleanupJob(requireContext())
+                SyncUtil.notifyContentObservers(context)
+
+                Toast.makeText(context, getString(R.string.view_toast_deleted_successfully, summary2delete), Toast.LENGTH_LONG).show()
+
+                val direction = IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment()
+                direction.module2show = icalViewViewModel.icalEntity.value?.property?.module
+                this.findNavController().navigate(direction)
+                icalViewViewModel.entryDeleted.value = false
+            }
+
         }
 
         icalViewViewModel.icalEntity.observe(viewLifecycleOwner) {
@@ -887,17 +904,8 @@ class IcalViewFragment : Fragment() {
         builder.setTitle(getString(R.string.view_dialog_sure_to_delete_title, icalViewViewModel.icalEntity.value?.property?.summary ?: ""))
         builder.setMessage(getString(R.string.view_dialog_sure_to_delete_message, icalViewViewModel.icalEntity.value?.property?.summary ?: ""))
         builder.setPositiveButton(R.string.delete) { _, _ ->
-
-            val summary = icalViewViewModel.icalEntity.value?.property?.summary ?: ""
-
-            val direction = IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment()
-            direction.module2show = icalViewViewModel.icalEntity.value?.property?.module
+            summary2delete = icalViewViewModel.icalEntity.value?.property?.summary ?: ""
             icalViewViewModel.delete(icalViewViewModel.icalEntity.value?.property!!)
-
-            Toast.makeText(context, getString(R.string.view_toast_deleted_successfully, summary), Toast.LENGTH_LONG).show()
-
-            Attachment.scheduleCleanupJob(requireContext())
-            this.findNavController().navigate(direction)
         }
         builder.setNeutralButton(R.string.cancel) { _, _ -> }
         builder.show()

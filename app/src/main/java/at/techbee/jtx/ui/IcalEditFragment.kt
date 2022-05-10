@@ -74,6 +74,7 @@ import at.techbee.jtx.util.DateTimeUtils.isLocalizedWeekstartMonday
 import at.techbee.jtx.util.DateTimeUtils.isValidEmail
 import at.techbee.jtx.util.DateTimeUtils.isValidURL
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
+import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -569,6 +570,7 @@ class IcalEditFragment : Fragment() {
             if (it != 0L) {
                 // saving is done now
                 hideKeyboard()
+                SyncUtil.notifyContentObservers(context)
 
                 // show Ad if necessary
                 if (AdManager.getInstance()
@@ -589,6 +591,26 @@ class IcalEditFragment : Fragment() {
                 this.findNavController().navigate(direction)
             }
             icalEditViewModel.savingClicked.value = false
+        }
+
+        icalEditViewModel.entryDeleted.observe(viewLifecycleOwner) {
+
+            if (it) {
+                // saving is done now
+                hideKeyboard()
+                SyncUtil.notifyContentObservers(context)
+                icalEditViewModel.entryDeleted.value = false
+
+                val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
+                Toast.makeText(context, getString(R.string.edit_toast_deleted_successfully, summary), Toast.LENGTH_LONG).show()
+
+                context?.let { context -> Attachment.scheduleCleanupJob(context) }
+
+                // return to list view
+                val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
+                direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
+                this.findNavController().navigate(direction)
+            }
         }
 
 
@@ -1551,18 +1573,8 @@ class IcalEditFragment : Fragment() {
         builder.setTitle(getString(R.string.edit_dialog_sure_to_delete_title, icalEditViewModel.iCalObjectUpdated.value?.summary))
         builder.setMessage(getString(R.string.edit_dialog_sure_to_delete_message, icalEditViewModel.iCalObjectUpdated.value?.summary))
         builder.setPositiveButton(R.string.delete) { _, _ ->
-
             hideKeyboard()
-
-            val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
             icalEditViewModel.delete()
-            Toast.makeText(context, getString(R.string.edit_toast_deleted_successfully, summary), Toast.LENGTH_LONG).show()
-
-            context?.let { context -> Attachment.scheduleCleanupJob(context) }
-
-            val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
-            direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
-            this.findNavController().navigate(direction)
         }
         builder.setNegativeButton(R.string.cancel) { _, _ ->  }   // Do nothing, just close the message
         builder.show()
