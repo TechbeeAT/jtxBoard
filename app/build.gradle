@@ -15,6 +15,7 @@ apply plugin: 'androidx.navigation.safeargs'
 
 
 android {
+    namespace 'at.techbee.jtx'
     compileSdkVersion 31
     defaultConfig {
         applicationId "at.techbee.jtx"
