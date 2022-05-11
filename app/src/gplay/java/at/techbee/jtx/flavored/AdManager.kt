@@ -132,7 +132,7 @@ class AdManager: AdManagerDefinition {
                 Log.d("InterstitalAd", "Ad was dismissed.")
             }
 
-            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 Log.d("InterstitalAd", "Ad failed to show.")
             }
 
