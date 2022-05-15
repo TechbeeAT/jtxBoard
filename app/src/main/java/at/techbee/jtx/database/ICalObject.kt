@@ -504,8 +504,7 @@ data class ICalObject(
             dirty = true
         )
 
-        fun generateNewUID() =
-            "${System.currentTimeMillis()}-${UUID.randomUUID()}@at.techbee.jtx"
+        fun generateNewUID() = UUID.randomUUID().toString()
 
         /**
          * Create a new [ICalObject] from the specified [ContentValues].
