@@ -1,0 +1,2 @@
+- Now supporting recurring entries without an end date and with a specific end date
+- General improvements
