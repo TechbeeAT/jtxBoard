@@ -601,6 +601,8 @@ class IcalEditFragment : Fragment() {
 
         icalEditViewModel.returnIcalObjectId.observe(viewLifecycleOwner) {
 
+            icalEditViewModel.savingClicked.value = false
+
             if (it != 0L) {
                 // saving is done now
                 hideKeyboard()
@@ -624,7 +626,6 @@ class IcalEditFragment : Fragment() {
                  */
                 this.findNavController().navigate(direction)
             }
-            icalEditViewModel.savingClicked.value = false
         }
 
         icalEditViewModel.entryDeleted.observe(viewLifecycleOwner) {
