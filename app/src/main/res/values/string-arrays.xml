@@ -14,6 +14,12 @@
         <item>@string/edit_recur_year</item>
     </string-array>
 
+    <string-array name="edit_recur_ends">
+        <item>@string/edit_recur_ends_after</item>
+        <item>@string/edit_recur_ends_on</item>
+        <item>@string/edit_recur_ends_never</item>
+    </string-array>
+
     <string-array name="priority">
         <item>@string/priority_0_no_priority</item>
         <item>@string/priority_1_highest</item>

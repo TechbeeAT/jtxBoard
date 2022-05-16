@@ -885,23 +885,30 @@ data class ICalObject(
 
                     val selectedWeekdays = mutableListOf<DayOfWeek>()
 
-                    rRule.dayList.forEach { day ->
-                        when(day.day) {
-                            WeekDay.Day.MO -> selectedWeekdays.add(DayOfWeek.MONDAY)
-                            WeekDay.Day.TU -> selectedWeekdays.add(DayOfWeek.TUESDAY)
-                            WeekDay.Day.WE -> selectedWeekdays.add(DayOfWeek.WEDNESDAY)
-                            WeekDay.Day.TH -> selectedWeekdays.add(DayOfWeek.THURSDAY)
-                            WeekDay.Day.FR -> selectedWeekdays.add(DayOfWeek.FRIDAY)
-                            WeekDay.Day.SA -> selectedWeekdays.add(DayOfWeek.SATURDAY)
-                            WeekDay.Day.SU -> selectedWeekdays.add(DayOfWeek.SUNDAY)
-                            else -> Log.w("LoadRRule", "Error on processing day list ($day)")
-                        }
-                    }
+                    if (rRule.dayList.any { it.day == WeekDay.Day.MO }) selectedWeekdays.add(DayOfWeek.MONDAY)
+                    if (rRule.dayList.any { it.day == WeekDay.Day.TU }) selectedWeekdays.add(DayOfWeek.TUESDAY)
+                    if (rRule.dayList.any { it.day == WeekDay.Day.WE }) selectedWeekdays.add(DayOfWeek.WEDNESDAY)
+                    if (rRule.dayList.any { it.day == WeekDay.Day.TH }) selectedWeekdays.add(DayOfWeek.THURSDAY)
+                    if (rRule.dayList.any { it.day == WeekDay.Day.FR }) selectedWeekdays.add(DayOfWeek.FRIDAY)
+                    if (rRule.dayList.any { it.day == WeekDay.Day.SA }) selectedWeekdays.add(DayOfWeek.SATURDAY)
+                    if (rRule.dayList.any { it.day == WeekDay.Day.SU }) selectedWeekdays.add(DayOfWeek.SUNDAY)
+
 
                     for(i in 1..count) {
                         var zonedDtstartWeekloop = zonedDtstart
                         for (j in 1..7) {
-                            if(zonedDtstartWeekloop.dayOfWeek in selectedWeekdays) {
+                            if(zonedDtstartWeekloop.dayOfWeek in selectedWeekdays || zonedDtstartWeekloop.dayOfWeek == zonedDtstart.dayOfWeek) {
+
+                                if(rRule.until != null
+                                    && zonedDtstartWeekloop
+                                        .withHour(0)
+                                        .withMinute(0)
+                                        .withSecond(0)
+                                        .withNano(0)
+                                        .toInstant()
+                                        .isAfter(rRule.until.toInstant()))
+                                    break
+
                                 recurList.add(zonedDtstartWeekloop.toInstant().toEpochMilli())
                                 Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstartWeekloop.toInstant().toEpochMilli(), dtstartTimezone))
                             }
@@ -946,14 +953,14 @@ data class ICalObject(
 
     fun retrieveCount(): Int {
         val rRule = Recur(this.rrule)
-        val zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart?:0L), requireTzId(dtstartTimezone))
         val interval = if(rRule.interval < 1) 1L else rRule.interval.toLong()
 
         return if(rRule.count >= 1)
             rRule.count
-        else if (rRule.count == -1 && rRule.until != null && rRule.until.time > zonedDtstart.toInstant().toEpochMilli()) {
-            var counter = 1
+        else if (rRule.count == -1 && rRule.until != null) {
+            var counter = 0
             var date = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart?:0L), requireTzId(dtstartTimezone))
+            date = date.withNano(0).withSecond(0).withMinute(0).withHour(0)
             while (Instant.ofEpochMilli(rRule.until.time).isAfter(date.toInstant())) {
                 counter += 1
                 date = when(rRule.frequency) {

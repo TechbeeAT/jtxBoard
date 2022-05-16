@@ -222,15 +222,46 @@
             app:layout_constraintTop_toTopOf="@+id/edit_recur_on_the_x_day_of_month_numberPicker" />
 
 
+        <Spinner
+            android:id="@+id/edit_recur_end_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:entries="@array/edit_recur_ends"
+            android:spinnerMode="dropdown"
+            android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_on_the_x_day_of_month_numberPicker" />
+
         <NumberPicker
             android:id="@+id/edit_recur_until_x_occurences_picker"
             android:layout_width="0dp"
             android:layout_height="150dp"
-            android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.recurrenceCountVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@+id/edit_recur_every_x_numberPicker"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@+id/edit_recur_every_x_numberPicker"
-            app:layout_constraintTop_toBottomOf="@+id/edit_recur_on_the_x_day_of_month_numberPicker" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_end_spinner" />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/edit_recur_ends_on_date_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{model.recurrenceUntilVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_until_x_occurences_picker">
+
+            <TextView
+                android:id="@+id/edit_recur_ends_on_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                tools:text="Friday Dec 31 2021" />
+
+        </com.google.android.material.card.MaterialCardView>
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -241,7 +272,7 @@
             android:layout_marginEnd="8dp"
             android:text="@string/edit_recur_x_times"
             android:textAlignment="viewStart"
-            android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.recurrenceCountVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/edit_recur_until_x_occurences_picker"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/edit_recur_until_x_occurences_picker"
@@ -260,7 +291,7 @@
             android:visibility="@{model.recurrenceGeneralVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_recur_until_x_occurences_picker" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_recur_ends_on_date_card" />
 
 
         <com.google.android.material.textview.MaterialTextView

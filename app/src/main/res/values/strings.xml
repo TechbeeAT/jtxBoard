@@ -295,6 +295,9 @@
     <string name="edit_recur_week">week(s)</string>
     <string name="edit_recur_month">month(s)</string>
     <string name="edit_recur_year">year(s)</string>
+    <string name="edit_recur_ends_never">ends never</string>
+    <string name="edit_recur_ends_on">ends on</string>
+    <string name="edit_recur_ends_after">ends after</string>
     <string name="edit_datepicker_dialog_select_date">Select date</string>
     <string name="edit_datepicker_dialog_select_time">Select time</string>
     <string name="edit_task_started_add">Pick started date/time</string>

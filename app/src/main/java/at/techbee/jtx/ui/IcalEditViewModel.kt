@@ -41,6 +41,10 @@ class IcalEditViewModel(
         const val RECURRENCE_MODE_WEEK = 1
         const val RECURRENCE_MODE_MONTH = 2
         const val RECURRENCE_MODE_YEAR = 3
+
+        const val RECURRENCE_END_AFTER = 0
+        const val RECURRENCE_END_ON = 1
+        const val RECURRENCE_END_NEVER = 2
     }
 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
@@ -108,6 +112,8 @@ class IcalEditViewModel(
     var recurrenceGeneralVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceWeekdaysVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceDayOfMonthVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var recurrenceCountVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var recurrenceUntilVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceExceptionsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceAdditionsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
@@ -141,11 +147,24 @@ class IcalEditViewModel(
             RECURRENCE_MODE_DAY
         })
 
+    var recurrenceEnd: MutableLiveData<Int> = MutableLiveData<Int>(
+        try {
+            if (Recur(iCalEntity.property.rrule).until == null &&(Recur(iCalEntity.property.rrule).count == -1))
+                RECURRENCE_END_NEVER
+            else if ((Recur(iCalEntity.property.rrule).until != null))
+                RECURRENCE_END_ON
+            else
+                RECURRENCE_END_AFTER
+        } catch (e: Exception) {
+            Log.w("LoadRRule", "Failed to preset UI according to provided RRule\n$e")
+            RECURRENCE_END_AFTER
+        })
+
 
     val urlError = MutableLiveData<String?>()
     val attendeesError = MutableLiveData<String?>()
 
-    var selectedTab = TAB_GENERAL
+    private var selectedTab = TAB_GENERAL
 
 
     init {
@@ -187,6 +206,8 @@ class IcalEditViewModel(
         recurrenceGeneralVisible.postValue(recurrenceChecked.value?:false)
         recurrenceWeekdaysVisible.postValue(recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_WEEK)
         recurrenceDayOfMonthVisible.postValue(recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_MONTH)
+        recurrenceCountVisible.postValue(recurrenceChecked.value?:false && recurrenceEnd.value == RECURRENCE_END_AFTER)
+        recurrenceUntilVisible.postValue(recurrenceChecked.value?:false && recurrenceEnd.value == RECURRENCE_END_ON)
         recurrenceExceptionsVisible.postValue(iCalEntity.property.exdate?.isNotEmpty() == true)
         recurrenceAdditionsVisible.postValue(iCalEntity.property.rdate?.isNotEmpty() == true)
     }

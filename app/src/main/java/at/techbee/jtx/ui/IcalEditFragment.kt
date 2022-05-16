@@ -49,10 +49,14 @@ import at.techbee.jtx.CONTACT_READ_PERMISSION_CODE
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.databinding.*
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_AFTER
+import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_NEVER
+import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_ON
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_DAY
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_MONTH
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_UNSUPPORTED
@@ -86,10 +90,7 @@ import com.google.android.material.timepicker.TimeFormat
 import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
-import net.fortuna.ical4j.model.NumberList
-import net.fortuna.ical4j.model.Recur
-import net.fortuna.ical4j.model.WeekDay
-import net.fortuna.ical4j.model.WeekDayList
+import net.fortuna.ical4j.model.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -112,6 +113,7 @@ class IcalEditFragment : Fragment() {
     private val allContactsSpinner: MutableList<String> = mutableListOf()
     private val allContactsAsAttendees: MutableList<Attendee> = mutableListOf()
     //private val allContactsNameAndMail: MutableList<String> = mutableListOf()
+    private var rruleUntil: Long = System.currentTimeMillis()
 
     private var photoUri: Uri? = null     // Uri for captured photo
 
@@ -137,6 +139,7 @@ class IcalEditFragment : Fragment() {
         const val TAG_PICKER_DTSTART = "dtstart"
         const val TAG_PICKER_DUE = "due"
         const val TAG_PICKER_COMPLETED = "completed"
+        const val TAG_PICKER_RECUR_UNTIL = "recurUntil"
 
         const val PREFS_EDIT_VIEW = "sharedPreferencesEditView"
         const val PREFS_LAST_COLLECTION = "lastUsedCollection"
@@ -382,7 +385,6 @@ class IcalEditFragment : Fragment() {
         binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.maxValue = 31
         binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.setOnValueChangedListener { _, _, _ -> updateRRule() }
 
-
         binding.editFragmentIcalEditRecur.editRecurDaysMonthsSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -411,6 +413,38 @@ class IcalEditFragment : Fragment() {
                 RECURRENCE_MODE_YEAR -> 3
                 else -> 0
             })
+
+        rruleUntil = icalEditViewModel.iCalEntity.property.rrule?.let { Recur(it).until?.time } ?: icalEditViewModel.iCalEntity.property.dtstart ?: System.currentTimeMillis()
+        binding.editFragmentIcalEditRecur.editRecurEndsOnDateText.text = convertLongToFullDateTimeString(rruleUntil, icalEditViewModel.iCalEntity.property.dtstartTimezone)
+
+        binding.editFragmentIcalEditRecur.editRecurEndSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    icalEditViewModel.recurrenceEnd.value = when(position) {
+                        0 -> RECURRENCE_END_AFTER
+                        1 -> RECURRENCE_END_ON
+                        2 -> RECURRENCE_END_NEVER
+                        else -> RECURRENCE_END_AFTER
+                    }
+                    icalEditViewModel.updateVisibility()
+                    updateRRule()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}    // nothing to do
+            }
+        binding.editFragmentIcalEditRecur.editRecurEndSpinner.setSelection(
+            when(icalEditViewModel.recurrenceEnd.value) {
+                RECURRENCE_END_AFTER -> 0
+                RECURRENCE_END_ON -> 1
+                RECURRENCE_END_NEVER -> 2
+                else -> 0
+            })
+
 
         //pre-set rules if rrule is present
         if(icalEditViewModel.iCalEntity.property.rrule!= null) {
@@ -964,6 +998,14 @@ class IcalEditFragment : Fragment() {
             )
         }
 
+        binding.editFragmentIcalEditRecur.editRecurEndsOnDateCard.setOnClickListener {
+            showDatePicker(
+                Recur(icalEditViewModel.iCalObjectUpdated.value?.rrule).until.time,
+                icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone,
+                TAG_PICKER_RECUR_UNTIL
+            )
+        }
+
         var restoreProgress = icalEditViewModel.iCalObjectUpdated.value?.percent ?: 0
 
         binding.editFragmentTabGeneral.editProgressSlider.addOnChangeListener { _, value, _ ->
@@ -1364,7 +1406,8 @@ class IcalEditFragment : Fragment() {
      */
     private fun updateCollectionColor() {
         val selectedCollection = icalEditViewModel.allCollections.value?.find { collection ->
-            collection.collectionId == icalEditViewModel.selectedCollectionId ?: icalEditViewModel.iCalObjectUpdated.value?.collectionId
+            collection.collectionId == (icalEditViewModel.selectedCollectionId
+                ?: icalEditViewModel.iCalObjectUpdated.value?.collectionId)
         }
         // applying the color
         ICalObject.applyColorOrHide(binding.editFragmentTabGeneral.editColorbarCollection, selectedCollection?.color)
@@ -1377,8 +1420,10 @@ class IcalEditFragment : Fragment() {
 
         // make sure preset is according to constraints (due is after start)
         val preset = when {
-            tag == TAG_PICKER_DUE && icalEditViewModel.iCalObjectUpdated.value?.dtstart != null &&  presetValueUTC.toInstant().toEpochMilli() < icalEditViewModel.iCalObjectUpdated.value?.dtstart?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: icalEditViewModel.iCalObjectUpdated.value?.due?: System.currentTimeMillis()
-            tag == TAG_PICKER_DTSTART && icalEditViewModel.iCalObjectUpdated.value?.due != null && presetValueUTC.toInstant().toEpochMilli() > icalEditViewModel.iCalObjectUpdated.value?.due?: 0L -> icalEditViewModel.iCalObjectUpdated.value?.due ?: icalEditViewModel.iCalObjectUpdated.value?.dtstart?: System.currentTimeMillis()
+            tag == TAG_PICKER_DUE && icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && presetValueUTC.toInstant()
+                .toEpochMilli() < (icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: 0L) -> icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: icalEditViewModel.iCalObjectUpdated.value?.due?: System.currentTimeMillis()
+            tag == TAG_PICKER_DTSTART && icalEditViewModel.iCalObjectUpdated.value?.due != null && presetValueUTC.toInstant()
+                .toEpochMilli() > (icalEditViewModel.iCalObjectUpdated.value?.due ?: 0L) -> icalEditViewModel.iCalObjectUpdated.value?.due ?: icalEditViewModel.iCalObjectUpdated.value?.dtstart?: System.currentTimeMillis()
             else -> presetValueUTC.toInstant().toEpochMilli()
         }
 
@@ -1389,6 +1434,8 @@ class IcalEditFragment : Fragment() {
                     setStart(icalEditViewModel.iCalObjectUpdated.value!!.dtstart!!)
                 if(tag == TAG_PICKER_DTSTART && icalEditViewModel.iCalObjectUpdated.value?.due != null )
                     setStart(icalEditViewModel.iCalObjectUpdated.value!!.due!!)
+                if(tag == TAG_PICKER_RECUR_UNTIL && icalEditViewModel.iCalObjectUpdated.value?.dtstart != null )
+                    setStart(icalEditViewModel.iCalObjectUpdated.value!!.dtstart!!)
 
                 // Create a custom date validator to only enable dates that are in the list
                 val customDateValidator = object : CalendarConstraints.DateValidator {
@@ -1398,6 +1445,8 @@ class IcalEditFragment : Fragment() {
                         if(tag == TAG_PICKER_DUE && icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && date < getDateWithoutTime(icalEditViewModel.iCalObjectUpdated.value!!.dtstart!!, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone))
                             return false
                         if(tag == TAG_PICKER_DTSTART && icalEditViewModel.iCalObjectUpdated.value?.due != null && date > getDateWithoutTime(icalEditViewModel.iCalObjectUpdated.value!!.due!!, icalEditViewModel.iCalObjectUpdated.value?.dueTimezone))
+                            return false
+                        if(tag == TAG_PICKER_RECUR_UNTIL && icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && date < getDateWithoutTime(icalEditViewModel.iCalObjectUpdated.value!!.dtstart!!, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone))
                             return false
                         return true
                     }
@@ -1421,13 +1470,23 @@ class IcalEditFragment : Fragment() {
                 TAG_PICKER_DTSTART -> icalEditViewModel.iCalObjectUpdated.value!!.dtstart = zonedTimestamp
                 TAG_PICKER_DUE -> icalEditViewModel.iCalObjectUpdated.value!!.due = zonedTimestamp
                 TAG_PICKER_COMPLETED -> icalEditViewModel.iCalObjectUpdated.value!!.completed = zonedTimestamp
+                TAG_PICKER_RECUR_UNTIL -> {
+                    rruleUntil = zonedTimestamp
+                    binding.editFragmentIcalEditRecur.editRecurEndsOnDateText.text = convertLongToFullDateTimeString(rruleUntil, icalEditViewModel.iCalEntity.property.dtstartTimezone)
+                }
+            }
+
+            if(tag == TAG_PICKER_DTSTART && rruleUntil < (icalEditViewModel.iCalObjectUpdated.value!!.dtstart ?: System.currentTimeMillis())) {
+                rruleUntil = icalEditViewModel.iCalObjectUpdated.value!!.dtstart ?: System.currentTimeMillis()
+                binding.editFragmentIcalEditRecur.editRecurEndsOnDateText.text = convertLongToFullDateTimeString(rruleUntil, icalEditViewModel.iCalEntity.property.dtstartTimezone)
             }
 
             // if DTSTART was changed, we additionally update the RRULE
-            if(tag == TAG_PICKER_DTSTART)
+            if(tag == TAG_PICKER_DTSTART || tag == TAG_PICKER_RECUR_UNTIL) {
                 updateRRule()
+            }
 
-            if (icalEditViewModel.addTimeChecked.value == true)    // let the user set the time only if the time is desired!
+            if (tag != TAG_PICKER_RECUR_UNTIL && icalEditViewModel.addTimeChecked.value == true)    // let the user set the time only if the time is desired!
                 showTimePicker(zonedTimestamp, tzId.id, tag)
 
             // post itself to update the UI
@@ -2122,6 +2181,16 @@ class IcalEditFragment : Fragment() {
                 // the day of dtstart must be checked and should not be unchecked!
                 val zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(icalEditViewModel.iCalObjectUpdated.value?.dtstart ?: System.currentTimeMillis()), requireTzId(icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone))
 
+                //re-enable all before disabling the current weekday again as it might have changed
+                binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.isEnabled = true
+                binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.isEnabled = true
+                binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.isEnabled = true
+                binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.isEnabled = true
+                binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.isEnabled = true
+                binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.isEnabled = true
+                binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.isEnabled = true
+
+
                 when (zonedDtstart.dayOfWeek) {
                     DayOfWeek.MONDAY -> {
                         dayList.add(WeekDay.MO)
@@ -2210,7 +2279,11 @@ class IcalEditFragment : Fragment() {
             }
             else -> return
         }
-        recurBuilder.count(binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.value)
+        when (icalEditViewModel.recurrenceEnd.value) {
+            RECURRENCE_END_AFTER -> recurBuilder.count(binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.value)
+            RECURRENCE_END_ON -> recurBuilder.until(Date(rruleUntil))
+            // RECURRENCE_END_NEVER -> nothing to do
+        }
         recurBuilder.interval(binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.value)
         val recur = recurBuilder.build()
 
