@@ -427,4 +427,10 @@ Global Strings -->
     <string name="notification_done">"Erledigt"</string>
     <string name="notification_add_1h">"+ 1 Stunde"</string>
     <string name="notification_add_1d">"+ 1 Tag"</string>
+    <string name="edit_recur_ends_never">"endet nie"</string>
+    <string name="edit_recur_ends_on">"endet am"</string>
+    <string name="edit_recur_ends_after">"endet nach"</string>
+    <string name="collections_toast_export_all_ics_success">"Alle Collections erfolgreich exportiert."</string>
+    <string name="collections_toast_export_all_ics_error">"Beim Export aller Collections ist ein Fehler aufgetreten."</string>
+    <string name="menu_collections_export_all">"Alle exportieren"</string>
 </resources>
