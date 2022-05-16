@@ -1000,11 +1000,14 @@ class IcalEditFragment : Fragment() {
         }
 
         binding.editFragmentIcalEditRecur.editRecurEndsOnDateCard.setOnClickListener {
-            showDatePicker(
-                Recur(icalEditViewModel.iCalObjectUpdated.value?.rrule).until.time,
-                icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone,
-                TAG_PICKER_RECUR_UNTIL
-            )
+            if(icalEditViewModel.iCalObjectUpdated.value?.dtstart != null)
+                showDatePicker(
+                    Recur(icalEditViewModel.iCalObjectUpdated.value?.rrule).until.time,
+                    icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone,
+                    TAG_PICKER_RECUR_UNTIL
+                )
+            else
+                toastNoDtstart?.show()
         }
 
         var restoreProgress = icalEditViewModel.iCalObjectUpdated.value?.percent ?: 0
