@@ -906,7 +906,7 @@ data class ICalObject(
                                         .withSecond(0)
                                         .withNano(0)
                                         .toInstant()
-                                        .isAfter(rRule.until.toInstant()))
+                                        .toEpochMilli() > rRule.until.time)
                                     break
 
                                 recurList.add(zonedDtstartWeekloop.toInstant().toEpochMilli())
@@ -961,7 +961,7 @@ data class ICalObject(
             var counter = 0
             var date = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart?:0L), requireTzId(dtstartTimezone))
             date = date.withNano(0).withSecond(0).withMinute(0).withHour(0)
-            while (Instant.ofEpochMilli(rRule.until.time).isAfter(date.toInstant())) {
+            while (date.toInstant().toEpochMilli() <= rRule.until.time) {
                 counter += 1
                 date = when(rRule.frequency) {
                     Recur.Frequency.DAILY -> date.plusDays(1*interval)

@@ -580,6 +580,20 @@ class ICalObjectTest {
         assertEquals(11,recurList.size)
     }
 
+    @Test
+    fun getInstancesFromRrule_daily_until_allday() {
+
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1652659200000L
+            this.dtstartTimezone = TZ_ALLDAY
+            this.rrule = "FREQ=DAILY;UNTIL=20220519"
+        }
+
+        val recurList = item.getInstancesFromRrule()
+        assertEquals(4,recurList.size)
+    }
+
+
 
     @Test
     fun getInstancesFromRrule_faultyRule() {
