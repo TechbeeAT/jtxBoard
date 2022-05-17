@@ -70,6 +70,7 @@ import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_PEOPLE_RES
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_RECURRING
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_SUBTASKS
 import at.techbee.jtx.util.DateTimeUtils
+import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getDateWithoutTime
 import at.techbee.jtx.util.DateTimeUtils.getLocalizedWeekdays
@@ -1476,7 +1477,7 @@ class IcalEditFragment : Fragment() {
                 TAG_PICKER_COMPLETED -> icalEditViewModel.iCalObjectUpdated.value!!.completed = zonedTimestamp
                 TAG_PICKER_RECUR_UNTIL -> {
                     rruleUntil = zonedTimestamp
-                    binding.editFragmentIcalEditRecur.editRecurEndsOnDateText.text = convertLongToFullDateTimeString(rruleUntil, icalEditViewModel.iCalEntity.property.dtstartTimezone)
+                    binding.editFragmentIcalEditRecur.editRecurEndsOnDateText.text = convertLongToFullDateString(rruleUntil, icalEditViewModel.iCalEntity.property.dtstartTimezone)
                 }
             }
 

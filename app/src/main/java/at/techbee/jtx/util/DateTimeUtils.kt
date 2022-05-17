@@ -42,6 +42,15 @@ object DateTimeUtils {
         return zonedDateTime.format(formatter)
     }
 
+    fun convertLongToFullDateString(date: Long?, timezone: String?): String {
+        if (date == null || date == 0L)
+            return ""
+        val zonedDateTime =
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
+        return zonedDateTime.format(formatter)
+    }
+
     fun convertLongToTimeString(time: Long?, timezone: String?): String {
         if (time == null || time == 0L)
             return ""
