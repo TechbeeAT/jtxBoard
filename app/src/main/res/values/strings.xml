@@ -257,7 +257,6 @@
     <string name="view_share_repeats">This entry repeats every</string>
 
 
-
     <!-- fragment_ical_edit -->
 
     <string name="edit_add_category_hint">#mycategory</string>
@@ -537,5 +536,6 @@
 
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again.</string>
+    <string name="title_activity_list_screen">ListScreen</string>
 
 </resources>
