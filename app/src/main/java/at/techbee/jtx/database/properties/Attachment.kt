@@ -200,6 +200,18 @@ data class Attachment (
             Log.d("IcalEditFragment", "enqueued fileCleanupWorkRequest")
         }
 
+        fun getSample() = Attachment(
+            attachmentId = 1L,
+            icalObjectId = 1L,
+            uri = "content://whatever",
+            null,
+            "application/pdf",
+            null,
+            "myfile",
+            "pdf",
+            123000
+        )
+
 
     }
 

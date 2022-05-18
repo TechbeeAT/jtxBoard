@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.compose
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EventRepeat
@@ -25,10 +26,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.database.Classification
-import at.techbee.jtx.database.Component
-import at.techbee.jtx.database.StatusJournal
-import at.techbee.jtx.database.StatusTodo
+import at.techbee.jtx.database.*
+import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
@@ -71,7 +70,7 @@ fun JournalStack() {
 
     LazyColumn(content = {
         items(icalobjects) { iCalObject ->
-            JournalCard(iCalObject)
+            ICalObjectListCard(iCalObject)
         }
     })
 
@@ -89,7 +88,7 @@ fun JournalStackPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JournalCard(iCalObject: ICal4List) {
+fun ICalObjectListCard(iCalObject: ICal4List) {
 
 
     //Text(text = "Hello $name!")
@@ -135,10 +134,12 @@ fun JournalCard(iCalObject: ICal4List) {
                 }
 
                 Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.Top) {
-                    VerticalDateBlock(
-                        iCalObject.dtstart ?: System.currentTimeMillis(),
-                        iCalObject.dtstartTimezone
-                    )
+
+                    if(iCalObject.module == Module.JOURNAL.name)
+                        VerticalDateBlock(
+                            iCalObject.dtstart ?: System.currentTimeMillis(),
+                            iCalObject.dtstartTimezone
+                        )
 
                     Column(
                         horizontalAlignment = Alignment.Start,
@@ -156,6 +157,22 @@ fun JournalCard(iCalObject: ICal4List) {
                         }
                     }
                 }
+
+
+                LazyRow(content = {
+
+                    val attachments = listOf(
+                        Attachment.getSample(),
+                        Attachment.getSample(),
+                        Attachment.getSample()
+                    )
+
+                    items(attachments) { attachment ->
+                        AttachmentCard(attachment)
+                    }
+
+                },
+                modifier = Modifier.padding(end = 8.dp))
 
 
                 Row(
@@ -194,6 +211,24 @@ fun JournalCard(iCalObject: ICal4List) {
                     }
 
                 }
+
+                if(iCalObject.component == Component.VTODO.name)
+                    ProgressElement(iCalObject.percent)
+
+                LazyColumn(content = {
+                    val subtasks = listOf(
+                        ICalObject.createTask("Subtask1"),
+                        ICalObject.createTask("Subtask2"),
+                        ICalObject.createTask("Subtask3").apply {
+                            percent = 36
+                        }
+                    )
+
+                    items(subtasks) { subtask ->
+                        SubtaskCard(subtask)
+                    }
+                },
+                modifier = Modifier.padding(top = 8.dp))
             }
         }
     }
@@ -201,11 +236,11 @@ fun JournalCard(iCalObject: ICal4List) {
 
 @Preview(showBackground = true)
 @Composable
-fun JournalCardPreview() {
+fun ICalObjectListCardPreview() {
     JtxBoardTheme {
 
         val icalobject = ICal4List.getSample()
-        JournalCard(icalobject)
+        ICalObjectListCard(icalobject)
     }
 }
 
