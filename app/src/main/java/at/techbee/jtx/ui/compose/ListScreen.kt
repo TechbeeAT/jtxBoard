@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.EventRepeat
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -25,71 +27,36 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
-/*
-class ListScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            JtxBoardTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-            }
-        }
-    }
-}
-
- */
-
 
 @Composable
-fun JournalStack() {
+fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>) {
 
-    val icalobjects =
-        listOf(
-            ICal4List.getSample().apply {
-                summary = "Entry1"
-            },
-            ICal4List.getSample().apply {
-                summary = "Entry2"
-            },
-            ICal4List.getSample().apply {
-                summary = "Entry3"
-            },
-        )
+    val list by listLive.observeAsState(emptyList())
 
-    LazyColumn(content = {
-        items(icalobjects) { iCalObject ->
-            ICalObjectListCard(iCalObject)
+    LazyColumn {
+        items(
+            items = list,
+            key = { item -> item.property.id }
+        ) { iCalObject ->
+                ICalObjectListCard(iCalObject)
         }
-    })
-
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun JournalStackPreview() {
-    JtxBoardTheme {
-        JournalStack()
     }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ICalObjectListCard(iCalObject: ICal4List) {
+fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto) {
 
+    val iCalObject = iCalObjectWithRelatedto.property
 
     //Text(text = "Hello $name!")
     Card(
@@ -133,7 +100,7 @@ fun ICalObjectListCard(iCalObject: ICal4List) {
                     }
                 }
 
-                Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.Top) {
+                Row(verticalAlignment = Alignment.Top) {
 
                     if(iCalObject.module == Module.JOURNAL.name)
                         VerticalDateBlock(
@@ -215,20 +182,11 @@ fun ICalObjectListCard(iCalObject: ICal4List) {
                 if(iCalObject.component == Component.VTODO.name)
                     ProgressElement(iCalObject.percent)
 
-                LazyColumn(content = {
-                    val subtasks = listOf(
-                        ICalObject.createTask("Subtask1"),
-                        ICalObject.createTask("Subtask2"),
-                        ICalObject.createTask("Subtask3").apply {
-                            percent = 36
-                        }
-                    )
-
-                    items(subtasks) { subtask ->
-                        SubtaskCard(subtask)
-                    }
-                },
-                modifier = Modifier.padding(top = 8.dp))
+                Column(modifier = Modifier.padding(top = 8.dp)) {
+                    SubtaskCard(ICalObject.createTask("Subtask 1"))
+                    SubtaskCard(ICalObject.createTask("Subtask 2"))
+                    SubtaskCard(ICalObject.createTask("Subtask 3"))
+                }
             }
         }
     }
@@ -236,14 +194,44 @@ fun ICalObjectListCard(iCalObject: ICal4List) {
 
 @Preview(showBackground = true)
 @Composable
-fun ICalObjectListCardPreview() {
+fun ICalObjectListCardPreview_JOURNAL() {
     JtxBoardTheme {
 
-        val icalobject = ICal4List.getSample()
+        val icalobject = ICal4ListWithRelatedto.getSample()
         ICalObjectListCard(icalobject)
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun ICalObjectListCardPreview_NOTE() {
+    JtxBoardTheme {
+
+        val icalobject = ICal4ListWithRelatedto.getSample().apply {
+            property.component = Component.VJOURNAL.name
+            property.module = Module.NOTE.name
+            property.dtstart = null
+            property.dtstartTimezone = null
+        }
+        ICalObjectListCard(icalobject)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ICalObjectListCardPreview_TODO() {
+    JtxBoardTheme {
+
+        val icalobject = ICal4ListWithRelatedto.getSample().apply {
+            property.component = Component.VTODO.name
+            property.module = Module.TODO.name
+            property.percent = 89
+            property.status = StatusTodo.`IN-PROCESS`.name
+            property.classification = Classification.CONFIDENTIAL.name
+        }
+        ICalObjectListCard(icalobject)
+    }
+}
 
 @Composable
 fun StatusClassificationBlock(

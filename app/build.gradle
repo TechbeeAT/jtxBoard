@@ -236,6 +236,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     implementation 'androidx.activity:activity-compose:1.4.0'
     implementation "androidx.compose.material:material-icons-extended:$version_compose"
+    implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"
     debugImplementation "androidx.compose.ui:ui-tooling:$version_compose"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$version_compose"

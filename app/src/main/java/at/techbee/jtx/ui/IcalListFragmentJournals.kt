@@ -15,23 +15,26 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
-import at.techbee.jtx.databinding.FragmentIcalListRecyclerBinding
-import java.lang.ClassCastException
+import at.techbee.jtx.ui.compose.ListScreen
+import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
 class IcalListFragmentJournals : Fragment() {
 
-    private var _binding: FragmentIcalListRecyclerBinding? = null
-    private val binding get() = _binding!!
 
     private val icalListViewModel: IcalListViewModel by activityViewModels()
 
@@ -52,13 +55,22 @@ class IcalListFragmentJournals : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        _binding = FragmentIcalListRecyclerBinding.inflate(inflater, container, false)
-        binding.listRecycler.layoutManager = LinearLayoutManager(context)
-        binding.listRecycler.setHasFixedSize(false)
-        binding.listRecycler.adapter = IcalListAdapterJournal(requireContext(), icalListViewModel)
-        binding.listRecycler.scheduleLayoutAnimation()
-
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            // Dispose of the Composition when the view's LifecycleOwner
+            // is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                JtxBoardTheme {
+                    // A surface container using the 'background' color from the theme
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        ListScreen(listLive = icalListViewModel.iCal4ListJournals)
+                    }
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -116,14 +128,10 @@ class IcalListFragmentJournals : Fragment() {
         prefs.edit().putString(PREFS_ORDERBY, icalListViewModel.orderBy.name).apply()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 
     private fun addObservers() {
         icalListViewModel.iCal4ListJournals.observe(viewLifecycleOwner) {
-            binding.listRecycler.adapter?.notifyDataSetChanged()
             if(icalListViewModel.scrollOnceId.value?:-1L > 0L)
                 icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
         }
@@ -135,7 +143,6 @@ class IcalListFragmentJournals : Fragment() {
             val scrollToItem = icalListViewModel.iCal4ListJournals.value?.find { listItem -> listItem.property.id == it }
             val scrollToItemPos = icalListViewModel.iCal4ListJournals.value?.indexOf(scrollToItem)
             if(scrollToItemPos != null && scrollToItemPos >= 0) {
-                binding.listRecycler.layoutManager?.scrollToPosition(scrollToItemPos)
                 icalListViewModel.scrollOnceId.value = null
             }
         }
