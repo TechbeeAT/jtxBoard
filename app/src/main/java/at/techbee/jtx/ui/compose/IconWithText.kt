@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.compose
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material3.Icon
@@ -20,12 +21,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.ui.theme.Typography
 
 @Composable
 fun IconWithText(icon: ImageVector, iconDesc: String, text: String, modifier: Modifier = Modifier) {
     Row(modifier = modifier) {
-        Icon(icon, iconDesc)
-        Text(text, modifier = Modifier.padding(start = 4.dp))
+        Icon(icon, iconDesc, modifier = Modifier.size(20.dp))
+        Text(
+            text,
+            style = Typography.titleSmall,
+            modifier = Modifier.padding(start = 4.dp)
+        )
     }
 }
 

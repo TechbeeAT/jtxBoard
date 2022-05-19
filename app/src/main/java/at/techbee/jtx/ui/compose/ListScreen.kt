@@ -8,6 +8,8 @@
 
 package at.techbee.jtx.ui.compose
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -23,21 +25,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
-import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.ui.theme.Typography
 
 
 @Composable
-fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>) {
+fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, navController: NavController) {
 
     val list by listLive.observeAsState(emptyList())
 
@@ -46,23 +52,34 @@ fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>) {
             items = list,
             key = { item -> item.property.id }
         ) { iCalObject ->
-                ICalObjectListCard(iCalObject)
+                ICalObjectListCard(iCalObject, navController)
         }
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto) {
+fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto, navController: NavController) {
 
     val iCalObject = iCalObjectWithRelatedto.property
 
-    //Text(text = "Hello $name!")
     Card(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(start = 8.dp, top = 8.dp)
+            .combinedClickable (
+                onClick = {
+                    navController.navigate(
+                        IcalListFragmentDirections.actionIcalListFragmentToIcalViewFragment()
+                            .setItem2show(iCalObject.id)
+                    )
+                },
+                onLongClick = {
+                    //TODO
+                }
+            )
     ) {
 
 
@@ -79,8 +96,15 @@ fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
-                        Text(iCalObject.collectionDisplayName?:iCalObject.accountName?:"")
-                        Text(iCalObject.categories?:"", modifier = Modifier.padding(start = 8.dp))
+                        Text(
+                            iCalObject.collectionDisplayName?:iCalObject.accountName?:"",
+                            style = Typography.titleSmall
+                        )
+                        Text(
+                            iCalObject.categories?:"", modifier = Modifier.padding(start = 8.dp),
+                            style = Typography.titleSmall,
+                            fontStyle = FontStyle.Companion.Italic
+                        )
                     }
                     Row(modifier = Modifier.padding(end = 8.dp, top = 8.dp)) {
                         if (iCalObject.uploadPending)
@@ -115,7 +139,10 @@ fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto) {
                             .padding(8.dp)
                     ) {
                         iCalObject.summary?.let {
-                            Text(text = it, fontWeight = FontWeight.Bold)
+                            Text(
+                                text = it,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                         iCalObject.description?.let {
                             Text(text = it,
@@ -198,7 +225,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
     JtxBoardTheme {
 
         val icalobject = ICal4ListWithRelatedto.getSample()
-        ICalObjectListCard(icalobject)
+        ICalObjectListCard(icalobject, rememberNavController())
     }
 }
 
@@ -213,7 +240,7 @@ fun ICalObjectListCardPreview_NOTE() {
             property.dtstart = null
             property.dtstartTimezone = null
         }
-        ICalObjectListCard(icalobject)
+        ICalObjectListCard(icalobject, rememberNavController())
     }
 }
 
@@ -229,7 +256,7 @@ fun ICalObjectListCardPreview_TODO() {
             property.status = StatusTodo.`IN-PROCESS`.name
             property.classification = Classification.CONFIDENTIAL.name
         }
-        ICalObjectListCard(icalobject)
+        ICalObjectListCard(icalobject, rememberNavController())
     }
 }
 

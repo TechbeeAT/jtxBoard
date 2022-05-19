@@ -23,6 +23,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
@@ -55,6 +57,8 @@ class IcalListFragmentJournals : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
+        val navController = this.findNavController()
+
         return ComposeView(requireContext()).apply {
             // Dispose of the Composition when the view's LifecycleOwner
             // is destroyed
@@ -66,7 +70,7 @@ class IcalListFragmentJournals : Fragment() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        ListScreen(listLive = icalListViewModel.iCal4ListJournals)
+                        ListScreen(listLive = icalListViewModel.iCal4ListJournals, navController)
                     }
                 }
             }
