@@ -370,7 +370,7 @@ class IcalListFragment : Fragment() {
     private fun goToFilter() {
 
         val filterFragment = IcalFilterFragment()
-        filterFragment.setStyle(STYLE_NORMAL, R.style.AppTheme)
+        filterFragment.setStyle(STYLE_NORMAL, R.style.MaterialAlertDialog_Material3)
         val transaction = childFragmentManager.beginTransaction()
         transaction.apply {
             add(0, filterFragment)
