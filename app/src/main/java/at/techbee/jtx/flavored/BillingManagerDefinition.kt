@@ -10,14 +10,16 @@ package at.techbee.jtx.flavored
 
 import android.app.Activity
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 interface BillingManagerDefinition {
 
-    var isAdFreePurchased: LiveData<Boolean>
+    var isProPurchased: LiveData<Boolean>
+    var isProPurchasedLoaded: MutableLiveData<Boolean>
 
-    val adFreePrice: LiveData<String?>
-    val adFreePurchaseDate: LiveData<String?>
-    val adFreeOrderId: LiveData<String?>
+    val proPrice: LiveData<String?>
+    val proPurchaseDate: LiveData<String?>
+    val proOrderId: LiveData<String?>
 
     /**
      * Initialises the billing client (if not initialised yet)
@@ -29,8 +31,7 @@ interface BillingManagerDefinition {
     /**
      * This function launches the billing flow from Google Play.
      * It shows a bar on the bototm of the page where the user can buy the item.
-     * The passed skuDetails are currently [BillingManager.adfreeSkuDetails].
+     * The passed skuDetails are currently [BillingManager.proProductDetails].
      */
     fun launchBillingFlow(activity: Activity)
-
 }

@@ -49,6 +49,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.slider.Slider
+import com.google.android.material.snackbar.Snackbar
 import io.noties.markwon.Markwon
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import java.io.*
@@ -204,6 +205,16 @@ class IcalViewFragment : Fragment() {
             if (it.ICalCollection?.readonly == true)
                 hideEditingOptions()
 
+            if(it.ICalCollection?.readonly == false
+                && it.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE
+                && BillingManager.getInstance()?.isProPurchased?.value == false) {
+                hideEditingOptions()
+                val snackbar = Snackbar.make(requireView(), R.string.buypro_snackbar_remote_entries_blocked, Snackbar.LENGTH_INDEFINITE)
+                snackbar.setAction(R.string.more) {
+                    findNavController().navigate(R.id.action_global_buyProFragment)
+                }
+                snackbar.show()
+            }
 
             updateToolbarText()
 
@@ -506,7 +517,7 @@ class IcalViewFragment : Fragment() {
         }
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only)
-        if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreePurchased?.value == false)
+        if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)
             AdManager.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), AdManager.getInstance()?.unitIdBannerView)
         else
             binding.viewAdContainer.visibility = View.GONE

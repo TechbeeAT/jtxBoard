@@ -34,6 +34,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import at.techbee.jtx.BuildConfig
+import at.techbee.jtx.MainActivity
 import at.techbee.jtx.PermissionsHelper
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
@@ -51,6 +53,7 @@ import at.techbee.jtx.util.UiUtil.reduceDragSensitivity
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import java.time.Instant
 import java.time.ZoneId
@@ -493,6 +496,15 @@ class IcalListFragment : Fragment() {
      */
     private fun showQuickAddDialog() {
 
+        if ((BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY && BillingManager.getInstance()?.isProPurchased?.value == false)) {
+            val snackbar = Snackbar.make(requireView(), R.string.buypro_snackbar_quick_entries_blocked, Snackbar.LENGTH_LONG)
+            snackbar.setAction(R.string.more) {
+                findNavController().navigate(R.id.action_global_buyProFragment)
+            }
+            snackbar.show()
+            return
+        }
+
         /**
          * PREPARE DIALOG
          */
@@ -640,7 +652,7 @@ class IcalListFragment : Fragment() {
 
                 icalListViewModel.insertQuickItem(it, categories)
 
-                if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreePurchased?.value == false)
+                if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)
                     AdManager.getInstance()?.showInterstitialAd(requireActivity())     // don't forget to show an ad if applicable ;-)
             }
         }

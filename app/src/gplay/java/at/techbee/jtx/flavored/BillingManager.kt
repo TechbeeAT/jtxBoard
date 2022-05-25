@@ -19,7 +19,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import at.techbee.jtx.util.DateTimeUtils
 import com.android.billingclient.api.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class BillingManager :
     LifecycleObserver, BillingManagerDefinition {
@@ -29,7 +31,7 @@ class BillingManager :
         @Volatile
         private var INSTANCE: BillingManager? = null
 
-        private const val IN_APP_PRODUCT_ADFREE = "adfree"
+        private const val IN_APP_PRODUCT_PRO = "adfree"
 
         private const val PREFS_BILLING = "sharedPreferencesBilling"
         private const val PREFS_BILLING_PURCHASE_STATE = "prefsBillingPurchaseState"
@@ -49,21 +51,22 @@ class BillingManager :
     }
 
     private var billingClient: BillingClient? = null
-    private var adfreeSkuDetails: MutableLiveData<SkuDetails?> =
-        MutableLiveData<SkuDetails?>(null)
-    private var adfreePurchase: MutableLiveData<Purchase?> =
+    private var proProductDetails: MutableLiveData<ProductDetails?> =
+        MutableLiveData<ProductDetails?>(null)
+    private var proPurchase: MutableLiveData<Purchase?> =
         MutableLiveData<Purchase?>(null)
 
 
-    override lateinit var isAdFreePurchased: LiveData<Boolean>
+    override lateinit var isProPurchased: LiveData<Boolean>
+    override var isProPurchasedLoaded = MutableLiveData(false)
 
-    override val adFreePrice = Transformations.map(adfreeSkuDetails) {
-        it?.price
+    override val proPrice = Transformations.map(proProductDetails) {
+        it?.oneTimePurchaseOfferDetails?.formattedPrice
     }
-    override val adFreePurchaseDate = Transformations.map(adfreePurchase) {
+    override val proPurchaseDate = Transformations.map(proPurchase) {
         DateTimeUtils.convertLongToFullDateTimeString(it?.purchaseTime, null)
     }
-    override val adFreeOrderId = Transformations.map(adfreePurchase) {
+    override val proOrderId = Transformations.map(proPurchase) {
         it?.orderId
     }
 
@@ -87,16 +90,17 @@ class BillingManager :
      */
     override fun initialise(activity: Activity) {
 
+        if (billingPrefs == null)
+            billingPrefs = activity.getSharedPreferences(PREFS_BILLING, Context.MODE_PRIVATE)
+
         // initialisation is done already, just return and do nothing
         //if(billingClient != null && adfreeOneTimeSkuDetails.value != null && adfreeSubscriptionSkuDetails.value != null) {
-        if (billingClient != null && adfreeSkuDetails.value != null) {
+        if (billingClient != null && proProductDetails.value != null) {
             // if everything is initialised we doublecheck if we missed a purchase and update it if necessary
             updatePurchases()
             return
         }
 
-        if (billingPrefs == null)
-            billingPrefs = activity.getSharedPreferences(PREFS_BILLING, Context.MODE_PRIVATE)
 
         /*
          * Returns true if a purchase status is set for the subscription in the billingPrefs
@@ -104,8 +108,8 @@ class BillingManager :
          * If the user has no subscription or it expired, the item would not be returned in the purchase list.
          * See also https://developer.android.com/google/play/billing/subscriptions#lifecycle
          */
-        isAdFreePurchased =
-            Transformations.map(adfreePurchase) { purchase ->
+        isProPurchased =
+            Transformations.map(proPurchase) { purchase ->
                 purchase?.purchaseState == Purchase.PurchaseState.PURCHASED
                     || billingPrefs?.getString(PREFS_BILLING_PURCHASE_STATE, null) == Purchase.PurchaseState.PURCHASED.toString()
             }
@@ -122,9 +126,7 @@ class BillingManager :
                     Log.d("Billing Client", "Connection OK")
 
                     // The BillingClient is ready. You can query purchases here.
-                    CoroutineScope(Dispatchers.IO).launch {
-                        querySkuDetails()
-                    }
+                    queryProductDetails()
                 }
             }
 
@@ -133,51 +135,65 @@ class BillingManager :
                 // Try to restart the connection on the next request to
                 // Google Play by calling the startConnection() method.
             }
-
         })
     }
 
 
     /**
      * Queries the available IN-APP products
-     * and sets the variable adfreeSkuDetails that contains the details of
-     * the ad-free option
+     * and sets the variable proProductDetails that contains the details of
+     * the product
      */
-    private suspend fun querySkuDetails() {
+    private fun queryProductDetails() {
 
-        // now query subscriptions
-        val params = SkuDetailsParams.newBuilder().apply {
-            this.setSkusList(arrayListOf(IN_APP_PRODUCT_ADFREE))
-            this.setType(BillingClient.SkuType.INAPP)
-        }.build()
+        val productList =
+            listOf(
+                QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(IN_APP_PRODUCT_PRO)
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build()
+            )
 
-        withContext(Dispatchers.IO) {
-            //Log.d("Billing Client", "Querying subscriptions")
-            val queryResult = billingClient?.querySkuDetails(params)
-            queryResult?.skuDetailsList?.forEach {
-                if (it.sku == IN_APP_PRODUCT_ADFREE)
-                    adfreeSkuDetails.postValue(it)
+        val params = QueryProductDetailsParams.newBuilder().setProductList(productList)
+
+        billingClient?.queryProductDetailsAsync(params.build()) { billingResult, productDetailsList ->
+
+            if (billingResult.responseCode != BillingClient.BillingResponseCode.OK)
+                return@queryProductDetailsAsync
+
+            productDetailsList.forEach { productDetails ->
+                if(productDetails.productId == IN_APP_PRODUCT_PRO)
+                    proProductDetails.postValue(productDetails)
             }
-            // once everything is initialised we doublecheck if we missed a purchase and update it if necessary
             updatePurchases()
+            // Process the result
         }
     }
 
 
     /**
      * This function launches the billing flow from Google Play.
-     * It shows a bar on the bototm of the page where the user can buy the item.
-     * The passed skuDetails are currently [BillingManager.adfreeSkuDetails].
+     * It shows a bar on the bottom of the page where the user can buy the item.
+     * The passed skuDetails are currently [BillingManager.proProductDetails].
      */
     override fun launchBillingFlow(activity: Activity) {
 
-        if (billingClient != null && adfreeSkuDetails.value != null) {
-            // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
-            val flowParams = BillingFlowParams.newBuilder()
-                .setSkuDetails(adfreeSkuDetails.value!!)
+        if (billingClient != null && proProductDetails.value != null) {
+
+            val productDetailsParamsList =
+                listOf(
+                    BillingFlowParams.ProductDetailsParams
+                        .newBuilder()
+                        .setProductDetails(proProductDetails.value!!)
+                        .build()
+                )
+            val billingFlowParams = BillingFlowParams
+                .newBuilder()
+                .setProductDetailsParamsList(productDetailsParamsList)
                 .build()
-            //val responseCode = billingClient?.launchBillingFlow(activity, flowParams)?.responseCode
-            billingClient?.launchBillingFlow(activity, flowParams)
+
+            // Launch the billing flow
+            billingClient?.launchBillingFlow(activity, billingFlowParams)
         } else {
             Toast.makeText(
                 activity,
@@ -194,16 +210,26 @@ class BillingManager :
      */
     private fun updatePurchases() {
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val inAppPurchases =
-                billingClient?.queryPurchasesAsync(BillingClient.SkuType.INAPP)
-            if (inAppPurchases?.purchasesList?.isEmpty() == true) {
-                billingPrefs?.edit()?.remove(PREFS_BILLING_PURCHASE_STATE)?.apply()
-                adfreePurchase.postValue(null)
-            }
+        billingClient?.queryPurchasesAsync(
+            QueryPurchasesParams.newBuilder()
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        ) { billingResult, purchaseList ->
+            // Process the result
+            if (billingResult.responseCode != BillingClient.BillingResponseCode.OK)
+                return@queryPurchasesAsync
 
-            inAppPurchases?.purchasesList?.forEach { purchase ->
-                handlePurchase(purchase)
+            if (purchaseList.isEmpty()) {
+                billingPrefs?.edit()?.remove(PREFS_BILLING_PURCHASE_STATE)?.apply()
+                proPurchase.postValue(null)
+                isProPurchasedLoaded.postValue(true)
+            } else {
+                CoroutineScope(Dispatchers.IO).launch {
+                    purchaseList.forEach { purchase ->
+                        handlePurchase(purchase)
+                    }
+                    isProPurchasedLoaded.postValue(true)
+                }
             }
         }
     }
@@ -213,24 +239,23 @@ class BillingManager :
      * It stores the purchase status in a shared preference for later usage.
      */
     private suspend fun handlePurchase(purchase: Purchase) {
+
         if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
             if (!purchase.isAcknowledged) {
                 val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
                     .setPurchaseToken(purchase.purchaseToken)
-                withContext(Dispatchers.IO) {
-                    billingClient?.acknowledgePurchase(acknowledgePurchaseParams.build())
-                }
+                billingClient?.acknowledgePurchase(acknowledgePurchaseParams.build())
             }
         }
 
-        if (purchase.skus.contains(IN_APP_PRODUCT_ADFREE)) {
-            if (adfreePurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
-                adfreePurchase.postValue(purchase)
+        if (purchase.products.contains(IN_APP_PRODUCT_PRO)) {
+            if (proPurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
+                proPurchase.postValue(purchase)
             billingPrefs?.edit()?.putString(PREFS_BILLING_PURCHASE_STATE, purchase.purchaseState.toString())?.apply()
         } else {
             billingPrefs?.edit()?.remove(PREFS_BILLING_PURCHASE_STATE)?.apply()
-            if (adfreePurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
-                adfreePurchase.postValue(purchase)
+            if (proPurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
+                proPurchase.postValue(purchase)
         }
     }
 }
