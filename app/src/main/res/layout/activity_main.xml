@@ -28,14 +28,10 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/menu_ical_list"
-            style="?attr/appBarLayoutStyle"
             app:navigationIcon="@drawable/ic_baseline_menu_24"
             app:title="@string/toolbar_text_jtx_board"
             tools:subtitle="Subtitle" />
-
-
     </com.google.android.material.appbar.AppBarLayout>
-
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_main_layout"
@@ -44,7 +40,6 @@
         android:layout_above="@id/main_adlinearlayout"
         android:layout_below="@+id/topAppBarLayout"
         tools:openDrawer="start">
-
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
@@ -58,7 +53,6 @@
             android:background="@drawable/bg_background"
             tools:layout="@layout/fragment_ical_list" />
 
-
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
             android:layout_width="wrap_content"
@@ -68,9 +62,7 @@
             app:headerLayout="@layout/drawer_main_header"
             app:menu="@menu/menu_drawer_main" />
 
-
     </androidx.drawerlayout.widget.DrawerLayout>
-
 
     <LinearLayout
         android:id="@+id/main_adlinearlayout"

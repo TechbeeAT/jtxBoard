@@ -12,17 +12,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.core.view.forEach
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.databinding.FragmentIcalFilterBinding
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
 
-class IcalFilterFragment : DialogFragment() {
+class IcalFilterFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentIcalFilterBinding? = null
     private val binding get() = _binding!!
@@ -36,9 +36,6 @@ class IcalFilterFragment : DialogFragment() {
 
         _binding = FragmentIcalFilterBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-
-        // add menu
-        setHasOptionsMenu(true)
 
         Classification.values().forEach { classification ->
             val chip = inflater.inflate(R.layout.fragment_ical_filter_chip, binding.classificationFilterChipgroup, false) as Chip
