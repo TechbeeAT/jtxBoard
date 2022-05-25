@@ -29,7 +29,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
-import androidx.fragment.app.DialogFragment.STYLE_NORMAL
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -64,6 +63,8 @@ class IcalListFragment : Fragment() {
     private val icalListViewModel: IcalListViewModel by activityViewModels()
     private var _binding: FragmentIcalListBinding? = null
     val binding get() = _binding!!
+
+    private var filterBottomSheet: IcalFilterFragment? = null
 
     private lateinit var application: Application
     private lateinit var dataSource: ICalDatabaseDao
@@ -195,7 +196,7 @@ class IcalListFragment : Fragment() {
         binding.listBottomBar.setOnMenuItemClickListener { menuitem ->
 
             when (menuitem.itemId) {
-                R.id.menu_list_bottom_filter -> goToFilter()
+                R.id.menu_list_bottom_filter -> openFilterBottomSheet()
                 R.id.menu_list_bottom_clearfilter -> resetFilter()
                 R.id.menu_list_bottom_quick_journal -> showQuickAddDialog()
                 R.id.menu_list_bottom_quick_note -> showQuickAddDialog()
@@ -349,7 +350,7 @@ class IcalListFragment : Fragment() {
 
         when (item.itemId) {
             R.id.menu_list_gotodate -> showScrollToDate()
-            R.id.menu_list_filter -> goToFilter()
+            R.id.menu_list_filter -> openFilterBottomSheet()
             R.id.menu_list_clearfilter -> resetFilter()
             R.id.menu_list_delete_visible -> deleteVisible()
             R.id.menu_list_syncnow -> SyncUtil.syncAllAccounts(context)
@@ -367,15 +368,10 @@ class IcalListFragment : Fragment() {
         icalListViewModel.clearFilter()
     }
 
-    private fun goToFilter() {
-
-        val filterFragment = IcalFilterFragment()
-        filterFragment.setStyle(STYLE_NORMAL, R.style.MaterialAlertDialog_Material3)
-        val transaction = childFragmentManager.beginTransaction()
-        transaction.apply {
-            add(0, filterFragment)
-            commit()
-        }
+    private fun openFilterBottomSheet() {
+        if (filterBottomSheet == null)
+            filterBottomSheet = IcalFilterFragment()
+        filterBottomSheet?.show(childFragmentManager, null)
     }
 
     private fun goToEdit(iCalObject: ICalEntity) {

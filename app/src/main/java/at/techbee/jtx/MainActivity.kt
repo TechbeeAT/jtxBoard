@@ -15,12 +15,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.os.Parcelable
 import android.util.Log
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -39,9 +42,10 @@ import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.SettingsFragment
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.elevation.SurfaceColors
+import com.google.android.material.navigation.NavigationView
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.io.File
 import java.io.IOException
@@ -121,6 +125,21 @@ class MainActivity : AppCompatActivity()  {
     override fun onResume() {
         super.onResume()
         AdManager.getInstance()?.resumeAds()
+
+        // coloring notification bar and navigation icon bar, see https://gitlab.com/techbeeat1/jtx/-/issues/202
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.navigationBarColor = SurfaceColors.SURFACE_2.getColor(this)  // bottom navigation should fill
+            window.statusBarColor = SurfaceColors.SURFACE_0.getColor(this)
+
+            val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            if(nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+                window.decorView.windowInsetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
+                window.decorView.windowInsetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_NAVIGATION_BARS)
+            } else {
+                window.decorView.windowInsetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
+                window.decorView.windowInsetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_NAVIGATION_BARS,APPEARANCE_LIGHT_NAVIGATION_BARS)
+            }
+        }
 
         //hanlde intents, but only if it wasn't already handled
         if(intent.hashCode() != lastProcessedIntentHash) {
