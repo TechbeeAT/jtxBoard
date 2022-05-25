@@ -212,6 +212,15 @@
         app:destination="@id/adInfoFragment"
         app:popUpTo="@id/icalListFragment" />
     <fragment
+        android:id="@+id/buyProFragment"
+        android:name="at.techbee.jtx.ui.BuyProFragment"
+        android:label="BuyProFragment"
+        tools:layout="@layout/fragment_buypro"/>
+    <action
+        android:id="@+id/action_global_buyProFragment"
+        app:destination="@id/buyProFragment"
+        app:popUpTo="@id/icalListFragment" />
+    <fragment
         android:id="@+id/collectionsFragment"
         android:name="at.techbee.jtx.ui.CollectionsFragment"
         android:label="CollectionsFragment"

@@ -26,6 +26,7 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.databinding.FragmentIcalListItemAttachmentBinding
 import at.techbee.jtx.databinding.FragmentIcalListItemSubtaskBinding
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import com.google.android.material.slider.Slider
 import java.io.FileNotFoundException
@@ -134,9 +135,8 @@ class IcalListAdapterHelper {
                     )
                 }
 
-
                 // on long click we notify the model to get the entity, so that the observer can forward the user to the edit fragment
-                if(!subtask.isReadOnly) {
+                if(!subtask.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true) {
                     subtaskBinding.root.setOnLongClickListener {
                         // the observer in the fragment will make sure that the edit fragment is opened for the loaded entity
                         model.postDirectEditEntity(subtask.id)

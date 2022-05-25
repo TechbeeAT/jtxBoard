@@ -69,29 +69,28 @@ class MainActivity : AppCompatActivity()  {
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
         const val BUILD_FLAVOR_HUAWEI = "huawei"
-        const val BUILD_FLAVOR_GLOBAL = "global"
 
-        private const val PREFS_MAIN = "sharedPreferencesMainActivity"
-        private const val PREFS_MAIN_ADINFO_DIALOG_SHOWN = "adInfoDialogShown"
+        private const val SETTINGS_PRO_INFO_SHOWN = "settingsProInfoShown"
+
     }
 
     private lateinit var toolbar: Toolbar
-
     private var settings: SharedPreferences? = null
-    private var mainActivityPrefs: SharedPreferences? = null
-
     private var lastProcessedIntentHash: Int? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        DynamicColors.applyToActivityIfAvailable(this)
+
+        BillingManager.getInstance()?.initialise(this)
+        if (!(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && BillingManager.getInstance()?.isProPurchased?.value == false))
+            DynamicColors.applyToActivityIfAvailable(this)    // Google play gets dynamic colors only in pro!
+
         setContentView(R.layout.activity_main)
 
         //load settings
         settings = PreferenceManager.getDefaultSharedPreferences(this)
-        mainActivityPrefs = getSharedPreferences(PREFS_MAIN, Context.MODE_PRIVATE)
 
         // Register Notification Channel for Reminders
         createNotificationChannel()
@@ -111,15 +110,18 @@ class MainActivity : AppCompatActivity()  {
         setUpDrawer()
         checkThemeSetting()
 
-        BillingManager.getInstance()?.initialise(this)
-        BillingManager.getInstance()?.isAdFreePurchased?.observe(this) {
-            if(it)
+        val billingManager = BillingManager.getInstance()
+        billingManager?.isProPurchased?.observe(this) { isPurchased ->
+            if(!isPurchased)
                 AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)
+
         }
 
-        if(AdManager.getInstance()?.isAdFlavor() == true)                        // check if flavor is ad-Flavor and if ads should be shown
-            showAdInfoDialogIfNecessary()  // show AdInfo Dialog and initialize ads
-
+        billingManager?.isProPurchasedLoaded?.observe(this) {
+            // we show the dialog only when we are sure that the purchase was loaded
+            if(it)
+                showProInfoDialog(billingManager.isProPurchased.value?: false)
+        }
     }
 
     override fun onResume() {
@@ -201,11 +203,18 @@ class MainActivity : AppCompatActivity()  {
         val navView: NavigationView = findViewById(R.id.nav_view)
 
         when (BuildConfig.FLAVOR) {
-            BUILD_FLAVOR_GOOGLEPLAY -> navView.menu.findItem(R.id.nav_donate).isVisible = false     // hide the donate menu for google play
-            BUILD_FLAVOR_HUAWEI -> navView.menu.findItem(R.id.nav_donate).isVisible = false     // hide the donate menu for google play
-            BUILD_FLAVOR_GLOBAL -> navView.menu.findItem(R.id.nav_donate).isVisible = false         // hide the donate menu for app stores with ads
-            BUILD_FLAVOR_OSE -> navView.menu.findItem(R.id.nav_adinfo).isVisible = false            // hide the adinfo for the OSE-edition
-            // BUILD_FLAVOR_ALPHA shows both menu items for testing
+            BUILD_FLAVOR_GOOGLEPLAY -> {
+                navView.menu.findItem(R.id.nav_donate).isVisible = false
+                navView.menu.findItem(R.id.nav_adinfo).isVisible = false
+            }     // hide the donate menu for google play
+            BUILD_FLAVOR_HUAWEI -> {
+                navView.menu.findItem(R.id.nav_donate).isVisible = false
+                navView.menu.findItem(R.id.nav_buypro).isVisible = false
+            }     // hide the donate menu for google play
+            BUILD_FLAVOR_OSE -> {
+                navView.menu.findItem(R.id.nav_adinfo).isVisible = false
+                navView.menu.findItem(R.id.nav_buypro).isVisible = false
+            }            // hide the adinfo for the OSE-edition
         }
     }
 
@@ -259,6 +268,10 @@ class MainActivity : AppCompatActivity()  {
                 R.id.nav_adinfo ->
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_adInfoFragment)
+
+                R.id.nav_buypro ->
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_buyProFragment)
 
                 R.id.nav_app_settings ->
                     findNavController(R.id.nav_host_fragment)
@@ -349,35 +362,6 @@ class MainActivity : AppCompatActivity()  {
     }
 
 
-    /**
-     * Shows a Dialog with Ad-Info and option to buy the subscription
-     * Currently this should only be used for the GooglePlay flavor!
-     */
-    private fun showAdInfoDialogIfNecessary() {
-
-        val adInfoShown = mainActivityPrefs?.getBoolean(PREFS_MAIN_ADINFO_DIALOG_SHOWN, false) ?: false
-        if (!adInfoShown) {   // show a dialog if ads were not accepted yet
-            MaterialAlertDialogBuilder(this)
-                .setTitle(resources.getString(R.string.list_dialog_contribution_title))
-                .setMessage(resources.getString(R.string.list_dialog_contribution_message))
-                .setNegativeButton(resources.getString(R.string.list_dialog_contribution_more_information)) { _, _ ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_adInfoFragment)
-                }
-                .setPositiveButton(resources.getString(R.string.gotit)) { _, _ ->
-                    AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)
-                }
-                .show()
-
-            mainActivityPrefs?.edit()?.putBoolean(PREFS_MAIN_ADINFO_DIALOG_SHOWN, true)?.apply()   // once shown, we don't show it again
-        }
-        // otherwise load the user consent (if necessary) and then load the ads
-        else  {
-            AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)
-            Log.d("AdInfoShown", "AdInfo was shown, loading consent form if necessary")
-        }
-    }
-
 
     private fun showAddContentDialog() {
 
@@ -448,5 +432,37 @@ class MainActivity : AppCompatActivity()  {
                     )
             }
             .show()
+    }
+
+    private fun showProInfoDialog(isPurchased: Boolean) {
+        // show a one time message for users who did not buy the app
+        val proInfoShown = settings?.getBoolean(SETTINGS_PRO_INFO_SHOWN, false) ?: false
+        val jtxProDialogMessage =
+            if(!proInfoShown && isPurchased && this.packageManager.getPackageInfo(this.packageName, 0).firstInstallTime < 1654034400000L) {
+                "Hello! We have removed all ad-code from jtx Board and now offer a Pro-version in addition to the free download that has restricted sync-capabilities. As you had purchased the ad-free option anyway, we automatically migrated you to the Pro-version! There is no change for you, this is just to let you know! :)"
+            } else if (!proInfoShown && !isPurchased && this.packageManager.getPackageInfo(this.packageName, 0).firstInstallTime < 1654034400000L) {
+                "Hello! We have removed all ad-code from jtx Board and now offer a Pro-version in addition to the free version that has restricted sync-capabilities. However, your installation will remain fully functional with all Pro features, just without ads - this is just to let you know! :)"
+            } else if (!proInfoShown && !isPurchased) {
+                getString(R.string.buypro_initial_dialog_message)
+            } else {
+                null
+            }
+
+        // show dialog only if conditions for message were fulfilled
+        jtxProDialogMessage?.let {  message ->
+            MaterialAlertDialogBuilder(this)
+                .setTitle("jtx Board Pro")
+                .setMessage(message)
+                .setIcon(R.drawable.ic_adinfo)
+                .setPositiveButton(R.string.ok) { _, _ -> }
+                .setNeutralButton(R.string.more) { _, _ ->
+                    findNavController(R.id.nav_host_fragment)
+                        .navigate(R.id.action_global_buyProFragment)
+                }
+                .show()
+
+            settings?.edit()?.putBoolean(SETTINGS_PRO_INFO_SHOWN, true)?.apply()
+        }
+
     }
 }

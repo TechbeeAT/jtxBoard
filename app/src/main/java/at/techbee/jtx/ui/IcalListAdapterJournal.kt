@@ -238,10 +238,12 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
             }
 
             // on long click we notify the model to get the entity, so that the observer can forward the user to the edit fragment
-            holder.listItemCardView.setOnLongClickListener {
-                // the observer in the fragment will make sure that the edit fragment is opened for the loaded entity
-                model.postDirectEditEntity(iCal4ListItem.property.id)
-                true
+            if(!iCal4ListItem.property.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true) {
+                holder.listItemCardView.setOnLongClickListener {
+                    // the observer in the fragment will make sure that the edit fragment is opened for the loaded entity
+                    model.postDirectEditEntity(iCal4ListItem.property.id)
+                    true
+                }
             }
 
 
@@ -252,7 +254,7 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
         }
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
-        if(position%3 == 2 && AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreePurchased?.value == false)
+        if(position%3 == 2 && AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)
             AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.getInstance()?.unitIdBannerListJournal)
         else
             holder.adContainer.visibility = View.GONE

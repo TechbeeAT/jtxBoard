@@ -611,7 +611,7 @@ class IcalEditFragment : Fragment() {
 
                 // show Ad if necessary
                 if (AdManager.getInstance()
-                        ?.isAdFlavor() == true && BillingManager.getInstance()?.isAdFreePurchased?.value == false
+                        ?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false
                 )
                     AdManager.getInstance()?.showInterstitialAd(requireActivity())
 

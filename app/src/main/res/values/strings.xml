@@ -46,6 +46,7 @@
     <string name="edit">Edit</string>
     <string name="reset">Reset</string>
     <string name="apply">Apply</string>
+    <string name="more">More</string>
     <string name="not_available_abbreviation">n/a</string>
 
     <string name="collection">Collection</string>
@@ -143,6 +144,7 @@
     <string name="toolbar_text_sync">Sync</string>
     <string name="toolbar_text_donate">Donate</string>
     <string name="toolbar_text_adinfo">Ad Info</string>
+    <string name="toolbar_text_buypro">Buy Pro</string>
     <string name="toolbar_text_collections">Collections</string>
 
 
@@ -170,6 +172,7 @@
     <string name="navigation_drawer_support">Support</string>
     <string name="navigation_drawer_donate">Donate</string>
     <string name="navigation_drawer_adinfo">Ad Info</string>
+    <string name="navigation_drawer_buypro">Buy Pro</string>
     <string name="navigation_drawer_privacy_policy">Privacy Policy</string>
 
 
@@ -502,6 +505,21 @@
     <string name="adinfo_button_manage_subscriptions">Manage subscription</string>
     <string name="adinfo_adfree_purchase_date">Purchased on %1$s</string>
     <string name="adinfo_adfree_order_id">Order ID: %1$s</string>
+
+    <!-- Buy Pro fragment -->
+    <string name="buypro_text">The development of an app is a complex topic and development, maintenance and support is hard work. If you would like use the Pro functionalities or if you would like to support our project, please consider the following in-app purchase:</string>
+    <string name="buypro_purchase_header">Upgrade to jtx Board Pro</string>
+    <string name="buypro_purchase_description">Thank you for considering jtx Board Pro. This upgrade enables editing capabilities for remote collections, quick-entries, quick-editing through long click and dynamic colors (available from Android 12).</string>
+    <string name="buypro_purchase_header_thankyou">Thank you for buying jtx Board Pro</string>
+    <string name="buypro_purchase_description_thankyou">This upgrade enables editing capabilities for remote collections, quick-entries, quick-editing through long click and dynamic colors (available from Android 12).</string>
+    <string name="buypro_purchase_date">Purchased on %1$s</string>
+    <string name="buypro_order_id">Order ID: %1$s</string>
+    <string name="buypro_success_header">Thank you for buying jtx Board Pro!</string>
+    <string name="buypro_success_description">Editing capabilities for remote collections, quick-entries, quick-editing through long click and dynamic colors (available from Android 12) are now enabled.</string>
+    <string name="buypro_success_thankyou">Thank you!</string>
+    <string name="buypro_snackbar_remote_entries_blocked">Please purchase the Pro package to enable editing capabilities of remote collections.</string>
+    <string name="buypro_snackbar_quick_entries_blocked">Please purchase the Pro package to enable quick-add capabilities.</string>
+    <string name="buypro_initial_dialog_message">Hello! jtx Board comes with a standard and a Pro version. Please check out the \"Buy Pro\" section to find out more about jtx Board Pro! \nThank you!</string>
 
     <string name="attachment_error_on_retrieving_file">Failed to retrieve file.</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">No app was found to open this file/URL.</string>

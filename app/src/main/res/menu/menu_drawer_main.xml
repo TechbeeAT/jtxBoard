@@ -40,6 +40,11 @@
         android:title="@string/navigation_drawer_adinfo" />
 
     <item
+        android:id="@+id/nav_buypro"
+        android:icon="@drawable/ic_pro"
+        android:title="@string/navigation_drawer_buypro" />
+
+    <item
         android:id="@+id/nav_app_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/navigation_drawer_settings" />
