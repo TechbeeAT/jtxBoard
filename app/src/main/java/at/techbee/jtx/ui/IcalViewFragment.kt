@@ -618,8 +618,6 @@ class IcalViewFragment : Fragment() {
 
         val subtaskBinding = FragmentIcalViewSubtaskBinding.inflate(inflater, linearLayout, false)
 
-        var resetProgress = subtask.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
-
        var subtaskSummary =subtask.summary
         val subtaskCount = icalViewViewModel.subtasksCountList.value?.find { subtask.id == it.icalobjectId}?.count
         if (subtaskCount != null)
@@ -638,11 +636,7 @@ class IcalViewFragment : Fragment() {
             }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                if (subtaskBinding.viewSubtaskProgressSlider.value < 100)
-                    resetProgress = subtaskBinding.viewSubtaskProgressSlider.value.toInt()
                 icalViewViewModel.updateProgress(subtask, subtaskBinding.viewSubtaskProgressSlider.value.toInt())
-
-
             }
         })
 
@@ -650,7 +644,7 @@ class IcalViewFragment : Fragment() {
             if (checked) {
                 icalViewViewModel.updateProgress(subtask, 100)
             } else {
-                icalViewViewModel.updateProgress(subtask, resetProgress)
+                icalViewViewModel.updateProgress(subtask, 0)
             }
 
         }
