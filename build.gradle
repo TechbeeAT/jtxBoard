@@ -33,6 +33,7 @@ buildscript {
         version_work = "2.7.1"
         version_fragment = "1.4.0-alpha09"
         version_billing = "5.0.0"
+        version_review = "2.0.0"
         version_markwon = "4.6.2"
     }
 
