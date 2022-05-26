@@ -601,7 +601,8 @@ class SyncContentProvider : ContentProvider() {
 
         // STEP 2: query all related to that are linking their PARENT and check if they also have the opposite relationship entered, if not, then add it
         val query2 = "SELECT r1.$COLUMN_RELATEDTO_ICALOBJECT_ID, r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, r1.$COLUMN_RELATEDTO_RELTYPE from $TABLE_NAME_RELATEDTO r1 " +
-                "where r1.$COLUMN_RELATEDTO_RELTYPE = \"${Reltype.PARENT.name}\"" +
+                "where r1.$COLUMN_RELATEDTO_RELTYPE = \"${Reltype.PARENT.name}\" " +
+                "AND r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID != 0 " +
                 "AND r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID NOT IN ( select r2.$COLUMN_RELATEDTO_ICALOBJECT_ID from $TABLE_NAME_RELATEDTO r2 WHERE r2.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = r1.$COLUMN_RELATEDTO_ICALOBJECT_ID AND r2.$COLUMN_RELATEDTO_ICALOBJECT_ID = r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID and $COLUMN_RELATEDTO_RELTYPE = \"${Reltype.CHILD.name}\")"
         database.getCursor(SimpleSQLiteQuery(query2))?.use { cursor ->
             if(cursor.moveToFirst()) {
@@ -617,6 +618,7 @@ class SyncContentProvider : ContentProvider() {
         // STEP 3: query all related to that are linking their CHILD and check if they also have the opposite relationship entered, if not, then add it
         val query3 = "SELECT r1.$COLUMN_RELATEDTO_ICALOBJECT_ID, r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, r1.$COLUMN_RELATEDTO_RELTYPE from $TABLE_NAME_RELATEDTO r1 " +
                 "where r1.$COLUMN_RELATEDTO_RELTYPE = \"${Reltype.CHILD.name}\"" +
+                "AND r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID != 0 " +
                 "AND r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID NOT IN ( select r2.$COLUMN_RELATEDTO_ICALOBJECT_ID from $TABLE_NAME_RELATEDTO r2 WHERE r2.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = r1.$COLUMN_RELATEDTO_ICALOBJECT_ID AND r2.$COLUMN_RELATEDTO_ICALOBJECT_ID = r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID and $COLUMN_RELATEDTO_RELTYPE = \"${Reltype.PARENT.name}\")"
         database.getCursor(SimpleSQLiteQuery(query3))?.use { cursor ->
             if(cursor.moveToFirst()) {

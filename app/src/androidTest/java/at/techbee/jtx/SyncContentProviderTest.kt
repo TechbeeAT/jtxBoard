@@ -28,6 +28,7 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 
 @RunWith(AndroidJUnit4::class)
@@ -736,9 +737,12 @@ class SyncContentProviderTest {
     @Test
     fun updateRelatedTo_Test1() {
 
+        val uid1 = UUID.randomUUID()
+        val uid2 = UUID.randomUUID()
+
         val contentValues = ContentValues().apply {
             put(JtxContract.JtxICalObject.SUMMARY, "summary1")
-            put(JtxContract.JtxICalObject.UID, "uid1")
+            put(JtxContract.JtxICalObject.UID, uid1.toString())
             put(JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
         }
         val uriIcalobject = JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount)
@@ -747,7 +751,7 @@ class SyncContentProviderTest {
 
         val contentValues2 = ContentValues().apply {
             put(JtxContract.JtxICalObject.SUMMARY, "summary2")
-            put(JtxContract.JtxICalObject.UID, "uid2")
+            put(JtxContract.JtxICalObject.UID, uid2.toString())
             put(JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
         }
         val entry2 = mContentResolver?.insert(uriIcalobject, contentValues2)?.lastPathSegment
@@ -757,7 +761,7 @@ class SyncContentProviderTest {
         val relatedtoValues = ContentValues()
         relatedtoValues.put(JtxContract.JtxRelatedto.ICALOBJECT_ID, entry1)
         //relatedtoValues.put(JtxContract.JtxRelatedto.LINKEDICALOBJECT_ID, entry2)
-        relatedtoValues.put(JtxContract.JtxRelatedto.TEXT, "uid2")
+        relatedtoValues.put(JtxContract.JtxRelatedto.TEXT, uid2.toString())
         relatedtoValues.put(JtxContract.JtxRelatedto.RELTYPE, Reltype.CHILD.name)
         val uriRelatedto = JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount)
         val newRelatedto = mContentResolver?.insert(uriRelatedto, relatedtoValues)
@@ -767,6 +771,47 @@ class SyncContentProviderTest {
             assertEquals(2, it?.count)
         }
     }
+
+
+    @Test
+    fun updateRelatedTo_Test2() {
+
+        val uid1 = UUID.randomUUID()
+        val uid2 = UUID.randomUUID()
+
+        val contentValues = ContentValues().apply {
+            put(JtxContract.JtxICalObject.SUMMARY, "summary3")
+            put(JtxContract.JtxICalObject.UID, uid1.toString())
+            put(JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
+        }
+        val uriIcalobject = JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount)
+        val entry1 = mContentResolver?.insert(uriIcalobject, contentValues)?.lastPathSegment
+        assertNotNull(entry1)
+
+
+        // INSERT
+        val relatedtoValues = ContentValues()
+        relatedtoValues.put(JtxContract.JtxRelatedto.ICALOBJECT_ID, entry1)
+        //relatedtoValues.put(JtxContract.JtxRelatedto.LINKEDICALOBJECT_ID, entry2)
+        relatedtoValues.put(JtxContract.JtxRelatedto.TEXT, uid2.toString())
+        relatedtoValues.put(JtxContract.JtxRelatedto.RELTYPE, Reltype.CHILD.name)
+        val uriRelatedto = JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount)
+        val newRelatedto = mContentResolver?.insert(uriRelatedto, relatedtoValues)
+        assertNotNull(newRelatedto)
+
+        val contentValues2 = ContentValues().apply {
+            put(JtxContract.JtxICalObject.SUMMARY, "summary4")
+            put(JtxContract.JtxICalObject.UID, uid2.toString())
+            put(JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
+        }
+        val entry2 = mContentResolver?.insert(uriIcalobject, contentValues2)?.lastPathSegment
+        assertNotNull(entry2)
+
+        mContentResolver?.query(uriRelatedto, arrayOf(JtxContract.JtxRelatedto.ICALOBJECT_ID, JtxContract.JtxRelatedto.LINKEDICALOBJECT_ID), null, null, null).use {
+            assertEquals(2, it?.count)
+        }
+    }
+
 
 
     @Test
