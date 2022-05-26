@@ -482,10 +482,13 @@
 
 
     <!-- Donate fragment -->
-    <string name="donate_header_text">The development of an app is a complex topic and development, maintenance and support is hard work. So if you like this app and if you would like to ensure continuous development, please consider a donation :-)</string>
+    <string name="donate_header_text">The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)</string>
     <string name="donate_thank_you">Thank you!</string>
     <string name="donate_donate_with">Donate with</string>
-    <string name="donate_other_donation_methods">If you would like to consier any other donation method, please check our website:</string>
+    <string name="donate_other_donation_methods">If you would like to consider any other donation method, please check our website:</string>
+    <string name="donate_dialog_title">Do you like jtx Board?</string>
+    <string name="donate_dialog_message">The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)\nThank you!</string>
+
 
     <!-- Adinfo fragment -->
     <string name="adinfo_text">The development of an app is a complex topic and development, maintenance and support is hard work. Your version of jtx Board is free and financed by advertisements. By accepting ads you contribute to the ongoing development and financing of this project.</string>

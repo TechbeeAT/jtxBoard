@@ -160,6 +160,11 @@ dependencies {
     // Google billing
     gplayImplementation "com.android.billingclient:billing-ktx:$version_billing"
 
+    // Google request for review
+    gplayImplementation "com.google.android.play:review:$version_review"
+    gplayImplementation "com.google.android.play:review-ktx:$version_review"
+
+
     // Huawei Ads Lite (works only on Huawei phones)
     huaweiImplementation "com.huawei.hms:ads:3.4.49.301"    // should be replaced by ads-lite when it can be tested with a huawei phone
     //implementation "com.huawei.hms:ads-lite:13.4.49.301"

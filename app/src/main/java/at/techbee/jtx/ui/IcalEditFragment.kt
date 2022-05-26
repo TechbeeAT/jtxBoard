@@ -54,6 +54,7 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.databinding.*
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.flavored.JtxReviewManager
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_AFTER
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_NEVER
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_ON
@@ -614,6 +615,9 @@ class IcalEditFragment : Fragment() {
                         ?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false
                 )
                     AdManager.getInstance()?.showInterstitialAd(requireActivity())
+
+                // ask for a review (if applicable)
+                JtxReviewManager(requireActivity()).launch()
 
                 // return to list view
                 val direction =
