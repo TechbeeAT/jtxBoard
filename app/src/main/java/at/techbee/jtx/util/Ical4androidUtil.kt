@@ -157,7 +157,6 @@ object Ical4androidUtil {
             numAdded += 1
         }
 
-        collection.updateRelatedTo()
         return Pair(numAdded, numSkipped)
     }
 }

@@ -57,6 +57,7 @@ class IcalViewViewModelTest {
         ICalDatabase.getInMemoryDB(context).close()
     }
 
+/*
     @Test
     fun testEditingClicked() = runBlockingTest {
 
@@ -71,6 +72,7 @@ class IcalViewViewModelTest {
 
         assertTrue(icalViewViewModel.editingClicked.value!!)
     }
+ */
 
     @Test
     fun testInsertRelatedNote() = runBlockingTest {

@@ -731,4 +731,202 @@ class SyncContentProviderTest {
         val uri = JtxContract.JtxICalObject.CONTENT_URI
         SyncContentProvider().getAccountFromUri(uri)
     }
+
+
+    @Test
+    fun updateRelatedTo_Test1() {
+
+        val contentValues = ContentValues().apply {
+            put(JtxContract.JtxICalObject.SUMMARY, "summary1")
+            put(JtxContract.JtxICalObject.UID, "uid1")
+            put(JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
+        }
+        val uriIcalobject = JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount)
+        val entry1 = mContentResolver?.insert(uriIcalobject, contentValues)?.lastPathSegment
+        assertNotNull(entry1)
+
+        val contentValues2 = ContentValues().apply {
+            put(JtxContract.JtxICalObject.SUMMARY, "summary2")
+            put(JtxContract.JtxICalObject.UID, "uid2")
+            put(JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
+        }
+        val entry2 = mContentResolver?.insert(uriIcalobject, contentValues2)?.lastPathSegment
+        assertNotNull(entry2)
+
+        // INSERT
+        val relatedtoValues = ContentValues()
+        relatedtoValues.put(JtxContract.JtxRelatedto.ICALOBJECT_ID, entry1)
+        //relatedtoValues.put(JtxContract.JtxRelatedto.LINKEDICALOBJECT_ID, entry2)
+        relatedtoValues.put(JtxContract.JtxRelatedto.TEXT, "uid2")
+        relatedtoValues.put(JtxContract.JtxRelatedto.RELTYPE, Reltype.CHILD.name)
+        val uriRelatedto = JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount)
+        val newRelatedto = mContentResolver?.insert(uriRelatedto, relatedtoValues)
+        assertNotNull(newRelatedto)
+
+        mContentResolver?.query(uriRelatedto, arrayOf(JtxContract.JtxRelatedto.ICALOBJECT_ID, JtxContract.JtxRelatedto.LINKEDICALOBJECT_ID), null, null, null).use {
+            assertEquals(2, it?.count)
+        }
+    }
+
+
+    @Test
+    fun updateRelatedTo_check_update_of_linkedId_CHILD_to_PARENT_is_present() {
+
+        // insert 2 icalobjects
+        val parentCV = ContentValues().apply {
+            put(at.techbee.jtx.JtxContract.JtxICalObject.SUMMARY, "summary")
+            put(at.techbee.jtx.JtxContract.JtxICalObject.COMPONENT, at.techbee.jtx.JtxContract.JtxICalObject.Component.VJOURNAL.name)
+            put(at.techbee.jtx.JtxContract.JtxICalObject.UID, "AAA")
+            put(at.techbee.jtx.JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
+        }
+        val parentUri = mContentResolver?.insert(at.techbee.jtx.JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount), parentCV)
+        val childCV = ContentValues().apply {
+            put(at.techbee.jtx.JtxContract.JtxICalObject.SUMMARY, "summary")
+            put(at.techbee.jtx.JtxContract.JtxICalObject.COMPONENT, at.techbee.jtx.JtxContract.JtxICalObject.Component.VJOURNAL.name)
+            put(at.techbee.jtx.JtxContract.JtxICalObject.UID, "BBB")
+            put(at.techbee.jtx.JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
+        }
+        val childUri = mContentResolver?.insert(at.techbee.jtx.JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount), childCV)
+
+        // link one of them to the other with PARENT reltype
+        val parentRelCV = ContentValues().apply {
+            put(at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID, childUri?.lastPathSegment)
+            put(at.techbee.jtx.JtxContract.JtxRelatedto.TEXT, "AAA")
+            put(at.techbee.jtx.JtxContract.JtxRelatedto.RELTYPE, at.techbee.jtx.JtxContract.JtxRelatedto.Reltype.PARENT.name)
+        }
+        mContentResolver?.insert(JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount), parentRelCV)
+
+        // check child to parent
+        mContentResolver?.query(
+            at.techbee.jtx.JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount),
+            arrayOf(at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID, at.techbee.jtx.JtxContract.JtxRelatedto.LINKEDICALOBJECT_ID, at.techbee.jtx.JtxContract.JtxRelatedto.TEXT, at.techbee.jtx.JtxContract.JtxRelatedto.RELTYPE),
+            "${at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID} = ?",
+            arrayOf(childUri?.lastPathSegment),
+            null
+        ).use {
+            assertNotNull(it)
+            assertEquals(1, it?.count)
+            it?.moveToFirst()
+            assertEquals(
+                childUri?.lastPathSegment?.toLong(),
+                it?.getLong(0)
+            )   // ICALOBJECT_ID
+            assertEquals(
+                parentUri?.lastPathSegment?.toLong(),
+                it?.getLong(1)
+            )   // LINKEDICALOBJECT_ID
+            assertEquals("AAA", it?.getString(2))   // TEXT (UID)
+            assertEquals(
+                at.techbee.jtx.JtxContract.JtxRelatedto.Reltype.PARENT.name,
+                it?.getString(3)
+            )
+        }
+
+        // check parent to child
+        mContentResolver?.query(
+            at.techbee.jtx.JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount),
+            arrayOf(at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID, at.techbee.jtx.JtxContract.JtxRelatedto.LINKEDICALOBJECT_ID, at.techbee.jtx.JtxContract.JtxRelatedto.TEXT, at.techbee.jtx.JtxContract.JtxRelatedto.RELTYPE),
+            "${at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID} = ?",
+            arrayOf(parentUri?.lastPathSegment),
+            null
+        ).use {
+            assertNotNull(it)
+            assertEquals(1, it?.count)
+            it?.moveToFirst()
+            assertEquals(
+                parentUri?.lastPathSegment?.toLong(),
+                it?.getLong(0)
+            )   // ICALOBJECT_ID
+            assertEquals(
+                childUri?.lastPathSegment?.toLong(),
+                it?.getLong(1)
+            )   // LINKEDICALOBJECT_ID
+            assertEquals("BBB", it?.getString(2))   // TEXT (UID)
+            assertEquals(
+                at.techbee.jtx.JtxContract.JtxRelatedto.Reltype.CHILD.name,
+                it?.getString(3)
+            )
+        }
+    }
+
+    @Test
+    fun updateRelatedTo_check_update_of_linkedId_PARENT_TO_CHILD_is_present() {
+
+        // insert 2 icalobjects
+        val parentCV = ContentValues().apply {
+            put(at.techbee.jtx.JtxContract.JtxICalObject.SUMMARY, "summary")
+            put(at.techbee.jtx.JtxContract.JtxICalObject.COMPONENT, at.techbee.jtx.JtxContract.JtxICalObject.Component.VJOURNAL.name)
+            put(at.techbee.jtx.JtxContract.JtxICalObject.UID, "AAA")
+            put(at.techbee.jtx.JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
+        }
+        val parentUri = mContentResolver?.insert(at.techbee.jtx.JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount), parentCV)
+        val childCV = ContentValues().apply {
+            put(at.techbee.jtx.JtxContract.JtxICalObject.SUMMARY, "summary")
+            put(at.techbee.jtx.JtxContract.JtxICalObject.COMPONENT, at.techbee.jtx.JtxContract.JtxICalObject.Component.VJOURNAL.name)
+            put(at.techbee.jtx.JtxContract.JtxICalObject.UID, "BBB")
+            put(at.techbee.jtx.JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
+        }
+        val childUri = mContentResolver?.insert(JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount), childCV)
+
+        // link one of them to the other with PARENT reltype
+        val parent2childRelCV = ContentValues().apply {
+            put(at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID, parentUri?.lastPathSegment)
+            put(at.techbee.jtx.JtxContract.JtxRelatedto.TEXT, "BBB")
+            put(at.techbee.jtx.JtxContract.JtxRelatedto.RELTYPE, at.techbee.jtx.JtxContract.JtxRelatedto.Reltype.CHILD.name)
+        }
+        mContentResolver?.insert(at.techbee.jtx.JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount), parent2childRelCV)
+
+        // check child to parent
+        mContentResolver?.query(
+            at.techbee.jtx.JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount),
+            arrayOf(at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID, at.techbee.jtx.JtxContract.JtxRelatedto.LINKEDICALOBJECT_ID, at.techbee.jtx.JtxContract.JtxRelatedto.TEXT, at.techbee.jtx.JtxContract.JtxRelatedto.RELTYPE),
+            "${at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID} = ?",
+            arrayOf(parentUri?.lastPathSegment),
+            null
+        ).use {
+            assertNotNull(it)
+            assertEquals(1, it?.count)
+            it?.moveToFirst()
+            assertEquals(
+                parentUri?.lastPathSegment?.toLong(),
+                it?.getLong(0)
+            )   // ICALOBJECT_ID
+            assertEquals(
+                childUri?.lastPathSegment?.toLong(),
+                it?.getLong(1)
+            )   // LINKEDICALOBJECT_ID
+            assertEquals("BBB", it?.getString(2))   // TEXT (UID)
+            assertEquals(
+                at.techbee.jtx.JtxContract.JtxRelatedto.Reltype.CHILD.name,
+                it?.getString(3)
+            )
+        }
+
+        // check parent to child
+        mContentResolver?.query(
+            at.techbee.jtx.JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount),
+            arrayOf(at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID, at.techbee.jtx.JtxContract.JtxRelatedto.LINKEDICALOBJECT_ID, at.techbee.jtx.JtxContract.JtxRelatedto.TEXT, at.techbee.jtx.JtxContract.JtxRelatedto.RELTYPE),
+            "${at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID} = ?",
+            arrayOf(childUri?.lastPathSegment),
+            null
+        ).use {
+            assertNotNull(it)
+            assertEquals(1, it?.count)
+            it?.moveToFirst()
+            assertEquals(
+                childUri?.lastPathSegment?.toLong(),
+                it?.getLong(0)
+            )   // ICALOBJECT_ID
+            assertEquals(
+                parentUri?.lastPathSegment?.toLong(),
+                it?.getLong(1)
+            )   // LINKEDICALOBJECT_ID
+            assertEquals("AAA", it?.getString(2))   // TEXT (UID)
+            assertEquals(
+                at.techbee.jtx.JtxContract.JtxRelatedto.Reltype.PARENT.name,
+                it?.getString(3)
+            )
+        }
+    }
+
 }
