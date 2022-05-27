@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) Techbee e.U.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the GNU Public License v3.0
@@ -14,16 +13,15 @@
         app:key="settings_display"
         app:title="Display settings">
 
-
         <ListPreference
-            app:key="settings_theme"
-            app:icon="@drawable/ic_theme"
-            app:title="@string/settings_select_theme"
+            app:defaultValue="system"
             app:entries="@array/app_settings_theme_names"
             app:entryValues="@array/app_settings_theme_values"
+            app:icon="@drawable/ic_theme"
+            app:key="settings_theme"
             app:persistent="true"
-            app:defaultValue="system"
-            app:useSimpleSummaryProvider="true"/>
+            app:title="@string/settings_select_theme"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
@@ -32,58 +30,58 @@
         app:title="@string/settings_list">
 
         <SwitchPreference
-            app:key="settings_show_subtasks_in_list"
             app:defaultValue="true"
-            app:title="@string/settings_show_subtasks_in_list"
             app:icon="@drawable/ic_todo"
-            app:useSimpleSummaryProvider="true"/>
+            app:key="settings_show_subtasks_in_list"
+            app:title="@string/settings_show_subtasks_in_list"
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
-            app:key="settings_show_attachments_in_list"
             app:defaultValue="true"
-            app:title="@string/settings_show_attachments_in_list"
             app:icon="@drawable/ic_attachment"
-            app:useSimpleSummaryProvider="true"/>
+            app:key="settings_show_attachments_in_list"
+            app:title="@string/settings_show_attachments_in_list"
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
-            app:key="settings_show_progress_for_maintasks_in_list"
             app:defaultValue="false"
-            app:title="@string/settings_show_progress_for_maintasks_in_list"
             app:icon="@drawable/ic_progress_task"
-            app:useSimpleSummaryProvider="true"/>
+            app:key="settings_show_progress_for_maintasks_in_list"
+            app:title="@string/settings_show_progress_for_maintasks_in_list"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:initialExpandedChildrenCount="0"
         app:key="settings_for_subentries"
-        app:title="@string/settings_group_settings_for_subentries"
-        app:initialExpandedChildrenCount="0">
+        app:title="@string/settings_group_settings_for_subentries">
 
         <SwitchPreference
-            app:key="settings_show_progress_for_subtasks_in_list"
             app:defaultValue="true"
-            app:title="@string/settings_show_progress_for_subtasks_in_list"
             app:icon="@drawable/ic_progress_subtask"
-            app:useSimpleSummaryProvider="true"/>
+            app:key="settings_show_progress_for_subtasks_in_list"
+            app:title="@string/settings_show_progress_for_subtasks_in_list"
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
-            app:key="settings_show_subtasks_of_journals_and_todos_in_tasklist"
             app:defaultValue="false"
-            app:title="@string/settings_show_subtasks_of_journals_and_todos_in_tasklist"
             app:icon="@drawable/ic_subtasks"
-            app:useSimpleSummaryProvider="true"/>
+            app:key="settings_show_subtasks_of_journals_and_todos_in_tasklist"
+            app:title="@string/settings_show_subtasks_of_journals_and_todos_in_tasklist"
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
+            app:defaultValue="false"
             app:key="settings_show_subnotes_of_journals_and_tasks_in_noteslist"
-            app:defaultValue="false"
             app:title="@string/settings_show_subnotes_of_journals_and_tasks_in_noteslist"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
-            app:key="settings_show_subjournals_of_notes_and_tasks_in_journallist"
             app:defaultValue="false"
+            app:key="settings_show_subjournals_of_notes_and_tasks_in_journallist"
             app:title="@string/settings_show_subjournals_of_notes_and_tasks_in_journallist"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
@@ -92,11 +90,11 @@
         app:title="@string/settings_app">
 
         <DropDownPreference
-            app:key="setting_audio_format"
             app:entries="@array/settings_audio_formats"
             app:entryValues="@array/settings_audio_formats"
-            app:title="@string/settings_select_mimetype_for_audio"
             app:icon="@drawable/ic_audio"
+            app:key="setting_audio_format"
+            app:title="@string/settings_select_mimetype_for_audio"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
