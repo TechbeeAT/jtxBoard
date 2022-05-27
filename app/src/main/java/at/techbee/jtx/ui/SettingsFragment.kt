@@ -20,28 +20,34 @@ import java.lang.ClassCastException
 class SettingsFragment : PreferenceFragmentCompat() {
 
     companion object {
-        const val ENFORCE_DARK_THEME = "settings_enfore_dark_theme"
         const val SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_in_list"
         const val SHOW_ATTACHMENTS_IN_LIST = "settings_show_attachments_in_list"
         const val SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST = "settings_show_progress_for_maintasks_in_list"
         const val SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST = "settings_show_progress_for_subtasks_in_list"
+
+        /**
+         * Preferred theme (light/dark). Value must be one of [AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM]
+         * (default if setting is missing), [AppCompatDelegate.MODE_NIGHT_NO] or [AppCompatDelegate.MODE_NIGHT_YES].
+         */
+        const val PREFERRED_THEME = "settings_theme"
+        const val THEME_DARK = "dark"
+        const val THEME_LIGHT = "light"
+        const val THEME_SYSTEM = "system"
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings, rootKey)
 
-        //val mainActivity = activity as MainActivity
-
-
         // register a change listener for the theme to update the UI immediately
         val settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
         settings.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if(key == ENFORCE_DARK_THEME) {
-                val enforceDark = sharedPreferences.getBoolean(ENFORCE_DARK_THEME, false)
-                if (enforceDark)
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                else
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            if(key == PREFERRED_THEME) {
+                when(sharedPreferences.getString(PREFERRED_THEME, THEME_SYSTEM)) {
+                    THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
             }
         }
     }

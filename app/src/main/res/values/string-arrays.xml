@@ -32,4 +32,15 @@
         <item>@string/priority_8_lower</item>
         <item>@string/priority_9_lowest</item>
     </string-array>
+
+    <string-array name="app_settings_theme_names">
+        <item>@string/settings_select_theme_system</item>
+        <item>@string/settings_select_theme_light</item>
+        <item>@string/settings_select_theme_dark</item>
+    </string-array>
+    <string-array name="app_settings_theme_values" translatable="false">
+        <item>-system</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
 </resources>

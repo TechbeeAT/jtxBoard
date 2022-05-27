@@ -15,12 +15,15 @@
         app:title="Display settings">
 
 
-    <SwitchPreference
-        app:key="settings_enfore_dark_theme"
-        app:defaultValue="false"
-        app:title="@string/settings_enforce_dark_theme"
-        app:icon="@drawable/ic_theme"
-        app:useSimpleSummaryProvider="true"/>
+        <ListPreference
+            app:key="settings_theme"
+            app:icon="@drawable/ic_theme"
+            app:title="@string/settings_select_theme"
+            app:entries="@array/app_settings_theme_names"
+            app:entryValues="@array/app_settings_theme_values"
+            app:persistent="true"
+            app:defaultValue="system"
+            app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>
 

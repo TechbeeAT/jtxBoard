@@ -301,11 +301,12 @@ class MainActivity : AppCompatActivity()  {
      */
     private fun checkThemeSetting() {
         // user interface settings
-        val enforceDark = settings?.getBoolean(SettingsFragment.ENFORCE_DARK_THEME, false) ?: false
-        if (enforceDark)
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        else
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        when(settings?.getString(SettingsFragment.PREFERRED_THEME, SettingsFragment.THEME_SYSTEM)) {
+            SettingsFragment.THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            SettingsFragment.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            SettingsFragment.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
     }
 
 

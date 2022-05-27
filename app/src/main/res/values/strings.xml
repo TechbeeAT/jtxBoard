@@ -450,6 +450,11 @@
 
     <!-- Settings fragment -->
     <string name="settings_enforce_dark_theme">Enforce dark theme</string>
+    <string name="settings_select_theme">Select theme</string>
+    <string name="settings_select_theme_dark">Dark</string>
+    <string name="settings_select_theme_light">Light</string>
+    <string name="settings_select_theme_system">System default</string>
+
     <string name="settings_list">Settings for the item list</string>
     <string name="settings_show_subtasks_in_list">Show subtasks in list</string>
     <string name="settings_show_attachments_in_list">Show attachments in list</string>
