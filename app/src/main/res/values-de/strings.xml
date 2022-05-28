@@ -433,4 +433,30 @@ Global Strings -->
     <string name="collections_toast_export_all_ics_success">"Alle Collections erfolgreich exportiert."</string>
     <string name="collections_toast_export_all_ics_error">"Beim Export aller Collections ist ein Fehler aufgetreten."</string>
     <string name="menu_collections_export_all">"Alle exportieren"</string>
+    <string name="more">"Mehr"</string>
+    <string name="toolbar_text_buypro">"Pro kaufen"</string>
+    <string name="navigation_drawer_buypro">"Pro kaufen"</string>
+    <string name="settings_select_theme">"Theme auswählen"</string>
+    <string name="settings_select_theme_dark">"Dunkel"</string>
+    <string name="settings_select_theme_light">"Hell"</string>
+    <string name="settings_select_theme_system">"Systemstandard"</string>
+    <string name="donate_dialog_title">"Gefällt dir jtx Board?"</string>
+    <string name="donate_dialog_message">"Die Entwicklung und Wartung einer App ist viel Arbeit. Wenn dir jtx Board gefällt und du die kontinuierliche Entwicklung sicherstellen möchtest, dann denke bitte auch an die Möglichkeit einer Spende! :-)
+Vielen Dank!"</string>
+
+    <!-- Buy Pro fragment -->
+    <string name="buypro_text">"Die Entwicklung und Wartung einer App ist viel Arbeit. Wenn dir jtx Board gefällt und du die Pro-Funktionalitäten freischalten möchtest oder du einfach gerne das Projekt unterstützen möchtest, dann folge bitte folgendem In-App-Kauf:"</string>
+    <string name="buypro_purchase_header">"Upgrade auf jtx Board Pro"</string>
+    <string name="buypro_purchase_description">"Vielen Dank, dass du jtx Board Pro in Erwägung ziehst. Dieses Upgrade schaltet die Bearbeitung von remote Collections, Schnell-Einträge, Schnell-Bearbeitung durch langen Klick und Dynamic Colors (ab Android 12) frei."</string>
+    <string name="buypro_purchase_header_thankyou">"Danke für den Kauf von jtx Board Pro"</string>
+    <string name="buypro_purchase_description_thankyou">"Dieses Upgrade schaltet die Bearbeitung von remote Collections, Schnell-Einträge, Schnell-Bearbeitung durch langen Klick und Dynamic Colors (ab Android 12) frei."</string>
+    <string name="buypro_purchase_date">"Gekauft am %1$s"</string>
+    <string name="buypro_order_id">"Bestellnummer"</string>
+    <string name="buypro_success_header">"Danke für den Kauf von jtx Board Pro!"</string>
+    <string name="buypro_success_description">"Die Bearbeitung von remote Collections, Schnell-Einträgen, Schnell-Bearbeitung durch langen Klick und Dynamic Colors (ab Android 12) sind jetzt aktiviert."</string>
+    <string name="buypro_success_thankyou">"Dankeschön!"</string>
+    <string name="buypro_snackbar_remote_entries_blocked">"Bitte kaufe das Pro Package um die Bearbeitung von remote Collections zu aktivieren."</string>
+    <string name="buypro_snackbar_quick_entries_blocked">"Bitte kaufe das Pro-Package um Schnell-Einträge zu aktivieren!"</string>
+    <string name="buypro_initial_dialog_message">"Hallo! jtx Board kommt in einer Standard- und einer Pro-Version. Bitte schaue in die \"Pro kaufen\" Sektion für weitere Infos!
+Danke!"</string>
 </resources>
