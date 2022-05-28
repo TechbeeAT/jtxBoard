@@ -161,7 +161,6 @@ class SyncContentProvider : ContentProvider() {
         //Log.println(Log.INFO, "SyncContentProvider", "Delete Query args prepared: ${args.joinToString(separator = ", ")}")
 
         database.deleteRAW(deleteQuery)
-        context!!.contentResolver.notifyChange(uri, null)
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
 
@@ -223,7 +222,6 @@ class SyncContentProvider : ContentProvider() {
         if(id == null)
             return null
 
-        context!!.contentResolver.notifyChange(uri, null)
         Log.println(Log.INFO, "newContentUri", ContentUris.withAppendedId(uri, id).toString())
 
         if(sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR)
@@ -467,7 +465,6 @@ class SyncContentProvider : ContentProvider() {
         // TODO: find a solution to efficiently return the actual count of updated rows (the return value of the RAW-query doesn't work)
         //val count = database.updateRAW(updateQuery)
         database.updateRAW(updateQuery)
-        context!!.contentResolver.notifyChange(uri, null)
 
         // updates on recurring instances through bulk updates should not occur, only updates on single items will update the recurring instances
         if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) || values.containsKey(COLUMN_RDATE) || values.containsKey(COLUMN_EXDATE)))
