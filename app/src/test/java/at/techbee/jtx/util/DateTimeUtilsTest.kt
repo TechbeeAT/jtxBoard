@@ -98,4 +98,14 @@ class DateTimeUtilsTest {
     // test with itmezone null is not done as it would take the local timezone
     @Test fun getDateWithoutTime_test_TZ_UTC() = assertEquals(1642550400000, getDateWithoutTime(1642590117816, "UTC"))
     @Test fun getDateWithoutTime_TZ_Vienna() = assertEquals(1642546800000, getDateWithoutTime(1642590117816, "Europe/Vienna"))
+
+    @Test fun determineDateFormat_Test1() = assertEquals("yyyy-MM-dd", DateTimeUtils.determineDateFormat("2022-06-21"))
+    @Test fun determineDateFormat_Test2() = assertEquals("dd.MM.yyyy", DateTimeUtils.determineDateFormat("20.5.2022"))
+    @Test fun determineDateFormat_Test3() = assertEquals("dd.MM.yyyy HH:mm", DateTimeUtils.determineDateFormat("2.5.2022 18:32"))
+    @Test fun determineDateFormat_Test4() = assertEquals("MM/dd/yyyy HH:mm", DateTimeUtils.determineDateFormat("2/27/2022 18:32"))
+    @Test fun determineDateFormat_Test5() = assertEquals("MM/dd/yyyy", DateTimeUtils.determineDateFormat("12/05/2022"))
+    @Test fun determineDateFormat_Test6() = assertEquals("yyyyMMdd", DateTimeUtils.determineDateFormat("19990506"))
+
+
+
 }

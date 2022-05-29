@@ -34,12 +34,13 @@ import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.property.DtStart
-import java.time.DayOfWeek
-import java.time.Instant
-import java.time.ZonedDateTime
+import java.time.*
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.time.format.TextStyle
 import java.util.*
 import java.util.TimeZone
+import java.util.regex.Pattern
 import kotlin.IllegalArgumentException
 
 
@@ -1105,6 +1106,39 @@ data class ICalObject(
                 this.summary = it[0]
             if (it.size >= 2)
                 this.description = it[1]
+        }
+    }
+
+    /**
+     * Takes a string, extracts the date out of the string if any date is present
+     * @param [text] that should be parsed
+     */
+    fun parseDate(text: String?) {
+        if(text.isNullOrEmpty())
+            return
+
+        val matcher = Pattern.compile("![./\\-0-9]*\\s?([0-9]{1,2}:[0-9]{1,2})?").matcher(text)
+        if (matcher.find()) {
+            val datestring = matcher.group().removePrefix("!").trim()
+            val format = DateTimeUtils.determineDateFormat(datestring) ?: return
+            val localDateTime = try {
+                if (datestring.contains(":"))
+                    LocalDateTime.parse(datestring, DateTimeFormatter.ofPattern(format))
+                else
+                    LocalDate.parse(datestring, DateTimeFormatter.ofPattern(format)).atStartOfDay()
+            } catch (e: DateTimeParseException) {
+                Log.d("parseDate", e.toString())
+                return
+            }
+            if(this.module == Module.JOURNAL.name) {
+                this.dtstart = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                if (localDateTime.hour != 0 || localDateTime.minute != 0 || localDateTime.second != 0)
+                    this.dtstartTimezone = null
+            } else if (this.module == Module.TODO.name) {
+                this.due = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                if (localDateTime.hour != 0 || localDateTime.minute != 0 || localDateTime.second != 0)
+                    this.dueTimezone = null
+            }
         }
     }
 

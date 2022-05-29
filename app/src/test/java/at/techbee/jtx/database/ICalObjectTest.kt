@@ -717,4 +717,68 @@ class ICalObjectTest {
         todo.rrule = "FREQ=MONTHLY;UNTIL=20220821T070000Z;INTERVAL=1"
         assertEquals(4, todo.retrieveCount())
     }
+
+    @Test
+    fun parseDate_test1() {
+        val todo = ICalObject.createTodo()
+        todo.parseDate("Here is a text with !20.04.2022 a date.")
+        assertEquals(null, todo.dtstart)
+        assertNotNull(todo.due)
+        assertEquals(TZ_ALLDAY, todo.dueTimezone)
+    }
+
+    @Test
+    fun parseDate_test2() {
+        val todo = ICalObject.createTodo()
+        todo.parseDate("What about !20220101")
+        assertEquals(null, todo.dtstart)
+        assertNotNull(todo.due)
+        assertEquals(TZ_ALLDAY, todo.dueTimezone)
+    }
+
+    @Test
+    fun parseDate_test3() {
+        val todo = ICalObject.createTodo()
+        todo.parseDate("What about !02/20/2022 11:23")
+        assertEquals(null, todo.dtstart)
+        assertNotNull(todo.due)
+        assertNull(todo.dueTimezone)
+    }
+
+    @Test
+    fun parseDate_journal_test1() {
+        val journal = ICalObject.createJournal()
+        journal.parseDate("Here is a text with !20.04.2022 a date.")
+        assertEquals(null, journal.due)
+        assertNotNull(journal.dtstart)
+        assertEquals(TZ_ALLDAY, journal.dtstartTimezone)
+    }
+
+    @Test
+    fun parseDate_journal_test2() {
+        val journal = ICalObject.createJournal()
+        journal.parseDate("What about !20220101")
+        assertEquals(null, journal.due)
+        assertNotNull(journal.dtstart)
+        assertEquals(TZ_ALLDAY, journal.dtstartTimezone)
+    }
+
+    @Test
+    fun parseDate_journal_test3() {
+        val journal = ICalObject.createJournal()
+        journal.parseDate("What about !02/20/2022 11:23")
+        assertEquals(null, journal.due)
+        assertNotNull(journal.dtstart)
+        assertNull(journal.dtstartTimezone)
+    }
+
+    @Test
+    fun parseDate_note_test() {
+        val note = ICalObject.createNote()
+        note.parseDate("What about !02/20/2022 11:23")
+        assertNull(note.due)
+        assertNull(note.dtstart)
+        assertNull(note.dtstartTimezone)
+    }
+
 }
