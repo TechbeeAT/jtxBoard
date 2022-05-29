@@ -9,10 +9,7 @@
 package at.techbee.jtx.ui.compose
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +22,11 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubtaskCard(subtask: ICalObject, modifier: Modifier = Modifier) {
+
+    ElevatedCard(
+        modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 4.dp)
+    ) {
+
 
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -58,6 +60,8 @@ fun SubtaskCard(subtask: ICalObject, modifier: Modifier = Modifier) {
             sliderPosition = if(it) 100f else 0f
         })
     }
+    }
+
 }
 
 @Preview(showBackground = true)

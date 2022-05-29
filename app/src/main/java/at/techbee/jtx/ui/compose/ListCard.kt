@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
@@ -119,10 +120,14 @@ fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto, navContr
                             .fillMaxWidth()
                             .padding(8.dp)
                     ) {
+
+                        val summarySize = if(iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
+
                         iCalObject.summary?.let {
                             Text(
                                 text = it,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                fontSize = summarySize
                             )
                         }
                         iCalObject.description?.let {
