@@ -15,8 +15,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
@@ -25,6 +32,8 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
 import at.techbee.jtx.databinding.FragmentIcalListRecyclerBinding
+import at.techbee.jtx.ui.compose.ListScreen
+import at.techbee.jtx.ui.theme.JtxBoardTheme
 import java.lang.ClassCastException
 
 
@@ -44,21 +53,29 @@ class IcalListFragmentNotes : Fragment() {
         const val PREFS_SORTORDER = "prefsSortOrder"
     }
 
-    private var _binding: FragmentIcalListRecyclerBinding? = null
-    private val binding get() = _binding!!
-
     private val icalListViewModel: IcalListViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        _binding = FragmentIcalListRecyclerBinding.inflate(inflater, container, false)
-        binding.listRecycler.layoutManager = LinearLayoutManager(context)
-        binding.listRecycler.setHasFixedSize(false)
-        binding.listRecycler.adapter = IcalListAdapterNote(requireContext(), icalListViewModel)
-        binding.listRecycler.scheduleLayoutAnimation()
+        val navController = this.findNavController()
 
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            // Dispose of the Composition when the view's LifecycleOwner
+            // is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                JtxBoardTheme {
+                    // A surface container using the 'background' color from the theme
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        ListScreen(listLive = icalListViewModel.iCal4ListNotes, navController)
+                    }
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -114,15 +131,9 @@ class IcalListFragmentNotes : Fragment() {
         prefs.edit().putString(PREFS_ORDERBY, icalListViewModel.orderBy.name).apply()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     private fun addObservers() {
         icalListViewModel.iCal4ListNotes.observe(viewLifecycleOwner) {
-            binding.listRecycler.adapter?.notifyDataSetChanged()
-            if(icalListViewModel.scrollOnceId.value?:-1L > 0L)
+            if((icalListViewModel.scrollOnceId.value ?: -1L) > 0L)
                 icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
         }
 
@@ -133,7 +144,8 @@ class IcalListFragmentNotes : Fragment() {
             val scrollToItem = icalListViewModel.iCal4ListNotes.value?.find { listItem -> listItem.property.id == it }
             val scrollToItemPos = icalListViewModel.iCal4ListNotes.value?.indexOf(scrollToItem)
             if(scrollToItemPos != null && scrollToItemPos >= 0) {
-                binding.listRecycler.layoutManager?.scrollToPosition(scrollToItemPos)
+                //binding.listRecycler.layoutManager?.scrollToPosition(scrollToItemPos)
+                //TODO
                 icalListViewModel.scrollOnceId.value = null
             }
         }

@@ -169,36 +169,39 @@ fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto, navContr
                         modifier = Modifier.padding(8.dp)
                     )
 
-                    Row(modifier = Modifier.padding(8.dp)) {
+                    if (iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0 || iCalObject.numComments > 0)
+                        Row(modifier = Modifier.padding(8.dp)) {
 
-                        IconWithText(
-                            icon = Icons.Outlined.Group,
-                            iconDesc = stringResource(R.string.attendees),
-                            text = iCalObject.numAttendees.toString(),
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                        IconWithText(
-                            icon = Icons.Outlined.Attachment,
-                            iconDesc = stringResource(R.string.attachments),
-                            text = iCalObject.numAttachments.toString(),
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                        IconWithText(
-                            icon = Icons.Outlined.Comment,
-                            iconDesc = stringResource(R.string.comments),
-                            text = iCalObject.numComments.toString()
-                        )
+                            if(iCalObject.numAttendees > 0)
+                                IconWithText(
+                                    icon = Icons.Outlined.Group,
+                                    iconDesc = stringResource(R.string.attendees),
+                                    text = iCalObject.numAttendees.toString(),
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                            if(iCalObject.numAttachments > 0)
+                                IconWithText(
+                                    icon = Icons.Outlined.Attachment,
+                                    iconDesc = stringResource(R.string.attachments),
+                                    text = iCalObject.numAttachments.toString(),
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                            if(iCalObject.numComments > 0)
+                                IconWithText(
+                                    icon = Icons.Outlined.Comment,
+                                    iconDesc = stringResource(R.string.comments),
+                                    text = iCalObject.numComments.toString()
+                                )
+                        }
                     }
-
-                }
 
                 if(iCalObject.component == Component.VTODO.name)
                     ProgressElement(iCalObject.percent)
 
                 Column(modifier = Modifier.padding(top = 8.dp)) {
-                    SubtaskCard(ICalObject.createTask("Subtask 1"))
-                    SubtaskCard(ICalObject.createTask("Subtask 2"))
-                    SubtaskCard(ICalObject.createTask("Subtask 3"))
+                    SubtaskCard(ICalObject.createTask("Subtask 1"), navController)
+                    SubtaskCard(ICalObject.createTask("Subtask 2"), navController)
+                    SubtaskCard(ICalObject.createTask("Subtask 3"), navController)
                 }
             }
         }
@@ -281,20 +284,22 @@ fun StatusClassificationBlock(
     Row(modifier = modifier) {
 
         statusText?.let {
-            IconWithText(
-                icon = Icons.Outlined.PublishedWithChanges,
-                iconDesc = stringResource(R.string.status),
-                text = it,
-                modifier = Modifier.padding(end = 8.dp)
-            )
+            if(it != StatusJournal.FINAL.name && it != StatusTodo.`NEEDS-ACTION`.name && it != StatusTodo.`IN-PROCESS`.name && it != StatusTodo.COMPLETED.name)
+                IconWithText(
+                    icon = Icons.Outlined.PublishedWithChanges,
+                    iconDesc = stringResource(R.string.status),
+                    text = it,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
         }
         classificationText?.let {
-            IconWithText(
-                icon = Icons.Outlined.AdminPanelSettings,
-                iconDesc = stringResource(R.string.classification),
-                text = it,
-                modifier = Modifier.padding(end = 8.dp)
-            )
+            if(it != Classification.PUBLIC.name)
+                IconWithText(
+                    icon = Icons.Outlined.AdminPanelSettings,
+                    iconDesc = stringResource(R.string.classification),
+                    text = it,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
         }
     }
 }

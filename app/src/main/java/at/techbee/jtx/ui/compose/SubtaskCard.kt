@@ -8,6 +8,8 @@
 
 package at.techbee.jtx.ui.compose
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -16,15 +18,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun SubtaskCard(subtask: ICalObject, modifier: Modifier = Modifier) {
+fun SubtaskCard(subtask: ICalObject, navController: NavController, modifier: Modifier = Modifier) {
 
     ElevatedCard(
-        modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 4.dp)
+        modifier = Modifier
+            .padding(start = 8.dp, end = 8.dp, bottom = 4.dp)
+            .combinedClickable(
+                onClick = {
+                    navController.navigate(
+                        IcalListFragmentDirections
+                            .actionIcalListFragmentToIcalViewFragment()
+                            .setItem2show(subtask.id)
+                    )
+                },
+                onLongClick = {
+                    //TODO
+                }
+            ),
+
     ) {
 
 
@@ -70,6 +89,6 @@ fun SubtaskCardPreview() {
     JtxBoardTheme {
         SubtaskCard(ICalObject.createTask("MySubtask").apply {
             this.percent = 34
-        })
+        }, rememberNavController())
     }
 }
