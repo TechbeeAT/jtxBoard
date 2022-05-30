@@ -781,4 +781,70 @@ class ICalObjectTest {
         assertNull(note.dtstartTimezone)
     }
 
+
+    @Test
+    fun parseDuration_task_test1() {
+        val todo = ICalObject.createTodo()
+        todo.parseDuration("Here is a text with P2D as a duration.")
+        assertEquals(null, todo.dtstart)
+        assertNotNull(todo.due)
+        assertEquals(TZ_ALLDAY, todo.dueTimezone)
+    }
+
+    @Test
+    fun parseDuration_task_test2() {
+        val todo = ICalObject.createTodo()
+        todo.parseDuration("What about P1DT1H1M1")
+        assertEquals(null, todo.dtstart)
+        assertNotNull(todo.due)
+        assertNull(todo.dueTimezone)
+    }
+
+    @Test
+    fun parseDuration_task_test3() {
+        val todo = ICalObject.createTodo()
+        todo.parseDuration("What about PT1m")
+        assertEquals(null, todo.dtstart)
+        assertNotNull(todo.due)
+        assertNull(todo.dueTimezone)
+    }
+
+
+    @Test
+    fun parseDuration_journal_test1() {
+        val journal = ICalObject.createJournal()
+        journal.parseDuration("Here is a text with P33m2d as a duration.")
+        assertEquals(null, journal.due)
+        assertNotNull(journal.dtstart)
+        assertEquals(TZ_ALLDAY, journal.dtstartTimezone)
+    }
+
+    @Test
+    fun parseDuration_journal_test2() {
+        val journal = ICalObject.createJournal()
+        journal.parseDuration("What about P1DT6h")
+        assertEquals(null, journal.due)
+        assertNotNull(journal.dtstart)
+        assertNull(journal.dtstartTimezone)
+    }
+
+    @Test
+    fun parseDuration_journal_test3() {
+        val journal = ICalObject.createJournal()
+        journal.parseDuration("What about PT6h")
+        assertEquals(null, journal.due)
+        assertNotNull(journal.dtstart)
+        assertNull(journal.dtstartTimezone)
+    }
+
+
+    @Test
+    fun parseDuration_note_test() {
+        val note = ICalObject.createNote()
+        note.parseDuration("What about P1D???")
+        assertNull(note.due)
+        assertNull(note.dtstart)
+        assertNull(note.dtstartTimezone)
+    }
+
 }

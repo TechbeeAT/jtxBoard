@@ -1127,20 +1127,57 @@ data class ICalObject(
                 else
                     LocalDate.parse(datestring, DateTimeFormatter.ofPattern(format)).atStartOfDay()
             } catch (e: DateTimeParseException) {
-                Log.d("parseDate", e.toString())
+                Log.d("parseDate", "Parsing datetime failed: $datestring\n$e")
                 return
             }
-            if(this.module == Module.JOURNAL.name) {
+            if(this.module == Module.JOURNAL.name)
                 this.dtstart = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                if (localDateTime.hour != 0 || localDateTime.minute != 0 || localDateTime.second != 0)
-                    this.dtstartTimezone = null
-            } else if (this.module == Module.TODO.name) {
+            else if (this.module == Module.TODO.name)
                 this.due = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                if (localDateTime.hour != 0 || localDateTime.minute != 0 || localDateTime.second != 0)
-                    this.dueTimezone = null
+
+            if (localDateTime.hour != 0 || localDateTime.minute != 0 || localDateTime.second != 0) {
+                this.dtstartTimezone = null
+                this.dueTimezone = null
+                this.completedTimezone = null
             }
         }
     }
+
+    /**
+     * Takes a string, extracts the duration out of the string if any date is present
+     * @param [text] that should be parsed
+     */
+    fun parseDuration(text: String?) {
+
+        val text2match = text?.uppercase() ?: return
+        val matcher = Pattern.compile("[-]?P(?!\$)(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?!\$)(?:\\d+H)?(?:\\d+M)?(?:\\d+(?:\\.\\d+)?S)?)?").matcher(text2match)
+        if (matcher.find()) {
+            val duration = try {
+                Duration.parse(matcher.group())
+            } catch (e: DateTimeParseException) {
+                Log.d("parseDate", "Parsing duration failed: $duration\n$e")
+                return
+            }
+
+            val datetime =
+                if (duration.seconds % (60*60*24) != 0L)
+                    ZonedDateTime.now(ZoneId.systemDefault()).withNano(0).withSecond(0).plus(duration)
+                else
+                   ZonedDateTime.now(ZoneId.of("UTC")).withHour(0).withMinute(0).withSecond(0).withNano(0).plus(duration)
+
+            if(this.module == Module.JOURNAL.name)
+                this.dtstart = datetime.toInstant().toEpochMilli()
+            else if (this.module == Module.TODO.name)
+                this.due = datetime.toInstant().toEpochMilli()
+
+            if (duration.seconds % (60*60*24) != 0L) {
+                this.dtstartTimezone = null
+                this.dueTimezone = null
+                this.completedTimezone = null
+            }
+        }
+    }
+
 
     fun getRecurInfo(context: Context?): String? {
         if(context == null)

@@ -646,6 +646,7 @@ class IcalListFragment : Fragment() {
             newIcalObject?.let {
                 it.parseSummaryAndDescription(text)
                 it.parseDate(text)
+                it.parseDuration(text)
                 it.collectionId = currentWriteableCollections[selectedCollectionPos].collectionId
                 val categories = Category.extractHashtagsFromText(text)
 
