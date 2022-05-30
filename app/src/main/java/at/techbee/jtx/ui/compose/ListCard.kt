@@ -115,7 +115,10 @@ fun ICalObjectListCard(
                     }
                 }
 
-                Row(verticalAlignment = Alignment.Top) {
+                Row(
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
 
                     if(iCalObject.module == Module.JOURNAL.name)
                         VerticalDateBlock(
@@ -128,6 +131,8 @@ fun ICalObjectListCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
+                            .weight(1f)
+
                     ) {
 
                         val summarySize = if(iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
@@ -145,6 +150,9 @@ fun ICalObjectListCard(
                                 overflow = TextOverflow.Ellipsis)
                         }
                     }
+
+                    if(iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
+                        Checkbox(checked = iCalObject.percent==100, onCheckedChange = {  })
                 }
 
                 if(settingShowAttachments && (iCalObjectWithRelatedto.attachment?.size ?: 0) > 0) {
@@ -198,7 +206,7 @@ fun ICalObjectListCard(
                         }
                     }
 
-                if(iCalObject.component == Component.VTODO.name)
+                if(iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
                     ProgressElement(iCalObject.percent)
 
 
@@ -208,6 +216,7 @@ fun ICalObjectListCard(
                             SubtaskCard(
                                 subtask = subtask,
                                 navController = navController,
+                                showProgress = settingShowProgressSubtasks,
                                 onEditRequest = onEditRequest
                             )
                         }
@@ -281,7 +290,34 @@ fun ICalObjectListCardPreview_TODO() {
                 this.percent = 34
             }),
             rememberNavController(),
-            onEditRequest = {  }
+            onEditRequest = {  },
+            settingShowProgressMaintasks = true
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ICalObjectListCardPreview_TODO_no_progress() {
+    JtxBoardTheme {
+
+        val icalobject = ICal4ListWithRelatedto.getSample().apply {
+            property.component = Component.VTODO.name
+            property.module = Module.TODO.name
+            property.percent = 89
+            property.status = StatusTodo.`IN-PROCESS`.name
+            property.classification = Classification.CONFIDENTIAL.name
+        }
+        ICalObjectListCard(
+            icalobject,
+            listOf(ICal4List.getSample().apply {
+                this.component = Component.VTODO.name
+                this.module = Module.TODO.name
+                this.percent = 34
+            }),
+            rememberNavController(),
+            onEditRequest = {  },
+            settingShowProgressMaintasks = false
         )
     }
 }

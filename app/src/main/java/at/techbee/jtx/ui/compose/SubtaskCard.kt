@@ -31,6 +31,7 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 fun SubtaskCard(
     subtask: ICal4List,
     navController: NavController,
+    showProgress: Boolean = true,
     modifier: Modifier = Modifier,
     onEditRequest: (Long) -> Unit
 ) {
@@ -55,7 +56,7 @@ fun SubtaskCard(
 
 
     Row(
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -67,21 +68,24 @@ fun SubtaskCard(
             subtask.summary?:subtask.description?:"",
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp)
-                .width(150.dp),
+                .weight(1f),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        Slider(
-            value = sliderPosition,
-            valueRange = 0F..100F,
-            steps = 100,
-            onValueChange = { sliderPosition = it },
-            modifier = Modifier.weight(1f)
-        )
-        Text(
-            String.format("%.0f%%", sliderPosition),
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp)
-        )
+        if(showProgress) {
+            Slider(
+                value = sliderPosition,
+                valueRange = 0F..100F,
+                steps = 100,
+                onValueChange = { sliderPosition = it },
+                modifier = Modifier.width(100.dp),
+
+                )
+            Text(
+                String.format("%.0f%%", sliderPosition),
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+            )
+        }
         Checkbox(checked = sliderPosition==100f, onCheckedChange = {
             sliderPosition = if(it) 100f else 0f
         })
@@ -100,6 +104,22 @@ fun SubtaskCardPreview() {
             this.percent = 34
         },
             rememberNavController(),
+            onEditRequest = {  }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SubtaskCardPreview_without_progress() {
+    JtxBoardTheme {
+        SubtaskCard(ICal4List.getSample().apply {
+            this.component = Component.VTODO.name
+            this.module = Module.TODO.name
+            this.percent = 34
+        },
+            rememberNavController(),
+            showProgress = false,
             onEditRequest = {  }
         )
     }
