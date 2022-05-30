@@ -20,6 +20,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -30,11 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.ui.IcalListFragmentDirections
+import at.techbee.jtx.ui.SettingsFragment
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
@@ -44,6 +47,14 @@ import at.techbee.jtx.ui.theme.Typography
 fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto, navController: NavController) {
 
     val iCalObject = iCalObjectWithRelatedto.property
+
+    //load settings
+    val settings = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
+    val settingShowSubtasks = settings.getBoolean(SettingsFragment.SHOW_SUBTASKS_IN_LIST, true)
+    val settingShowAttachments = settings.getBoolean(SettingsFragment.SHOW_ATTACHMENTS_IN_LIST, true)
+    val settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false)
+    val settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true)
+
 
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -138,11 +149,10 @@ fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto, navContr
                     }
                 }
 
-
-                iCalObjectWithRelatedto.attachment?.let { attachments ->
+                if(settingShowAttachments && (iCalObjectWithRelatedto.attachment?.size ?: 0) > 0) {
                     LazyRow(
                         content = {
-                        items(attachments) { attachment ->
+                        items(iCalObjectWithRelatedto.attachment?: emptyList()) { attachment ->
                             AttachmentCard(attachment)
                         }
                     },

@@ -41,8 +41,6 @@ class IcalListAdapterHelper {
         private var settingShowAttachments = true
         private var settingShowProgressSubtasks = true
         private var settingShowProgressMaintasks = false
-        //private var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = model.iCal4List
-        //private var allSubtasks: LiveData<List<ICal4List?>> = model.allSubtasks
 
 
         fun addSubtasksView(model: IcalListViewModel, subtasks: List<ICal4List?>, subtasksLinearLayout: LinearLayout, context: Context, parent: ViewGroup) {
@@ -233,13 +231,6 @@ class IcalListAdapterHelper {
             settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true)
         }
     }
-
-
-
-
-
-
-
 }
 
 
