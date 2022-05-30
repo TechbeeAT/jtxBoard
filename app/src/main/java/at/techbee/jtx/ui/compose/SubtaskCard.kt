@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
@@ -48,7 +49,8 @@ fun SubtaskCard(
                     )
                 },
                 onLongClick = {
-                    onEditRequest(subtask.id)
+                    if(!subtask.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
+                        onEditRequest(subtask.id)
                 }
             ),
 

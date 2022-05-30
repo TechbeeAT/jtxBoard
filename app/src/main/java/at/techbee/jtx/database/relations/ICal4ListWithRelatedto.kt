@@ -82,7 +82,7 @@ data class ICal4ListWithRelatedto (
                                 numComments = 6,
                                 numRelatedTodos = 7,
                                 numResources = 8,
-                                isReadOnly = true
+                                isReadOnly = false
                                 ),
                                 null,
                                 listOf(Attachment.getSample(), Attachment.getSample())

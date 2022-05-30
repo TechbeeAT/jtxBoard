@@ -34,6 +34,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
@@ -68,7 +69,8 @@ fun ICalObjectListCard(
                     )
                 },
                 onLongClick = {
-                    onEditRequest(iCalObject.id)
+                    if (!iCalObject.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
+                        onEditRequest(iCalObject.id)
                 }
             )
     ) {
@@ -98,6 +100,10 @@ fun ICalObjectListCard(
                         )
                     }
                     Row(modifier = Modifier.padding(end = 8.dp, top = 8.dp)) {
+                        if (iCalObject.isReadOnly)
+                            Icon(painter = painterResource(id = R.drawable.ic_readonly),
+                                contentDescription = stringResource(id = R.string.readyonly)
+                            )
                         if (iCalObject.uploadPending)
                             Icon(Icons.Outlined.CloudSync, stringResource(R.string.upload_pending))
                         if (iCalObject.isRecurringOriginal || (iCalObject.isRecurringInstance && iCalObject.isLinkedRecurringInstance))
@@ -307,6 +313,10 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             property.percent = 89
             property.status = StatusTodo.`IN-PROCESS`.name
             property.classification = Classification.CONFIDENTIAL.name
+            property.uploadPending = false
+            property.isRecurringInstance = false
+            property.isRecurringOriginal = false
+            property.isReadOnly = true
         }
         ICalObjectListCard(
             icalobject,
