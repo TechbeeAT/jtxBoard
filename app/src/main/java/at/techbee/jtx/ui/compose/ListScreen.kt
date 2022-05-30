@@ -55,7 +55,16 @@ fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: L
                 } == true
             }
 
-            ICalObjectListCard(iCalObject, currentSubtasks, navController, settingShowSubtasks = settingShowSubtasks, settingShowAttachments = settingShowAttachments, settingShowProgressMaintasks = settingShowProgressMaintasks, settingShowProgressSubtasks = settingShowProgressSubtasks)
+            ICalObjectListCard(
+                iCalObject,
+                currentSubtasks,
+                navController,
+                settingShowSubtasks = settingShowSubtasks,
+                settingShowAttachments = settingShowAttachments,
+                settingShowProgressMaintasks = settingShowProgressMaintasks,
+                settingShowProgressSubtasks = settingShowProgressSubtasks,
+                onEditRequest = { id -> model.postDirectEditEntity(id) }
+            )
         }
     }
 }

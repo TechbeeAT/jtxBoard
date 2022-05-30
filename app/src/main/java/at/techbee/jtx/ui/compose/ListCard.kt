@@ -48,7 +48,8 @@ fun ICalObjectListCard(
     settingShowSubtasks: Boolean = true,
     settingShowAttachments: Boolean = true,
     settingShowProgressMaintasks: Boolean = false,
-    settingShowProgressSubtasks: Boolean = true
+    settingShowProgressSubtasks: Boolean = true,
+    onEditRequest: (Long) -> Unit
 ) {
 
     val iCalObject = iCalObjectWithRelatedto.property
@@ -67,7 +68,7 @@ fun ICalObjectListCard(
                     )
                 },
                 onLongClick = {
-                    //model.postDirectEditEntity(iCalObject.id)
+                    onEditRequest(iCalObject.id)
                 }
             )
     ) {
@@ -204,8 +205,11 @@ fun ICalObjectListCard(
                 if(settingShowSubtasks && (subtasks.size) > 0) {
                     Column {
                         subtasks.forEach { subtask ->
-                            SubtaskCard(subtask, navController)
-
+                            SubtaskCard(
+                                subtask = subtask,
+                                navController = navController,
+                                onEditRequest = onEditRequest
+                            )
                         }
                     }
                 }
@@ -227,7 +231,8 @@ fun ICalObjectListCardPreview_JOURNAL() {
                 this.module = Module.TODO.name
                 this.percent = 34
             }),
-            rememberNavController()
+            rememberNavController(),
+            onEditRequest = {  }
         )
     }
 }
@@ -250,7 +255,8 @@ fun ICalObjectListCardPreview_NOTE() {
                 this.module = Module.TODO.name
                 this.percent = 34
             }),
-            rememberNavController()
+            rememberNavController(),
+            onEditRequest = {  }
         )
     }
 }
@@ -274,7 +280,8 @@ fun ICalObjectListCardPreview_TODO() {
                 this.module = Module.TODO.name
                 this.percent = 34
             }),
-            rememberNavController()
+            rememberNavController(),
+            onEditRequest = {  }
         )
     }
 }

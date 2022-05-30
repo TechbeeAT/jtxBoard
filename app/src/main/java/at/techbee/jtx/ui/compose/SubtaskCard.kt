@@ -28,7 +28,12 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun SubtaskCard(subtask: ICal4List, navController: NavController, modifier: Modifier = Modifier) {
+fun SubtaskCard(
+    subtask: ICal4List,
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    onEditRequest: (Long) -> Unit
+) {
 
     ElevatedCard(
         modifier = Modifier
@@ -42,7 +47,7 @@ fun SubtaskCard(subtask: ICal4List, navController: NavController, modifier: Modi
                     )
                 },
                 onLongClick = {
-                    //model.postDirectEditEntity(subtask.id)
+                    onEditRequest(subtask.id)
                 }
             ),
 
@@ -93,7 +98,9 @@ fun SubtaskCardPreview() {
             this.component = Component.VTODO.name
             this.module = Module.TODO.name
             this.percent = 34
-        }, rememberNavController()
+        },
+            rememberNavController(),
+            onEditRequest = {  }
         )
     }
 }
