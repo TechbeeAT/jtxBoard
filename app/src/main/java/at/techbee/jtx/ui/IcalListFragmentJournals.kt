@@ -70,7 +70,7 @@ class IcalListFragmentJournals : Fragment() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        ListScreen(listLive = icalListViewModel.iCal4ListJournals, navController)
+                        ListScreen(listLive = icalListViewModel.iCal4ListJournals, subtasksLive = icalListViewModel.allSubtasks, navController = navController)
                     }
                 }
             }
@@ -136,7 +136,7 @@ class IcalListFragmentJournals : Fragment() {
 
     private fun addObservers() {
         icalListViewModel.iCal4ListJournals.observe(viewLifecycleOwner) {
-            if(icalListViewModel.scrollOnceId.value?:-1L > 0L)
+            if((icalListViewModel.scrollOnceId.value ?: -1L) > 0L)
                 icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
         }
 

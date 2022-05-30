@@ -36,6 +36,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
+import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.SettingsFragment
 import at.techbee.jtx.ui.theme.JtxBoardTheme
@@ -44,7 +45,7 @@ import at.techbee.jtx.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto, navController: NavController) {
+fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto, subtasks: List<ICal4List>, navController: NavController) {
 
     val iCalObject = iCalObjectWithRelatedto.property
 
@@ -203,10 +204,14 @@ fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto, navContr
                 if(iCalObject.component == Component.VTODO.name)
                     ProgressElement(iCalObject.percent)
 
-                Column(modifier = Modifier.padding(top = 8.dp)) {
-                    SubtaskCard(ICalObject.createTask("Subtask 1"), navController)
-                    SubtaskCard(ICalObject.createTask("Subtask 2"), navController)
-                    SubtaskCard(ICalObject.createTask("Subtask 3"), navController)
+
+                if(settingShowSubtasks && (subtasks.size) > 0) {
+                    Column {
+                        subtasks.forEach { subtask ->
+                            SubtaskCard(subtask, navController)
+
+                        }
+                    }
                 }
             }
         }
@@ -219,7 +224,14 @@ fun ICalObjectListCardPreview_JOURNAL() {
     JtxBoardTheme {
 
         val icalobject = ICal4ListWithRelatedto.getSample()
-        ICalObjectListCard(icalobject, rememberNavController())
+        ICalObjectListCard(
+            icalobject,
+            listOf(ICal4List.getSample().apply {
+                this.component = Component.VTODO.name
+                this.module = Module.TODO.name
+                this.percent = 34
+            }),
+            rememberNavController())
     }
 }
 
@@ -234,8 +246,14 @@ fun ICalObjectListCardPreview_NOTE() {
             property.dtstart = null
             property.dtstartTimezone = null
         }
-        ICalObjectListCard(icalobject, rememberNavController())
-    }
+        ICalObjectListCard(
+            icalobject,
+            listOf(ICal4List.getSample().apply {
+                this.component = Component.VTODO.name
+                this.module = Module.TODO.name
+                this.percent = 34
+            }),
+            rememberNavController())    }
 }
 
 @Preview(showBackground = true)
@@ -250,8 +268,14 @@ fun ICalObjectListCardPreview_TODO() {
             property.status = StatusTodo.`IN-PROCESS`.name
             property.classification = Classification.CONFIDENTIAL.name
         }
-        ICalObjectListCard(icalobject, rememberNavController())
-    }
+        ICalObjectListCard(
+            icalobject,
+            listOf(ICal4List.getSample().apply {
+                this.component = Component.VTODO.name
+                this.module = Module.TODO.name
+                this.percent = 34
+            }),
+            rememberNavController())    }
 }
 
 @Composable

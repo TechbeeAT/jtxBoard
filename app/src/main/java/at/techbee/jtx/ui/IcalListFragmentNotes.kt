@@ -71,7 +71,7 @@ class IcalListFragmentNotes : Fragment() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        ListScreen(listLive = icalListViewModel.iCal4ListNotes, navController)
+                        ListScreen(listLive = icalListViewModel.iCal4ListNotes, subtasksLive = icalListViewModel.allSubtasks, navController = navController)
                     }
                 }
             }

@@ -20,13 +20,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun SubtaskCard(subtask: ICalObject, navController: NavController, modifier: Modifier = Modifier) {
+fun SubtaskCard(subtask: ICal4List, navController: NavController, modifier: Modifier = Modifier) {
 
     ElevatedCard(
         modifier = Modifier
@@ -87,7 +90,9 @@ fun SubtaskCard(subtask: ICalObject, navController: NavController, modifier: Mod
 @Composable
 fun SubtaskCardPreview() {
     JtxBoardTheme {
-        SubtaskCard(ICalObject.createTask("MySubtask").apply {
+        SubtaskCard(ICal4List.getSample().apply {
+            this.component = Component.VTODO.name
+            this.module = Module.TODO.name
             this.percent = 34
         }, rememberNavController())
     }

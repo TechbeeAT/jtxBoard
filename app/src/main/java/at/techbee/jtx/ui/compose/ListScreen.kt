@@ -18,13 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
+import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
+import at.techbee.jtx.database.views.ICal4List
 
 
 @Composable
-fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, navController: NavController) {
+fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: LiveData<List<ICal4List>>, navController: NavController) {
 
     val list by listLive.observeAsState(emptyList())
+    val subtasks by subtasksLive.observeAsState(emptyList())
 
     LazyColumn(
         modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp)
@@ -33,7 +36,15 @@ fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, navController: 
             items = list,
             key = { item -> item.property.id }
         ) { iCalObject ->
-                ICalObjectListCard(iCalObject, navController)
+
+            val currentSubtasks = subtasks.filter { subtask ->
+                iCalObject.relatedto?.any { relatedto ->
+                    relatedto.linkedICalObjectId == subtask.id && relatedto.reltype == Reltype.CHILD.name
+                } == true
+            }
+
+
+            ICalObjectListCard(iCalObject, currentSubtasks, navController)
         }
     }
 }

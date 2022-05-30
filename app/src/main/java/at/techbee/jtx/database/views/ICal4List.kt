@@ -133,3 +133,56 @@ data class ICal4List(
     @ColumnInfo var numResources: Int,
     @ColumnInfo var isReadOnly: Boolean
 )
+{
+
+    companion object {
+        fun getSample() =
+            ICal4List(
+                id = 1L,
+                module = Module.JOURNAL.name,
+                component = Component.VJOURNAL.name,
+                "My Summary",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tellus risus, tristique ac elit vitae, mollis feugiat quam. Duis aliquet arcu at purus porttitor ultricies. Vivamus sagittis feugiat ex eu efficitur. Aliquam nec cursus ante, a varius nisi. In a malesuada urna, in rhoncus est. Maecenas auctor molestie quam, quis lobortis tortor sollicitudin sagittis. Curabitur sit amet est varius urna mattis interdum.\n" +
+                        "\n" +
+                        "Phasellus id quam vel enim semper ullamcorper in ac velit. Aliquam eleifend dignissim lacinia. Donec elementum ex et dui iaculis, eget vehicula leo bibendum. Nam turpis erat, luctus ut vehicula quis, congue non ex. In eget risus consequat, luctus ipsum nec, venenatis elit. In in tellus vel mauris rhoncus bibendum. Pellentesque sit amet quam elementum, pharetra nisl id, vehicula turpis. ",
+                System.currentTimeMillis(),
+                null,
+                null,
+                null,
+                status = StatusJournal.DRAFT.name,
+                classification = Classification.CONFIDENTIAL.name,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                System.currentTimeMillis(),
+                System.currentTimeMillis(),
+                System.currentTimeMillis(),
+                0,
+                Color.Magenta.toArgb(),
+                Color.Cyan.toArgb(),
+                1L,
+                "myAccount",
+                "myCollection",
+                deleted = false,
+                uploadPending = true,
+                isRecurringOriginal = true,
+                isRecurringInstance = true,
+                isLinkedRecurringInstance = true,
+                isChildOfJournal = false,
+                isChildOfNote = false,
+                isChildOfTodo = false,
+                categories = "Category1, Whatever",
+                numSubtasks = 3,
+                numAttachments = 4,
+                numAttendees = 5,
+                numComments = 6,
+                numRelatedTodos = 7,
+                numResources = 8,
+                isReadOnly = true
+            )
+    }
+}
