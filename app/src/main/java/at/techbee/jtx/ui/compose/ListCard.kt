@@ -20,7 +20,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -31,31 +30,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.IcalListFragmentDirections
-import at.techbee.jtx.ui.SettingsFragment
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto, subtasks: List<ICal4List>, navController: NavController) {
+fun ICalObjectListCard(
+    iCalObjectWithRelatedto: ICal4ListWithRelatedto,
+    subtasks: List<ICal4List>,
+    navController: NavController,
+    settingShowSubtasks: Boolean = true,
+    settingShowAttachments: Boolean = true,
+    settingShowProgressMaintasks: Boolean = false,
+    settingShowProgressSubtasks: Boolean = true
+) {
 
     val iCalObject = iCalObjectWithRelatedto.property
-
-    //load settings
-    val settings = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
-    val settingShowSubtasks = settings.getBoolean(SettingsFragment.SHOW_SUBTASKS_IN_LIST, true)
-    val settingShowAttachments = settings.getBoolean(SettingsFragment.SHOW_ATTACHMENTS_IN_LIST, true)
-    val settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false)
-    val settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true)
-
 
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -71,7 +67,7 @@ fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto, subtasks
                     )
                 },
                 onLongClick = {
-                    //TODO
+                    //model.postDirectEditEntity(iCalObject.id)
                 }
             )
     ) {
@@ -231,7 +227,8 @@ fun ICalObjectListCardPreview_JOURNAL() {
                 this.module = Module.TODO.name
                 this.percent = 34
             }),
-            rememberNavController())
+            rememberNavController()
+        )
     }
 }
 
@@ -253,7 +250,9 @@ fun ICalObjectListCardPreview_NOTE() {
                 this.module = Module.TODO.name
                 this.percent = 34
             }),
-            rememberNavController())    }
+            rememberNavController()
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -275,7 +274,9 @@ fun ICalObjectListCardPreview_TODO() {
                 this.module = Module.TODO.name
                 this.percent = 34
             }),
-            rememberNavController())    }
+            rememberNavController()
+        )
+    }
 }
 
 @Composable

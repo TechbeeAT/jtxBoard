@@ -70,7 +70,7 @@ class IcalListFragmentJournals : Fragment() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        ListScreen(listLive = icalListViewModel.iCal4ListJournals, subtasksLive = icalListViewModel.allSubtasks, navController = navController)
+                        ListScreen(listLive = icalListViewModel.iCal4ListJournals, subtasksLive = icalListViewModel.allSubtasks, navController = navController, model = icalListViewModel)
                     }
                 }
             }

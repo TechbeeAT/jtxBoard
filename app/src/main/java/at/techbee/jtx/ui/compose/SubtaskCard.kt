@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.database.Component
-import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.IcalListFragmentDirections
@@ -43,7 +42,7 @@ fun SubtaskCard(subtask: ICal4List, navController: NavController, modifier: Modi
                     )
                 },
                 onLongClick = {
-                    //TODO
+                    //model.postDirectEditEntity(subtask.id)
                 }
             ),
 
@@ -94,6 +93,7 @@ fun SubtaskCardPreview() {
             this.component = Component.VTODO.name
             this.module = Module.TODO.name
             this.percent = 34
-        }, rememberNavController())
+        }, rememberNavController()
+        )
     }
 }

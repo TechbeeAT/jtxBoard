@@ -208,7 +208,7 @@ data class Attachment (
         fun getSample() = Attachment(
             attachmentId = 1L,
             icalObjectId = 1L,
-            uri = "content://whatever",
+            uri = null,
             null,
             "application/pdf",
             null,
@@ -312,7 +312,7 @@ data class Attachment (
 
     fun getPreview(context: Context): Bitmap? {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && uri != null) {
             try {
                 val thumbSize = Size(50, 50)
                 val thumbUri = Uri.parse(uri)
