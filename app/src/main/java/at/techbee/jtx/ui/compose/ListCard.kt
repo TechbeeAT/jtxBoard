@@ -139,20 +139,15 @@ fun ICalObjectListCard(iCalObjectWithRelatedto: ICal4ListWithRelatedto, navContr
                 }
 
 
-                LazyRow(content = {
-
-                    val attachments = listOf(
-                        Attachment.getSample(),
-                        Attachment.getSample(),
-                        Attachment.getSample()
-                    )
-
-                    items(attachments) { attachment ->
-                        AttachmentCard(attachment)
-                    }
-
-                },
-                    modifier = Modifier.padding(end = 8.dp))
+                iCalObjectWithRelatedto.attachment?.let { attachments ->
+                    LazyRow(
+                        content = {
+                        items(attachments) { attachment ->
+                            AttachmentCard(attachment)
+                        }
+                    },
+                        modifier = Modifier.padding(end = 8.dp))
+                }
 
 
                 Row(

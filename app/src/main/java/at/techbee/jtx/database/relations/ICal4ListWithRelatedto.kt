@@ -85,7 +85,7 @@ data class ICal4ListWithRelatedto (
                                 isReadOnly = true
                                 ),
                                 null,
-                                null
+                                listOf(Attachment.getSample(), Attachment.getSample())
                 )
         }
 }

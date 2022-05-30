@@ -8,45 +8,61 @@
 
 package at.techbee.jtx.ui.compose
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilePresent
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import java.io.FileNotFoundException
+import java.lang.NullPointerException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttachmentCard(attachment: Attachment) {
 
-    Card(
+    val context = LocalContext.current
+
+    ElevatedCard(
         modifier = Modifier
-            .fillMaxWidth()
+            .wrapContentSize(align = Alignment.CenterStart)
             .padding(8.dp)
+            .widthIn(max = 150.dp),
+        onClick = {
+            attachment.openFile(context)
+        }
     ) {
 
+        Row(modifier = Modifier
+            .padding(8.dp)
+            .wrapContentWidth(align = Alignment.Start),
+        horizontalArrangement = Arrangement.Start) {
 
-            Row(modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()) {
-
+            val preview = attachment.getPreview(LocalContext.current)
+            if(preview == null)
                 Icon(Icons.Outlined.FilePresent, stringResource(R.string.attachments))
-                Text(attachment.filename + "." + attachment.extension, modifier = Modifier.padding(start = 8.dp))
-                // TODO: handle filesize!
-                // TODO: handle image!
-
+            else
+                Image(bitmap = preview.asImageBitmap(), contentDescription = null)
+            Text(attachment.getFilenameOrLink() ?: "",
+                modifier = Modifier
+                    .padding(start = 8.dp, end = 8.dp)
+                    .align(alignment = Alignment.CenterVertically),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
