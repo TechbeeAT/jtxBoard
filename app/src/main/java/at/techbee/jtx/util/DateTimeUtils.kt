@@ -252,7 +252,6 @@ object DateTimeUtils {
      * format is unknown. You can simply extend DateUtil with more formats if needed.
      * @param dateString The date string to determine the SimpleDateFormat pattern for.
      * @return The matching SimpleDateFormat pattern, or null if format is unknown.
-     * @see SimpleDateFormat
      */
     fun determineDateFormat(dateString: String): String? {
 
