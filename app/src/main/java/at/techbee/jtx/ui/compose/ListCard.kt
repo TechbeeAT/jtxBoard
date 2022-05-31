@@ -134,8 +134,8 @@ fun ICalObjectListCard(
 
                 if (iCalObject.module == Module.TODO.name && (iCalObject.dtstart != null || iCalObject.due != null)) {
                     Row( modifier = Modifier
-                            .padding(start = 8.dp, end = 8.dp)
-                            .fillMaxWidth(),
+                        .padding(start = 8.dp, end = 8.dp)
+                        .fillMaxWidth(),
                         verticalAlignment = Alignment.Top,
                         horizontalArrangement = Arrangement.Start
                     ) {
@@ -143,14 +143,18 @@ fun ICalObjectListCard(
                             Text(
                                 iCalObject.getDtstartTextInfo(LocalContext.current)?:"",
                                 style = Typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                fontStyle = FontStyle.Italic,
                                 modifier = Modifier.padding(end = 16.dp)
                             )
                         }
                         iCalObject.due?.let {
                             Text(
                                 iCalObject.getDueTextInfo(LocalContext.current)?:"",
-                                style = Typography.titleSmall
-                            )
+                                style = Typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                fontStyle = FontStyle.Italic
+                                )
                         }
                     }
                 }

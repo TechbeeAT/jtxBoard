@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.DateTimeUtils
-
+import java.util.*
 
 
 @Composable
@@ -30,17 +30,31 @@ fun VerticalDateBlock(datetime: Long, timezone: String?) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(8.dp)
     ) {
-        Text(DateTimeUtils.convertLongToMonthString(datetime, timezone))
         Text(
             text = DateTimeUtils.convertLongToDayString(datetime, timezone),
             fontWeight = FontWeight.Bold,
-            fontSize = 28.sp
+            fontSize = 36.sp
         )
-        Text(DateTimeUtils.convertLongToYearString(datetime, timezone))
+        Text(
+            DateTimeUtils.convertLongToMonthString(datetime, timezone),
+            fontSize = 12.sp
+        )
+
+        Text(
+            DateTimeUtils.convertLongToYearString(datetime, timezone),
+            fontSize = 12.sp
+        )
         if (timezone != ICalObject.TZ_ALLDAY)
-            Text(DateTimeUtils.convertLongToTimeString(datetime, timezone))
-        if (timezone != ICalObject.TZ_ALLDAY && timezone?.isNotEmpty() == true)
-            Text(DateTimeUtils.getOffsetStringFromTimezone(timezone))
+            Text(
+                DateTimeUtils.convertLongToTimeString(datetime, timezone),
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
+        if (timezone != ICalObject.TZ_ALLDAY && timezone?.isNotEmpty() == true && TimeZone.getTimeZone(timezone).getDisplayName(true, TimeZone.SHORT) != null)
+            Text(
+                TimeZone.getTimeZone(timezone).getDisplayName(true, TimeZone.SHORT),
+                fontSize = 12.sp
+            )
     }
 }
 
@@ -65,5 +79,13 @@ fun DateBlock_Preview_WithTime() {
 fun DateBlock_Preview_WithTimezone() {
     JtxBoardTheme {
         VerticalDateBlock(System.currentTimeMillis(), "Europe/Vienna")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DateBlock_Preview_WithTimezone2() {
+    JtxBoardTheme {
+        VerticalDateBlock(System.currentTimeMillis(), "Africa/Addis_Ababa")
     }
 }
