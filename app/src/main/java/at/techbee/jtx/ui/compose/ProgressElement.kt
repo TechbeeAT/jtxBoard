@@ -34,14 +34,15 @@ fun ProgressElement(
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
 
+    //use progress in state!
+    var sliderPosition by remember { mutableStateOf(progress?.toFloat() ?: 0f) }
+
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
 
-        //use progress in state!
-        var sliderPosition by mutableStateOf(progress?.toFloat() ?: 0f)
 
         Text(
             stringResource(id = R.string.progress),

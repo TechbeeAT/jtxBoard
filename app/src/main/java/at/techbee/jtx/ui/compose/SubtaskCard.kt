@@ -91,7 +91,7 @@ fun SubtaskCard(
                 onValueChangeFinished = { onProgressChanged(subtask.id, sliderPosition.toInt(), subtask.isLinkedRecurringInstance) },
                 modifier = Modifier.width(100.dp),
                 enabled = !subtask.isReadOnly
-                )
+            )
             Text(
                 String.format("%.0f%%", sliderPosition),
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
