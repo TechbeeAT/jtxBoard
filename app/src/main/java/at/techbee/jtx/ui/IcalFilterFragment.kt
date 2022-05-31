@@ -196,9 +196,6 @@ class IcalFilterFragment : BottomSheetDialogFragment() {
         if(icalListViewModel.searchModule == Module.TODO.name)
             binding.statusJournalFilterChipgroup.visibility = View.GONE
 
-        binding.filterFabApplyfilter.setOnClickListener {
-            dismiss()
-        }
 
         binding.filterFabResetfilter.setOnClickListener {
             resetFilter()

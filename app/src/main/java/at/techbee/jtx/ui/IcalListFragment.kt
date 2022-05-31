@@ -204,7 +204,6 @@ class IcalListFragment : Fragment() {
 
             when (menuitem.itemId) {
                 R.id.menu_list_bottom_filter -> openFilterBottomSheet()
-                R.id.menu_list_bottom_clearfilter -> resetFilter()
                 R.id.menu_list_bottom_quick_journal -> showQuickAddDialog()
                 R.id.menu_list_bottom_quick_note -> showQuickAddDialog()
                 R.id.menu_list_bottom_quick_todo -> showQuickAddDialog()
@@ -292,9 +291,12 @@ class IcalListFragment : Fragment() {
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_no_dates_set).isVisible = icalListViewModel.searchModule == Module.TODO.name
 
         // don't show the option to clear the filter if no filter was set
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.isVisible = !isFilterActive()
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_clearfilter)?.isVisible = isFilterActive()
         optionsMenu?.findItem(R.id.menu_list_clearfilter)?.isVisible = isFilterActive()
+        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.icon =
+            if(isFilterActive())
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_filter_delete)
+            else
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_filter)
 
         if(!SyncUtil.isDAVx5CompatibleWithJTX(application))
             optionsMenu?.findItem(R.id.menu_list_syncnow)?.isVisible = false
