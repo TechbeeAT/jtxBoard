@@ -33,7 +33,6 @@ fun SubtaskCard(
     subtask: ICal4List,
     navController: NavController,
     showProgress: Boolean = true,
-    modifier: Modifier = Modifier,
     onEditRequest: (Long) -> Unit
 ) {
 
@@ -81,16 +80,18 @@ fun SubtaskCard(
                 steps = 100,
                 onValueChange = { sliderPosition = it },
                 modifier = Modifier.width(100.dp),
-
+                enabled = !subtask.isReadOnly
                 )
             Text(
                 String.format("%.0f%%", sliderPosition),
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
             )
         }
-        Checkbox(checked = sliderPosition==100f, onCheckedChange = {
-            sliderPosition = if(it) 100f else 0f
-        })
+        Checkbox(
+            checked = sliderPosition==100f,
+            onCheckedChange = {   sliderPosition = if(it) 100f else 0f },
+            enabled = !subtask.isReadOnly
+        )
     }
     }
 
@@ -104,6 +105,23 @@ fun SubtaskCardPreview() {
             this.component = Component.VTODO.name
             this.module = Module.TODO.name
             this.percent = 34
+            this.isReadOnly = false
+        },
+            rememberNavController(),
+            onEditRequest = {  }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SubtaskCardPreview_readonly() {
+    JtxBoardTheme {
+        SubtaskCard(ICal4List.getSample().apply {
+            this.component = Component.VTODO.name
+            this.module = Module.TODO.name
+            this.percent = 34
+            this.isReadOnly = true
         },
             rememberNavController(),
             onEditRequest = {  }

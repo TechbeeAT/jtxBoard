@@ -39,6 +39,8 @@ import java.time.Instant
 import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
+/*
+
 class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
     RecyclerView.Adapter<IcalListAdapterTodo.TodoItemHolder>() {
 
@@ -54,83 +56,8 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
         .usePlugin(StrikethroughPlugin.create())
         .build()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoItemHolder {
-
-        this.parent = parent
-        //load settings
-        settings = PreferenceManager.getDefaultSharedPreferences(context)
-        settingShowSubtasks = settings.getBoolean(SettingsFragment.SHOW_SUBTASKS_IN_LIST, true)
-        settingShowAttachments = settings.getBoolean(SettingsFragment.SHOW_ATTACHMENTS_IN_LIST, true)
-        settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false)
-        settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true)
-
-        val itemHolder = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_ical_list_item_todo, parent, false)
-        return TodoItemHolder(itemHolder)
-
-    }
-
-    override fun getItemCount() = iCal4List.value?.size ?: 0
-
     override fun onBindViewHolder(holder: TodoItemHolder, position: Int) {
 
-        if (iCal4List.value?.size == 0)    // only continue if there are items in the list
-            return
-
-        val progressVisibility = if (settingShowProgressMaintasks) View.VISIBLE else View.GONE
-        val progressTopVisibility = if (!settingShowProgressMaintasks) View.VISIBLE else View.GONE
-        val subtasksVisibility = if (settingShowSubtasks)  View.VISIBLE else View.GONE
-
-        holder.progressLabel.visibility = progressVisibility
-        holder.progressSlider.visibility = progressVisibility
-        holder.progressPercent.visibility = progressVisibility
-        holder.progressCheckbox.visibility = progressVisibility
-        holder.progressCheckboxTop.visibility = progressTopVisibility
-        holder.subtasksLinearLayout.visibility = subtasksVisibility
-
-
-        val iCal4ListItem = iCal4List.value?.get(position)
-
-        if (iCal4ListItem != null) {
-
-            holder.summary.text = iCal4ListItem.property.summary
-            if (iCal4ListItem.property.description.isNullOrEmpty())
-                holder.description.visibility = View.GONE
-            else {
-                iCal4ListItem.property.description?.let {
-                    val descMarkwon = markwon.toMarkdown(it)
-                    holder.description.text = descMarkwon
-                }
-                holder.description.visibility = View.VISIBLE
-            }
-
-
-
-            // strikethrough the summary if the item is cancelled
-            if(iCal4ListItem.property.status == StatusTodo.CANCELLED.name) {
-                holder.summary.paintFlags = holder.summary.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            } else {
-                holder.summary.paintFlags = holder.summary.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-            }
-
-
-            if (iCal4ListItem.property.categories.isNullOrEmpty()) {
-                holder.categories.visibility = View.GONE
-            } else {
-                holder.categories.text = iCal4ListItem.property.categories
-                holder.categories.visibility = View.VISIBLE
-            }
-
-            if (iCal4ListItem.property.collectionDisplayName.isNullOrEmpty()) {
-                holder.collection.visibility = View.GONE
-            } else {
-                holder.collection.text = iCal4ListItem.property.collectionDisplayName
-                holder.collection.visibility = View.VISIBLE
-            }
-
-            // applying the color
-            ICalObject.applyColorOrHide(holder.colorBarCollection, iCal4ListItem.property.colorCollection)
-            ICalObject.applyColorOrHide(holder.colorBarItem, iCal4ListItem.property.colorItem)
 
             /* START handle subtasks */
             holder.progressSlider.value = iCal4ListItem.property.percent?.toFloat() ?: 0F
@@ -217,83 +144,13 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 }
             }
 
-            /*
-            if (iCal4ListItem.property.percent == 100)
-                holder.progressCheckbox.isActivated = true
 
-             */
-            /* END handle subtasks */
 
 
             val priorityArray = context.resources.getStringArray(R.array.priority)
             if (iCal4ListItem.property.priority != null && iCal4ListItem.property.priority in 0..9)
                 holder.priority.text = priorityArray[iCal4ListItem.property.priority!!]
 
-            // field numAttendees
-            if(iCal4ListItem.property.numAttendees == 0) {
-                holder.numAttendeesIcon.visibility = View.GONE
-                holder.numAttendeesText.visibility = View.GONE
-            } else {
-                holder.numAttendeesIcon.visibility = View.VISIBLE
-                holder.numAttendeesText.visibility = View.VISIBLE
-                holder.numAttendeesText.text = iCal4ListItem.property.numAttendees.toString()
-            }
-
-            //field numAttachments
-            if(iCal4ListItem.property.numAttachments == 0) {
-                holder.numAttachmentsIcon.visibility = View.GONE
-                holder.numAttachmentsText.visibility = View.GONE
-            } else {
-                holder.numAttachmentsIcon.visibility = View.VISIBLE
-                holder.numAttachmentsText.visibility = View.VISIBLE
-                holder.numAttachmentsText.text = iCal4ListItem.property.numAttachments.toString()
-            }
-
-            //field numComments
-            if(iCal4ListItem.property.numComments == 0) {
-                holder.numCommentsIcon.visibility = View.GONE
-                holder.numCommentsText.visibility = View.GONE
-            } else {
-                holder.numCommentsIcon.visibility = View.VISIBLE
-                holder.numCommentsText.visibility = View.VISIBLE
-                holder.numCommentsText.text = iCal4ListItem.property.numComments.toString()
-            }
-
-            //recur icon and text
-            if((iCal4ListItem.property.isRecurringOriginal) || (iCal4ListItem.property.isRecurringInstance && iCal4ListItem.property.isLinkedRecurringInstance)) {
-                holder.recurIcon.setImageResource(R.drawable.ic_recurring)
-                holder.recurIcon.visibility = View.VISIBLE
-            } else if (iCal4ListItem.property.isRecurringInstance && !iCal4ListItem.property.isLinkedRecurringInstance) {
-                holder.recurIcon.setImageResource(R.drawable.ic_recur_exception)
-                holder.recurIcon.visibility = View.VISIBLE
-            }
-             else
-                holder.recurIcon.visibility = View.GONE
-
-
-            // show upload pending symbol if applicable
-            if(iCal4ListItem.property.uploadPending)
-                holder.uploadPendingIcon.visibility = View.VISIBLE
-            else
-                holder.uploadPendingIcon.visibility = View.GONE
-
-
-                    // turn to item view when the card is clicked
-            holder.listItemCardView.setOnClickListener {
-                it.findNavController().navigate(
-                    IcalListFragmentDirections.actionIcalListFragmentToIcalViewFragment()
-                        .setItem2show(iCal4ListItem.property.id)
-                )
-            }
-
-            // on long click we notify the model to get the entity, so that the observer can forward the user to the edit fragment
-            if(!iCal4ListItem.property.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true) {
-                holder.listItemCardView.setOnLongClickListener {
-                    // the observer in the fragment will make sure that the edit fragment is opened for the loaded entity
-                    model.postDirectEditEntity(iCal4ListItem.property.id)
-                    true
-                }
-            }
 
 
             var resetProgress = iCal4ListItem.property.percent ?: 0
@@ -390,65 +247,7 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
             }
         }
 
-        // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only), show only on every 5th position
-        if(position%3 == 2 && AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)
-            AdManager.getInstance()?.addAdViewToContainerViewFragment(holder.adContainer, context, AdManager.getInstance()?.unitIdBannerListTodo)
-        else
-            holder.adContainer.visibility = View.GONE
 
-
-
-
-        //scrolling is much smoother when isRecyclable is set to false
-        holder.setIsRecyclable(false)
-    }
-
-    class TodoItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        //val listItemBinding = FragmentIcalListItemBinding.inflate(LayoutInflater.from(itemView.context), itemView as ViewGroup, false)
-        var listItemCardView: MaterialCardView = itemView.findViewById(R.id.list_item_todo_card_view)
-
-        var summary: TextView = itemView.findViewById(R.id.list_item_todo_summary)
-        var description: TextView = itemView.findViewById(R.id.list_item_todo_description)
-        var progressCheckboxTop: CheckBox = itemView.findViewById(R.id.list_item_todo_progress_checkbox_top)
-
-
-        var categories: TextView = itemView.findViewById(R.id.list_item_todo_categories)
-        var collection: TextView = itemView.findViewById(R.id.list_item_todo_collection)
-
-        var priority: TextView = itemView.findViewById(R.id.list_item_todo_priority)
-        var priorityIcon: ImageView = itemView.findViewById(R.id.list_item_todo_priority_icon)
-
-        var progressLabel: TextView = itemView.findViewById(R.id.list_item_todo_progress_label)
-        var progressSlider: Slider = itemView.findViewById(R.id.list_item_todo_progress_slider)
-        var progressPercent: TextView = itemView.findViewById(R.id.list_item_todo_progress_percent)
-        var progressCheckbox: CheckBox = itemView.findViewById(R.id.list_item_todo_progress_checkbox)
-
-        var due: TextView = itemView.findViewById(R.id.list_item_todo_due)
-        var start: TextView = itemView.findViewById(R.id.list_item_todo_start)
-
-
-        var colorBarCollection: ImageView = itemView.findViewById(R.id.list_item_todo_colorbar_collection)
-        var colorBarItem: ImageView = itemView.findViewById(R.id.list_item_todo_colorbar_item)
-
-
-        var expandSubtasks: ImageView = itemView.findViewById(R.id.list_item_todo_expand)
-        var subtasksLinearLayout: LinearLayout =
-            itemView.findViewById(R.id.list_item_todo_subtasks_linearlayout)
-
-        var attachmentsLinearLayout: LinearLayout = itemView.findViewById(R.id.list_item_todo_attachments)
-
-        var numAttendeesIcon: ImageView = itemView.findViewById(R.id.list_item_todo_num_attendees_icon)
-        var numAttachmentsIcon: ImageView = itemView.findViewById(R.id.list_item_todo_num_attachments_icon)
-        var numCommentsIcon: ImageView = itemView.findViewById(R.id.list_item_todo_num_comments_icon)
-        var numAttendeesText: TextView = itemView.findViewById(R.id.list_item_todo_num_attendees_text)
-        var numAttachmentsText: TextView = itemView.findViewById(R.id.list_item_todo_num_attachments_text)
-        var numCommentsText: TextView = itemView.findViewById(R.id.list_item_todo_num_comments_text)
-
-        var recurIcon: ImageView = itemView.findViewById(R.id.list_item_todo_recurring_icon)
-        var uploadPendingIcon: ImageView = itemView.findViewById(R.id.list_item_todo_upload_pending_icon)
-
-        var adContainer: LinearLayout = itemView.findViewById(R.id.list_item_todo_adContainer)
-    }
 }
 
-
+ */

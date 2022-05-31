@@ -24,7 +24,7 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProgressElement(progress: Int?, modifier: Modifier = Modifier) {
+fun ProgressElement(progress: Int?, modifier: Modifier = Modifier, isReadOnly: Boolean) {
 
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -44,15 +44,20 @@ fun ProgressElement(progress: Int?, modifier: Modifier = Modifier) {
             valueRange = 0F..100F,
             steps = 100,
             onValueChange = { sliderPosition = it },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            enabled = !isReadOnly
         )
         Text(
             String.format("%.0f%%", sliderPosition),
             modifier = Modifier.padding(start = 8.dp, end = 8.dp)
         )
-        Checkbox(checked = sliderPosition==100f, onCheckedChange = {
+        Checkbox(
+            checked = sliderPosition==100f,
+            onCheckedChange = {
             sliderPosition = if(it) 100f else 0f
-        })
+            },
+            enabled = !isReadOnly
+        )
     }
 }
 
@@ -60,6 +65,14 @@ fun ProgressElement(progress: Int?, modifier: Modifier = Modifier) {
 @Composable
 fun ProgressElementPreview() {
     JtxBoardTheme {
-        ProgressElement(57)
+        ProgressElement(57, isReadOnly = false)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProgressElementPreview_readonly() {
+    JtxBoardTheme {
+        ProgressElement(57, isReadOnly = true)
     }
 }

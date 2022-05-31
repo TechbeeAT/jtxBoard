@@ -20,6 +20,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -38,6 +39,8 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
+import io.noties.markwon.Markwon
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -54,6 +57,9 @@ fun ICalObjectListCard(
 ) {
 
     val iCalObject = iCalObjectWithRelatedto.property
+    var markwon = Markwon.builder(LocalContext.current)
+        .usePlugin(StrikethroughPlugin.create())
+        .build()
 
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -214,7 +220,7 @@ fun ICalObjectListCard(
                     }
 
                 if(iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
-                    ProgressElement(iCalObject.percent)
+                    ProgressElement(iCalObject.percent, isReadOnly = iCalObject.isReadOnly)
 
 
                 if(settingShowSubtasks && (subtasks.size) > 0) {
