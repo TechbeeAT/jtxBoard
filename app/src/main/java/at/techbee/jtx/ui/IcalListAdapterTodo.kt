@@ -41,104 +41,12 @@ import java.util.concurrent.TimeUnit
 
 /*
 
-class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
-    RecyclerView.Adapter<IcalListAdapterTodo.TodoItemHolder>() {
-
-    lateinit var parent: ViewGroup
-    private lateinit var settings: SharedPreferences
-    private var settingShowSubtasks = true
-    private var settingShowAttachments = true
-    private var settingShowProgressSubtasks = true
-    private var settingShowProgressMaintasks = false
-    private var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = model.iCal4ListTodos
-    private var allSubtasks: LiveData<List<ICal4List>> = model.allSubtasks
-    private var markwon = Markwon.builder(context)
-        .usePlugin(StrikethroughPlugin.create())
-        .build()
-
-    override fun onBindViewHolder(holder: TodoItemHolder, position: Int) {
 
 
             if (model.searchModule == Module.TODO.name && settingShowSubtasks && settingShowProgressMaintasks && iCal4ListItem.property.numSubtasks > 0)
                 holder.expandSubtasks.visibility = View.VISIBLE
             else
                 holder.expandSubtasks.visibility = View.INVISIBLE
-
-
-            //holder.subtasksLinearLayout.visibility = View.VISIBLE
-            holder.progressPercent.text = String.format("%.0f%%", iCal4ListItem.property.percent?.toFloat() ?: 0F)
-
-            if (iCal4ListItem.property.priority in 1..9) {           // show priority only if it was set and != 0 (no priority)
-                holder.priorityIcon.visibility = View.VISIBLE
-                holder.priority.visibility = View.VISIBLE
-            } else {
-                holder.priorityIcon.visibility = View.GONE
-                holder.priority.visibility = View.GONE
-            }
-
-            if (iCal4ListItem.property.due == null)
-                holder.due.visibility = View.GONE
-            else {
-                holder.due.visibility = View.VISIBLE
-                val zonedDue = ZonedDateTime.ofInstant(
-                    Instant.ofEpochMilli(iCal4ListItem.property.due!!),
-                    DateTimeUtils.requireTzId(iCal4ListItem.property.dueTimezone)).toInstant().toEpochMilli()
-                val millisLeft = if(iCal4ListItem.property.dueTimezone == ICalObject.TZ_ALLDAY)
-                    zonedDue - DateTimeUtils.getTodayAsLong()
-                else
-                    zonedDue - System.currentTimeMillis()
-
-                val daysLeft =
-                    TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
-                val hoursLeft =
-                    TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
-
-                when {
-                    millisLeft < 0L -> holder.due.text =
-                        context.getString(R.string.list_due_overdue)
-                    millisLeft >= 0L && daysLeft == 0L && iCal4ListItem.property.dueTimezone == ICalObject.TZ_ALLDAY -> holder.due.text =
-                        context.getString(R.string.list_due_today)
-                    millisLeft >= 0L && daysLeft == 1L && iCal4ListItem.property.dueTimezone == ICalObject.TZ_ALLDAY -> holder.due.text =
-                        context.getString(R.string.list_due_tomorrow)
-                    millisLeft >= 0L && daysLeft <= 1L && iCal4ListItem.property.dueTimezone != ICalObject.TZ_ALLDAY -> holder.due.text =
-                        context.getString(R.string.list_due_inXhours, hoursLeft)
-                    millisLeft >= 0L && daysLeft >= 2L -> holder.due.text =
-                        context.getString(R.string.list_due_inXdays, daysLeft)
-                    else -> holder.due.visibility = View.GONE      //should not be possible
-                }
-            }
-
-            if (iCal4ListItem.property.dtstart == null)
-                holder.start.visibility = View.GONE
-            else {
-                holder.start.visibility = View.VISIBLE
-
-                val zonedStart = ZonedDateTime.ofInstant(
-                    Instant.ofEpochMilli(iCal4ListItem.property.dtstart!!),
-                    DateTimeUtils.requireTzId(iCal4ListItem.property.dtstartTimezone)).toInstant().toEpochMilli()
-                val millisLeft = if(iCal4ListItem.property.dtstartTimezone == ICalObject.TZ_ALLDAY)
-                    zonedStart - DateTimeUtils.getTodayAsLong()
-                else
-                    zonedStart - System.currentTimeMillis()
-
-                val daysLeft = TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
-                val hoursLeft = TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
-
-                when {
-                    millisLeft < 0L -> holder.start.text =
-                        context.getString(R.string.list_start_past)
-                    millisLeft >= 0L && daysLeft == 0L && iCal4ListItem.property.dtstartTimezone == ICalObject.TZ_ALLDAY -> holder.start.text =
-                        context.getString(R.string.list_start_today)
-                    millisLeft >= 0L && daysLeft == 1L && iCal4ListItem.property.dtstartTimezone == ICalObject.TZ_ALLDAY -> holder.start.text =
-                        context.getString(R.string.list_start_tomorrow)
-                    millisLeft >= 0L && daysLeft <= 1L && iCal4ListItem.property.dtstartTimezone != ICalObject.TZ_ALLDAY -> holder.start.text =
-                        context.getString(R.string.list_start_inXhours, hoursLeft)
-                    millisLeft >= 0L && daysLeft >= 2L -> holder.start.text =
-                        context.getString(R.string.list_start_inXdays, daysLeft)
-                    else -> holder.start.visibility = View.GONE      //should not be possible
-                }
-            }
-
 
 
 
@@ -156,18 +64,6 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                     holder.expandSubtasks.setImageResource(R.drawable.ic_expand)
                 }
             }
-
-
-            if(iCal4ListItem.property.isReadOnly) {
-                holder.progressCheckboxTop.isEnabled = false
-                holder.progressCheckbox.isEnabled = false
-                holder.progressSlider.isEnabled = false
-            } else {
-                holder.progressCheckboxTop.isEnabled = true
-                holder.progressCheckbox.isEnabled = true
-                holder.progressSlider.isEnabled = true
-            }
-        }
 
 
 }

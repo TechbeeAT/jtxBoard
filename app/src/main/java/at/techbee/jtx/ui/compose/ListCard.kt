@@ -98,18 +98,19 @@ fun ICalObjectListCard(
                 ) {
                     Row(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
                         Text(
-                            iCalObject.collectionDisplayName?:iCalObject.accountName?:"",
+                            iCalObject.collectionDisplayName ?: iCalObject.accountName ?: "",
                             style = Typography.titleSmall
                         )
                         Text(
-                            iCalObject.categories?:"", modifier = Modifier.padding(start = 8.dp),
+                            iCalObject.categories ?: "", modifier = Modifier.padding(start = 8.dp),
                             style = Typography.titleSmall,
                             fontStyle = FontStyle.Italic
                         )
                     }
                     Row(modifier = Modifier.padding(end = 8.dp, top = 8.dp)) {
                         if (iCalObject.isReadOnly)
-                            Icon(painter = painterResource(id = R.drawable.ic_readonly),
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_readonly),
                                 contentDescription = stringResource(id = R.string.readyonly)
                             )
                         if (iCalObject.uploadPending)
@@ -130,12 +131,35 @@ fun ICalObjectListCard(
                     }
                 }
 
+                if (iCalObject.module == Module.TODO.name && (iCalObject.dtstart != null || iCalObject.due != null)) {
+                    Row( modifier = Modifier
+                            .padding(start = 8.dp, end = 8.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        iCalObject.dtstart?.let {
+                            Text(
+                                iCalObject.getDtstartTextInfo(LocalContext.current)?:"",
+                                style = Typography.titleSmall,
+                                modifier = Modifier.padding(end = 16.dp)
+                            )
+                        }
+                        iCalObject.due?.let {
+                            Text(
+                                iCalObject.getDueTextInfo(LocalContext.current)?:"",
+                                style = Typography.titleSmall
+                            )
+                        }
+                    }
+                }
+
                 Row(
                     verticalAlignment = Alignment.Top,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
 
-                    if(iCalObject.module == Module.JOURNAL.name)
+                    if (iCalObject.module == Module.JOURNAL.name)
                         VerticalDateBlock(
                             iCalObject.dtstart ?: System.currentTimeMillis(),
                             iCalObject.dtstartTimezone
@@ -150,7 +174,8 @@ fun ICalObjectListCard(
 
                     ) {
 
-                        val summarySize = if(iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
+                        val summarySize =
+                            if (iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
 
                         iCalObject.summary?.let {
                             Text(
@@ -160,29 +185,36 @@ fun ICalObjectListCard(
                             )
                         }
                         iCalObject.description?.let {
-                            Text(text = it,
+                            Text(
+                                text = it,
                                 maxLines = 5,
-                                overflow = TextOverflow.Ellipsis)
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
                     }
 
-                    if(iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
+                    if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
                         Checkbox(
-                            checked = iCalObject.percent==100,
+                            checked = iCalObject.percent == 100,
                             enabled = !iCalObject.isReadOnly,
                             onCheckedChange = {
-                                onProgressChanged(iCalObject.id, if(it) 100 else 0, iCalObject.isLinkedRecurringInstance)
+                                onProgressChanged(
+                                    iCalObject.id,
+                                    if (it) 100 else 0,
+                                    iCalObject.isLinkedRecurringInstance
+                                )
                             })
                 }
 
-                if(settingShowAttachments && (iCalObjectWithRelatedto.attachment?.size ?: 0) > 0) {
+                if (settingShowAttachments && (iCalObjectWithRelatedto.attachment?.size ?: 0) > 0) {
                     LazyRow(
                         content = {
-                        items(iCalObjectWithRelatedto.attachment?: emptyList()) { attachment ->
-                            AttachmentCard(attachment)
-                        }
-                    },
-                        modifier = Modifier.padding(end = 8.dp))
+                            items(iCalObjectWithRelatedto.attachment ?: emptyList()) { attachment ->
+                                AttachmentCard(attachment)
+                            }
+                        },
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
                 }
 
 
@@ -204,30 +236,30 @@ fun ICalObjectListCard(
                     if (iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0 || iCalObject.numComments > 0)
                         Row(modifier = Modifier.padding(8.dp)) {
 
-                            if(iCalObject.numAttendees > 0)
+                            if (iCalObject.numAttendees > 0)
                                 IconWithText(
                                     icon = Icons.Outlined.Group,
                                     iconDesc = stringResource(R.string.attendees),
                                     text = iCalObject.numAttendees.toString(),
                                     modifier = Modifier.padding(end = 8.dp)
                                 )
-                            if(iCalObject.numAttachments > 0)
+                            if (iCalObject.numAttachments > 0)
                                 IconWithText(
                                     icon = Icons.Outlined.Attachment,
                                     iconDesc = stringResource(R.string.attachments),
                                     text = iCalObject.numAttachments.toString(),
                                     modifier = Modifier.padding(end = 8.dp)
                                 )
-                            if(iCalObject.numComments > 0)
+                            if (iCalObject.numComments > 0)
                                 IconWithText(
                                     icon = Icons.Outlined.Comment,
                                     iconDesc = stringResource(R.string.comments),
                                     text = iCalObject.numComments.toString()
                                 )
                         }
-                    }
+                }
 
-                if(iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
+                if (iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
                     ProgressElement(
                         iCalObjectId = iCalObject.id,
                         progress = iCalObject.percent,
@@ -237,7 +269,7 @@ fun ICalObjectListCard(
                     )
 
 
-                if(settingShowSubtasks && (subtasks.size) > 0) {
+                if (settingShowSubtasks && (subtasks.size) > 0) {
                     Column {
                         subtasks.forEach { subtask ->
                             SubtaskCard(
@@ -269,7 +301,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
                 this.percent = 34
             }),
             rememberNavController(),
-            onEditRequest = {  },
+            onEditRequest = { },
             onProgressChanged = { _, _, _ -> }
         )
     }
@@ -294,7 +326,7 @@ fun ICalObjectListCardPreview_NOTE() {
                 this.percent = 34
             }),
             rememberNavController(),
-            onEditRequest = {  },
+            onEditRequest = { },
             onProgressChanged = { _, _, _ -> }
         )
     }
@@ -311,6 +343,8 @@ fun ICalObjectListCardPreview_TODO() {
             property.percent = 89
             property.status = StatusTodo.`IN-PROCESS`.name
             property.classification = Classification.CONFIDENTIAL.name
+            property.dtstart = System.currentTimeMillis()
+            property.due = System.currentTimeMillis()
         }
         ICalObjectListCard(
             icalobject,
@@ -320,7 +354,7 @@ fun ICalObjectListCardPreview_TODO() {
                 this.percent = 34
             }),
             rememberNavController(),
-            onEditRequest = {  },
+            onEditRequest = { },
             settingShowProgressMaintasks = true,
             onProgressChanged = { _, _, _ -> }
         )
@@ -342,6 +376,8 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             property.isRecurringInstance = false
             property.isRecurringOriginal = false
             property.isReadOnly = true
+            property.dtstart = null
+            property.due = null
         }
         ICalObjectListCard(
             icalobject,
@@ -351,7 +387,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
                 this.percent = 34
             }),
             rememberNavController(),
-            onEditRequest = {  },
+            onEditRequest = { },
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> }
         )
@@ -383,7 +419,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
                 this.percent = 34
             }),
             rememberNavController(),
-            onEditRequest = {  },
+            onEditRequest = { },
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> }
         )
@@ -400,9 +436,15 @@ fun StatusClassificationPriorityBlock(
 ) {
 
     val statusText: String? = when {
-        component == Component.VTODO.name && status == StatusTodo.CANCELLED.name -> stringResource(id = R.string.todo_status_cancelled)
-        component == Component.VJOURNAL.name && status == StatusJournal.DRAFT.name -> stringResource(id = R.string.journal_status_draft)
-        component == Component.VJOURNAL.name && status == StatusJournal.CANCELLED.name -> stringResource(id = R.string.journal_status_cancelled)
+        component == Component.VTODO.name && status == StatusTodo.CANCELLED.name -> stringResource(
+            id = R.string.todo_status_cancelled
+        )
+        component == Component.VJOURNAL.name && status == StatusJournal.DRAFT.name -> stringResource(
+            id = R.string.journal_status_draft
+        )
+        component == Component.VJOURNAL.name && status == StatusJournal.CANCELLED.name -> stringResource(
+            id = R.string.journal_status_cancelled
+        )
         else -> null
     }
     val classificationText: String? = when (classification) {

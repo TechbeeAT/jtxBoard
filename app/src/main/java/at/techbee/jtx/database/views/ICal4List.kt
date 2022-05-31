@@ -8,12 +8,18 @@
 
 package at.techbee.jtx.database.views
 
+import android.content.Context
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
+import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.util.DateTimeUtils
+import java.time.Instant
+import java.time.ZonedDateTime
+import java.util.concurrent.TimeUnit
 
 const val VIEW_NAME_ICAL4LIST = "ical4list"
 
@@ -184,5 +190,56 @@ data class ICal4List(
                 numResources = 8,
                 isReadOnly = true
             )
+    }
+
+
+
+
+    fun getDtstartTextInfo(context: Context): String? {
+
+        if(dtstart == null)
+            return null
+
+        val zonedStart = ZonedDateTime.ofInstant(
+            Instant.ofEpochMilli(dtstart!!),
+            DateTimeUtils.requireTzId(dtstartTimezone)
+        ).toInstant().toEpochMilli()
+        val millisLeft = if(dtstartTimezone == ICalObject.TZ_ALLDAY) zonedStart - DateTimeUtils.getTodayAsLong() else zonedStart - System.currentTimeMillis()
+
+        val daysLeft = TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
+        val hoursLeft = TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
+
+        return when {
+            millisLeft < 0L -> context.getString(R.string.list_start_past)
+            millisLeft >= 0L && daysLeft == 0L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(
+                R.string.list_start_today)
+            millisLeft >= 0L && daysLeft == 1L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(
+                R.string.list_start_tomorrow)
+            millisLeft >= 0L && daysLeft <= 1L && dtstartTimezone != ICalObject.TZ_ALLDAY -> context.getString(
+                R.string.list_start_inXhours, hoursLeft)
+            millisLeft >= 0L && daysLeft >= 2L -> context.getString(R.string.list_start_inXdays, daysLeft)
+            else -> null      //should not be possible
+        }
+    }
+
+    fun getDueTextInfo(context: Context): String? {
+
+        if(due == null)
+            return null
+
+        val zonedDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due!!), DateTimeUtils.requireTzId(dueTimezone)).toInstant().toEpochMilli()
+        val millisLeft = if(dueTimezone == ICalObject.TZ_ALLDAY) zonedDue - DateTimeUtils.getTodayAsLong() else zonedDue - System.currentTimeMillis()
+
+        val daysLeft = TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
+        val hoursLeft = TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
+
+        return when {
+            millisLeft < 0L -> context.getString(R.string.list_due_overdue)
+            millisLeft >= 0L && daysLeft == 0L && dueTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_today)
+            millisLeft >= 0L && daysLeft == 1L && dueTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_tomorrow)
+            millisLeft >= 0L && daysLeft <= 1L && dueTimezone != ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_inXhours, hoursLeft)
+            millisLeft >= 0L && daysLeft >= 2L -> context.getString(R.string.list_due_inXdays, daysLeft)
+            else -> null      //should not be possible
+        }
     }
 }
