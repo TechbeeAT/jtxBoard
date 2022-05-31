@@ -59,11 +59,6 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
     override fun onBindViewHolder(holder: TodoItemHolder, position: Int) {
 
 
-            /* START handle subtasks */
-            holder.progressSlider.value = iCal4ListItem.property.percent?.toFloat() ?: 0F
-            holder.progressCheckbox.isChecked = iCal4ListItem.property.percent == 100
-            holder.progressCheckboxTop.isChecked = iCal4ListItem.property.percent == 100
-
             if (model.searchModule == Module.TODO.name && settingShowSubtasks && settingShowProgressMaintasks && iCal4ListItem.property.numSubtasks > 0)
                 holder.expandSubtasks.visibility = View.VISIBLE
             else
@@ -146,34 +141,6 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
 
 
 
-
-            val priorityArray = context.resources.getStringArray(R.array.priority)
-            if (iCal4ListItem.property.priority != null && iCal4ListItem.property.priority in 0..9)
-                holder.priority.text = priorityArray[iCal4ListItem.property.priority!!]
-
-
-
-            var resetProgress = iCal4ListItem.property.percent ?: 0
-
-            // take care to update the progress in the DB when the progress is changed
-            holder.progressSlider.addOnSliderTouchListener(object :
-                Slider.OnSliderTouchListener {
-
-                override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
-                }
-
-                override fun onStopTrackingTouch(slider: Slider) {
-
-                    model.updateProgress(
-                        iCal4ListItem.property.id,
-                        holder.progressSlider.value.toInt(),
-                        iCal4ListItem.property.isLinkedRecurringInstance
-                    )
-
-                    if (holder.progressSlider.value.toInt() != 100)
-                        resetProgress = holder.progressSlider.value.toInt()
-                }
-            })
 
 
             holder.progressCheckbox.setOnCheckedChangeListener { _, checked ->

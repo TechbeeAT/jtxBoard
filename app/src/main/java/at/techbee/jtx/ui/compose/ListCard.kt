@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -166,7 +167,11 @@ fun ICalObjectListCard(
                     }
 
                     if(iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
-                        Checkbox(checked = iCalObject.percent==100, onCheckedChange = {  })
+                        Checkbox(
+                            checked = iCalObject.percent==100,
+                            onCheckedChange = {
+                                onProgressChanged(iCalObject.id, if(it) 100 else 0, iCalObject.isLinkedRecurringInstance)
+                            })
                 }
 
                 if(settingShowAttachments && (iCalObjectWithRelatedto.attachment?.size ?: 0) > 0) {
@@ -187,10 +192,11 @@ fun ICalObjectListCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
-                    StatusClassificationBlock(
+                    StatusClassificationPriorityBlock(
                         component = iCalObject.component,
                         status = iCalObject.status,
                         classification = iCalObject.classification,
+                        priority = iCalObject.priority,
                         modifier = Modifier.padding(8.dp)
                     )
 
@@ -384,80 +390,94 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
 }
 
 @Composable
-fun StatusClassificationBlock(
+fun StatusClassificationPriorityBlock(
     component: String,
     status: String?,
     classification: String?,
+    priority: Int?,
     modifier: Modifier = Modifier
 ) {
 
     val statusText: String? = when {
-        //component == Component.VTODO.name && status == StatusTodo.`NEEDS-ACTION`.name -> stringResource(id = R.string.todo_status_needsaction)
-        //component == Component.VTODO.name && status == StatusTodo.`IN-PROCESS`.name -> stringResource(id = R.string.todo_status_inprocess)
-        component == Component.VTODO.name && status == StatusTodo.CANCELLED.name -> stringResource(
-            id = R.string.todo_status_cancelled
-        )
-        //component == Component.VTODO.name && status == StatusTodo.COMPLETED.name -> stringResource(id = R.string.todo_status_completed)
-
-        component == Component.VJOURNAL.name && status == StatusJournal.DRAFT.name -> stringResource(
-            id = R.string.journal_status_draft
-        )
-        //component == Component.VJOURNAL.name && status == StatusJournal.FINAL.name -> stringResource(id = R.string.journal_status_final)
-        component == Component.VJOURNAL.name && status == StatusJournal.CANCELLED.name -> stringResource(
-            id = R.string.journal_status_cancelled
-        )
+        component == Component.VTODO.name && status == StatusTodo.CANCELLED.name -> stringResource(id = R.string.todo_status_cancelled)
+        component == Component.VJOURNAL.name && status == StatusJournal.DRAFT.name -> stringResource(id = R.string.journal_status_draft)
+        component == Component.VJOURNAL.name && status == StatusJournal.CANCELLED.name -> stringResource(id = R.string.journal_status_cancelled)
         else -> null
     }
     val classificationText: String? = when (classification) {
         Classification.PRIVATE.name -> stringResource(id = R.string.classification_private)
         Classification.CONFIDENTIAL.name -> stringResource(id = R.string.classification_confidential)
-        //Classification.PUBLIC.name -> stringResource(id = R.string.classification_public)
         else -> null
     }
+
+    val priorityArray = stringArrayResource(id = R.array.priority)
+    val priorityText = if (priority in 0..9) priorityArray[priority!!] else null
 
     Row(modifier = modifier) {
 
         statusText?.let {
-            if(it != StatusJournal.FINAL.name && it != StatusTodo.`NEEDS-ACTION`.name && it != StatusTodo.`IN-PROCESS`.name && it != StatusTodo.COMPLETED.name)
-                IconWithText(
-                    icon = Icons.Outlined.PublishedWithChanges,
-                    iconDesc = stringResource(R.string.status),
-                    text = it,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
+            IconWithText(
+                icon = Icons.Outlined.PublishedWithChanges,
+                iconDesc = stringResource(R.string.status),
+                text = it,
+                modifier = Modifier.padding(end = 8.dp)
+            )
         }
         classificationText?.let {
-            if(it != Classification.PUBLIC.name)
-                IconWithText(
-                    icon = Icons.Outlined.AdminPanelSettings,
-                    iconDesc = stringResource(R.string.classification),
-                    text = it,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
+            IconWithText(
+                icon = Icons.Outlined.AdminPanelSettings,
+                iconDesc = stringResource(R.string.classification),
+                text = it,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+        }
+        priorityText?.let {
+            IconWithText(
+                icon = Icons.Outlined.WorkOutline,
+                iconDesc = stringResource(R.string.priority),
+                text = it,
+                modifier = Modifier.padding(end = 8.dp)
+            )
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun StatusClassificationBlock_Preview_nothingDisplayed() {
+fun StatusClassificationPriorityBlock_Preview_nothingDisplayed() {
     JtxBoardTheme {
-        StatusClassificationBlock(
+        StatusClassificationPriorityBlock(
             component = Component.VJOURNAL.name,
             status = StatusJournal.FINAL.name,
-            classification = Classification.PUBLIC.name
+            classification = Classification.PUBLIC.name,
+            priority = null
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun StatusClassificationBlock_Preview_bothDisplayed() {
+fun StatusClassificationPriorityBlock_Preview_bothDisplayed() {
     JtxBoardTheme {
-        StatusClassificationBlock(
+        StatusClassificationPriorityBlock(
             component = Component.VJOURNAL.name,
             status = StatusJournal.DRAFT.name,
-            classification = Classification.CONFIDENTIAL.name
+            classification = Classification.CONFIDENTIAL.name,
+            priority = null
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun StatusClassificationPriorityBlock_Preview_w_prio() {
+    JtxBoardTheme {
+        StatusClassificationPriorityBlock(
+            component = Component.VJOURNAL.name,
+            status = StatusJournal.DRAFT.name,
+            classification = Classification.CONFIDENTIAL.name,
+            priority = 2
         )
     }
 }
