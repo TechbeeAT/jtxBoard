@@ -303,16 +303,13 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
                 || collection.accountType == ICalCollection.TEST_ACCOUNT_TYPE )
                 return@forEach
 
-            val found = allDavx5Accounts.find { account ->
-                collection.accountName == account.name && collection.accountType == account.type
-            }
+            if(allDavx5Accounts.any { account -> collection.accountName == account.name && collection.accountType == account.type })
+                return@forEach
 
             // if the collection cannot be found in the list of accounts, then it was deleted, delete it also in jtx
-            if (found == null) {
-                Log.d("checkForDeletedAccounts", "Account ${collection.accountName} / ${collection.accountType} not found, deleting...")
-                viewModelScope.launch(Dispatchers.IO) {
-                    database.deleteICalCollectionbyId(collection.collectionId)
-                }
+            Log.d("checkForDeletedAccounts", "Account ${collection.accountName} / ${collection.accountType} not found, deleting...")
+            viewModelScope.launch(Dispatchers.IO) {
+                database.deleteICalCollectionbyId(collection.collectionId)
             }
         }
     }
