@@ -142,39 +142,6 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
 
 
 
-
-            holder.progressCheckbox.setOnCheckedChangeListener { _, checked ->
-                if (checked)
-                    holder.progressSlider.value = 100F
-                else
-                    holder.progressSlider.value = resetProgress.toFloat()
-
-                model.updateProgress(
-                    iCal4ListItem.property.id,
-                    holder.progressSlider.value.toInt(),
-                    iCal4ListItem.property.isLinkedRecurringInstance
-                )
-            }
-
-            holder.progressCheckboxTop.setOnCheckedChangeListener { _, checked ->
-                if (checked)
-                    holder.progressSlider.value = 100F
-                else
-                    holder.progressSlider.value = 0F
-
-                model.updateProgress(
-                    iCal4ListItem.property.id,
-                    holder.progressSlider.value.toInt(),
-                    iCal4ListItem.property.isLinkedRecurringInstance
-                )
-            }
-
-            val itemSubtasks = allSubtasks.value?.filter { sub -> iCal4ListItem.relatedto?.find { rel -> rel.linkedICalObjectId == sub.id } != null } ?: emptyList()
-            IcalListAdapterHelper.addSubtasksView(model, itemSubtasks.distinct(), holder.subtasksLinearLayout, context, parent)
-
-            IcalListAdapterHelper.addAttachmentView(iCal4ListItem.attachment, holder.attachmentsLinearLayout, context, parent)
-
-
             var toggleSubtasksExpanded = true
 
             holder.expandSubtasks.setOnClickListener {
@@ -190,18 +157,6 @@ class IcalListAdapterTodo(var context: Context, var model: IcalListViewModel) :
                 }
             }
 
-            holder.progressLabel.setOnClickListener {
-
-                if (!toggleSubtasksExpanded) {
-                    IcalListAdapterHelper.addSubtasksView(model, itemSubtasks.distinct(), holder.subtasksLinearLayout, context, parent)
-                    toggleSubtasksExpanded = true
-                    holder.expandSubtasks.setImageResource(R.drawable.ic_collapse)
-                } else {
-                    holder.subtasksLinearLayout.removeAllViews()
-                    toggleSubtasksExpanded = false
-                    holder.expandSubtasks.setImageResource(R.drawable.ic_expand)
-                }
-            }
 
             if(iCal4ListItem.property.isReadOnly) {
                 holder.progressCheckboxTop.isEnabled = false

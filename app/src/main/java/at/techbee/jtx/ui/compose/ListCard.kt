@@ -169,6 +169,7 @@ fun ICalObjectListCard(
                     if(iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
                         Checkbox(
                             checked = iCalObject.percent==100,
+                            enabled = !iCalObject.isReadOnly,
                             onCheckedChange = {
                                 onProgressChanged(iCalObject.id, if(it) 100 else 0, iCalObject.isLinkedRecurringInstance)
                             })
