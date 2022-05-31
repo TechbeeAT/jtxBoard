@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
@@ -30,15 +31,16 @@ fun ColoredEdge(colorItem: Int?, colorCollection: Int?) {
             Icon(
                 painter = painterResource(R.drawable.ic_card_colored_edge),
                 stringResource(R.string.color),
-                modifier = Modifier.size(60.dp),
-                tint = Color(it)
+                modifier = Modifier.size(60.dp).alpha(0.5f),
+                tint = Color(it),
+
             )
         }
         colorItem?.let {
             Icon(
                 painter = painterResource(R.drawable.ic_card_colored_edge),
                 stringResource(R.string.color),
-                modifier = Modifier.size(30.dp),
+                modifier = Modifier.size(30.dp).alpha(0.5f),
                 tint = Color(it)
             )
         }
