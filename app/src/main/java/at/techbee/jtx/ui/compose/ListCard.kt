@@ -106,6 +106,7 @@ fun ICalObjectListCard(
                             )
                         if (iCalObject.uploadPending)
                             Icon(Icons.Outlined.CloudSync, stringResource(R.string.upload_pending))
+
                         if (iCalObject.isRecurringOriginal || (iCalObject.isRecurringInstance && iCalObject.isLinkedRecurringInstance))
                             Icon(
                                 Icons.Default.EventRepeat,
@@ -315,6 +316,37 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             property.classification = Classification.CONFIDENTIAL.name
             property.uploadPending = false
             property.isRecurringInstance = false
+            property.isRecurringOriginal = false
+            property.isReadOnly = true
+        }
+        ICalObjectListCard(
+            icalobject,
+            listOf(ICal4List.getSample().apply {
+                this.component = Component.VTODO.name
+                this.module = Module.TODO.name
+                this.percent = 34
+            }),
+            rememberNavController(),
+            onEditRequest = {  },
+            settingShowProgressMaintasks = false
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ICalObjectListCardPreview_TODO_recur_exception() {
+    JtxBoardTheme {
+
+        val icalobject = ICal4ListWithRelatedto.getSample().apply {
+            property.component = Component.VTODO.name
+            property.module = Module.TODO.name
+            property.percent = 89
+            property.status = StatusTodo.`IN-PROCESS`.name
+            property.classification = Classification.CONFIDENTIAL.name
+            property.uploadPending = false
+            property.isRecurringInstance = true
+            property.isLinkedRecurringInstance = false
             property.isRecurringOriginal = false
             property.isReadOnly = true
         }
