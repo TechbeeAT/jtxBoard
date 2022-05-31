@@ -193,7 +193,7 @@ fun ICalObjectListCard(
                         iCalObject.description?.let {
                             Text(
                                 text = it,
-                                maxLines = 5,
+                                maxLines = 6,
                                 overflow = TextOverflow.Ellipsis
                             )
                         }

@@ -24,14 +24,12 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
-import at.techbee.jtx.databinding.FragmentIcalListRecyclerBinding
 import at.techbee.jtx.ui.compose.ListScreen
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import java.lang.ClassCastException
