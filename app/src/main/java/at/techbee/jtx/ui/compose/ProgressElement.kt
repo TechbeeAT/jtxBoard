@@ -24,7 +24,13 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProgressElement(progress: Int?, modifier: Modifier = Modifier, isReadOnly: Boolean) {
+fun ProgressElement(
+    iCalObjectId: Long,
+    progress: Int?,
+    isReadOnly: Boolean,
+    isLinkedRecurringInstance: Boolean,
+    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
+) {
 
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -44,6 +50,7 @@ fun ProgressElement(progress: Int?, modifier: Modifier = Modifier, isReadOnly: B
             valueRange = 0F..100F,
             steps = 100,
             onValueChange = { sliderPosition = it },
+            onValueChangeFinished = { onProgressChanged(iCalObjectId, sliderPosition.toInt(), isLinkedRecurringInstance) },
             modifier = Modifier.weight(1f),
             enabled = !isReadOnly
         )
@@ -54,7 +61,8 @@ fun ProgressElement(progress: Int?, modifier: Modifier = Modifier, isReadOnly: B
         Checkbox(
             checked = sliderPosition==100f,
             onCheckedChange = {
-            sliderPosition = if(it) 100f else 0f
+                sliderPosition = if(it) 100f else 0f
+                onProgressChanged(iCalObjectId, if(it) 100 else 0, isLinkedRecurringInstance)
             },
             enabled = !isReadOnly
         )
@@ -65,7 +73,7 @@ fun ProgressElement(progress: Int?, modifier: Modifier = Modifier, isReadOnly: B
 @Composable
 fun ProgressElementPreview() {
     JtxBoardTheme {
-        ProgressElement(57, isReadOnly = false)
+        ProgressElement(1L, 57, isReadOnly = false, isLinkedRecurringInstance = false) { _, _, _ -> }
     }
 }
 
@@ -73,6 +81,6 @@ fun ProgressElementPreview() {
 @Composable
 fun ProgressElementPreview_readonly() {
     JtxBoardTheme {
-        ProgressElement(57, isReadOnly = true)
+        ProgressElement(1L, 57, isReadOnly = true, isLinkedRecurringInstance = false) { _, _, _ -> }
     }
 }

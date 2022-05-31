@@ -53,7 +53,8 @@ fun ICalObjectListCard(
     settingShowAttachments: Boolean = true,
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
-    onEditRequest: (Long) -> Unit
+    onEditRequest: (iCalObjectId: Long) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
 
     val iCalObject = iCalObjectWithRelatedto.property
@@ -220,7 +221,13 @@ fun ICalObjectListCard(
                     }
 
                 if(iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
-                    ProgressElement(iCalObject.percent, isReadOnly = iCalObject.isReadOnly)
+                    ProgressElement(
+                        iCalObjectId = iCalObject.id,
+                        progress = iCalObject.percent,
+                        isReadOnly = iCalObject.isReadOnly,
+                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                        onProgressChanged = onProgressChanged
+                    )
 
 
                 if(settingShowSubtasks && (subtasks.size) > 0) {
@@ -230,7 +237,8 @@ fun ICalObjectListCard(
                                 subtask = subtask,
                                 navController = navController,
                                 showProgress = settingShowProgressSubtasks,
-                                onEditRequest = onEditRequest
+                                onEditRequest = onEditRequest,
+                                onProgressChanged = onProgressChanged
                             )
                         }
                     }
@@ -254,7 +262,8 @@ fun ICalObjectListCardPreview_JOURNAL() {
                 this.percent = 34
             }),
             rememberNavController(),
-            onEditRequest = {  }
+            onEditRequest = {  },
+            onProgressChanged = { _, _, _ -> }
         )
     }
 }
@@ -278,7 +287,8 @@ fun ICalObjectListCardPreview_NOTE() {
                 this.percent = 34
             }),
             rememberNavController(),
-            onEditRequest = {  }
+            onEditRequest = {  },
+            onProgressChanged = { _, _, _ -> }
         )
     }
 }
@@ -304,7 +314,8 @@ fun ICalObjectListCardPreview_TODO() {
             }),
             rememberNavController(),
             onEditRequest = {  },
-            settingShowProgressMaintasks = true
+            settingShowProgressMaintasks = true,
+            onProgressChanged = { _, _, _ -> }
         )
     }
 }
@@ -334,7 +345,8 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             }),
             rememberNavController(),
             onEditRequest = {  },
-            settingShowProgressMaintasks = false
+            settingShowProgressMaintasks = false,
+            onProgressChanged = { _, _, _ -> }
         )
     }
 }
@@ -365,7 +377,8 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             }),
             rememberNavController(),
             onEditRequest = {  },
-            settingShowProgressMaintasks = false
+            settingShowProgressMaintasks = false,
+            onProgressChanged = { _, _, _ -> }
         )
     }
 }

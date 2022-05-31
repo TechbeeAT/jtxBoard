@@ -33,7 +33,8 @@ fun SubtaskCard(
     subtask: ICal4List,
     navController: NavController,
     showProgress: Boolean = true,
-    onEditRequest: (Long) -> Unit
+    onEditRequest: (Long) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
 
     ElevatedCard(
@@ -79,6 +80,7 @@ fun SubtaskCard(
                 valueRange = 0F..100F,
                 steps = 100,
                 onValueChange = { sliderPosition = it },
+                onValueChangeFinished = { onProgressChanged(subtask.id, sliderPosition.toInt(), subtask.isLinkedRecurringInstance) },
                 modifier = Modifier.width(100.dp),
                 enabled = !subtask.isReadOnly
                 )
@@ -89,7 +91,10 @@ fun SubtaskCard(
         }
         Checkbox(
             checked = sliderPosition==100f,
-            onCheckedChange = {   sliderPosition = if(it) 100f else 0f },
+            onCheckedChange = {
+                sliderPosition = if(it) 100f else 0f
+                onProgressChanged(subtask.id, sliderPosition.toInt(), subtask.isLinkedRecurringInstance)
+            },
             enabled = !subtask.isReadOnly
         )
     }
@@ -108,7 +113,8 @@ fun SubtaskCardPreview() {
             this.isReadOnly = false
         },
             rememberNavController(),
-            onEditRequest = {  }
+            onEditRequest = {  },
+            onProgressChanged = { _, _, _ -> }
         )
     }
 }
@@ -124,7 +130,8 @@ fun SubtaskCardPreview_readonly() {
             this.isReadOnly = true
         },
             rememberNavController(),
-            onEditRequest = {  }
+            onEditRequest = {  },
+            onProgressChanged = { _, _, _ -> }
         )
     }
 }
@@ -140,7 +147,8 @@ fun SubtaskCardPreview_without_progress() {
         },
             rememberNavController(),
             showProgress = false,
-            onEditRequest = {  }
+            onEditRequest = {  },
+            onProgressChanged = { _, _, _ -> }
         )
     }
 }

@@ -63,7 +63,8 @@ fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: L
                 settingShowAttachments = settingShowAttachments,
                 settingShowProgressMaintasks = settingShowProgressMaintasks,
                 settingShowProgressSubtasks = settingShowProgressSubtasks,
-                onEditRequest = { id -> model.postDirectEditEntity(id) }
+                onEditRequest = { id -> model.postDirectEditEntity(id) },
+                onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> model.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  }
             )
         }
     }
