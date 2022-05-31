@@ -43,7 +43,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     var searchClassification: MutableList<Classification> = mutableListOf()
     var searchCollection: MutableList<String> = mutableListOf()
     var searchAccount: MutableList<String> = mutableListOf()
-    var isExcludeDone: Boolean = false
+    var isExcludeDone = MutableLiveData(false)
     var isFilterOverdue: Boolean = false
     var isFilterDueToday: Boolean = false
     var isFilterDueTomorrow: Boolean = false
@@ -154,7 +154,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             queryString += ") "
         }
 
-        if (isExcludeDone)
+        if (isExcludeDone.value == true)
             queryString += "AND $COLUMN_PERCENT IS NOT 100 "
 
         val dueQuery = mutableListOf<String>()

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.preference.PreferenceManager
+import at.techbee.jtx.database.StatusTodo
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
@@ -40,6 +41,8 @@ fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: L
     val settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false)
     val settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true)
 
+    val excludeDone by model.isExcludeDone.observeAsState(false)
+
 
     LazyColumn(
         modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp)
@@ -49,11 +52,14 @@ fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: L
             key = { item -> item.property.id }
         ) { iCalObject ->
 
-            val currentSubtasks = subtasks.filter { subtask ->
+            var currentSubtasks = subtasks.filter { subtask ->
                 iCalObject.relatedto?.any { relatedto ->
-                    relatedto.linkedICalObjectId == subtask.id && relatedto.reltype == Reltype.CHILD.name
-                } == true
+                    relatedto.linkedICalObjectId == subtask.id && relatedto.reltype == Reltype.CHILD.name } == true
             }
+            if(excludeDone)   // exclude done if applicable
+                currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 }
+            if(model.searchStatusTodo.isNotEmpty()) // exclude filtered if applicable
+                currentSubtasks = currentSubtasks.filter { subtask -> model.searchStatusTodo.contains(StatusTodo.getFromString(subtask.status)) }
 
             ICalObjectListCard(
                 iCalObject,

@@ -95,7 +95,7 @@ class IcalListFragmentTodos : Fragment() {
             PREFS_STATUS_TODO, null))
         icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(
             PREFS_CLASSIFICATION, null))
-        icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_EXCLUDE_DONE, false)
+        icalListViewModel.isExcludeDone.postValue(prefs.getBoolean(PREFS_EXCLUDE_DONE, false))
         icalListViewModel.isFilterOverdue = prefs.getBoolean(PREFS_FILTER_OVERDUE, false)
         icalListViewModel.isFilterDueToday = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
         icalListViewModel.isFilterDueTomorrow = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
@@ -128,7 +128,7 @@ class IcalListFragmentTodos : Fragment() {
         prefs.edit().putStringSet(PREFS_STATUS_TODO, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
         prefs.edit().putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
         prefs.edit().putStringSet(PREFS_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
-        prefs.edit().putBoolean(PREFS_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
+        prefs.edit().putBoolean(PREFS_EXCLUDE_DONE, icalListViewModel.isExcludeDone.value?:false).apply()
 
         prefs.edit().putBoolean(PREFS_FILTER_OVERDUE, icalListViewModel.isFilterOverdue).apply()
         prefs.edit().putBoolean(PREFS_FILTER_DUE_TODAY, icalListViewModel.isFilterDueToday).apply()

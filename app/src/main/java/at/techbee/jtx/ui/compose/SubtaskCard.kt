@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.compose
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -27,6 +28,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun SubtaskCard(
@@ -36,6 +38,9 @@ fun SubtaskCard(
     onEditRequest: (Long) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
+
+    //var sliderPosition by remember { mutableStateOf(subtask.percent?.toFloat() ?: 0f) }
+    var sliderPosition by mutableStateOf(subtask.percent?.toFloat() ?: 0f)
 
     ElevatedCard(
         modifier = Modifier
@@ -64,7 +69,6 @@ fun SubtaskCard(
     ) {
 
         //use progress in state!
-        var sliderPosition by remember { mutableStateOf(subtask.percent?.toFloat() ?: 0f) }
 
         var subtaskText = subtask.summary?:subtask.description?:""
         if(subtask.numSubtasks > 0)

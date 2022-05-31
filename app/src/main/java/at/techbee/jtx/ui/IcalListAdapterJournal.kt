@@ -31,41 +31,6 @@ class IcalListAdapterJournal(var context: Context, var model: IcalListViewModel)
             }
 
 
-
-
-            if (model.searchModule == Module.TODO.name && settingShowSubtasks && settingShowProgressMaintasks && iCal4ListItem.property.numSubtasks > 0)
-                holder.expandSubtasks.visibility = View.VISIBLE
-            else
-                holder.expandSubtasks.visibility = View.INVISIBLE
-
-
-
-            var toggleSubtasksExpanded = true
-
-            holder.expandSubtasks.setOnClickListener {
-
-                if (!toggleSubtasksExpanded) {
-                    IcalListAdapterHelper.addSubtasksView(model, itemSubtasks.distinct(), holder.subtasksLinearLayout, context, parent)
-                    toggleSubtasksExpanded = true
-                    holder.expandSubtasks.setImageResource(R.drawable.ic_collapse)
-                } else {
-                    holder.subtasksLinearLayout.removeAllViews()
-                    toggleSubtasksExpanded = false
-                    holder.expandSubtasks.setImageResource(R.drawable.ic_expand)
-                }
-            }
-
-
-}
-
-
-
-
-        }
-
-    }
-}
-
  */
 
 

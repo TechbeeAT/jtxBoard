@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.compose
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgressElement(
@@ -39,7 +41,7 @@ fun ProgressElement(
     ) {
 
         //use progress in state!
-        var sliderPosition by remember { mutableStateOf(progress?.toFloat() ?: 0f) }
+        var sliderPosition by mutableStateOf(progress?.toFloat() ?: 0f)
 
         Text(
             stringResource(id = R.string.progress),

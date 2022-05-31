@@ -93,7 +93,7 @@ class IcalListFragmentJournals : Fragment() {
             PREFS_STATUS_TODO, null))
         icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(
             PREFS_CLASSIFICATION, null))
-        icalListViewModel.isExcludeDone = prefs.getBoolean(PREFS_EXCLUDE_DONE, false)
+        icalListViewModel.isExcludeDone.postValue(prefs.getBoolean(PREFS_EXCLUDE_DONE, false))
         icalListViewModel.isFilterOverdue = false
         icalListViewModel.isFilterDueToday = false
         icalListViewModel.isFilterDueTomorrow = false
@@ -126,7 +126,7 @@ class IcalListFragmentJournals : Fragment() {
         prefs.edit().putStringSet(PREFS_STATUS_TODO, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
         prefs.edit().putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
         prefs.edit().putStringSet(PREFS_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
-        prefs.edit().putBoolean(PREFS_EXCLUDE_DONE, icalListViewModel.isExcludeDone).apply()
+        prefs.edit().putBoolean(PREFS_EXCLUDE_DONE, icalListViewModel.isExcludeDone.value?:false).apply()
 
         prefs.edit().putString(PREFS_SORTORDER, icalListViewModel.sortOrder.name).apply()
         prefs.edit().putString(PREFS_ORDERBY, icalListViewModel.orderBy.name).apply()

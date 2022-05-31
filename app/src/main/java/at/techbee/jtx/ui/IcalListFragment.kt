@@ -196,6 +196,10 @@ class IcalListFragment : Fragment() {
             this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(it))
         }
 
+        icalListViewModel.isExcludeDone.observe(viewLifecycleOwner) {
+            icalListViewModel.updateSearch()
+        }
+
         binding.listBottomBar.setOnMenuItemClickListener { menuitem ->
 
             when (menuitem.itemId) {
@@ -273,7 +277,7 @@ class IcalListFragment : Fragment() {
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_note).isVisible = icalListViewModel.searchModule == Module.NOTE.name
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_todo).isVisible = icalListViewModel.searchModule == Module.TODO.name
 
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_toggle_completed_tasks).isChecked = icalListViewModel.isExcludeDone
+        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_toggle_completed_tasks).isChecked = icalListViewModel.isExcludeDone.value ?: false
         if(icalListViewModel.searchModule == Module.TODO.name) {
             binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_overdue).isChecked = icalListViewModel.isFilterOverdue
             binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_today).isChecked = icalListViewModel.isFilterDueToday
@@ -383,7 +387,7 @@ class IcalListFragment : Fragment() {
 
     private fun toggleMenuCheckboxFilter(menuitem: MenuItem) {
         when (menuitem.itemId) {
-            R.id.menu_list_bottom_toggle_completed_tasks -> icalListViewModel.isExcludeDone = !icalListViewModel.isExcludeDone
+            R.id.menu_list_bottom_toggle_completed_tasks -> icalListViewModel.isExcludeDone.postValue(icalListViewModel.isExcludeDone.value?.not() ?: false)
             R.id.menu_list_bottom_filter_overdue -> icalListViewModel.isFilterOverdue = !icalListViewModel.isFilterOverdue
             R.id.menu_list_bottom_filter_due_today -> icalListViewModel.isFilterDueToday = !icalListViewModel.isFilterDueToday
             R.id.menu_list_bottom_filter_due_tomorrow -> icalListViewModel.isFilterDueTomorrow = !icalListViewModel.isFilterDueTomorrow
