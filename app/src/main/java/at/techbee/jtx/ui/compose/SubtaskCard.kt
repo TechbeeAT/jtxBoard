@@ -66,8 +66,12 @@ fun SubtaskCard(
         //use progress in state!
         var sliderPosition by remember { mutableStateOf(subtask.percent?.toFloat() ?: 0f) }
 
+        var subtaskText = subtask.summary?:subtask.description?:""
+        if(subtask.numSubtasks > 0)
+            subtaskText += " (+${subtask.numSubtasks})"
+
         Text(
-            subtask.summary?:subtask.description?:"",
+            subtaskText,
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp)
                 .weight(1f),
@@ -107,10 +111,13 @@ fun SubtaskCard(
 fun SubtaskCardPreview() {
     JtxBoardTheme {
         SubtaskCard(ICal4List.getSample().apply {
+            this.summary = null
+            this.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
             this.component = Component.VTODO.name
             this.module = Module.TODO.name
             this.percent = 34
             this.isReadOnly = false
+            this.numSubtasks = 0
         },
             rememberNavController(),
             onEditRequest = {  },
@@ -128,6 +135,7 @@ fun SubtaskCardPreview_readonly() {
             this.module = Module.TODO.name
             this.percent = 34
             this.isReadOnly = true
+            this.numSubtasks = 7
         },
             rememberNavController(),
             onEditRequest = {  },

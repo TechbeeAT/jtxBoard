@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -174,14 +175,15 @@ fun ICalObjectListCard(
 
                     ) {
 
-                        val summarySize =
-                            if (iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
+                        val summarySize = if (iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
+                        val summaryTextDecoration = if(iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None
 
                         iCalObject.summary?.let {
                             Text(
                                 text = it,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = summarySize
+                                fontSize = summarySize,
+                                textDecoration = summaryTextDecoration
                             )
                         }
                         iCalObject.description?.let {
@@ -317,6 +319,7 @@ fun ICalObjectListCardPreview_NOTE() {
             property.module = Module.NOTE.name
             property.dtstart = null
             property.dtstartTimezone = null
+            property.status = StatusJournal.CANCELLED.name
         }
         ICalObjectListCard(
             icalobject,
