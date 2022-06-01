@@ -14,14 +14,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EventRepeat
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -106,7 +104,8 @@ fun ICalObjectListCard(
                                 style = Typography.labelMedium
                             )
                             Text(
-                                iCalObject.categories ?: "", modifier = Modifier.padding(start = 8.dp),
+                                iCalObject.categories ?: "",
+                                modifier = Modifier.padding(start = 8.dp),
                                 style = Typography.labelMedium,
                                 fontStyle = FontStyle.Italic
                             )
@@ -116,7 +115,7 @@ fun ICalObjectListCard(
                             Row {
                                 iCalObject.dtstart?.let {
                                     Text(
-                                        iCalObject.getDtstartTextInfo(LocalContext.current)?:"",
+                                        iCalObject.getDtstartTextInfo(LocalContext.current) ?: "",
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
@@ -125,7 +124,7 @@ fun ICalObjectListCard(
                                 }
                                 iCalObject.due?.let {
                                     Text(
-                                        iCalObject.getDueTextInfo(LocalContext.current)?:"",
+                                        iCalObject.getDueTextInfo(LocalContext.current) ?: "",
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic
@@ -133,35 +132,20 @@ fun ICalObjectListCard(
                                 }
                             }
                         }
-
-
-
                     }
-                    Row(modifier = Modifier.padding(end = 8.dp, top = 8.dp)) {
-                        if (iCalObject.isReadOnly)
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_readonly),
-                                contentDescription = stringResource(id = R.string.readyonly)
-                            )
-                        if (iCalObject.uploadPending)
-                            Icon(Icons.Outlined.CloudSync, stringResource(R.string.upload_pending))
 
-                        if (iCalObject.isRecurringOriginal || (iCalObject.isRecurringInstance && iCalObject.isLinkedRecurringInstance))
-                            Icon(
-                                Icons.Default.EventRepeat,
-                                stringResource(R.string.list_item_recurring),
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
-                        if (iCalObject.isRecurringInstance && !iCalObject.isLinkedRecurringInstance)
-                            Icon(
-                                painter = painterResource(R.drawable.ic_recur_exception),
-                                stringResource(R.string.list_item_recurring),
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
-                    }
+                    ListStatusBar(
+                        numAttendees = iCalObject.numAttendees,
+                        numAttachments = iCalObject.numAttachments,
+                        numComments = iCalObject.numComments,
+                        isReadOnly = iCalObject.isReadOnly,
+                        uploadPending = iCalObject.uploadPending,
+                        isRecurringOriginal = iCalObject.isRecurringOriginal,
+                        isRecurringInstance = iCalObject.isRecurringInstance,
+                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                        modifier = Modifier.padding(end = 8.dp, top = 4.dp)
+                    )
                 }
-
-
 
                 Row(
                     verticalAlignment = Alignment.Top,
@@ -249,32 +233,6 @@ fun ICalObjectListCard(
                             modifier = Modifier.padding(8.dp)
                         )
                     }
-
-                    if (iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0 || iCalObject.numComments > 0)
-                        Row(modifier = Modifier.padding(8.dp)) {
-
-                            if (iCalObject.numAttendees > 0)
-                                IconWithText(
-                                    icon = Icons.Outlined.Group,
-                                    iconDesc = stringResource(R.string.attendees),
-                                    text = iCalObject.numAttendees.toString(),
-                                    modifier = Modifier.padding(end = 8.dp)
-                                )
-                            if (iCalObject.numAttachments > 0)
-                                IconWithText(
-                                    icon = Icons.Outlined.Attachment,
-                                    iconDesc = stringResource(R.string.attachments),
-                                    text = iCalObject.numAttachments.toString(),
-                                    modifier = Modifier.padding(end = 8.dp)
-                                )
-                            if (iCalObject.numComments > 0)
-                                IconWithText(
-                                    icon = Icons.Outlined.Comment,
-                                    iconDesc = stringResource(R.string.comments),
-                                    text = iCalObject.numComments.toString()
-                                )
-                        }
-
                 }
 
                 if (iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
