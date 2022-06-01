@@ -93,20 +93,49 @@ fun ICalObjectListCard(
 
                 Row(
                     modifier = Modifier
-                        .padding(top = 4.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
-                        Text(
-                            iCalObject.collectionDisplayName ?: iCalObject.accountName ?: "",
-                            style = Typography.titleSmall
-                        )
-                        Text(
-                            iCalObject.categories ?: "", modifier = Modifier.padding(start = 8.dp),
-                            style = Typography.titleSmall,
-                            fontStyle = FontStyle.Italic
-                        )
+                    Column(
+                        modifier = Modifier.padding(top = 4.dp, start = 8.dp, end = 8.dp)
+                    ) {
+
+                        Row {
+                            Text(
+                                iCalObject.collectionDisplayName ?: iCalObject.accountName ?: "",
+                                style = Typography.labelMedium
+                            )
+                            Text(
+                                iCalObject.categories ?: "", modifier = Modifier.padding(start = 8.dp),
+                                style = Typography.labelMedium,
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+
+                        if (iCalObject.module == Module.TODO.name && (iCalObject.dtstart != null || iCalObject.due != null)) {
+                            Row {
+                                iCalObject.dtstart?.let {
+                                    Text(
+                                        iCalObject.getDtstartTextInfo(LocalContext.current)?:"",
+                                        style = Typography.labelMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        fontStyle = FontStyle.Italic,
+                                        modifier = Modifier.padding(end = 16.dp)
+                                    )
+                                }
+                                iCalObject.due?.let {
+                                    Text(
+                                        iCalObject.getDueTextInfo(LocalContext.current)?:"",
+                                        style = Typography.labelMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        fontStyle = FontStyle.Italic
+                                    )
+                                }
+                            }
+                        }
+
+
+
                     }
                     Row(modifier = Modifier.padding(end = 8.dp, top = 8.dp)) {
                         if (iCalObject.isReadOnly)
@@ -132,32 +161,7 @@ fun ICalObjectListCard(
                     }
                 }
 
-                if (iCalObject.module == Module.TODO.name && (iCalObject.dtstart != null || iCalObject.due != null)) {
-                    Row( modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp)
-                        .fillMaxWidth(),
-                        verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        iCalObject.dtstart?.let {
-                            Text(
-                                iCalObject.getDtstartTextInfo(LocalContext.current)?:"",
-                                style = Typography.titleSmall,
-                                fontWeight = FontWeight.Bold,
-                                fontStyle = FontStyle.Italic,
-                                modifier = Modifier.padding(end = 16.dp)
-                            )
-                        }
-                        iCalObject.due?.let {
-                            Text(
-                                iCalObject.getDueTextInfo(LocalContext.current)?:"",
-                                style = Typography.titleSmall,
-                                fontWeight = FontWeight.Bold,
-                                fontStyle = FontStyle.Italic
-                                )
-                        }
-                    }
-                }
+
 
                 Row(
                     verticalAlignment = Alignment.Top,
@@ -174,7 +178,7 @@ fun ICalObjectListCard(
                         horizontalAlignment = Alignment.Start,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(start = 8.dp, end = 8.dp)
                             .weight(1f)
 
                     ) {
@@ -182,21 +186,20 @@ fun ICalObjectListCard(
                         val summarySize = if (iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
                         val summaryTextDecoration = if(iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None
 
-                        iCalObject.summary?.let {
+                        if(iCalObject.summary?.isNotBlank() == true)
                             Text(
-                                text = it,
+                                text = iCalObject.summary?:"",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = summarySize,
                                 textDecoration = summaryTextDecoration
                             )
-                        }
-                        iCalObject.description?.let {
+
+                        if(iCalObject.description?.isNotBlank() == true)
                             Text(
-                                text = it,
+                                text = iCalObject.description?:"",
                                 maxLines = 6,
                                 overflow = TextOverflow.Ellipsis
                             )
-                        }
                     }
 
                     if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
@@ -226,18 +229,25 @@ fun ICalObjectListCard(
 
                 Row(
                     modifier = Modifier
-                        .padding(top = 4.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
-                    StatusClassificationPriorityBlock(
-                        component = iCalObject.component,
-                        status = iCalObject.status,
-                        classification = iCalObject.classification,
-                        priority = iCalObject.priority,
-                        modifier = Modifier.padding(8.dp)
-                    )
+                    if(iCalObject.status == StatusJournal.CANCELLED.name
+                        || iCalObject.status == StatusJournal.DRAFT.name
+                        || iCalObject.status == StatusJournal.CANCELLED.name
+                        || iCalObject.classification == Classification.PRIVATE.name
+                        || iCalObject.classification == Classification.CONFIDENTIAL.name
+                        || iCalObject.priority in 1..9
+                    ) {
+                        StatusClassificationPriorityBlock(
+                            component = iCalObject.component,
+                            status = iCalObject.status,
+                            classification = iCalObject.classification,
+                            priority = iCalObject.priority,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
 
                     if (iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0 || iCalObject.numComments > 0)
                         Row(modifier = Modifier.padding(8.dp)) {
@@ -263,6 +273,7 @@ fun ICalObjectListCard(
                                     text = iCalObject.numComments.toString()
                                 )
                         }
+
                 }
 
                 if (iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
@@ -461,7 +472,7 @@ fun StatusClassificationPriorityBlock(
     }
 
     val priorityArray = stringArrayResource(id = R.array.priority)
-    val priorityText = if (priority in 0..9) priorityArray[priority!!] else null
+    val priorityText = if (priority in 1..9) priorityArray[priority!!] else null
 
     Row(modifier = modifier) {
 
