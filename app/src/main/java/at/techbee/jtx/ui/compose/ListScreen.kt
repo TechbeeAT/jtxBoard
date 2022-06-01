@@ -11,13 +11,16 @@ package at.techbee.jtx.ui.compose
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.StatusTodo
@@ -29,10 +32,14 @@ import at.techbee.jtx.ui.SettingsFragment
 
 
 @Composable
-fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: LiveData<List<ICal4List>>, navController: NavController, model: IcalListViewModel) {
+fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: LiveData<List<ICal4List>>, scrollOnceId: MutableLiveData<Long?>, navController: NavController, model: IcalListViewModel) {
 
     val list by listLive.observeAsState(emptyList())
     val subtasks by subtasksLive.observeAsState(emptyList())
+
+    val scrollId by scrollOnceId.observeAsState(null)
+    val listState = rememberLazyListState()
+
 
     //load settings
     val settings = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
@@ -44,8 +51,21 @@ fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: L
     val excludeDone by model.isExcludeDone.observeAsState(false)
 
 
+    if(scrollId != null) {
+        LaunchedEffect(list) {
+            val index = list.indexOfFirst { iCalObject -> iCalObject.property.id == scrollId }
+            if(index > -1) {
+                listState.animateScrollToItem(index)
+                scrollOnceId.postValue(null)
+            }
+        }
+    }
+
+
+
     LazyColumn(
-        modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp)
+        modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
+        state = listState,
     ) {
         items(
             items = list,

@@ -23,7 +23,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
@@ -70,7 +69,12 @@ class IcalListFragmentJournals : Fragment() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        ListScreen(listLive = icalListViewModel.iCal4ListJournals, subtasksLive = icalListViewModel.allSubtasks, navController = navController, model = icalListViewModel)
+                        ListScreen(
+                            listLive = icalListViewModel.iCal4ListJournals,
+                            subtasksLive = icalListViewModel.allSubtasks,
+                            scrollOnceId = icalListViewModel.scrollOnceId,
+                            navController = navController,
+                            model = icalListViewModel)
                     }
                 }
             }
@@ -110,14 +114,11 @@ class IcalListFragmentJournals : Fragment() {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
 
-        addObservers()
         icalListViewModel.updateSearch()
     }
 
     override fun onPause() {
         super.onPause()
-
-        removeObservers()
 
         val prefs = requireActivity().getSharedPreferences(PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
         prefs.edit().putStringSet(PREFS_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
@@ -130,30 +131,5 @@ class IcalListFragmentJournals : Fragment() {
 
         prefs.edit().putString(PREFS_SORTORDER, icalListViewModel.sortOrder.name).apply()
         prefs.edit().putString(PREFS_ORDERBY, icalListViewModel.orderBy.name).apply()
-    }
-
-
-
-    private fun addObservers() {
-        icalListViewModel.iCal4ListJournals.observe(viewLifecycleOwner) {
-            if((icalListViewModel.scrollOnceId.value ?: -1L) > 0L)
-                icalListViewModel.scrollOnceId.postValue(icalListViewModel.scrollOnceId.value)    // we post the value again as the observer might have missed the change
-        }
-
-        icalListViewModel.scrollOnceId.observe(viewLifecycleOwner) {
-            if (it == null)
-                return@observe
-
-            val scrollToItem = icalListViewModel.iCal4ListJournals.value?.find { listItem -> listItem.property.id == it }
-            val scrollToItemPos = icalListViewModel.iCal4ListJournals.value?.indexOf(scrollToItem)
-            if(scrollToItemPos != null && scrollToItemPos >= 0) {
-                icalListViewModel.scrollOnceId.value = null
-            }
-        }
-    }
-
-    private fun removeObservers() {
-        icalListViewModel.iCal4ListJournals.removeObservers(viewLifecycleOwner)
-        icalListViewModel.scrollOnceId.removeObservers(viewLifecycleOwner)
     }
 }
