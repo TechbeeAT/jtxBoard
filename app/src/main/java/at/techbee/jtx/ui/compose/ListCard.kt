@@ -165,7 +165,8 @@ fun ICalObjectListCard(
 
                 Row(
                     verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 ) {
 
                     if (iCalObject.module == Module.JOURNAL.name)
