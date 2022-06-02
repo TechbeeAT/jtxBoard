@@ -38,6 +38,9 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "main_icalobject.$COLUMN_COMPONENT, " +
             "main_icalobject.$COLUMN_SUMMARY, " +
             "main_icalobject.$COLUMN_DESCRIPTION, " +
+            "main_icalobject.$COLUMN_LOCATION, " +
+            "main_icalobject.$COLUMN_URL, " +
+            "main_icalobject.$COLUMN_CONTACT, " +
             "main_icalobject.$COLUMN_DTSTART, " +
             "main_icalobject.$COLUMN_DTSTART_TIMEZONE, " +
             "main_icalobject.$COLUMN_DTEND, " +
@@ -88,6 +91,10 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_COMPONENT) var component: String,
     @ColumnInfo(name = COLUMN_SUMMARY) var summary: String?,
     @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String?,
+    @ColumnInfo(name = COLUMN_LOCATION) var location: String?,
+    @ColumnInfo(name = COLUMN_URL) var url: String?,
+    @ColumnInfo(name = COLUMN_CONTACT) var contact: String?,
+
     @ColumnInfo(name = COLUMN_DTSTART) var dtstart: Long?,
     @ColumnInfo(name = COLUMN_DTSTART_TIMEZONE) var dtstartTimezone: String?,
 
@@ -151,6 +158,9 @@ data class ICal4List(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tellus risus, tristique ac elit vitae, mollis feugiat quam. Duis aliquet arcu at purus porttitor ultricies. Vivamus sagittis feugiat ex eu efficitur. Aliquam nec cursus ante, a varius nisi. In a malesuada urna, in rhoncus est. Maecenas auctor molestie quam, quis lobortis tortor sollicitudin sagittis. Curabitur sit amet est varius urna mattis interdum.\n" +
                         "\n" +
                         "Phasellus id quam vel enim semper ullamcorper in ac velit. Aliquam eleifend dignissim lacinia. Donec elementum ex et dui iaculis, eget vehicula leo bibendum. Nam turpis erat, luctus ut vehicula quis, congue non ex. In eget risus consequat, luctus ipsum nec, venenatis elit. In in tellus vel mauris rhoncus bibendum. Pellentesque sit amet quam elementum, pharetra nisl id, vehicula turpis. ",
+                null,
+                null,
+                null,
                 System.currentTimeMillis(),
                 null,
                 null,
