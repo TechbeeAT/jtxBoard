@@ -19,18 +19,89 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Classification
+import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.StatusJournal
+import at.techbee.jtx.database.StatusTodo
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @Composable
-fun ListStatusBar(numAttendees: Int, numAttachments: Int, numComments: Int, numResources: Int, isReadOnly: Boolean, uploadPending: Boolean, isRecurringOriginal: Boolean, isRecurringInstance: Boolean, isLinkedRecurringInstance: Boolean, hasURL: Boolean, hasLocation: Boolean, hasContact: Boolean, modifier: Modifier = Modifier ) {
-    Row(modifier = modifier,
+fun ListStatusBar(
+    numAttendees: Int,
+    numAttachments: Int,
+    numComments: Int,
+    numResources: Int,
+    isReadOnly: Boolean,
+    uploadPending: Boolean,
+    isRecurringOriginal: Boolean,
+    isRecurringInstance: Boolean,
+    isLinkedRecurringInstance: Boolean,
+    hasURL: Boolean,
+    hasLocation: Boolean,
+    hasContact: Boolean,
+    component: String,
+    status: String?,
+    classification: String?,
+    priority: Int?,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
+        val statusText: String? = when {
+            component == Component.VTODO.name && status == StatusTodo.CANCELLED.name -> stringResource(
+                id = R.string.todo_status_cancelled
+            )
+            component == Component.VJOURNAL.name && status == StatusJournal.DRAFT.name -> stringResource(
+                id = R.string.journal_status_draft
+            )
+            component == Component.VJOURNAL.name && status == StatusJournal.CANCELLED.name -> stringResource(
+                id = R.string.journal_status_cancelled
+            )
+            else -> null
+        }
+        val classificationText: String? = when (classification) {
+            Classification.PRIVATE.name -> stringResource(id = R.string.classification_private)
+            Classification.CONFIDENTIAL.name -> stringResource(id = R.string.classification_confidential)
+            else -> null
+        }
+
+        val priorityArray = stringArrayResource(id = R.array.priority)
+        val priorityText = if (priority in 1..9) priorityArray[priority!!] else null
+
+
+
+        statusText?.let {
+            IconWithText(
+                icon = Icons.Outlined.PublishedWithChanges,
+                iconDesc = stringResource(R.string.status),
+                text = it,
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
+        classificationText?.let {
+            IconWithText(
+                icon = Icons.Outlined.AdminPanelSettings,
+                iconDesc = stringResource(R.string.classification),
+                text = it,
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
+        priorityText?.let {
+            IconWithText(
+                icon = Icons.Outlined.WorkOutline,
+                iconDesc = stringResource(R.string.priority),
+                text = it,
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
 
         if (numAttendees > 0)
             IconWithText(
@@ -94,7 +165,11 @@ fun ListStatusBar(numAttendees: Int, numAttachments: Int, numComments: Int, numR
                 modifier = Modifier.size(14.dp)
             )
         if (uploadPending)
-            Icon(Icons.Outlined.CloudSync, stringResource(R.string.upload_pending), modifier = Modifier.size(14.dp))
+            Icon(
+                Icons.Outlined.CloudSync,
+                stringResource(R.string.upload_pending),
+                modifier = Modifier.size(14.dp)
+            )
 
         if (isRecurringOriginal || (isRecurringInstance && isLinkedRecurringInstance))
             Icon(
@@ -132,7 +207,11 @@ fun ListStatusBar_Preview1() {
             hasContact = true,
             isRecurringOriginal = false,
             isRecurringInstance = false,
-            isLinkedRecurringInstance = false
+            isLinkedRecurringInstance = false,
+            component = Component.VJOURNAL.name,
+            status = StatusJournal.FINAL.name,
+            classification = Classification.PUBLIC.name,
+            priority = null
         )
     }
 }
@@ -154,11 +233,14 @@ fun ListStatusBar_Preview2() {
             hasURL = true,
             isRecurringOriginal = true,
             isRecurringInstance = false,
-            isLinkedRecurringInstance = false
+            isLinkedRecurringInstance = false,
+            component = Component.VJOURNAL.name,
+            status = StatusJournal.DRAFT.name,
+            classification = Classification.CONFIDENTIAL.name,
+            priority = null
         )
     }
 }
-
 
 
 @Preview(showBackground = true)
@@ -177,7 +259,11 @@ fun ListStatusBar_Preview3() {
             hasContact = false,
             isRecurringOriginal = false,
             isRecurringInstance = true,
-            isLinkedRecurringInstance = false
+            isLinkedRecurringInstance = false,
+            component = Component.VJOURNAL.name,
+            status = StatusJournal.DRAFT.name,
+            classification = Classification.CONFIDENTIAL.name,
+            priority = 2
         )
     }
 }

@@ -103,16 +103,18 @@ fun ICalObjectListCard(
                                 iCalObject.collectionDisplayName ?: iCalObject.accountName ?: "",
                                 style = Typography.labelMedium
                             )
-                            Text(
-                                iCalObject.categories ?: "",
-                                modifier = Modifier.padding(start = 8.dp),
-                                style = Typography.labelMedium,
-                                fontStyle = FontStyle.Italic
-                            )
                         }
 
-                        if (iCalObject.module == Module.TODO.name && (iCalObject.dtstart != null || iCalObject.due != null)) {
+                        if (iCalObject.categories?.isNotEmpty() == true && iCalObject.module == Module.TODO.name && (iCalObject.dtstart != null || iCalObject.due != null)) {
                             Row {
+                                iCalObject.categories?.let {
+                                    Text(
+                                        it,
+                                        style = Typography.labelMedium,
+                                        fontStyle = FontStyle.Italic,
+                                        modifier = Modifier.padding(end = 16.dp)
+                                    )
+                                }
                                 iCalObject.dtstart?.let {
                                     Text(
                                         iCalObject.getDtstartTextInfo(LocalContext.current) ?: "",
@@ -147,6 +149,10 @@ fun ICalObjectListCard(
                         isRecurringOriginal = iCalObject.isRecurringOriginal,
                         isRecurringInstance = iCalObject.isRecurringInstance,
                         isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                        component = iCalObject.component,
+                        status = iCalObject.status,
+                        classification = iCalObject.classification,
+                        priority = iCalObject.priority,
                         modifier = Modifier.padding(end = 8.dp, top = 4.dp)
                     )
                 }
@@ -215,29 +221,6 @@ fun ICalObjectListCard(
                     )
                 }
 
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-
-                    if(iCalObject.status == StatusJournal.CANCELLED.name
-                        || iCalObject.status == StatusJournal.DRAFT.name
-                        || iCalObject.status == StatusJournal.CANCELLED.name
-                        || iCalObject.classification == Classification.PRIVATE.name
-                        || iCalObject.classification == Classification.CONFIDENTIAL.name
-                        || iCalObject.priority in 1..9
-                    ) {
-                        StatusClassificationPriorityBlock(
-                            component = iCalObject.component,
-                            status = iCalObject.status,
-                            classification = iCalObject.classification,
-                            priority = iCalObject.priority,
-                            modifier = Modifier.padding(8.dp)
-                        )
-                    }
-                }
 
                 if (iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
                     ProgressElement(
@@ -403,105 +386,6 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             onEditRequest = { },
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> }
-        )
-    }
-}
-
-@Composable
-fun StatusClassificationPriorityBlock(
-    component: String,
-    status: String?,
-    classification: String?,
-    priority: Int?,
-    modifier: Modifier = Modifier
-) {
-
-    val statusText: String? = when {
-        component == Component.VTODO.name && status == StatusTodo.CANCELLED.name -> stringResource(
-            id = R.string.todo_status_cancelled
-        )
-        component == Component.VJOURNAL.name && status == StatusJournal.DRAFT.name -> stringResource(
-            id = R.string.journal_status_draft
-        )
-        component == Component.VJOURNAL.name && status == StatusJournal.CANCELLED.name -> stringResource(
-            id = R.string.journal_status_cancelled
-        )
-        else -> null
-    }
-    val classificationText: String? = when (classification) {
-        Classification.PRIVATE.name -> stringResource(id = R.string.classification_private)
-        Classification.CONFIDENTIAL.name -> stringResource(id = R.string.classification_confidential)
-        else -> null
-    }
-
-    val priorityArray = stringArrayResource(id = R.array.priority)
-    val priorityText = if (priority in 1..9) priorityArray[priority!!] else null
-
-    Row(modifier = modifier) {
-
-        statusText?.let {
-            IconWithText(
-                icon = Icons.Outlined.PublishedWithChanges,
-                iconDesc = stringResource(R.string.status),
-                text = it,
-                modifier = Modifier.padding(end = 8.dp)
-            )
-        }
-        classificationText?.let {
-            IconWithText(
-                icon = Icons.Outlined.AdminPanelSettings,
-                iconDesc = stringResource(R.string.classification),
-                text = it,
-                modifier = Modifier.padding(end = 8.dp)
-            )
-        }
-        priorityText?.let {
-            IconWithText(
-                icon = Icons.Outlined.WorkOutline,
-                iconDesc = stringResource(R.string.priority),
-                text = it,
-                modifier = Modifier.padding(end = 8.dp)
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun StatusClassificationPriorityBlock_Preview_nothingDisplayed() {
-    JtxBoardTheme {
-        StatusClassificationPriorityBlock(
-            component = Component.VJOURNAL.name,
-            status = StatusJournal.FINAL.name,
-            classification = Classification.PUBLIC.name,
-            priority = null
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun StatusClassificationPriorityBlock_Preview_bothDisplayed() {
-    JtxBoardTheme {
-        StatusClassificationPriorityBlock(
-            component = Component.VJOURNAL.name,
-            status = StatusJournal.DRAFT.name,
-            classification = Classification.CONFIDENTIAL.name,
-            priority = null
-        )
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun StatusClassificationPriorityBlock_Preview_w_prio() {
-    JtxBoardTheme {
-        StatusClassificationPriorityBlock(
-            component = Component.VJOURNAL.name,
-            status = StatusJournal.DRAFT.name,
-            classification = Classification.CONFIDENTIAL.name,
-            priority = 2
         )
     }
 }
