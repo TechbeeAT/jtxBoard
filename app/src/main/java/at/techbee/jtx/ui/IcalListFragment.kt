@@ -425,15 +425,10 @@ class IcalListFragment : Fragment() {
         // Build constraints.
         val constraintsBuilder =
             CalendarConstraints.Builder().apply {
-
-                val startItem = icalListViewModel.iCal4ListJournals.value?.firstOrNull()
-                val endItem = icalListViewModel.iCal4ListJournals.value?.lastOrNull()
-
-                if (startItem?.property?.dtstart != null && endItem?.property?.dtstart != null) {
-                    setStart(startItem.property.dtstart!!)
-                    setEnd(endItem.property.dtstart!!)
-                    setValidator(customDateValidator)
-                }
+                val dates = icalListViewModel.iCal4ListJournals.value?.map { it.property.dtstart?:System.currentTimeMillis() }?.toList() ?: listOf(System.currentTimeMillis())
+                setStart(dates.minOf { it })
+                setEnd(dates.maxOf { it })
+                setValidator(customDateValidator)
             }
 
         val datePicker =
