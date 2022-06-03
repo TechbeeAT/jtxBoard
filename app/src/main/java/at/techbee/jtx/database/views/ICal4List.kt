@@ -79,6 +79,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "(SELECT count(*) FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numComments, " +
             "(SELECT count(*) FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numRelatedTodos, " +
             "(SELECT count(*) FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numResources, " +
+            "(SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND $COLUMN_ATTACHMENT_FMTTYPE LIKE 'audio/%' LIMIT 1 ) as audioAttachment, " +
+
             "collection.$COLUMN_COLLECTION_READONLY as isReadOnly " +
             "FROM $TABLE_NAME_ICALOBJECT main_icalobject " +
             //"LEFT JOIN $TABLE_NAME_CATEGORY ON main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
@@ -146,6 +148,7 @@ data class ICal4List(
     @ColumnInfo var numComments: Int,
     @ColumnInfo var numRelatedTodos: Int,
     @ColumnInfo var numResources: Int,
+    @ColumnInfo var audioAttachment: String?,
     @ColumnInfo var isReadOnly: Boolean
 )
 {
@@ -201,6 +204,7 @@ data class ICal4List(
                 numComments = 6,
                 numRelatedTodos = 7,
                 numResources = 8,
+                null,
                 isReadOnly = true
             )
     }

@@ -86,6 +86,7 @@ data class ICal4ListWithRelatedto (
                                 numComments = 6,
                                 numRelatedTodos = 7,
                                 numResources = 8,
+                                audioAttachment = null,
                                 isReadOnly = false
                                 ),
                                 null,
