@@ -68,7 +68,7 @@ fun SubnoteCard(
 
             if(audioUri?.isNotEmpty() == true) {
                 Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp)
                 ) {
