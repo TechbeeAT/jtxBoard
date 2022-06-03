@@ -163,6 +163,17 @@ SELECTs (global selects without parameter)
     fun getAllSubtasks(): LiveData<List<ICal4List>>
 
     /**
+     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
+     * by checking if the [ICalObject.id] is listed as a [Relatedto.linkedICalObjectId].
+     *
+     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
+     */
+    @Transaction
+    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VJOURNAL'")
+    fun getAllSubnotes(): LiveData<List<ICal4List>>
+
+
+    /**
      * Retrieve an list the number of Subtasks of an [ICalObject] as a [SubtaskCount].
      * This is especially used for Sub-Sub-Tasks to show the number of Sub-Sub-Tasks on a Sub-Task.
      *

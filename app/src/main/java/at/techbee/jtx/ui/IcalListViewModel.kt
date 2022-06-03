@@ -72,6 +72,8 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
 
         // TODO maybe retrieve all subtasks only when subtasks are needed!
     val allSubtasks: LiveData<List<ICal4List>> = database.getAllSubtasks()
+    val allSubnotes: LiveData<List<ICal4List>> = database.getAllSubnotes()
+
 
     val allCategories = database.getAllCategories()   // filter FragmentDialog
     val allCollections = database.getAllCollections()

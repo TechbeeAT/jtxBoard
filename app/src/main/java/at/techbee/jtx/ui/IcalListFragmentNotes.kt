@@ -72,6 +72,7 @@ class IcalListFragmentNotes : Fragment() {
                         ListScreen(
                             listLive = icalListViewModel.iCal4ListNotes,
                             subtasksLive = icalListViewModel.allSubtasks,
+                            subnotesLive = icalListViewModel.allSubnotes,
                             scrollOnceId = icalListViewModel.scrollOnceId,
                             navController = navController,
                             model = icalListViewModel)

@@ -13,11 +13,14 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -27,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
@@ -43,9 +47,11 @@ import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 fun ICalObjectListCard(
     iCalObjectWithRelatedto: ICal4ListWithRelatedto,
     subtasks: List<ICal4List>,
+    subnotes: List<ICal4List>,
     navController: NavController,
-    settingShowSubtasks: Boolean = true,
-    settingShowAttachments: Boolean = true,
+    settingExpandSubtasks: Boolean = true,
+    settingExpandSubnotes: Boolean = true,
+    settingExpandAttachments: Boolean = true,
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
     onEditRequest: (iCalObjectId: Long) -> Unit,
@@ -56,6 +62,11 @@ fun ICalObjectListCard(
     var markwon = Markwon.builder(LocalContext.current)
         .usePlugin(StrikethroughPlugin.create())
         .build()
+
+    var isSubtasksExpanded by remember { mutableStateOf(settingExpandSubtasks) }
+    var isSubnotesExpanded by remember { mutableStateOf(settingExpandSubnotes) }
+    var isAttachmentsExpanded by remember { mutableStateOf(settingExpandAttachments) }
+
 
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -206,7 +217,73 @@ fun ICalObjectListCard(
                             })
                 }
 
-                if (settingShowAttachments && (iCalObjectWithRelatedto.attachment?.size ?: 0) > 0) {
+                if(iCalObject.numAttachments > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0) {
+                    Row(
+                        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if(iCalObject.numAttachments > 0)
+                            FilterChip(
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Outlined.AttachFile,
+                                        stringResource(R.string.attachments)
+                                    )
+                                },
+                                trailingIcon = {
+                                    Icon(
+                                        if(isAttachmentsExpanded) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
+                                        stringResource(R.string.list_expand)
+                                    ) },
+                                label = { Text(iCalObject.numAttachments.toString()) },
+                                onClick = { isAttachmentsExpanded = !isAttachmentsExpanded },
+                                selected = false,
+                                border = null,
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
+                        if(iCalObject.numSubtasks > 0)
+                            FilterChip(
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Outlined.TaskAlt,
+                                        stringResource(R.string.subtasks)
+                                    )
+                                },
+                                trailingIcon = {
+                                    Icon(
+                                        if(isSubtasksExpanded) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
+                                        stringResource(R.string.list_expand)
+                                    ) },
+                                label = { Text(iCalObject.numSubtasks.toString()) },
+                                onClick = { isSubtasksExpanded = !isSubtasksExpanded },
+                                selected = false,
+                                border = null,
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
+                        if(iCalObject.numSubnotes > 0)
+                            FilterChip(
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Outlined.Forum,
+                                        stringResource(R.string.note)
+                                    )
+                                },
+                                trailingIcon = {
+                                    Icon(
+                                        if(isSubnotesExpanded) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
+                                        stringResource(R.string.list_expand)
+                                ) },
+                                label = { Text(iCalObject.numSubnotes.toString()) },
+                                onClick = { isSubnotesExpanded = !isSubnotesExpanded },
+                                selected = false,
+                                border = null,
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
+                    }
+                }
+
+                if (isAttachmentsExpanded && (iCalObjectWithRelatedto.attachment?.size ?: 0) > 0) {
                     LazyRow(
                         content = {
                             items(iCalObjectWithRelatedto.attachment ?: emptyList()) { attachment ->
@@ -228,7 +305,7 @@ fun ICalObjectListCard(
                     )
 
 
-                if (settingShowSubtasks && (subtasks.size) > 0) {
+                if (isSubtasksExpanded && (subtasks.size) > 0) {
                     Column {
                         subtasks.forEach { subtask ->
                             SubtaskCard(
@@ -237,6 +314,19 @@ fun ICalObjectListCard(
                                 showProgress = settingShowProgressSubtasks,
                                 onEditRequest = onEditRequest,
                                 onProgressChanged = onProgressChanged
+                            )
+                        }
+                    }
+                }
+
+                if (isSubnotesExpanded && (subnotes.size) > 0) {
+                    Column {
+                        subnotes.forEach { subnote ->
+                            SubnoteCard(
+                                subnote = subnote,
+                                navController = navController,
+                                onEditRequest = onEditRequest,
+                                audioUri = null
                             )
                         }
                     }
@@ -258,6 +348,10 @@ fun ICalObjectListCardPreview_JOURNAL() {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
                 this.percent = 34
+            }),
+            listOf(ICal4List.getSample().apply {
+                this.component = Component.VJOURNAL.name
+                this.module = Module.NOTE.name
             }),
             rememberNavController(),
             onEditRequest = { },
@@ -284,6 +378,10 @@ fun ICalObjectListCardPreview_NOTE() {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
                 this.percent = 34
+            }),
+            listOf(ICal4List.getSample().apply {
+                this.component = Component.VJOURNAL.name
+                this.module = Module.NOTE.name
             }),
             rememberNavController(),
             onEditRequest = { },
@@ -312,6 +410,10 @@ fun ICalObjectListCardPreview_TODO() {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
                 this.percent = 34
+            }),
+            listOf(ICal4List.getSample().apply {
+                this.component = Component.VJOURNAL.name
+                this.module = Module.NOTE.name
             }),
             rememberNavController(),
             onEditRequest = { },
@@ -346,6 +448,10 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
                 this.module = Module.TODO.name
                 this.percent = 34
             }),
+            listOf(ICal4List.getSample().apply {
+                this.component = Component.VJOURNAL.name
+                this.module = Module.NOTE.name
+            }),
             rememberNavController(),
             onEditRequest = { },
             settingShowProgressMaintasks = false,
@@ -377,6 +483,10 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
                 this.percent = 34
+            }),
+            listOf(ICal4List.getSample().apply {
+                this.component = Component.VJOURNAL.name
+                this.module = Module.NOTE.name
             }),
             rememberNavController(),
             onEditRequest = { },

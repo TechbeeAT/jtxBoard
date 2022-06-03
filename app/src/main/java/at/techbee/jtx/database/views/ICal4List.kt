@@ -73,6 +73,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = sub_ical.$COLUMN_ID AND sub_ical.$COLUMN_MODULE = 'TODO' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'CHILD') THEN 1 ELSE 0 END as isChildOfTodo, " +
             "(SELECT group_concat($TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT, \', \') FROM $TABLE_NAME_CATEGORY WHERE main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID GROUP BY $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = \'VTODO\' AND sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'CHILD') as numSubtasks, " +
+            "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = \'VJOURNAL\' AND sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'CHILD') as numSubnotes, " +
             "(SELECT count(*) FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAttachments, " +
             "(SELECT count(*) FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAttendees, " +
             "(SELECT count(*) FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numComments, " +
@@ -139,6 +140,7 @@ data class ICal4List(
 
     @ColumnInfo var categories: String?,
     @ColumnInfo var numSubtasks: Int,
+    @ColumnInfo var numSubnotes: Int,
     @ColumnInfo var numAttachments: Int,
     @ColumnInfo var numAttendees: Int,
     @ColumnInfo var numComments: Int,
@@ -193,6 +195,7 @@ data class ICal4List(
                 isChildOfTodo = false,
                 categories = "Category1, Whatever",
                 numSubtasks = 3,
+                numSubnotes = 2,
                 numAttachments = 4,
                 numAttendees = 5,
                 numComments = 6,

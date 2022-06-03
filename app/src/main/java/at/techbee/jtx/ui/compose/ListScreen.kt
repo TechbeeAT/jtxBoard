@@ -32,21 +32,18 @@ import at.techbee.jtx.ui.SettingsFragment
 
 
 @Composable
-fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: LiveData<List<ICal4List>>, scrollOnceId: MutableLiveData<Long?>, navController: NavController, model: IcalListViewModel) {
+fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: LiveData<List<ICal4List>>, subnotesLive: LiveData<List<ICal4List>>, scrollOnceId: MutableLiveData<Long?>, navController: NavController, model: IcalListViewModel) {
 
     val list by listLive.observeAsState(emptyList())
     val subtasks by subtasksLive.observeAsState(emptyList())
+    val subnotes by subnotesLive.observeAsState(emptyList())
+
 
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
 
-
     //load settings
     val settings = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
-    val settingShowSubtasks = settings.getBoolean(SettingsFragment.SHOW_SUBTASKS_IN_LIST, true)
-    val settingShowAttachments = settings.getBoolean(SettingsFragment.SHOW_ATTACHMENTS_IN_LIST, true)
-    val settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false)
-    val settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true)
 
     val excludeDone by model.isExcludeDone.observeAsState(false)
 
@@ -81,14 +78,21 @@ fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: L
             if(model.searchStatusTodo.isNotEmpty()) // exclude filtered if applicable
                 currentSubtasks = currentSubtasks.filter { subtask -> model.searchStatusTodo.contains(StatusTodo.getFromString(subtask.status)) }
 
+            val currentSubnotes = subnotes.filter { subnote ->
+                iCalObject.relatedto?.any { relatedto ->
+                    relatedto.linkedICalObjectId == subnote.id && relatedto.reltype == Reltype.CHILD.name } == true
+            }
+
             ICalObjectListCard(
                 iCalObject,
                 currentSubtasks,
+                currentSubnotes,
                 navController,
-                settingShowSubtasks = settingShowSubtasks,
-                settingShowAttachments = settingShowAttachments,
-                settingShowProgressMaintasks = settingShowProgressMaintasks,
-                settingShowProgressSubtasks = settingShowProgressSubtasks,
+                settingExpandSubtasks = settings.getBoolean(SettingsFragment.AUTO_EXPAND_SUBTASKS, false),
+                settingExpandSubnotes = settings.getBoolean(SettingsFragment.AUTO_EXPAND_SUBNOTES, false),
+                settingExpandAttachments = settings.getBoolean(SettingsFragment.AUTO_EXPAND_ATTACHMENTS, false),
+                settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false),
+                settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true),
                 onEditRequest = { id -> model.postDirectEditEntity(id) },
                 onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> model.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  }
             )

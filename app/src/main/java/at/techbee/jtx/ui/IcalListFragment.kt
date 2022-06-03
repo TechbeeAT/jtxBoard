@@ -175,14 +175,6 @@ class IcalListFragment : Fragment() {
             updateMenuVisibilities()
         }
 
-        // This observer is needed in order to make sure that the Subtasks are retrieved!
-        icalListViewModel.allSubtasks.observe(viewLifecycleOwner) {
-            this.allSubtasks = it     // give observer something to do
-            //if(it.isNotEmpty())
-            //recyclerView?.adapter?.notifyDataSetChanged()
-            // trying to skip this code. This might have the effect, that subtasks that are added during the sync might not be immediately available, but improves the performance as the list does not get updated all the time
-        }
-
         icalListViewModel.allCollections.observe(viewLifecycleOwner) {
             allCollections = it
         }

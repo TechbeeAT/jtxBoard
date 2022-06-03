@@ -20,8 +20,9 @@ import java.lang.ClassCastException
 class SettingsFragment : PreferenceFragmentCompat() {
 
     companion object {
-        const val SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_in_list"
-        const val SHOW_ATTACHMENTS_IN_LIST = "settings_show_attachments_in_list"
+        const val AUTO_EXPAND_SUBTASKS = "settings_auto_expand_subtasks"
+        const val AUTO_EXPAND_SUBNOTES = "settings_auto_expand_subnotes"
+        const val AUTO_EXPAND_ATTACHMENTS = "settings_auto_expand_attachments"
         const val SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST = "settings_show_progress_for_maintasks_in_list"
         const val SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST = "settings_show_progress_for_subtasks_in_list"
 

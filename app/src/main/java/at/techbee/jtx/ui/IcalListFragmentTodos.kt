@@ -76,6 +76,7 @@ class IcalListFragmentTodos : Fragment() {
                         ListScreen(
                             listLive = icalListViewModel.iCal4ListTodos,
                             subtasksLive = icalListViewModel.allSubtasks,
+                            subnotesLive = icalListViewModel.allSubnotes,
                             scrollOnceId = icalListViewModel.scrollOnceId,
                             navController = navController,
                             model = icalListViewModel)

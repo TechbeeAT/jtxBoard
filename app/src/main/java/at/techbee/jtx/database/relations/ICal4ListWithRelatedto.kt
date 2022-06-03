@@ -80,6 +80,7 @@ data class ICal4ListWithRelatedto (
                                 isChildOfTodo = false,
                                 categories = "Category1, Whatever",
                                 numSubtasks = 3,
+                                numSubnotes = 5,
                                 numAttachments = 4,
                                 numAttendees = 5,
                                 numComments = 6,
