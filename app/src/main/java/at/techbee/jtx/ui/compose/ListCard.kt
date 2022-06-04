@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.compose
 
 import android.media.MediaPlayer
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -285,7 +286,7 @@ fun ICalObjectListCard(
                     }
                 }
 
-                if (isAttachmentsExpanded && (iCalObjectWithRelatedto.attachment?.size ?: 0) > 0) {
+                AnimatedVisibility(visible = isAttachmentsExpanded) {
                     LazyRow(
                         content = {
                             items(iCalObjectWithRelatedto.attachment ?: emptyList()) { attachment ->
@@ -307,7 +308,7 @@ fun ICalObjectListCard(
                     )
 
 
-                if (isSubtasksExpanded && (subtasks.size) > 0) {
+                AnimatedVisibility(visible = isSubtasksExpanded) {
                     Column {
                         subtasks.forEach { subtask ->
                             SubtaskCard(
@@ -321,7 +322,7 @@ fun ICalObjectListCard(
                     }
                 }
 
-                if (isSubnotesExpanded && (subnotes.size) > 0) {
+                AnimatedVisibility(visible = isSubnotesExpanded) {
                     Column {
                         subnotes.forEach { subnote ->
                             SubnoteCard(
