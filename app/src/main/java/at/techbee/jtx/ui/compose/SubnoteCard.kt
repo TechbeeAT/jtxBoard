@@ -9,6 +9,8 @@
 package at.techbee.jtx.ui.compose
 
 import android.annotation.SuppressLint
+import android.media.MediaPlayer
+import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -18,6 +20,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,13 +40,18 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 @Composable
 fun SubnoteCard(
     subnote: ICal4List,
-    audioUri: String?,
     navController: NavController,
     onEditRequest: (Long) -> Unit,
+    player: MediaPlayer,
 ) {
 
     var sliderPosition by remember { mutableStateOf(0f) }
     //var sliderPosition by mutableStateOf(subtask.percent?.toFloat() ?: 0f)
+    var playing by remember { mutableStateOf(false) }
+    var position by remember { mutableStateOf(0F) }
+    var duration by remember { mutableStateOf(0) }
+
+    val context = LocalContext.current
 
     ElevatedCard(
         modifier = Modifier
@@ -66,24 +74,40 @@ fun SubnoteCard(
 
         Column() {
 
-            if(audioUri?.isNotEmpty() == true) {
+            subnote.audioAttachment?.let {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp)
                 ) {
-                    Icon(
-                        Icons.Outlined.PlayCircle,
-                        stringResource(R.string.view_comment_playbutton_content_desc),
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
+                    IconButton(onClick = {
+                        if(player.isPlaying) {
+                            player.stop()
+                            player.reset()
+                        }
+                        player.setDataSource(context, Uri.parse(subnote.audioAttachment))
+                        player.prepare()
+                        duration = player.duration
+                        player.start()
+                    }) {
+                        Icon(
+                            Icons.Outlined.PlayCircle,
+                            stringResource(R.string.view_comment_playbutton_content_desc),
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    }
                     Slider(
-                        value = sliderPosition,
-                        valueRange = 0F..100F,
-                        steps = 100,
-                        onValueChange = { sliderPosition = it },
-                        modifier = Modifier.fillMaxWidth().padding(end = 8.dp),
-                        enabled = false
+                        value = position,
+                        valueRange = 0F..duration.toFloat(),
+                        onValueChange = {
+                            position = it
+                            player.seekTo(it.toInt())
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 8.dp)
                     )
                 }
             }
@@ -92,7 +116,9 @@ fun SubnoteCard(
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
                 ) {
 
                     Text(
@@ -123,9 +149,9 @@ fun SubnoteCardPreview() {
                 this.module = Module.TODO.name
                 this.isReadOnly = false
             },
-            audioUri = null,
             navController = rememberNavController(),
             onEditRequest = { },
+            player = MediaPlayer(),
         )
     }
 }
@@ -143,9 +169,9 @@ fun SubnoteCardPreview_audio() {
                 this.isReadOnly = true
                 this.numSubtasks = 7
             },
-            audioUri = "TODO",
             navController = rememberNavController(),
             onEditRequest = { },
+            player = MediaPlayer(),
         )
     }
 }
@@ -160,9 +186,9 @@ fun SubnoteCardPreview_audio_with_text() {
                 this.module = Module.TODO.name
                 this.percent = 34
             },
-            audioUri = "TODO",
             navController = rememberNavController(),
             onEditRequest = { },
+            player = MediaPlayer(),
         )
     }
 }

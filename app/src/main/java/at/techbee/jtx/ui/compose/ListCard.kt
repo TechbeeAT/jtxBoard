@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.compose
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -55,7 +56,8 @@ fun ICalObjectListCard(
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
     onEditRequest: (iCalObjectId: Long) -> Unit,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
+    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    player: MediaPlayer
 ) {
 
     val iCalObject = iCalObjectWithRelatedto.property
@@ -326,7 +328,7 @@ fun ICalObjectListCard(
                                 subnote = subnote,
                                 navController = navController,
                                 onEditRequest = onEditRequest,
-                                audioUri = null
+                                player = player,
                             )
                         }
                     }
@@ -355,7 +357,8 @@ fun ICalObjectListCardPreview_JOURNAL() {
             }),
             rememberNavController(),
             onEditRequest = { },
-            onProgressChanged = { _, _, _ -> }
+            onProgressChanged = { _, _, _ -> },
+            player = MediaPlayer()
         )
     }
 }
@@ -385,7 +388,8 @@ fun ICalObjectListCardPreview_NOTE() {
             }),
             rememberNavController(),
             onEditRequest = { },
-            onProgressChanged = { _, _, _ -> }
+            onProgressChanged = { _, _, _ -> },
+            player = MediaPlayer()
         )
     }
 }
@@ -418,7 +422,8 @@ fun ICalObjectListCardPreview_TODO() {
             rememberNavController(),
             onEditRequest = { },
             settingShowProgressMaintasks = true,
-            onProgressChanged = { _, _, _ -> }
+            onProgressChanged = { _, _, _ -> },
+            player = MediaPlayer()
         )
     }
 }
@@ -455,7 +460,8 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             rememberNavController(),
             onEditRequest = { },
             settingShowProgressMaintasks = false,
-            onProgressChanged = { _, _, _ -> }
+            onProgressChanged = { _, _, _ -> },
+            player = MediaPlayer()
         )
     }
 }
@@ -491,7 +497,8 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             rememberNavController(),
             onEditRequest = { },
             settingShowProgressMaintasks = false,
-            onProgressChanged = { _, _, _ -> }
+            onProgressChanged = { _, _, _ -> },
+            player = MediaPlayer()
         )
     }
 }

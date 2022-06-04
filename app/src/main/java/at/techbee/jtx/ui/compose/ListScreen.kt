@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.compose
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,15 +33,22 @@ import at.techbee.jtx.ui.SettingsFragment
 
 
 @Composable
-fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: LiveData<List<ICal4List>>, subnotesLive: LiveData<List<ICal4List>>, scrollOnceId: MutableLiveData<Long?>, navController: NavController, model: IcalListViewModel) {
+fun ListScreen(
+    listLive: LiveData<List<ICal4ListWithRelatedto>>,
+    subtasksLive: LiveData<List<ICal4List>>,
+    subnotesLive: LiveData<List<ICal4List>>,
+    scrollOnceId: MutableLiveData<Long?>,
+    navController: NavController,
+    model: IcalListViewModel) {
 
     val list by listLive.observeAsState(emptyList())
     val subtasks by subtasksLive.observeAsState(emptyList())
     val subnotes by subnotesLive.observeAsState(emptyList())
 
-
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
+
+    val mediaPlayer = MediaPlayer()
 
     //load settings
     val settings = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
@@ -94,7 +102,8 @@ fun ListScreen(listLive: LiveData<List<ICal4ListWithRelatedto>>, subtasksLive: L
                 settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false),
                 settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true),
                 onEditRequest = { id -> model.postDirectEditEntity(id) },
-                onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> model.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  }
+                onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> model.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  },
+                player = mediaPlayer
             )
         }
     }
