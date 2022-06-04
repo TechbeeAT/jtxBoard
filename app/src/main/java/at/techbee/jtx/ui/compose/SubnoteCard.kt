@@ -11,10 +11,15 @@ package at.techbee.jtx.ui.compose
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.PauseCircle
 import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,9 +39,13 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+    ExperimentalAnimationApi::class
+)
 @Composable
 fun SubnoteCard(
     subnote: ICal4List,
@@ -51,7 +60,24 @@ fun SubnoteCard(
     var position by remember { mutableStateOf(0F) }
     var duration by remember { mutableStateOf(0) }
 
+    val coroutineScope = rememberCoroutineScope()
+
     val context = LocalContext.current
+
+    suspend fun updatePosition() {
+        val delayInMillis = 10L
+        val curDuration = player.duration
+
+        while(player.isPlaying && curDuration == player.duration) {
+            position = player.currentPosition.toFloat()
+            delay(delayInMillis)
+        }
+        player.stop()
+        player.reset()
+        playing = false
+        position = 0F
+    }
+
 
     ElevatedCard(
         modifier = Modifier
@@ -85,22 +111,46 @@ fun SubnoteCard(
                     IconButton(onClick = {
                         if(player.isPlaying) {
                             player.stop()
-                            player.reset()
+                            playing = false
                         }
+                        player.reset()
                         player.setDataSource(context, Uri.parse(subnote.audioAttachment))
                         player.prepare()
                         duration = player.duration
                         player.start()
+                        playing = true
+                        coroutineScope.launch {
+                            updatePosition()
+                        }
                     }) {
-                        Icon(
-                            Icons.Outlined.PlayCircle,
-                            stringResource(R.string.view_comment_playbutton_content_desc),
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
+                        AnimatedVisibility(
+                            visible = !playing,
+                            enter = scaleIn(),
+                            exit = scaleOut()
+                        ) {
+                            Icon(
+                                Icons.Outlined.PlayCircle,
+                                stringResource(R.string.view_comment_playbutton_content_desc),
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                        }
+                        AnimatedVisibility(
+                            visible = playing,
+                            enter = scaleIn(),
+                            exit = scaleOut()
+                        ) {
+                            Icon(
+                                Icons.Outlined.PauseCircle,
+                                stringResource(R.string.view_comment_pausebutton_content_desc),
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                        }
+
                     }
                     Slider(
                         value = position,
                         valueRange = 0F..duration.toFloat(),
+                        steps = duration/100,
                         onValueChange = {
                             position = it
                             player.seekTo(it.toInt())

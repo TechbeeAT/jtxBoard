@@ -231,6 +231,7 @@
     <string name="view_fragment_audio_permission_message">jtx Board needs the permission in order to record audio or use speech-to-text functionalities. Please grant the permission to use this feature.</string>
     <string name="view_fragment_audio_dialog_add_audio_note">Add Audio Note</string>
     <string name="view_comment_playbutton_content_desc">Play audio comment</string>
+    <string name="view_comment_pausebutton_content_desc">Pause audio comment</string>
     <string name="view_fragment_audio_start_stop_recording_contentdesc">Start/Stop recording</string>
     <string name="view_fragment_audio_start_stop_playback_contentdesc">Play audio comment</string>
     <string name="view_reccurrence_note_is_exception">This item is an exception to a recurring entry.</string>
