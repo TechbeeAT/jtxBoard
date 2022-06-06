@@ -639,14 +639,21 @@ class SyncContentProvider : ContentProvider() {
         }
 
         // STEP 4: update the missing uid of the inserted entries
-        val query4 = "UPDATE $TABLE_NAME_RELATEDTO " +
-                "SET $COLUMN_RELATEDTO_TEXT = " +
-                "(SELECT icalobject.$COLUMN_UID FROM $TABLE_NAME_ICALOBJECT icalobject " +
-                "INNER JOIN $TABLE_NAME_COLLECTION collection ON icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID " +
-                "WHERE $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = icalobject.$COLUMN_ID AND collection.$COLUMN_COLLECTION_ACCOUNT_NAME = '${account.name}' AND collection.$COLUMN_COLLECTION_ACCOUNT_TYPE = '${account.type}') " +
-                "WHERE $COLUMN_RELATEDTO_TEXT is null OR $COLUMN_RELATEDTO_TEXT = ''"
-        database.updateRAW(SimpleSQLiteQuery(query4))
-
+        val relatedtoWithoutUID = database.getRelatedToWithoutUID()
+        relatedtoWithoutUID.forEach { relatedto ->
+            val query4 = "UPDATE $TABLE_NAME_RELATEDTO " +
+                    "SET $COLUMN_RELATEDTO_TEXT = " +
+                    "(SELECT icalobject.$COLUMN_UID FROM $TABLE_NAME_ICALOBJECT icalobject " +
+                    "INNER JOIN $TABLE_NAME_COLLECTION collection ON icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID " +
+                    "WHERE $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = icalobject.$COLUMN_ID AND collection.$COLUMN_COLLECTION_ACCOUNT_NAME = '${account.name}' AND collection.$COLUMN_COLLECTION_ACCOUNT_TYPE = '${account.type}') " +
+                    "WHERE $COLUMN_RELATEDTO_ID = ${relatedto.relatedtoId}"
+            try {
+                database.updateRAW(SimpleSQLiteQuery(query4))
+            } catch (e: SQLiteConstraintException) {
+                Log.w("SQLiteConstraint", "The related-to combination with the UID was already there, deleting the current one as we can't update it")
+                database.deleteRelatedto(relatedto)
+            }
+        }
     }
 }
 
