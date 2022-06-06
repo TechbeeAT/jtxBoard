@@ -29,7 +29,7 @@ buildscript {
         version_navigation = '2.4.2'
         version_room = '2.4.2'
         version_material = '1.7.0-alpha02'
-        version_appcompat = "1.4.1"
+        version_appcompat = "1.4.2"
         version_work = "2.7.1"
         version_fragment = "1.4.0-alpha09"
         version_billing = "5.0.0"
