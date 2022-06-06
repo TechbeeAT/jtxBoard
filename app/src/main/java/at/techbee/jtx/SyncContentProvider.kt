@@ -594,21 +594,22 @@ class SyncContentProvider : ContentProvider() {
                     "SET $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = " +
                     "(SELECT icalobject.$COLUMN_ID FROM $TABLE_NAME_ICALOBJECT icalobject " +
                     "INNER JOIN $TABLE_NAME_COLLECTION collection ON icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID " +
-                    "WHERE $COLUMN_RELATEDTO_TEXT = icalobject.$COLUMN_UID AND collection.$COLUMN_COLLECTION_ACCOUNT_NAME = \"${account.name}\" AND collection.$COLUMN_COLLECTION_ACCOUNT_TYPE = \"${account.type}\") " +
+                    "WHERE $COLUMN_RELATEDTO_TEXT = icalobject.$COLUMN_UID AND collection.$COLUMN_COLLECTION_ACCOUNT_NAME = '${account.name}' AND collection.$COLUMN_COLLECTION_ACCOUNT_TYPE = '${account.type}') " +
                     "WHERE $COLUMN_RELATEDTO_ID = ${relatedto.relatedtoId}"
             try {
                 database.updateRAW(SimpleSQLiteQuery(query))
             } catch (e: SQLiteConstraintException) {
-                database.deleteRelatedto(relatedto)       // the related-to was already there, delete the current one as we can't update it
+                Log.w("SQLiteConstraint", "The related-to combination was already there, deleting the current one as we can't update it")
+                database.deleteRelatedto(relatedto)
             }
         }
 
         // STEP 2: query all related to that are linking their PARENT and check if they also have the opposite relationship entered, if not, then add it
         val query2 =
             "SELECT r1.$COLUMN_RELATEDTO_ICALOBJECT_ID, r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, r1.$COLUMN_RELATEDTO_RELTYPE from $TABLE_NAME_RELATEDTO r1 " +
-                    "where r1.$COLUMN_RELATEDTO_RELTYPE = \"${Reltype.PARENT.name}\" " +
+                    "where r1.$COLUMN_RELATEDTO_RELTYPE = '${Reltype.PARENT.name}' " +
                     "AND r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID != 0 " +
-                    "AND r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID NOT IN ( select r2.$COLUMN_RELATEDTO_ICALOBJECT_ID from $TABLE_NAME_RELATEDTO r2 WHERE r2.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = r1.$COLUMN_RELATEDTO_ICALOBJECT_ID AND r2.$COLUMN_RELATEDTO_ICALOBJECT_ID = r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID and $COLUMN_RELATEDTO_RELTYPE = \"${Reltype.CHILD.name}\")"
+                    "AND r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID NOT IN ( select r2.$COLUMN_RELATEDTO_ICALOBJECT_ID from $TABLE_NAME_RELATEDTO r2 WHERE r2.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = r1.$COLUMN_RELATEDTO_ICALOBJECT_ID AND r2.$COLUMN_RELATEDTO_ICALOBJECT_ID = r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID and $COLUMN_RELATEDTO_RELTYPE = '${Reltype.CHILD.name}')"
         database.getCursor(SimpleSQLiteQuery(query2))?.use { cursor ->
             if (cursor.moveToFirst()) {
                 val relatedto = Relatedto(
@@ -623,9 +624,9 @@ class SyncContentProvider : ContentProvider() {
         // STEP 3: query all related to that are linking their CHILD and check if they also have the opposite relationship entered, if not, then add it
         val query3 =
             "SELECT r1.$COLUMN_RELATEDTO_ICALOBJECT_ID, r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, r1.$COLUMN_RELATEDTO_RELTYPE from $TABLE_NAME_RELATEDTO r1 " +
-                    "where r1.$COLUMN_RELATEDTO_RELTYPE = \"${Reltype.CHILD.name}\"" +
+                    "where r1.$COLUMN_RELATEDTO_RELTYPE = '${Reltype.CHILD.name}'" +
                     "AND r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID != 0 " +
-                    "AND r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID NOT IN ( select r2.$COLUMN_RELATEDTO_ICALOBJECT_ID from $TABLE_NAME_RELATEDTO r2 WHERE r2.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = r1.$COLUMN_RELATEDTO_ICALOBJECT_ID AND r2.$COLUMN_RELATEDTO_ICALOBJECT_ID = r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID and $COLUMN_RELATEDTO_RELTYPE = \"${Reltype.PARENT.name}\")"
+                    "AND r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID NOT IN ( select r2.$COLUMN_RELATEDTO_ICALOBJECT_ID from $TABLE_NAME_RELATEDTO r2 WHERE r2.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = r1.$COLUMN_RELATEDTO_ICALOBJECT_ID AND r2.$COLUMN_RELATEDTO_ICALOBJECT_ID = r1.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID and $COLUMN_RELATEDTO_RELTYPE = '${Reltype.PARENT.name}')"
         database.getCursor(SimpleSQLiteQuery(query3))?.use { cursor ->
             if (cursor.moveToFirst()) {
                 val relatedto = Relatedto(
@@ -642,8 +643,8 @@ class SyncContentProvider : ContentProvider() {
                 "SET $COLUMN_RELATEDTO_TEXT = " +
                 "(SELECT icalobject.$COLUMN_UID FROM $TABLE_NAME_ICALOBJECT icalobject " +
                 "INNER JOIN $TABLE_NAME_COLLECTION collection ON icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID " +
-                "WHERE $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = icalobject.$COLUMN_ID AND collection.$COLUMN_COLLECTION_ACCOUNT_NAME = \"${account.name}\" AND collection.$COLUMN_COLLECTION_ACCOUNT_TYPE = \"${account.type}\") " +
-                "WHERE $COLUMN_RELATEDTO_TEXT is null OR $COLUMN_RELATEDTO_TEXT = \"\""
+                "WHERE $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = icalobject.$COLUMN_ID AND collection.$COLUMN_COLLECTION_ACCOUNT_NAME = '${account.name}' AND collection.$COLUMN_COLLECTION_ACCOUNT_TYPE = '${account.type}') " +
+                "WHERE $COLUMN_RELATEDTO_TEXT is null OR $COLUMN_RELATEDTO_TEXT = ''"
         database.updateRAW(SimpleSQLiteQuery(query4))
 
     }
