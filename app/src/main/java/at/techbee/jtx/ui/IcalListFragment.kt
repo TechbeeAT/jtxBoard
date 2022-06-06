@@ -42,7 +42,6 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.databinding.FragmentIcalListBinding
 import at.techbee.jtx.databinding.FragmentIcalListQuickaddDialogBinding
 import at.techbee.jtx.flavored.AdManager
@@ -79,10 +78,8 @@ class IcalListFragment : Fragment() {
     private lateinit var prefs: SharedPreferences
     private lateinit var arguments: IcalListFragmentArgs
 
-    var allCollections = listOf<ICalCollection>()
+    private var allCollections = listOf<ICalCollection>()
     var currentWriteableCollections = listOf<ICalCollection>()
-
-    var allSubtasks: List<ICal4List> = listOf()
 
 
     companion object {
@@ -188,9 +185,6 @@ class IcalListFragment : Fragment() {
             this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(it))
         }
 
-        icalListViewModel.isExcludeDone.observe(viewLifecycleOwner) {
-            icalListViewModel.updateSearch()
-        }
 
         binding.listBottomBar.setOnMenuItemClickListener { menuitem ->
 
@@ -381,7 +375,7 @@ class IcalListFragment : Fragment() {
 
     private fun toggleMenuCheckboxFilter(menuitem: MenuItem) {
         when (menuitem.itemId) {
-            R.id.menu_list_bottom_toggle_completed_tasks -> icalListViewModel.isExcludeDone.postValue(icalListViewModel.isExcludeDone.value?.not() ?: false)
+            R.id.menu_list_bottom_toggle_completed_tasks -> icalListViewModel.isExcludeDone.value = (icalListViewModel.isExcludeDone.value?:false).not()
             R.id.menu_list_bottom_filter_overdue -> icalListViewModel.isFilterOverdue = !icalListViewModel.isFilterOverdue
             R.id.menu_list_bottom_filter_due_today -> icalListViewModel.isFilterDueToday = !icalListViewModel.isFilterDueToday
             R.id.menu_list_bottom_filter_due_tomorrow -> icalListViewModel.isFilterDueTomorrow = !icalListViewModel.isFilterDueTomorrow
@@ -389,7 +383,6 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_bottom_filter_no_dates_set -> icalListViewModel.isFilterNoDatesSet = !icalListViewModel.isFilterNoDatesSet
             else -> return
         }
-        //lastIcal4ListHash = 0     // makes the recycler view refresh everything (necessary for subtasks!)
         icalListViewModel.updateSearch()
     }
 
