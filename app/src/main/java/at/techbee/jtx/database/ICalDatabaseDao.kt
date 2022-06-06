@@ -475,6 +475,13 @@ DELETEs by Object
     @Query("SELECT * FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = 0 OR $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID IS NULL")
     fun getRelatedToWithoutLinkedId(): List<Relatedto>
 
+    /**
+     * Returns a list of related to where the TEXT (uid) is null or 0.
+     * Especially relevant after sync.
+     */
+    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_TEXT is null OR $COLUMN_RELATEDTO_TEXT = ''")
+    fun getRelatedToWithoutUID(): List<Relatedto>
+
 
 
 
