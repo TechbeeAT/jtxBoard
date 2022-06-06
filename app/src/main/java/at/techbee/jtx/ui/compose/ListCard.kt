@@ -151,6 +151,7 @@ fun ICalObjectListCard(
                         numAttachments = iCalObject.numAttachments,
                         numComments = iCalObject.numComments,
                         numResources = iCalObject.numResources,
+                        numAlarms = iCalObject.numAlarms,
                         isReadOnly = iCalObject.isReadOnly,
                         uploadPending = iCalObject.uploadPending,
                         hasURL = iCalObject.url?.isNotBlank() == true,

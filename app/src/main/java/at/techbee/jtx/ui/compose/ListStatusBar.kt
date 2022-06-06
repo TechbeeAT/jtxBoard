@@ -36,6 +36,7 @@ fun ListStatusBar(
     numAttachments: Int,
     numComments: Int,
     numResources: Int,
+    numAlarms: Int,
     isReadOnly: Boolean,
     uploadPending: Boolean,
     isRecurringOriginal: Boolean,
@@ -131,6 +132,13 @@ fun ListStatusBar(
                 text = numResources.toString(),
                 modifier = Modifier.padding(start = 4.dp)
             )
+        if (numAlarms > 0)
+            IconWithText(
+                icon = Icons.Outlined.Alarm,
+                iconDesc = stringResource(R.string.alarms),
+                text = numAlarms.toString(),
+                modifier = Modifier.padding(start = 4.dp)
+            )
 
         if (hasURL)
             Icon(
@@ -200,6 +208,7 @@ fun ListStatusBar_Preview1() {
             numAttachments = 4,
             numComments = 11,
             numResources = 3729,
+            numAlarms = 8,
             isReadOnly = false,
             uploadPending = true,
             hasLocation = true,
@@ -226,6 +235,7 @@ fun ListStatusBar_Preview2() {
             numAttachments = 0,
             numComments = 2345,
             numResources = 88,
+            numAlarms = 2,
             isReadOnly = true,
             uploadPending = false,
             hasLocation = true,
@@ -252,6 +262,7 @@ fun ListStatusBar_Preview3() {
             numAttachments = 0,
             numComments = 0,
             numResources = 0,
+            numAlarms = 0,
             isReadOnly = false,
             uploadPending = true,
             hasLocation = false,
