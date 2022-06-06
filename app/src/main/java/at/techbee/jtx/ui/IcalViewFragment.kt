@@ -908,7 +908,7 @@ class IcalViewFragment : Fragment() {
             summary2delete = icalViewViewModel.icalEntity.value?.property?.summary ?: ""
             icalViewViewModel.delete(icalViewViewModel.icalEntity.value?.property!!)
         }
-        builder.setNeutralButton(R.string.cancel) { _, _ -> }
+        builder.setNegativeButton(R.string.cancel) { _, _ -> }
         builder.show()
     }
 
