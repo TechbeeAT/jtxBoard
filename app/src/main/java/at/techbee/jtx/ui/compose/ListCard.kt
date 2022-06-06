@@ -229,59 +229,50 @@ fun ICalObjectListCard(
                     ) {
                         if(iCalObject.numAttachments > 0)
                             FilterChip(
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Outlined.AttachFile,
-                                        stringResource(R.string.attachments)
-                                    )
+                                label = {
+                                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                                        Icon(
+                                            Icons.Outlined.AttachFile,
+                                            stringResource(R.string.attachments)
+                                        )
+                                        Text(iCalObject.numAttachments.toString())
+                                    }
                                 },
-                                trailingIcon = {
-                                    Icon(
-                                        if(isAttachmentsExpanded) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
-                                        stringResource(R.string.list_expand)
-                                    ) },
-                                label = { Text(iCalObject.numAttachments.toString()) },
                                 onClick = { isAttachmentsExpanded = !isAttachmentsExpanded },
-                                selected = false,
-                                border = null,
+                                selected = isAttachmentsExpanded,
+                                //border = null,
                                 modifier = Modifier.padding(end = 4.dp)
                             )
                         if(iCalObject.numSubtasks > 0)
                             FilterChip(
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Outlined.TaskAlt,
-                                        stringResource(R.string.subtasks)
-                                    )
+                                label = {
+                                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                                        Icon(
+                                            Icons.Outlined.TaskAlt,
+                                            stringResource(R.string.subtasks)
+                                        )
+                                        Text(iCalObject.numSubtasks.toString(), modifier = Modifier.padding(start = 4.dp))
+                                    }
                                 },
-                                trailingIcon = {
-                                    Icon(
-                                        if(isSubtasksExpanded) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
-                                        stringResource(R.string.list_expand)
-                                    ) },
-                                label = { Text(iCalObject.numSubtasks.toString()) },
                                 onClick = { isSubtasksExpanded = !isSubtasksExpanded },
-                                selected = false,
-                                border = null,
+                                selected = isSubtasksExpanded,
+                                //border = null,
                                 modifier = Modifier.padding(end = 4.dp)
                             )
                         if(iCalObject.numSubnotes > 0)
                             FilterChip(
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Outlined.Forum,
-                                        stringResource(R.string.note)
-                                    )
+                                label = {
+                                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                                        Icon(
+                                            Icons.Outlined.Forum,
+                                            stringResource(R.string.note)
+                                        )
+                                        Text(iCalObject.numSubnotes.toString())
+                                    }
                                 },
-                                trailingIcon = {
-                                    Icon(
-                                        if(isSubnotesExpanded) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
-                                        stringResource(R.string.list_expand)
-                                ) },
-                                label = { Text(iCalObject.numSubnotes.toString()) },
                                 onClick = { isSubnotesExpanded = !isSubnotesExpanded },
-                                selected = false,
-                                border = null,
+                                selected = isSubnotesExpanded,
+                                //border = null,
                                 modifier = Modifier.padding(end = 4.dp)
                             )
                     }
