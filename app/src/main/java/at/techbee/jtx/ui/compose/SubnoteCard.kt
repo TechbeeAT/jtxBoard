@@ -51,11 +51,9 @@ fun SubnoteCard(
     subnote: ICal4List,
     navController: NavController,
     onEditRequest: (Long) -> Unit,
-    player: MediaPlayer,
+    player: MediaPlayer?,
 ) {
 
-    var sliderPosition by remember { mutableStateOf(0f) }
-    //var sliderPosition by mutableStateOf(subtask.percent?.toFloat() ?: 0f)
     var playing by remember { mutableStateOf(false) }
     var position by remember { mutableStateOf(0F) }
     var duration by remember { mutableStateOf(0) }
@@ -66,14 +64,14 @@ fun SubnoteCard(
 
     suspend fun updatePosition() {
         val delayInMillis = 10L
-        val curDuration = player.duration
+        val curDuration = player?.duration
 
-        while(player.isPlaying && curDuration == player.duration) {
+        while(player?.isPlaying == true && curDuration == player.duration) {
             position = player.currentPosition.toFloat()
             delay(delayInMillis)
         }
-        player.stop()
-        player.reset()
+        player?.stop()
+        player?.reset()
         playing = false
         position = 0F
     }
@@ -98,7 +96,7 @@ fun SubnoteCard(
 
         ) {
 
-        Column() {
+        Column {
 
             subnote.audioAttachment?.let {
                 Row(
@@ -109,15 +107,15 @@ fun SubnoteCard(
                         .padding(start = 8.dp, end = 8.dp)
                 ) {
                     IconButton(onClick = {
-                        if(player.isPlaying) {
+                        if(player?.isPlaying == true) {
                             player.stop()
                             playing = false
                         }
-                        player.reset()
-                        player.setDataSource(context, Uri.parse(subnote.audioAttachment))
-                        player.prepare()
-                        duration = player.duration
-                        player.start()
+                        player?.reset()
+                        player?.setDataSource(context, Uri.parse(subnote.audioAttachment))
+                        player?.prepare()
+                        duration = player?.duration ?: 0
+                        player?.start()
                         playing = true
                         coroutineScope.launch {
                             updatePosition()
@@ -153,7 +151,7 @@ fun SubnoteCard(
                         steps = duration/100,
                         onValueChange = {
                             position = it
-                            player.seekTo(it.toInt())
+                            player?.seekTo(it.toInt())
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -201,7 +199,7 @@ fun SubnoteCardPreview() {
             },
             navController = rememberNavController(),
             onEditRequest = { },
-            player = MediaPlayer(),
+            player = null,
         )
     }
 }
@@ -221,7 +219,7 @@ fun SubnoteCardPreview_audio() {
             },
             navController = rememberNavController(),
             onEditRequest = { },
-            player = MediaPlayer(),
+            player = null,
         )
     }
 }
@@ -238,7 +236,7 @@ fun SubnoteCardPreview_audio_with_text() {
             },
             navController = rememberNavController(),
             onEditRequest = { },
-            player = MediaPlayer(),
+            player = null,
         )
     }
 }

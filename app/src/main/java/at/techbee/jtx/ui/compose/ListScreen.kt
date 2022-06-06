@@ -9,6 +9,8 @@
 package at.techbee.jtx.ui.compose
 
 import android.media.MediaPlayer
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,6 +34,7 @@ import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.SettingsFragment
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListScreen(
     listLive: LiveData<List<ICal4ListWithRelatedto>>,
@@ -103,7 +106,11 @@ fun ListScreen(
                 settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true),
                 onEditRequest = { id -> model.postDirectEditEntity(id) },
                 onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> model.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  },
-                player = mediaPlayer
+                player = mediaPlayer,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+                    .animateItemPlacement()
             )
         }
     }

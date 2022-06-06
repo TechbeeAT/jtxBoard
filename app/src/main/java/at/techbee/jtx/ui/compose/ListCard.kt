@@ -51,14 +51,15 @@ fun ICalObjectListCard(
     subtasks: List<ICal4List>,
     subnotes: List<ICal4List>,
     navController: NavController,
+    modifier: Modifier? = Modifier,
+    player: MediaPlayer?,
     settingExpandSubtasks: Boolean = true,
     settingExpandSubnotes: Boolean = true,
     settingExpandAttachments: Boolean = true,
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
     onEditRequest: (iCalObjectId: Long) -> Unit,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
-    player: MediaPlayer
+    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
 
     val iCalObject = iCalObjectWithRelatedto.property
@@ -73,9 +74,7 @@ fun ICalObjectListCard(
 
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp)
+        modifier = modifier?:Modifier
             .combinedClickable(
                 onClick = {
                     navController.navigate(
@@ -351,7 +350,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
             rememberNavController(),
             onEditRequest = { },
             onProgressChanged = { _, _, _ -> },
-            player = MediaPlayer()
+            player = null
         )
     }
 }
@@ -382,7 +381,7 @@ fun ICalObjectListCardPreview_NOTE() {
             rememberNavController(),
             onEditRequest = { },
             onProgressChanged = { _, _, _ -> },
-            player = MediaPlayer()
+            player = null
         )
     }
 }
@@ -416,7 +415,7 @@ fun ICalObjectListCardPreview_TODO() {
             onEditRequest = { },
             settingShowProgressMaintasks = true,
             onProgressChanged = { _, _, _ -> },
-            player = MediaPlayer()
+            player = null
         )
     }
 }
@@ -454,7 +453,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             onEditRequest = { },
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> },
-            player = MediaPlayer()
+            player = null
         )
     }
 }
@@ -491,7 +490,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             onEditRequest = { },
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> },
-            player = MediaPlayer()
+            player = null
         )
     }
 }
