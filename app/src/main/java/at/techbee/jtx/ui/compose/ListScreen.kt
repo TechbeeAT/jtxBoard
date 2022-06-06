@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.compose
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,6 +31,8 @@ import at.techbee.jtx.database.StatusTodo
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.SettingsFragment
 
@@ -111,6 +114,19 @@ fun ListScreen(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
                     .animateItemPlacement()
+                    .combinedClickable(
+                        onClick = {
+                            navController.navigate(
+                                IcalListFragmentDirections
+                                    .actionIcalListFragmentToIcalViewFragment()
+                                    .setItem2show(iCalObject.property.id)
+                            )
+                        },
+                        onLongClick = {
+                            if (!iCalObject.property.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
+                                model.postDirectEditEntity(iCalObject.property.id)
+                        }
+                    )
             )
         }
     }

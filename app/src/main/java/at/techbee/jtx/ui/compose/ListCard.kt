@@ -11,7 +11,6 @@ package at.techbee.jtx.ui.compose
 import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -36,12 +35,9 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
-import io.noties.markwon.Markwon
-import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
+
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -51,7 +47,7 @@ fun ICalObjectListCard(
     subtasks: List<ICal4List>,
     subnotes: List<ICal4List>,
     navController: NavController,
-    modifier: Modifier? = Modifier,
+    modifier: Modifier = Modifier,
     player: MediaPlayer?,
     settingExpandSubtasks: Boolean = true,
     settingExpandSubnotes: Boolean = true,
@@ -63,9 +59,12 @@ fun ICalObjectListCard(
 ) {
 
     val iCalObject = iCalObjectWithRelatedto.property
+    /*
     var markwon = Markwon.builder(LocalContext.current)
         .usePlugin(StrikethroughPlugin.create())
         .build()
+
+     */
 
     var isSubtasksExpanded by remember { mutableStateOf(settingExpandSubtasks) }
     var isSubnotesExpanded by remember { mutableStateOf(settingExpandSubnotes) }
@@ -74,20 +73,7 @@ fun ICalObjectListCard(
 
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        modifier = modifier?:Modifier
-            .combinedClickable(
-                onClick = {
-                    navController.navigate(
-                        IcalListFragmentDirections
-                            .actionIcalListFragmentToIcalViewFragment()
-                            .setItem2show(iCalObject.id)
-                    )
-                },
-                onLongClick = {
-                    if (!iCalObject.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
-                        onEditRequest(iCalObject.id)
-                }
-            )
+        modifier = modifier
     ) {
 
 
