@@ -39,7 +39,6 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ICalObjectListCard(
@@ -49,6 +48,7 @@ fun ICalObjectListCard(
     navController: NavController,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
+    isScrolling: Boolean = false,
     settingExpandSubtasks: Boolean = true,
     settingExpandSubnotes: Boolean = true,
     settingExpandAttachments: Boolean = true,
@@ -174,21 +174,23 @@ fun ICalObjectListCard(
 
                     ) {
 
-                        val summarySize = if (iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
-                        val summaryTextDecoration = if(iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None
+                        val summarySize =
+                            if (iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
+                        val summaryTextDecoration =
+                            if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None
 
-                        if(iCalObject.summary?.isNotBlank() == true)
+                        if (iCalObject.summary?.isNotBlank() == true)
                             Text(
-                                text = iCalObject.summary?:"",
+                                text = iCalObject.summary ?: "",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = summarySize,
                                 textDecoration = summaryTextDecoration,
                                 modifier = Modifier.padding(top = 4.dp)
                             )
 
-                        if(iCalObject.description?.isNotBlank() == true)
+                        if (iCalObject.description?.isNotBlank() == true)
                             Text(
-                                text = iCalObject.description?:"",
+                                text = iCalObject.description ?: "",
                                 maxLines = 6,
                                 overflow = TextOverflow.Ellipsis
                             )
@@ -207,114 +209,131 @@ fun ICalObjectListCard(
                             })
                 }
 
-                if(iCalObject.numAttachments > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0) {
-                    Row(
-                        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if(iCalObject.numAttachments > 0)
-                            FilterChip(
-                                label = {
-                                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                                        Icon(
-                                            Icons.Outlined.AttachFile,
-                                            stringResource(R.string.attachments),
-                                            modifier = Modifier.size(16.dp)
-                                        )
-                                        Text(iCalObject.numAttachments.toString())
-                                    }
-                                },
-                                onClick = { isAttachmentsExpanded = !isAttachmentsExpanded },
-                                selected = isAttachmentsExpanded,
-                                //border = null,
-                                modifier = Modifier.padding(end = 4.dp)
-                            )
-                        if(iCalObject.numSubtasks > 0)
-                            FilterChip(
-                                label = {
-                                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                                        Icon(
-                                            Icons.Outlined.TaskAlt,
-                                            stringResource(R.string.subtasks),
-                                            modifier = Modifier.size(16.dp)
-                                        )
-                                        Text(iCalObject.numSubtasks.toString(), modifier = Modifier.padding(start = 4.dp))
-                                    }
-                                },
-                                onClick = { isSubtasksExpanded = !isSubtasksExpanded },
-                                selected = isSubtasksExpanded,
-                                //border = null,
-                                modifier = Modifier.padding(end = 4.dp)
-                            )
-                        if(iCalObject.numSubnotes > 0)
-                            FilterChip(
-                                label = {
-                                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                                        Icon(
-                                            Icons.Outlined.Forum,
-                                            stringResource(R.string.note),
-                                            modifier = Modifier.size(16.dp)
-                                        )
-                                        Text(iCalObject.numSubnotes.toString(), modifier = Modifier.padding(start = 4.dp))
-                                    }
-                                },
-                                onClick = { isSubnotesExpanded = !isSubnotesExpanded },
-                                selected = isSubnotesExpanded,
-                                //border = null,
-                                modifier = Modifier.padding(end = 4.dp)
-                            )
-                    }
-                }
 
-                AnimatedVisibility(visible = isAttachmentsExpanded) {
-                    LazyRow(
-                        content = {
-                            items(iCalObjectWithRelatedto.attachment ?: emptyList()) { attachment ->
-                                AttachmentCard(attachment)
+                    if (iCalObject.numAttachments > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0) {
+                        Row(
+                            modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            if (iCalObject.numAttachments > 0)
+                                FilterChip(
+                                    label = {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Icon(
+                                                Icons.Outlined.AttachFile,
+                                                stringResource(R.string.attachments),
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                            Text(iCalObject.numAttachments.toString())
+                                        }
+                                    },
+                                    onClick = { isAttachmentsExpanded = !isAttachmentsExpanded },
+                                    selected = isAttachmentsExpanded,
+                                    //border = null,
+                                    modifier = Modifier.padding(end = 4.dp)
+                                )
+                            if (iCalObject.numSubtasks > 0)
+                                FilterChip(
+                                    label = {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Icon(
+                                                Icons.Outlined.TaskAlt,
+                                                stringResource(R.string.subtasks),
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                            Text(
+                                                iCalObject.numSubtasks.toString(),
+                                                modifier = Modifier.padding(start = 4.dp)
+                                            )
+                                        }
+                                    },
+                                    onClick = { isSubtasksExpanded = !isSubtasksExpanded },
+                                    selected = isSubtasksExpanded,
+                                    //border = null,
+                                    modifier = Modifier.padding(end = 4.dp)
+                                )
+                            if (iCalObject.numSubnotes > 0)
+                                FilterChip(
+                                    label = {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Icon(
+                                                Icons.Outlined.Forum,
+                                                stringResource(R.string.note),
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                            Text(
+                                                iCalObject.numSubnotes.toString(),
+                                                modifier = Modifier.padding(start = 4.dp)
+                                            )
+                                        }
+                                    },
+                                    onClick = { isSubnotesExpanded = !isSubnotesExpanded },
+                                    selected = isSubnotesExpanded,
+                                    //border = null,
+                                    modifier = Modifier.padding(end = 4.dp)
+                                )
+                        }
+                    }
+
+                    AnimatedVisibility(visible = isAttachmentsExpanded && !isScrolling) {
+                        LazyRow(
+                            content = {
+                                items(
+                                    iCalObjectWithRelatedto.attachment ?: emptyList()
+                                ) { attachment ->
+                                    AttachmentCard(attachment)
+                                }
+                            },
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    }
+
+                    if (iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
+                        ProgressElement(
+                            iCalObjectId = iCalObject.id,
+                            progress = iCalObject.percent,
+                            isReadOnly = iCalObject.isReadOnly,
+                            isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                            onProgressChanged = onProgressChanged
+                        )
+
+
+                    AnimatedVisibility(visible = isSubtasksExpanded && !isScrolling) {
+                        Column {
+                            subtasks.forEach { subtask ->
+                                SubtaskCard(
+                                    subtask = subtask,
+                                    navController = navController,
+                                    showProgress = settingShowProgressSubtasks,
+                                    onEditRequest = onEditRequest,
+                                    onProgressChanged = onProgressChanged
+                                )
                             }
-                        },
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                }
-
-
-                if (iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
-                    ProgressElement(
-                        iCalObjectId = iCalObject.id,
-                        progress = iCalObject.percent,
-                        isReadOnly = iCalObject.isReadOnly,
-                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
-                        onProgressChanged = onProgressChanged
-                    )
-
-
-                AnimatedVisibility(visible = isSubtasksExpanded) {
-                    Column {
-                        subtasks.forEach { subtask ->
-                            SubtaskCard(
-                                subtask = subtask,
-                                navController = navController,
-                                showProgress = settingShowProgressSubtasks,
-                                onEditRequest = onEditRequest,
-                                onProgressChanged = onProgressChanged
-                            )
                         }
                     }
-                }
 
-                AnimatedVisibility(visible = isSubnotesExpanded) {
-                    Column {
-                        subnotes.forEach { subnote ->
-                            SubnoteCard(
-                                subnote = subnote,
-                                navController = navController,
-                                onEditRequest = onEditRequest,
-                                player = player,
-                            )
+                    AnimatedVisibility(visible = isSubnotesExpanded && !isScrolling) {
+                        Column {
+                            subnotes.forEach { subnote ->
+                                SubnoteCard(
+                                    subnote = subnote,
+                                    navController = navController,
+                                    onEditRequest = onEditRequest,
+                                    player = player,
+                                )
+                            }
                         }
                     }
-                }
             }
         }
     }

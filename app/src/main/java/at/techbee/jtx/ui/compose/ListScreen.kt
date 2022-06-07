@@ -102,6 +102,7 @@ fun ListScreen(
                 currentSubtasks,
                 currentSubnotes,
                 navController,
+                isScrolling = listState.isScrollInProgress,
                 settingExpandSubtasks = settings.getBoolean(SettingsFragment.AUTO_EXPAND_SUBTASKS, false),
                 settingExpandSubnotes = settings.getBoolean(SettingsFragment.AUTO_EXPAND_SUBNOTES, false),
                 settingExpandAttachments = settings.getBoolean(SettingsFragment.AUTO_EXPAND_ATTACHMENTS, false),
@@ -112,7 +113,7 @@ fun ListScreen(
                 player = mediaPlayer,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = if(iCalObject.property.id == list.last().property.id) 400.dp else 8.dp)
                     .animateItemPlacement()
                     .combinedClickable(
                         onClick = {
