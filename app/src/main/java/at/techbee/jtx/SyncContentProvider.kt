@@ -617,7 +617,11 @@ class SyncContentProvider : ContentProvider() {
                     linkedICalObjectId = cursor.getLong(0),
                     reltype = Reltype.CHILD.name
                 )
-                database.insertRelatedtoSync(relatedto)
+                try {
+                    database.insertRelatedtoSync(relatedto)
+                } catch (e: SQLiteConstraintException) {
+                    Log.w("SQLiteConstraint", "The related-to combination with the mirrored related-to caused an SQLiteConstraint error, ignoring it.")
+                }
             }
         }
 
@@ -634,7 +638,11 @@ class SyncContentProvider : ContentProvider() {
                     linkedICalObjectId = cursor.getLong(0),
                     reltype = Reltype.PARENT.name
                 )
-                database.insertRelatedtoSync(relatedto)
+                try {
+                    database.insertRelatedtoSync(relatedto)
+                } catch (e: SQLiteConstraintException) {
+                    Log.w("SQLiteConstraint", "The related-to combination with the mirrored related-to caused an SQLiteConstraint error, ignoring it.")
+                }
             }
         }
 
