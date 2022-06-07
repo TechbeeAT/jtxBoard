@@ -33,21 +33,21 @@
             app:defaultValue="false"
             app:icon="@drawable/ic_todo"
             app:key="settings_auto_expand_subtasks"
-            app:title="@string/settings_auto_expand_subtasks"
+            app:title="@string/settings_default_expand_subtasks"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
             app:defaultValue="false"
             app:icon="@drawable/ic_note"
             app:key="settings_auto_expand_subnotes"
-            app:title="@string/settings_auto_expand_subnotes"
+            app:title="@string/settings_default_expand_subnotes"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
             app:defaultValue="false"
             app:icon="@drawable/ic_attachment"
             app:key="settings_auto_expand_attachments"
-            app:title="@string/settings_auto_expand_attachments"
+            app:title="@string/settings_default_expand_attachments"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference

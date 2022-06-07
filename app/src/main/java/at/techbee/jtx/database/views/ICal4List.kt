@@ -81,8 +81,10 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "(SELECT count(*) FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numResources, " +
             "(SELECT count(*) FROM $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAlarms, " +
             "(SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND $COLUMN_ATTACHMENT_FMTTYPE LIKE 'audio/%' LIMIT 1 ) as audioAttachment, " +
-
-            "collection.$COLUMN_COLLECTION_READONLY as isReadOnly " +
+            "collection.$COLUMN_COLLECTION_READONLY as isReadOnly, " +
+            "main_icalobject.$COLUMN_SUBTASKS_EXPANDED, " +
+            "main_icalobject.$COLUMN_SUBNOTES_EXPANDED, " +
+            "main_icalobject.$COLUMN_ATTACHMENTS_EXPANDED " +
             "FROM $TABLE_NAME_ICALOBJECT main_icalobject " +
             //"LEFT JOIN $TABLE_NAME_CATEGORY ON main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
             "INNER JOIN $TABLE_NAME_COLLECTION collection ON main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID " +
@@ -151,8 +153,12 @@ data class ICal4List(
     @ColumnInfo var numResources: Int,
     @ColumnInfo var numAlarms: Int,
     @ColumnInfo var audioAttachment: String?,
-    @ColumnInfo var isReadOnly: Boolean
-)
+    @ColumnInfo var isReadOnly: Boolean,
+
+    @ColumnInfo(name = COLUMN_SUBTASKS_EXPANDED) var isSubtasksExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_SUBNOTES_EXPANDED) var isSubnotesExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_ATTACHMENTS_EXPANDED) var isAttachmentsExpanded: Boolean? = null,
+    )
 {
 
     companion object {

@@ -102,17 +102,18 @@ fun ListScreen(
                 currentSubtasks,
                 currentSubnotes,
                 navController,
-                settingExpandSubtasks = settings.getBoolean(SettingsFragment.AUTO_EXPAND_SUBTASKS, false),
-                settingExpandSubnotes = settings.getBoolean(SettingsFragment.AUTO_EXPAND_SUBNOTES, false),
-                settingExpandAttachments = settings.getBoolean(SettingsFragment.AUTO_EXPAND_ATTACHMENTS, false),
+                isSubtasksExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_SUBTASKS_DEFAULT, false),
+                isSubnotesExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_SUBNOTES_DEFAULT, false),
+                isAttachmentsExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_ATTACHMENTS_DEFAULT, false),
                 settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false),
                 settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true),
                 onEditRequest = { id -> model.postDirectEditEntity(id) },
                 onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> model.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  },
+                onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean -> model.updateExpanded(itemId, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)},
                 player = mediaPlayer,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = if(iCalObject.property.id == list.last().property.id) 400.dp else 8.dp)
+                    .padding(bottom = 8.dp)
                     .animateItemPlacement()
                     .combinedClickable(
                         onClick = {

@@ -456,9 +456,9 @@
     <string name="settings_select_theme_system">System default</string>
 
     <string name="settings_list">Settings for the item list</string>
-    <string name="settings_auto_expand_subtasks">Automatically expand subtasks in list</string>
-    <string name="settings_auto_expand_subnotes">Automatically expand subnotes in list</string>
-    <string name="settings_auto_expand_attachments">Automatically expand attachments in list</string>
+    <string name="settings_default_expand_subtasks">Expand subtasks in list by default</string>
+    <string name="settings_default_expand_subnotes">Expand subnotes in list by default</string>
+    <string name="settings_default_expand_attachments">Expand attachments in list by default</string>
 
     <string name="settings_show_subtasks_in_list">Show subtasks in list</string>
     <string name="settings_show_attachments_in_list">Show attachments in list</string>

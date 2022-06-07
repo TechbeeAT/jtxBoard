@@ -47,26 +47,27 @@ fun ICalObjectListCard(
     navController: NavController,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
-    settingExpandSubtasks: Boolean = true,
-    settingExpandSubnotes: Boolean = true,
-    settingExpandAttachments: Boolean = true,
+    isSubtasksExpandedDefault: Boolean = true,
+    isSubnotesExpandedDefault: Boolean = true,
+    isAttachmentsExpandedDefault: Boolean = true,
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
     onEditRequest: (iCalObjectId: Long) -> Unit,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
+    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
     val iCalObject = iCalObjectWithRelatedto.property
+
     /*
     var markwon = Markwon.builder(LocalContext.current)
         .usePlugin(StrikethroughPlugin.create())
         .build()
-
      */
 
-    var isSubtasksExpanded by remember { mutableStateOf(settingExpandSubtasks) }
-    var isSubnotesExpanded by remember { mutableStateOf(settingExpandSubnotes) }
-    var isAttachmentsExpanded by remember { mutableStateOf(settingExpandAttachments) }
+    var isSubtasksExpanded by remember { mutableStateOf(iCalObject.isSubtasksExpanded?:isSubtasksExpandedDefault) }
+    var isSubnotesExpanded by remember { mutableStateOf(iCalObject.isSubnotesExpanded?:isSubnotesExpandedDefault) }
+    var isAttachmentsExpanded by remember { mutableStateOf(iCalObject.isAttachmentsExpanded?:isAttachmentsExpandedDefault) }
 
 
     ElevatedCard(
@@ -252,7 +253,10 @@ fun ICalObjectListCard(
                                             )
                                         }
                                     },
-                                    onClick = { isSubtasksExpanded = !isSubtasksExpanded },
+                                    onClick = {
+                                        isSubtasksExpanded = !isSubtasksExpanded
+                                        onExpandedChanged(iCalObject.id, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)
+                                              },
                                     selected = isSubtasksExpanded,
                                     //border = null,
                                     modifier = Modifier.padding(end = 4.dp)
@@ -357,6 +361,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
             rememberNavController(),
             onEditRequest = { },
             onProgressChanged = { _, _, _ -> },
+            onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
     }
@@ -388,6 +393,7 @@ fun ICalObjectListCardPreview_NOTE() {
             rememberNavController(),
             onEditRequest = { },
             onProgressChanged = { _, _, _ -> },
+            onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
     }
@@ -422,6 +428,7 @@ fun ICalObjectListCardPreview_TODO() {
             onEditRequest = { },
             settingShowProgressMaintasks = true,
             onProgressChanged = { _, _, _ -> },
+            onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
     }
@@ -460,6 +467,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             onEditRequest = { },
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> },
+            onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
     }
@@ -497,6 +505,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             onEditRequest = { },
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> },
+            onExpandedChanged = { _, _, _, _ -> },
             player = null
         )
     }

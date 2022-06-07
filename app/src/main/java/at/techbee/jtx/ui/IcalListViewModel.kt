@@ -344,6 +344,15 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     }
 
     /**
+     * Updates the expanded status of subtasks, subnotes and attachments in the DB
+     */
+    fun updateExpanded(icalObjectId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.updateExpanded(icalObjectId, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)
+        }
+    }
+
+    /**
      * This function takes an icalObjectId, retrives the icalObject and posts it  in the directEditEntity LiveData Object.
      * This can be observed and will forward the user to the edit fragment.
      * [icalObjectId] that should be opened in the edit view
