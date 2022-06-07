@@ -230,7 +230,10 @@ fun ICalObjectListCard(
                                             Text(iCalObject.numAttachments.toString())
                                         }
                                     },
-                                    onClick = { isAttachmentsExpanded = !isAttachmentsExpanded },
+                                    onClick = {
+                                        isAttachmentsExpanded = !isAttachmentsExpanded
+                                        onExpandedChanged(iCalObject.id, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)
+                                    },
                                     selected = isAttachmentsExpanded,
                                     //border = null,
                                     modifier = Modifier.padding(end = 4.dp)
@@ -279,7 +282,10 @@ fun ICalObjectListCard(
                                             )
                                         }
                                     },
-                                    onClick = { isSubnotesExpanded = !isSubnotesExpanded },
+                                    onClick = {
+                                        isSubnotesExpanded = !isSubnotesExpanded
+                                        onExpandedChanged(iCalObject.id, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)
+                                    },
                                     selected = isSubnotesExpanded,
                                     //border = null,
                                     modifier = Modifier.padding(end = 4.dp)
