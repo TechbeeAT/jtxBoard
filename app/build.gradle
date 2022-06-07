@@ -22,8 +22,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 101020004
-        versionName "1.01.02-rc4"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 102000001
+        versionName "1.02.00-beta01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Stop Putin's madness!\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
