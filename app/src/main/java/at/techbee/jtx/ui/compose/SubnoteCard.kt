@@ -15,8 +15,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PauseCircle
@@ -30,28 +28,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+@OptIn(ExperimentalMaterial3Api::class,
     ExperimentalAnimationApi::class
 )
 @Composable
 fun SubnoteCard(
     subnote: ICal4List,
-    navController: NavController,
-    onEditRequest: (Long) -> Unit,
     player: MediaPlayer?,
+    modifier: Modifier = Modifier
 ) {
 
     var playing by remember { mutableStateOf(false) }
@@ -76,28 +69,8 @@ fun SubnoteCard(
         position = 0F
     }
 
-
-    ElevatedCard(
-        modifier = Modifier
-            .padding(start = 8.dp, end = 8.dp, bottom = 4.dp)
-            .combinedClickable(
-                onClick = {
-                    navController.navigate(
-                        IcalListFragmentDirections
-                            .actionIcalListFragmentToIcalViewFragment()
-                            .setItem2show(subnote.id)
-                    )
-                },
-                onLongClick = {
-                    if (!subnote.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
-                        onEditRequest(subnote.id)
-                }
-            ),
-
-        ) {
-
+    ElevatedCard(modifier = modifier) {
         Column {
-
             subnote.audioAttachment?.let {
                 Row(
                     horizontalArrangement = Arrangement.Start,
@@ -169,6 +142,20 @@ fun SubnoteCard(
                         .padding(8.dp)
                 ) {
 
+                    /*
+                    OutlinedIconButton(
+                        onClick = { /*TODO*/ },
+                        border = null
+                    ) {
+                        Icon(
+                            Icons.Outlined.DragHandle,
+                            "Up",
+                            //stringResource("Up"),
+                        )
+                    }
+                     */
+
+
                     Text(
                         subnote.summary ?: subnote.description ?: "",
                         modifier = Modifier
@@ -197,8 +184,6 @@ fun SubnoteCardPreview() {
                 this.module = Module.TODO.name
                 this.isReadOnly = false
             },
-            navController = rememberNavController(),
-            onEditRequest = { },
             player = null,
         )
     }
@@ -217,8 +202,6 @@ fun SubnoteCardPreview_audio() {
                 this.isReadOnly = true
                 this.numSubtasks = 7
             },
-            navController = rememberNavController(),
-            onEditRequest = { },
             player = null,
         )
     }
@@ -234,8 +217,6 @@ fun SubnoteCardPreview_audio_with_text() {
                 this.module = Module.TODO.name
                 this.percent = 34
             },
-            navController = rememberNavController(),
-            onEditRequest = { },
             player = null,
         )
     }

@@ -394,6 +394,12 @@ const val COLUMN_SUBNOTES_EXPANDED = "subnotesExpanded"
  */
 const val COLUMN_ATTACHMENTS_EXPANDED = "attachmentsExpanded"
 
+/**
+ * Purpose:  defines if the order index especially for subtasks and subnotes
+ * Type: [Int?]
+ */
+const val COLUMN_SORT_INDEX = "sortIndex"
+
 @Parcelize
 @Entity(
     tableName = TABLE_NAME_ICALOBJECT,
@@ -478,6 +484,7 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_SUBTASKS_EXPANDED) var isSubtasksExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_SUBNOTES_EXPANDED) var isSubnotesExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_ATTACHMENTS_EXPANDED) var isAttachmentsExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null
 
 ) : Parcelable {
 

@@ -45,7 +45,7 @@ import at.techbee.jtx.database.views.ICal4ViewNote
         ICal4List::class,
         ICal4ViewNote::class,
         CollectionsView::class],
-    version = 8,
+    version = 9,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -53,7 +53,8 @@ import at.techbee.jtx.database.views.ICal4ViewNote
         AutoMigration (from = 4, to = 5),  // no AutoMigrationSpec needed from 3 to 4
         AutoMigration (from = 5, to = 6),
         AutoMigration (from = 6, to = 7),  // only view update
-        AutoMigration (from = 7, to = 8)  // icalobject & view update
+        AutoMigration (from = 7, to = 8),  // icalobject & view update
+        AutoMigration (from = 8, to = 9),  // icalobject & view update
 ]
 )
 //@TypeConverters(Converters::class)
@@ -89,7 +90,6 @@ abstract class ICalDatabase : RoomDatabase() {
                 database.execSQL("DROP TABLE `contact`")
             }
         }
-
 
         @Volatile
         private var INSTANCE: ICalDatabase? = null

@@ -84,7 +84,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "collection.$COLUMN_COLLECTION_READONLY as isReadOnly, " +
             "main_icalobject.$COLUMN_SUBTASKS_EXPANDED, " +
             "main_icalobject.$COLUMN_SUBNOTES_EXPANDED, " +
-            "main_icalobject.$COLUMN_ATTACHMENTS_EXPANDED " +
+            "main_icalobject.$COLUMN_ATTACHMENTS_EXPANDED, " +
+            "main_icalobject.$COLUMN_SORT_INDEX " +
             "FROM $TABLE_NAME_ICALOBJECT main_icalobject " +
             //"LEFT JOIN $TABLE_NAME_CATEGORY ON main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
             "INNER JOIN $TABLE_NAME_COLLECTION collection ON main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID " +
@@ -158,6 +159,7 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_SUBTASKS_EXPANDED) var isSubtasksExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_SUBNOTES_EXPANDED) var isSubnotesExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_ATTACHMENTS_EXPANDED) var isAttachmentsExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null,
     )
 {
 

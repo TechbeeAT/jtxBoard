@@ -74,7 +74,6 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     val allSubtasks: LiveData<List<ICal4List>> = database.getAllSubtasks()
     val allSubnotes: LiveData<List<ICal4List>> = database.getAllSubnotes()
 
-
     val allCategories = database.getAllCategories()   // filter FragmentDialog
     val allCollections = database.getAllCollections()
 
@@ -349,6 +348,17 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     fun updateExpanded(icalObjectId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             database.updateExpanded(icalObjectId, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)
+        }
+    }
+
+    /**
+     * Updates the sortIndex of a list of elements in the DB
+     */
+    fun updateSortIndex(list: List<ICal4List>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            list.forEach {
+                database.updateOrder(it.id, it.sortIndex)
+            }
         }
     }
 
