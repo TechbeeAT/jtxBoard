@@ -56,7 +56,7 @@ class CollectionsFragment : Fragment() {
     private var iCalImportSnackbar: Snackbar? = null
 
     private var ics: String? = null
-    private val getFileUriForSavingICS = registerForActivityResult(ActivityResultContracts.CreateDocument()) { uri ->
+    private val getFileUriForSavingICS = registerForActivityResult(ActivityResultContracts.CreateDocument("text/calendar")) { uri ->
         if(ics.isNullOrEmpty() || uri == null) {
             Toast.makeText(context, R.string.collections_toast_export_ics_error, Toast.LENGTH_LONG)
             ics = null
@@ -78,7 +78,7 @@ class CollectionsFragment : Fragment() {
 
     private var allExportIcs: MutableList<Pair<String, String>> = mutableListOf()  // first of pair is filename, second is ics
     private val getFileUriForSavingAllCollections = registerForActivityResult(ActivityResultContracts.CreateDocument()) { uri ->
-        if(allExportIcs.isNullOrEmpty() || uri == null) {
+        if(allExportIcs.isEmpty() || uri == null) {
             Toast.makeText(context, R.string.collections_toast_export_all_ics_error, Toast.LENGTH_LONG)
             allExportIcs.clear()
             return@registerForActivityResult
@@ -358,9 +358,9 @@ class CollectionsFragment : Fragment() {
         allCollections.forEach {
             when {
                 it.readonly -> return@forEach
-                currentCollection.numJournals?:0 > 0 && !it.supportsVJOURNAL -> return@forEach
-                currentCollection.numNotes?:0 > 0 && !it.supportsVJOURNAL -> return@forEach
-                currentCollection.numTodos?:0 > 0 && !it.supportsVTODO -> return@forEach
+                (currentCollection.numJournals ?: 0) > 0 && !it.supportsVJOURNAL -> return@forEach
+                (currentCollection.numNotes ?: 0) > 0 && !it.supportsVJOURNAL -> return@forEach
+                (currentCollection.numTodos ?: 0) > 0 && !it.supportsVTODO -> return@forEach
                 currentCollection.collectionId == it.collectionId -> return@forEach
                 else -> possibleCollections.add(it.toICalCollection())
             }
