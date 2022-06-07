@@ -102,7 +102,6 @@ fun ListScreen(
                 currentSubtasks,
                 currentSubnotes,
                 navController,
-                isScrolling = listState.isScrollInProgress,
                 settingExpandSubtasks = settings.getBoolean(SettingsFragment.AUTO_EXPAND_SUBTASKS, false),
                 settingExpandSubnotes = settings.getBoolean(SettingsFragment.AUTO_EXPAND_SUBNOTES, false),
                 settingExpandAttachments = settings.getBoolean(SettingsFragment.AUTO_EXPAND_ATTACHMENTS, false),

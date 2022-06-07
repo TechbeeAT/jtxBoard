@@ -47,7 +47,6 @@ fun ICalObjectListCard(
     navController: NavController,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
-    isScrolling: Boolean = false,
     settingExpandSubtasks: Boolean = true,
     settingExpandSubnotes: Boolean = true,
     settingExpandAttachments: Boolean = true,
@@ -284,7 +283,7 @@ fun ICalObjectListCard(
                         }
                     }
 
-                    AnimatedVisibility(visible = isAttachmentsExpanded && !isScrolling) {
+                    AnimatedVisibility(visible = isAttachmentsExpanded) {
                         LazyRow(
                             content = {
                                 items(
@@ -307,7 +306,7 @@ fun ICalObjectListCard(
                         )
 
 
-                    AnimatedVisibility(visible = isSubtasksExpanded && !isScrolling) {
+                    AnimatedVisibility(visible = isSubtasksExpanded) {
                         Column {
                             subtasks.forEach { subtask ->
                                 SubtaskCard(
@@ -321,7 +320,7 @@ fun ICalObjectListCard(
                         }
                     }
 
-                    AnimatedVisibility(visible = isSubnotesExpanded && !isScrolling) {
+                    AnimatedVisibility(visible = isSubnotesExpanded) {
                         Column {
                             subnotes.forEach { subnote ->
                                 SubnoteCard(
