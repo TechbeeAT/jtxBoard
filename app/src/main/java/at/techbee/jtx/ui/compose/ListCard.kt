@@ -40,7 +40,7 @@ import at.techbee.jtx.ui.theme.Typography
 
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ICalObjectListCard(
     iCalObjectWithRelatedto: ICal4ListWithRelatedto,
@@ -182,7 +182,8 @@ fun ICalObjectListCard(
                                 text = iCalObject.summary?:"",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = summarySize,
-                                textDecoration = summaryTextDecoration
+                                textDecoration = summaryTextDecoration,
+                                modifier = Modifier.padding(top = 4.dp)
                             )
 
                         if(iCalObject.description?.isNotBlank() == true)
@@ -218,7 +219,8 @@ fun ICalObjectListCard(
                                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                                         Icon(
                                             Icons.Outlined.AttachFile,
-                                            stringResource(R.string.attachments)
+                                            stringResource(R.string.attachments),
+                                            modifier = Modifier.size(16.dp)
                                         )
                                         Text(iCalObject.numAttachments.toString())
                                     }
@@ -234,7 +236,8 @@ fun ICalObjectListCard(
                                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                                         Icon(
                                             Icons.Outlined.TaskAlt,
-                                            stringResource(R.string.subtasks)
+                                            stringResource(R.string.subtasks),
+                                            modifier = Modifier.size(16.dp)
                                         )
                                         Text(iCalObject.numSubtasks.toString(), modifier = Modifier.padding(start = 4.dp))
                                     }
@@ -250,9 +253,10 @@ fun ICalObjectListCard(
                                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                                         Icon(
                                             Icons.Outlined.Forum,
-                                            stringResource(R.string.note)
+                                            stringResource(R.string.note),
+                                            modifier = Modifier.size(16.dp)
                                         )
-                                        Text(iCalObject.numSubnotes.toString())
+                                        Text(iCalObject.numSubnotes.toString(), modifier = Modifier.padding(start = 4.dp))
                                     }
                                 },
                                 onClick = { isSubnotesExpanded = !isSubnotesExpanded },
