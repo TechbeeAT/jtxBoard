@@ -10,6 +10,7 @@ package at.techbee.jtx.ui
 
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,31 +35,41 @@ import at.techbee.jtx.ui.compose.ListScreen
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
-class IcalListFragmentTodos : Fragment() {
-
-    private val icalListViewModel: IcalListViewModel by activityViewModels()
+class IcalListFragmentModule(val module: Module) : Fragment() {
 
     companion object {
+        const val PREFS_LIST_JOURNALS = "prefsListJournals"
+        const val PREFS_LIST_NOTES = "prefsListNotes"
         const val PREFS_LIST_TODOS = "prefsListTodos"
 
-        const val PREFS_COLLECTION = "prefsCollection"
-        const val PREFS_ACCOUNT = "prefsAccount"
-        const val PREFS_CATEGORIES = "prefsCategories"
-        const val PREFS_CLASSIFICATION = "prefsClassification"
-        const val PREFS_STATUS_JOURNAL = "prefsStatusJournal"
-        const val PREFS_STATUS_TODO = "prefsStatusTodo"
-        const val PREFS_EXCLUDE_DONE = "prefsExcludeDone"
-        const val PREFS_FILTER_OVERDUE = "prefsFilterOverdue"
-        const val PREFS_FILTER_DUE_TODAY = "prefsFilterToday"
-        const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
-        const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
-        const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
-        const val PREFS_ORDERBY = "prefsOrderBy"
-        const val PREFS_SORTORDER = "prefsSortOrder"
+        private const val PREFS_COLLECTION = "prefsCollection"
+        private const val PREFS_ACCOUNT = "prefsAccount"
+        private const val PREFS_CATEGORIES = "prefsCategories"
+        private const val PREFS_CLASSIFICATION = "prefsClassification"
+        private const val PREFS_STATUS_JOURNAL = "prefsStatusJournal"
+        private const val PREFS_STATUS_TODO = "prefsStatusTodo"
+        private const val PREFS_EXCLUDE_DONE = "prefsExcludeDone"
+        private const val PREFS_ORDERBY = "prefsOrderBy"
+        private const val PREFS_SORTORDER = "prefsSortOrder"
+        private const val PREFS_FILTER_OVERDUE = "prefsFilterOverdue"
+        private const val PREFS_FILTER_DUE_TODAY = "prefsFilterToday"
+        private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
+        private const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
+        private const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
     }
+
+    private val icalListViewModel: IcalListViewModel by activityViewModels()
+    private lateinit var prefs: SharedPreferences
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
+
+        prefs = when(module) {
+            Module.JOURNAL -> requireActivity().getSharedPreferences(PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
+            Module.NOTE -> requireActivity().getSharedPreferences(PREFS_LIST_NOTES, Context.MODE_PRIVATE)
+            Module.TODO -> requireActivity().getSharedPreferences(PREFS_LIST_TODOS, Context.MODE_PRIVATE)
+        }
 
         val navController = this.findNavController()
 
@@ -74,7 +85,11 @@ class IcalListFragmentTodos : Fragment() {
                         color = MaterialTheme.colorScheme.background
                     ) {
                         ListScreen(
-                            listLive = icalListViewModel.iCal4ListTodos,
+                            listLive = when(module) {
+                                Module.JOURNAL -> icalListViewModel.iCal4ListJournals
+                                Module.NOTE -> icalListViewModel.iCal4ListNotes
+                                Module.TODO -> icalListViewModel.iCal4ListTodos
+                            },
                             subtasksLive = icalListViewModel.allSubtasks,
                             subnotesLive = icalListViewModel.allSubnotes,
                             scrollOnceId = icalListViewModel.scrollOnceId,
@@ -88,44 +103,33 @@ class IcalListFragmentTodos : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        icalListViewModel.searchModule = Module.TODO.name
-
-        val prefs = requireActivity().getSharedPreferences(PREFS_LIST_TODOS, Context.MODE_PRIVATE)
-
-        icalListViewModel.searchCategories = prefs.getStringSet(PREFS_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
-        icalListViewModel.searchCollection = prefs.getStringSet(PREFS_COLLECTION, null)?.toMutableList() ?: mutableListOf()
-        icalListViewModel.searchAccount = prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
-        icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(prefs.getStringSet(
-            PREFS_STATUS_JOURNAL, null))
-        icalListViewModel.searchStatusTodo = StatusTodo.getListFromStringList(prefs.getStringSet(
-            PREFS_STATUS_TODO, null))
-        icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(
-            PREFS_CLASSIFICATION, null))
-        icalListViewModel.isExcludeDone.postValue(prefs.getBoolean(PREFS_EXCLUDE_DONE, false))
-        icalListViewModel.isFilterOverdue = prefs.getBoolean(PREFS_FILTER_OVERDUE, false)
-        icalListViewModel.isFilterDueToday = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
-        icalListViewModel.isFilterDueTomorrow = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
-        icalListViewModel.isFilterDueFuture = prefs.getBoolean(PREFS_FILTER_DUE_FUTURE, false)
-        icalListViewModel.isFilterNoDatesSet = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
-        icalListViewModel.orderBy = prefs.getString(PREFS_ORDERBY, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.DUE
-        icalListViewModel.sortOrder = prefs.getString(PREFS_SORTORDER, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.ASC
+        icalListViewModel.searchModule = module.name
+        loadPrefs()
+        icalListViewModel.updateSearch()
 
         try {
             val activity = requireActivity() as MainActivity
             val toolbarText = getString(R.string.toolbar_text_jtx_board)
-            val toolbarSubtitle = getString(R.string.toolbar_text_jtx_board_tasks_overview)
+            val toolbarSubtitle = when(module) {
+                Module.JOURNAL -> getString(R.string.toolbar_text_jtx_board_journals_overview)
+                Module.NOTE -> getString(R.string.toolbar_text_jtx_board_notes_overview)
+                Module.TODO -> getString(R.string.toolbar_text_jtx_board_tasks_overview)
+            }
             activity.setToolbarTitle(toolbarText, toolbarSubtitle )
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
 
-        icalListViewModel.updateSearch()
     }
 
     override fun onPause() {
         super.onPause()
+        savePrefs()
+    }
 
-        val prefs = requireActivity().getSharedPreferences(PREFS_LIST_TODOS, Context.MODE_PRIVATE)
+
+    private fun savePrefs() {
+
         prefs.edit().putStringSet(PREFS_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
         prefs.edit().putStringSet(PREFS_ACCOUNT, icalListViewModel.searchAccount.toSet()).apply()
         prefs.edit().putStringSet(PREFS_STATUS_JOURNAL, StatusJournal.getStringSetFromList(icalListViewModel.searchStatusJournal)).apply()
@@ -143,4 +147,25 @@ class IcalListFragmentTodos : Fragment() {
         prefs.edit().putString(PREFS_SORTORDER, icalListViewModel.sortOrder.name).apply()
         prefs.edit().putString(PREFS_ORDERBY, icalListViewModel.orderBy.name).apply()
     }
+
+    fun loadPrefs() {
+        icalListViewModel.searchCategories = prefs.getStringSet(PREFS_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
+        icalListViewModel.searchCollection = prefs.getStringSet(PREFS_COLLECTION, null)?.toMutableList() ?: mutableListOf()
+        icalListViewModel.searchAccount = prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
+        icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(prefs.getStringSet(
+            PREFS_STATUS_JOURNAL, null))
+        icalListViewModel.searchStatusTodo = StatusTodo.getListFromStringList(prefs.getStringSet(
+            PREFS_STATUS_TODO, null))
+        icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(
+            PREFS_CLASSIFICATION, null))
+        icalListViewModel.isExcludeDone.postValue(prefs.getBoolean(PREFS_EXCLUDE_DONE, false))
+        icalListViewModel.isFilterOverdue = prefs.getBoolean(PREFS_FILTER_OVERDUE, false)
+        icalListViewModel.isFilterDueToday = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
+        icalListViewModel.isFilterDueTomorrow = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
+        icalListViewModel.isFilterDueFuture = prefs.getBoolean(PREFS_FILTER_DUE_FUTURE, false)
+        icalListViewModel.isFilterNoDatesSet = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
+        icalListViewModel.orderBy = prefs.getString(PREFS_ORDERBY, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.DUE
+        icalListViewModel.sortOrder = prefs.getString(PREFS_SORTORDER, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.ASC
+    }
+
 }

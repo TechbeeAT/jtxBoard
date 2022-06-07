@@ -93,7 +93,6 @@ class IcalListFragment : Fragment() {
         const val SETTINGS_SHOW_SUBNOTES_IN_LIST = "settings_show_subnotes_of_journals_and_tasks_in_noteslist"
         const val SETTINGS_SHOW_SUBJOURNALS_IN_LIST = "settings_show_subjournals_of_notes_and_tasks_in_journallist"
 
-
         const val TAB_INDEX_JOURNAL = 0
         const val TAB_INDEX_NOTE = 1
         const val TAB_INDEX_TODO = 2
@@ -129,10 +128,10 @@ class IcalListFragment : Fragment() {
 
             override fun createFragment(position: Int): Fragment {
                 return when(position) {
-                    0 -> IcalListFragmentJournals()
-                    1 -> IcalListFragmentNotes()
-                    2 -> IcalListFragmentTodos()
-                    else -> IcalListFragmentJournals()
+                    0 -> IcalListFragmentModule(Module.JOURNAL)
+                    1 -> IcalListFragmentModule(Module.NOTE)
+                    2 -> IcalListFragmentModule(Module.TODO)
+                    else -> IcalListFragmentModule(Module.JOURNAL)
                 }
             }
         }
