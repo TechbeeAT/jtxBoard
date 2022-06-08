@@ -374,7 +374,8 @@ class IcalViewFragment : Fragment() {
 
             if (it?.size != 0) {
                 binding.viewFeedbackLinearlayout.removeAllViews()
-                it.forEach { relatedNote ->
+                it.sortedBy { item -> item?.sortIndex }
+                    .forEach { relatedNote ->
                     if (relatedNote == null)
                         return@forEach
 
@@ -398,9 +399,7 @@ class IcalViewFragment : Fragment() {
                                 commentBinding.viewCommentPlaybutton,
                                 uri
                             )
-
                         }
-
                     }
                     commentBinding.root.setOnClickListener { view ->
                         view.findNavController().navigate(
@@ -420,9 +419,10 @@ class IcalViewFragment : Fragment() {
         icalViewViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
             binding.viewSubtasksLinearlayout.removeAllViews()
-            it.forEach { singleSubtask ->
-                addSubtasksView(singleSubtask, binding.viewSubtasksLinearlayout)
-            }
+            it.sortedBy { item -> item?.sortIndex }
+                .forEach { singleSubtask ->
+                    addSubtasksView(singleSubtask, binding.viewSubtasksLinearlayout)
+                }
         }
 
         icalViewViewModel.recurInstances.observe(viewLifecycleOwner) { instanceList ->
