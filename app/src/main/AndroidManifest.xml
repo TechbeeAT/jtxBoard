@@ -81,11 +81,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".ListScreen"
-            android:exported="false"
-            android:label="@string/title_activity_list_screen"
-            android:theme="@style/AppTheme" />
 
         <provider
             android:name="at.techbee.jtx.SyncContentProvider"
@@ -102,7 +97,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths"/>
         </provider>
 
         <activity
