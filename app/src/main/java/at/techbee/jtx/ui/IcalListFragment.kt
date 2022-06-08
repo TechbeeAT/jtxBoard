@@ -409,7 +409,9 @@ class IcalListFragment : Fragment() {
         // Build constraints.
         val constraintsBuilder =
             CalendarConstraints.Builder().apply {
-                val dates = icalListViewModel.iCal4ListJournals.value?.map { it.property.dtstart?:System.currentTimeMillis() }?.toList() ?: listOf(System.currentTimeMillis())
+                var dates = icalListViewModel.iCal4ListJournals.value?.map { it.property.dtstart?:System.currentTimeMillis() }?.toList()
+                if(dates.isNullOrEmpty())
+                    dates = listOf(System.currentTimeMillis())
                 setStart(dates.minOf { it })
                 setEnd(dates.maxOf { it })
                 setValidator(customDateValidator)
