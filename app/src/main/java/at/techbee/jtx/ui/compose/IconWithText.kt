@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,11 +33,16 @@ fun IconWithText(icon: ImageVector, iconDesc: String, text: String, modifier: Mo
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Icon(icon, iconDesc, modifier = Modifier.size(14.dp))
+        Icon(
+            icon,
+            iconDesc,
+            modifier = Modifier.size(14.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant)
         Text(
             text,
             modifier = Modifier.padding(start = 2.dp),
-            style = Typography.labelMedium
+            style = Typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

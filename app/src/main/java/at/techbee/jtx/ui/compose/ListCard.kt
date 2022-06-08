@@ -86,7 +86,6 @@ fun ICalObjectListCard(
         modifier = modifier
     ) {
 
-
         Box {
 
             ColoredEdge(iCalObject.colorItem, iCalObject.colorCollection)
@@ -106,7 +105,8 @@ fun ICalObjectListCard(
                             Text(
                                 iCalObject.collectionDisplayName ?: iCalObject.accountName ?: "",
                                 style = Typography.labelMedium,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
 
@@ -117,7 +117,8 @@ fun ICalObjectListCard(
                                         it,
                                         style = Typography.labelMedium,
                                         fontStyle = FontStyle.Italic,
-                                        modifier = Modifier.padding(end = 16.dp)
+                                        modifier = Modifier.padding(end = 16.dp),
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                                 iCalObject.dtstart?.let {
@@ -126,7 +127,8 @@ fun ICalObjectListCard(
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        modifier = Modifier.padding(end = 16.dp)
+                                        modifier = Modifier.padding(end = 16.dp),
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                                 iCalObject.due?.let {
@@ -134,7 +136,8 @@ fun ICalObjectListCard(
                                         iCalObject.getDueTextInfo(LocalContext.current) ?: "",
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
-                                        fontStyle = FontStyle.Italic
+                                        fontStyle = FontStyle.Italic,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
@@ -348,7 +351,7 @@ fun ICalObjectListCard(
                                                 )
                                             },
                                             onLongClick = {
-                                                if(!subtask.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
+                                                if (!subtask.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
                                                     onEditRequest(subtask.id)
                                             }
                                         )
@@ -361,12 +364,20 @@ fun ICalObjectListCard(
                                             onDragStopped = {
                                                 val index2move = subtasks.indexOf(subtask)
                                                 val list2order = subtasks.toMutableList()
-                                                if(index2move == -1)
+                                                if (index2move == -1)
                                                     return@draggable
-                                                if(offsetY < 0 && index2move > 0)  // dragged down
-                                                    Collections.swap(list2order, index2move, index2move - 1)
-                                                else if(offsetY > 0 && index2move < list2order.lastIndex)  // dragged up
-                                                    Collections.swap(list2order, index2move, index2move + 1)
+                                                if (offsetY < 0 && index2move > 0)  // dragged down
+                                                    Collections.swap(
+                                                        list2order,
+                                                        index2move,
+                                                        index2move - 1
+                                                    )
+                                                else if (offsetY > 0 && index2move < list2order.lastIndex)  // dragged up
+                                                    Collections.swap(
+                                                        list2order,
+                                                        index2move,
+                                                        index2move + 1
+                                                    )
 
                                                 list2order.forEachIndexed { index, iCal4List ->
                                                     iCal4List.sortIndex = index
@@ -413,12 +424,20 @@ fun ICalObjectListCard(
                                             onDragStopped = {
                                                 val index2move = subnotes.indexOf(subnote)
                                                 val list2order = subnotes.toMutableList()
-                                                if(index2move == -1)
+                                                if (index2move == -1)
                                                     return@draggable
-                                                if(offsetY < 0 && index2move > 0)  // dragged down
-                                                    Collections.swap(list2order, index2move, index2move - 1)
-                                                else if(offsetY > 0 && index2move < list2order.lastIndex)  // dragged up
-                                                    Collections.swap(list2order, index2move, index2move + 1)
+                                                if (offsetY < 0 && index2move > 0)  // dragged down
+                                                    Collections.swap(
+                                                        list2order,
+                                                        index2move,
+                                                        index2move - 1
+                                                    )
+                                                else if (offsetY > 0 && index2move < list2order.lastIndex)  // dragged up
+                                                    Collections.swap(
+                                                        list2order,
+                                                        index2move,
+                                                        index2move + 1
+                                                    )
 
                                                 list2order.forEachIndexed { index, iCal4List ->
                                                     iCal4List.sortIndex = index

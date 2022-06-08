@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -146,7 +147,8 @@ fun ListStatusBar(
                 stringResource(R.string.url),
                 modifier = Modifier
                     .padding(start = 4.dp)
-                    .size(14.dp)
+                    .size(14.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         if (hasLocation)
             Icon(
@@ -154,7 +156,8 @@ fun ListStatusBar(
                 stringResource(R.string.location),
                 modifier = Modifier
                     .padding(start = 4.dp)
-                    .size(14.dp)
+                    .size(14.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
         if (hasContact)
@@ -163,20 +166,23 @@ fun ListStatusBar(
                 stringResource(R.string.contact),
                 modifier = Modifier
                     .padding(start = 4.dp, end = 2.dp)
-                    .size(14.dp)
+                    .size(14.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
         if (isReadOnly)
             Icon(
                 painter = painterResource(id = R.drawable.ic_readonly),
                 contentDescription = stringResource(id = R.string.readyonly),
-                modifier = Modifier.size(14.dp)
+                modifier = Modifier.size(14.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         if (uploadPending)
             Icon(
                 Icons.Outlined.CloudSync,
                 stringResource(R.string.upload_pending),
-                modifier = Modifier.size(14.dp)
+                modifier = Modifier.size(14.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
         if (isRecurringOriginal || (isRecurringInstance && isLinkedRecurringInstance))
@@ -185,7 +191,8 @@ fun ListStatusBar(
                 stringResource(R.string.list_item_recurring),
                 modifier = Modifier
                     .padding(start = 4.dp)
-                    .size(14.dp)
+                    .size(14.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         if (isRecurringInstance && !isLinkedRecurringInstance)
             Icon(
@@ -193,7 +200,8 @@ fun ListStatusBar(
                 stringResource(R.string.list_item_recurring),
                 modifier = Modifier
                     .padding(start = 4.dp)
-                    .size(14.dp)
+                    .size(14.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
     }
 }

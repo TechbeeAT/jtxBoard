@@ -10,16 +10,18 @@ package at.techbee.jtx.ui.compose
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.DateTimeUtils
 import java.util.*
 
@@ -32,28 +34,33 @@ fun VerticalDateBlock(datetime: Long, timezone: String?) {
     ) {
         Text(
             text = DateTimeUtils.convertLongToDayString(datetime, timezone),
+            style = Typography.displaySmall,
             fontWeight = FontWeight.Bold,
-            fontSize = 36.sp
+            color = MaterialTheme.colorScheme.onSurface
         )
         Text(
             DateTimeUtils.convertLongToMonthString(datetime, timezone),
-            fontSize = 12.sp
+            style = Typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Text(
             DateTimeUtils.convertLongToYearString(datetime, timezone),
-            fontSize = 12.sp
+            style = Typography.bodySmall
         )
         if (timezone != ICalObject.TZ_ALLDAY)
             Text(
                 DateTimeUtils.convertLongToTimeString(datetime, timezone),
+                style = Typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
+                color = MaterialTheme.colorScheme.onSurface
             )
         if (timezone != ICalObject.TZ_ALLDAY && timezone?.isNotEmpty() == true && TimeZone.getTimeZone(timezone).getDisplayName(true, TimeZone.SHORT) != null)
             Text(
                 TimeZone.getTimeZone(timezone).getDisplayName(true, TimeZone.SHORT),
-                fontSize = 12.sp
+                style = Typography.bodySmall,
+                fontStyle = FontStyle.Italic,
+                color = MaterialTheme.colorScheme.onSurface
             )
     }
 }
