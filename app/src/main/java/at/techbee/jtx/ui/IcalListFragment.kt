@@ -128,10 +128,10 @@ class IcalListFragment : Fragment() {
 
             override fun createFragment(position: Int): Fragment {
                 return when(position) {
-                    0 -> IcalListFragmentModule(Module.JOURNAL)
-                    1 -> IcalListFragmentModule(Module.NOTE)
-                    2 -> IcalListFragmentModule(Module.TODO)
-                    else -> IcalListFragmentModule(Module.JOURNAL)
+                    0 -> IcalListFragmentJournal()
+                    1 -> IcalListFragmentNote()
+                    2 -> IcalListFragmentTodo()
+                    else -> IcalListFragmentJournal()
                 }
             }
         }

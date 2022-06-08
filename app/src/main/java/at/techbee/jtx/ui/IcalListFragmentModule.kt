@@ -35,7 +35,7 @@ import at.techbee.jtx.ui.compose.ListScreen
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
-class IcalListFragmentModule(val module: Module) : Fragment() {
+open class IcalListFragmentModule(val module: Module) : Fragment() {
 
     companion object {
         const val PREFS_LIST_JOURNALS = "prefsListJournals"
@@ -148,7 +148,7 @@ class IcalListFragmentModule(val module: Module) : Fragment() {
         prefs.edit().putString(PREFS_ORDERBY, icalListViewModel.orderBy.name).apply()
     }
 
-    fun loadPrefs() {
+    private fun loadPrefs() {
         icalListViewModel.searchCategories = prefs.getStringSet(PREFS_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
         icalListViewModel.searchCollection = prefs.getStringSet(PREFS_COLLECTION, null)?.toMutableList() ?: mutableListOf()
         icalListViewModel.searchAccount = prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
@@ -169,3 +169,9 @@ class IcalListFragmentModule(val module: Module) : Fragment() {
     }
 
 }
+
+
+class IcalListFragmentJournal: IcalListFragmentModule(module = Module.JOURNAL)
+class IcalListFragmentNote: IcalListFragmentModule(module = Module.NOTE)
+class IcalListFragmentTodo: IcalListFragmentModule(module = Module.TODO)
+
