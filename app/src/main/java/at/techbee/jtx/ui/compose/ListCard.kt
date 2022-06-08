@@ -105,7 +105,7 @@ fun ICalObjectListCard(
                             )
                         }
 
-                        if (iCalObject.categories?.isNotEmpty() == true && iCalObject.module == Module.TODO.name && (iCalObject.dtstart != null || iCalObject.due != null)) {
+                        if (iCalObject.categories?.isNotEmpty() == true || (iCalObject.module == Module.TODO.name && (iCalObject.dtstart != null || iCalObject.due != null))) {
                             Row {
                                 iCalObject.categories?.let {
                                     Text(
@@ -455,6 +455,7 @@ fun ICalObjectListCardPreview_TODO() {
             property.classification = Classification.CONFIDENTIAL.name
             property.dtstart = System.currentTimeMillis()
             property.due = System.currentTimeMillis()
+            property.categories = null
         }
         ICalObjectListCard(
             icalobject,
