@@ -351,16 +351,6 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    /**
-     * Updates the sortIndex of a list of elements in the DB
-     */
-    fun updateSortIndex(list: List<ICal4List>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            list.forEach {
-                database.updateOrder(it.id, it.sortIndex)
-            }
-        }
-    }
 
     /**
      * This function takes an icalObjectId, retrives the icalObject and posts it  in the directEditEntity LiveData Object.

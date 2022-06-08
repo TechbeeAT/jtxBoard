@@ -12,14 +12,13 @@ import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.AttachFile
+import androidx.compose.material.icons.outlined.Forum
+import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -44,8 +42,6 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
-import java.util.*
-import kotlin.math.roundToInt
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -64,8 +60,7 @@ fun ICalObjectListCard(
     settingShowProgressSubtasks: Boolean = true,
     onEditRequest: (iCalObjectId: Long) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
-    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
-    onOrderChanged: (subtasks: List<ICal4List>) -> Unit
+    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
     val iCalObject = iCalObjectWithRelatedto.property
@@ -334,8 +329,6 @@ fun ICalObjectListCard(
                         Column {
                             subtasks.forEach { subtask ->
 
-                                var offsetY by remember { mutableStateOf(0f) }  // see https://developer.android.com/jetpack/compose/gestures
-
                                 SubtaskCard(
                                     subtask = subtask,
                                     showProgress = settingShowProgressSubtasks,
@@ -355,37 +348,6 @@ fun ICalObjectListCard(
                                                     onEditRequest(subtask.id)
                                             }
                                         )
-                                        .offset { IntOffset(0, offsetY.roundToInt()) }
-                                        .draggable(
-                                            orientation = Orientation.Vertical,
-                                            state = rememberDraggableState { delta ->
-                                                offsetY += delta
-                                            },
-                                            onDragStopped = {
-                                                val index2move = subtasks.indexOf(subtask)
-                                                val list2order = subtasks.toMutableList()
-                                                if (index2move == -1)
-                                                    return@draggable
-                                                if (offsetY < 0 && index2move > 0)  // dragged down
-                                                    Collections.swap(
-                                                        list2order,
-                                                        index2move,
-                                                        index2move - 1
-                                                    )
-                                                else if (offsetY > 0 && index2move < list2order.lastIndex)  // dragged up
-                                                    Collections.swap(
-                                                        list2order,
-                                                        index2move,
-                                                        index2move + 1
-                                                    )
-
-                                                list2order.forEachIndexed { index, iCal4List ->
-                                                    iCal4List.sortIndex = index
-                                                }
-                                                offsetY = 0F
-                                                onOrderChanged(list2order)
-                                            }
-                                        )
                                 )
                             }
                         }
@@ -394,8 +356,6 @@ fun ICalObjectListCard(
                     AnimatedVisibility(visible = isSubnotesExpanded) {
                         Column {
                             subnotes.forEach { subnote ->
-
-                                var offsetY by remember { mutableStateOf(0f) }  // see https://developer.android.com/jetpack/compose/gestures
 
                                 SubnoteCard(
                                     subnote = subnote,
@@ -414,37 +374,6 @@ fun ICalObjectListCard(
                                                 if (!subnote.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
                                                     onEditRequest(subnote.id)
                                             },
-                                        )
-                                        .offset { IntOffset(0, offsetY.roundToInt()) }
-                                        .draggable(
-                                            orientation = Orientation.Vertical,
-                                            state = rememberDraggableState { delta ->
-                                                offsetY += delta
-                                            },
-                                            onDragStopped = {
-                                                val index2move = subnotes.indexOf(subnote)
-                                                val list2order = subnotes.toMutableList()
-                                                if (index2move == -1)
-                                                    return@draggable
-                                                if (offsetY < 0 && index2move > 0)  // dragged down
-                                                    Collections.swap(
-                                                        list2order,
-                                                        index2move,
-                                                        index2move - 1
-                                                    )
-                                                else if (offsetY > 0 && index2move < list2order.lastIndex)  // dragged up
-                                                    Collections.swap(
-                                                        list2order,
-                                                        index2move,
-                                                        index2move + 1
-                                                    )
-
-                                                list2order.forEachIndexed { index, iCal4List ->
-                                                    iCal4List.sortIndex = index
-                                                }
-                                                offsetY = 0F
-                                                onOrderChanged(list2order)
-                                            }
                                         )
                                 )
                             }
@@ -476,7 +405,6 @@ fun ICalObjectListCardPreview_JOURNAL() {
             onEditRequest = { },
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
-            onOrderChanged = {  },
             player = null
         )
     }
@@ -509,7 +437,6 @@ fun ICalObjectListCardPreview_NOTE() {
             onEditRequest = { },
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
-            onOrderChanged = {  },
             player = null
         )
     }
@@ -545,7 +472,6 @@ fun ICalObjectListCardPreview_TODO() {
             settingShowProgressMaintasks = true,
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
-            onOrderChanged = {  },
             player = null
         )
     }
@@ -585,7 +511,6 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
-            onOrderChanged = {  },
             player = null
         )
     }
@@ -624,7 +549,6 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
-            onOrderChanged = {  },
             player = null
         )
     }

@@ -110,7 +110,6 @@ fun ListScreen(
                 onEditRequest = { id -> model.postDirectEditEntity(id) },
                 onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> model.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  },
                 onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean -> model.updateExpanded(itemId, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)},
-                onOrderChanged = { sublist -> model.updateSortIndex(sublist) },
                 player = mediaPlayer,
                 modifier = Modifier
                     .fillMaxWidth()
