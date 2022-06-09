@@ -334,7 +334,7 @@ fun ICalObjectListCard(
                                     showProgress = settingShowProgressSubtasks,
                                     onProgressChanged = onProgressChanged,
                                     modifier = Modifier
-                                        .padding(start = 8.dp, end = 8.dp, bottom = 4.dp)
+                                        .padding(start = 8.dp, end = 8.dp)
                                         .combinedClickable(
                                             onClick = {
                                                 navController.navigate(
@@ -361,7 +361,7 @@ fun ICalObjectListCard(
                                     subnote = subnote,
                                     player = player,
                                     modifier = Modifier
-                                        .padding(start = 8.dp, end = 8.dp, bottom = 4.dp)
+                                        .padding(start = 8.dp, end = 8.dp)
                                         .combinedClickable(
                                             onClick = {
                                                 navController.navigate(
