@@ -419,6 +419,8 @@
     <string name="menu_list_todo_show_completed">Show completed</string>
     <string name="menu_list_todo_hide_completed">Hide completed</string>
     <string name="menu_list_syncnow">Sync now</string>
+    <string name="menu_list_viewmode_list">List view</string>
+    <string name="menu_list_viewmode_grid">Grid view</string>
 
 
     <string name="menu_view_share_text">Share</string>

@@ -89,6 +89,9 @@ class IcalListFragment : Fragment() {
         const val PREFS_MODULE = "prefsModule"
         const val PREFS_ISFIRSTRUN = "isFirstRun"
 
+        const val PREFS_VIEWMODE_LIST = "prefsViewmodeList"
+        const val PREFS_VIEWMODE_GRID = "prefsViewmodeGrid"
+
         const val SETTINGS_SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_of_journals_and_todos_in_tasklist"
         const val SETTINGS_SHOW_SUBNOTES_IN_LIST = "settings_show_subnotes_of_journals_and_tasks_in_noteslist"
         const val SETTINGS_SHOW_SUBJOURNALS_IN_LIST = "settings_show_subjournals_of_notes_and_tasks_in_journallist"
@@ -182,6 +185,13 @@ class IcalListFragment : Fragment() {
             icalListViewModel.directEditEntity.removeObservers(viewLifecycleOwner)
             icalListViewModel.directEditEntity.value = null      // invalidate so that on click on back, the value is empty and doesn't create unexpected behaviour!
             this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(it))
+        }
+
+        icalListViewModel.viewMode.observe(viewLifecycleOwner) {
+            if(it == PREFS_VIEWMODE_LIST)
+                optionsMenu?.findItem(R.id.menu_list_viewmode_list)?.isChecked = true
+            if(it == PREFS_VIEWMODE_GRID)
+                optionsMenu?.findItem(R.id.menu_list_viewmode_grid)?.isChecked = true
         }
 
 
@@ -348,6 +358,8 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_clearfilter -> resetFilter()
             R.id.menu_list_delete_visible -> deleteVisible()
             R.id.menu_list_syncnow -> SyncUtil.syncAllAccounts(context)
+            R.id.menu_list_viewmode_list -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_LIST)
+            R.id.menu_list_viewmode_grid -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_GRID)
         }
         return super.onOptionsItemSelected(item)
     }

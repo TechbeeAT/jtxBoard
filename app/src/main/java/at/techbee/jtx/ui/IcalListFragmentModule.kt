@@ -19,6 +19,8 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -31,7 +33,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
-import at.techbee.jtx.ui.compose.ListScreen
+import at.techbee.jtx.ui.compose.ListScreenList
+import at.techbee.jtx.ui.compose.ListScreenGrid
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
@@ -56,6 +59,8 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
         private const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
         private const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
+
+        private const val PREFS_VIEWMODE = "prefsViewmode"
     }
 
     private val icalListViewModel: IcalListViewModel by activityViewModels()
@@ -84,17 +89,34 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        ListScreen(
-                            listLive = when(module) {
-                                Module.JOURNAL -> icalListViewModel.iCal4ListJournals
-                                Module.NOTE -> icalListViewModel.iCal4ListNotes
-                                Module.TODO -> icalListViewModel.iCal4ListTodos
-                            },
-                            subtasksLive = icalListViewModel.allSubtasks,
-                            subnotesLive = icalListViewModel.allSubnotes,
-                            scrollOnceId = icalListViewModel.scrollOnceId,
-                            navController = navController,
-                            model = icalListViewModel)
+
+                        val viewMode by icalListViewModel.viewMode.observeAsState()
+
+                        if(viewMode == IcalListFragment.PREFS_VIEWMODE_LIST ) {
+                            ListScreenList(
+                                listLive = when (module) {
+                                    Module.JOURNAL -> icalListViewModel.iCal4ListJournals
+                                    Module.NOTE -> icalListViewModel.iCal4ListNotes
+                                    Module.TODO -> icalListViewModel.iCal4ListTodos
+                                },
+                                subtasksLive = icalListViewModel.allSubtasks,
+                                subnotesLive = icalListViewModel.allSubnotes,
+                                scrollOnceId = icalListViewModel.scrollOnceId,
+                                navController = navController,
+                                model = icalListViewModel
+                            )
+                        } else {
+                            ListScreenGrid(
+                                listLive = when (module) {
+                                    Module.JOURNAL -> icalListViewModel.iCal4ListJournals
+                                    Module.NOTE -> icalListViewModel.iCal4ListNotes
+                                    Module.TODO -> icalListViewModel.iCal4ListTodos
+                                },
+                                scrollOnceId = icalListViewModel.scrollOnceId,
+                                navController = navController,
+                                model = icalListViewModel
+                            )
+                        }
                     }
                 }
             }
@@ -146,6 +168,8 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
 
         prefs.edit().putString(PREFS_SORTORDER, icalListViewModel.sortOrder.name).apply()
         prefs.edit().putString(PREFS_ORDERBY, icalListViewModel.orderBy.name).apply()
+
+        prefs.edit().putString(PREFS_VIEWMODE, icalListViewModel.viewMode.value).apply()
     }
 
     private fun loadPrefs() {
@@ -166,6 +190,8 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
         icalListViewModel.isFilterNoDatesSet = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
         icalListViewModel.orderBy = prefs.getString(PREFS_ORDERBY, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.DUE
         icalListViewModel.sortOrder = prefs.getString(PREFS_SORTORDER, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.ASC
+
+        icalListViewModel.viewMode.postValue(prefs.getString(PREFS_VIEWMODE, IcalListFragment.PREFS_VIEWMODE_LIST))
     }
 
 }

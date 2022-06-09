@@ -52,6 +52,8 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     var orderBy: OrderBy = OrderBy.CREATED   // default, overwritten by Shared Prefs
     var sortOrder: SortOrder = SortOrder.DESC // default, overwritten by Shared Prefs
 
+    var viewMode: MutableLiveData<String> = MutableLiveData(IcalListFragment.PREFS_VIEWMODE_LIST)
+
     var searchSettingShowAllSubtasksInTasklist: Boolean = false
     var searchSettingShowAllSubnotesInNoteslist: Boolean = false
     var searchSettingShowAllSubjournalsinJournallist: Boolean = false

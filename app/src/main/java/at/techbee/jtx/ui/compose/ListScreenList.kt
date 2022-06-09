@@ -39,7 +39,7 @@ import at.techbee.jtx.ui.SettingsFragment
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ListScreen(
+fun ListScreenList(
     listLive: LiveData<List<ICal4ListWithRelatedto>>,
     subtasksLive: LiveData<List<ICal4List>>,
     subnotesLive: LiveData<List<ICal4List>>,
@@ -71,7 +71,6 @@ fun ListScreen(
             }
         }
     }
-
 
 
     LazyColumn(
