@@ -141,7 +141,6 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
-
     }
 
     override fun onPause() {
@@ -182,7 +181,7 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
             PREFS_STATUS_TODO, null))
         icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(
             PREFS_CLASSIFICATION, null))
-        icalListViewModel.isExcludeDone.postValue(prefs.getBoolean(PREFS_EXCLUDE_DONE, false))
+        icalListViewModel.isExcludeDone.value = prefs.getBoolean(PREFS_EXCLUDE_DONE, false)
         icalListViewModel.isFilterOverdue = prefs.getBoolean(PREFS_FILTER_OVERDUE, false)
         icalListViewModel.isFilterDueToday = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
         icalListViewModel.isFilterDueTomorrow = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
@@ -191,9 +190,8 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
         icalListViewModel.orderBy = prefs.getString(PREFS_ORDERBY, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.DUE
         icalListViewModel.sortOrder = prefs.getString(PREFS_SORTORDER, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.ASC
 
-        icalListViewModel.viewMode.postValue(prefs.getString(PREFS_VIEWMODE, IcalListFragment.PREFS_VIEWMODE_LIST))
+        icalListViewModel.viewMode.value = prefs.getString(PREFS_VIEWMODE, IcalListFragment.PREFS_VIEWMODE_LIST)
     }
-
 }
 
 
