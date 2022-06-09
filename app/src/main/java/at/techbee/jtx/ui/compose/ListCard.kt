@@ -225,7 +225,7 @@ fun ICalObjectListCard(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             if (iCalObject.numAttachments > 0)
-                                FilterChip(
+                                ElevatedFilterChip(
                                     label = {
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically,
@@ -248,7 +248,7 @@ fun ICalObjectListCard(
                                     modifier = Modifier.padding(end = 4.dp)
                                 )
                             if (iCalObject.numSubtasks > 0)
-                                FilterChip(
+                                ElevatedFilterChip(
                                     label = {
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically,
@@ -274,7 +274,7 @@ fun ICalObjectListCard(
                                     modifier = Modifier.padding(end = 4.dp)
                                 )
                             if (iCalObject.numSubnotes > 0)
-                                FilterChip(
+                                ElevatedFilterChip(
                                     label = {
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically,
@@ -326,7 +326,7 @@ fun ICalObjectListCard(
 
 
                     AnimatedVisibility(visible = isSubtasksExpanded) {
-                        Column {
+                        Column(modifier = Modifier.padding(bottom = 4.dp)) {
                             subtasks.forEach { subtask ->
 
                                 SubtaskCard(
@@ -354,7 +354,7 @@ fun ICalObjectListCard(
                     }
 
                     AnimatedVisibility(visible = isSubnotesExpanded) {
-                        Column {
+                        Column(modifier = Modifier.padding(bottom = 4.dp)) {
                             subnotes.forEach { subnote ->
 
                                 SubnoteCard(
