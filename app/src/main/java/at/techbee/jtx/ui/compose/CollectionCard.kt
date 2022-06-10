@@ -11,19 +11,22 @@ package at.techbee.jtx.ui.compose
 import android.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
+import at.techbee.jtx.util.SyncUtil
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,6 +37,7 @@ fun CollectionCard(
 ) {
 
     var menuExpanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
 
     ElevatedCard(
@@ -54,7 +58,7 @@ fun CollectionCard(
             ) {
                 Column {
                     Text(
-                        collection.displayName ?:"",
+                        collection.displayName ?: collection.accountName ?: collection.accountType ?: "",
                         style = Typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -98,34 +102,49 @@ fun CollectionCard(
                         Icons.Outlined.MoreVert,
                         stringResource(R.string.collections_collection_menu)
                     )
+
+                    DropdownMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false }
+                    ) {
+                        if(collection.accountType == LOCAL_ACCOUNT_TYPE) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.edit)) },
+                                leadingIcon = { Icon(Icons.Outlined.Edit, null) },
+                                onClick = { /*TODO*/ }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.delete)) },
+                                leadingIcon = { Icon(Icons.Outlined.Delete, null) },
+                                onClick = { /*TODO*/ }
+                            )
+                        }
+                        if(collection.accountType != LOCAL_ACCOUNT_TYPE) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.menu_collection_popup_show_in_davx5)) },
+                                leadingIcon = { Icon(Icons.Outlined.Sync, null) },
+                                onClick = { SyncUtil.openDAVx5AccountsActivity(context) }
+                            )
+                        }
+                        DropdownMenuItem(
+                            text = { Text(stringResource(id = R.string.menu_collection_popup_export_as_ics)) },
+                            leadingIcon = { Icon(Icons.Outlined.Download, null) },
+                            onClick = { /*TODO*/ }
+                        )
+                        if(!collection.readonly) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.menu_collection_popup_import_from_ics)) },
+                                leadingIcon = { Icon(Icons.Outlined.Upload, null) },
+                                onClick = { /*TODO*/ }
+                            )
+                        }
+                        DropdownMenuItem(
+                            text = { Text(stringResource(id = R.string.menu_collections_popup_move_entries)) },
+                            leadingIcon = { Icon(Icons.Outlined.MoveDown, null) },
+                            onClick = { /*TODO*/ }
+                        )
+                    }
                 }
-
-            }
-
-            DropdownMenu(
-                expanded = menuExpanded,
-                onDismissRequest = { menuExpanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = { stringResource(id = R.string.delete) },
-                    onClick = { /*TODO*/ }
-                )
-                DropdownMenuItem(
-                    text = { stringResource(id = R.string.menu_collection_popup_show_in_davx5) },
-                    onClick = { /*TODO*/ }
-                )
-                DropdownMenuItem(
-                    text = { stringResource(id = R.string.menu_collection_popup_export_as_ics) },
-                    onClick = { /*TODO*/ }
-                )
-                DropdownMenuItem(
-                    text = { stringResource(id = R.string.menu_collection_popup_import_from_ics) },
-                    onClick = { /*TODO*/ }
-                )
-                DropdownMenuItem(
-                    text = { stringResource(id = R.string.menu_collections_popup_move_entries) },
-                    onClick = { /*TODO*/ }
-                )
 
             }
         }
