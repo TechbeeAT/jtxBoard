@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.compose
+package at.techbee.jtx.ui.compose.cards
 
 import android.graphics.Color
 import androidx.compose.foundation.layout.*
@@ -25,6 +25,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.compose.dialogs.CollectionsAddOrEditDialog
+import at.techbee.jtx.ui.compose.elements.ColoredEdge
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.SyncUtil

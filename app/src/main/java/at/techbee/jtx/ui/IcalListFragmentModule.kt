@@ -33,8 +33,8 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
-import at.techbee.jtx.ui.compose.ListScreenList
-import at.techbee.jtx.ui.compose.ListScreenGrid
+import at.techbee.jtx.ui.compose.screens.ListScreenList
+import at.techbee.jtx.ui.compose.screens.ListScreenGrid
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
@@ -113,8 +113,15 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
                                     Module.TODO -> icalListViewModel.iCal4ListTodos
                                 },
                                 scrollOnceId = icalListViewModel.scrollOnceId,
-                                navController = navController,
-                                model = icalListViewModel
+                                onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> icalListViewModel.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  },
+                                goToView = { itemId ->
+                                    navController.navigate(
+                                        IcalListFragmentDirections
+                                            .actionIcalListFragmentToIcalViewFragment()
+                                            .setItem2show(itemId)
+                                    )
+                                },
+                                goToEdit = {itemId -> icalListViewModel.postDirectEditEntity(itemId) }
                             )
                         }
                     }

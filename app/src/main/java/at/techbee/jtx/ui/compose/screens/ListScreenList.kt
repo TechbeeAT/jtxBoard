@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.compose
+package at.techbee.jtx.ui.compose.screens
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -35,6 +35,7 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.SettingsFragment
+import at.techbee.jtx.ui.compose.cards.ICalObjectListCard
 
 
 @OptIn(ExperimentalFoundationApi::class)

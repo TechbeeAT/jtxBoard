@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.compose
+package at.techbee.jtx.ui.compose.cards
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*

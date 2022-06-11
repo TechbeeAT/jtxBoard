@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.compose
+package at.techbee.jtx.ui.compose.cards
 
 import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
@@ -40,6 +40,10 @@ import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.IcalListFragmentDirections
+import at.techbee.jtx.ui.compose.elements.ColoredEdge
+import at.techbee.jtx.ui.compose.elements.ListStatusBar
+import at.techbee.jtx.ui.compose.elements.ProgressElement
+import at.techbee.jtx.ui.compose.elements.VerticalDateBlock
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 

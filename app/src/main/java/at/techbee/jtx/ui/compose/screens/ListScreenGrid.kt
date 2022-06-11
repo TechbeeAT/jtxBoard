@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.compose
+package at.techbee.jtx.ui.compose.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -26,11 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.NavController
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.IcalListFragmentDirections
-import at.techbee.jtx.ui.IcalListViewModel
+import at.techbee.jtx.ui.compose.cards.ListCardSmall
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -38,8 +36,10 @@ import at.techbee.jtx.ui.IcalListViewModel
 fun ListScreenGrid(
     listLive: LiveData<List<ICal4ListWithRelatedto>>,
     scrollOnceId: MutableLiveData<Long?>,
-    navController: NavController,
-    model: IcalListViewModel) {
+    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    goToView: (itemId: Long) -> Unit,
+    goToEdit: (itemId: Long) -> Unit
+) {
 
     val list by listLive.observeAsState(emptyList())
 
@@ -77,20 +77,14 @@ fun ListScreenGrid(
                     .fillMaxWidth()
                     .animateItemPlacement()
                     .combinedClickable(
-                        onClick = {
-                            navController.navigate(
-                                IcalListFragmentDirections
-                                    .actionIcalListFragmentToIcalViewFragment()
-                                    .setItem2show(iCalObject.property.id)
-                            )
-                        },
+                        onClick = { goToView(iCalObject.property.id) },
                         onLongClick = {
                             if (!iCalObject.property.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
-                                model.postDirectEditEntity(iCalObject.property.id)
+                              goToEdit(iCalObject.property.id)
                         }
                     )
                     .height(150.dp),
-                onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> model.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  },
+                onProgressChanged = onProgressChanged,
                 )
         }
     }
