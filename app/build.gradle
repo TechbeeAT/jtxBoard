@@ -227,6 +227,10 @@ dependencies {
     // Color Picker
     implementation 'com.larswerkman:HoloColorPicker:1.5'
 
+    // Compose Color Picker
+    //implementation 'com.godaddy.android.colorpicker:compose-color-picker:0.4.2'
+    implementation 'com.godaddy.android.colorpicker:compose-color-picker-android:0.4.2'
+
 
     // jetpack compose
     implementation 'androidx.core:core-ktx:1.8.0'

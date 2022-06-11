@@ -33,6 +33,7 @@ import at.techbee.jtx.util.SyncUtil
 @Composable
 fun CollectionCard(
     collection: CollectionsView,
+    collectionToEdit: MutableState<CollectionsView?>,
     modifier: Modifier = Modifier
 ) {
 
@@ -111,7 +112,7 @@ fun CollectionCard(
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.edit)) },
                                 leadingIcon = { Icon(Icons.Outlined.Edit, null) },
-                                onClick = { /*TODO*/ }
+                                onClick = { collectionToEdit.value = collection }
                             )
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.delete)) },
@@ -167,7 +168,10 @@ fun CollectionCardPreview() {
             this.supportsVTODO = true
         }
 
-        CollectionCard(collection)
+        CollectionCard(
+            collection = collection,
+            collectionToEdit = remember { mutableStateOf(null) }
+        )
     }
 }
 
@@ -187,8 +191,10 @@ fun CollectionCardPreview2() {
             this.supportsVTODO = false
         }
 
-        CollectionCard(collection)
-    }
+        CollectionCard(
+            collection,
+            collectionToEdit = remember { mutableStateOf(null) }
+        )    }
 }
 
 @Preview(showBackground = true)
@@ -203,6 +209,9 @@ fun CollectionCardPreview3() {
             this.supportsVTODO = true
         }
 
-        CollectionCard(collection)
+        CollectionCard(
+            collection,
+            collectionToEdit = remember { mutableStateOf(null) }
+        )
     }
 }
