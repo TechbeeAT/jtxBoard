@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
+import at.techbee.jtx.ui.compose.dialogs.CollectionsAddOrEditDialog
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.SyncUtil
@@ -33,12 +34,21 @@ import at.techbee.jtx.util.SyncUtil
 @Composable
 fun CollectionCard(
     collection: CollectionsView,
-    collectionToEdit: MutableState<CollectionsView?>,
+    onCollectionChanged: (CollectionsView) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     var menuExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+    var showCollectionsAddOrEditDialog by remember { mutableStateOf(false) }
+
+    if(showCollectionsAddOrEditDialog)
+        CollectionsAddOrEditDialog(
+            current = collection,
+            onCollectionChanged = onCollectionChanged,
+            dismissDialog = { showCollectionsAddOrEditDialog = false }
+        )
 
 
     ElevatedCard(
@@ -112,7 +122,7 @@ fun CollectionCard(
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.edit)) },
                                 leadingIcon = { Icon(Icons.Outlined.Edit, null) },
-                                onClick = { collectionToEdit.value = collection }
+                                onClick = { showCollectionsAddOrEditDialog = true }
                             )
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.delete)) },
@@ -170,7 +180,7 @@ fun CollectionCardPreview() {
 
         CollectionCard(
             collection = collection,
-            collectionToEdit = remember { mutableStateOf(null) }
+            onCollectionChanged = { }
         )
     }
 }
@@ -193,8 +203,9 @@ fun CollectionCardPreview2() {
 
         CollectionCard(
             collection,
-            collectionToEdit = remember { mutableStateOf(null) }
-        )    }
+            onCollectionChanged = { }
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -211,7 +222,7 @@ fun CollectionCardPreview3() {
 
         CollectionCard(
             collection,
-            collectionToEdit = remember { mutableStateOf(null) }
+            onCollectionChanged = { }
         )
     }
 }
