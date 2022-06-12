@@ -40,7 +40,8 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 @Composable
 fun CollectionsScreen(
     collectionsLive: LiveData<List<CollectionsView>>,
-    onCollectionChanged: (CollectionsView) -> Unit
+    onCollectionChanged: (CollectionsView) -> Unit,
+    onCollectionDeleted: (CollectionsView) -> Unit
 ) {
 
     val list by collectionsLive.observeAsState(emptyList())
@@ -77,6 +78,7 @@ fun CollectionsScreen(
                     CollectionCard(
                         collection = collection,
                         onCollectionChanged = onCollectionChanged,
+                        onCollectionDeleted = onCollectionDeleted,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 8.dp)
@@ -161,7 +163,8 @@ fun CollectionsScreen_Preview() {
         )
         CollectionsScreen(
             MutableLiveData(listOf(collection1, collection2, collection3)),
-            onCollectionChanged = { }
+            onCollectionChanged = { },
+            onCollectionDeleted = { }
         )
     }
 }

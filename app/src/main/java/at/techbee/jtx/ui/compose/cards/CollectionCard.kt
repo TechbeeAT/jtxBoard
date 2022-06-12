@@ -25,6 +25,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.compose.dialogs.CollectionsAddOrEditDialog
+import at.techbee.jtx.ui.compose.dialogs.CollectionsDeleteCollectionDialog
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
@@ -36,6 +37,7 @@ import at.techbee.jtx.util.SyncUtil
 fun CollectionCard(
     collection: CollectionsView,
     onCollectionChanged: (CollectionsView) -> Unit,
+    onCollectionDeleted: (CollectionsView) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -43,12 +45,21 @@ fun CollectionCard(
     val context = LocalContext.current
 
     var showCollectionsAddOrEditDialog by remember { mutableStateOf(false) }
+    var showCollectionsDeleteCollectionDialog by remember { mutableStateOf(false) }
+
 
     if(showCollectionsAddOrEditDialog)
         CollectionsAddOrEditDialog(
             current = collection,
             onCollectionChanged = onCollectionChanged,
             dismissDialog = { showCollectionsAddOrEditDialog = false }
+        )
+
+    if(showCollectionsDeleteCollectionDialog)
+        CollectionsDeleteCollectionDialog(
+            current = collection,
+            onCollectionDeleted = onCollectionDeleted,
+            dismissDialog = { showCollectionsDeleteCollectionDialog = false }
         )
 
 
@@ -128,7 +139,7 @@ fun CollectionCard(
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.delete)) },
                                 leadingIcon = { Icon(Icons.Outlined.Delete, null) },
-                                onClick = { /*TODO*/ }
+                                onClick = { showCollectionsDeleteCollectionDialog = true }
                             )
                         }
                         if(collection.accountType != LOCAL_ACCOUNT_TYPE) {
@@ -181,7 +192,8 @@ fun CollectionCardPreview() {
 
         CollectionCard(
             collection = collection,
-            onCollectionChanged = { }
+            onCollectionChanged = { },
+            onCollectionDeleted = { }
         )
     }
 }
@@ -204,7 +216,8 @@ fun CollectionCardPreview2() {
 
         CollectionCard(
             collection,
-            onCollectionChanged = { }
+            onCollectionChanged = { },
+            onCollectionDeleted = { }
         )
     }
 }
@@ -223,7 +236,8 @@ fun CollectionCardPreview3() {
 
         CollectionCard(
             collection,
-            onCollectionChanged = { }
+            onCollectionChanged = { },
+            onCollectionDeleted = { }
         )
     }
 }
