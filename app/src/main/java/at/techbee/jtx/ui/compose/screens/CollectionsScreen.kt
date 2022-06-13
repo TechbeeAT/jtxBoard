@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.compose.cards.CollectionCard
 import at.techbee.jtx.ui.theme.JtxBoardTheme
@@ -41,7 +42,8 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 fun CollectionsScreen(
     collectionsLive: LiveData<List<CollectionsView>>,
     onCollectionChanged: (CollectionsView) -> Unit,
-    onCollectionDeleted: (CollectionsView) -> Unit
+    onCollectionDeleted: (CollectionsView) -> Unit,
+    onCollectionMoved: (old: ICalCollection, new: ICalCollection) -> Unit
 ) {
 
     val list by collectionsLive.observeAsState(emptyList())
@@ -164,7 +166,8 @@ fun CollectionsScreen_Preview() {
         CollectionsScreen(
             MutableLiveData(listOf(collection1, collection2, collection3)),
             onCollectionChanged = { },
-            onCollectionDeleted = { }
+            onCollectionDeleted = { },
+            onCollectionMoved = { _, _ -> }
         )
     }
 }
