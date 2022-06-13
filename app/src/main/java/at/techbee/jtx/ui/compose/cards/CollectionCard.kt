@@ -52,14 +52,14 @@ fun CollectionCard(
         CollectionsAddOrEditDialog(
             current = collection,
             onCollectionChanged = onCollectionChanged,
-            dismissDialog = { showCollectionsAddOrEditDialog = false }
+            onDismiss = { showCollectionsAddOrEditDialog = false }
         )
 
     if(showCollectionsDeleteCollectionDialog)
         CollectionsDeleteCollectionDialog(
             current = collection,
             onCollectionDeleted = onCollectionDeleted,
-            dismissDialog = { showCollectionsDeleteCollectionDialog = false }
+            onDismiss = { showCollectionsDeleteCollectionDialog = false }
         )
 
 

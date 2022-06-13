@@ -39,7 +39,7 @@ import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 fun CollectionsAddOrEditDialog(
     current: CollectionsView,
     onCollectionChanged: (CollectionsView) -> Unit,
-    dismissDialog: () -> Unit
+    onDismiss: () -> Unit
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -50,7 +50,7 @@ fun CollectionsAddOrEditDialog(
 
     AlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
-        onDismissRequest = { dismissDialog() },
+        onDismissRequest = { onDismiss() },
         title = {
             if(current.collectionId == 0L)
                 Text(text = stringResource(id = R.string.collections_dialog_add_local_collection_title))
@@ -106,7 +106,7 @@ fun CollectionsAddOrEditDialog(
             TextButton(
                 onClick = {
                     onCollectionChanged(current)
-                    dismissDialog()
+                    onDismiss()
                 }
             ) {
                 Text(stringResource(id = R.string.save))
@@ -115,7 +115,7 @@ fun CollectionsAddOrEditDialog(
         dismissButton = {
             TextButton(
                 onClick = {
-                    dismissDialog()
+                    onDismiss()
                 }
             ) {
                 Text( stringResource(id = R.string.cancel))
@@ -142,7 +142,7 @@ fun CollectionsEditDialog_Preview() {
         CollectionsAddOrEditDialog(
             collection1,
             onCollectionChanged = { },
-            dismissDialog = { }
+            onDismiss = { }
         )
     }
 }
@@ -165,7 +165,7 @@ fun CollectionsEditDialog_Preview2() {
         CollectionsAddOrEditDialog(
             collection1,
             onCollectionChanged = { },
-            dismissDialog = { }
+            onDismiss = { }
         )
     }
 }

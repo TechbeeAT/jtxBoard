@@ -25,19 +25,19 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 fun CollectionsDeleteCollectionDialog(
     current: CollectionsView,
     onCollectionDeleted: (CollectionsView) -> Unit,
-    dismissDialog: () -> Unit
+    onDismiss: () -> Unit
 ) {
 
 
     AlertDialog(
-        onDismissRequest = { dismissDialog() },
+        onDismissRequest = { onDismiss() },
         title = { Text(stringResource(id = R.string.collections_dialog_delete_local_title, current.displayName?:current.accountName?:"")) },
         text = { Text(stringResource(id = R.string.collections_dialog_delete_local_message)) },
         confirmButton = {
             TextButton(
                 onClick = {
                     onCollectionDeleted(current)
-                    dismissDialog()
+                    onDismiss()
                 }
             ) {
                 Text(stringResource(id = R.string.delete))
@@ -46,7 +46,7 @@ fun CollectionsDeleteCollectionDialog(
         dismissButton = {
             TextButton(
                 onClick = {
-                    dismissDialog()
+                    onDismiss()
                 }
             ) {
                 Text( stringResource(id = R.string.cancel))
@@ -73,7 +73,7 @@ fun CollectionsDeleteCollectionDialog_Preview() {
         CollectionsDeleteCollectionDialog(
             collection1,
             onCollectionDeleted = { },
-            dismissDialog = { }
+            onDismiss = { }
         )
     }
 }
