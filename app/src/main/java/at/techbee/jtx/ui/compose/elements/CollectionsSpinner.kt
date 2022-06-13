@@ -35,7 +35,7 @@ fun CollectionsSpinner(
     Box {
         Column {
             OutlinedTextField(
-                value = (selected.displayName?: selected.accountName) ?: " ",
+                value = selected.displayName?.let { it } + ("" + selected.accountName?.let { " (" + it + ")" }),
                 onValueChange = { },
                 label = { Text(text = stringResource(id = R.string.collection)) },
                 modifier = Modifier.fillMaxWidth(),
@@ -60,6 +60,7 @@ fun CollectionsSpinner(
                         onClick = {
                             selected = collection
                             expanded = false
+                            onSelectionChanged(selected)
                         },
                         text = {
                             Text(
