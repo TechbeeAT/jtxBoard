@@ -50,13 +50,10 @@ fun CollectionsScreen(
 ) {
 
     val list by collectionsLive.observeAsState(emptyList())
-    val listState = rememberLazyListState()
-
     val grouped = list.groupBy { it.accountName ?: it.accountType ?: "Account" }
 
     LazyColumn(
-        modifier = Modifier.padding(8.dp),
-        state = listState,
+        modifier = Modifier.padding(8.dp)
     ) {
 
         item {
