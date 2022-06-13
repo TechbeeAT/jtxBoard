@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.compose.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -41,16 +42,18 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 @Composable
 fun CollectionsScreen(
     collectionsLive: LiveData<List<CollectionsView>>,
-    onCollectionChanged: (CollectionsView) -> Unit,
-    onCollectionDeleted: (CollectionsView) -> Unit,
-    onCollectionMoved: (old: ICalCollection, new: ICalCollection) -> Unit
+    onCollectionChanged: (ICalCollection) -> Unit,
+    onCollectionDeleted: (ICalCollection) -> Unit,
+    onEntriesMoved: (old: ICalCollection, new: ICalCollection) -> Unit,
+    onImportFromICS: (CollectionsView) -> Unit,
+    onExportAsICS: (CollectionsView) -> Unit,
+    onCollectionClicked: (CollectionsView) -> Unit
 ) {
 
     val list by collectionsLive.observeAsState(emptyList())
     val listState = rememberLazyListState()
 
     val grouped = list.groupBy { it.accountName?:it.accountType?:"Account" }
-
 
 
     Column(modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 16.dp)) {
@@ -79,12 +82,18 @@ fun CollectionsScreen(
 
                     CollectionCard(
                         collection = collection,
+                        allCollections = list,
                         onCollectionChanged = onCollectionChanged,
                         onCollectionDeleted = onCollectionDeleted,
+                        onEntriesMoved = onEntriesMoved,
+                        onImportFromICS = onImportFromICS,
+                        onExportAsICS = onExportAsICS,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 8.dp)
                             .animateItemPlacement()
+                            .combinedClickable(
+                                onClick = { onCollectionClicked(collection) })
                     )
                 }
 
@@ -167,7 +176,10 @@ fun CollectionsScreen_Preview() {
             MutableLiveData(listOf(collection1, collection2, collection3)),
             onCollectionChanged = { },
             onCollectionDeleted = { },
-            onCollectionMoved = { _, _ -> }
+            onEntriesMoved = { _, _ -> },
+            onImportFromICS = { },
+            onExportAsICS = { },
+            onCollectionClicked = { }
         )
     }
 }

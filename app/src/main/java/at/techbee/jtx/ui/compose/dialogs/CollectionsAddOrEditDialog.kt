@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import at.techbee.jtx.R
-import at.techbee.jtx.database.views.CollectionsView
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
@@ -37,8 +37,8 @@ import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CollectionsAddOrEditDialog(
-    current: CollectionsView,
-    onCollectionChanged: (CollectionsView) -> Unit,
+    current: ICalCollection,
+    onCollectionChanged: (ICalCollection) -> Unit,
     onDismiss: () -> Unit
 ) {
 
@@ -105,6 +105,9 @@ fun CollectionsAddOrEditDialog(
         confirmButton = {
             TextButton(
                 onClick = {
+                    current.displayName = collectionName
+                    if(colorActivated)
+                        current.color = collectionColor
                     onCollectionChanged(current)
                     onDismiss()
                 }
@@ -130,7 +133,7 @@ fun CollectionsAddOrEditDialog(
 fun CollectionsEditDialog_Preview() {
     JtxBoardTheme {
 
-        val collection1 = CollectionsView(
+        val collection1 = ICalCollection(
             collectionId = 1L,
             color = Color.Cyan.toArgb(),
             displayName = "Collection Display Name",
@@ -153,7 +156,7 @@ fun CollectionsEditDialog_Preview() {
 fun CollectionsEditDialog_Preview2() {
     JtxBoardTheme {
 
-        val collection1 = CollectionsView(
+        val collection1 = ICalCollection(
             collectionId = 0L,
             color = null,
             displayName = "Collection Display Name",

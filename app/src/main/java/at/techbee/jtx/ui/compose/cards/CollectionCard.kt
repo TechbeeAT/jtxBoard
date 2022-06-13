@@ -22,10 +22,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.compose.dialogs.CollectionsAddOrEditDialog
 import at.techbee.jtx.ui.compose.dialogs.CollectionsDeleteCollectionDialog
+import at.techbee.jtx.ui.compose.dialogs.CollectionsMoveCollectionDialog
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
@@ -36,8 +38,12 @@ import at.techbee.jtx.util.SyncUtil
 @Composable
 fun CollectionCard(
     collection: CollectionsView,
-    onCollectionChanged: (CollectionsView) -> Unit,
-    onCollectionDeleted: (CollectionsView) -> Unit,
+    allCollections: List<CollectionsView>,
+    onCollectionChanged: (ICalCollection) -> Unit,
+    onCollectionDeleted: (ICalCollection) -> Unit,
+    onEntriesMoved: (old: ICalCollection, new: ICalCollection) -> Unit,
+    onImportFromICS: (CollectionsView) -> Unit,
+    onExportAsICS: (CollectionsView) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -46,11 +52,11 @@ fun CollectionCard(
 
     var showCollectionsAddOrEditDialog by remember { mutableStateOf(false) }
     var showCollectionsDeleteCollectionDialog by remember { mutableStateOf(false) }
-
+    var showCollectionsMoveCollectionDialog by remember { mutableStateOf(false) }
 
     if(showCollectionsAddOrEditDialog)
         CollectionsAddOrEditDialog(
-            current = collection,
+            current = collection.toICalCollection(),
             onCollectionChanged = onCollectionChanged,
             onDismiss = { showCollectionsAddOrEditDialog = false }
         )
@@ -60,6 +66,15 @@ fun CollectionCard(
             current = collection,
             onCollectionDeleted = onCollectionDeleted,
             onDismiss = { showCollectionsDeleteCollectionDialog = false }
+        )
+
+    if(showCollectionsMoveCollectionDialog)
+        CollectionsMoveCollectionDialog(
+            current = collection,
+            allCollections = mutableListOf<ICalCollection>().apply {
+                allCollections.forEach { collection -> this.add(collection.toICalCollection()) }},
+            onEntriesMoved = onEntriesMoved,
+            onDismiss = { showCollectionsMoveCollectionDialog = false }
         )
 
 
@@ -134,37 +149,55 @@ fun CollectionCard(
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.edit)) },
                                 leadingIcon = { Icon(Icons.Outlined.Edit, null) },
-                                onClick = { showCollectionsAddOrEditDialog = true }
+                                onClick = {
+                                    showCollectionsAddOrEditDialog = true
+                                    menuExpanded = false
+                                }
                             )
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.delete)) },
                                 leadingIcon = { Icon(Icons.Outlined.Delete, null) },
-                                onClick = { showCollectionsDeleteCollectionDialog = true }
+                                onClick = {
+                                    showCollectionsDeleteCollectionDialog = true
+                                    menuExpanded = false
+                                }
                             )
                         }
                         if(collection.accountType != LOCAL_ACCOUNT_TYPE) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.menu_collection_popup_show_in_davx5)) },
                                 leadingIcon = { Icon(Icons.Outlined.Sync, null) },
-                                onClick = { SyncUtil.openDAVx5AccountsActivity(context) }
+                                onClick = {
+                                    SyncUtil.openDAVx5AccountsActivity(context)
+                                    menuExpanded = false
+                                }
                             )
                         }
                         DropdownMenuItem(
                             text = { Text(stringResource(id = R.string.menu_collection_popup_export_as_ics)) },
                             leadingIcon = { Icon(Icons.Outlined.Download, null) },
-                            onClick = { /*TODO*/ }
+                            onClick = {
+                                onExportAsICS(collection)
+                                menuExpanded = false
+                            }
                         )
                         if(!collection.readonly) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.menu_collection_popup_import_from_ics)) },
                                 leadingIcon = { Icon(Icons.Outlined.Upload, null) },
-                                onClick = { /*TODO*/ }
+                                onClick = {
+                                    onImportFromICS(collection)
+                                    menuExpanded = false
+                                }
                             )
                         }
                         DropdownMenuItem(
                             text = { Text(stringResource(id = R.string.menu_collections_popup_move_entries)) },
                             leadingIcon = { Icon(Icons.Outlined.MoveDown, null) },
-                            onClick = { /*TODO*/ }
+                            onClick = {
+                                showCollectionsMoveCollectionDialog = true
+                                menuExpanded = false
+                            }
                         )
                     }
                 }
@@ -192,8 +225,12 @@ fun CollectionCardPreview() {
 
         CollectionCard(
             collection = collection,
+            allCollections = listOf(collection),
             onCollectionChanged = { },
-            onCollectionDeleted = { }
+            onCollectionDeleted = { },
+            onEntriesMoved = { _, _ -> },
+            onImportFromICS = { },
+            onExportAsICS = { }
         )
     }
 }
@@ -216,8 +253,12 @@ fun CollectionCardPreview2() {
 
         CollectionCard(
             collection,
+            allCollections = listOf(collection),
             onCollectionChanged = { },
-            onCollectionDeleted = { }
+            onCollectionDeleted = { },
+            onEntriesMoved = { _, _ -> },
+            onImportFromICS = { },
+            onExportAsICS = { }
         )
     }
 }
@@ -236,8 +277,12 @@ fun CollectionCardPreview3() {
 
         CollectionCard(
             collection,
+            allCollections = listOf(collection),
             onCollectionChanged = { },
-            onCollectionDeleted = { }
+            onCollectionDeleted = { },
+            onEntriesMoved = { _, _ -> },
+            onImportFromICS = { },
+            onExportAsICS = { }
         )
     }
 }

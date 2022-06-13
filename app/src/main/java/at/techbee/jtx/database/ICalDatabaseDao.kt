@@ -86,6 +86,15 @@ SELECTs (global selects without parameter)
     fun getAllCollections(): LiveData<List<ICalCollection>>
 
     /**
+     * Retrieve an list of all Collections ([CollectionsView]) as a LiveData-List
+     *
+     * @return a list of [CollectionsView] as LiveData<List<CollectionsView>>
+     */
+    @Transaction
+    @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW ORDER BY $COLUMN_COLLECTION_ACCOUNT_TYPE = 'LOCAL', $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    fun getAllCollectionsView(): LiveData<List<CollectionsView>>
+
+    /**
      * Retrieve an list of all LOCAL Collections from the [CollectionsView] as a LiveData-List
      * A local collection is a collection with account type LOCAL
      * @return a list of [CollectionsView] as LiveData<List<CollectionsView>>

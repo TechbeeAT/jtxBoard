@@ -25,8 +25,7 @@ import kotlinx.coroutines.launch
 class CollectionsViewModel(application: Application) : AndroidViewModel(application) {
 
     val database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
-    val localCollections = database.getLocalCollections()
-    val remoteCollections = database.getRemoteCollections()
+    val collections = database.getAllCollectionsView()
     val isDavx5Compatible = MutableLiveData(SyncUtil.isDAVx5CompatibleWithJTX(application))
     val app = application
 

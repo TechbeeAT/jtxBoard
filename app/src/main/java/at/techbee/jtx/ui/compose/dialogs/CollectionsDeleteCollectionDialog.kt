@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
@@ -24,7 +25,7 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 @Composable
 fun CollectionsDeleteCollectionDialog(
     current: CollectionsView,
-    onCollectionDeleted: (CollectionsView) -> Unit,
+    onCollectionDeleted: (ICalCollection) -> Unit,
     onDismiss: () -> Unit
 ) {
 
@@ -36,7 +37,7 @@ fun CollectionsDeleteCollectionDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onCollectionDeleted(current)
+                    onCollectionDeleted(current.toICalCollection())
                     onDismiss()
                 }
             ) {

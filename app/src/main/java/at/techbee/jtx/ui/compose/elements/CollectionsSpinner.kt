@@ -35,7 +35,7 @@ fun CollectionsSpinner(
     Box {
         Column {
             OutlinedTextField(
-                value = selected.displayName?.let { it } + ("" + selected.accountName?.let { " (" + it + ")" }),
+                value = selected.displayName + selected.accountName?.let { " (" + it + ")" },
                 onValueChange = { },
                 label = { Text(text = stringResource(id = R.string.collection)) },
                 modifier = Modifier.fillMaxWidth(),
@@ -56,7 +56,7 @@ fun CollectionsSpinner(
                         return@forEach
 
                     DropdownMenuItem(
-                        modifier = Modifier.fillMaxWidth(),
+                        //modifier = Modifier.fillMaxWidth(),
                         onClick = {
                             selected = collection
                             expanded = false
