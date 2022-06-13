@@ -10,7 +10,6 @@ package at.techbee.jtx.ui.compose.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -53,85 +52,56 @@ fun CollectionsScreen(
     val list by collectionsLive.observeAsState(emptyList())
     val listState = rememberLazyListState()
 
-    val grouped = list.groupBy { it.accountName?:it.accountType?:"Account" }
+    val grouped = list.groupBy { it.accountName ?: it.accountType ?: "Account" }
 
+    LazyColumn(
+        modifier = Modifier.padding(8.dp),
+        state = listState,
+    ) {
 
-    Column(modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 16.dp)) {
+        item {
+            Text(
+                stringResource(id = R.string.collections_info),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
 
-        Text(stringResource(id = R.string.collections_info), textAlign = TextAlign.Center)
-
-        LazyColumn(
-            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
-            state = listState,
-        ) {
-
-            grouped.forEach { (account, collectionsInAccount) ->
-                stickyHeader {
-                    Text(
-                        account,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 16.dp, start = 8.dp, end = 16.dp, bottom = 8.dp)
+        grouped.forEach { (account, collectionsInAccount) ->
+            stickyHeader {
+                Text(
+                    account,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(
+                        top = 16.dp,
+                        start = 8.dp,
+                        end = 16.dp,
+                        bottom = 8.dp
                     )
-                }
+                )
+            }
 
-                items(
-                    items = collectionsInAccount,
-                    key = { collection -> collection.collectionId }
-                ) { collection ->
+            items(
+                items = collectionsInAccount,
+                key = { collection -> collection.collectionId }
+            ) { collection ->
 
-                    CollectionCard(
-                        collection = collection,
-                        allCollections = list,
-                        onCollectionChanged = onCollectionChanged,
-                        onCollectionDeleted = onCollectionDeleted,
-                        onEntriesMoved = onEntriesMoved,
-                        onImportFromICS = onImportFromICS,
-                        onExportAsICS = onExportAsICS,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp)
-                            .animateItemPlacement()
-                            .combinedClickable(
-                                onClick = { onCollectionClicked(collection) })
-                    )
-                }
-
-                /*
-                ICalObjectListCard(
-                    iCalObject,
-                    currentSubtasks,
-                    currentSubnotes,
-                    navController,
-                    isSubtasksExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_SUBTASKS_DEFAULT, false),
-                    isSubnotesExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_SUBNOTES_DEFAULT, false),
-                    isAttachmentsExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_ATTACHMENTS_DEFAULT, false),
-                    settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false),
-                    settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true),
-                    onEditRequest = { id -> model.postDirectEditEntity(id) },
-                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> model.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  },
-                    onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean -> model.updateExpanded(itemId, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)},
-                    player = mediaPlayer,
+                CollectionCard(
+                    collection = collection,
+                    allCollections = list,
+                    onCollectionChanged = onCollectionChanged,
+                    onCollectionDeleted = onCollectionDeleted,
+                    onEntriesMoved = onEntriesMoved,
+                    onImportFromICS = onImportFromICS,
+                    onExportAsICS = onExportAsICS,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)
                         .animateItemPlacement()
                         .combinedClickable(
-                            onClick = {
-                                navController.navigate(
-                                    IcalListFragmentDirections
-                                        .actionIcalListFragmentToIcalViewFragment()
-                                        .setItem2show(iCalObject.property.id)
-                                )
-                            },
-                            onLongClick = {
-                                if (!iCalObject.property.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
-                                    model.postDirectEditEntity(iCalObject.property.id)
-                            }
-                        )
+                            onClick = { onCollectionClicked(collection) })
                 )
-
-                 */
             }
         }
     }
