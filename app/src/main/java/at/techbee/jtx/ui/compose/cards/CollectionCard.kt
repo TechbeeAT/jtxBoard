@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,25 +55,26 @@ fun CollectionCard(
     var showCollectionsDeleteCollectionDialog by remember { mutableStateOf(false) }
     var showCollectionsMoveCollectionDialog by remember { mutableStateOf(false) }
 
-    if(showCollectionsAddOrEditDialog)
+    if (showCollectionsAddOrEditDialog)
         CollectionsAddOrEditDialog(
             current = collection.toICalCollection(),
             onCollectionChanged = onCollectionChanged,
             onDismiss = { showCollectionsAddOrEditDialog = false }
         )
 
-    if(showCollectionsDeleteCollectionDialog)
+    if (showCollectionsDeleteCollectionDialog)
         CollectionsDeleteCollectionDialog(
             current = collection,
             onCollectionDeleted = onCollectionDeleted,
             onDismiss = { showCollectionsDeleteCollectionDialog = false }
         )
 
-    if(showCollectionsMoveCollectionDialog)
+    if (showCollectionsMoveCollectionDialog)
         CollectionsMoveCollectionDialog(
             current = collection,
             allCollections = mutableListOf<ICalCollection>().apply {
-                allCollections.forEach { collection -> this.add(collection.toICalCollection()) }},
+                allCollections.forEach { collection -> this.add(collection.toICalCollection()) }
+            },
             onEntriesMoved = onEntriesMoved,
             onDismiss = { showCollectionsMoveCollectionDialog = false }
         )
@@ -96,11 +98,12 @@ fun CollectionCard(
             ) {
                 Column {
                     Text(
-                        collection.displayName ?: collection.accountName ?: collection.accountType ?: "",
+                        collection.displayName ?: collection.accountName ?: collection.accountType
+                        ?: "",
                         style = Typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    if(collection.description?.isNotBlank() == true) {
+                    if (collection.description?.isNotBlank() == true) {
                         Text(
                             collection.description ?: "",
                             style = Typography.bodySmall,
@@ -111,9 +114,14 @@ fun CollectionCard(
                     Row {
 
                         val notAvailable = stringResource(id = R.string.not_available_abbreviation)
-                        val numJournals = if(collection.supportsVJOURNAL) collection.numJournals?.toString()?:"0" else notAvailable
-                        val numNotes = if(collection.supportsVJOURNAL) collection.numNotes?.toString()?:"0" else notAvailable
-                        val numTodos = if(collection.supportsVTODO) collection.numTodos?.toString()?:"0" else notAvailable
+                        val numJournals =
+                            if (collection.supportsVJOURNAL) collection.numJournals?.toString()
+                                ?: "0" else notAvailable
+                        val numNotes =
+                            if (collection.supportsVJOURNAL) collection.numNotes?.toString()
+                                ?: "0" else notAvailable
+                        val numTodos = if (collection.supportsVTODO) collection.numTodos?.toString()
+                            ?: "0" else notAvailable
 
                         Text(
                             stringResource(id = R.string.collections_journals_num, numJournals),
@@ -135,70 +143,83 @@ fun CollectionCard(
                     }
                 }
 
-                IconButton(onClick = { menuExpanded = true }) {
-                    Icon(
-                        Icons.Outlined.MoreVert,
-                        stringResource(R.string.collections_collection_menu)
-                    )
 
-                    DropdownMenu(
-                        expanded = menuExpanded,
-                        onDismissRequest = { menuExpanded = false }
-                    ) {
-                        if(collection.accountType == LOCAL_ACCOUNT_TYPE) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.edit)) },
-                                leadingIcon = { Icon(Icons.Outlined.Edit, null) },
-                                onClick = {
-                                    showCollectionsAddOrEditDialog = true
-                                    menuExpanded = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.delete)) },
-                                leadingIcon = { Icon(Icons.Outlined.Delete, null) },
-                                onClick = {
-                                    showCollectionsDeleteCollectionDialog = true
-                                    menuExpanded = false
-                                }
-                            )
-                        }
-                        if(collection.accountType != LOCAL_ACCOUNT_TYPE) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.menu_collection_popup_show_in_davx5)) },
-                                leadingIcon = { Icon(Icons.Outlined.Sync, null) },
-                                onClick = {
-                                    SyncUtil.openDAVx5AccountsActivity(context)
-                                    menuExpanded = false
-                                }
-                            )
-                        }
-                        DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.menu_collection_popup_export_as_ics)) },
-                            leadingIcon = { Icon(Icons.Outlined.Download, null) },
-                            onClick = {
-                                onExportAsICS(collection)
-                                menuExpanded = false
-                            }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (collection.readonly)
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_readonly),
+                            contentDescription = stringResource(id = R.string.readyonly),
+                            //modifier = Modifier.size(14.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        if(!collection.readonly) {
+
+                    IconButton(onClick = { menuExpanded = true }) {
+
+                        Icon(
+                            Icons.Outlined.MoreVert,
+                            stringResource(R.string.collections_collection_menu)
+                        )
+
+                        DropdownMenu(
+                            expanded = menuExpanded,
+                            onDismissRequest = { menuExpanded = false }
+                        ) {
+                            if (collection.accountType == LOCAL_ACCOUNT_TYPE) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(id = R.string.edit)) },
+                                    leadingIcon = { Icon(Icons.Outlined.Edit, null) },
+                                    onClick = {
+                                        showCollectionsAddOrEditDialog = true
+                                        menuExpanded = false
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(id = R.string.delete)) },
+                                    leadingIcon = { Icon(Icons.Outlined.Delete, null) },
+                                    onClick = {
+                                        showCollectionsDeleteCollectionDialog = true
+                                        menuExpanded = false
+                                    }
+                                )
+                            }
+                            if (collection.accountType != LOCAL_ACCOUNT_TYPE) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(id = R.string.menu_collection_popup_show_in_davx5)) },
+                                    leadingIcon = { Icon(Icons.Outlined.Sync, null) },
+                                    onClick = {
+                                        SyncUtil.openDAVx5AccountsActivity(context)
+                                        menuExpanded = false
+                                    }
+                                )
+                            }
                             DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.menu_collection_popup_import_from_ics)) },
-                                leadingIcon = { Icon(Icons.Outlined.Upload, null) },
+                                text = { Text(stringResource(id = R.string.menu_collection_popup_export_as_ics)) },
+                                leadingIcon = { Icon(Icons.Outlined.Download, null) },
                                 onClick = {
-                                    onImportFromICS(collection)
+                                    onExportAsICS(collection)
+                                    menuExpanded = false
+                                }
+                            )
+                            if (!collection.readonly) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(id = R.string.menu_collection_popup_import_from_ics)) },
+                                    leadingIcon = { Icon(Icons.Outlined.Upload, null) },
+                                    onClick = {
+                                        onImportFromICS(collection)
+                                        menuExpanded = false
+                                    }
+                                )
+                            }
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.menu_collections_popup_move_entries)) },
+                                leadingIcon = { Icon(Icons.Outlined.MoveDown, null) },
+                                onClick = {
+                                    showCollectionsMoveCollectionDialog = true
                                     menuExpanded = false
                                 }
                             )
                         }
-                        DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.menu_collections_popup_move_entries)) },
-                            leadingIcon = { Icon(Icons.Outlined.MoveDown, null) },
-                            onClick = {
-                                showCollectionsMoveCollectionDialog = true
-                                menuExpanded = false
-                            }
-                        )
                     }
                 }
 
@@ -249,6 +270,7 @@ fun CollectionCardPreview2() {
             this.numTodos = 0
             this.supportsVJOURNAL = false
             this.supportsVTODO = false
+            this.readonly = true
         }
 
         CollectionCard(
