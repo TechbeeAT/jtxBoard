@@ -30,7 +30,7 @@ import at.techbee.jtx.util.DateTimeUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListCardSmall(
+fun ListCardGrid(
     iCalObjectWithRelatedto: ICal4ListWithRelatedto,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
@@ -165,13 +165,13 @@ fun ListCardSmall(
 
 @Preview(showBackground = true)
 @Composable
-fun ListCardSmall_JOURNAL() {
+fun ListCardGrid_JOURNAL() {
     JtxBoardTheme {
 
         val icalobject = ICal4ListWithRelatedto.getSample().apply {
             property.dtstart = System.currentTimeMillis()
         }
-        ListCardSmall(
+        ListCardGrid(
             icalobject,
             onProgressChanged = { _, _, _ -> }
         )
@@ -180,7 +180,7 @@ fun ListCardSmall_JOURNAL() {
 
 @Preview(showBackground = true)
 @Composable
-fun ListCardSmall_NOTE() {
+fun ListCardGrid_NOTE() {
     JtxBoardTheme {
 
         val icalobject = ICal4ListWithRelatedto.getSample().apply {
@@ -190,7 +190,7 @@ fun ListCardSmall_NOTE() {
             property.dtstartTimezone = null
             property.status = StatusJournal.CANCELLED.name
         }
-        ListCardSmall(
+        ListCardGrid(
             icalobject,
             onProgressChanged = { _, _, _ -> }
         )    }
@@ -198,7 +198,7 @@ fun ListCardSmall_NOTE() {
 
 @Preview(showBackground = true)
 @Composable
-fun ListCardSmall_TODO() {
+fun ListCardGrid_TODO() {
     JtxBoardTheme {
 
         val icalobject = ICal4ListWithRelatedto.getSample().apply {
@@ -211,7 +211,7 @@ fun ListCardSmall_TODO() {
             property.due = System.currentTimeMillis()
             property.summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         }
-        ListCardSmall(
+        ListCardGrid(
             icalobject,
             onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
         )

@@ -28,7 +28,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.compose.cards.ListCardSmall
+import at.techbee.jtx.ui.compose.cards.ListCardGrid
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -71,7 +71,7 @@ fun ListScreenGrid(
         )
         { iCalObject ->
 
-            ListCardSmall(
+            ListCardGrid(
                 iCalObject,
                 modifier = Modifier
                     .fillMaxWidth()
