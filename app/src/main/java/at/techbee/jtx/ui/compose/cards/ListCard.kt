@@ -106,7 +106,7 @@ fun ICalObjectListCard(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 4.dp, start = 4.dp, end = 4.dp),
+                        .padding(top = 4.dp, start = 8.dp, end = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
