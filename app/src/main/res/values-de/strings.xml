@@ -459,4 +459,11 @@ Vielen Dank!"</string>
     <string name="buypro_snackbar_quick_entries_blocked">"Bitte kaufe das Pro-Package um Schnell-Einträge zu aktivieren!"</string>
     <string name="buypro_initial_dialog_message">"Hallo! jtx Board kommt in einer Standard- und einer Pro-Version. Bitte schaue in die \"Pro kaufen\" Sektion für weitere Infos!
 Danke!"</string>
+    <string name="view_comment_pausebutton_content_desc">"Audiokommentar pausieren"</string>
+    <string name="menu_list_viewmode_list">"Listenansicht"</string>
+    <string name="menu_list_viewmode_grid">"Rasteransicht"</string>
+    <string name="settings_default_expand_subtasks">"Unteraufgaben standardmäßig erweitern"</string>
+    <string name="settings_default_expand_subnotes">"Unternotizen standardmäßig erweitern"</string>
+    <string name="settings_default_expand_attachments">"Anhänge standardmäßig erweitern"</string>
+    <string name="title_activity_list_screen">"Listenansicht"</string>
 </resources>
