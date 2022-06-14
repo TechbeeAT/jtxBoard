@@ -241,7 +241,7 @@ fun ICalObjectListCard(
                         )
                             ListStatusBar(
                                 numAttendees = iCalObject.numAttendees,
-                                numAttachments = iCalObject.numAttachments,
+                                //numAttachments = iCalObject.numAttachments,
                                 numComments = iCalObject.numComments,
                                 numResources = iCalObject.numResources,
                                 numAlarms = iCalObject.numAlarms,
