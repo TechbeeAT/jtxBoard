@@ -120,24 +120,27 @@ fun ICalObjectListCard(
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
-                                iCalObject.dtstart?.let {
-                                    Text(
-                                        iCalObject.getDtstartTextInfo(LocalContext.current) ?: "",
-                                        style = Typography.labelMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        fontStyle = FontStyle.Italic,
-                                        modifier = Modifier.padding(end = 16.dp),
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                iCalObject.due?.let {
-                                    Text(
-                                        iCalObject.getDueTextInfo(LocalContext.current) ?: "",
-                                        style = Typography.labelMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        fontStyle = FontStyle.Italic,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
+                                if(iCalObject.module == Module.TODO.name) {
+                                    iCalObject.dtstart?.let {
+                                        Text(
+                                            iCalObject.getDtstartTextInfo(LocalContext.current)
+                                                ?: "",
+                                            style = Typography.labelMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            fontStyle = FontStyle.Italic,
+                                            modifier = Modifier.padding(end = 16.dp),
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                    iCalObject.due?.let {
+                                        Text(
+                                            iCalObject.getDueTextInfo(LocalContext.current) ?: "",
+                                            style = Typography.labelMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            fontStyle = FontStyle.Italic,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
                             }
                         }
