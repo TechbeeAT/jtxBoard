@@ -30,17 +30,24 @@
         app:title="@string/settings_list">
 
         <SwitchPreference
-            app:defaultValue="true"
+            app:defaultValue="false"
             app:icon="@drawable/ic_todo"
-            app:key="settings_show_subtasks_in_list"
-            app:title="@string/settings_show_subtasks_in_list"
+            app:key="settings_auto_expand_subtasks"
+            app:title="@string/settings_default_expand_subtasks"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
-            app:defaultValue="true"
+            app:defaultValue="false"
+            app:icon="@drawable/ic_note"
+            app:key="settings_auto_expand_subnotes"
+            app:title="@string/settings_default_expand_subnotes"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreference
+            app:defaultValue="false"
             app:icon="@drawable/ic_attachment"
-            app:key="settings_show_attachments_in_list"
-            app:title="@string/settings_show_attachments_in_list"
+            app:key="settings_auto_expand_attachments"
+            app:title="@string/settings_default_expand_attachments"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference

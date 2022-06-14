@@ -43,7 +43,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     var searchClassification: MutableList<Classification> = mutableListOf()
     var searchCollection: MutableList<String> = mutableListOf()
     var searchAccount: MutableList<String> = mutableListOf()
-    var isExcludeDone: Boolean = false
+    var isExcludeDone = MutableLiveData(false)
     var isFilterOverdue: Boolean = false
     var isFilterDueToday: Boolean = false
     var isFilterDueTomorrow: Boolean = false
@@ -51,6 +51,8 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     var isFilterNoDatesSet: Boolean = false
     var orderBy: OrderBy = OrderBy.CREATED   // default, overwritten by Shared Prefs
     var sortOrder: SortOrder = SortOrder.DESC // default, overwritten by Shared Prefs
+
+    var viewMode: MutableLiveData<String> = MutableLiveData(IcalListFragment.PREFS_VIEWMODE_LIST)
 
     var searchSettingShowAllSubtasksInTasklist: Boolean = false
     var searchSettingShowAllSubnotesInNoteslist: Boolean = false
@@ -72,6 +74,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
 
         // TODO maybe retrieve all subtasks only when subtasks are needed!
     val allSubtasks: LiveData<List<ICal4List>> = database.getAllSubtasks()
+    val allSubnotes: LiveData<List<ICal4List>> = database.getAllSubnotes()
 
     val allCategories = database.getAllCategories()   // filter FragmentDialog
     val allCollections = database.getAllCollections()
@@ -154,7 +157,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             queryString += ") "
         }
 
-        if (isExcludeDone)
+        if (isExcludeDone.value == true)
             queryString += "AND $COLUMN_PERCENT IS NOT 100 "
 
         val dueQuery = mutableListOf<String>()
@@ -340,6 +343,16 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             quickInsertedEntity.postValue(database.getSync(newId))
         }
     }
+
+    /**
+     * Updates the expanded status of subtasks, subnotes and attachments in the DB
+     */
+    fun updateExpanded(icalObjectId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.updateExpanded(icalObjectId, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)
+        }
+    }
+
 
     /**
      * This function takes an icalObjectId, retrives the icalObject and posts it  in the directEditEntity LiveData Object.

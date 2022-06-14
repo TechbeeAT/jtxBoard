@@ -12,11 +12,15 @@ import android.content.ActivityNotFoundException
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
+import android.util.Size
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.room.*
@@ -27,6 +31,7 @@ import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
 import kotlinx.parcelize.Parcelize
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
 
 
@@ -200,6 +205,18 @@ data class Attachment (
             Log.d("IcalEditFragment", "enqueued fileCleanupWorkRequest")
         }
 
+        fun getSample() = Attachment(
+            attachmentId = 1L,
+            icalObjectId = 1L,
+            uri = null,
+            null,
+            "application/pdf",
+            null,
+            "myfile.pdf",
+            "pdf",
+            123000
+        )
+
 
     }
 
@@ -290,6 +307,29 @@ data class Attachment (
             fmttype?.isNotEmpty() == true -> fmttype
             else -> null
         }
+    }
+
+
+    fun getPreview(context: Context): Bitmap? {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && uri != null) {
+            try {
+                val thumbSize = Size(50, 50)
+                val thumbUri = Uri.parse(uri)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    return context.contentResolver?.loadThumbnail(thumbUri, thumbSize, null)
+
+                }
+            } catch (e: java.lang.NullPointerException) {
+                Log.i("UriEmpty", "Uri was empty or could not be parsed.")
+            } catch (e: FileNotFoundException) {
+                Log.d("FileNotFound", "File with uri ${uri} not found.\n$e")
+            } catch (e: ImageDecoder.DecodeException) {
+                Log.i("ImageThumbnail", "Could not retrieve image thumbnail from file ${uri}")
+            }
+        }
+        return null
     }
 }
 

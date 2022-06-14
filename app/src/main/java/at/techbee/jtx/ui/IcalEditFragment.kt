@@ -830,7 +830,8 @@ class IcalEditFragment : Fragment() {
             if(it.isNullOrEmpty())
                 return@observe
 
-            it.forEach { singleSubtask ->
+            it.sortedBy { item -> item?.sortIndex }
+                .forEach { singleSubtask ->
                 addSubtasksView(singleSubtask)
             }
             icalEditViewModel.relatedSubtasks.removeObservers(viewLifecycleOwner)
