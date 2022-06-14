@@ -413,6 +413,9 @@ class IcalViewFragment : Fragment() {
                     }
                     binding.viewFeedbackLinearlayout.addView(commentBinding.root)
                 }
+            } else if (it.isEmpty() && icalViewViewModel.icalEntity.value?.ICalCollection?.readonly == true) {   // don't show header for subnotes if read only and no subnotes are present
+                binding.viewFeedbackHeader.visibility = View.GONE
+                binding.viewFeedbackLinearlayout.visibility = View.GONE
             }
         }
 
@@ -919,6 +922,7 @@ class IcalViewFragment : Fragment() {
         binding.viewFabEdit.visibility = View.GONE
         optionsMenu?.findItem(R.id.menu_view_delete_item)?.isVisible = false
         binding.viewAddNoteTextinputlayout.visibility = View.GONE
+
         binding.viewAddAudioNote.visibility = View.GONE
         binding.viewReadyonly.visibility = View.VISIBLE
         binding.viewBottomBar.visibility = View.GONE
