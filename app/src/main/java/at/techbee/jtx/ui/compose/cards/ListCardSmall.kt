@@ -71,7 +71,7 @@ fun ListCardSmall(
                                         it,
                                         style = Typography.labelMedium,
                                         fontStyle = FontStyle.Italic,
-                                        modifier = Modifier.padding(end = 16.dp),
+                                        modifier = Modifier.padding(end = 16.dp).weight(1f),
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis

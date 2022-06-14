@@ -39,7 +39,7 @@ fun ListCardCompact(
     val iCalObject = iCalObjectWithRelatedto.property
 
 
-        Box {
+        Box(modifier = modifier) {
 
             ColoredEdge(iCalObject.colorItem, iCalObject.colorCollection)
 
@@ -65,7 +65,7 @@ fun ListCardCompact(
                                         it,
                                         style = Typography.labelMedium,
                                         fontStyle = FontStyle.Italic,
-                                        modifier = Modifier.padding(end = 16.dp),
+                                        modifier = Modifier.padding(end = 16.dp).weight(1f),
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
