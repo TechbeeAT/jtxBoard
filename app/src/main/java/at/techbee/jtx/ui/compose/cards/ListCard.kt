@@ -178,7 +178,8 @@ fun ICalObjectListCard(
                     if (iCalObject.module == Module.JOURNAL.name)
                         VerticalDateBlock(
                             iCalObject.dtstart ?: System.currentTimeMillis(),
-                            iCalObject.dtstartTimezone
+                            iCalObject.dtstartTimezone,
+                            modifier = Modifier.padding(start = 8.dp, end = 4.dp, bottom = 4.dp, top = 4.dp)
                         )
 
                     Column(

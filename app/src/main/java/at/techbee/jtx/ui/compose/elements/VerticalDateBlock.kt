@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.compose.elements
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
@@ -27,10 +25,10 @@ import java.util.*
 
 
 @Composable
-fun VerticalDateBlock(datetime: Long, timezone: String?) {
+fun VerticalDateBlock(datetime: Long, timezone: String?, modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(8.dp)
+        modifier = modifier
     ) {
         Text(
             text = DateTimeUtils.convertLongToDayString(datetime, timezone),
@@ -46,7 +44,8 @@ fun VerticalDateBlock(datetime: Long, timezone: String?) {
 
         Text(
             DateTimeUtils.convertLongToYearString(datetime, timezone),
-            style = Typography.bodySmall
+            style = Typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface
         )
         if (timezone != ICalObject.TZ_ALLDAY)
             Text(
