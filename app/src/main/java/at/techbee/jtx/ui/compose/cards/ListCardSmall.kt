@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.compose.cards
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -29,7 +28,7 @@ import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.DateTimeUtils
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListCardSmall(
     iCalObjectWithRelatedto: ICal4ListWithRelatedto,
@@ -102,30 +101,6 @@ fun ListCardSmall(
                             }
                         }
                     }
-
-                    /*
-                    ListStatusBar(
-                        numAttendees = iCalObject.numAttendees,
-                        numAttachments = iCalObject.numAttachments,
-                        numComments = iCalObject.numComments,
-                        numResources = iCalObject.numResources,
-                        numAlarms = iCalObject.numAlarms,
-                        isReadOnly = iCalObject.isReadOnly,
-                        uploadPending = iCalObject.uploadPending,
-                        hasURL = iCalObject.url?.isNotBlank() == true,
-                        hasLocation = iCalObject.location?.isNotBlank() == true,
-                        hasContact = iCalObject.contact?.isNotBlank() == true,
-                        isRecurringOriginal = iCalObject.isRecurringOriginal,
-                        isRecurringInstance = iCalObject.isRecurringInstance,
-                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
-                        component = iCalObject.component,
-                        status = iCalObject.status,
-                        classification = iCalObject.classification,
-                        priority = iCalObject.priority,
-                        modifier = Modifier.padding(end = 8.dp, top = 4.dp)
-                    )
-
-                     */
                 }
 
                 Row(
