@@ -33,29 +33,29 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @Composable
 fun ListStatusBar(
-    numAttendees: Int,
-    numAttachments: Int,
-    numComments: Int,
-    numResources: Int,
-    numAlarms: Int,
-    isReadOnly: Boolean,
-    uploadPending: Boolean,
-    isRecurringOriginal: Boolean,
-    isRecurringInstance: Boolean,
-    isLinkedRecurringInstance: Boolean,
-    hasURL: Boolean,
-    hasLocation: Boolean,
-    hasContact: Boolean,
+    numAttendees: Int? = null,
+    numAttachments: Int? = null,
+    numComments: Int? = null,
+    numResources: Int? = null,
+    numAlarms: Int? = null,
+    isReadOnly: Boolean? = null,
+    uploadPending: Boolean? = null,
+    isRecurringOriginal: Boolean? = null,
+    isRecurringInstance: Boolean? = null,
+    isLinkedRecurringInstance: Boolean? = null,
+    hasURL: Boolean? = null,
+    hasLocation: Boolean? = null,
+    hasContact: Boolean? = null,
     component: String,
-    status: String?,
-    classification: String?,
-    priority: Int?,
+    status: String? = null,
+    classification: String? = null,
+    priority: Int? = null,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         val statusText: String? = when {
             component == Component.VTODO.name && status == StatusTodo.CANCELLED.name -> stringResource(
@@ -85,7 +85,6 @@ fun ListStatusBar(
                 icon = Icons.Outlined.PublishedWithChanges,
                 iconDesc = stringResource(R.string.status),
                 text = it,
-                modifier = Modifier.padding(start = 4.dp)
             )
         }
         classificationText?.let {
@@ -93,7 +92,6 @@ fun ListStatusBar(
                 icon = Icons.Outlined.AdminPanelSettings,
                 iconDesc = stringResource(R.string.classification),
                 text = it,
-                modifier = Modifier.padding(start = 4.dp)
             )
         }
         priorityText?.let {
@@ -101,83 +99,75 @@ fun ListStatusBar(
                 icon = Icons.Outlined.WorkOutline,
                 iconDesc = stringResource(R.string.priority),
                 text = it,
-                modifier = Modifier.padding(start = 4.dp)
             )
         }
 
-        if (numAttendees > 0)
+        if (numAttendees != null && numAttendees > 0)
             IconWithText(
                 icon = Icons.Outlined.Group,
                 iconDesc = stringResource(R.string.attendees),
                 text = numAttendees.toString(),
-                modifier = Modifier.padding(start = 4.dp)
             )
-        if (numAttachments > 0)
+        if (numAttachments != null && numAttachments > 0)
             IconWithText(
                 icon = Icons.Outlined.Attachment,
                 iconDesc = stringResource(R.string.attachments),
                 text = numAttachments.toString(),
-                modifier = Modifier.padding(start = 4.dp)
             )
-        if (numComments > 0)
+        if (numComments != null && numComments > 0)
             IconWithText(
                 icon = Icons.Outlined.Comment,
                 iconDesc = stringResource(R.string.comments),
                 text = numComments.toString(),
-                modifier = Modifier.padding(start = 4.dp)
             )
-        if (numResources > 0)
+        if (numResources != null && numResources > 0)
             IconWithText(
                 icon = Icons.Outlined.WorkOutline,
                 iconDesc = stringResource(R.string.resources),
                 text = numResources.toString(),
-                modifier = Modifier.padding(start = 4.dp)
             )
-        if (numAlarms > 0)
+        if (numAlarms != null && numAlarms > 0)
             IconWithText(
                 icon = Icons.Outlined.Alarm,
                 iconDesc = stringResource(R.string.alarms),
                 text = numAlarms.toString(),
-                modifier = Modifier.padding(start = 4.dp)
             )
 
-        if (hasURL)
+        if (hasURL == true)
             Icon(
                 Icons.Outlined.Link,
                 stringResource(R.string.url),
                 modifier = Modifier
-                    .padding(start = 4.dp)
                     .size(14.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-        if (hasLocation)
+        if (hasLocation == true)
             Icon(
                 Icons.Outlined.PinDrop,
                 stringResource(R.string.location),
                 modifier = Modifier
-                    .padding(start = 4.dp)
                     .size(14.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-        if (hasContact)
+        if (hasContact == true)
             Icon(
                 Icons.Outlined.ContactMail,
                 stringResource(R.string.contact),
                 modifier = Modifier
-                    .padding(start = 4.dp, end = 2.dp)
+                    .padding(end = 2.dp)
                     .size(14.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-        if (isReadOnly)
+        if (isReadOnly == true)
             Icon(
                 painter = painterResource(id = R.drawable.ic_readonly),
                 contentDescription = stringResource(id = R.string.readyonly),
                 modifier = Modifier.size(14.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-        if (uploadPending)
+        if (uploadPending == true)
             Icon(
                 Icons.Outlined.CloudSync,
                 stringResource(R.string.upload_pending),
@@ -185,21 +175,19 @@ fun ListStatusBar(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-        if (isRecurringOriginal || (isRecurringInstance && isLinkedRecurringInstance))
+        if (isRecurringOriginal == true || (isRecurringInstance == true && isLinkedRecurringInstance == true))
             Icon(
                 Icons.Outlined.EventRepeat,
                 stringResource(R.string.list_item_recurring),
                 modifier = Modifier
-                    .padding(start = 4.dp)
                     .size(14.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-        if (isRecurringInstance && !isLinkedRecurringInstance)
+        if (isRecurringInstance == true && isLinkedRecurringInstance == false)
             Icon(
                 painter = painterResource(R.drawable.ic_recur_exception),
                 stringResource(R.string.list_item_recurring),
                 modifier = Modifier
-                    .padding(start = 4.dp)
                     .size(14.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
