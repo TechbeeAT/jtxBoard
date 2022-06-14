@@ -678,7 +678,7 @@ class IcalViewFragment : Fragment() {
             R.id.menu_view_share_text -> {
 
                 var shareText = ""
-                icalViewViewModel.icalEntity.value?.property?.dtstart?.let { shareText += getString(R.string.view_started) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dtstartTimezone) + System.lineSeparator() }
+                icalViewViewModel.icalEntity.value?.property?.dtstart?.let { shareText += getString(R.string.view_started) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dtstartTimezone) + System.lineSeparator() + System.lineSeparator()}
                 icalViewViewModel.icalEntity.value?.property?.due?.let { shareText += getString(R.string.view_due) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dueTimezone) + System.lineSeparator() }
                 icalViewViewModel.icalEntity.value?.property?.completed?.let { shareText += getString(R.string.view_completed) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.completedTimezone) + System.lineSeparator() }
                 icalViewViewModel.icalEntity.value?.property?.getRecurInfo(context)?.let { shareText += it }
@@ -690,10 +690,27 @@ class IcalViewFragment : Fragment() {
                 if(categories.isNotEmpty())
                     shareText += getString(R.string.categories) + ": " + categories.joinToString(separator=", ") + System.lineSeparator()
 
+                if(icalViewViewModel.icalEntity.value?.property?.contact?.isNotEmpty() == true)
+                    shareText += getString(R.string.contact) + ": " + icalViewViewModel.icalEntity.value?.property?.contact + System.lineSeparator()
+
+                if(icalViewViewModel.icalEntity.value?.property?.location?.isNotEmpty() == true)
+                    shareText += getString(R.string.location) + ": " + icalViewViewModel.icalEntity.value?.property?.location + System.lineSeparator()
+
+                if(icalViewViewModel.icalEntity.value?.property?.url?.isNotEmpty() == true)
+                    shareText += getString(R.string.url) + ": " + icalViewViewModel.icalEntity.value?.property?.url + System.lineSeparator()
+
                 val resources: MutableList<String> = mutableListOf()
                 icalViewViewModel.icalEntity.value?.resources?.forEach { resource -> resource.text?.let { resources.add(it) } }
                 if(resources.isNotEmpty())
                     shareText += getString(R.string.resources) + ": " + resources.joinToString(separator=", ") + System.lineSeparator()
+
+                val attachments: MutableList<String> = mutableListOf()
+                icalViewViewModel.icalEntity.value?.attachments?.forEach { attachment ->
+                    if(attachment.uri?.startsWith("http") == true)
+                        attachments.add(attachment.uri!!)
+                }
+                if(attachments.isNotEmpty())
+                    shareText += getString(R.string.attachments) + ": " + System.lineSeparator() + attachments.joinToString(separator=System.lineSeparator()) + System.lineSeparator()
 
                 shareText = shareText.trim()
 
