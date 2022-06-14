@@ -195,14 +195,28 @@ fun ICalObjectListCard(
                         val summaryTextDecoration =
                             if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None
 
-                        if (iCalObject.summary?.isNotBlank() == true)
-                            Text(
-                                text = iCalObject.summary ?: "",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = summarySize,
-                                textDecoration = summaryTextDecoration,
-                                modifier = Modifier.padding(top = 4.dp)
-                            )
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                            if (iCalObject.summary?.isNotBlank() == true)
+                                Text(
+                                    text = iCalObject.summary ?: "",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = summarySize,
+                                    textDecoration = summaryTextDecoration,
+                                    modifier = Modifier.padding(top = 4.dp).weight(1f)
+                                )
+
+                            if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
+                                Checkbox(
+                                    checked = iCalObject.percent == 100,
+                                    enabled = !iCalObject.isReadOnly,
+                                    onCheckedChange = {
+                                        onProgressChanged(
+                                            iCalObject.id,
+                                            if (it) 100 else 0,
+                                            iCalObject.isLinkedRecurringInstance
+                                        )
+                                    })
+                        }
 
                         if (iCalObject.description?.isNotBlank() == true)
                             Text(
@@ -242,17 +256,7 @@ fun ICalObjectListCard(
                             )
                     }
 
-                    if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
-                        Checkbox(
-                            checked = iCalObject.percent == 100,
-                            enabled = !iCalObject.isReadOnly,
-                            onCheckedChange = {
-                                onProgressChanged(
-                                    iCalObject.id,
-                                    if (it) 100 else 0,
-                                    iCalObject.isLinkedRecurringInstance
-                                )
-                            })
+
                 }
 
 
@@ -583,6 +587,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
     JtxBoardTheme {
 
         val icalobject = ICal4ListWithRelatedto.getSample().apply {
+            property.summary = "This is a longer summary that would break the line and continue on the second one.\nHere is even a manual line break, let's see what happens."
             property.component = Component.VTODO.name
             property.module = Module.TODO.name
             property.percent = 89
