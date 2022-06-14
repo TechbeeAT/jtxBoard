@@ -279,23 +279,12 @@
         </ScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/filter_fab_applyfilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="80dp"
-            app:srcCompat="@drawable/ic_save"
-            android:contentDescription="@string/filter_fab_apply_filter_contentdescription" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/filter_fab_resetfilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
-            android:layout_marginEnd="80dp"
             android:layout_marginBottom="16dp"
-            app:srcCompat="@drawable/ic_filter_delete"
-            android:contentDescription="@string/menu_list_clearfilter"/>
+            android:contentDescription="@string/menu_list_clearfilter"
+            app:srcCompat="@drawable/ic_filter_delete" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

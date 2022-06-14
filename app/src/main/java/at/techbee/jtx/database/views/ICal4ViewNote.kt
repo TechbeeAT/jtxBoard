@@ -32,7 +32,8 @@ const val VIEW_NAME_ICAL4VIEWNOTE = "ical4viewNote"
                 "$TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID, " +     // = parentId
                 "$TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_BINARY, " +
                 "$TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_FMTTYPE, " +
-                "$TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_URI " +
+                "$TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_URI, " +
+                "$TABLE_NAME_ICALOBJECT.$COLUMN_SORT_INDEX " +
                 "FROM $TABLE_NAME_ICALOBJECT " +
                 "INNER JOIN $TABLE_NAME_RELATEDTO ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID " +  // this join filters standalone notes already
                 "LEFT JOIN $TABLE_NAME_ATTACHMENT ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_ATTACHMENT.$COLUMN_ATTACHMENT_ICALOBJECT_ID " +
@@ -53,6 +54,7 @@ data class ICal4ViewNote (
     @ColumnInfo(name = COLUMN_RELATEDTO_ICALOBJECT_ID) var parentId: Long,
     @ColumnInfo(name = COLUMN_ATTACHMENT_BINARY) var attachmentBinary: String?,
     @ColumnInfo(name = COLUMN_ATTACHMENT_FMTTYPE) var attachmentFmttype: String?,
-    @ColumnInfo(name = COLUMN_ATTACHMENT_URI) var attachmentUri: String?
+    @ColumnInfo(name = COLUMN_ATTACHMENT_URI) var attachmentUri: String?,
+    @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null
 )
 

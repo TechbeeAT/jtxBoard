@@ -42,6 +42,24 @@ object DateTimeUtils {
         return zonedDateTime.format(formatter)
     }
 
+    fun convertLongToShortDateTimeString(date: Long?, timezone: String?): String {
+        if (date == null || date == 0L)
+            return ""
+        val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+        val formatter = when (timezone) {
+            null -> DateTimeFormatter.ofLocalizedDateTime(
+                FormatStyle.SHORT,
+                FormatStyle.SHORT
+            )  // short Format for time to not show the timezone info
+            TZ_ALLDAY -> DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)   // only date
+            else -> DateTimeFormatter.ofLocalizedDateTime(
+                FormatStyle.SHORT,
+                FormatStyle.LONG
+            )  // FormatStyle.LONG also shows seconds, maybe a solution could be found to remove this in the future
+        }
+        return zonedDateTime.format(formatter)
+    }
+
     fun convertLongToFullDateString(date: Long?, timezone: String?): String {
         if (date == null || date == 0L)
             return ""

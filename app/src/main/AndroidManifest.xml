@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) Techbee e.U.
-  ~ All rights reserved. This program and the accompanying materials
-  ~ are made available under the terms of the GNU Public License v3.0
-  ~ which accompanies this distribution, and is available at
-  ~ http://www.gnu.org/licenses/gpl.html
-  -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -16,52 +8,70 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- START remove permissions would be merged by the ical4android manifest and that are not needed -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- START remove permissions would be merged by the ical4android manifest and that are not needed -->
     <!-- read/write Android calendars -->
-    <uses-permission android:name="android.permission.READ_CALENDAR" tools:node="remove" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" tools:node="remove" />
-    <!-- read/write tasks (OpenTasks) -->
-    <uses-permission android:name="org.dmfs.permission.READ_TASKS" tools:node="remove" />
-    <uses-permission android:name="org.dmfs.permission.WRITE_TASKS" tools:node="remove" />
-    <!-- read/write tasks (tasks.org) -->
-    <uses-permission android:name="org.tasks.permission.READ_TASKS" tools:node="remove" />
-    <uses-permission android:name="org.tasks.permission.WRITE_TASKS" tools:node="remove" />
-    <!-- read/write tasks & journals (jtx Board) -->
-    <uses-permission android:name="at.techbee.jtx.permission.READ" tools:node="remove"  />
-    <uses-permission android:name="at.techbee.jtx.permission.WRITE" tools:node="remove" />
-    <!-- END remove permissions would be merged by the ical4android manifest and that are not needed -->
-
+    <uses-permission
+        android:name="android.permission.READ_CALENDAR"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.WRITE_CALENDAR"
+        tools:node="remove" /> <!-- read/write tasks (OpenTasks) -->
+    <uses-permission
+        android:name="org.dmfs.permission.READ_TASKS"
+        tools:node="remove" />
+    <uses-permission
+        android:name="org.dmfs.permission.WRITE_TASKS"
+        tools:node="remove" /> <!-- read/write tasks (tasks.org) -->
+    <uses-permission
+        android:name="org.tasks.permission.READ_TASKS"
+        tools:node="remove" />
+    <uses-permission
+        android:name="org.tasks.permission.WRITE_TASKS"
+        tools:node="remove" /> <!-- read/write tasks & journals (jtx Board) -->
+    <uses-permission
+        android:name="at.techbee.jtx.permission.READ"
+        tools:node="remove" />
+    <uses-permission
+        android:name="at.techbee.jtx.permission.WRITE"
+        tools:node="remove" /> <!-- END remove permissions would be merged by the ical4android manifest and that are not needed -->
     <permission-tree
+        android:name="${applicationId}.permission"
         android:icon="@drawable/ic_jtx"
-        android:label="@string/app_name"
-        android:name="${applicationId}.permission" />
+        android:label="@string/app_name" />
 
     <permission-group
+        android:name="${applicationId}.permission-group"
         android:description="@string/app_permission_desc"
         android:icon="@drawable/ic_jtx"
-        android:label="@string/app_permission_label"
-        android:name="${applicationId}.permission-group" />
+        android:label="@string/app_permission_label" />
 
     <permission
-        android:description="@string/app_permission_desc"
-        android:label="@string/app_name"
         android:name="${applicationId}.permission.READ"
-        android:permissionGroup="${applicationId}.permission-group"
-        android:protectionLevel="dangerous"/>
-
-    <permission
         android:description="@string/app_permission_desc"
         android:label="@string/app_name"
-        android:name="${applicationId}.permission.WRITE"
         android:permissionGroup="${applicationId}.permission-group"
-        android:protectionLevel="dangerous"/>
+        android:protectionLevel="dangerous" />
+    <permission
+        android:name="${applicationId}.permission.WRITE"
+        android:description="@string/app_permission_desc"
+        android:label="@string/app_name"
+        android:permissionGroup="${applicationId}.permission-group"
+        android:protectionLevel="dangerous" />
 
-
-    <uses-feature android:name="android.hardware.camera2"
+    <uses-feature
+        android:name="android.hardware.camera2"
         android:required="false" />
 
+    <queries>
+
+        <!-- package visiblity – which apps do we need to see? -->
+        <package android:name="at.bitfire.davdroid" />
+
+        <!-- necessary for Speech Recognition for Devices > APi 30 -->
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -71,6 +81,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <provider
             android:name="at.techbee.jtx.SyncContentProvider"
             android:authorities="at.techbee.jtx.provider"
@@ -79,8 +90,6 @@
             android:multiprocess="false"
             android:readPermission="${applicationId}.permission.READ"
             android:writePermission="${applicationId}.permission.WRITE" />
-
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="at.techbee.jtx.fileprovider"
@@ -88,36 +97,39 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths">
-            </meta-data>
+                android:resource="@xml/file_paths"/>
         </provider>
 
-        <activity android:name="at.techbee.jtx.MainActivity"
+        <activity
+            android:name="at.techbee.jtx.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
                 <data android:mimeType="image/*" />
                 <data android:mimeType="application/pdf" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="file"/>
+
+                <data android:scheme="file" />
                 <data android:scheme="content" />
                 <data android:mimeType="text/calendar" />
             </intent-filter>
 
-            <meta-data android:name="android.app.shortcuts"
+            <meta-data
+                android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
-
         </activity>
 
         <receiver android:name="at.techbee.jtx.NotificationPublisher" />
@@ -125,18 +137,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
-
-    <queries>
-        <!-- package visiblity – which apps do we need to see? -->
-        <package android:name="at.bitfire.davdroid" />
-
-        <!-- necessary for Speech Recognition for Devices > APi 30 -->
-        <intent>
-            <action
-                android:name="android.speech.RecognitionService" />
-        </intent>
-    </queries>
 
 </manifest>

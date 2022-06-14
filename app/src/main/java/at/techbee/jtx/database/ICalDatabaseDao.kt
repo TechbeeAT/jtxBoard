@@ -86,6 +86,15 @@ SELECTs (global selects without parameter)
     fun getAllCollections(): LiveData<List<ICalCollection>>
 
     /**
+     * Retrieve an list of all Collections ([CollectionsView]) as a LiveData-List
+     *
+     * @return a list of [CollectionsView] as LiveData<List<CollectionsView>>
+     */
+    @Transaction
+    @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW ORDER BY $COLUMN_COLLECTION_ACCOUNT_TYPE = 'LOCAL' DESC, $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    fun getAllCollectionsView(): LiveData<List<CollectionsView>>
+
+    /**
      * Retrieve an list of all LOCAL Collections from the [CollectionsView] as a LiveData-List
      * A local collection is a collection with account type LOCAL
      * @return a list of [CollectionsView] as LiveData<List<CollectionsView>>
@@ -159,8 +168,19 @@ SELECTs (global selects without parameter)
      * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
      */
     @Transaction
-    @Query("SELECT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO'")
+    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO' ORDER BY $COLUMN_SORT_INDEX")
     fun getAllSubtasks(): LiveData<List<ICal4List>>
+
+    /**
+     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
+     * by checking if the [ICalObject.id] is listed as a [Relatedto.linkedICalObjectId].
+     *
+     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
+     */
+    @Transaction
+    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VJOURNAL' ORDER BY $COLUMN_SORT_INDEX")
+    fun getAllSubnotes(): LiveData<List<ICal4List>>
+
 
     /**
      * Retrieve an list the number of Subtasks of an [ICalObject] as a [SubtaskCount].
@@ -510,8 +530,13 @@ DELETEs by Object
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
     suspend fun updateSetDirty(id: Long, lastModified: Long)
 
+    @Transaction
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SUBTASKS_EXPANDED = :isSubtasksExpanded, $COLUMN_SUBNOTES_EXPANDED = :isSubnotesExpanded, $COLUMN_ATTACHMENTS_EXPANDED = :isAttachmentsExpanded WHERE $COLUMN_ID = :id")
+    suspend fun updateExpanded(id: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean)
 
-
+    @Transaction
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SORT_INDEX = :index WHERE $COLUMN_ID = :id")
+    suspend fun updateOrder(id: Long, index: Int?)
 
 
 

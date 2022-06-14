@@ -70,7 +70,7 @@ class IcalViewViewModelTest {
 
         icalViewViewModel.editingClicked()
 
-        assertTrue(icalViewViewModel.editingClicked.value!!)
+        assertNotNull(icalViewViewModel.entryToEdit)
     }
  */
 
