@@ -91,7 +91,7 @@ SELECTs (global selects without parameter)
      * @return a list of [CollectionsView] as LiveData<List<CollectionsView>>
      */
     @Transaction
-    @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW ORDER BY $COLUMN_COLLECTION_ACCOUNT_TYPE = 'LOCAL', $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW ORDER BY $COLUMN_COLLECTION_ACCOUNT_TYPE = 'LOCAL' DESC, $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllCollectionsView(): LiveData<List<CollectionsView>>
 
     /**
