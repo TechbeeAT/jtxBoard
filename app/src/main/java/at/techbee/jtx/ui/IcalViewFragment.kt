@@ -921,6 +921,7 @@ class IcalViewFragment : Fragment() {
         binding.viewAddNoteTextinputlayout.visibility = View.GONE
         binding.viewAddAudioNote.visibility = View.GONE
         binding.viewReadyonly.visibility = View.VISIBLE
+        binding.viewBottomBar.visibility = View.GONE
 
         binding.viewSubtasksAdd.isEnabled = false
         binding.viewAddNoteTextinputlayout.isEnabled = false
