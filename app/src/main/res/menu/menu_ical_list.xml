@@ -48,4 +48,15 @@
             app:showAsAction="never" />
     </group>
 
+    <group
+        android:id="@+id/menu_list_menugroup_viewmode"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_list_viewmode_list"
+            android:title="@string/menu_list_viewmode_list" />
+        <item
+            android:id="@+id/menu_list_viewmode_grid"
+            android:title="@string/menu_list_viewmode_grid" />
+    </group>
+
 </menu>

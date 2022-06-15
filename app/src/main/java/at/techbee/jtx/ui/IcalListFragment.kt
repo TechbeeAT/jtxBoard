@@ -42,7 +42,6 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.databinding.FragmentIcalListBinding
 import at.techbee.jtx.databinding.FragmentIcalListQuickaddDialogBinding
 import at.techbee.jtx.flavored.AdManager
@@ -79,10 +78,8 @@ class IcalListFragment : Fragment() {
     private lateinit var prefs: SharedPreferences
     private lateinit var arguments: IcalListFragmentArgs
 
-    var allCollections = listOf<ICalCollection>()
+    private var allCollections = listOf<ICalCollection>()
     var currentWriteableCollections = listOf<ICalCollection>()
-
-    var allSubtasks: List<ICal4List> = listOf()
 
 
     companion object {
@@ -92,10 +89,12 @@ class IcalListFragment : Fragment() {
         const val PREFS_MODULE = "prefsModule"
         const val PREFS_ISFIRSTRUN = "isFirstRun"
 
+        const val PREFS_VIEWMODE_LIST = "prefsViewmodeList"
+        const val PREFS_VIEWMODE_GRID = "prefsViewmodeGrid"
+
         const val SETTINGS_SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_of_journals_and_todos_in_tasklist"
         const val SETTINGS_SHOW_SUBNOTES_IN_LIST = "settings_show_subnotes_of_journals_and_tasks_in_noteslist"
         const val SETTINGS_SHOW_SUBJOURNALS_IN_LIST = "settings_show_subjournals_of_notes_and_tasks_in_journallist"
-
 
         const val TAB_INDEX_JOURNAL = 0
         const val TAB_INDEX_NOTE = 1
@@ -132,10 +131,10 @@ class IcalListFragment : Fragment() {
 
             override fun createFragment(position: Int): Fragment {
                 return when(position) {
-                    0 -> IcalListFragmentJournals()
-                    1 -> IcalListFragmentNotes()
-                    2 -> IcalListFragmentTodos()
-                    else -> IcalListFragmentJournals()
+                    0 -> IcalListFragmentJournal()
+                    1 -> IcalListFragmentNote()
+                    2 -> IcalListFragmentTodo()
+                    else -> IcalListFragmentJournal()
                 }
             }
         }
@@ -175,14 +174,6 @@ class IcalListFragment : Fragment() {
             updateMenuVisibilities()
         }
 
-        // This observer is needed in order to make sure that the Subtasks are retrieved!
-        icalListViewModel.allSubtasks.observe(viewLifecycleOwner) {
-            this.allSubtasks = it     // give observer something to do
-            //if(it.isNotEmpty())
-            //recyclerView?.adapter?.notifyDataSetChanged()
-            // trying to skip this code. This might have the effect, that subtasks that are added during the sync might not be immediately available, but improves the performance as the list does not get updated all the time
-        }
-
         icalListViewModel.allCollections.observe(viewLifecycleOwner) {
             allCollections = it
         }
@@ -196,11 +187,18 @@ class IcalListFragment : Fragment() {
             this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(it))
         }
 
+        icalListViewModel.viewMode.observe(viewLifecycleOwner) {
+            if(it == PREFS_VIEWMODE_LIST)
+                optionsMenu?.findItem(R.id.menu_list_viewmode_list)?.isChecked = true
+            if(it == PREFS_VIEWMODE_GRID)
+                optionsMenu?.findItem(R.id.menu_list_viewmode_grid)?.isChecked = true
+        }
+
+
         binding.listBottomBar.setOnMenuItemClickListener { menuitem ->
 
             when (menuitem.itemId) {
                 R.id.menu_list_bottom_filter -> openFilterBottomSheet()
-                R.id.menu_list_bottom_clearfilter -> resetFilter()
                 R.id.menu_list_bottom_quick_journal -> showQuickAddDialog()
                 R.id.menu_list_bottom_quick_note -> showQuickAddDialog()
                 R.id.menu_list_bottom_quick_todo -> showQuickAddDialog()
@@ -273,7 +271,7 @@ class IcalListFragment : Fragment() {
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_note).isVisible = icalListViewModel.searchModule == Module.NOTE.name
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_todo).isVisible = icalListViewModel.searchModule == Module.TODO.name
 
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_toggle_completed_tasks).isChecked = icalListViewModel.isExcludeDone
+        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_toggle_completed_tasks).isChecked = icalListViewModel.isExcludeDone.value ?: false
         if(icalListViewModel.searchModule == Module.TODO.name) {
             binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_overdue).isChecked = icalListViewModel.isFilterOverdue
             binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_today).isChecked = icalListViewModel.isFilterDueToday
@@ -288,9 +286,12 @@ class IcalListFragment : Fragment() {
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_no_dates_set).isVisible = icalListViewModel.searchModule == Module.TODO.name
 
         // don't show the option to clear the filter if no filter was set
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.isVisible = !isFilterActive()
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_clearfilter)?.isVisible = isFilterActive()
         optionsMenu?.findItem(R.id.menu_list_clearfilter)?.isVisible = isFilterActive()
+        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.icon =
+            if(isFilterActive())
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_filter_delete)
+            else
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_filter)
 
         if(!SyncUtil.isDAVx5CompatibleWithJTX(application))
             optionsMenu?.findItem(R.id.menu_list_syncnow)?.isVisible = false
@@ -357,6 +358,8 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_clearfilter -> resetFilter()
             R.id.menu_list_delete_visible -> deleteVisible()
             R.id.menu_list_syncnow -> SyncUtil.syncAllAccounts(context)
+            R.id.menu_list_viewmode_list -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_LIST)
+            R.id.menu_list_viewmode_grid -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_GRID)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -383,7 +386,7 @@ class IcalListFragment : Fragment() {
 
     private fun toggleMenuCheckboxFilter(menuitem: MenuItem) {
         when (menuitem.itemId) {
-            R.id.menu_list_bottom_toggle_completed_tasks -> icalListViewModel.isExcludeDone = !icalListViewModel.isExcludeDone
+            R.id.menu_list_bottom_toggle_completed_tasks -> icalListViewModel.isExcludeDone.value = (icalListViewModel.isExcludeDone.value?:false).not()
             R.id.menu_list_bottom_filter_overdue -> icalListViewModel.isFilterOverdue = !icalListViewModel.isFilterOverdue
             R.id.menu_list_bottom_filter_due_today -> icalListViewModel.isFilterDueToday = !icalListViewModel.isFilterDueToday
             R.id.menu_list_bottom_filter_due_tomorrow -> icalListViewModel.isFilterDueTomorrow = !icalListViewModel.isFilterDueTomorrow
@@ -391,7 +394,6 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_bottom_filter_no_dates_set -> icalListViewModel.isFilterNoDatesSet = !icalListViewModel.isFilterNoDatesSet
             else -> return
         }
-        //lastIcal4ListHash = 0     // makes the recycler view refresh everything (necessary for subtasks!)
         icalListViewModel.updateSearch()
     }
 
@@ -419,15 +421,12 @@ class IcalListFragment : Fragment() {
         // Build constraints.
         val constraintsBuilder =
             CalendarConstraints.Builder().apply {
-
-                val startItem = icalListViewModel.iCal4ListJournals.value?.firstOrNull()
-                val endItem = icalListViewModel.iCal4ListJournals.value?.lastOrNull()
-
-                if (startItem?.property?.dtstart != null && endItem?.property?.dtstart != null) {
-                    setStart(startItem.property.dtstart!!)
-                    setEnd(endItem.property.dtstart!!)
-                    setValidator(customDateValidator)
-                }
+                var dates = icalListViewModel.iCal4ListJournals.value?.map { it.property.dtstart?:System.currentTimeMillis() }?.toList()
+                if(dates.isNullOrEmpty())
+                    dates = listOf(System.currentTimeMillis())
+                setStart(dates.minOf { it })
+                setEnd(dates.maxOf { it })
+                setValidator(customDateValidator)
             }
 
         val datePicker =

@@ -1,0 +1,3 @@
+- Select between light, dark and system theme
+- Style and layout updates for Material You
+- Several improvements and bugfixes

@@ -8,10 +8,18 @@
 
 package at.techbee.jtx.database.views
 
+import android.content.Context
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
+import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.util.DateTimeUtils
+import java.time.Instant
+import java.time.ZonedDateTime
+import java.util.concurrent.TimeUnit
 
 const val VIEW_NAME_ICAL4LIST = "ical4list"
 
@@ -30,6 +38,9 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "main_icalobject.$COLUMN_COMPONENT, " +
             "main_icalobject.$COLUMN_SUMMARY, " +
             "main_icalobject.$COLUMN_DESCRIPTION, " +
+            "main_icalobject.$COLUMN_LOCATION, " +
+            "main_icalobject.$COLUMN_URL, " +
+            "main_icalobject.$COLUMN_CONTACT, " +
             "main_icalobject.$COLUMN_DTSTART, " +
             "main_icalobject.$COLUMN_DTSTART_TIMEZONE, " +
             "main_icalobject.$COLUMN_DTEND, " +
@@ -62,12 +73,19 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = sub_ical.$COLUMN_ID AND sub_ical.$COLUMN_MODULE = 'TODO' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'CHILD') THEN 1 ELSE 0 END as isChildOfTodo, " +
             "(SELECT group_concat($TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT, \', \') FROM $TABLE_NAME_CATEGORY WHERE main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID GROUP BY $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = \'VTODO\' AND sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'CHILD') as numSubtasks, " +
+            "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = \'VJOURNAL\' AND sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'CHILD') as numSubnotes, " +
             "(SELECT count(*) FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAttachments, " +
             "(SELECT count(*) FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAttendees, " +
             "(SELECT count(*) FROM $TABLE_NAME_COMMENT WHERE $COLUMN_COMMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numComments, " +
             "(SELECT count(*) FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numRelatedTodos, " +
             "(SELECT count(*) FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numResources, " +
-            "collection.$COLUMN_COLLECTION_READONLY as isReadOnly " +
+            "(SELECT count(*) FROM $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAlarms, " +
+            "(SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND $COLUMN_ATTACHMENT_FMTTYPE LIKE 'audio/%' LIMIT 1 ) as audioAttachment, " +
+            "collection.$COLUMN_COLLECTION_READONLY as isReadOnly, " +
+            "main_icalobject.$COLUMN_SUBTASKS_EXPANDED, " +
+            "main_icalobject.$COLUMN_SUBNOTES_EXPANDED, " +
+            "main_icalobject.$COLUMN_ATTACHMENTS_EXPANDED, " +
+            "main_icalobject.$COLUMN_SORT_INDEX " +
             "FROM $TABLE_NAME_ICALOBJECT main_icalobject " +
             //"LEFT JOIN $TABLE_NAME_CATEGORY ON main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
             "INNER JOIN $TABLE_NAME_COLLECTION collection ON main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID " +
@@ -80,6 +98,10 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_COMPONENT) var component: String,
     @ColumnInfo(name = COLUMN_SUMMARY) var summary: String?,
     @ColumnInfo(name = COLUMN_DESCRIPTION) var description: String?,
+    @ColumnInfo(name = COLUMN_LOCATION) var location: String?,
+    @ColumnInfo(name = COLUMN_URL) var url: String?,
+    @ColumnInfo(name = COLUMN_CONTACT) var contact: String?,
+
     @ColumnInfo(name = COLUMN_DTSTART) var dtstart: Long?,
     @ColumnInfo(name = COLUMN_DTSTART_TIMEZONE) var dtstartTimezone: String?,
 
@@ -124,12 +146,128 @@ data class ICal4List(
 
     @ColumnInfo var categories: String?,
     @ColumnInfo var numSubtasks: Int,
+    @ColumnInfo var numSubnotes: Int,
     @ColumnInfo var numAttachments: Int,
     @ColumnInfo var numAttendees: Int,
     @ColumnInfo var numComments: Int,
     @ColumnInfo var numRelatedTodos: Int,
     @ColumnInfo var numResources: Int,
-    @ColumnInfo var isReadOnly: Boolean
+    @ColumnInfo var numAlarms: Int,
+    @ColumnInfo var audioAttachment: String?,
+    @ColumnInfo var isReadOnly: Boolean,
 
-)
+    @ColumnInfo(name = COLUMN_SUBTASKS_EXPANDED) var isSubtasksExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_SUBNOTES_EXPANDED) var isSubnotesExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_ATTACHMENTS_EXPANDED) var isAttachmentsExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null,
+    )
+{
 
+    companion object {
+        fun getSample() =
+            ICal4List(
+                id = 1L,
+                module = Module.JOURNAL.name,
+                component = Component.VJOURNAL.name,
+                "My Summary",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tellus risus, tristique ac elit vitae, mollis feugiat quam. Duis aliquet arcu at purus porttitor ultricies. Vivamus sagittis feugiat ex eu efficitur. Aliquam nec cursus ante, a varius nisi. In a malesuada urna, in rhoncus est. Maecenas auctor molestie quam, quis lobortis tortor sollicitudin sagittis. Curabitur sit amet est varius urna mattis interdum.\n" +
+                        "\n" +
+                        "Phasellus id quam vel enim semper ullamcorper in ac velit. Aliquam eleifend dignissim lacinia. Donec elementum ex et dui iaculis, eget vehicula leo bibendum. Nam turpis erat, luctus ut vehicula quis, congue non ex. In eget risus consequat, luctus ipsum nec, venenatis elit. In in tellus vel mauris rhoncus bibendum. Pellentesque sit amet quam elementum, pharetra nisl id, vehicula turpis. ",
+                null,
+                null,
+                null,
+                System.currentTimeMillis(),
+                null,
+                null,
+                null,
+                status = StatusJournal.DRAFT.name,
+                classification = Classification.CONFIDENTIAL.name,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                System.currentTimeMillis(),
+                System.currentTimeMillis(),
+                System.currentTimeMillis(),
+                0,
+                Color.Magenta.toArgb(),
+                Color.Cyan.toArgb(),
+                1L,
+                "myAccount",
+                "myCollection",
+                deleted = false,
+                uploadPending = true,
+                isRecurringOriginal = true,
+                isRecurringInstance = true,
+                isLinkedRecurringInstance = true,
+                isChildOfJournal = false,
+                isChildOfNote = false,
+                isChildOfTodo = false,
+                categories = "Category1, Whatever",
+                numSubtasks = 3,
+                numSubnotes = 2,
+                numAttachments = 4,
+                numAttendees = 5,
+                numComments = 6,
+                numRelatedTodos = 7,
+                numResources = 8,
+                numAlarms = 2,
+                null,
+                isReadOnly = true
+            )
+    }
+
+
+
+
+    fun getDtstartTextInfo(context: Context): String? {
+
+        if(dtstart == null)
+            return null
+
+        val zonedStart = ZonedDateTime.ofInstant(
+            Instant.ofEpochMilli(dtstart!!),
+            DateTimeUtils.requireTzId(dtstartTimezone)
+        ).toInstant().toEpochMilli()
+        val millisLeft = if(dtstartTimezone == ICalObject.TZ_ALLDAY) zonedStart - DateTimeUtils.getTodayAsLong() else zonedStart - System.currentTimeMillis()
+
+        val daysLeft = TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
+        val hoursLeft = TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
+
+        return when {
+            millisLeft < 0L -> context.getString(R.string.list_start_past)
+            millisLeft >= 0L && daysLeft == 0L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(
+                R.string.list_start_today)
+            millisLeft >= 0L && daysLeft == 1L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(
+                R.string.list_start_tomorrow)
+            millisLeft >= 0L && daysLeft <= 1L && dtstartTimezone != ICalObject.TZ_ALLDAY -> context.getString(
+                R.string.list_start_inXhours, hoursLeft)
+            millisLeft >= 0L && daysLeft >= 2L -> context.getString(R.string.list_start_inXdays, daysLeft)
+            else -> null      //should not be possible
+        }
+    }
+
+    fun getDueTextInfo(context: Context): String? {
+
+        if(due == null)
+            return null
+
+        val zonedDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due!!), DateTimeUtils.requireTzId(dueTimezone)).toInstant().toEpochMilli()
+        val millisLeft = if(dueTimezone == ICalObject.TZ_ALLDAY) zonedDue - DateTimeUtils.getTodayAsLong() else zonedDue - System.currentTimeMillis()
+
+        val daysLeft = TimeUnit.MILLISECONDS.toDays(millisLeft)     // cannot be negative, would stop at 0!
+        val hoursLeft = TimeUnit.MILLISECONDS.toHours(millisLeft)     // cannot be negative, would stop at 0!
+
+        return when {
+            millisLeft < 0L -> context.getString(R.string.list_due_overdue)
+            millisLeft >= 0L && daysLeft == 0L && dueTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_today)
+            millisLeft >= 0L && daysLeft == 1L && dueTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_tomorrow)
+            millisLeft >= 0L && daysLeft <= 1L && dueTimezone != ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_inXhours, hoursLeft)
+            millisLeft >= 0L && daysLeft >= 2L -> context.getString(R.string.list_due_inXdays, daysLeft)
+            else -> null      //should not be possible
+        }
+    }
+}

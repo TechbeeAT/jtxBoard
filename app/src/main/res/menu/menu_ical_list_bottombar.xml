@@ -33,11 +33,6 @@
             android:icon="@drawable/ic_filter"
             android:title="@string/filter"
             app:showAsAction="ifRoom" />
-        <item
-            android:id="@+id/menu_list_bottom_clearfilter"
-            android:icon="@drawable/ic_filter_delete"
-            android:title="@string/menu_list_clearfilter"
-            app:showAsAction="ifRoom" />
     </group>
 
     <group android:checkableBehavior="all">

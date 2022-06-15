@@ -376,6 +376,29 @@ const val COLUMN_SCHEDULETAG = "scheduletag"
  */
 const val COLUMN_FLAGS = "flags"
 
+/**
+ * Purpose:  defines if the subtasks for this entry are expanded
+ * Type: [Boolean?]
+ */
+const val COLUMN_SUBTASKS_EXPANDED = "subtasksExpanded"
+
+/**
+ * Purpose:  defines if the subnotes for this entry are expanded
+ * Type: [Boolean?]
+ */
+const val COLUMN_SUBNOTES_EXPANDED = "subnotesExpanded"
+
+/**
+ * Purpose:  defines if the attachments for this entry are expanded
+ * Type: [Boolean?]
+ */
+const val COLUMN_ATTACHMENTS_EXPANDED = "attachmentsExpanded"
+
+/**
+ * Purpose:  defines if the order index especially for subtasks and subnotes
+ * Type: [Int?]
+ */
+const val COLUMN_SORT_INDEX = "sortIndex"
 
 @Parcelize
 @Entity(
@@ -456,8 +479,12 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_FILENAME) var fileName: String? = null,
     @ColumnInfo(name = COLUMN_ETAG) var eTag: String? = null,
     @ColumnInfo(name = COLUMN_SCHEDULETAG) var scheduleTag: String? = null,
-    @ColumnInfo(name = COLUMN_FLAGS) var flags: Int? = null
+    @ColumnInfo(name = COLUMN_FLAGS) var flags: Int? = null,
 
+    @ColumnInfo(name = COLUMN_SUBTASKS_EXPANDED) var isSubtasksExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_SUBNOTES_EXPANDED) var isSubnotesExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_ATTACHMENTS_EXPANDED) var isAttachmentsExpanded: Boolean? = null,
+    @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null
 
 ) : Parcelable {
 

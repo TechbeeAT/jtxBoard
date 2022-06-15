@@ -1,0 +1,2 @@
+- Sort order of priority, start and due date always last if not set
+- Fixed SQL Constraint error when synchronizing entries with subtasks and subnotes

@@ -43,7 +43,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     var searchClassification: MutableList<Classification> = mutableListOf()
     var searchCollection: MutableList<String> = mutableListOf()
     var searchAccount: MutableList<String> = mutableListOf()
-    var isExcludeDone: Boolean = false
+    var isExcludeDone = MutableLiveData(false)
     var isFilterOverdue: Boolean = false
     var isFilterDueToday: Boolean = false
     var isFilterDueTomorrow: Boolean = false
@@ -51,6 +51,8 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     var isFilterNoDatesSet: Boolean = false
     var orderBy: OrderBy = OrderBy.CREATED   // default, overwritten by Shared Prefs
     var sortOrder: SortOrder = SortOrder.DESC // default, overwritten by Shared Prefs
+
+    var viewMode: MutableLiveData<String> = MutableLiveData(IcalListFragment.PREFS_VIEWMODE_LIST)
 
     var searchSettingShowAllSubtasksInTasklist: Boolean = false
     var searchSettingShowAllSubnotesInNoteslist: Boolean = false
@@ -72,6 +74,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
 
         // TODO maybe retrieve all subtasks only when subtasks are needed!
     val allSubtasks: LiveData<List<ICal4List>> = database.getAllSubtasks()
+    val allSubnotes: LiveData<List<ICal4List>> = database.getAllSubnotes()
 
     val allCategories = database.getAllCategories()   // filter FragmentDialog
     val allCollections = database.getAllCollections()
@@ -154,7 +157,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             queryString += ") "
         }
 
-        if (isExcludeDone)
+        if (isExcludeDone.value == true)
             queryString += "AND $COLUMN_PERCENT IS NOT 100 "
 
         val dueQuery = mutableListOf<String>()
@@ -303,16 +306,13 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
                 || collection.accountType == ICalCollection.TEST_ACCOUNT_TYPE )
                 return@forEach
 
-            val found = allDavx5Accounts.find { account ->
-                collection.accountName == account.name && collection.accountType == account.type
-            }
+            if(allDavx5Accounts.any { account -> collection.accountName == account.name && collection.accountType == account.type })
+                return@forEach
 
             // if the collection cannot be found in the list of accounts, then it was deleted, delete it also in jtx
-            if (found == null) {
-                Log.d("checkForDeletedAccounts", "Account ${collection.accountName} / ${collection.accountType} not found, deleting...")
-                viewModelScope.launch(Dispatchers.IO) {
-                    database.deleteICalCollectionbyId(collection.collectionId)
-                }
+            Log.d("checkForDeletedAccounts", "Account ${collection.accountName} / ${collection.accountType} not found, deleting...")
+            viewModelScope.launch(Dispatchers.IO) {
+                database.deleteICalCollectionbyId(collection.collectionId)
             }
         }
     }
@@ -343,6 +343,16 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             quickInsertedEntity.postValue(database.getSync(newId))
         }
     }
+
+    /**
+     * Updates the expanded status of subtasks, subnotes and attachments in the DB
+     */
+    fun updateExpanded(icalObjectId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.updateExpanded(icalObjectId, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)
+        }
+    }
+
 
     /**
      * This function takes an icalObjectId, retrives the icalObject and posts it  in the directEditEntity LiveData Object.
@@ -406,13 +416,13 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
 
 
 enum class OrderBy(val stringResource: Int, val queryAppendix: String, val compatibleModules: List<Module>) {
-    START(R.string.started, "ORDER BY $COLUMN_DTSTART ", listOf(Module.JOURNAL, Module.TODO)),
-    DUE(R.string.due, "ORDER BY $COLUMN_DUE ", listOf(Module.TODO)),
-    COMPLETED(R.string.completed, "ORDER BY $COLUMN_COMPLETED ", listOf(Module.TODO)),
+    START(R.string.started, "ORDER BY $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ", listOf(Module.JOURNAL, Module.TODO)),
+    DUE(R.string.due, "ORDER BY $COLUMN_DUE IS NULL, $COLUMN_DUE ", listOf(Module.TODO)),
+    COMPLETED(R.string.completed, "ORDER BY $COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED ", listOf(Module.TODO)),
     CREATED(R.string.filter_created, "ORDER BY $COLUMN_CREATED ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO)),
     LAST_MODIFIED(R.string.filter_last_modified, "ORDER BY $COLUMN_LAST_MODIFIED ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO)),
     SUMMARY(R.string.summary, "ORDER BY $COLUMN_SUMMARY ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO)),
-    PRIORITY(R.string.priority, "ORDER BY $COLUMN_PRIORITY ", listOf(Module.TODO))
+    PRIORITY(R.string.priority, "ORDER BY $COLUMN_PRIORITY IS NULL, $COLUMN_PRIORITY ", listOf(Module.TODO))
 }
 
 enum class SortOrder(val stringResource: Int, val queryAppendix: String) {

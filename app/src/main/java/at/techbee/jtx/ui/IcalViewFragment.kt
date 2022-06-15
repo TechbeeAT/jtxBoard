@@ -374,7 +374,8 @@ class IcalViewFragment : Fragment() {
 
             if (it?.size != 0) {
                 binding.viewFeedbackLinearlayout.removeAllViews()
-                it.forEach { relatedNote ->
+                it.sortedBy { item -> item?.sortIndex }
+                    .forEach { relatedNote ->
                     if (relatedNote == null)
                         return@forEach
 
@@ -398,9 +399,7 @@ class IcalViewFragment : Fragment() {
                                 commentBinding.viewCommentPlaybutton,
                                 uri
                             )
-
                         }
-
                     }
                     commentBinding.root.setOnClickListener { view ->
                         view.findNavController().navigate(
@@ -414,15 +413,19 @@ class IcalViewFragment : Fragment() {
                     }
                     binding.viewFeedbackLinearlayout.addView(commentBinding.root)
                 }
+            } else if (it.isEmpty() && icalViewViewModel.icalEntity.value?.ICalCollection?.readonly == true) {   // don't show header for subnotes if read only and no subnotes are present
+                binding.viewFeedbackHeader.visibility = View.GONE
+                binding.viewFeedbackLinearlayout.visibility = View.GONE
             }
         }
 
         icalViewViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
             binding.viewSubtasksLinearlayout.removeAllViews()
-            it.forEach { singleSubtask ->
-                addSubtasksView(singleSubtask, binding.viewSubtasksLinearlayout)
-            }
+            it.sortedBy { item -> item?.sortIndex }
+                .forEach { singleSubtask ->
+                    addSubtasksView(singleSubtask, binding.viewSubtasksLinearlayout)
+                }
         }
 
         icalViewViewModel.recurInstances.observe(viewLifecycleOwner) { instanceList ->
@@ -675,7 +678,7 @@ class IcalViewFragment : Fragment() {
             R.id.menu_view_share_text -> {
 
                 var shareText = ""
-                icalViewViewModel.icalEntity.value?.property?.dtstart?.let { shareText += getString(R.string.view_started) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dtstartTimezone) + System.lineSeparator() }
+                icalViewViewModel.icalEntity.value?.property?.dtstart?.let { shareText += getString(R.string.view_started) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dtstartTimezone) + System.lineSeparator() + System.lineSeparator()}
                 icalViewViewModel.icalEntity.value?.property?.due?.let { shareText += getString(R.string.view_due) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dueTimezone) + System.lineSeparator() }
                 icalViewViewModel.icalEntity.value?.property?.completed?.let { shareText += getString(R.string.view_completed) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.completedTimezone) + System.lineSeparator() }
                 icalViewViewModel.icalEntity.value?.property?.getRecurInfo(context)?.let { shareText += it }
@@ -687,10 +690,27 @@ class IcalViewFragment : Fragment() {
                 if(categories.isNotEmpty())
                     shareText += getString(R.string.categories) + ": " + categories.joinToString(separator=", ") + System.lineSeparator()
 
+                if(icalViewViewModel.icalEntity.value?.property?.contact?.isNotEmpty() == true)
+                    shareText += getString(R.string.contact) + ": " + icalViewViewModel.icalEntity.value?.property?.contact + System.lineSeparator()
+
+                if(icalViewViewModel.icalEntity.value?.property?.location?.isNotEmpty() == true)
+                    shareText += getString(R.string.location) + ": " + icalViewViewModel.icalEntity.value?.property?.location + System.lineSeparator()
+
+                if(icalViewViewModel.icalEntity.value?.property?.url?.isNotEmpty() == true)
+                    shareText += getString(R.string.url) + ": " + icalViewViewModel.icalEntity.value?.property?.url + System.lineSeparator()
+
                 val resources: MutableList<String> = mutableListOf()
                 icalViewViewModel.icalEntity.value?.resources?.forEach { resource -> resource.text?.let { resources.add(it) } }
                 if(resources.isNotEmpty())
                     shareText += getString(R.string.resources) + ": " + resources.joinToString(separator=", ") + System.lineSeparator()
+
+                val attachments: MutableList<String> = mutableListOf()
+                icalViewViewModel.icalEntity.value?.attachments?.forEach { attachment ->
+                    if(attachment.uri?.startsWith("http") == true)
+                        attachments.add(attachment.uri!!)
+                }
+                if(attachments.isNotEmpty())
+                    shareText += getString(R.string.attachments) + ": " + System.lineSeparator() + attachments.joinToString(separator=System.lineSeparator()) + System.lineSeparator()
 
                 shareText = shareText.trim()
 
@@ -908,7 +928,7 @@ class IcalViewFragment : Fragment() {
             summary2delete = icalViewViewModel.icalEntity.value?.property?.summary ?: ""
             icalViewViewModel.delete(icalViewViewModel.icalEntity.value?.property!!)
         }
-        builder.setNeutralButton(R.string.cancel) { _, _ -> }
+        builder.setNegativeButton(R.string.cancel) { _, _ -> }
         builder.show()
     }
 
@@ -919,8 +939,10 @@ class IcalViewFragment : Fragment() {
         binding.viewFabEdit.visibility = View.GONE
         optionsMenu?.findItem(R.id.menu_view_delete_item)?.isVisible = false
         binding.viewAddNoteTextinputlayout.visibility = View.GONE
+
         binding.viewAddAudioNote.visibility = View.GONE
         binding.viewReadyonly.visibility = View.VISIBLE
+        binding.viewBottomBar.visibility = View.GONE
 
         binding.viewSubtasksAdd.isEnabled = false
         binding.viewAddNoteTextinputlayout.isEnabled = false

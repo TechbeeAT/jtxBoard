@@ -231,6 +231,7 @@
     <string name="view_fragment_audio_permission_message">jtx Board needs the permission in order to record audio or use speech-to-text functionalities. Please grant the permission to use this feature.</string>
     <string name="view_fragment_audio_dialog_add_audio_note">Add Audio Note</string>
     <string name="view_comment_playbutton_content_desc">Play audio comment</string>
+    <string name="view_comment_pausebutton_content_desc">Pause audio comment</string>
     <string name="view_fragment_audio_start_stop_recording_contentdesc">Start/Stop recording</string>
     <string name="view_fragment_audio_start_stop_playback_contentdesc">Play audio comment</string>
     <string name="view_reccurrence_note_is_exception">This item is an exception to a recurring entry.</string>
@@ -255,7 +256,6 @@
     <string name="view_share_part_of_series">This entry is part of a series.</string>
     <string name="view_share_exception_of_series">This entry is an exception of a series.</string>
     <string name="view_share_repeats">This entry repeats every</string>
-
 
 
     <!-- fragment_ical_edit -->
@@ -419,6 +419,8 @@
     <string name="menu_list_todo_show_completed">Show completed</string>
     <string name="menu_list_todo_hide_completed">Hide completed</string>
     <string name="menu_list_syncnow">Sync now</string>
+    <string name="menu_list_viewmode_list">List view</string>
+    <string name="menu_list_viewmode_grid">Grid view</string>
 
 
     <string name="menu_view_share_text">Share</string>
@@ -456,6 +458,10 @@
     <string name="settings_select_theme_system">System default</string>
 
     <string name="settings_list">Settings for the item list</string>
+    <string name="settings_default_expand_subtasks">Expand subtasks in list by default</string>
+    <string name="settings_default_expand_subnotes">Expand subnotes in list by default</string>
+    <string name="settings_default_expand_attachments">Expand attachments in list by default</string>
+
     <string name="settings_show_subtasks_in_list">Show subtasks in list</string>
     <string name="settings_show_attachments_in_list">Show attachments in list</string>
     <string name="settings_show_progress_for_subtasks_in_list">Show progress for subtasks in list</string>
@@ -537,5 +543,6 @@
 
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again.</string>
+    <string name="title_activity_list_screen">ListScreen</string>
 
 </resources>
