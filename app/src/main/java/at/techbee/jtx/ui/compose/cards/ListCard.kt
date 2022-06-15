@@ -13,8 +13,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachFile
 import androidx.compose.material.icons.outlined.Forum
@@ -67,6 +65,7 @@ fun ICalObjectListCard(
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
+    val context = LocalContext.current
     val iCalObject = iCalObjectWithRelatedto.property
 
     /*
@@ -179,7 +178,12 @@ fun ICalObjectListCard(
                         VerticalDateBlock(
                             iCalObject.dtstart ?: System.currentTimeMillis(),
                             iCalObject.dtstartTimezone,
-                            modifier = Modifier.padding(start = 8.dp, end = 4.dp, bottom = 4.dp, top = 4.dp)
+                            modifier = Modifier.padding(
+                                start = 8.dp,
+                                end = 4.dp,
+                                bottom = 4.dp,
+                                top = 4.dp
+                            )
                         )
 
                     Column(
@@ -196,14 +200,19 @@ fun ICalObjectListCard(
                         val summaryTextDecoration =
                             if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None
 
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
                             if (iCalObject.summary?.isNotBlank() == true)
                                 Text(
                                     text = iCalObject.summary ?: "",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = summarySize,
                                     textDecoration = summaryTextDecoration,
-                                    modifier = Modifier.padding(top = 4.dp).weight(1f)
+                                    modifier = Modifier
+                                        .padding(top = 4.dp)
+                                        .weight(1f)
                                 )
 
                             if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
@@ -361,16 +370,17 @@ fun ICalObjectListCard(
                 }
 
                 AnimatedVisibility(visible = isAttachmentsExpanded) {
-                    LazyRow(
-                        content = {
-                            items(
-                                iCalObjectWithRelatedto.attachment ?: emptyList()
-                            ) { attachment ->
-                                AttachmentCard(attachment)
-                            }
-                        },
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
+                    Column(modifier = Modifier.padding(bottom = 4.dp)) {
+                        iCalObjectWithRelatedto.attachment?.forEach { attachment ->
+                            AttachmentCard(
+                                attachment,
+                                modifier = Modifier
+                                    .padding(start = 8.dp, end = 8.dp)
+                                    .combinedClickable(
+                                        onClick = { attachment.openFile(context) }
+                                    ))
+                        }
+                    }
                 }
 
                 if (iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)
@@ -588,7 +598,8 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
     JtxBoardTheme {
 
         val icalobject = ICal4ListWithRelatedto.getSample().apply {
-            property.summary = "This is a longer summary that would break the line and continue on the second one.\nHere is even a manual line break, let's see what happens."
+            property.summary =
+                "This is a longer summary that would break the line and continue on the second one.\nHere is even a manual line break, let's see what happens."
             property.component = Component.VTODO.name
             property.module = Module.TODO.name
             property.percent = 89
