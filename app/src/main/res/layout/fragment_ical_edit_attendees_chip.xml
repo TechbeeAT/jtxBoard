@@ -13,9 +13,11 @@
     xmlns:tools="http://schemas.android.com/tools"
 
     android:id="@+id/chip_1"
-    style="@style/Widget.Material3.Chip.Input"
+    style="@style/Widget.Material3.Chip.Assist"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:checkable="false"
+    app:closeIconVisible="true"
     app:chipIcon="@drawable/ic_person"
+    app:chipIconTint="?attr/colorControlNormal"
     tools:text="Chip #1" />

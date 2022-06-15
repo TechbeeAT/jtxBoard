@@ -19,4 +19,5 @@
     android:checkable="false"
     app:closeIconVisible="false"
     app:chipIcon="@drawable/ic_person"
+    app:chipIconTint="?attr/colorControlNormal"
     tools:text="Chip #1" />
