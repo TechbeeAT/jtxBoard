@@ -67,6 +67,7 @@ fun ICalObjectListCard(
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
+    val context = LocalContext.current
     val iCalObject = iCalObjectWithRelatedto.property
 
     /*
@@ -111,46 +112,46 @@ fun ICalObjectListCard(
                 ) {
 
                     Row {
-                    Text(
-                        iCalObject.collectionDisplayName ?: iCalObject.accountName ?: "",
-                        style = Typography.labelMedium,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(end = 16.dp)
-                    )
-
-                    iCalObject.categories?.let {
                         Text(
-                            it,
+                            iCalObject.collectionDisplayName ?: iCalObject.accountName ?: "",
                             style = Typography.labelMedium,
-                            fontStyle = FontStyle.Italic,
-                            modifier = Modifier.padding(end = 16.dp),
+                            overflow = TextOverflow.Ellipsis,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(end = 16.dp)
                         )
-                    }
-                    if (iCalObject.module == Module.TODO.name) {
-                        iCalObject.dtstart?.let {
+
+                        iCalObject.categories?.let {
                             Text(
-                                iCalObject.getDtstartTextInfo(LocalContext.current)
-                                    ?: "",
+                                it,
                                 style = Typography.labelMedium,
-                                fontWeight = FontWeight.Bold,
                                 fontStyle = FontStyle.Italic,
                                 modifier = Modifier.padding(end = 16.dp),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
-                        iCalObject.due?.let {
-                            Text(
-                                iCalObject.getDueTextInfo(LocalContext.current) ?: "",
-                                style = Typography.labelMedium,
-                                fontWeight = FontWeight.Bold,
-                                fontStyle = FontStyle.Italic,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(end = 16.dp)
-                            )
+                        if (iCalObject.module == Module.TODO.name) {
+                            iCalObject.dtstart?.let {
+                                Text(
+                                    iCalObject.getDtstartTextInfo(LocalContext.current)
+                                        ?: "",
+                                    style = Typography.labelMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    fontStyle = FontStyle.Italic,
+                                    modifier = Modifier.padding(end = 16.dp),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                            iCalObject.due?.let {
+                                Text(
+                                    iCalObject.getDueTextInfo(LocalContext.current) ?: "",
+                                    style = Typography.labelMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    fontStyle = FontStyle.Italic,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(end = 16.dp)
+                                )
+                            }
                         }
-                    }
                     }
 
                     ListStatusBar(
@@ -206,28 +207,35 @@ fun ICalObjectListCard(
                                 overflow = TextOverflow.Ellipsis
                             )
 
-                        if(iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0
+                        if (iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0
                             || iCalObject.numComments > 0 || iCalObject.numResources > 0
                             || iCalObject.numAlarms > 0 || iCalObject.contact?.isNotEmpty() == true
                             || iCalObject.url?.isNotEmpty() == true || iCalObject.location?.isNotEmpty() == true
-                            || iCalObject.priority in 1..9 || iCalObject.status in listOf(StatusJournal.CANCELLED.name, StatusJournal.DRAFT.name, StatusTodo.CANCELLED.name)
-                            || iCalObject.classification in listOf(Classification.CONFIDENTIAL.name, Classification.PRIVATE.name)
+                            || iCalObject.priority in 1..9 || iCalObject.status in listOf(
+                                StatusJournal.CANCELLED.name,
+                                StatusJournal.DRAFT.name,
+                                StatusTodo.CANCELLED.name
+                            )
+                            || iCalObject.classification in listOf(
+                                Classification.CONFIDENTIAL.name,
+                                Classification.PRIVATE.name
+                            )
                         )
-                        ListStatusBar(
-                            numAttendees = iCalObject.numAttendees,
-                            numAttachments = iCalObject.numAttachments,
-                            numComments = iCalObject.numComments,
-                            numResources = iCalObject.numResources,
-                            numAlarms = iCalObject.numAlarms,
-                            hasURL = iCalObject.url?.isNotBlank() == true,
-                            hasLocation = iCalObject.location?.isNotBlank() == true,
-                            hasContact = iCalObject.contact?.isNotBlank() == true,
-                            component = iCalObject.component,
-                            status = iCalObject.status,
-                            classification = iCalObject.classification,
-                            priority = iCalObject.priority,
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
+                            ListStatusBar(
+                                numAttendees = iCalObject.numAttendees,
+                                numAttachments = iCalObject.numAttachments,
+                                numComments = iCalObject.numComments,
+                                numResources = iCalObject.numResources,
+                                numAlarms = iCalObject.numAlarms,
+                                hasURL = iCalObject.url?.isNotBlank() == true,
+                                hasLocation = iCalObject.location?.isNotBlank() == true,
+                                hasContact = iCalObject.contact?.isNotBlank() == true,
+                                component = iCalObject.component,
+                                status = iCalObject.status,
+                                classification = iCalObject.classification,
+                                priority = iCalObject.priority,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
                     }
 
                     if (iCalObject.module == Module.TODO.name && !settingShowProgressMaintasks)
@@ -344,16 +352,17 @@ fun ICalObjectListCard(
                 }
 
                 AnimatedVisibility(visible = isAttachmentsExpanded) {
-                    LazyRow(
-                        content = {
-                            items(
-                                iCalObjectWithRelatedto.attachment ?: emptyList()
-                            ) { attachment ->
-                                AttachmentCard(attachment)
-                            }
-                        },
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
+                    Column(modifier = Modifier.padding(bottom = 4.dp)) {
+                        iCalObjectWithRelatedto.attachment?.forEach { attachment ->
+                            AttachmentCard(
+                                attachment,
+                                modifier = Modifier
+                                    .padding(start = 8.dp, end = 8.dp)
+                                    .combinedClickable(
+                                        onClick = { attachment.openFile(context) }
+                                    ))
+                        }
+                    }
                 }
 
                 if (iCalObject.component == Component.VTODO.name && settingShowProgressMaintasks)

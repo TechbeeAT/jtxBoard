@@ -29,23 +29,17 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AttachmentCard(attachment: Attachment) {
+fun AttachmentCard(
+    attachment: Attachment,
+    modifier: Modifier = Modifier
+) {
 
-    val context = LocalContext.current
 
     ElevatedCard(
-        modifier = Modifier
-            .wrapContentSize(align = Alignment.CenterStart)
-            .padding(8.dp)
-            .widthIn(max = 150.dp),
-        onClick = {
-            attachment.openFile(context)
-        }
+        modifier = modifier
     ) {
 
-        Row(modifier = Modifier
-            .padding(8.dp)
-            .wrapContentWidth(align = Alignment.Start),
+        Row(modifier = Modifier.fillMaxWidth().padding(8.dp),
         horizontalArrangement = Arrangement.Start) {
 
             val preview = attachment.getPreview(LocalContext.current)
