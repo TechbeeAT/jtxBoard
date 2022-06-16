@@ -171,6 +171,7 @@ class CollectionsFragment : Fragment() {
                     ) {
                         CollectionsScreen(
                             collectionsLive = collectionsViewModel.collections,
+                            isProcessing = collectionsViewModel.isProcessing,
                             onCollectionChanged = { collection -> collectionsViewModel.saveCollection(collection) },
                             onCollectionDeleted = { collection -> collectionsViewModel.deleteCollection(collection) },
                             onEntriesMoved = { old, new -> collectionsViewModel.moveCollectionItems(old.collectionId, new.collectionId) },
