@@ -1,0 +1,3 @@
+- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!
+- The new grid view option gives a more compact overview of journals, notes and tasks!
+- jtx Board is now also available in Spanish and Chinese!
