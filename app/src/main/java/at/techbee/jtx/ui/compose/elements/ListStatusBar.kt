@@ -50,13 +50,15 @@ fun ListStatusBar(
     status: String? = null,
     classification: String? = null,
     priority: Int? = null,
+    numSubtasks: Int? = null,
+    numSubnotes: Int? = null,
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
-    ) {
+        modifier = modifier
+        ) {
         val statusText: String? = when {
             component == Component.VTODO.name && status == StatusTodo.CANCELLED.name -> stringResource(
                 id = R.string.todo_status_cancelled
@@ -160,6 +162,20 @@ fun ListStatusBar(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
+        if (numSubtasks != null && numSubtasks > 0)
+            IconWithText(
+                icon = Icons.Outlined.TaskAlt,
+                iconDesc = stringResource(R.string.subtasks),
+                text = numSubtasks.toString(),
+            )
+
+        if (numSubnotes != null && numSubnotes > 0)
+            IconWithText(
+                icon = Icons.Outlined.Note,
+                iconDesc = stringResource(R.string.note),
+                text = numSubnotes.toString(),
+            )
+
         if (isReadOnly == true)
             Icon(
                 painter = painterResource(id = R.drawable.ic_readonly),
@@ -259,6 +275,8 @@ fun ListStatusBar_Preview3() {
             numComments = 0,
             numResources = 0,
             numAlarms = 0,
+            numSubtasks = 44,
+            numSubnotes = 23,
             isReadOnly = false,
             uploadPending = true,
             hasLocation = false,
