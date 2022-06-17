@@ -233,7 +233,7 @@ fun ListCardGrid_NOTE() {
         ListCardGrid(
             icalobject,
             onProgressChanged = { _, _, _ -> },
-            modifier = Modifier.width(150.dp)
+            modifier = Modifier.width(150.dp).height(150.dp)
         )
     }
 }
@@ -261,7 +261,7 @@ fun ListCardGrid_TODO() {
         }
         ListCardGrid(
             icalobject,
-            onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
+            onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp).height(150.dp)
         )
     }
 }

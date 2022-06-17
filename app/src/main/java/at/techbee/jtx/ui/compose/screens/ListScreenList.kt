@@ -21,21 +21,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.NavController
 import androidx.preference.PreferenceManager
-import at.techbee.jtx.database.StatusTodo
+import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.IcalListFragmentDirections
-import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.SettingsFragment
 import at.techbee.jtx.ui.compose.cards.ICalObjectListCard
+import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -45,8 +46,12 @@ fun ListScreenList(
     subtasksLive: LiveData<List<ICal4List>>,
     subnotesLive: LiveData<List<ICal4List>>,
     scrollOnceId: MutableLiveData<Long?>,
-    navController: NavController,
-    model: IcalListViewModel) {
+    isExcludeDone: MutableLiveData<Boolean>,
+    goToView: (itemId: Long) -> Unit,
+    goToEdit: (itemId: Long) -> Unit,
+    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
+) {
 
     val list by listLive.observeAsState(emptyList())
     val subtasks by subtasksLive.observeAsState(emptyList())
@@ -60,7 +65,7 @@ fun ListScreenList(
     //load settings
     val settings = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
 
-    val excludeDone by model.isExcludeDone.observeAsState(false)
+    val excludeDone by isExcludeDone.observeAsState(false)
 
 
     if(scrollId != null) {
@@ -89,8 +94,10 @@ fun ListScreenList(
             }
             if(excludeDone)   // exclude done if applicable
                 currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 }
+            /*
             if(model.searchStatusTodo.isNotEmpty()) // exclude filtered if applicable
                 currentSubtasks = currentSubtasks.filter { subtask -> model.searchStatusTodo.contains(StatusTodo.getFromString(subtask.status)) }
+             */
 
             val currentSubnotes = subnotes.filter { subnote ->
                 iCalObject.relatedto?.any { relatedto ->
@@ -101,35 +108,123 @@ fun ListScreenList(
                 iCalObject,
                 currentSubtasks,
                 currentSubnotes,
-                navController,
                 isSubtasksExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_SUBTASKS_DEFAULT, false),
                 isSubnotesExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_SUBNOTES_DEFAULT, false),
                 isAttachmentsExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_ATTACHMENTS_DEFAULT, false),
                 settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false),
                 settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true),
-                onEditRequest = { id -> model.postDirectEditEntity(id) },
-                onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> model.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  },
-                onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean -> model.updateExpanded(itemId, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)},
+                goToView = goToView,
+                goToEdit = goToEdit,
+                onProgressChanged = onProgressChanged,
+                onExpandedChanged = onExpandedChanged,
                 player = mediaPlayer,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
                     .animateItemPlacement()
                     .combinedClickable(
-                        onClick = {
-                            navController.navigate(
-                                IcalListFragmentDirections
-                                    .actionIcalListFragmentToIcalViewFragment()
-                                    .setItem2show(iCalObject.property.id)
-                            )
-                        },
+                        onClick = { goToView(iCalObject.property.id) },
                         onLongClick = {
                             if (!iCalObject.property.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
-                                model.postDirectEditEntity(iCalObject.property.id)
+                                goToEdit(iCalObject.property.id)
                         }
                     )
             )
         }
+    }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun ListScreenList_TODO() {
+    JtxBoardTheme {
+
+        val icalobject = ICal4ListWithRelatedto.getSample().apply {
+            property.id = 1L
+            property.component = Component.VTODO.name
+            property.module = Module.TODO.name
+            property.percent = 89
+            property.status = StatusTodo.`IN-PROCESS`.name
+            property.classification = Classification.PUBLIC.name
+            property.dtstart = null
+            property.due = null
+            property.numAttachments = 0
+            property.numSubnotes = 0
+            property.numSubtasks = 0
+            property.summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+        val icalobject2 = ICal4ListWithRelatedto.getSample().apply {
+            property.id = 2L
+            property.component = Component.VTODO.name
+            property.module = Module.TODO.name
+            property.percent = 89
+            property.status = StatusTodo.`IN-PROCESS`.name
+            property.classification = Classification.CONFIDENTIAL.name
+            property.dtstart = System.currentTimeMillis()
+            property.due = System.currentTimeMillis()
+            property.summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            property.colorItem = Color.Blue.toArgb()
+        }
+        ListScreenList(
+            listLive = MutableLiveData(listOf(icalobject, icalobject2)),
+            subtasksLive = MutableLiveData(emptyList()),
+            scrollOnceId = MutableLiveData(null),
+            onProgressChanged = { _, _, _ -> },
+            goToView = { },
+            goToEdit = { },
+            isExcludeDone = MutableLiveData(false),
+            subnotesLive = MutableLiveData(emptyList()),
+            onExpandedChanged = { _, _, _, _ -> }
+        )
+    }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun ListScreenList_JOURNAL() {
+    JtxBoardTheme {
+
+        val icalobject = ICal4ListWithRelatedto.getSample().apply {
+            property.id = 1L
+            property.component = Component.VJOURNAL.name
+            property.module = Module.JOURNAL.name
+            property.percent = 89
+            property.status = StatusJournal.FINAL.name
+            property.classification = Classification.PUBLIC.name
+            property.dtstart = null
+            property.due = null
+            property.numAttachments = 0
+            property.numSubnotes = 0
+            property.numSubtasks = 0
+            property.summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+        val icalobject2 = ICal4ListWithRelatedto.getSample().apply {
+            property.id = 2L
+            property.component = Component.VJOURNAL.name
+            property.module = Module.JOURNAL.name
+            property.percent = 89
+            property.status = StatusTodo.`IN-PROCESS`.name
+            property.classification = Classification.CONFIDENTIAL.name
+            property.dtstart = System.currentTimeMillis()
+            property.due = System.currentTimeMillis()
+            property.summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            property.colorItem = Color.Blue.toArgb()
+        }
+        ListScreenList(
+            listLive = MutableLiveData(listOf(icalobject, icalobject2)),
+            subtasksLive = MutableLiveData(emptyList()),
+            scrollOnceId = MutableLiveData(null),
+            onProgressChanged = { _, _, _ -> },
+            goToView = { },
+            goToEdit = { },
+            isExcludeDone = MutableLiveData(false),
+            subnotesLive = MutableLiveData(emptyList()),
+            onExpandedChanged = { _, _, _, _ -> }
+        )
     }
 }
 

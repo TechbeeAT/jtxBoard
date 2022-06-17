@@ -8,11 +8,22 @@
 
 package at.techbee.jtx.ui.compose.cards
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -22,35 +33,60 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
-import at.techbee.jtx.ui.compose.elements.ColoredEdge
+import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.compose.elements.ListStatusBar
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.DateTimeUtils
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ListCardCompact(
     iCalObjectWithRelatedto: ICal4ListWithRelatedto,
+    subtasks: List<ICal4List>,
     modifier: Modifier = Modifier,
-    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
+    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    goToView: (itemId: Long) -> Unit,
+    goToEdit: (itemId: Long) -> Unit
     ) {
 
     val iCalObject = iCalObjectWithRelatedto.property
+    val statusBarVisible by remember {
+        mutableStateOf(
+            iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0 || iCalObject.numComments > 0 || iCalObject.numResources > 0 || iCalObject.numAlarms > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0
+                    || iCalObject.isReadOnly || iCalObject.uploadPending || iCalObject.url?.isNotEmpty() == true || iCalObject.location?.isNotEmpty() == true
+                    || iCalObject.contact?.isNotEmpty() == true || iCalObject.isRecurringInstance || iCalObject.isRecurringOriginal || iCalObject.isLinkedRecurringInstance
+                    || iCalObject.priority in 1..9 || iCalObject.status in listOf(
+                StatusJournal.CANCELLED.name,
+                StatusJournal.DRAFT.name,
+                StatusTodo.CANCELLED.name
+            )
+                    || iCalObject.classification in listOf(
+                Classification.CONFIDENTIAL.name,
+                Classification.PRIVATE.name
+            )
+        )
+    }
+    val color = iCalObject.colorItem?.let { Color(it) } ?: iCalObject.colorCollection?.let { Color(it) } ?: Color.Transparent
 
+        Row(modifier = modifier.height(IntrinsicSize.Min)) {
 
-        Box(modifier = modifier) {
+            Box(
+                modifier = Modifier.width(10.dp).alpha(0.5f).fillMaxHeight().background(color, RoundedCornerShape(8.dp))
+            )
 
-            ColoredEdge(iCalObject.colorItem, iCalObject.colorCollection)
-
-            Column {
+            Column(
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp).fillMaxWidth()
+            ) {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(
-                        modifier = Modifier.padding(top = 4.dp, start = 8.dp, end = 8.dp).fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
 
                         if (iCalObject.categories?.isNotEmpty() == true
@@ -96,49 +132,24 @@ fun ListCardCompact(
                             }
                         }
                     }
-
-                    /*
-                    ListStatusBar(
-                        numAttendees = iCalObject.numAttendees,
-                        numAttachments = iCalObject.numAttachments,
-                        numComments = iCalObject.numComments,
-                        numResources = iCalObject.numResources,
-                        numAlarms = iCalObject.numAlarms,
-                        isReadOnly = iCalObject.isReadOnly,
-                        uploadPending = iCalObject.uploadPending,
-                        hasURL = iCalObject.url?.isNotBlank() == true,
-                        hasLocation = iCalObject.location?.isNotBlank() == true,
-                        hasContact = iCalObject.contact?.isNotBlank() == true,
-                        isRecurringOriginal = iCalObject.isRecurringOriginal,
-                        isRecurringInstance = iCalObject.isRecurringInstance,
-                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
-                        component = iCalObject.component,
-                        status = iCalObject.status,
-                        classification = iCalObject.classification,
-                        priority = iCalObject.priority,
-                        modifier = Modifier.padding(end = 8.dp, top = 4.dp)
-                    )
-
-                     */
                 }
 
                 Row(
                     verticalAlignment = Alignment.Top,
                     horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
 
                     Column(
                         horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 8.dp, end = 8.dp)
                             .weight(1f)
-
                     ) {
 
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
@@ -147,10 +158,10 @@ fun ListCardCompact(
                                 Text(
                                     text = iCalObject.summary ?: "",
                                     textDecoration = if (iCalObject.status == StatusJournal.CANCELLED.name || iCalObject.status == StatusTodo.CANCELLED.name) TextDecoration.LineThrough else TextDecoration.None,
-                                    maxLines = 2,
+                                    maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(top = 4.dp).weight(1f)
+                                    modifier = Modifier.weight(1f)
                                 )
 
                         }
@@ -177,34 +188,61 @@ fun ListCardCompact(
                                 )
                             }
                         )
-
                 }
 
-                /*
-                ListStatusBar(
-                    numAttendees = iCalObject.numAttendees,
-                    numAttachments = iCalObject.numAttachments,
-                    numComments = iCalObject.numComments,
-                    numResources = iCalObject.numResources,
-                    numAlarms = iCalObject.numAlarms,
-                    isReadOnly = iCalObject.isReadOnly,
-                    uploadPending = iCalObject.uploadPending,
-                    hasURL = iCalObject.url?.isNotBlank() == true,
-                    hasLocation = iCalObject.location?.isNotBlank() == true,
-                    hasContact = iCalObject.contact?.isNotBlank() == true,
-                    isRecurringOriginal = iCalObject.isRecurringOriginal,
-                    isRecurringInstance = iCalObject.isRecurringInstance,
-                    isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
-                    component = iCalObject.component,
-                    status = iCalObject.status,
-                    classification = iCalObject.classification,
-                    priority = iCalObject.priority,
-                    modifier = Modifier.padding(end = 8.dp, top = 4.dp, start = 8.dp)
-                )
-                 */
+                AnimatedVisibility(visible = statusBarVisible) {
+                    ListStatusBar(
+                        numAttendees = iCalObject.numAttendees,
+                        numAttachments = iCalObject.numAttachments,
+                        numComments = iCalObject.numComments,
+                        numResources = iCalObject.numResources,
+                        numAlarms = iCalObject.numAlarms,
+                        numSubtasks = iCalObject.numSubtasks,
+                        numSubnotes = iCalObject.numSubnotes,
+                        isReadOnly = iCalObject.isReadOnly,
+                        uploadPending = iCalObject.uploadPending,
+                        hasURL = iCalObject.url?.isNotBlank() == true,
+                        hasLocation = iCalObject.location?.isNotBlank() == true,
+                        hasContact = iCalObject.contact?.isNotBlank() == true,
+                        isRecurringOriginal = iCalObject.isRecurringOriginal,
+                        isRecurringInstance = iCalObject.isRecurringInstance,
+                        isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                        component = iCalObject.component,
+                        status = iCalObject.status,
+                        classification = iCalObject.classification,
+                        priority = iCalObject.priority,
+                        modifier = Modifier.padding(top = 4.dp)
+
+                    )
+                }
+
+                Column(modifier = Modifier.padding(top = 4.dp)) {
+                    subtasks.forEach { subtask ->
+
+                        SubtaskCardCompact(
+                            subtask = subtask,
+                            onProgressChanged = onProgressChanged,
+                            modifier = Modifier
+                                .padding(start = 8.dp, end = 8.dp)
+                            .combinedClickable(
+                                onClick = { goToView(subtask.id) },
+                                onLongClick = {
+                                    if (!subtask.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
+                                        goToEdit(subtask.id)
+                                }
+                            )
+                        )
+
+                        if (subtask.id != subtasks.last().id)
+                            Divider(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                thickness = 1.dp,
+                                modifier = Modifier.alpha(0.25f)
+                            )
+                    }
+                }
             }
         }
-
 }
 
 @Preview(showBackground = true)
@@ -214,10 +252,15 @@ fun ListCardCompact_JOURNAL() {
 
         val icalobject = ICal4ListWithRelatedto.getSample().apply {
             property.dtstart = System.currentTimeMillis()
+            property.colorItem = Color.Blue.toArgb()
+            property.colorCollection = Color.Magenta.toArgb()
         }
         ListCardCompact(
             icalobject,
-            onProgressChanged = { _, _, _ -> }
+            emptyList(),
+            onProgressChanged = { _, _, _ -> },
+            goToView = { },
+            goToEdit = { }
         )
     }
 }
@@ -236,7 +279,10 @@ fun ListCardCompact_NOTE() {
         }
         ListCardCompact(
             icalobject,
-            onProgressChanged = { _, _, _ -> }
+            emptyList(),
+            onProgressChanged = { _, _, _ -> },
+            goToView = { },
+            goToEdit = { }
         )    }
 }
 
@@ -257,7 +303,10 @@ fun ListCardCompact_TODO() {
         }
         ListCardCompact(
             icalobject,
-            onProgressChanged = { _, _, _ -> }, modifier = Modifier.width(150.dp)
+            subtasks = listOf(icalobject.property, icalobject.property),
+            onProgressChanged = { _, _, _ -> },
+            goToView = { },
+            goToEdit = { }
         )
     }
 }

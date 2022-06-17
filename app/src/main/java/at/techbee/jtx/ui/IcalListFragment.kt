@@ -91,6 +91,7 @@ class IcalListFragment : Fragment() {
 
         const val PREFS_VIEWMODE_LIST = "prefsViewmodeList"
         const val PREFS_VIEWMODE_GRID = "prefsViewmodeGrid"
+        const val PREFS_VIEWMODE_COMPACT = "prefsViewmodeCompac"
 
         const val SETTINGS_SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_of_journals_and_todos_in_tasklist"
         const val SETTINGS_SHOW_SUBNOTES_IN_LIST = "settings_show_subnotes_of_journals_and_tasks_in_noteslist"
@@ -192,6 +193,8 @@ class IcalListFragment : Fragment() {
                 optionsMenu?.findItem(R.id.menu_list_viewmode_list)?.isChecked = true
             if(it == PREFS_VIEWMODE_GRID)
                 optionsMenu?.findItem(R.id.menu_list_viewmode_grid)?.isChecked = true
+            if(it == PREFS_VIEWMODE_COMPACT)
+                optionsMenu?.findItem(R.id.menu_list_viewmode_compact)?.isChecked = true
         }
 
 
@@ -360,6 +363,7 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_syncnow -> SyncUtil.syncAllAccounts(context)
             R.id.menu_list_viewmode_list -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_LIST)
             R.id.menu_list_viewmode_grid -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_GRID)
+            R.id.menu_list_viewmode_compact -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_COMPACT)
         }
         return super.onOptionsItemSelected(item)
     }
