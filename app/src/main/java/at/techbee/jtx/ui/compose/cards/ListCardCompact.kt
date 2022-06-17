@@ -96,9 +96,9 @@ fun ListCardCompact(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                iCalObject.categories?.let {
+                                if(iCalObject.categories?.isNotBlank() == true) {
                                     Text(
-                                        it,
+                                        iCalObject.categories?:"",
                                         style = Typography.labelMedium,
                                         fontStyle = FontStyle.Italic,
                                         modifier = Modifier.padding(end = 16.dp).weight(1f),
@@ -106,6 +106,8 @@ fun ListCardCompact(
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
+                                } else {
+                                    Spacer(modifier = Modifier.width(1.dp))  // make sure dtstart/due move to the right
                                 }
                                 if(iCalObject.module == Module.JOURNAL.name && iCalObject.dtstart != null) {
                                     Text(
@@ -254,6 +256,27 @@ fun ListCardCompact_JOURNAL() {
             property.dtstart = System.currentTimeMillis()
             property.colorItem = Color.Blue.toArgb()
             property.colorCollection = Color.Magenta.toArgb()
+        }
+        ListCardCompact(
+            icalobject,
+            emptyList(),
+            onProgressChanged = { _, _, _ -> },
+            goToView = { },
+            goToEdit = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ListCardCompact_JOURNAL2() {
+    JtxBoardTheme {
+
+        val icalobject = ICal4ListWithRelatedto.getSample().apply {
+            property.dtstart = System.currentTimeMillis()
+            property.colorItem = Color.Blue.toArgb()
+            property.colorCollection = Color.Magenta.toArgb()
+            property.categories = null
         }
         ListCardCompact(
             icalobject,
