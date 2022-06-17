@@ -180,6 +180,8 @@ dependencies {
     //implementation "com.huawei.hms:ads-lite:13.4.49.301"
     huaweiImplementation "com.huawei.hms:ads-consent:3.4.49.301"
 
+    gplayImplementation "com.google.android.gms:play-services-maps:18.0.2"
+
     // Workmanager support
     implementation("androidx.work:work-runtime-ktx:$version_work")
 

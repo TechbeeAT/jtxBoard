@@ -115,6 +115,5 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
             resultInsertedFromICS.postValue(resultPair)
         }
     }
-
 }
 
