@@ -17,12 +17,14 @@ import android.view.View
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
+import androidx.preference.PreferenceManager
 import androidx.room.*
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
+import at.techbee.jtx.ui.SettingsFragment
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
@@ -41,6 +43,7 @@ import java.time.format.TextStyle
 import java.util.*
 import java.util.TimeZone
 import kotlin.IllegalArgumentException
+import kotlin.time.Duration
 
 
 /** The name of the the table for IcalObjects.
@@ -1191,6 +1194,30 @@ data class ICalObject(
             null
         else
             recurInfo + System.lineSeparator()
+    }
+
+    fun setDefaultStartDateFromSettings(context: Context) {
+        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(SettingsFragment.DEFAULT_START_DATE, null) ?: return
+        if(default == "null")
+            return
+        try {
+            this.dtstart = DateTimeUtils.getTodayAsLong() + Duration.parse(default).inWholeMilliseconds
+            this.dtstartTimezone = TZ_ALLDAY
+        } catch (e: java.lang.IllegalArgumentException) {
+            Log.d("DurationParsing", "Could not parse duration from settings")
+        }
+    }
+
+    fun setDefaultDueDateFromSettings(context: Context) {
+        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(SettingsFragment.DEFAULT_DUE_DATE, null) ?: return
+        if(default == "null")
+            return
+        try {
+            this.due = DateTimeUtils.getTodayAsLong() + Duration.parse(default).inWholeMilliseconds
+            this.dueTimezone = TZ_ALLDAY
+        } catch (e: java.lang.IllegalArgumentException) {
+            Log.d("DurationParsing", "Could not parse duration from settings")
+        }
     }
 }
 

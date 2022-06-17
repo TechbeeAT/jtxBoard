@@ -13,4 +13,17 @@
         <item>audio/aac</item>
         <item>audio/ogg</item>
     </array>
+
+    <!-- Possible default date for start and due (as millis) -->
+    <array name="settings_default_date_values">
+        <item>null</item>   <!-- off -->
+        <item>P0D</item>  <!-- today -->
+        <item>P1D</item>  <!-- one day -->
+        <item>P2D</item>  <!-- two days -->
+        <item>P3D</item>  <!-- three days -->
+        <item>P7D</item>  <!-- 7 days -->
+        <item>P14D</item>  <!-- 14 days -->
+        <item>P28D</item>  <!-- 28 days -->
+    </array>
+
 </resources>

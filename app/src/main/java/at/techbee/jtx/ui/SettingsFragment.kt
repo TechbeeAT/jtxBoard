@@ -25,6 +25,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val EXPAND_ATTACHMENTS_DEFAULT = "settings_expand_attachments_default"
         const val SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST = "settings_show_progress_for_maintasks_in_list"
         const val SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST = "settings_show_progress_for_subtasks_in_list"
+        const val DEFAULT_START_DATE = "setting_default_start_date"
+        const val DEFAULT_DUE_DATE = "setting_default_due_date"
 
         /**
          * Preferred theme (light/dark). Value must be one of [AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM]

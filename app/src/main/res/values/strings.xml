@@ -473,6 +473,17 @@
     <string name="settings_show_subjournals_of_notes_and_tasks_in_journallist">Show subjournals of Notes and Tasks in Journallist</string>
     <string name="settings_app">App Settings</string>
     <string name="settings_select_mimetype_for_audio">Select Mimetype for audio notes</string>
+    <string name="settings_tasks">Tasks Settings</string>
+    <string name="settings_default_start_date">Set a default start date for tasks</string>
+    <string name="settings_default_due_date">Set a default due date for tasks</string>
+    <string name="settings_default_date_none">None</string>
+    <string name="settings_default_date_same_day">Same day</string>
+    <string name="settings_default_date_next_day">Next day</string>
+    <string name="settings_default_date_two_days">Two days after</string>
+    <string name="settings_default_date_three_days">Three days after</string>
+    <string name="settings_default_date_one_week">One week after</string>
+    <string name="settings_default_date_two_weeks">Two weeks after</string>
+    <string name="settings_default_date_four_weeks">Four weeks after</string>
 
 
     <!-- Sync fragment -->

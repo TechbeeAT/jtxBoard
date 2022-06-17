@@ -106,4 +106,27 @@
 
     </PreferenceCategory>
 
+
+    <PreferenceCategory
+        app:key="settings_tasks"
+        app:title="@string/settings_tasks">
+
+        <DropDownPreference
+            app:defaultValue="true"
+            app:entries="@array/settings_default_date_entries"
+            app:entryValues="@array/settings_default_date_values"
+            app:key="setting_default_start_date"
+            app:title="@string/settings_default_start_date"
+            app:useSimpleSummaryProvider="true" />
+
+        <DropDownPreference
+            app:defaultValue="true"
+            app:entries="@array/settings_default_date_entries"
+            app:entryValues="@array/settings_default_date_values"
+            app:key="setting_default_due_date"
+            app:title="@string/settings_default_due_date"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
 </androidx.preference.PreferenceScreen>

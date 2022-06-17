@@ -265,7 +265,10 @@ class IcalListFragment : Fragment() {
             }
             Module.TODO.name -> {
                 binding.fab.setImageResource(R.drawable.ic_todo_add)
-                binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createTodo())) }
+                binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createTodo().apply {
+                    this.setDefaultDueDateFromSettings(requireContext())
+                    this.setDefaultStartDateFromSettings(requireContext())
+                })) }
             }
         }
 
@@ -643,7 +646,10 @@ class IcalListFragment : Fragment() {
             val newIcalObject = when(icalListViewModel.searchModule) {
                 Module.JOURNAL.name -> ICalObject.createJournal()
                 Module.NOTE.name -> ICalObject.createNote(null)
-                Module.TODO.name -> ICalObject.createTask(null)
+                Module.TODO.name -> ICalObject.createTask(null).apply {
+                    this.setDefaultDueDateFromSettings(requireContext())
+                    this.setDefaultStartDateFromSettings(requireContext())
+                }
                 else -> null
             }
             newIcalObject?.let {
