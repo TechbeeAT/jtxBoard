@@ -52,7 +52,6 @@ fun ICalObjectListCard(
     iCalObjectWithRelatedto: ICal4ListWithRelatedto,
     subtasks: List<ICal4List>,
     subnotes: List<ICal4List>,
-    navController: NavController,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     isSubtasksExpandedDefault: Boolean = true,
@@ -60,7 +59,8 @@ fun ICalObjectListCard(
     isAttachmentsExpandedDefault: Boolean = true,
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
-    onEditRequest: (iCalObjectId: Long) -> Unit,
+    goToView: (itemId: Long) -> Unit,
+    goToEdit: (itemId: Long) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
@@ -404,16 +404,10 @@ fun ICalObjectListCard(
                                 modifier = Modifier
                                     .padding(start = 8.dp, end = 8.dp)
                                     .combinedClickable(
-                                        onClick = {
-                                            navController.navigate(
-                                                IcalListFragmentDirections
-                                                    .actionIcalListFragmentToIcalViewFragment()
-                                                    .setItem2show(subtask.id)
-                                            )
-                                        },
+                                        onClick = { goToView(subtask.id)  },
                                         onLongClick = {
                                             if (!subtask.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
-                                                onEditRequest(subtask.id)
+                                                goToEdit(subtask.id)
                                         }
                                     )
                             )
@@ -431,16 +425,10 @@ fun ICalObjectListCard(
                                 modifier = Modifier
                                     .padding(start = 8.dp, end = 8.dp)
                                     .combinedClickable(
-                                        onClick = {
-                                            navController.navigate(
-                                                IcalListFragmentDirections
-                                                    .actionIcalListFragmentToIcalViewFragment()
-                                                    .setItem2show(subnote.id)
-                                            )
-                                        },
+                                        onClick = { goToView(subnote.id) },
                                         onLongClick = {
                                             if (!subnote.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
-                                                onEditRequest(subnote.id)
+                                                goToEdit(subnote.id)
                                         },
                                     )
                             )
@@ -474,8 +462,8 @@ fun ICalObjectListCardPreview_JOURNAL() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            rememberNavController(),
-            onEditRequest = { },
+            goToView = { },
+            goToEdit = { },
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
@@ -506,8 +494,8 @@ fun ICalObjectListCardPreview_NOTE() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            rememberNavController(),
-            onEditRequest = { },
+            goToView = { },
+            goToEdit = { },
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
@@ -543,8 +531,8 @@ fun ICalObjectListCardPreview_TODO() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            rememberNavController(),
-            onEditRequest = { },
+            goToView = { },
+            goToEdit = { },
             settingShowProgressMaintasks = true,
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
@@ -582,8 +570,8 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            rememberNavController(),
-            onEditRequest = { },
+            goToView = { },
+            goToEdit = { },
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
@@ -622,8 +610,8 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
                 this.component = Component.VJOURNAL.name
                 this.module = Module.NOTE.name
             }),
-            rememberNavController(),
-            onEditRequest = { },
+            goToView = { },
+            goToEdit = { },
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },

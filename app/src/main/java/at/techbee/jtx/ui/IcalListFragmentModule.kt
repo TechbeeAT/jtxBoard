@@ -33,6 +33,7 @@ import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
+import at.techbee.jtx.ui.compose.screens.ListScreenCompact
 import at.techbee.jtx.ui.compose.screens.ListScreenList
 import at.techbee.jtx.ui.compose.screens.ListScreenGrid
 import at.techbee.jtx.ui.theme.JtxBoardTheme
@@ -67,13 +68,24 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
     private lateinit var prefs: SharedPreferences
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-        prefs = when(module) {
-            Module.JOURNAL -> requireActivity().getSharedPreferences(PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
-            Module.NOTE -> requireActivity().getSharedPreferences(PREFS_LIST_NOTES, Context.MODE_PRIVATE)
-            Module.TODO -> requireActivity().getSharedPreferences(PREFS_LIST_TODOS, Context.MODE_PRIVATE)
+        prefs = when (module) {
+            Module.JOURNAL -> requireActivity().getSharedPreferences(
+                PREFS_LIST_JOURNALS,
+                Context.MODE_PRIVATE
+            )
+            Module.NOTE -> requireActivity().getSharedPreferences(
+                PREFS_LIST_NOTES,
+                Context.MODE_PRIVATE
+            )
+            Module.TODO -> requireActivity().getSharedPreferences(
+                PREFS_LIST_TODOS,
+                Context.MODE_PRIVATE
+            )
         }
 
         val navController = this.findNavController()
@@ -92,38 +104,95 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
 
                         val viewMode by icalListViewModel.viewMode.observeAsState()
 
-                        if(viewMode == IcalListFragment.PREFS_VIEWMODE_LIST ) {
-                            ListScreenList(
-                                listLive = when (module) {
-                                    Module.JOURNAL -> icalListViewModel.iCal4ListJournals
-                                    Module.NOTE -> icalListViewModel.iCal4ListNotes
-                                    Module.TODO -> icalListViewModel.iCal4ListTodos
-                                },
-                                subtasksLive = icalListViewModel.allSubtasks,
-                                subnotesLive = icalListViewModel.allSubnotes,
-                                scrollOnceId = icalListViewModel.scrollOnceId,
-                                navController = navController,
-                                model = icalListViewModel
-                            )
-                        } else {
-                            ListScreenGrid(
-                                listLive = when (module) {
-                                    Module.JOURNAL -> icalListViewModel.iCal4ListJournals
-                                    Module.NOTE -> icalListViewModel.iCal4ListNotes
-                                    Module.TODO -> icalListViewModel.iCal4ListTodos
-                                },
-                                scrollOnceId = icalListViewModel.scrollOnceId,
-                                onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> icalListViewModel.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  },
-                                goToView = { itemId ->
-                                    navController.navigate(
-                                        IcalListFragmentDirections
-                                            .actionIcalListFragmentToIcalViewFragment()
-                                            .setItem2show(itemId)
-                                    )
-                                },
-                                goToEdit = {itemId -> icalListViewModel.postDirectEditEntity(itemId) }
-                            )
+                        when (viewMode) {
+                            IcalListFragment.PREFS_VIEWMODE_LIST -> {
+                                ListScreenList(
+                                    listLive = when (module) {
+                                        Module.JOURNAL -> icalListViewModel.iCal4ListJournals
+                                        Module.NOTE -> icalListViewModel.iCal4ListNotes
+                                        Module.TODO -> icalListViewModel.iCal4ListTodos
+                                    },
+                                    subtasksLive = icalListViewModel.allSubtasks,
+                                    subnotesLive = icalListViewModel.allSubnotes,
+                                    scrollOnceId = icalListViewModel.scrollOnceId,
+                                    isExcludeDone = icalListViewModel.isExcludeDone,
+                                    goToView = { itemId ->
+                                        navController.navigate(
+                                            IcalListFragmentDirections
+                                                .actionIcalListFragmentToIcalViewFragment()
+                                                .setItem2show(itemId)
+                                        )
+                                    },
+                                    goToEdit = { itemId ->
+                                        icalListViewModel.postDirectEditEntity(
+                                            itemId
+                                        )
+                                    },
+                                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance -> icalListViewModel.updateProgress(itemId, newPercent, isLinkedRecurringInstance)  },
+                                    onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean -> icalListViewModel.updateExpanded(itemId, isSubtasksExpanded, isSubnotesExpanded, isAttachmentsExpanded)},
+                                )
+                            }
+                            IcalListFragment.PREFS_VIEWMODE_GRID -> {
+                                ListScreenGrid(
+                                    listLive = when (module) {
+                                        Module.JOURNAL -> icalListViewModel.iCal4ListJournals
+                                        Module.NOTE -> icalListViewModel.iCal4ListNotes
+                                        Module.TODO -> icalListViewModel.iCal4ListTodos
+                                    },
+                                    scrollOnceId = icalListViewModel.scrollOnceId,
+                                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
+                                        icalListViewModel.updateProgress(
+                                            itemId,
+                                            newPercent,
+                                            isLinkedRecurringInstance
+                                        )
+                                    },
+                                    goToView = { itemId ->
+                                        navController.navigate(
+                                            IcalListFragmentDirections
+                                                .actionIcalListFragmentToIcalViewFragment()
+                                                .setItem2show(itemId)
+                                        )
+                                    },
+                                    goToEdit = { itemId ->
+                                        icalListViewModel.postDirectEditEntity(
+                                            itemId
+                                        )
+                                    }
+                                )
+                            }
+                            IcalListFragment.PREFS_VIEWMODE_COMPACT -> {
+                                ListScreenCompact(
+                                    listLive = when (module) {
+                                        Module.JOURNAL -> icalListViewModel.iCal4ListJournals
+                                        Module.NOTE -> icalListViewModel.iCal4ListNotes
+                                        Module.TODO -> icalListViewModel.iCal4ListTodos
+                                    },
+                                    subtasksLive = icalListViewModel.allSubtasks,
+                                    scrollOnceId = icalListViewModel.scrollOnceId,
+                                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
+                                        icalListViewModel.updateProgress(
+                                            itemId,
+                                            newPercent,
+                                            isLinkedRecurringInstance
+                                        )
+                                    },
+                                    goToView = { itemId ->
+                                        navController.navigate(
+                                            IcalListFragmentDirections
+                                                .actionIcalListFragmentToIcalViewFragment()
+                                                .setItem2show(itemId)
+                                        )
+                                    },
+                                    goToEdit = { itemId ->
+                                        icalListViewModel.postDirectEditEntity(
+                                            itemId
+                                        )
+                                    }
+                                )
+                            }
                         }
+
                     }
                 }
             }
@@ -139,14 +208,17 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
         try {
             val activity = requireActivity() as MainActivity
             val toolbarText = getString(R.string.toolbar_text_jtx_board)
-            val toolbarSubtitle = when(module) {
+            val toolbarSubtitle = when (module) {
                 Module.JOURNAL -> getString(R.string.toolbar_text_jtx_board_journals_overview)
                 Module.NOTE -> getString(R.string.toolbar_text_jtx_board_notes_overview)
                 Module.TODO -> getString(R.string.toolbar_text_jtx_board_tasks_overview)
             }
-            activity.setToolbarTitle(toolbarText, toolbarSubtitle )
+            activity.setToolbarTitle(toolbarText, toolbarSubtitle)
         } catch (e: ClassCastException) {
-            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
+            Log.d(
+                "setToolbarText",
+                "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e"
+            )
         }
     }
 
@@ -158,19 +230,34 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
 
     private fun savePrefs() {
 
-        prefs.edit().putStringSet(PREFS_COLLECTION, icalListViewModel.searchCollection.toSet()).apply()
+        prefs.edit().putStringSet(PREFS_COLLECTION, icalListViewModel.searchCollection.toSet())
+            .apply()
         prefs.edit().putStringSet(PREFS_ACCOUNT, icalListViewModel.searchAccount.toSet()).apply()
-        prefs.edit().putStringSet(PREFS_STATUS_JOURNAL, StatusJournal.getStringSetFromList(icalListViewModel.searchStatusJournal)).apply()
-        prefs.edit().putStringSet(PREFS_STATUS_TODO, StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)).apply()
-        prefs.edit().putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(icalListViewModel.searchClassification)).apply()
-        prefs.edit().putStringSet(PREFS_CATEGORIES, icalListViewModel.searchCategories.toSet()).apply()
-        prefs.edit().putBoolean(PREFS_EXCLUDE_DONE, icalListViewModel.isExcludeDone.value?:false).apply()
+        prefs.edit().putStringSet(
+            PREFS_STATUS_JOURNAL,
+            StatusJournal.getStringSetFromList(icalListViewModel.searchStatusJournal)
+        ).apply()
+        prefs.edit().putStringSet(
+            PREFS_STATUS_TODO,
+            StatusTodo.getStringSetFromList(icalListViewModel.searchStatusTodo)
+        ).apply()
+        prefs.edit().putStringSet(
+            PREFS_CLASSIFICATION,
+            Classification.getStringSetFromList(icalListViewModel.searchClassification)
+        ).apply()
+        prefs.edit().putStringSet(PREFS_CATEGORIES, icalListViewModel.searchCategories.toSet())
+            .apply()
+        prefs.edit().putBoolean(PREFS_EXCLUDE_DONE, icalListViewModel.isExcludeDone.value ?: false)
+            .apply()
 
         prefs.edit().putBoolean(PREFS_FILTER_OVERDUE, icalListViewModel.isFilterOverdue).apply()
         prefs.edit().putBoolean(PREFS_FILTER_DUE_TODAY, icalListViewModel.isFilterDueToday).apply()
-        prefs.edit().putBoolean(PREFS_FILTER_DUE_TOMORROW, icalListViewModel.isFilterDueTomorrow).apply()
-        prefs.edit().putBoolean(PREFS_FILTER_DUE_FUTURE, icalListViewModel.isFilterDueFuture).apply()
-        prefs.edit().putBoolean(PREFS_FILTER_NO_DATES_SET, icalListViewModel.isFilterNoDatesSet).apply()
+        prefs.edit().putBoolean(PREFS_FILTER_DUE_TOMORROW, icalListViewModel.isFilterDueTomorrow)
+            .apply()
+        prefs.edit().putBoolean(PREFS_FILTER_DUE_FUTURE, icalListViewModel.isFilterDueFuture)
+            .apply()
+        prefs.edit().putBoolean(PREFS_FILTER_NO_DATES_SET, icalListViewModel.isFilterNoDatesSet)
+            .apply()
 
         prefs.edit().putString(PREFS_SORTORDER, icalListViewModel.sortOrder.name).apply()
         prefs.edit().putString(PREFS_ORDERBY, icalListViewModel.orderBy.name).apply()
@@ -179,30 +266,45 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
     }
 
     private fun loadPrefs() {
-        icalListViewModel.searchCategories = prefs.getStringSet(PREFS_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
-        icalListViewModel.searchCollection = prefs.getStringSet(PREFS_COLLECTION, null)?.toMutableList() ?: mutableListOf()
-        icalListViewModel.searchAccount = prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
-        icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(prefs.getStringSet(
-            PREFS_STATUS_JOURNAL, null))
-        icalListViewModel.searchStatusTodo = StatusTodo.getListFromStringList(prefs.getStringSet(
-            PREFS_STATUS_TODO, null))
-        icalListViewModel.searchClassification = Classification.getListFromStringList(prefs.getStringSet(
-            PREFS_CLASSIFICATION, null))
+        icalListViewModel.searchCategories =
+            prefs.getStringSet(PREFS_CATEGORIES, null)?.toMutableList() ?: mutableListOf()
+        icalListViewModel.searchCollection =
+            prefs.getStringSet(PREFS_COLLECTION, null)?.toMutableList() ?: mutableListOf()
+        icalListViewModel.searchAccount =
+            prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
+        icalListViewModel.searchStatusJournal = StatusJournal.getListFromStringList(
+            prefs.getStringSet(
+                PREFS_STATUS_JOURNAL, null
+            )
+        )
+        icalListViewModel.searchStatusTodo = StatusTodo.getListFromStringList(
+            prefs.getStringSet(
+                PREFS_STATUS_TODO, null
+            )
+        )
+        icalListViewModel.searchClassification = Classification.getListFromStringList(
+            prefs.getStringSet(
+                PREFS_CLASSIFICATION, null
+            )
+        )
         icalListViewModel.isExcludeDone.value = prefs.getBoolean(PREFS_EXCLUDE_DONE, false)
         icalListViewModel.isFilterOverdue = prefs.getBoolean(PREFS_FILTER_OVERDUE, false)
         icalListViewModel.isFilterDueToday = prefs.getBoolean(PREFS_FILTER_DUE_TODAY, false)
         icalListViewModel.isFilterDueTomorrow = prefs.getBoolean(PREFS_FILTER_DUE_TOMORROW, false)
         icalListViewModel.isFilterDueFuture = prefs.getBoolean(PREFS_FILTER_DUE_FUTURE, false)
         icalListViewModel.isFilterNoDatesSet = prefs.getBoolean(PREFS_FILTER_NO_DATES_SET, false)
-        icalListViewModel.orderBy = prefs.getString(PREFS_ORDERBY, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.DUE
-        icalListViewModel.sortOrder = prefs.getString(PREFS_SORTORDER, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.ASC
+        icalListViewModel.orderBy =
+            prefs.getString(PREFS_ORDERBY, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.DUE
+        icalListViewModel.sortOrder =
+            prefs.getString(PREFS_SORTORDER, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.ASC
 
-        icalListViewModel.viewMode.value = prefs.getString(PREFS_VIEWMODE, IcalListFragment.PREFS_VIEWMODE_LIST)
+        icalListViewModel.viewMode.value =
+            prefs.getString(PREFS_VIEWMODE, IcalListFragment.PREFS_VIEWMODE_LIST)
     }
 }
 
 
-class IcalListFragmentJournal: IcalListFragmentModule(module = Module.JOURNAL)
-class IcalListFragmentNote: IcalListFragmentModule(module = Module.NOTE)
-class IcalListFragmentTodo: IcalListFragmentModule(module = Module.TODO)
+class IcalListFragmentJournal : IcalListFragmentModule(module = Module.JOURNAL)
+class IcalListFragmentNote : IcalListFragmentModule(module = Module.NOTE)
+class IcalListFragmentTodo : IcalListFragmentModule(module = Module.TODO)
 

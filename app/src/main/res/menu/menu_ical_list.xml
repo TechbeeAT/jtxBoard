@@ -57,6 +57,9 @@
         <item
             android:id="@+id/menu_list_viewmode_grid"
             android:title="@string/menu_list_viewmode_grid" />
+        <item
+            android:id="@+id/menu_list_viewmode_compact"
+            android:title="@string/menu_list_viewmode_compact" />
     </group>
 
 </menu>
