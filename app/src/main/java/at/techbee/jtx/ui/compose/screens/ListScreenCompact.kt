@@ -43,6 +43,7 @@ fun ListScreenCompact(
     listLive: LiveData<List<ICal4ListWithRelatedto>>,
     subtasksLive: LiveData<List<ICal4List>>,
     scrollOnceId: MutableLiveData<Long?>,
+    isExcludeDone: MutableLiveData<Boolean>,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     goToView: (itemId: Long) -> Unit,
     goToEdit: (itemId: Long) -> Unit
@@ -53,6 +54,7 @@ fun ListScreenCompact(
 
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
+    val excludeDone by isExcludeDone.observeAsState(false)
 
     if(scrollId != null) {
         LaunchedEffect(list) {
@@ -75,10 +77,12 @@ fun ListScreenCompact(
         )
         { iCalObject ->
 
-            val currentSubtasks = subtasks.filter { subtask ->
+            var currentSubtasks = subtasks.filter { subtask ->
                 iCalObject.relatedto?.any { relatedto ->
                     relatedto.linkedICalObjectId == subtask.id && relatedto.reltype == Reltype.CHILD.name } == true
             }
+            if(excludeDone)   // exclude done if applicable
+                currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 }
 
             ListCardCompact(
                 iCalObject,
@@ -146,6 +150,7 @@ fun ListScreenCompact_TODO() {
             listLive = MutableLiveData(listOf(icalobject, icalobject2)),
             subtasksLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
+            isExcludeDone = MutableLiveData(false),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { }
@@ -190,6 +195,7 @@ fun ListScreenCompact_JOURNAL() {
             listLive = MutableLiveData(listOf(icalobject, icalobject2)),
             subtasksLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
+            isExcludeDone = MutableLiveData(false),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { }

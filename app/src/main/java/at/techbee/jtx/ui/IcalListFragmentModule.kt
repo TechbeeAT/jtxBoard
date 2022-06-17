@@ -170,6 +170,7 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
                                     },
                                     subtasksLive = icalListViewModel.allSubtasks,
                                     scrollOnceId = icalListViewModel.scrollOnceId,
+                                    isExcludeDone = icalListViewModel.isExcludeDone,
                                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                                         icalListViewModel.updateProgress(
                                             itemId,
