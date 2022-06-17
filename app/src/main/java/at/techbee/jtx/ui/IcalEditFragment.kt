@@ -44,10 +44,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import at.techbee.jtx.AUTHORITY_FILEPROVIDER
-import at.techbee.jtx.CONTACT_READ_PERMISSION_CODE
-import at.techbee.jtx.MainActivity
-import at.techbee.jtx.R
+import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.properties.*
@@ -58,6 +55,7 @@ import at.techbee.jtx.flavored.JtxReviewManager
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_AFTER
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_NEVER
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_ON
+import at.techbee.jtx.flavored.MapManager
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_DAY
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_MONTH
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_UNSUPPORTED
@@ -557,6 +555,17 @@ class IcalEditFragment : Fragment() {
                     icalEditViewModel.iCalObjectUpdated.postValue(icalEditViewModel.iCalObjectUpdated.value)
                 }
                 .show()
+        }
+
+        if(BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY) {
+            binding.editFragmentTabUlc.editLocationEdit.setEndIconOnClickListener {
+                MapManager(requireContext()).showLocationPickerDialog(
+                    inflater,
+                    icalEditViewModel.iCalObjectUpdated
+                )
+            }
+        } else {
+            binding.editFragmentTabUlc.editLocationEdit.isEndIconVisible = false
         }
 
         icalEditViewModel.savingClicked.observe(viewLifecycleOwner) {

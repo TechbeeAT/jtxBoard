@@ -41,6 +41,7 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.databinding.*
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.flavored.MapManager
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
@@ -254,6 +255,9 @@ class IcalViewFragment : Fragment() {
                 val descMarkwon = markwon.toMarkdown(desc)
                 binding.viewDescription.text = descMarkwon
             }
+
+            if(it.property.geoLat != null && it.property.geoLong != null)
+                MapManager(requireContext()).addMap(binding.viewLocationMap, it.property.geoLat!!, it.property.geoLong!!, it.property.location)
 
             binding.viewCommentsLinearlayout.removeAllViews()
             it.comments?.forEach { comment ->

@@ -825,6 +825,17 @@
                     app:layout_constraintTop_toBottomOf="@+id/view_location_header"
                     tools:text="Office 1020 Vienna" />
 
+                <LinearLayout
+                    android:id="@+id/view_location_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_location"
+                    />
+
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_attendee_header"
@@ -839,7 +850,7 @@
                     android:visibility="@{model.attendeesVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_attendee"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_location" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_location_map" />
 
 
                 <com.google.android.material.chip.ChipGroup
