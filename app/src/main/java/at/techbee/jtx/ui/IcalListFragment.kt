@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui
 
 
-import android.accounts.AccountManager
 import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
@@ -230,10 +229,6 @@ class IcalListFragment : Fragment() {
         icalListViewModel.searchSettingShowAllSubjournalsinJournallist = settings?.getBoolean(SETTINGS_SHOW_SUBJOURNALS_IN_LIST, false) ?: false
 
         updateMenuVisibilities()
-
-        // check if any accounts were removed, retrieve all DAVx5 Accounts
-        val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
-        icalListViewModel.removeDeletedAccounts(accounts)
 
         super.onResume()
     }

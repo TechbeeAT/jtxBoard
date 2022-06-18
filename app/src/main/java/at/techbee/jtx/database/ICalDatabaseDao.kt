@@ -343,6 +343,13 @@ DELETEs by Object
     @Delete
     fun deleteICalCollection(collection: ICalCollection)
 
+    /**
+     * Delete all collections of an account.
+     * @param [accountName] and [accountType] of the Account to be deleted.
+     */
+    @Query("DELETE FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ACCOUNT_NAME = :accountName AND $COLUMN_COLLECTION_ACCOUNT_TYPE = :accountType")
+    fun deleteAccount(accountName: String, accountType: String)
+
 
 
     /**

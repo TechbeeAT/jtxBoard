@@ -8,24 +8,24 @@
 
 package at.techbee.jtx.ui.compose.screens
 
+import android.accounts.Account
+import android.accounts.AccountManager
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +35,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.compose.cards.CollectionCard
 import at.techbee.jtx.ui.theme.JtxBoardTheme
@@ -50,13 +51,16 @@ fun CollectionsScreen(
     onEntriesMoved: (old: ICalCollection, new: ICalCollection) -> Unit,
     onImportFromICS: (CollectionsView) -> Unit,
     onExportAsICS: (CollectionsView) -> Unit,
-    onCollectionClicked: (CollectionsView) -> Unit
+    onCollectionClicked: (CollectionsView) -> Unit,
+    onDeleteAccount: (Account) -> Unit
 ) {
 
     val list by collectionsLive.observeAsState(emptyList())
-    val grouped = list.groupBy { it.accountName ?: it.accountType ?: "Account" }
+    val grouped = list.groupBy { Account(it.accountName, it.accountType) }
     val scrollState = rememberScrollState()
     val showProgressIndicator by isProcessing.observeAsState(false)
+
+    val foundAccounts = AccountManager.get(LocalContext.current).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
 
 
     Box {
@@ -76,10 +80,10 @@ fun CollectionsScreen(
             )
 
             grouped.forEach { (account, collectionsInAccount) ->
-                Text(
-                    account,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
+                CollectionsAccountHeader(
+                    account = account,
+                    isFoundInAccountmanager = foundAccounts.contains(account) || account.type == LOCAL_ACCOUNT_TYPE,
+                    onDeleteAccount = onDeleteAccount,
                     modifier = Modifier.padding(
                         top = 16.dp,
                         start = 8.dp,
@@ -210,7 +214,137 @@ fun CollectionsScreen_Preview() {
             onEntriesMoved = { _, _ -> },
             onImportFromICS = { },
             onExportAsICS = { },
-            onCollectionClicked = { }
+            onCollectionClicked = { },
+            onDeleteAccount = { }
         )
     }
 }
+
+
+@Composable
+fun CollectionsAccountHeader(
+    account: Account,
+    isFoundInAccountmanager: Boolean,
+    onDeleteAccount: (Account) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    var showDeleteAccountDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteAccountDialog)
+        AccountDeleteDialog(
+            account = account,
+            onDeleteAccount = onDeleteAccount,
+            onDismiss = { showDeleteAccountDialog = false }
+        )
+
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f)) {
+            Text(
+                account.name,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+            )
+
+            if (!isFoundInAccountmanager) {
+                Text(
+                    stringResource(id = R.string.collections_account_not_found_info),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+        }
+
+        if (!isFoundInAccountmanager)
+            IconButton(onClick = { showDeleteAccountDialog = true }) {
+                Icon(Icons.Outlined.Delete, contentDescription = stringResource(id = R.string.delete))
+            }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun CollectionsAccountHeader_Preview() {
+    JtxBoardTheme {
+
+        CollectionsAccountHeader(
+            Account("Test Account Name", "at.bitfire.davdroid"),
+            isFoundInAccountmanager = true,
+            onDeleteAccount = { }
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun CollectionsAccountHeader_Preview2() {
+    JtxBoardTheme {
+
+        CollectionsAccountHeader(
+            Account("Test Account Name", "at.bitfire.davdroid"),
+            false,
+            onDeleteAccount = { }
+        )
+    }
+}
+
+
+
+@Composable
+fun AccountDeleteDialog(
+    account: Account,
+    onDeleteAccount: (Account) -> Unit,
+    onDismiss: () -> Unit
+) {
+
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text(stringResource(R.string.collections_account_delete_dialog_title, account.name)) },
+        text = { Text(stringResource(R.string.collections_account_delete_dialog_message)) },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onDeleteAccount(account)
+                    onDismiss()
+                }
+            ) {
+                Text(stringResource(id = R.string.delete))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismiss()
+                }
+            ) {
+                Text( stringResource(id = R.string.cancel))
+            }
+        }
+    )
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun AccountDeleteDialog_preview() {
+    JtxBoardTheme {
+
+        AccountDeleteDialog(
+            Account("Test Account Name", "at.bitfire.davdroid"),
+            onDeleteAccount = { },
+            onDismiss = { }
+        )
+    }
+}
+
+

@@ -8,10 +8,8 @@
 
 package at.techbee.jtx.ui
 
-import android.accounts.Account
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -290,32 +288,6 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
 
     }
 
-    /**
-     * This function takes a list of Accounts and checks, if there are any collections that are not in the
-     * account list anymore. In this case the collections of the missing account in the list are also
-     * locally deleted.
-     */
-    fun removeDeletedAccounts(allDavx5Accounts: Array<Account>) {
-
-        Log.d("checkForDeletedAccounts", "Found accounts: $allDavx5Accounts")
-        allCollections.value?.forEach { collection ->
-
-            // Local collections STAY UNTOUCHED!
-            // The Test account type should not be deleted, otherwise the tests will fail!
-            if(collection.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE
-                || collection.accountType == ICalCollection.TEST_ACCOUNT_TYPE )
-                return@forEach
-
-            if(allDavx5Accounts.any { account -> collection.accountName == account.name && collection.accountType == account.type })
-                return@forEach
-
-            // if the collection cannot be found in the list of accounts, then it was deleted, delete it also in jtx
-            Log.d("checkForDeletedAccounts", "Account ${collection.accountName} / ${collection.accountType} not found, deleting...")
-            viewModelScope.launch(Dispatchers.IO) {
-                database.deleteICalCollectionbyId(collection.collectionId)
-            }
-        }
-    }
 
     fun delete(itemIds: List<Long>) {
         viewModelScope.launch(Dispatchers.IO) {

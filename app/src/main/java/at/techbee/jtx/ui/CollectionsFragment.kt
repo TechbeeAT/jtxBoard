@@ -184,7 +184,8 @@ class CollectionsFragment : Fragment() {
                                     iCalString2Import = null
                                     iCalImportSnackbar?.dismiss()
                                 }
-                            }
+                            },
+                            onDeleteAccount = { account -> collectionsViewModel.removeAccount(account) }
                         )
                     }
                 }

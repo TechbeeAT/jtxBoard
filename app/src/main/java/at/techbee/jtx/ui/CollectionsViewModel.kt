@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui
 
 
+import android.accounts.Account
 import android.app.Application
 import androidx.lifecycle.*
 import at.techbee.jtx.database.ICalCollection
@@ -113,6 +114,16 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
             if(collection.accountType != LOCAL_ACCOUNT_TYPE)
                 SyncUtil.notifyContentObservers(getApplication())
             resultInsertedFromICS.postValue(resultPair)
+        }
+    }
+
+
+    /**
+     * This function removes an account with all its collections from jtx Board.
+     */
+    fun removeAccount(account: Account) {
+        viewModelScope.launch(Dispatchers.IO) {
+            database.deleteAccount(account.name, account.type)
         }
     }
 }
