@@ -9,126 +9,56 @@
 package at.techbee.jtx.ui
 
 import android.app.Application
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.Toast
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import at.techbee.jtx.BuildConfig
+import androidx.fragment.app.activityViewModels
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
-import at.techbee.jtx.databinding.*
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
-import com.google.android.material.tabs.TabLayout
-import com.mikepenz.aboutlibraries.Libs
-import com.mikepenz.aboutlibraries.LibsBuilder
-import org.json.JSONException
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.HashMap
+import at.techbee.jtx.ui.compose.screens.AboutScreen
+import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
 class AboutFragment : Fragment() {
 
-    private var _binding: FragmentAboutBinding? = null
-    private val binding get() = _binding!!
-
     lateinit var application: Application
-    private lateinit var inflater: LayoutInflater
+    private val model: AboutViewModel by activityViewModels()
 
-    companion object {
-
-        private const val TAB_POSITION_ABOUT = 0
-        private const val TAB_POSITION_LIBRARIES = 1
-        private const val TAB_POSITION_TRANSLATIONS = 2
-        private const val TAB_POSITION_THANKS = 3
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        // Get a reference to the binding object and inflate the fragment views.
-        this.inflater = inflater
-        _binding = FragmentAboutBinding.inflate(inflater, container, false)
-        this.application = requireNotNull(this.activity).application
-
-        val bindingAboutJtx = FragmentAboutJtxBinding.inflate(inflater, container, false)
-        val bindingAboutThanks = FragmentAboutThanksBinding.inflate(inflater, container, false)
-        val bindingAboutTranslations = FragmentAboutTranslationsBinding.inflate(inflater, container, false)
-
-        // showing the link to POEditor only for ose-flavor
-        if(BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_OSE) {
-            bindingAboutTranslations.fragmentAboutTranslationsContributionInfo.visibility = View.VISIBLE
-            bindingAboutTranslations.fragmentAboutTranslationsButtonPoeditor.visibility = View.VISIBLE
-            bindingAboutTranslations.fragmentAboutTranslationsButtonPoeditor.setOnClickListener {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_poeditor))))
-            }
-        }
+        //this.application = requireNotNull(this.activity).application
 
 
-        //val aboutBinding = FragmentAboutBinding.inflate(inflater, container, false)
-        bindingAboutJtx.aboutAppVersion.text = getString(R.string.about_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
-        bindingAboutJtx.aboutAppCodename.text = getString(R.string.about_app_codename, BuildConfig.versionCodename)
-        bindingAboutJtx.aboutAppBuildTime.text = getString(R.string.about_app_build_date, SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime))
-        binding.aboutLinearlayout.removeAllViews()
-        binding.aboutLinearlayout.addView(bindingAboutJtx.root)
+        return ComposeView(requireContext()).apply {
+            // Dispose of the Composition when the view's LifecycleOwner
+            // is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            setContent {
+                JtxBoardTheme {
+                    // A surface container using the 'background' color from the theme
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        AboutScreen(model.translators, model.releaseinfos)
+                    }
 
-        // get the fragment for the about library
-        val aboutLibrariesFragment = LibsBuilder()
-            .withFields(R.string::class.java.fields)        // mandatory for non-standard build flavors
-            .withLicenseShown(true)
-            .withAboutIconShown(false)
-            // https://github.com/mikepenz/AboutLibraries/issues/490
-            .withLibraryModification("org_brotli__dec", Libs.LibraryFields.LIBRARY_NAME, "Brotli")
-            .withLibraryModification("org_brotli__dec", Libs.LibraryFields.AUTHOR_NAME, "Google")
-            .supportFragment()
-
-        // make sure that aboutLibrariesFragment can provide the view
-        parentFragmentManager.beginTransaction()
-            .add(aboutLibrariesFragment, null)
-            .commit()
-
-        binding.aboutTablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                binding.aboutLinearlayout.removeAllViews()
-                when (tab?.position) {
-                    TAB_POSITION_ABOUT -> binding.aboutLinearlayout.addView(bindingAboutJtx.root)
-                    TAB_POSITION_TRANSLATIONS -> binding.aboutLinearlayout.addView(bindingAboutTranslations.root)
-                    TAB_POSITION_LIBRARIES -> binding.aboutLinearlayout.addView(aboutLibrariesFragment.requireView())
-                    TAB_POSITION_THANKS -> binding.aboutLinearlayout.addView(bindingAboutThanks.root)
-                    else -> binding.aboutLinearlayout.addView(bindingAboutJtx.root)
                 }
             }
-            override fun onTabUnselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
-            override fun onTabReselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
-        })
-
-        // let the bee talk, just for fun ;-)
-        var clickCount = 1
-        bindingAboutJtx.aboutAppTechbeeLogo.setOnClickListener {
-
-            val messages = arrayOf("If it's for coffee, then yes", "Bzzzz", "Bzzzzzzzzz", "I'm working here", "What's up?")
-            if(clickCount%5 == 0)
-                bindingAboutJtx.aboutAppTechbeeLogo.setImageResource(R.drawable.logo_techbee_front)
-            else
-                bindingAboutJtx.aboutAppTechbeeLogo.setImageResource(R.drawable.logo_techbee)
-            Toast.makeText(requireContext(), messages[clickCount%5], Toast.LENGTH_SHORT).show()
-            clickCount++
         }
-
-
-        addTranslators(bindingAboutTranslations.aboutTranslationsLinearlayout)
-
-        return binding.root
     }
 
     override fun onResume() {
@@ -140,67 +70,6 @@ class AboutFragment : Fragment() {
             Log.d("Cast not successful", e.toString())
             //This error will always happen for fragment testing, as the cast to Main Activity cannot be successful
         }
-
         super.onResume()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-
-    /**
-     * This method queries the translators from the POEditor API and adds the name and languages to the linear layout
-     * @param [layout] to which the translators should be added
-     */
-    private fun addTranslators(layout: LinearLayout) {
-
-        val url = " https://api.poeditor.com/v2/contributors/list"
-
-        val jsonObjectRequest: JsonObjectRequest = object : JsonObjectRequest(
-            Method.POST, url, null,
-            { response ->
-                try {
-                    Log.d("jsonResponse", response.toString())
-                    val result = response.getJSONObject("result")
-                    val contributors = result.getJSONArray("contributors")
-                    for(i in 0 until contributors.length()) {
-                        val name = contributors.getJSONObject(i).getString("name")
-                        Log.d("json", "Name = $name")
-
-                        val languageLocales = mutableListOf<String>()
-                        val languages = contributors.getJSONObject(i).getJSONArray("permissions").getJSONObject(0).getJSONArray("languages")
-                        for(j in 0 until languages.length()) {
-                            val language = languages.getString(j)
-                            //Log.d("json", "Language = $language")
-                            languageLocales.add(Locale.forLanguageTag(language).displayLanguage)
-                            //Log.d("json", "LanguageLocale = ${languageLocale.displayLanguage}")
-                        }
-
-                        // create a new card through the binding and add the parsed name and languages, then add it to the linear layout
-                        val translatorBinding = FragmentAboutTranslationsTranslatorBinding.inflate(inflater, layout, false)
-                        translatorBinding.fragmentAboutTranslationsTranslatorName.text = name
-                        translatorBinding.fragmentAboutTranslationsTranslatorLanguages.text = languageLocales.joinToString(separator = ", ")
-                        layout.addView(translatorBinding.root)
-                    }
-                } catch (e: JSONException) {
-                    Log.w("Contributors", "Failed to parse JSON response with contributors\n$e")
-                }
-            },
-            { error ->
-                   Log.d("jsonResponse", error.toString())
-            }) {
-
-            override fun getBody(): ByteArray {
-                return "api_token=7f94161134af8f355eb6feced64dcad5&id=500401".toByteArray()
-            }
-
-            override fun getHeaders(): MutableMap<String, String> {
-                val params: MutableMap<String, String> = HashMap()
-                params["Content-Type"] = "application/x-www-form-urlencoded"
-                return params            }
-        }
-        Volley.newRequestQueue(requireContext()).add(jsonObjectRequest)
     }
 }

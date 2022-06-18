@@ -36,6 +36,7 @@ buildscript {
         version_review = "2.0.0"
         version_markwon = "4.6.2"
         version_compose = "1.2.0-beta03"
+        version_about_libraries = "10.3.0"
     }
 
     repositories {
@@ -54,7 +55,7 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:$version_gradle"
-        classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:8.9.4"
+        classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:${version_about_libraries}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
         classpath 'androidx.navigation:navigation-safe-args-gradle-plugin:2.4.2'
 

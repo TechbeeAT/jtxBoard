@@ -117,12 +117,6 @@ android {
     }
 }
 
-aboutLibraries {
-    additionalLicenses {
-        mpl_2_0
-    }
-}
-
 
 dependencies {
 
@@ -219,7 +213,9 @@ dependencies {
     androidTestImplementation("androidx.work:work-testing:$version_work")
 
     //About Libraries
-    implementation "com.mikepenz:aboutlibraries:8.9.4"
+    implementation "com.mikepenz:aboutlibraries-core:${version_about_libraries}"
+    implementation "com.mikepenz:aboutlibraries-compose:${version_about_libraries}"
+
 
     // Markwon for markdown support
     implementation  "io.noties.markwon:core:$version_markwon"
