@@ -25,6 +25,8 @@
     <string name="link_techbee" translatable="false">https://techbee.at</string>
     <string name="link_jtx_terms" translatable="false">https://jtx.techbee.at/terms-conditions</string>
     <string name="link_jtx_poeditor" translatable="false">https://poeditor.com/join/project?hash=4jaOOJSLxx</string>
+    <string name="link_paypal" translatable="false">https://www.paypal.com/donate?hosted_button_id=8BVX7PUVVTCWY</string>
+    <string name="link_jtx_donate" translatable="false">https://jtx.techbee.at/app/donate</string>
     <string name="twitter_account_name" translatable="false">\@jtxBoard</string>
 
     <!-- Permissions -->

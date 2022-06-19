@@ -8,42 +8,48 @@
 
 package at.techbee.jtx.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
-import android.net.Uri
-import at.techbee.jtx.databinding.FragmentDonateBinding
+import at.techbee.jtx.ui.compose.screens.DonateScreen
+import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
 class DonateFragment : Fragment() {
-
-    private var _binding: FragmentDonateBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var inflater: LayoutInflater
-
-    companion object {
-
-        private const val PAYPAL_DONATE_URL = "https://www.paypal.com/donate?hosted_button_id=8BVX7PUVVTCWY"
-
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        // Get a reference to the binding object and inflate the fragment views.
-        this.inflater = inflater
-        this._binding = FragmentDonateBinding.inflate(inflater, container, false)
+        return ComposeView(requireContext()).apply {
+            // Dispose of the Composition when the view's LifecycleOwner
+            // is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            setContent {
+                JtxBoardTheme {
+                    // A surface container using the 'background' color from the theme
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        DonateScreen()
+                    }
 
-        return binding.root
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -56,15 +62,6 @@ class DonateFragment : Fragment() {
             //This error will always happen for fragment testing, as the cast to Main Activity cannot be successful
         }
 
-        binding.donateButtonPaypal.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(PAYPAL_DONATE_URL)))
-        }
-
         super.onResume()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
