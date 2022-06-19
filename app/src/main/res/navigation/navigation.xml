@@ -203,8 +203,7 @@
     <fragment
         android:id="@+id/adInfoFragment"
         android:name="at.techbee.jtx.ui.AdInfoFragment"
-        android:label="AdInfoFragment"
-        tools:layout="@layout/fragment_adinfo"/>
+        android:label="AdInfoFragment"/>
     <action
         android:id="@+id/action_global_adInfoFragment"
         app:destination="@id/adInfoFragment"

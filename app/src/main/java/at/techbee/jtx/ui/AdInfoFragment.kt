@@ -8,26 +8,25 @@
 
 package at.techbee.jtx.ui
 
-import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import at.techbee.jtx.*
-import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_GOOGLEPLAY
-import at.techbee.jtx.MainActivity.Companion.BUILD_FLAVOR_HUAWEI
-import at.techbee.jtx.databinding.FragmentAdinfoBinding
-import at.techbee.jtx.flavored.AdManager
-import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.MainActivity
+import at.techbee.jtx.R
+import at.techbee.jtx.ui.compose.screens.AdInfoScreen
+import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
 class AdInfoFragment : Fragment() {
-
-    private var _binding: FragmentAdinfoBinding? = null
-    private val binding get() = _binding!!
-    lateinit var application: Application
 
 
     override fun onCreateView(
@@ -35,10 +34,23 @@ class AdInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        this._binding = FragmentAdinfoBinding.inflate(inflater, container, false)
-        this.application = requireNotNull(this.activity).application
+        return ComposeView(requireContext()).apply {
+            // Dispose of the Composition when the view's LifecycleOwner
+            // is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            setContent {
+                JtxBoardTheme {
+                    // A surface container using the 'background' color from the theme
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        AdInfoScreen()
+                    }
+                }
+            }
+        }
 
-        return binding.root
     }
 
     override fun onResume() {
@@ -51,10 +63,5 @@ class AdInfoFragment : Fragment() {
             //This error will always happen for fragment testing, as the cast to Main Activity cannot be successful
         }
         super.onResume()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
