@@ -175,8 +175,7 @@
     <fragment
         android:id="@+id/aboutFragment"
         android:name="at.techbee.jtx.ui.AboutFragment"
-        android:label="AboutFragment"
-        tools:layout="@layout/fragment_about"/>
+        android:label="AboutFragment"/>
     <action
         android:id="@+id/action_global_aboutFragment"
         app:destination="@id/aboutFragment"
