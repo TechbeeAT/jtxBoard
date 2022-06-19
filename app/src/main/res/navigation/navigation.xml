@@ -186,8 +186,7 @@
     <fragment
         android:id="@+id/syncFragment"
         android:name="at.techbee.jtx.ui.SyncFragment"
-        android:label="SyncFragment"
-        tools:layout="@layout/fragment_sync"/>
+        android:label="SyncFragment"/>
     <action
         android:id="@+id/action_global_syncFragment"
         app:destination="@id/syncFragment"

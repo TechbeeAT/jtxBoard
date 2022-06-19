@@ -8,33 +8,29 @@
 
 package at.techbee.jtx.ui
 
-import android.app.Application
-import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
-import at.techbee.jtx.databinding.FragmentSyncBinding
-import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.ICalDatabaseDao
-import android.content.Intent
-import android.net.Uri
-import android.view.*
-import androidx.fragment.app.activityViewModels
+import at.techbee.jtx.ui.compose.screens.SyncScreen
+import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.SyncUtil
 
 
 class SyncFragment : Fragment() {
 
     private val syncViewModel: SyncViewModel by activityViewModels()
-    private var _binding: FragmentSyncBinding? = null
-    private val binding get() = _binding!!
-
-    lateinit var application: Application
-    private lateinit var inflater: LayoutInflater
-    private lateinit var dataSource: ICalDatabaseDao
     private var optionsMenu: Menu? = null
 
 
@@ -42,15 +38,6 @@ class SyncFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        // Get a reference to the binding object and inflate the fragment views.
-        this.inflater = inflater
-        this._binding = FragmentSyncBinding.inflate(inflater, container, false)
-        this.application = requireNotNull(this.activity).application
-        this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
-
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.model = syncViewModel
 
         setHasOptionsMenu(true)
 
@@ -60,23 +47,32 @@ class SyncFragment : Fragment() {
                 optionsMenu?.findItem(R.id.menu_sync_syncnow)?.isVisible = false
         }
 
-        binding.syncButtonAddAccount.setOnClickListener {
-            SyncUtil.openDAVx5LoginActivity(context)
+        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
+            syncViewModel.isSyncInProgress.postValue(SyncUtil.isJtxSyncRunning(context))
         }
 
-        binding.syncButtonPlaystore.setOnClickListener {
-            try {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${SyncUtil.DAVX5_PACKAGE_NAME}")))
-            } catch (anfe: ActivityNotFoundException) {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${SyncUtil.DAVX5_PACKAGE_NAME}")))
+
+        return ComposeView(requireContext()).apply {
+            // Dispose of the Composition when the view's LifecycleOwner
+            // is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            setContent {
+                JtxBoardTheme {
+                    // A surface container using the 'background' color from the theme
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        SyncScreen(
+                            isDAVx5availableLive = syncViewModel.isDavx5Available,
+                            remoteCollectionsLive = syncViewModel.remoteCollections,
+                            isSyncInProgress = syncViewModel.isSyncInProgress,
+                            goToCollections = { findNavController().navigate(R.id.action_global_collectionsFragment) }
+                        )
+                    }
+                }
             }
         }
-
-        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-            syncViewModel.showSyncProgressIndicator.postValue(SyncUtil.isJtxSyncRunning(context))
-        }
-
-        return binding.root
     }
 
     override fun onResume() {
@@ -88,13 +84,8 @@ class SyncFragment : Fragment() {
             Log.d("Cast not successful", e.toString())
             //This error will always happen for fragment testing, as the cast to Main Activity cannot be successful
         }
-        syncViewModel.isDavx5Available.postValue(SyncUtil.isDAVx5CompatibleWithJTX(application))
+        syncViewModel.isDavx5Available.postValue(SyncUtil.isDAVx5CompatibleWithJTX(requireActivity().application))
         super.onResume()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 

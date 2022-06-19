@@ -17,6 +17,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -129,6 +130,14 @@ class SyncUtil {
                 context?.contentResolver?.notifyChange(JtxContract.JtxICalObject.CONTENT_URI, null, ContentResolver.NOTIFY_SYNC_TO_NETWORK)
             } else {
                 context?.contentResolver?.notifyChange(JtxContract.JtxICalObject.CONTENT_URI, null, true)
+            }
+        }
+
+        fun openDAVx5inPlayStore(context: Context?) {
+            try {
+                context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${DAVX5_PACKAGE_NAME}")))
+            } catch (anfe: ActivityNotFoundException) {
+                context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${DAVX5_PACKAGE_NAME}")))
             }
         }
     }

@@ -507,6 +507,7 @@
     <string name="sync_davx5_get_davx5_on">or get DAVx⁵ on</string>
     <string name="sync_furhter_info_davx5">For more information about DAVx⁵ please check out</string>
     <string name="sync_button_add_account_in_davx5">Add account in DAVx⁵</string>
+    <string name="sync_button_go_to_collections">Go to Collections</string>
     <string name="sync_toast_intent_open_davx5_failed">Failed opening DAVx⁵, please open the app manually.</string>
     <string name="sync_toast_intent_start_davx5_sync">Triggering sync in DAVx⁵ failed, please check in DAVx⁵.</string>
 

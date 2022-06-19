@@ -17,18 +17,7 @@ import at.techbee.jtx.database.*
 class SyncViewModel(application: Application) : AndroidViewModel(application) {
 
     val database = ICalDatabase.getInstance(application).iCalDatabaseDao
-    private val allRemoteCollections = database.getAllRemoteCollections()
-    val showSyncProgressIndicator = MutableLiveData(false)
+    val remoteCollections = database.getAllRemoteCollections()
+    val isSyncInProgress = MutableLiveData(false)
     val isDavx5Available = MutableLiveData(false)
-    val isRemoteCollectionsAvailable = Transformations.map(allRemoteCollections) {
-        it.isNotEmpty()
-    }
-
-    val collectionsString = Transformations.map(allRemoteCollections) {
-        var collString = ""
-        it.forEach { collection ->
-            collString += collection.accountName + " (" + collection.displayName + ")\n"
-        }
-        return@map collString
-    }
 }
