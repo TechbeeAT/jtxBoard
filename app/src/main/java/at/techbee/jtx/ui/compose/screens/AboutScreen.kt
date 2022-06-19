@@ -1,6 +1,7 @@
 package at.techbee.jtx.ui.compose.screens
 
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
@@ -36,13 +37,16 @@ fun AboutScreen(
             }
         }
 
-        when (selectedTab) {
-            AboutTabDestination.Jtx.tabIndex -> AboutJtx()
-            AboutTabDestination.Releasenotes.tabIndex -> AboutReleaseinfo(releaseinfo)
-            AboutTabDestination.Libraries.tabIndex -> AboutLibraries()
-            AboutTabDestination.Translations.tabIndex -> AboutTranslations(translators)
-            AboutTabDestination.Thanks.tabIndex -> AboutSpecialThanks()
+        Crossfade(targetState = selectedTab) {
+            when (it) {
+                AboutTabDestination.Jtx.tabIndex -> AboutJtx()
+                AboutTabDestination.Releasenotes.tabIndex -> AboutReleaseinfo(releaseinfo)
+                AboutTabDestination.Libraries.tabIndex -> AboutLibraries()
+                AboutTabDestination.Translations.tabIndex -> AboutTranslations(translators)
+                AboutTabDestination.Thanks.tabIndex -> AboutSpecialThanks()
+            }
         }
+
     }
 }
 

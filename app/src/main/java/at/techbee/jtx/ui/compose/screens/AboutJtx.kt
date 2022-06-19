@@ -11,6 +11,7 @@ package at.techbee.jtx.ui.compose.screens
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
@@ -103,19 +104,21 @@ fun AboutJtx(modifier: Modifier = Modifier) {
             style = Typography.bodyLarge,
         )
 
-        Image(
-            painter = if(clickCount < 4) painterResource(id = R.drawable.logo_techbee) else painterResource(id = R.drawable.logo_techbee_front),
-            contentDescription = null,
-            modifier = Modifier
-                .size(200.dp)
-                .combinedClickable(
-                    enabled = true,
-                    onClickLabel = "Clickable image",
-                    onClick = {
-                        clickCount += 1
-                    }
-                )
-        )
+        Crossfade(targetState = clickCount) { clicks ->
+            Image(
+                painter = if(clicks < 4) painterResource(id = R.drawable.logo_techbee) else painterResource(id = R.drawable.logo_techbee_front),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(200.dp)
+                    .combinedClickable(
+                        enabled = true,
+                        onClickLabel = "Clickable image",
+                        onClick = {
+                            clickCount += 1
+                        }
+                    )
+            )
+        }
         AnimatedVisibility(visible = clickCount >= 0) {
             Text(
                 text = "\"" + messages[if(clickCount>4) 4 else clickCount] + "\"",
