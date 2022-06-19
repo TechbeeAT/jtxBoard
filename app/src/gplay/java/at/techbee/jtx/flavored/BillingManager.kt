@@ -61,13 +61,13 @@ class BillingManager :
     override var isProPurchasedLoaded = MutableLiveData(false)
 
     override val proPrice = Transformations.map(proProductDetails) {
-        it?.oneTimePurchaseOfferDetails?.formattedPrice
+        it?.oneTimePurchaseOfferDetails?.formattedPrice ?: ""
     }
     override val proPurchaseDate = Transformations.map(proPurchase) {
         DateTimeUtils.convertLongToFullDateTimeString(it?.purchaseTime, null)
     }
     override val proOrderId = Transformations.map(proPurchase) {
-        it?.orderId
+        it?.orderId ?: "-"
     }
 
     private var billingPrefs: SharedPreferences? = null

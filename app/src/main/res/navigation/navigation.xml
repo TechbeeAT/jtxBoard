@@ -210,8 +210,7 @@
     <fragment
         android:id="@+id/buyProFragment"
         android:name="at.techbee.jtx.ui.BuyProFragment"
-        android:label="BuyProFragment"
-        tools:layout="@layout/fragment_buypro"/>
+        android:label="BuyProFragment"/>
     <action
         android:id="@+id/action_global_buyProFragment"
         app:destination="@id/buyProFragment"

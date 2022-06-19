@@ -38,9 +38,9 @@ class BillingManager :
 
     override var isProPurchased: LiveData<Boolean> = MutableLiveData(true)   // always true for OSE flavor
     override var isProPurchasedLoaded = MutableLiveData(false)
-    override val proPrice = MutableLiveData<String?>(null)
-    override val proPurchaseDate = MutableLiveData<String?>(null)
-    override val proOrderId = MutableLiveData<String?>(null)
+    override val proPrice = MutableLiveData("")
+    override val proPurchaseDate = MutableLiveData("-")
+    override val proOrderId = MutableLiveData("-")
 
     override fun initialise(activity: Activity) { /* nothing to do for this flavor */ }
     override fun launchBillingFlow(activity: Activity) { /* nothing to do for this flavor */ }
