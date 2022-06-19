@@ -46,13 +46,14 @@ fun AboutReleaseinfo(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
+
         item {
             Text(
                 stringResource(id = R.string.about_tabitem_releasenotes),
                 style = Typography.titleLarge,
-                modifier = Modifier.padding(8.dp)
             )
         }
+
 
         items(
             items = list.toList(),
@@ -76,8 +77,8 @@ fun AboutReleaseinfo_Preview() {
             MutableLiveData(
                 mutableSetOf(
                     Pair("v1.2.0", "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!"),
-                    Pair("v1.2.0", "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!"),
-                    Pair("v1.2.0", "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!")
+                    Pair("v1.2.1", "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!"),
+                    Pair("v1.2.2", "- jtx Board now comes with a refactored list view with a more dynamic handling of subtasks, sub notes and attachments!\n- The new grid view option gives a more compact overview of journals, notes and tasks!\n- jtx Board is now also available in Spanish and Chinese!")
                 )
             )
         )

@@ -58,7 +58,6 @@ fun AboutTranslations(
             Text(
                 stringResource(id = R.string.about_tabitem_translations),
                 style = Typography.titleLarge,
-                modifier = Modifier.padding(8.dp)
             )
         }
 

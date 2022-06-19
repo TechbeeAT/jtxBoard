@@ -40,14 +40,14 @@ fun AboutSpecialThanks(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .scrollable(scrollState, orientation = Orientation.Vertical),
+            .scrollable(scrollState, orientation = Orientation.Vertical)
+            .padding(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             stringResource(id = R.string.about_tabitem_thanks),
             style = Typography.titleLarge,
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 16.dp)
         )
 
         Image(

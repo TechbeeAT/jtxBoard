@@ -27,11 +27,14 @@ import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 
 @Composable
 fun AboutLibraries() {
-    Column(verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 16.dp)
+    ) {
         Text(
             stringResource(id = R.string.about_tabitem_libraries),
             style = Typography.titleLarge,
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 16.dp)
         )
         LibrariesContainer(
             Modifier.fillMaxSize()
