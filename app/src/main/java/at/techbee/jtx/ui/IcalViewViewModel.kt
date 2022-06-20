@@ -50,6 +50,7 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     lateinit var timeVisible: LiveData<Boolean>
     lateinit var timezoneVisible: LiveData<Boolean>
     lateinit var urlVisible: LiveData<Boolean>
+    lateinit var locationHeaderVisible: LiveData<Boolean>
     lateinit var locationVisible: LiveData<Boolean>
     lateinit var attendeesVisible: LiveData<Boolean>
     lateinit var resourcesVisible: LiveData<Boolean>
@@ -194,8 +195,11 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
             urlVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.property?.url.isNullOrBlank()      // true if url is NOT null or empty
             }
+            locationHeaderVisible = Transformations.map(icalEntity) { item ->
+                return@map !item?.property?.location.isNullOrBlank() || (item?.property?.geoLat != null && item.property.geoLong != null)
+            }
             locationVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.property?.location.isNullOrBlank()      // true if url is NOT null or empty
+                return@map !item?.property?.location.isNullOrBlank()
             }
             attendeesVisible = Transformations.map(icalEntity) { item ->
                 return@map !item?.attendees.isNullOrEmpty()      // true if attendees is NOT null or empty

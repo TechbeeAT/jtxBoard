@@ -806,7 +806,7 @@
                     android:text="@string/location"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{model.locationHeaderVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_location"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_url" />
