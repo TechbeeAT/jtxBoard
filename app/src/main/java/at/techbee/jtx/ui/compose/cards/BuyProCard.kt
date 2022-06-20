@@ -81,7 +81,7 @@ fun BuyProCard(
 
                 Text(
                     stringResource(id = R.string.buypro_purchase_description),
-                    style = Typography.bodyMedium,
+                    style = Typography.bodyLarge,
                     modifier = Modifier.padding(top = 8.dp)
                 )
 
@@ -142,7 +142,7 @@ fun BuyProCardPurchased(
                 )
                 Text(
                     stringResource(id = R.string.buypro_success_description),
-                    style = Typography.bodyMedium,
+                    style = Typography.bodyLarge,
                     modifier = Modifier.padding(top = 8.dp)
                 )
 
