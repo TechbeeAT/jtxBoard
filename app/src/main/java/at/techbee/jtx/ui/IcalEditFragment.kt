@@ -754,7 +754,7 @@ class IcalEditFragment : Fragment() {
             }
 
             menu?.findItem(R.id.menu_edit_clear_dates)?.isVisible =
-                (it.dtstart != null || it.due != null || it.completed != null)   // don't show clear dates if no dates are set anyway
+                (it.component == Component.VTODO.name && (it.dtstart != null || it.due != null || it.completed != null))   // don't show clear dates if no dates are set anyway
         }
 
 
