@@ -16,6 +16,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -150,7 +151,7 @@ fun CollectionCard(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_readonly),
                             contentDescription = stringResource(id = R.string.readyonly),
-                            //modifier = Modifier.size(14.dp),
+                            modifier = Modifier.size(20.dp).alpha(0.4f),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
