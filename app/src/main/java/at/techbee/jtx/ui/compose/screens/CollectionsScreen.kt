@@ -104,7 +104,7 @@ fun CollectionsScreen(
                         onExportAsICS = onExportAsICS,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 8.dp)
+                            .padding(bottom = 4.dp)
                             .combinedClickable(
                                 onClick = { onCollectionClicked(collection) })
                     )
