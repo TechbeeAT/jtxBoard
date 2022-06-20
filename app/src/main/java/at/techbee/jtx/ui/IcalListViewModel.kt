@@ -273,15 +273,33 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
     }
 
 
-    fun updateProgress(itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) {
+    fun updateProgress(itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            val currentItem = database.getICalObjectById(itemId)
-            ICalObject.makeRecurringException(currentItem!!, database)
-            val item = database.getSync(itemId)!!.property
+            val currentItem = database.getICalObjectById(itemId) ?: return@launch
+            ICalObject.makeRecurringException(currentItem, database)
+            val item = database.getSync(itemId)?.property  ?: return@launch
             item.setUpdatedProgress(newPercent)
             database.update(item)
             SyncUtil.notifyContentObservers(getApplication())
+            if(scrollOnce)
+                scrollOnceId.postValue(itemId)
+        }
+        if(isLinkedRecurringInstance)
+            Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_LONG).show()
+    }
+
+    fun updateStatusJournal(itemId: Long, newStatusJournal: StatusJournal, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val currentItem = database.getICalObjectById(itemId) ?: return@launch
+            ICalObject.makeRecurringException(currentItem, database)
+            val item = database.getSync(itemId)?.property ?: return@launch
+            item.status = newStatusJournal.name
+            database.update(item)
+            SyncUtil.notifyContentObservers(getApplication())
+            if(scrollOnce)
+                scrollOnceId.postValue(itemId)
         }
         if(isLinkedRecurringInstance)
             Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_LONG).show()

@@ -619,3 +619,45 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
         )
     }
 }
+
+
+@Preview(showBackground = true)
+@Composable
+fun ICalObjectListCardPreview_NOTE_simple() {
+    JtxBoardTheme {
+
+        val icalobject = ICal4ListWithRelatedto.getSample().apply {
+            property.summary =
+                "This is a longer summary that would break the line and continue on the second one.\nHere is even a manual line break, let's see what happens."
+            property.component = Component.VJOURNAL.name
+            property.module = Module.NOTE.name
+            property.percent = 100
+            property.status = StatusJournal.FINAL.name
+            property.classification = Classification.PUBLIC.name
+            property.uploadPending = false
+            property.isRecurringInstance = true
+            property.isLinkedRecurringInstance = false
+            property.isRecurringOriginal = false
+            property.isReadOnly = true
+            property.numAttachments = 0
+            property.numAttendees = 0
+            property.numAlarms = 0
+            property.numResources = 0
+            property.numSubtasks = 0
+            property.numSubnotes = 0
+            property.numComments = 0
+            this.attachment = emptyList()
+        }
+        ICalObjectListCard(
+            icalobject,
+            emptyList(),
+            emptyList(),
+            goToView = { },
+            goToEdit = { },
+            settingShowProgressMaintasks = false,
+            onProgressChanged = { _, _, _ -> },
+            onExpandedChanged = { _, _, _, _ -> },
+            player = null
+        )
+    }
+}

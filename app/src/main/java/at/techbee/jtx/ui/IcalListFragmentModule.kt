@@ -36,6 +36,7 @@ import at.techbee.jtx.database.StatusTodo
 import at.techbee.jtx.ui.compose.screens.ListScreenCompact
 import at.techbee.jtx.ui.compose.screens.ListScreenList
 import at.techbee.jtx.ui.compose.screens.ListScreenGrid
+import at.techbee.jtx.ui.compose.screens.ListScreenKanban
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
@@ -177,6 +178,40 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
                                             newPercent,
                                             isLinkedRecurringInstance
                                         )
+                                    },
+                                    goToView = { itemId ->
+                                        navController.navigate(
+                                            IcalListFragmentDirections
+                                                .actionIcalListFragmentToIcalViewFragment()
+                                                .setItem2show(itemId)
+                                        )
+                                    },
+                                    goToEdit = { itemId ->
+                                        icalListViewModel.postDirectEditEntity(
+                                            itemId
+                                        )
+                                    }
+                                )
+                            }
+                            IcalListFragment.PREFS_VIEWMODE_KANBAN -> {
+                                ListScreenKanban(
+                                    module = module,
+                                    listLive = when (module) {
+                                        Module.JOURNAL -> icalListViewModel.iCal4ListJournals
+                                        Module.NOTE -> icalListViewModel.iCal4ListNotes
+                                        Module.TODO -> icalListViewModel.iCal4ListTodos
+                                    },
+                                    scrollOnceId = icalListViewModel.scrollOnceId,
+                                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance, scrollOnce ->
+                                        icalListViewModel.updateProgress(
+                                            itemId,
+                                            newPercent,
+                                            isLinkedRecurringInstance,
+                                            scrollOnce
+                                        )
+                                    },
+                                    onStatusChanged = { itemId, newStatus, isLinkedRecurringInstance, scrollOnce ->
+                                        icalListViewModel.updateStatusJournal(itemId, newStatus, isLinkedRecurringInstance, scrollOnce)
                                     },
                                     goToView = { itemId ->
                                         navController.navigate(
