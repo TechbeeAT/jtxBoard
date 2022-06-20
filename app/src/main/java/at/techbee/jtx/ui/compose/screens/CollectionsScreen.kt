@@ -57,7 +57,6 @@ fun CollectionsScreen(
 
     val list by collectionsLive.observeAsState(emptyList())
     val grouped = list.groupBy { Account(it.accountName, it.accountType) }
-    val scrollState = rememberScrollState()
     val showProgressIndicator by isProcessing.observeAsState(false)
 
     val foundAccounts = AccountManager.get(LocalContext.current).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
@@ -71,7 +70,7 @@ fun CollectionsScreen(
         Column(
             modifier = Modifier
                 .padding(8.dp)
-                .verticalScroll(scrollState)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
                 stringResource(id = R.string.collections_info),

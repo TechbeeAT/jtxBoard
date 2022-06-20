@@ -12,13 +12,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -41,7 +36,6 @@ import java.text.SimpleDateFormat
 fun AboutJtx(modifier: Modifier = Modifier) {
 
     val context = LocalContext.current
-    val scrollState = rememberScrollState()
 
     // let the bee talk, just for fun ;-)
     var clickCount by remember { mutableStateOf(-1) }
@@ -50,7 +44,7 @@ fun AboutJtx(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .scrollable(scrollState, orientation = Orientation.Vertical),
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
