@@ -9,7 +9,9 @@
 package at.techbee.jtx.ui.compose.dialogs
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.ui.compose.elements.ColorSelectorRow
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
@@ -44,7 +47,7 @@ fun CollectionsAddOrEditDialog(
 
     val keyboardController = LocalSoftwareKeyboardController.current
     var collectionName by remember { mutableStateOf(current.displayName ?: current.accountName ?: "") }
-    var collectionColor by remember { mutableStateOf(current.color) }
+    var collectionColor by remember { mutableStateOf(Color(current.color ?: Color.White.toArgb())) }
     var colorActivated by remember { mutableStateOf(current.color != null) }
 
 
@@ -91,12 +94,23 @@ fun CollectionsAddOrEditDialog(
                 }
 
                 AnimatedVisibility(visible = colorActivated) {
+                    ColorSelectorRow(
+                        selectedColor = collectionColor,
+                        onColorChanged = {  newColor -> collectionColor = newColor },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState())
+                            .padding(8.dp)
+                    )
+                }
+
+                AnimatedVisibility(visible = colorActivated) {
                     HarmonyColorPicker(
-                        color = collectionColor?.let { Color(it) }?: Color.White,
+                        color = collectionColor,
                         harmonyMode = ColorHarmonyMode.NONE,
                         modifier = Modifier.size(300.dp),
                         onColorChanged = { hsvColor ->
-                            collectionColor = hsvColor.toColor().toArgb()
+                            collectionColor = hsvColor.toColor()
                         })
                 }
 
@@ -107,7 +121,7 @@ fun CollectionsAddOrEditDialog(
                 onClick = {
                     current.displayName = collectionName
                     if(colorActivated)
-                        current.color = collectionColor
+                        current.color = collectionColor.toArgb()
                     onCollectionChanged(current)
                     onDismiss()
                 }
