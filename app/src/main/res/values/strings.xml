@@ -429,6 +429,7 @@
     <string name="menu_list_viewmode_list">List view</string>
     <string name="menu_list_viewmode_grid">Grid view</string>
     <string name="menu_list_viewmode_compact">Compact view</string>
+    <string name="menu_list_viewmode_kanban">Kanban view</string>
 
 
     <string name="menu_view_share_text">Share</string>
