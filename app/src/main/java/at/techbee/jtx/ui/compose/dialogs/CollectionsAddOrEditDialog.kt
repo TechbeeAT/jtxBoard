@@ -46,9 +46,10 @@ fun CollectionsAddOrEditDialog(
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
-    var collectionName by remember { mutableStateOf(current.displayName ?: current.accountName ?: "") }
+    var collectionName by remember { mutableStateOf(current.displayName ?: "") }
     var collectionColor by remember { mutableStateOf(Color(current.color ?: Color.White.toArgb())) }
     var colorActivated by remember { mutableStateOf(current.color != null) }
+    var noCollectionNameError by remember { mutableStateOf(false) }
 
 
     AlertDialog(
@@ -80,7 +81,8 @@ fun CollectionsAddOrEditDialog(
                                 keyboardController?.hide()
                             }
                         ),
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        isError = noCollectionNameError
                     )
 
                     Switch(
@@ -119,11 +121,15 @@ fun CollectionsAddOrEditDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    current.displayName = collectionName
-                    if(colorActivated)
-                        current.color = collectionColor.toArgb()
-                    onCollectionChanged(current)
-                    onDismiss()
+                    if(collectionName.isBlank())
+                        noCollectionNameError = true
+                    else {
+                        current.displayName = collectionName
+                        if (colorActivated)
+                            current.color = collectionColor.toArgb()
+                        onCollectionChanged(current)
+                        onDismiss()
+                    }
                 }
             ) {
                 Text(stringResource(id = R.string.save))
