@@ -64,7 +64,7 @@ fun BuyProScreen(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(240.dp)
+                .height(200.dp)
                 .padding(top = 32.dp, bottom = 32.dp) )
         Text(
             text = stringResource(id = R.string.buypro_text),
