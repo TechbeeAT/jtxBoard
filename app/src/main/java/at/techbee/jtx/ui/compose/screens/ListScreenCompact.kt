@@ -16,9 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -28,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import at.techbee.jtx.ListSettings
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
@@ -43,7 +42,7 @@ fun ListScreenCompact(
     listLive: LiveData<List<ICal4ListWithRelatedto>>,
     subtasksLive: LiveData<List<ICal4List>>,
     scrollOnceId: MutableLiveData<Long?>,
-    isExcludeDone: MutableLiveData<Boolean>,
+    listSettingsLive: MutableLiveData<ListSettings>,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     goToView: (itemId: Long) -> Unit,
     goToEdit: (itemId: Long) -> Unit
@@ -54,7 +53,8 @@ fun ListScreenCompact(
 
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
-    val excludeDone by isExcludeDone.observeAsState(false)
+
+    val listSettings by listSettingsLive.observeAsState()
 
     if(scrollId != null) {
         LaunchedEffect(list) {
@@ -81,7 +81,7 @@ fun ListScreenCompact(
                 iCalObject.relatedto?.any { relatedto ->
                     relatedto.linkedICalObjectId == subtask.id && relatedto.reltype == Reltype.CHILD.name } == true
             }
-            if(excludeDone)   // exclude done if applicable
+            if(listSettings?.isExcludeDone?.value == true)   // exclude done if applicable
                 currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 }
 
             ListCardCompact(
@@ -95,7 +95,7 @@ fun ListScreenCompact(
                         onClick = { goToView(iCalObject.property.id) },
                         onLongClick = {
                             if (!iCalObject.property.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
-                              goToEdit(iCalObject.property.id)
+                                goToEdit(iCalObject.property.id)
                         }
                     ),
                 onProgressChanged = onProgressChanged,
@@ -150,7 +150,7 @@ fun ListScreenCompact_TODO() {
             listLive = MutableLiveData(listOf(icalobject, icalobject2)),
             subtasksLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
-            isExcludeDone = MutableLiveData(false),
+            listSettingsLive = MutableLiveData(ListSettings()),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { }
@@ -195,7 +195,7 @@ fun ListScreenCompact_JOURNAL() {
             listLive = MutableLiveData(listOf(icalobject, icalobject2)),
             subtasksLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
-            isExcludeDone = MutableLiveData(false),
+            listSettingsLive = MutableLiveData(ListSettings()),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { }

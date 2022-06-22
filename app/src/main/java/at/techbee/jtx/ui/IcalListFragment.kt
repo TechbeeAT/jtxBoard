@@ -11,153 +11,86 @@ package at.techbee.jtx.ui
 
 import android.app.Application
 import android.content.ContentResolver
-import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.os.Parcel
-import android.speech.RecognitionListener
-import android.speech.RecognizerIntent
-import android.speech.SpeechRecognizer
 import android.view.*
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import at.techbee.jtx.BuildConfig
-import at.techbee.jtx.MainActivity
-import at.techbee.jtx.PermissionsHelper
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
-import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.databinding.FragmentIcalListBinding
-import at.techbee.jtx.databinding.FragmentIcalListQuickaddDialogBinding
-import at.techbee.jtx.flavored.AdManager
-import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.util.DateTimeUtils.requireTzId
+import at.techbee.jtx.ui.compose.screens.ListTabContainer
+import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.SyncUtil
-import at.techbee.jtx.util.UiUtil.reduceDragSensitivity
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayoutMediator
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.util.*
 
 
 class IcalListFragment : Fragment() {
 
-    private val icalListViewModel: IcalListViewModel by activityViewModels()
-    private var _binding: FragmentIcalListBinding? = null
-    val binding get() = _binding!!
-
-    private var filterBottomSheet: IcalFilterFragment? = null
-
     private lateinit var application: Application
-    private lateinit var dataSource: ICalDatabaseDao
 
     private var optionsMenu: Menu? = null
     private var gotodateMenuItem: MenuItem? = null
 
     private var settings: SharedPreferences? = null
-    private lateinit var prefs: SharedPreferences
     private lateinit var arguments: IcalListFragmentArgs
 
     private var allCollections = listOf<ICalCollection>()
     var currentWriteableCollections = listOf<ICalCollection>()
 
 
-    companion object {
-        const val PREFS_LIST_VIEW = "sharedPreferencesListView"
 
+    companion object {
         const val PREFS_LAST_USED_COLLECTION = "lastUsedCollection"
         const val PREFS_MODULE = "prefsModule"
         const val PREFS_ISFIRSTRUN = "isFirstRun"
 
-        const val PREFS_VIEWMODE_LIST = "prefsViewmodeList"
-        const val PREFS_VIEWMODE_GRID = "prefsViewmodeGrid"
-        const val PREFS_VIEWMODE_COMPACT = "prefsViewmodeCompac"
-        const val PREFS_VIEWMODE_KANBAN = "prefsViewmodeKanban"
-
-        const val SETTINGS_SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_of_journals_and_todos_in_tasklist"
-        const val SETTINGS_SHOW_SUBNOTES_IN_LIST = "settings_show_subnotes_of_journals_and_tasks_in_noteslist"
-        const val SETTINGS_SHOW_SUBJOURNALS_IN_LIST = "settings_show_subjournals_of_notes_and_tasks_in_journallist"
-
-        const val TAB_INDEX_JOURNAL = 0
-        const val TAB_INDEX_NOTE = 1
-        const val TAB_INDEX_TODO = 2
     }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        _binding = FragmentIcalListBinding.inflate(inflater, container, false)
         application = requireNotNull(this.activity).application
-        dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
-        binding.lifecycleOwner = viewLifecycleOwner
 
         // add menu
         setHasOptionsMenu(true)
 
         settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
         arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
-        prefs = requireActivity().getSharedPreferences(PREFS_LIST_VIEW, Context.MODE_PRIVATE)
+
+        val modelJournals = IcalListViewModel(application, Module.JOURNAL)
+        val modelNotes = IcalListViewModel(application, Module.NOTE)
+        val modelTasks = IcalListViewModel(application, Module.TODO)
+
 
         // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
+        /*
         val firstInstall = context?.packageManager?.getPackageInfo(requireContext().packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
         if(prefs.getBoolean(PREFS_ISFIRSTRUN, true)) {
             if (firstInstall > 1641596400000L)
                 icalListViewModel.addWelcomeEntries(requireContext())
             prefs.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
         }
+        
+         */
 
-        binding.listViewpager.reduceDragSensitivity()
-        binding.listViewpager.adapter = object : FragmentStateAdapter(this) {
-            override fun getItemCount(): Int = 3
-
-            override fun createFragment(position: Int): Fragment {
-                return when(position) {
-                    0 -> IcalListFragmentJournal()
-                    1 -> IcalListFragmentNote()
-                    2 -> IcalListFragmentTodo()
-                    else -> IcalListFragmentJournal()
-                }
-            }
-        }
-
-        TabLayoutMediator(binding.listTablayoutJournalnotestodos, binding.listViewpager) { tab, position ->
-            when(position) {
-                0 -> {
-                    tab.text = getString(R.string.list_tabitem_journals)
-                    tab.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_journals)
-                }
-                1 -> {
-                    tab.text = getString(R.string.list_tabitem_notes)
-                    tab.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_note)
-                }
-                2 -> {
-                    tab.text = getString(R.string.list_tabitem_todos)
-                    tab.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_todo)
-                }
-            }
-        }.attach()
 
         loadFilterArgsAndPrefs()
+        
+/*
         if(arguments.item2focus != 0L)
             icalListViewModel.scrollOnceId.postValue(arguments.item2focus)
 
@@ -165,30 +98,11 @@ class IcalListFragment : Fragment() {
             binding.listProgressIndicator.visibility = if(it) View.VISIBLE else View.INVISIBLE
         }
 
-        icalListViewModel.iCal4ListJournals.observe(viewLifecycleOwner) {
-            updateMenuVisibilities()
-        }
-        icalListViewModel.iCal4ListNotes.observe(viewLifecycleOwner) {
-            updateMenuVisibilities()
-        }
-        icalListViewModel.iCal4ListTodos.observe(viewLifecycleOwner) {
+        icalListViewModel.iCal4List.observe(viewLifecycleOwner) {
             updateMenuVisibilities()
         }
 
-        icalListViewModel.allCollections.observe(viewLifecycleOwner) {
-            allCollections = it
-        }
-
-        // observe the directEditEntity. This is set in the Adapter on long click through the model. On long click we forward the user directly to the edit fragment
-        icalListViewModel.directEditEntity.observe(viewLifecycleOwner) {
-            if (it == null)
-                return@observe
-            icalListViewModel.directEditEntity.removeObservers(viewLifecycleOwner)
-            icalListViewModel.directEditEntity.value = null      // invalidate so that on click on back, the value is empty and doesn't create unexpected behaviour!
-            this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(it))
-        }
-
-        icalListViewModel.viewMode.observe(viewLifecycleOwner) {
+        icalListViewModel.viewModeLive.observe(viewLifecycleOwner) {
             if(it == PREFS_VIEWMODE_LIST)
                 optionsMenu?.findItem(R.id.menu_list_viewmode_list)?.isChecked = true
             if(it == PREFS_VIEWMODE_GRID)
@@ -198,8 +112,10 @@ class IcalListFragment : Fragment() {
             if(it == PREFS_VIEWMODE_KANBAN)
                 optionsMenu?.findItem(R.id.menu_list_viewmode_kanban)?.isChecked = true
         }
+        
+         */
 
-
+/*
         binding.listBottomBar.setOnMenuItemClickListener { menuitem ->
 
             when (menuitem.itemId) {
@@ -216,34 +132,70 @@ class IcalListFragment : Fragment() {
             }
             false
         }
+ */
 
         ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-            icalListViewModel.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning(requireContext()))
+            modelJournals.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning(requireContext()))
+            modelNotes.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning(requireContext()))
+            modelTasks.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning(requireContext()))
         }
 
-        return binding.root
+
+        return ComposeView(requireContext()).apply {
+            // Dispose of the Composition when the view's LifecycleOwner is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            setContent {
+                JtxBoardTheme {
+                    // A surface container using the 'background' color from the theme
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        ListTabContainer(
+                            icalListViewModelJournal = modelJournals,
+                            icalListViewModelNote = modelNotes,
+                            icalListViewModelTodo = modelTasks,
+                            navController = findNavController()
+                        )
+                    }
+                }
+            }
+        }
     }
 
 
     override fun onResume() {
-
-        icalListViewModel.searchSettingShowAllSubtasksInTasklist = settings?.getBoolean(SETTINGS_SHOW_SUBTASKS_IN_LIST, false) ?: false
-        icalListViewModel.searchSettingShowAllSubnotesInNoteslist = settings?.getBoolean(SETTINGS_SHOW_SUBNOTES_IN_LIST, false) ?: false
-        icalListViewModel.searchSettingShowAllSubjournalsinJournallist = settings?.getBoolean(SETTINGS_SHOW_SUBJOURNALS_IN_LIST, false) ?: false
 
         updateMenuVisibilities()
 
         super.onResume()
     }
 
+    /*
+        override fun onResume() {
+        super.onResume()
+
+        try {
+            val activity = requireActivity() as MainActivity
+            val toolbarText = getString(R.string.toolbar_text_jtx_board)
+            val toolbarSubtitle = when (module) {
+                Module.JOURNAL -> getString(R.string.toolbar_text_jtx_board_journals_overview)
+                Module.NOTE -> getString(R.string.toolbar_text_jtx_board_notes_overview)
+                Module.TODO -> getString(R.string.toolbar_text_jtx_board_tasks_overview)
+            }
+            activity.setToolbarTitle(toolbarText, toolbarSubtitle)
+        } catch (e: ClassCastException) {
+            Log.d(
+                "setToolbarText",
+                "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e"
+            )
+        }
+    }
+     */
+
     override fun onPause() {
         super.onPause()
-        prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        //prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
     }
 
 
@@ -251,7 +203,7 @@ class IcalListFragment : Fragment() {
      * This function hides/shows the relevant menu entries for the active module.
      */
     private fun updateMenuVisibilities() {
-
+/*
         when (icalListViewModel.searchModule) {
             Module.JOURNAL.name -> {
                 binding.fab.setImageResource(R.drawable.ic_add)
@@ -275,7 +227,7 @@ class IcalListFragment : Fragment() {
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_note).isVisible = icalListViewModel.searchModule == Module.NOTE.name
         binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_todo).isVisible = icalListViewModel.searchModule == Module.TODO.name
 
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_toggle_completed_tasks).isChecked = icalListViewModel.isExcludeDone.value ?: false
+        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_toggle_completed_tasks).isChecked = icalListViewModel.isExcludeDone
         if(icalListViewModel.searchModule == Module.TODO.name) {
             binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_overdue).isChecked = icalListViewModel.isFilterOverdue
             binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_today).isChecked = icalListViewModel.isFilterDueToday
@@ -300,6 +252,8 @@ class IcalListFragment : Fragment() {
         if(!SyncUtil.isDAVx5CompatibleWithJTX(application))
             optionsMenu?.findItem(R.id.menu_list_syncnow)?.isVisible = false
 
+ */
+
     }
 
 
@@ -311,6 +265,9 @@ class IcalListFragment : Fragment() {
      * should be used then.
      */
     private fun loadFilterArgsAndPrefs() {
+
+        /*
+
         // check first if the arguments contain the search-property, if not, check in prefs, if this is also null, return a default value
         // The next line is commented out as it has become less useful to use the searchModule from the args. It might make more sense to only use the value in the shared preferences to always return to the list where the user got deeper into details.
         //icalListViewModel.searchModule = arguments.module2show ?: prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
@@ -322,6 +279,8 @@ class IcalListFragment : Fragment() {
             Module.NOTE.name -> binding.listViewpager.currentItem = TAB_INDEX_NOTE
             Module.TODO.name -> binding.listViewpager.currentItem = TAB_INDEX_TODO
         }
+
+         */
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -342,13 +301,18 @@ class IcalListFragment : Fragment() {
 
             override fun onQueryTextChange(query: String): Boolean {
 
+                /*
                 if (query.isEmpty())
                     icalListViewModel.searchText = "%"
                 else
                     icalListViewModel.searchText = "%$query%"
 
                 icalListViewModel.updateSearch()
+
+
+                 */
                 return false
+
             }
         })
     }
@@ -358,15 +322,16 @@ class IcalListFragment : Fragment() {
 
         when (item.itemId) {
             R.id.menu_list_gotodate -> showScrollToDate()
-            R.id.menu_list_filter -> openFilterBottomSheet()
             R.id.menu_list_clearfilter -> resetFilter()
             R.id.menu_list_delete_visible -> deleteVisible()
             R.id.menu_list_syncnow -> SyncUtil.syncAllAccounts(context)
-            R.id.menu_list_viewmode_list -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_LIST)
-            R.id.menu_list_viewmode_grid -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_GRID)
-            R.id.menu_list_viewmode_compact -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_COMPACT)
-            R.id.menu_list_viewmode_kanban -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_KANBAN)
+            /*
+            R.id.menu_list_viewmode_list -> icalListViewModel.viewMode = PREFS_VIEWMODE_LIST
+            R.id.menu_list_viewmode_grid -> icalListViewModel.viewMode = PREFS_VIEWMODE_GRID
+            R.id.menu_list_viewmode_compact -> icalListViewModel.viewMode = PREFS_VIEWMODE_COMPACT
+            R.id.menu_list_viewmode_kanban -> icalListViewModel.viewMode = PREFS_VIEWMODE_KANBAN
 
+             */
         }
         return super.onOptionsItemSelected(item)
     }
@@ -378,22 +343,21 @@ class IcalListFragment : Fragment() {
      * Clears the preferences with the saved search criteria
      */
     private fun resetFilter() {
+        /*
         icalListViewModel.clearFilter()
+
+         */
     }
 
-    private fun openFilterBottomSheet() {
-        if (filterBottomSheet == null)
-            filterBottomSheet = IcalFilterFragment()
-        filterBottomSheet?.show(childFragmentManager, null)
-    }
 
     private fun goToEdit(iCalObject: ICalEntity) {
         this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(iCalObject))
     }
 
     private fun toggleMenuCheckboxFilter(menuitem: MenuItem) {
+        /*
         when (menuitem.itemId) {
-            R.id.menu_list_bottom_toggle_completed_tasks -> icalListViewModel.isExcludeDone.value = (icalListViewModel.isExcludeDone.value?:false).not()
+            R.id.menu_list_bottom_toggle_completed_tasks -> icalListViewModel.isExcludeDone = icalListViewModel.isExcludeDone.not()
             R.id.menu_list_bottom_filter_overdue -> icalListViewModel.isFilterOverdue = !icalListViewModel.isFilterOverdue
             R.id.menu_list_bottom_filter_due_today -> icalListViewModel.isFilterDueToday = !icalListViewModel.isFilterDueToday
             R.id.menu_list_bottom_filter_due_tomorrow -> icalListViewModel.isFilterDueTomorrow = !icalListViewModel.isFilterDueTomorrow
@@ -402,10 +366,13 @@ class IcalListFragment : Fragment() {
             else -> return
         }
         icalListViewModel.updateSearch()
+
+         */
     }
 
     private fun showScrollToDate() {
 
+        /*
         // Create a custom date validator to only enable dates that are in the list
         val customDateValidator = object : CalendarConstraints.DateValidator {
             override fun describeContents(): Int {
@@ -414,7 +381,7 @@ class IcalListFragment : Fragment() {
 
             override fun writeToParcel(dest: Parcel?, flags: Int) {}
             override fun isValid(date: Long): Boolean {
-                icalListViewModel.iCal4ListJournals.value?.forEach {
+                icalListViewModel.iCal4List.value?.forEach {
                     val zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.property.dtstart?:0L), requireTzId(it.property.dtstartTimezone))
                     val zonedSelection = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault())
 
@@ -428,7 +395,7 @@ class IcalListFragment : Fragment() {
         // Build constraints.
         val constraintsBuilder =
             CalendarConstraints.Builder().apply {
-                var dates = icalListViewModel.iCal4ListJournals.value?.map { it.property.dtstart?:System.currentTimeMillis() }?.toList()
+                var dates = icalListViewModel.iCal4List.value?.map { it.property.dtstart?:System.currentTimeMillis() }?.toList()
                 if(dates.isNullOrEmpty())
                     dates = listOf(System.currentTimeMillis())
                 setStart(dates.minOf { it })
@@ -448,7 +415,7 @@ class IcalListFragment : Fragment() {
             val zonedSelection = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
 
             // find the item with the same date
-            val matchedItem = icalListViewModel.iCal4ListJournals.value?.find { item ->
+            val matchedItem = icalListViewModel.iCal4List.value?.find { item ->
                 val zonedMatch = ZonedDateTime.ofInstant(Instant.ofEpochMilli(item.property.dtstart ?: 0L), requireTzId(item.property.dtstartTimezone))
                 zonedSelection.dayOfMonth == zonedMatch.dayOfMonth && zonedSelection.monthValue == zonedMatch.monthValue && zonedSelection.year == zonedMatch.year
             }
@@ -457,10 +424,13 @@ class IcalListFragment : Fragment() {
         }
 
         datePicker.show(parentFragmentManager, "menu_list_gotodate")
+
+         */
     }
 
 
-    private fun isFilterActive() =
+    private fun isFilterActive() = false
+        /*
         icalListViewModel.searchCategories.isNotEmpty()
                 || icalListViewModel.searchOrganizer.isNotEmpty()
                 || (icalListViewModel.searchModule == Module.JOURNAL.name && icalListViewModel.searchStatusJournal.isNotEmpty())
@@ -469,16 +439,14 @@ class IcalListFragment : Fragment() {
                 || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
                 || icalListViewModel.searchAccount.isNotEmpty()
 
+         */
+
     private fun deleteVisible() {
 
+        /*
+
         val itemIds = mutableListOf<Long>()
-        val baseList = when(icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> icalListViewModel.iCal4ListJournals.value
-            Module.NOTE.name -> icalListViewModel.iCal4ListNotes.value
-            Module.TODO.name -> icalListViewModel.iCal4ListTodos.value
-            else -> emptyList()
-        }
-        baseList?.forEach {
+        icalListViewModel.iCal4List.value?.forEach {
             if(!it.property.isLinkedRecurringInstance)
                 itemIds.add(it.property.id)
         }
@@ -493,6 +461,8 @@ class IcalListFragment : Fragment() {
             .setNeutralButton(R.string.cancel) { _, _ ->  // nothing to do
             }
             .show()
+
+         */
     }
 
 
@@ -501,6 +471,8 @@ class IcalListFragment : Fragment() {
      * The user can add a summary/description and select the collection
      */
     private fun showQuickAddDialog() {
+
+        /*
 
         if ((BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY && BillingManager.getInstance()?.isProPurchased?.value == false)) {
             val snackbar = Snackbar.make(requireView(), R.string.buypro_snackbar_quick_entries_blocked, Snackbar.LENGTH_LONG)
@@ -696,5 +668,9 @@ class IcalListFragment : Fragment() {
                 }
             }
             .show()
+
+         */
     }
+
+
 }

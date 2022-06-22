@@ -16,9 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
+import at.techbee.jtx.ListSettings
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
@@ -46,7 +45,7 @@ fun ListScreenList(
     subtasksLive: LiveData<List<ICal4List>>,
     subnotesLive: LiveData<List<ICal4List>>,
     scrollOnceId: MutableLiveData<Long?>,
-    isExcludeDone: MutableLiveData<Boolean>,
+    listSettingsLive: MutableLiveData<ListSettings>,
     goToView: (itemId: Long) -> Unit,
     goToEdit: (itemId: Long) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
@@ -60,12 +59,12 @@ fun ListScreenList(
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
 
+    val listSettings by listSettingsLive.observeAsState()
+
     val mediaPlayer = MediaPlayer()
 
     //load settings
     val settings = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
-
-    val excludeDone by isExcludeDone.observeAsState(false)
 
 
     if(scrollId != null) {
@@ -92,7 +91,7 @@ fun ListScreenList(
                 iCalObject.relatedto?.any { relatedto ->
                     relatedto.linkedICalObjectId == subtask.id && relatedto.reltype == Reltype.CHILD.name } == true
             }
-            if(excludeDone)   // exclude done if applicable
+            if(listSettings?.isExcludeDone?.value == true)   // exclude done if applicable
                 currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 }
             /*
             if(model.searchStatusTodo.isNotEmpty()) // exclude filtered if applicable
@@ -174,7 +173,7 @@ fun ListScreenList_TODO() {
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },
-            isExcludeDone = MutableLiveData(false),
+            listSettingsLive = MutableLiveData(ListSettings()),
             subnotesLive = MutableLiveData(emptyList()),
             onExpandedChanged = { _, _, _, _ -> }
         )
@@ -221,7 +220,7 @@ fun ListScreenList_JOURNAL() {
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },
-            isExcludeDone = MutableLiveData(false),
+            listSettingsLive = MutableLiveData(ListSettings()),
             subnotesLive = MutableLiveData(emptyList()),
             onExpandedChanged = { _, _, _, _ -> }
         )

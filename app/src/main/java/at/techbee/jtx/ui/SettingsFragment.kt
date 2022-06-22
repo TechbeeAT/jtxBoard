@@ -28,6 +28,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val DEFAULT_START_DATE = "setting_default_start_date"
         const val DEFAULT_DUE_DATE = "setting_default_due_date"
 
+        const val SETTINGS_SHOW_SUBTASKS_IN_LIST = "settings_show_subtasks_of_journals_and_todos_in_tasklist"
+        const val SETTINGS_SHOW_SUBNOTES_IN_LIST = "settings_show_subnotes_of_journals_and_tasks_in_noteslist"
+        const val SETTINGS_SHOW_SUBJOURNALS_IN_LIST = "settings_show_subjournals_of_notes_and_tasks_in_journallist"
+
         /**
          * Preferred theme (light/dark). Value must be one of [AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM]
          * (default if setting is missing), [AppCompatDelegate.MODE_NIGHT_NO] or [AppCompatDelegate.MODE_NIGHT_YES].

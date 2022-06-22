@@ -31,11 +31,6 @@
 
     <group android:id="@+id/menugroup_filter" >
         <item
-            android:id="@+id/menu_list_filter"
-            android:icon="@drawable/ic_filter"
-            android:title="@string/filter"
-            app:showAsAction="never" />
-        <item
             android:id="@+id/menu_list_clearfilter"
             android:title="@string/menu_list_clearfilter"
             app:showAsAction="never" />

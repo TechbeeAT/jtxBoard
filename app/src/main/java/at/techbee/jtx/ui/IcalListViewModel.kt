@@ -10,9 +10,12 @@ package at.techbee.jtx.ui
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.lifecycle.*
+import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
+import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
@@ -21,6 +24,9 @@ import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
+import at.techbee.jtx.ui.SettingsFragment.Companion.SETTINGS_SHOW_SUBJOURNALS_IN_LIST
+import at.techbee.jtx.ui.SettingsFragment.Companion.SETTINGS_SHOW_SUBNOTES_IN_LIST
+import at.techbee.jtx.ui.SettingsFragment.Companion.SETTINGS_SHOW_SUBTASKS_IN_LIST
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
@@ -28,45 +34,23 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 
-open class IcalListViewModel(application: Application) : AndroidViewModel(application) {
+open class IcalListViewModel(application: Application, val module: Module) : AndroidViewModel(application) {
 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-    var searchModule: String = Module.JOURNAL.name
-    var searchText: String = ""
-    var searchCategories: MutableList<String> = mutableListOf()
-    var searchOrganizer: MutableList<String> = mutableListOf()
-    var searchStatusJournal: MutableList<StatusJournal> = mutableListOf()
-    var searchStatusTodo: MutableList<StatusTodo> = mutableListOf()
-    var searchClassification: MutableList<Classification> = mutableListOf()
-    var searchCollection: MutableList<String> = mutableListOf()
-    var searchAccount: MutableList<String> = mutableListOf()
-    var isExcludeDone = MutableLiveData(false)
-    var isFilterOverdue: Boolean = false
-    var isFilterDueToday: Boolean = false
-    var isFilterDueTomorrow: Boolean = false
-    var isFilterDueFuture: Boolean = false
-    var isFilterNoDatesSet: Boolean = false
-    var orderBy: OrderBy = OrderBy.CREATED   // default, overwritten by Shared Prefs
-    var sortOrder: SortOrder = SortOrder.DESC // default, overwritten by Shared Prefs
 
-    var viewMode: MutableLiveData<String> = MutableLiveData(IcalListFragment.PREFS_VIEWMODE_LIST)
+    private val settings = PreferenceManager.getDefaultSharedPreferences(application)
 
-    var searchSettingShowAllSubtasksInTasklist: Boolean = false
-    var searchSettingShowAllSubnotesInNoteslist: Boolean = false
-    var searchSettingShowAllSubjournalsinJournallist: Boolean = false
-
-
-    private var listQueryJournals: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    private var listQueryNotes: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    private var listQueryTodos: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var iCal4ListJournals: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQueryJournals) {
-        database.getIcalObjectWithRelatedto(it)
+    private val prefs: SharedPreferences = when (module) {
+        Module.JOURNAL -> application.getSharedPreferences(PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
+        Module.NOTE -> application.getSharedPreferences(PREFS_LIST_NOTES, Context.MODE_PRIVATE)
+        Module.TODO -> application.getSharedPreferences(PREFS_LIST_TODOS, Context.MODE_PRIVATE)
     }
-    var iCal4ListNotes: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQueryNotes) {
-        database.getIcalObjectWithRelatedto(it)
-    }
-    var iCal4ListTodos: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQueryTodos) {
+
+    val listSettings = MutableLiveData(ListSettings().apply { load(prefs) })
+
+    private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
+    var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQuery) {
         database.getIcalObjectWithRelatedto(it)
     }
 
@@ -83,6 +67,28 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
 
     val isSynchronizing = MutableLiveData(false)
 
+    var searchText: String = ""
+
+
+    private val searchSettingShowAllSubtasksInTasklist: Boolean
+        get() = settings?.getBoolean(SETTINGS_SHOW_SUBTASKS_IN_LIST, false) ?: false
+    private val searchSettingShowAllSubnotesInNoteslist: Boolean
+        get() =  settings?.getBoolean(SETTINGS_SHOW_SUBNOTES_IN_LIST, false) ?: false
+    private val searchSettingShowAllSubjournalsinJournallist: Boolean
+        get() = settings?.getBoolean(SETTINGS_SHOW_SUBJOURNALS_IN_LIST, false) ?: false
+
+
+
+    init {
+        updateSearch()
+    }
+
+    companion object {
+
+        const val PREFS_LIST_JOURNALS = "prefsListJournals"
+        const val PREFS_LIST_NOTES = "prefsListNotes"
+        const val PREFS_LIST_TODOS = "prefsListTodos"
+    }
 
     private fun constructQuery(): SimpleSQLiteQuery {
 
@@ -90,11 +96,11 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
 
 // Beginning of query string
         var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST "
-        if(searchCategories.isNotEmpty())
+        if(listSettings.value?.searchCategories?.value?.isNotEmpty() == true)
             queryString += "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID "
-        if(searchOrganizer.isNotEmpty())
-            queryString += "LEFT JOIN $TABLE_NAME_ORGANIZER ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ICALOBJECT_ID "
-        if(searchCollection.isNotEmpty() || searchAccount.isNotEmpty())
+//        if(listSettings.value.searchOrganizer.isNotEmpty())
+//            queryString += "LEFT JOIN $TABLE_NAME_ORGANIZER ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ICALOBJECT_ID "
+        if(listSettings.value?.searchCollection?.value?.isNotEmpty() == true || listSettings.value?.searchAccount?.value?.isNotEmpty() == true)
             queryString += "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
         //     "LEFT JOIN vattendees ON icalobject._id = vattendees.icalObjectId " +
         //     "LEFT JOIN vorganizer ON icalobject._id = vorganizer.icalObjectId " +
@@ -102,7 +108,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
 
         // First query parameter Component must always be present!
         queryString += "WHERE $COLUMN_MODULE = ? "
-        args.add(searchModule)
+        args.add(module.name)
 
         // Query for the given text search from the action bar
         if (searchText.isNotEmpty() && searchText.length >= 2) {
@@ -112,9 +118,9 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
         }
 
         // Query for the passed filter criteria from VJournalFilterFragment
-        if (searchCategories.size > 0) {
+        if (listSettings.value?.searchCategories?.value?.isNotEmpty() == true) {
             queryString += "AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT IN ("
-            searchCategories.forEach {
+            listSettings.value?.searchCategories?.value?.forEach {
                 queryString += "?,"
                 args.add(it)
             }
@@ -122,21 +128,22 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             queryString += ") "
         }
 
-        // Query for the passed filter criteria from VJournalFilterFragment
-        if (searchOrganizer.size > 0) {
+        /*
+        if (listSettings.value.searchOrganizer.size > 0) {
             queryString += "AND $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_CALADDRESS IN ("
-            searchOrganizer.forEach {
+            listSettings.value.searchOrganizer.forEach {
                 queryString += "?,"
                 args.add(it)
             }
             queryString = queryString.removeSuffix(",")      // remove the last comma
             queryString += ") "
         }
+         */
 
         // Query for the passed filter criteria from FilterFragment
-        if (searchStatusJournal.size > 0 && (searchModule == Module.JOURNAL.name || searchModule == Module.NOTE.name)) {
+        if (listSettings.value?.searchStatusJournal?.value?.isNotEmpty() == true && (module == Module.JOURNAL || module == Module.NOTE)) {
             queryString += "AND $COLUMN_STATUS IN ("
-            searchStatusJournal.forEach {
+            listSettings.value?.searchStatusJournal?.value?.forEach {
                 queryString += "?,"
                 args.add(it.toString())
             }
@@ -145,9 +152,9 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
         }
 
         // Query for the passed filter criteria from FilterFragment
-        if (searchStatusTodo.size > 0 && searchModule == Module.TODO.name) {
+        if (listSettings.value?.searchStatusTodo?.value?.isNotEmpty() == true && module == Module.TODO) {
             queryString += "AND $COLUMN_STATUS IN ("
-            searchStatusTodo.forEach {
+            listSettings.value?.searchStatusTodo?.value?.forEach {
                 queryString += "?,"
                 args.add(it.toString())
             }
@@ -155,28 +162,28 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             queryString += ") "
         }
 
-        if (isExcludeDone.value == true)
+        if (listSettings.value?.isExcludeDone?.value == true)
             queryString += "AND $COLUMN_PERCENT IS NOT 100 "
 
         val dueQuery = mutableListOf<String>()
-        if (isFilterOverdue)
+        if (listSettings.value?.isFilterOverdue?.value == true)
             dueQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
-        if (isFilterDueToday)
+        if (listSettings.value?.isFilterDueToday?.value == true)
             dueQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)-1}")
-        if (isFilterDueTomorrow)
+        if (listSettings.value?.isFilterDueTomorrow?.value == true)
             dueQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)} AND ${DateTimeUtils.getTodayAsLong() + TimeUnit.DAYS.toMillis(2)-1}")
-        if (isFilterDueFuture)
+        if (listSettings.value?.isFilterDueFuture?.value == true)
             dueQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
         if(dueQuery.isNotEmpty())
             queryString += " AND (${dueQuery.joinToString(separator = " OR ")}) "
 
-        if(isFilterNoDatesSet)
+        if(listSettings.value?.isFilterNoDatesSet?.value == true)
             queryString += "AND $COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL "
 
         // Query for the passed filter criteria from FilterFragment
-        if (searchClassification.size > 0) {
+        if (listSettings.value?.searchClassification?.value?.isNotEmpty() == true) {
             queryString += "AND $COLUMN_CLASSIFICATION IN ("
-            searchClassification.forEach {
+            listSettings.value?.searchClassification?.value?.forEach {
                 queryString += "?,"
                 args.add(it.toString())
             }
@@ -186,9 +193,9 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
 
 
         // Query for the passed filter criteria from FilterFragment
-        if (searchCollection.size > 0) {
+        if (listSettings.value?.searchCollection?.value?.isNotEmpty() == true) {
             queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_DISPLAYNAME IN ("
-            searchCollection.forEach {
+            listSettings.value?.searchCollection?.value?.forEach {
                 queryString += "?,"
                 args.add(it)
             }
@@ -197,9 +204,9 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
         }
 
         // Query for the passed filter criteria from FilterFragment
-        if (searchAccount.isNotEmpty()) {
+        if (listSettings.value?.searchAccount?.value?.isNotEmpty() == true) {
             queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME IN ("
-            searchAccount.forEach {
+            listSettings.value?.searchAccount?.value?.forEach {
                 queryString += "?,"
                 args.add(it)
             }
@@ -209,8 +216,8 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
 
         // Exclude items that are Child items by checking if they appear in the linkedICalObjectId of relatedto!
         //queryString += "AND $VIEW_NAME_ICAL4LIST.$COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO) "
-        when (searchModule) {
-            Module.TODO.name -> {
+        when (module) {
+            Module.TODO -> {
                 // we exclude all Children of Tasks from the List, as they never should appear as main tasks (they will later be added as subtasks in the observer)
                 queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
 
@@ -219,14 +226,14 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
                     queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
 
             }
-            Module.NOTE.name -> {
+            Module.NOTE -> {
                 queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 "
 
                 if (!searchSettingShowAllSubnotesInNoteslist)
                     queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 "
 
             }
-            Module.JOURNAL.name -> {
+            Module.JOURNAL -> {
                 queryString += "AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 "
 
                 if (!searchSettingShowAllSubjournalsinJournallist)
@@ -234,8 +241,8 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
             }
         }
 
-        queryString += orderBy.queryAppendix
-        sortOrder.let { queryString += it.queryAppendix }
+        queryString += listSettings.value?.orderBy?.value?.queryAppendix ?: ""
+        listSettings.value?.sortOrder?.let { queryString += it.value.queryAppendix }
 
         //Log.println(Log.INFO, "queryString", queryString)
         //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
@@ -249,12 +256,7 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
      * observer in the fragment.
      */
     fun updateSearch() {
-        val newQuery = constructQuery()
-            when(searchModule) {
-                Module.JOURNAL.name -> listQueryJournals.postValue(newQuery)
-                Module.NOTE.name -> listQueryNotes.postValue(newQuery)
-                Module.TODO.name -> listQueryTodos.postValue(newQuery)
-        }
+        listQuery.postValue(constructQuery())
     }
 
 
@@ -262,13 +264,8 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
      * Clears all search criteria (except for module) and updates the search
      */
     fun clearFilter() {
-        searchCategories.clear()
-        searchOrganizer.clear()
-        searchStatusJournal.clear()
-        searchStatusTodo.clear()
-        searchClassification.clear()
-        searchCollection.clear()
-        searchAccount.clear()
+        listSettings.value?.reset()
+        listSettings.value?.save(prefs)
         updateSearch()
     }
 
@@ -405,17 +402,33 @@ open class IcalListViewModel(application: Application) : AndroidViewModel(applic
 }
 
 
-enum class OrderBy(val stringResource: Int, val queryAppendix: String, val compatibleModules: List<Module>) {
-    START(R.string.started, "ORDER BY $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ", listOf(Module.JOURNAL, Module.TODO)),
-    DUE(R.string.due, "ORDER BY $COLUMN_DUE IS NULL, $COLUMN_DUE ", listOf(Module.TODO)),
-    COMPLETED(R.string.completed, "ORDER BY $COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED ", listOf(Module.TODO)),
-    CREATED(R.string.filter_created, "ORDER BY $COLUMN_CREATED ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO)),
-    LAST_MODIFIED(R.string.filter_last_modified, "ORDER BY $COLUMN_LAST_MODIFIED ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO)),
-    SUMMARY(R.string.summary, "ORDER BY $COLUMN_SUMMARY ", listOf(Module.JOURNAL, Module.NOTE, Module.TODO)),
-    PRIORITY(R.string.priority, "ORDER BY $COLUMN_PRIORITY IS NULL, $COLUMN_PRIORITY ", listOf(Module.TODO))
+enum class OrderBy(val stringResource: Int, val queryAppendix: String) {
+    START(R.string.started, "ORDER BY $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
+    DUE(R.string.due, "ORDER BY $COLUMN_DUE IS NULL, $COLUMN_DUE "),
+    COMPLETED(R.string.completed, "ORDER BY $COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED "),
+    CREATED(R.string.filter_created, "ORDER BY $COLUMN_CREATED "),
+    LAST_MODIFIED(R.string.filter_last_modified, "ORDER BY $COLUMN_LAST_MODIFIED "),
+    SUMMARY(R.string.summary, "ORDER BY $COLUMN_SUMMARY "),
+    PRIORITY(R.string.priority, "ORDER BY $COLUMN_PRIORITY IS NULL, $COLUMN_PRIORITY ");
+
+    companion object {
+        fun getValuesFor(module: Module): Array<OrderBy> =
+            if(module == Module.JOURNAL || module == Module.NOTE)
+                arrayOf(START, CREATED, LAST_MODIFIED, SUMMARY)
+            else
+                values()
+    }
 }
 
 enum class SortOrder(val stringResource: Int, val queryAppendix: String) {
     ASC(R.string.filter_asc, "ASC "),
     DESC(R.string.filter_desc, "DESC ")
 }
+
+enum class ViewMode(val stringResource: Int) {
+    LIST(R.string.menu_list_viewmode_list),
+    GRID(R.string.menu_list_viewmode_grid),
+    COMPACT(R.string.menu_list_viewmode_compact),
+    KANBAN(R.string.menu_list_viewmode_kanban)
+}
+
