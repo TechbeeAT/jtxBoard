@@ -47,7 +47,8 @@ open class IcalListViewModel(application: Application, val module: Module) : And
         Module.TODO -> application.getSharedPreferences(PREFS_LIST_TODOS, Context.MODE_PRIVATE)
     }
 
-    val listSettings = MutableLiveData(ListSettings().apply { load(prefs) })
+    val listSettings = ListSettings().apply { load(prefs) }
+
 
     private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
     var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQuery) {
@@ -96,11 +97,11 @@ open class IcalListViewModel(application: Application, val module: Module) : And
 
 // Beginning of query string
         var queryString = "SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* FROM $VIEW_NAME_ICAL4LIST "
-        if(listSettings.value?.searchCategories?.value?.isNotEmpty() == true)
+        if(listSettings.searchCategories.value.isNotEmpty())
             queryString += "LEFT JOIN $TABLE_NAME_CATEGORY ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID "
 //        if(listSettings.value.searchOrganizer.isNotEmpty())
 //            queryString += "LEFT JOIN $TABLE_NAME_ORGANIZER ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_ORGANIZER.$COLUMN_ORGANIZER_ICALOBJECT_ID "
-        if(listSettings.value?.searchCollection?.value?.isNotEmpty() == true || listSettings.value?.searchAccount?.value?.isNotEmpty() == true)
+        if(listSettings.searchCollection.value.isNotEmpty() || listSettings.searchAccount.value.isNotEmpty())
             queryString += "LEFT JOIN $TABLE_NAME_COLLECTION ON $VIEW_NAME_ICAL4LIST.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID "  // +
         //     "LEFT JOIN vattendees ON icalobject._id = vattendees.icalObjectId " +
         //     "LEFT JOIN vorganizer ON icalobject._id = vorganizer.icalObjectId " +
@@ -118,9 +119,9 @@ open class IcalListViewModel(application: Application, val module: Module) : And
         }
 
         // Query for the passed filter criteria from VJournalFilterFragment
-        if (listSettings.value?.searchCategories?.value?.isNotEmpty() == true) {
+        if (listSettings.searchCategories.value.isNotEmpty()) {
             queryString += "AND $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT IN ("
-            listSettings.value?.searchCategories?.value?.forEach {
+            listSettings.searchCategories.value.forEach {
                 queryString += "?,"
                 args.add(it)
             }
@@ -141,9 +142,9 @@ open class IcalListViewModel(application: Application, val module: Module) : And
          */
 
         // Query for the passed filter criteria from FilterFragment
-        if (listSettings.value?.searchStatusJournal?.value?.isNotEmpty() == true && (module == Module.JOURNAL || module == Module.NOTE)) {
+        if (listSettings.searchStatusJournal.value.isNotEmpty() && (module == Module.JOURNAL || module == Module.NOTE)) {
             queryString += "AND $COLUMN_STATUS IN ("
-            listSettings.value?.searchStatusJournal?.value?.forEach {
+            listSettings.searchStatusJournal.value.forEach {
                 queryString += "?,"
                 args.add(it.toString())
             }
@@ -152,9 +153,9 @@ open class IcalListViewModel(application: Application, val module: Module) : And
         }
 
         // Query for the passed filter criteria from FilterFragment
-        if (listSettings.value?.searchStatusTodo?.value?.isNotEmpty() == true && module == Module.TODO) {
+        if (listSettings.searchStatusTodo.value.isNotEmpty() && module == Module.TODO) {
             queryString += "AND $COLUMN_STATUS IN ("
-            listSettings.value?.searchStatusTodo?.value?.forEach {
+            listSettings.searchStatusTodo.value.forEach {
                 queryString += "?,"
                 args.add(it.toString())
             }
@@ -162,28 +163,28 @@ open class IcalListViewModel(application: Application, val module: Module) : And
             queryString += ") "
         }
 
-        if (listSettings.value?.isExcludeDone?.value == true)
+        if (listSettings.isExcludeDone.value)
             queryString += "AND $COLUMN_PERCENT IS NOT 100 "
 
         val dueQuery = mutableListOf<String>()
-        if (listSettings.value?.isFilterOverdue?.value == true)
+        if (listSettings.isFilterOverdue.value)
             dueQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
-        if (listSettings.value?.isFilterDueToday?.value == true)
+        if (listSettings.isFilterDueToday.value)
             dueQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)-1}")
-        if (listSettings.value?.isFilterDueTomorrow?.value == true)
+        if (listSettings.isFilterDueTomorrow.value)
             dueQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)} AND ${DateTimeUtils.getTodayAsLong() + TimeUnit.DAYS.toMillis(2)-1}")
-        if (listSettings.value?.isFilterDueFuture?.value == true)
+        if (listSettings.isFilterDueFuture.value)
             dueQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
         if(dueQuery.isNotEmpty())
             queryString += " AND (${dueQuery.joinToString(separator = " OR ")}) "
 
-        if(listSettings.value?.isFilterNoDatesSet?.value == true)
+        if(listSettings.isFilterNoDatesSet.value)
             queryString += "AND $COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL "
 
         // Query for the passed filter criteria from FilterFragment
-        if (listSettings.value?.searchClassification?.value?.isNotEmpty() == true) {
+        if (listSettings.searchClassification.value.isNotEmpty()) {
             queryString += "AND $COLUMN_CLASSIFICATION IN ("
-            listSettings.value?.searchClassification?.value?.forEach {
+            listSettings.searchClassification.value.forEach {
                 queryString += "?,"
                 args.add(it.toString())
             }
@@ -193,9 +194,9 @@ open class IcalListViewModel(application: Application, val module: Module) : And
 
 
         // Query for the passed filter criteria from FilterFragment
-        if (listSettings.value?.searchCollection?.value?.isNotEmpty() == true) {
+        if (listSettings.searchCollection.value.isNotEmpty()) {
             queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_DISPLAYNAME IN ("
-            listSettings.value?.searchCollection?.value?.forEach {
+            listSettings.searchCollection.value.forEach {
                 queryString += "?,"
                 args.add(it)
             }
@@ -204,9 +205,9 @@ open class IcalListViewModel(application: Application, val module: Module) : And
         }
 
         // Query for the passed filter criteria from FilterFragment
-        if (listSettings.value?.searchAccount?.value?.isNotEmpty() == true) {
+        if (listSettings.searchAccount.value.isNotEmpty()) {
             queryString += "AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ACCOUNT_NAME IN ("
-            listSettings.value?.searchAccount?.value?.forEach {
+            listSettings.searchAccount.value.forEach {
                 queryString += "?,"
                 args.add(it)
             }
@@ -241,8 +242,8 @@ open class IcalListViewModel(application: Application, val module: Module) : And
             }
         }
 
-        queryString += listSettings.value?.orderBy?.value?.queryAppendix ?: ""
-        listSettings.value?.sortOrder?.let { queryString += it.value.queryAppendix }
+        queryString += listSettings.orderBy.value.queryAppendix
+        listSettings.sortOrder.let { queryString += it.value.queryAppendix }
 
         //Log.println(Log.INFO, "queryString", queryString)
         //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
@@ -255,8 +256,10 @@ open class IcalListViewModel(application: Application, val module: Module) : And
      * new query in the listQuery variable. This can trigger an
      * observer in the fragment.
      */
-    fun updateSearch() {
+    fun updateSearch(saveListSettings: Boolean = false) {
         listQuery.postValue(constructQuery())
+        if(saveListSettings)
+            listSettings.save(prefs)
     }
 
 
@@ -264,8 +267,8 @@ open class IcalListViewModel(application: Application, val module: Module) : And
      * Clears all search criteria (except for module) and updates the search
      */
     fun clearFilter() {
-        listSettings.value?.reset()
-        listSettings.value?.save(prefs)
+        listSettings.reset()
+        listSettings.save(prefs)
         updateSearch()
     }
 

@@ -45,7 +45,7 @@ fun ListScreenList(
     subtasksLive: LiveData<List<ICal4List>>,
     subnotesLive: LiveData<List<ICal4List>>,
     scrollOnceId: MutableLiveData<Long?>,
-    listSettingsLive: MutableLiveData<ListSettings>,
+    listSettings: ListSettings,
     goToView: (itemId: Long) -> Unit,
     goToEdit: (itemId: Long) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
@@ -58,8 +58,6 @@ fun ListScreenList(
 
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
-
-    val listSettings by listSettingsLive.observeAsState()
 
     val mediaPlayer = MediaPlayer()
 
@@ -91,7 +89,7 @@ fun ListScreenList(
                 iCalObject.relatedto?.any { relatedto ->
                     relatedto.linkedICalObjectId == subtask.id && relatedto.reltype == Reltype.CHILD.name } == true
             }
-            if(listSettings?.isExcludeDone?.value == true)   // exclude done if applicable
+            if(listSettings.isExcludeDone.value)   // exclude done if applicable
                 currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 }
             /*
             if(model.searchStatusTodo.isNotEmpty()) // exclude filtered if applicable
@@ -173,7 +171,7 @@ fun ListScreenList_TODO() {
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },
-            listSettingsLive = MutableLiveData(ListSettings()),
+            listSettings = ListSettings(),
             subnotesLive = MutableLiveData(emptyList()),
             onExpandedChanged = { _, _, _, _ -> }
         )
@@ -220,7 +218,7 @@ fun ListScreenList_JOURNAL() {
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },
-            listSettingsLive = MutableLiveData(ListSettings()),
+            listSettings = ListSettings(),
             subnotesLive = MutableLiveData(emptyList()),
             onExpandedChanged = { _, _, _, _ -> }
         )

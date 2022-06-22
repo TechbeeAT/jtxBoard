@@ -9,7 +9,8 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import at.techbee.jtx.ui.IcalListFragmentDirections
@@ -27,9 +28,22 @@ fun ListTabContainer(
     navController: NavController
 ) {
 
-    var selectedDestination by remember { mutableStateOf<ListTabDestination>(ListTabDestination.Journals) }
     val screens = listOf(ListTabDestination.Journals, ListTabDestination.Notes, ListTabDestination.Tasks)
-    var activeViewModel by remember { mutableStateOf(icalListViewModelJournal) }
+    val destinationSaver =  Saver<ListTabDestination, Int>(
+        save = { it.tabIndex },
+        restore = { tabIndex -> screens.find { it.tabIndex == tabIndex } ?: ListTabDestination.Journals}
+    )
+    var selectedDestination by rememberSaveable(stateSaver = destinationSaver) { mutableStateOf(ListTabDestination.Journals) }
+    val modelSaver = Saver<IcalListViewModel, String>(
+        save = { it.module.name },
+        restore = { module -> when(module) {
+            ListTabDestination.Journals.module.name -> icalListViewModelJournal
+            ListTabDestination.Notes.module.name -> icalListViewModelNote
+            ListTabDestination.Tasks.module.name -> icalListViewModelTodo
+            else -> icalListViewModelJournal
+        }  }
+    )
+    var activeViewModel by rememberSaveable(stateSaver = modelSaver) { mutableStateOf(icalListViewModelJournal) }
     val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
 
@@ -37,10 +51,8 @@ fun ListTabContainer(
         bottomBar = { ListBottomAppBar(
             module = selectedDestination.module,
             onAddNewEntry = { newEntry -> navController.navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newEntry)) },
-            listSettingsLive = activeViewModel.listSettings,
-            onListSettingsChanged = { newListSettings ->
-                activeViewModel.listSettings.postValue(newListSettings)
-                },
+            listSettings = activeViewModel.listSettings,
+            onListSettingsChanged = { activeViewModel.updateSearch(saveListSettings = true) },
             onFilterIconClicked = {
                 coroutineScope.launch {
                     filterBottomSheetState.show()
@@ -89,12 +101,10 @@ fun ListTabContainer(
                 sheetContent = {
                     FilterScreen(
                         module = selectedDestination.module,
-                        listSettingsLive = activeViewModel.listSettings,
+                        listSettings = activeViewModel.listSettings,
                         allCollectionsLive = activeViewModel.allCollections,
                         allCategoriesLive = activeViewModel.allCategories,
-                        onListSettingsChanged = { newListSettings ->
-                            activeViewModel.listSettings.postValue(newListSettings)
-                        }
+                        onListSettingsChanged = { activeViewModel.updateSearch(saveListSettings = true) }
                     )
                 }
             ) {}

@@ -42,7 +42,7 @@ fun ListScreenCompact(
     listLive: LiveData<List<ICal4ListWithRelatedto>>,
     subtasksLive: LiveData<List<ICal4List>>,
     scrollOnceId: MutableLiveData<Long?>,
-    listSettingsLive: MutableLiveData<ListSettings>,
+    listSettings: ListSettings,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     goToView: (itemId: Long) -> Unit,
     goToEdit: (itemId: Long) -> Unit
@@ -53,8 +53,6 @@ fun ListScreenCompact(
 
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
-
-    val listSettings by listSettingsLive.observeAsState()
 
     if(scrollId != null) {
         LaunchedEffect(list) {
@@ -81,7 +79,7 @@ fun ListScreenCompact(
                 iCalObject.relatedto?.any { relatedto ->
                     relatedto.linkedICalObjectId == subtask.id && relatedto.reltype == Reltype.CHILD.name } == true
             }
-            if(listSettings?.isExcludeDone?.value == true)   // exclude done if applicable
+            if(listSettings.isExcludeDone.value)   // exclude done if applicable
                 currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 }
 
             ListCardCompact(
@@ -150,7 +148,7 @@ fun ListScreenCompact_TODO() {
             listLive = MutableLiveData(listOf(icalobject, icalobject2)),
             subtasksLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
-            listSettingsLive = MutableLiveData(ListSettings()),
+            listSettings = ListSettings(),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { }
@@ -195,7 +193,7 @@ fun ListScreenCompact_JOURNAL() {
             listLive = MutableLiveData(listOf(icalobject, icalobject2)),
             subtasksLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
-            listSettingsLive = MutableLiveData(ListSettings()),
+            listSettings = ListSettings(),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { }

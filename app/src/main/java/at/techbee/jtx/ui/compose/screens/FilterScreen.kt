@@ -38,16 +38,14 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 @Composable
 fun FilterScreen(
     module: Module,
-    listSettingsLive: LiveData<ListSettings>,
+    listSettings: ListSettings,
     allCollectionsLive: LiveData<List<ICalCollection>>,
     allCategoriesLive: LiveData<List<String>>,
-    onListSettingsChanged: (ListSettings) -> Unit,
+    onListSettingsChanged: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val allCollections by allCollectionsLive.observeAsState()
     val allCategories by allCategoriesLive.observeAsState()
-
-    val listSettings by listSettingsLive.observeAsState()
 
 
     Column(
@@ -75,15 +73,13 @@ fun FilterScreen(
             val allAccounts = allCollections?.groupBy { it.accountName ?: return@Row }
             allAccounts?.keys?.forEach { account ->
                 FilterChip(
-                    selected = listSettings?.searchAccount?.value?.contains(account) == true,
+                    selected = listSettings.searchAccount.value.contains(account),
                     onClick = {
-                        listSettings?.let { listSettings ->
                             listSettings.searchAccount.value = if (listSettings.searchAccount.value.contains(account))
                                 listSettings.searchAccount.value.minus(account)
                             else
                                 listSettings.searchAccount.value.plus(account)
-                            onListSettingsChanged(listSettings)
-                        }
+                            onListSettingsChanged()
                     },
                     label = { Text(account) },
                     modifier = Modifier.padding(end = 4.dp)
@@ -106,16 +102,14 @@ fun FilterScreen(
             val allCollectionsGrouped = allCollections?.groupBy { it.displayName ?: return@Row }
             allCollectionsGrouped?.keys?.forEach { collection ->
                 FilterChip(
-                    selected = listSettings?.searchCollection?.value?.contains(collection) == true,
+                    selected = listSettings.searchCollection.value.contains(collection),
                     onClick = {
-                        listSettings?.let { listSettings ->
                             listSettings.searchCollection.value =
                                 if (listSettings.searchCollection.value.contains(collection))
                                     listSettings.searchCollection.value.minus(collection)
                                 else
                                     listSettings.searchCollection.value.plus(collection)
-                            onListSettingsChanged(listSettings)
-                        }
+                            onListSettingsChanged()
                     },
                     label = { Text(collection) },
                     modifier = Modifier.padding(end = 4.dp)
@@ -138,17 +132,14 @@ fun FilterScreen(
             ) {
                 StatusJournal.values().forEach { status ->
                     FilterChip(
-                        selected = listSettings?.searchStatusJournal?.value?.contains(status) == true,
+                        selected = listSettings.searchStatusJournal.value.contains(status) ,
                         onClick = {
-                            listSettings?.let { listSettings ->
-
                                 listSettings.searchStatusJournal.value =
                                     if (listSettings.searchStatusJournal.value.contains(status))
                                         listSettings.searchStatusJournal.value.minus(status)
                                     else
                                         listSettings.searchStatusJournal.value.plus(status)
-                                onListSettingsChanged(listSettings)
-                            }
+                                onListSettingsChanged()
                         },
                         label = { Text(stringResource(id = status.stringResource)) },
                         modifier = Modifier.padding(end = 4.dp)
@@ -163,17 +154,14 @@ fun FilterScreen(
             ) {
                 StatusTodo.values().forEach { status ->
                     FilterChip(
-                        selected = listSettings?.searchStatusTodo?.value?.contains(status) == true,
+                        selected = listSettings.searchStatusTodo.value.contains(status),
                         onClick = {
-                            listSettings?.let { listSettings ->
-
                                 listSettings.searchStatusTodo.value =
                                     if (listSettings.searchStatusTodo.value.contains(status))
                                         listSettings.searchStatusTodo.value.minus(status)
                                     else
                                         listSettings.searchStatusTodo.value.plus(status)
-                                onListSettingsChanged(listSettings)
-                            }
+                                onListSettingsChanged()
                         },
                         label = { Text(stringResource(id = status.stringResource)) },
                         modifier = Modifier.padding(end = 4.dp)
@@ -195,16 +183,14 @@ fun FilterScreen(
         ) {
             Classification.values().forEach { classification ->
                 FilterChip(
-                    selected = listSettings?.searchClassification?.value?.contains(classification) == true,
+                    selected = listSettings.searchClassification.value.contains(classification),
                     onClick = {
-                        listSettings?.let { listSettings ->
                             listSettings.searchClassification.value =
                                 if (listSettings.searchClassification.value.contains(classification))
                                     listSettings.searchClassification.value.minus(classification)
                                 else
                                     listSettings.searchClassification.value.plus(classification)
-                            onListSettingsChanged(listSettings)
-                        }
+                            onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = classification.stringResource)) },
                     modifier = Modifier.padding(end = 4.dp)
@@ -225,17 +211,14 @@ fun FilterScreen(
         ) {
             allCategories?.forEach { category ->
                 FilterChip(
-                    selected = listSettings?.searchCategories?.value?.contains(category) == true,
+                    selected = listSettings.searchCategories.value.contains(category),
                     onClick = {
-                        listSettings?.let { listSettings ->
-
                             listSettings.searchCategories.value =
                                 if (listSettings.searchCategories.value.contains(category))
                                     listSettings.searchCategories.value.minus(category)
                                 else
                                     listSettings.searchCategories.value.plus(category)
-                            onListSettingsChanged(listSettings)
-                        }
+                            onListSettingsChanged()
                     },
                     label = { Text(category) },
                     modifier = Modifier.padding(end = 4.dp)
@@ -264,11 +247,11 @@ fun FilterScreen(
         ) {
             OrderBy.getValuesFor(module).forEach { orderBy ->
                 FilterChip(
-                    selected = listSettings?.orderBy?.value == orderBy,
+                    selected = listSettings.orderBy.value == orderBy,
                     onClick = {
-                        if (listSettings?.orderBy?.value != orderBy)
-                            listSettings?.orderBy?.value = orderBy
-                        listSettings?.let { onListSettingsChanged(it) }
+                        if (listSettings.orderBy.value != orderBy)
+                            listSettings.orderBy.value = orderBy
+                        onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = orderBy.stringResource)) },
                     modifier = Modifier.padding(end = 4.dp)
@@ -281,11 +264,11 @@ fun FilterScreen(
         ) {
             SortOrder.values().forEach { sortOrder ->
                 FilterChip(
-                    selected = listSettings?.sortOrder?.value == sortOrder,
+                    selected = listSettings.sortOrder.value == sortOrder,
                     onClick = {
-                        if (listSettings?.sortOrder?.value != sortOrder)
-                            listSettings?.sortOrder?.value = sortOrder
-                        listSettings?.let { onListSettingsChanged(it) }
+                        if (listSettings.sortOrder.value != sortOrder)
+                            listSettings.sortOrder.value = sortOrder
+                        onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = sortOrder.stringResource)) },
                     modifier = Modifier.padding(end = 4.dp)
@@ -301,8 +284,8 @@ fun FilterScreen(
                 .fillMaxWidth()
         ) {
             Button(onClick = {
-                listSettings?.reset()
-                listSettings?.let { onListSettingsChanged(it) }
+                listSettings.reset()
+                onListSettingsChanged()
 
             }) {
                 Text(stringResource(id = R.string.reset))
@@ -317,17 +300,17 @@ fun FilterScreen(
 fun FilterScreen_Preview_TODO() {
     JtxBoardTheme {
 
-        val listSettings = MutableLiveData(ListSettings())
+        val listSettings = ListSettings()
 
         FilterScreen(
             module = Module.TODO,
-            listSettingsLive = listSettings,
+            listSettings = listSettings,
             allCollectionsLive = MutableLiveData(listOf(
                 ICalCollection(collectionId = 1L, displayName = "Collection 1", accountName = "Account 1"),
                 ICalCollection(collectionId = 2L, displayName = "Collection 2", accountName = "Account 2")
             )),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
-            onListSettingsChanged = { newListSettings -> listSettings.postValue(newListSettings) }
+            onListSettingsChanged = {  }
 
         )
     }
@@ -338,17 +321,17 @@ fun FilterScreen_Preview_TODO() {
 fun FilterScreen_Preview_JOURNAL() {
     JtxBoardTheme {
 
-        val listSettings = MutableLiveData(ListSettings())
+        val listSettings = ListSettings()
 
         FilterScreen(
             module = Module.JOURNAL,
-            listSettingsLive = listSettings,
+            listSettings = listSettings,
             allCollectionsLive = MutableLiveData(listOf(
                 ICalCollection(collectionId = 1L, displayName = "Collection 1", accountName = "Account 1"),
                 ICalCollection(collectionId = 2L, displayName = "Collection 2", accountName = "Account 2")
             )),
             allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
-            onListSettingsChanged = { newListSettings -> listSettings.postValue(newListSettings) }
+            onListSettingsChanged = {  }
         )
     }
 }

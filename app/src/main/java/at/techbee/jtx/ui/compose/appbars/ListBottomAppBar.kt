@@ -6,11 +6,9 @@ import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
@@ -22,14 +20,13 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 @Composable
 fun ListBottomAppBar(
     module: Module,
-    listSettingsLive: MutableLiveData<ListSettings>,
+    listSettings: ListSettings,
     onAddNewEntry: (ICalEntity) -> Unit,
-    onListSettingsChanged: (ListSettings) -> Unit,
+    onListSettingsChanged: () -> Unit,
     onFilterIconClicked: () -> Unit
 ) {
 
     var menuExpanded by remember { mutableStateOf(false) }
-    val listSettings by listSettingsLive.observeAsState()
 
 
     DropdownMenu(
@@ -39,80 +36,80 @@ fun ListBottomAppBar(
         DropdownMenuItem(
             text = { LabelledCheckbox(
                 text = stringResource(id = R.string.menu_list_todo_hide_completed),
-                isChecked = listSettings?.isExcludeDone?.value == true,
+                isChecked = listSettings.isExcludeDone.value,
                 onCheckedChanged = { checked ->
-                    listSettings?.isExcludeDone?.value = checked
-                    listSettings?.let { onListSettingsChanged(it) }
+                    listSettings.isExcludeDone.value = checked
+                    onListSettingsChanged()
                 } )},
             onClick = {
-                listSettings?.isExcludeDone?.value?.let { listSettings?.isExcludeDone?.value = !it }
-                listSettings?.let { onListSettingsChanged(it) }
+                listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
+                onListSettingsChanged()
             }
         )
         if(module == Module.TODO) {
             DropdownMenuItem(
                 text = { LabelledCheckbox(
                     text = stringResource(id = R.string.list_due_overdue),
-                    isChecked = listSettings?.isFilterOverdue?.value == true,
+                    isChecked = listSettings.isFilterOverdue.value,
                     onCheckedChanged = { checked ->
-                        listSettings?.isFilterOverdue?.value = checked
-                        listSettings?.let { onListSettingsChanged(it) }
+                        listSettings.isFilterOverdue.value = checked
+                        onListSettingsChanged()
                     } )},
                 onClick = {
-                    listSettings?.isFilterOverdue?.value?.let { listSettings?.isFilterOverdue?.value = !it }
-                    listSettings?.let { onListSettingsChanged(it) }
+                    listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
+                    onListSettingsChanged()
                 }
             )
             DropdownMenuItem(
                 text = { LabelledCheckbox(
                     text = stringResource(id = R.string.list_due_today),
-                    isChecked = listSettings?.isFilterDueToday?.value == true,
+                    isChecked = listSettings.isFilterDueToday.value,
                     onCheckedChanged = { checked ->
-                        listSettings?.isFilterDueToday?.value = checked
-                        listSettings?.let { onListSettingsChanged(it) }
+                        listSettings.isFilterDueToday.value = checked
+                        onListSettingsChanged()
                     } )},
                 onClick = {
-                    listSettings?.isFilterDueToday?.value?.let { listSettings?.isFilterDueToday?.value = !it }
-                    listSettings?.let { onListSettingsChanged(it) }
+                    listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
+                    onListSettingsChanged()
                 }
             )
             DropdownMenuItem(
                 text = { LabelledCheckbox(
                     text = stringResource(id = R.string.list_due_tomorrow),
-                    isChecked = listSettings?.isFilterDueTomorrow?.value == true,
+                    isChecked = listSettings.isFilterDueTomorrow.value,
                     onCheckedChanged = { checked ->
-                        listSettings?.isFilterDueTomorrow?.value = checked
-                        listSettings?.let { onListSettingsChanged(it) }
+                        listSettings.isFilterDueTomorrow.value = checked
+                        onListSettingsChanged()
                     } )},
                 onClick = {
-                    listSettings?.isFilterDueTomorrow?.value?.let { listSettings?.isFilterDueTomorrow?.value = !it }
-                    listSettings?.let { onListSettingsChanged(it) }
+                    listSettings.isFilterDueTomorrow.value = !listSettings.isFilterDueTomorrow.value
+                    onListSettingsChanged()
                 }
             )
             DropdownMenuItem(
                 text = { LabelledCheckbox(
                     text = stringResource(id = R.string.list_due_future),
-                    isChecked = listSettings?.isFilterDueFuture?.value == true,
+                    isChecked = listSettings.isFilterDueFuture.value,
                     onCheckedChanged = { checked ->
-                        listSettings?.isFilterDueFuture?.value = checked
-                        listSettings?.let { onListSettingsChanged(it) }
+                        listSettings.isFilterDueFuture.value = checked
+                        onListSettingsChanged()
                     } )},
                 onClick = {
-                    listSettings?.isFilterDueFuture?.value?.let { listSettings?.isFilterDueFuture?.value = !it }
-                    listSettings?.let { onListSettingsChanged(it) }
+                    listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
+                    onListSettingsChanged()
                 }
             )
             DropdownMenuItem(
                 text = { LabelledCheckbox(
                     text = stringResource(id = R.string.list_no_dates_set),
-                    isChecked = listSettings?.isFilterNoDatesSet?.value == true,
+                    isChecked = listSettings.isFilterNoDatesSet.value,
                     onCheckedChanged = { checked ->
-                        listSettings?.isFilterNoDatesSet?.value = checked
-                        listSettings?.let { onListSettingsChanged(it) }
+                        listSettings.isFilterNoDatesSet.value = checked
+                        onListSettingsChanged()
                     } )},
                 onClick = {
-                    listSettings?.isFilterNoDatesSet?.let { listSettings?.isFilterNoDatesSet != it }
-                    listSettings?.let { onListSettingsChanged(it) }
+                    listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
+                    onListSettingsChanged()
                 }
             )
         }
@@ -162,13 +159,11 @@ fun ListBottomAppBar(
 fun ListBottomAppBar_Preview_Journal() {
     JtxBoardTheme {
 
-        val listSettingsLive = MutableLiveData(ListSettings())
-
         ListBottomAppBar(
                 module = Module.JOURNAL,
-            listSettingsLive = listSettingsLive,
+            listSettings = ListSettings(),
             onAddNewEntry = { },
-            onListSettingsChanged = { newListSettings -> listSettingsLive.value = newListSettings },
+            onListSettingsChanged = {  },
             onFilterIconClicked = { }
             )
         }
@@ -179,13 +174,11 @@ fun ListBottomAppBar_Preview_Journal() {
 fun ListBottomAppBar_Preview_Todo() {
     JtxBoardTheme {
 
-        val listSettingsLive = MutableLiveData(ListSettings())
-
         ListBottomAppBar(
             module = Module.TODO,
-            listSettingsLive = listSettingsLive,
+            listSettings = ListSettings(),
             onAddNewEntry = { },
-            onListSettingsChanged = { newListSettings -> listSettingsLive.value = newListSettings },
+            onListSettingsChanged = {  },
             onFilterIconClicked = { }
         )
     }

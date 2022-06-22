@@ -14,14 +14,14 @@ fun ListScreen(
     navController: NavController
 ) {
 
-    when (icalListViewModel.listSettings.value?.viewMode?.value) {
+    when (icalListViewModel.listSettings.viewMode.value) {
         ViewMode.LIST -> {
             ListScreenList(
                 listLive = icalListViewModel.iCal4List,
                 subtasksLive = icalListViewModel.allSubtasks,
                 subnotesLive = icalListViewModel.allSubnotes,
                 scrollOnceId = icalListViewModel.scrollOnceId,
-                listSettingsLive = icalListViewModel.listSettings,
+                listSettings = icalListViewModel.listSettings,
                 goToView = { itemId ->
                     navController.navigate(
                         IcalListFragmentDirections
@@ -68,7 +68,7 @@ fun ListScreen(
                 listLive = icalListViewModel.iCal4List,
                 subtasksLive = icalListViewModel.allSubtasks,
                 scrollOnceId = icalListViewModel.scrollOnceId,
-                listSettingsLive = icalListViewModel.listSettings,
+                listSettings = icalListViewModel.listSettings,
                 onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                     icalListViewModel.updateProgress(
                         itemId,
@@ -120,7 +120,6 @@ fun ListScreen(
                 }
             )
         }
-        else -> {}
     }
 }
 
