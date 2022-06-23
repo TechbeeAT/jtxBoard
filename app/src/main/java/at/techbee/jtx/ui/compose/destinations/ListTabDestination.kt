@@ -31,10 +31,4 @@ sealed class ListTabDestination (
         titleResource = R.string.list_tabitem_todos,
         icon = Icons.Outlined.DataObject,
     )
-
-    companion object {
-        fun getDestinationByTabIndex(index: Int) {
-
-        }
-    }
 }

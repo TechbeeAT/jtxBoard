@@ -404,6 +404,11 @@ open class IcalListViewModel(application: Application, val module: Module) : And
     }
 }
 
+open class IcalListViewModelJournals(application: Application) : IcalListViewModel(application, Module.JOURNAL)
+open class IcalListViewModelNotes(application: Application) : IcalListViewModel(application, Module.NOTE)
+open class IcalListViewModelTodos(application: Application) : IcalListViewModel(application, Module.TODO)
+
+
 
 enum class OrderBy(val stringResource: Int, val queryAppendix: String) {
     START(R.string.started, "ORDER BY $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),

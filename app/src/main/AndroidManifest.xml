@@ -81,9 +81,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity2"
+            android:exported="true"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <provider
-            android:name="at.techbee.jtx.SyncContentProvider"
+            android:name=".SyncContentProvider"
             android:authorities="at.techbee.jtx.provider"
             android:enabled="true"
             android:exported="true"
@@ -97,17 +107,12 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity
-            android:name="at.techbee.jtx.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -132,16 +137,14 @@
                 android:resource="@xml/shortcuts" />
         </activity>
 
-        <receiver android:name="at.techbee.jtx.NotificationPublisher" />
+        <receiver android:name=".NotificationPublisher" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCaISlh2wJCX-tksqU7I3YOuf3wcmCAyfI" />
-
     </application>
 
 </manifest>

@@ -407,7 +407,6 @@
     <string name="collections_account_delete_dialog_message">Are you sure that you want to delete this account from jtx Board? All collections within this account will be removed. This operation cannot be undone.</string>
 
 
-
     <!-- menus -->
     <string name="menu_edit_clear_dates">Clear dates</string>
 
@@ -565,5 +564,6 @@
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again.</string>
     <string name="title_activity_list_screen">ListScreen</string>
+    <string name="title_activity_main2">MainActivity2</string>
 
 </resources>

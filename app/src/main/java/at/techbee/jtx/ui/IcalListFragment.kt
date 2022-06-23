@@ -15,15 +15,24 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -32,9 +41,13 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.ui.compose.screens.ListTabContainer
+import at.techbee.jtx.ui.compose.appbars.ListBottomAppBar
+import at.techbee.jtx.ui.compose.destinations.ListTabDestination
+import at.techbee.jtx.ui.compose.screens.FilterScreen
+import at.techbee.jtx.ui.compose.screens.ListScreen
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.SyncUtil
+import kotlinx.coroutines.launch
 
 
 class IcalListFragment : Fragment() {
@@ -88,8 +101,7 @@ class IcalListFragment : Fragment() {
          */
 
 
-        loadFilterArgsAndPrefs()
-        
+
 /*
         if(arguments.item2focus != 0L)
             icalListViewModel.scrollOnceId.postValue(arguments.item2focus)
@@ -115,24 +127,7 @@ class IcalListFragment : Fragment() {
         
          */
 
-/*
-        binding.listBottomBar.setOnMenuItemClickListener { menuitem ->
 
-            when (menuitem.itemId) {
-                R.id.menu_list_bottom_filter -> openFilterBottomSheet()
-                R.id.menu_list_bottom_quick_journal -> showQuickAddDialog()
-                R.id.menu_list_bottom_quick_note -> showQuickAddDialog()
-                R.id.menu_list_bottom_quick_todo -> showQuickAddDialog()
-                R.id.menu_list_bottom_toggle_completed_tasks -> toggleMenuCheckboxFilter(menuitem)
-                R.id.menu_list_bottom_filter_overdue -> toggleMenuCheckboxFilter(menuitem)
-                R.id.menu_list_bottom_filter_due_today -> toggleMenuCheckboxFilter(menuitem)
-                R.id.menu_list_bottom_filter_due_tomorrow -> toggleMenuCheckboxFilter(menuitem)
-                R.id.menu_list_bottom_filter_due_in_future -> toggleMenuCheckboxFilter(menuitem)
-                R.id.menu_list_bottom_filter_no_dates_set -> toggleMenuCheckboxFilter(menuitem)
-            }
-            false
-        }
- */
 
         ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
             modelJournals.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning(requireContext()))
@@ -142,24 +137,6 @@ class IcalListFragment : Fragment() {
 
 
         return ComposeView(requireContext()).apply {
-            // Dispose of the Composition when the view's LifecycleOwner is destroyed
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
-            setContent {
-                JtxBoardTheme {
-                    // A surface container using the 'background' color from the theme
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
-                        ListTabContainer(
-                            icalListViewModelJournal = modelJournals,
-                            icalListViewModelNote = modelNotes,
-                            icalListViewModelTodo = modelTasks,
-                            navController = findNavController()
-                        )
-                    }
-                }
-            }
         }
     }
 
@@ -193,10 +170,6 @@ class IcalListFragment : Fragment() {
     }
      */
 
-    override fun onPause() {
-        super.onPause()
-        //prefs.edit().putString(PREFS_MODULE, icalListViewModel.searchModule).apply()
-    }
 
 
     /**
@@ -256,32 +229,6 @@ class IcalListFragment : Fragment() {
 
     }
 
-
-    /**
-     * This function sets the initial search criteria and retrieves them either from args or from
-     * the preferences. This method should be called on Create to make sure that the
-     * filter criteria in args are correctly loaded. Once this is done, the filter criteria
-     * will be saved in preferences and the args are not necessary anymore. loadFiltersFromPrefs()
-     * should be used then.
-     */
-    private fun loadFilterArgsAndPrefs() {
-
-        /*
-
-        // check first if the arguments contain the search-property, if not, check in prefs, if this is also null, return a default value
-        // The next line is commented out as it has become less useful to use the searchModule from the args. It might make more sense to only use the value in the shared preferences to always return to the list where the user got deeper into details.
-        //icalListViewModel.searchModule = arguments.module2show ?: prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
-        icalListViewModel.searchModule = prefs.getString(PREFS_MODULE, null) ?: Module.JOURNAL.name
-
-        // activate the right tab according to the searchModule
-        when (icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> binding.listViewpager.currentItem = TAB_INDEX_JOURNAL
-            Module.NOTE.name -> binding.listViewpager.currentItem = TAB_INDEX_NOTE
-            Module.TODO.name -> binding.listViewpager.currentItem = TAB_INDEX_TODO
-        }
-
-         */
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_ical_list, menu)
@@ -354,21 +301,6 @@ class IcalListFragment : Fragment() {
         this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(iCalObject))
     }
 
-    private fun toggleMenuCheckboxFilter(menuitem: MenuItem) {
-        /*
-        when (menuitem.itemId) {
-            R.id.menu_list_bottom_toggle_completed_tasks -> icalListViewModel.isExcludeDone = icalListViewModel.isExcludeDone.not()
-            R.id.menu_list_bottom_filter_overdue -> icalListViewModel.isFilterOverdue = !icalListViewModel.isFilterOverdue
-            R.id.menu_list_bottom_filter_due_today -> icalListViewModel.isFilterDueToday = !icalListViewModel.isFilterDueToday
-            R.id.menu_list_bottom_filter_due_tomorrow -> icalListViewModel.isFilterDueTomorrow = !icalListViewModel.isFilterDueTomorrow
-            R.id.menu_list_bottom_filter_due_in_future -> icalListViewModel.isFilterDueFuture = !icalListViewModel.isFilterDueFuture
-            R.id.menu_list_bottom_filter_no_dates_set -> icalListViewModel.isFilterNoDatesSet = !icalListViewModel.isFilterNoDatesSet
-            else -> return
-        }
-        icalListViewModel.updateSearch()
-
-         */
-    }
 
     private fun showScrollToDate() {
 
