@@ -3,14 +3,15 @@ package at.techbee.jtx.ui.compose.screens
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
@@ -18,13 +19,11 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.IcalListViewModelJournals
 import at.techbee.jtx.ui.IcalListViewModelNotes
 import at.techbee.jtx.ui.IcalListViewModelTodos
-import at.techbee.jtx.ui.compose.appbars.ListBottomAppBar
 import at.techbee.jtx.ui.compose.destinations.ListTabDestination
-import kotlinx.coroutines.launch
 
 
 @Composable
-fun BoardContainer() {
+fun ListScreenTabContainer() {
 
 
     val screens =

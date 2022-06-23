@@ -73,7 +73,7 @@ fun MainScaffold(activity: Activity) {
                 mainContent = {
                     NavHost(navController = navController, startDestination = NavigationDrawerDestination.BOARD.name) {
                         composable(NavigationDrawerDestination.BOARD.name) {
-                            BoardContainer()
+                            ListScreenTabContainer()
                         }
                         composable(NavigationDrawerDestination.SYNC.name) {
                             val viewModel: SyncViewModel = viewModel()
