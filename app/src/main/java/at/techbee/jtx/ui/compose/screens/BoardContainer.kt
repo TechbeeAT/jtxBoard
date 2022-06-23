@@ -1,7 +1,6 @@
 package at.techbee.jtx.ui.compose.screens
 
 
-import android.app.Application
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.ExperimentalMaterialApi
@@ -12,29 +11,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.fragment.findNavController
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.ui.IcalListFragmentDirections
-import at.techbee.jtx.ui.IcalListViewModel
-import at.techbee.jtx.ui.ViewMode
+import at.techbee.jtx.ui.IcalListViewModelJournals
+import at.techbee.jtx.ui.IcalListViewModelNotes
+import at.techbee.jtx.ui.IcalListViewModelTodos
 import at.techbee.jtx.ui.compose.appbars.ListBottomAppBar
 import at.techbee.jtx.ui.compose.destinations.ListTabDestination
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun BoardContainer() {
 
-    val application = LocalContext.current.applicationContext as Application
-
-    val modelJournals = IcalListViewModel(application, Module.JOURNAL)
-    val modelNotes = IcalListViewModel(application, Module.NOTE)
-    val modelTasks = IcalListViewModel(application, Module.TODO)
 
     val screens =
         listOf(ListTabDestination.Journals, ListTabDestination.Notes, ListTabDestination.Tasks)
@@ -49,87 +40,37 @@ fun BoardContainer() {
             ListTabDestination.Journals
         )
     }
-    val modelSaver = Saver<IcalListViewModel, String>(
-        save = { it.module.name },
-        restore = { module ->
-            when (module) {
-                ListTabDestination.Journals.module.name -> modelJournals
-                ListTabDestination.Notes.module.name -> modelNotes
-                ListTabDestination.Tasks.module.name -> modelTasks
-                else -> modelJournals
+
+
+    val icalListViewModelJournals: IcalListViewModelJournals = viewModel()
+    val icalListViewModelNotes: IcalListViewModelNotes = viewModel()
+    val icalListViewModelTodos: IcalListViewModelTodos = viewModel()
+
+    fun getActiveViewModel() =
+        when(selectedTab.module) {
+            Module.JOURNAL -> icalListViewModelJournals
+            Module.NOTE -> icalListViewModelNotes
+            Module.TODO -> icalListViewModelTodos
+        }
+
+    Column {
+        TabRow(selectedTabIndex = selectedTab.tabIndex) {
+            screens.forEach { screen ->
+                Tab(selected = selectedTab == screen,
+                    onClick = {
+                        selectedTab = screen
+                    },
+                    text = { Text(stringResource(id = screen.titleResource)) })
             }
         }
-    )
-    var activeViewModel by rememberSaveable(stateSaver = modelSaver) { mutableStateOf(modelJournals) }
-    val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-    val coroutineScope = rememberCoroutineScope()
 
-    Scaffold(
-        bottomBar = {
-            ListBottomAppBar(
-                module = selectedTab.module,
-                onAddNewEntry = { newEntry ->  /* findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newEntry)) */   /* TODO */ },
-                listSettings = activeViewModel.listSettings,
-                onListSettingsChanged = { activeViewModel.updateSearch(saveListSettings = true) },
-                onFilterIconClicked = {
-                    coroutineScope.launch {
-                        filterBottomSheetState.show()
-                    }
-                }
+        Crossfade(targetState = selectedTab) {
+            ListScreen(
+                icalListViewModel = getActiveViewModel() ,
+                navController = rememberNavController()    // TODO!!!!!
             )
-        },
-        content = {
-            Column {
-                TabRow(selectedTabIndex = selectedTab.tabIndex) {
-                    screens.forEach { screen ->
-                        Tab(selected = selectedTab == screen,
-                            onClick = {
-                                selectedTab = screen
-                                activeViewModel = when (selectedTab) {
-                                    ListTabDestination.Journals -> modelJournals
-                                    ListTabDestination.Notes -> modelNotes
-                                    ListTabDestination.Tasks -> modelTasks
-                                }
-                            },
-                            text = { Text(stringResource(id = screen.titleResource)) })
-                    }
-                }
-
-                Crossfade(targetState = selectedTab) {
-                    when (it) {
-                        ListTabDestination.Journals -> ListScreen(
-                            icalListViewModel = activeViewModel,
-                            navController = rememberNavController()    // TODO!!!!!
-                        )
-                        ListTabDestination.Notes -> ListScreen(
-                            icalListViewModel = activeViewModel,
-                            navController = rememberNavController()    // TODO!!!!!
-                        )
-                        ListTabDestination.Tasks -> ListScreen(
-                            icalListViewModel = activeViewModel,
-                            navController = rememberNavController()    // TODO!!!!!
-                        )
-                    }
-                }
-            }
-
-
-
-            ModalBottomSheetLayout(
-                sheetState = filterBottomSheetState,
-                sheetContent = {
-                    FilterScreen(
-                        module = selectedTab.module,
-                        listSettings = activeViewModel.listSettings,
-                        allCollectionsLive = activeViewModel.allCollections,
-                        allCategoriesLive = activeViewModel.allCategories,
-                        onListSettingsChanged = { activeViewModel.updateSearch(saveListSettings = true) }
-                    )
-                }
-            ) {}
-
         }
-    )
+    }
 }
 
 
