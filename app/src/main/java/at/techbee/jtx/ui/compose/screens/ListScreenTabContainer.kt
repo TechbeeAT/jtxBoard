@@ -3,27 +3,33 @@ package at.techbee.jtx.ui.compose.screens
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
+import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.IcalListViewModelJournals
 import at.techbee.jtx.ui.IcalListViewModelNotes
 import at.techbee.jtx.ui.IcalListViewModelTodos
+import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
+import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.destinations.ListTabDestination
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListScreenTabContainer() {
+fun ListScreenTabContainer(navController: NavHostController) {
 
 
     val screens =
@@ -52,24 +58,43 @@ fun ListScreenTabContainer() {
             Module.TODO -> icalListViewModelTodos
         }
 
-    Column {
-        TabRow(selectedTabIndex = selectedTab.tabIndex) {
-            screens.forEach { screen ->
-                Tab(selected = selectedTab == screen,
-                    onClick = {
-                        selectedTab = screen
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+
+    Scaffold(
+        topBar = { JtxTopAppBar(
+            drawerState = drawerState, 
+            title = stringResource(id = R.string.navigation_drawer_board)
+        ) },
+        content = {
+            Column {
+                JtxNavigationDrawer(drawerState,
+                    mainContent = {
+                        Column {
+                            TabRow(selectedTabIndex = selectedTab.tabIndex) {
+                                screens.forEach { screen ->
+                                    Tab(selected = selectedTab == screen,
+                                        onClick = {
+                                            selectedTab = screen
+                                        },
+                                        text = { Text(stringResource(id = screen.titleResource)) })
+                                }
+                            }
+
+                            Crossfade(targetState = selectedTab) {
+                                ListScreen(
+                                    icalListViewModel = getActiveViewModel() ,
+                                    navController = navController
+                                )
+                            }
+                        }
                     },
-                    text = { Text(stringResource(id = screen.titleResource)) })
+                    navController = navController
+                )
             }
         }
+    )
 
-        Crossfade(targetState = selectedTab) {
-            ListScreen(
-                icalListViewModel = getActiveViewModel() ,
-                navController = rememberNavController()    // TODO!!!!!
-            )
-        }
-    }
+
 }
 
 

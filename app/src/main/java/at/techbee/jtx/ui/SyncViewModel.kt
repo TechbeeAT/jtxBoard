@@ -18,6 +18,4 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
 
     val database = ICalDatabase.getInstance(application).iCalDatabaseDao
     val remoteCollections = database.getAllRemoteCollections()
-    val isSyncInProgress = MutableLiveData(false)
-    val isDavx5Available = MutableLiveData(false)
 }

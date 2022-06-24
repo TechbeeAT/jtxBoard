@@ -24,7 +24,7 @@ import org.junit.runner.RunWith
 @SmallTest
 class SyncFragmentTest {
 
-
+/*
     @Test
     fun check_texts() {
         launchFragmentInContainer<SyncFragment>(null, R.style.AppTheme, Lifecycle.State.RESUMED)
@@ -33,4 +33,6 @@ class SyncFragmentTest {
         onView(withText(R.string.sync_basic_info)).check(matches(isDisplayed()))
         // further checks are skipped here. Other texts would depend if DAVx5 is installed or not, this could be the case for a local test, but for the CI maybe not. It's better to skip the test as it is not that important anyway.
     }
+
+ */
 }

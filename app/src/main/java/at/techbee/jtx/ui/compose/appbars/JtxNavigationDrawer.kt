@@ -41,7 +41,8 @@ fun JtxNavigationDrawer(
                 onCloseDrawer = { scope.launch { drawerState.close() } }
             )
         },
-        content = { mainContent() }
+        content = { mainContent() },
+        modifier = Modifier.padding(top = 64.dp)
     )
 }
 
@@ -52,13 +53,10 @@ fun JtxNavigationDrawer(
 fun JtxNavigationDrawer_Preview() {
     JtxBoardTheme {
 
-        val context = LocalContext.current
         JtxNavigationDrawer(
-            drawerState = rememberDrawerState(DrawerValue.Closed),
+            drawerState = rememberDrawerState(DrawerValue.Open),
             navController = rememberNavController(),
-            mainContent = {
-                Text("Hello World")
-            }
+            mainContent = {      }
         )
     }
 }
@@ -72,7 +70,6 @@ fun JtxNavigationDrawerMenu(
     onCloseDrawer: () -> Unit
 ) {
 
-    var selectedItem by remember { mutableStateOf(NavigationDrawerDestination.BOARD) }
     val context = LocalContext.current
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
@@ -120,11 +117,10 @@ fun JtxNavigationDrawerMenu(
                             }
                     },
                     label = { Text(stringResource(item.titleResource)) },
-                    selected = item == selectedItem,
+                    selected = item.name == navController.currentDestination?.route,
                     onClick = {
                         item.navigationAction(navController, context)
                         onCloseDrawer()
-                        selectedItem = item
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )

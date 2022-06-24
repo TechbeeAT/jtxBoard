@@ -22,13 +22,15 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JtxTopAppBar(
-    drawerState: DrawerState
+    drawerState: DrawerState,
+    title: String,
+    actions: @Composable () -> Unit = { }
 ) {
 
     val coroutineScope = rememberCoroutineScope()
 
     CenterAlignedTopAppBar(
-        title = { Text("jtx Board")},
+        title = { Text(title)},
         navigationIcon = {
             IconButton(onClick = {
                 coroutineScope.launch {
@@ -54,18 +56,8 @@ fun JtxTopAppBar(
 
             }
         },
-        actions = {
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(
-                    imageVector = Icons.Outlined.Favorite,
-                    contentDescription = "Localized description"
-                )
-            }
-        }
+        actions = { actions() }
     )
-
-
-
 }
 
 
@@ -76,7 +68,16 @@ fun JtxTopAppBar_Preview() {
     JtxBoardTheme {
         Scaffold(
             topBar = { JtxTopAppBar(
-                drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+                drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+                title = "My Title comes here",
+                actions = {
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Favorite,
+                            contentDescription = "Localized description"
+                        )
+                    }
+                }
             ) },
             content = {}
         )

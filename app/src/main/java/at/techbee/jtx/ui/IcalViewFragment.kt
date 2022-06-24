@@ -207,9 +207,9 @@ class IcalViewFragment : Fragment() {
                 && BillingManager.getInstance()?.isProPurchased?.value == false) {
                 hideEditingOptions()
                 val snackbar = Snackbar.make(requireView(), R.string.buypro_snackbar_remote_entries_blocked, Snackbar.LENGTH_INDEFINITE)
-                snackbar.setAction(R.string.more) {
-                    findNavController().navigate(R.id.action_global_buyProFragment)
-                }
+                //snackbar.setAction(R.string.more) {
+                    //findNavController().navigate(R.id.action_global_buyProFragment)
+                //}
                 snackbar.show()
             }
 

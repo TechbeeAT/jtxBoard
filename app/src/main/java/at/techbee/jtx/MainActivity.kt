@@ -252,45 +252,10 @@ class MainActivity : AppCompatActivity()  {
                 R.id.nav_collections ->
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_collectionsFragment)
-
-                R.id.nav_sync ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_syncFragment)
-
-                R.id.nav_about ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_aboutFragment)
-
-                R.id.nav_donate ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_donateFragment)
-
-                R.id.nav_adinfo ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_adInfoFragment)
-
-                R.id.nav_buypro ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_buyProFragment)
-
+                
                 R.id.nav_app_settings ->
                     findNavController(R.id.nav_host_fragment)
                         .navigate(R.id.action_global_settingsFragment)
-
-                R.id.nav_twitter ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_twitter))))
-
-                R.id.nav_website ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx))))
-                
-                R.id.nav_website_news ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_news))))
-
-                R.id.nav_support ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_support))))
-
-                R.id.nav_privacy ->
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_jtx_privacy_policy))))
             }
             true
         }
@@ -457,8 +422,8 @@ class MainActivity : AppCompatActivity()  {
                 .setIcon(R.drawable.ic_adinfo)
                 .setPositiveButton(R.string.ok) { _, _ -> }
                 .setNeutralButton(R.string.more) { _, _ ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_buyProFragment)
+                    //findNavController(R.id.nav_host_fragment)
+                    //    .navigate(R.id.action_global_buyProFragment)
                 }
                 .show()
 

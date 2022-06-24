@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.compose.screens
 
+import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
@@ -18,10 +19,9 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Button
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Sync
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -35,33 +35,79 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
+import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
+import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.SyncUtil
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SyncScreen(
-    isDAVx5availableLive: LiveData<Boolean>,
     remoteCollectionsLive: LiveData<List<ICalCollection>>,
-    isSyncInProgress: LiveData<Boolean>,
+    isSyncInProgress: State<Boolean>,
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val context = LocalContext.current
+    val isDAVx5available = SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
+
+    Scaffold(
+        topBar = { JtxTopAppBar(
+            drawerState = drawerState,
+            title = stringResource(id = R.string.navigation_drawer_sync), 
+            actions = { 
+                if(isDAVx5available) {
+                    IconButton(onClick = { SyncUtil.syncAllAccounts(context) }) {
+                        Icon(Icons.Outlined.Sync, stringResource(id = R.string.sync_now))
+                    }
+                }
+            }
+        ) },
+        content = {
+            Column {
+                JtxNavigationDrawer(
+                    drawerState = drawerState,
+                    mainContent = { SyncScreenContent(
+                        remoteCollectionsLive = remoteCollectionsLive,
+                        isDAVx5available = isDAVx5available,
+                        isSyncInProgress = isSyncInProgress,
+                        goToCollections = { navController.navigate(NavigationDrawerDestination.COLLECTIONS.name) })
+                    },
+                    navController = navController
+                )
+            }
+        }
+    )
+}
+
+
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun SyncScreenContent(
+    remoteCollectionsLive: LiveData<List<ICalCollection>>,
+    isDAVx5available: Boolean,
+    isSyncInProgress: State<Boolean>,
     goToCollections: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val context = LocalContext.current
     val scrollState = rememberScrollState()
-    val showProgressIndicator by isSyncInProgress.observeAsState(initial = false)
-    val isDAVx5available by isDAVx5availableLive.observeAsState(false)
     val remoteCollections by remoteCollectionsLive.observeAsState(emptyList())
-
 
     Box {
 
-        AnimatedVisibility(visible = showProgressIndicator) {
+        AnimatedVisibility(visible = isSyncInProgress.value) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
 
@@ -255,10 +301,9 @@ fun SyncScreen(
 fun SyncScreen_Preview_no_DAVX5() {
     JtxBoardTheme {
         SyncScreen(
-            isDAVx5availableLive = MutableLiveData(false),
             remoteCollectionsLive = MutableLiveData(emptyList()),
-            isSyncInProgress = MutableLiveData(false),
-            goToCollections = { }
+            isSyncInProgress = mutableStateOf(false),
+            navController = rememberNavController(),
         )
     }
 }
@@ -266,15 +311,29 @@ fun SyncScreen_Preview_no_DAVX5() {
 
 @Preview(showBackground = true)
 @Composable
-fun SyncScreen_Preview_DAVx5_no_collections() {
+fun SyncScreenContent_Preview_no_DAVX5() {
     JtxBoardTheme {
-        SyncScreen(
-            isDAVx5availableLive = MutableLiveData(true),
+        SyncScreenContent(
+            isDAVx5available = false,
+            isSyncInProgress = mutableStateOf(false),
+            remoteCollectionsLive = MutableLiveData(emptyList()),
+            goToCollections = { },
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun SyncScreenContent_Preview_DAVx5_no_collections() {
+    JtxBoardTheme {
+        SyncScreenContent(
+            isDAVx5available = true,
+            isSyncInProgress = mutableStateOf(false),
             remoteCollectionsLive = MutableLiveData(
                 emptyList()
             ),
-            isSyncInProgress = MutableLiveData(false),
-            goToCollections = { }
+            goToCollections = { },
         )
     }
 }
@@ -282,18 +341,18 @@ fun SyncScreen_Preview_DAVx5_no_collections() {
 
 @Preview(showBackground = true)
 @Composable
-fun SyncScreen_Preview_DAVx5_with_collections() {
+fun SyncScreenContent_Preview_DAVx5_with_collections() {
     JtxBoardTheme {
-        SyncScreen(
-            isDAVx5availableLive = MutableLiveData(true),
+        SyncScreenContent(
+            isDAVx5available = true,
+            isSyncInProgress = mutableStateOf(true),
             remoteCollectionsLive = MutableLiveData(
                 listOf(
                     ICalCollection().apply { this.collectionId = 1 },
                     ICalCollection().apply { this.collectionId = 2 }
                 )
             ),
-            isSyncInProgress = MutableLiveData(true),
-            goToCollections = { }
+            goToCollections = { },
         )
     }
 }

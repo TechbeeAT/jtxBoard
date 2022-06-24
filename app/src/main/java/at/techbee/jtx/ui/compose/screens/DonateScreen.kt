@@ -10,10 +10,10 @@ package at.techbee.jtx.ui.compose.screens
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,14 +24,51 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
+import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
+import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DonateScreen(navController: NavHostController, modifier: Modifier = Modifier) {
+
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    Scaffold(
+        topBar = { JtxTopAppBar(
+            drawerState = drawerState, 
+            title = stringResource(id = R.string.navigation_drawer_donate)
+        ) },
+        content = {
+            Column {
+                JtxNavigationDrawer(
+                    drawerState = drawerState,
+                    mainContent = {
+                        DonateScreenContent()
+                    },
+                    navController = navController
+                )
+            }
+        }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DonateScreen_Preview() {
+    JtxBoardTheme {
+        DonateScreen(rememberNavController())
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DonateScreen(modifier: Modifier = Modifier) {
+fun DonateScreenContent(modifier: Modifier = Modifier) {
 
     val context = LocalContext.current
 
@@ -116,8 +153,8 @@ fun DonateScreen(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun DonateScreen_Preview() {
+fun DonateScreenContent_Preview() {
     JtxBoardTheme {
-        DonateScreen()
+        DonateScreenContent()
     }
 }
