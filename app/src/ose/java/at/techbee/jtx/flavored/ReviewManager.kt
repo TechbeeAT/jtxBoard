@@ -44,7 +44,7 @@ class JtxReviewManager(val activity: Activity) : ReviewManagerDefinition {
             .setMessage(activity.getString(R.string.donate_dialog_message))
             .setPositiveButton(R.string.ok) { _, _ ->   }
             .setNeutralButton(R.string.more) { _, _ ->
-                activity.findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_donateFragment)
+                //activity.findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_donateFragment)
             }
             .show()
 

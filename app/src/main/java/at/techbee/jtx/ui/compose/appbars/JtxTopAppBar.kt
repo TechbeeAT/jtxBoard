@@ -41,15 +41,15 @@ fun JtxTopAppBar(
                     when (it.targetValue) {
                         DrawerValue.Open -> Icon(
                             imageVector = Icons.Outlined.ArrowBack,
-                            contentDescription = "Localized description"
+                            contentDescription = stringResource(id = R.string.navigation_drawer_open)
                         )
                         DrawerValue.Closed -> Icon(
                             imageVector = Icons.Outlined.Menu,
-                            contentDescription = "Localized description"
+                            contentDescription = stringResource(id = R.string.navigation_drawer_close)
                         )
                         else -> Icon(
                             imageVector = Icons.Outlined.Menu,
-                            contentDescription = "Localized description"
+                            contentDescription = stringResource(id = R.string.navigation_drawer_open)
                         )
                     }
                 }

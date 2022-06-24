@@ -2,7 +2,6 @@ package at.techbee.jtx
 
 import android.app.Activity
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
@@ -10,20 +9,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.viewinterop.AndroidViewBinding
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import at.techbee.jtx.databinding.FragmentCollectionsContainerBinding
+import at.techbee.jtx.databinding.FragmentSettingsContainerBinding
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.AboutViewModel
+import at.techbee.jtx.ui.CollectionsFragment
+import at.techbee.jtx.ui.SettingsFragment
 import at.techbee.jtx.ui.SyncViewModel
 import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.compose.screens.*
 import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
-class MainActivity2 : ComponentActivity() {
+class MainActivity2 : FragmentActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
+//class MainActivity2 : ComponentActivity() {
 
     val activity = this
 
@@ -41,8 +47,6 @@ class MainActivity2 : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MainNavHost(this)
-
-                    //Greeting("Android")
                 }
             }
         }
@@ -67,6 +71,11 @@ fun MainNavHost(activity: Activity) {
             composable(NavigationDrawerDestination.BOARD.name) {
                 ListScreenTabContainer(navController)
             }
+            composable(NavigationDrawerDestination.COLLECTIONS.name) {
+                AndroidViewBinding(FragmentCollectionsContainerBinding::inflate) {
+                    fragmentCollectionsContainerView.getFragment<CollectionsFragment>()
+                }
+            }
             composable(NavigationDrawerDestination.SYNC.name) {
                 val viewModel: SyncViewModel = viewModel()
                 SyncScreen(
@@ -75,7 +84,7 @@ fun MainNavHost(activity: Activity) {
                     navController = navController)
             }
             composable(NavigationDrawerDestination.DONATE.name) { DonateScreen(navController) }
-            composable(NavigationDrawerDestination.ADINFO.name) { AdInfoScreen() }
+            composable(NavigationDrawerDestination.ADINFO.name) { AdInfoScreen(navController) }
             composable(NavigationDrawerDestination.ABOUT.name) {
                 val viewModel: AboutViewModel = viewModel()
                 AboutScreen(
@@ -97,6 +106,11 @@ fun MainNavHost(activity: Activity) {
                     },
                     navController = navController
                 )
+            }
+            composable(NavigationDrawerDestination.SETTINGS.name) {
+                AndroidViewBinding(FragmentSettingsContainerBinding::inflate) {
+                    fragmentSettingsContainerView.getFragment<SettingsFragment>()
+                }
             }
         }
     }

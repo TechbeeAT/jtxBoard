@@ -26,12 +26,10 @@ import android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.webkit.MimeTypeMap
 import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.ICalObject
@@ -45,7 +43,6 @@ import at.techbee.jtx.ui.SettingsFragment
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.SurfaceColors
-import com.google.android.material.navigation.NavigationView
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.io.File
 import java.io.IOException
@@ -106,8 +103,7 @@ class MainActivity : AppCompatActivity()  {
         // necessary for ical4j
         TimeZoneRegistryFactory.getInstance().createRegistry()
 
-        adaptMenuToBuildFlavor()
-        setUpDrawer()
+
         checkThemeSetting()
 
         val billingManager = BillingManager.getInstance()
@@ -199,67 +195,7 @@ class MainActivity : AppCompatActivity()  {
         AdManager.getInstance()?.pauseAds()
     }
 
-    private fun adaptMenuToBuildFlavor() {
-        val navView: NavigationView = findViewById(R.id.nav_view)
 
-        when (BuildConfig.FLAVOR) {
-            BUILD_FLAVOR_GOOGLEPLAY -> {
-                navView.menu.findItem(R.id.nav_donate).isVisible = false
-                navView.menu.findItem(R.id.nav_adinfo).isVisible = false
-            }     // hide the donate menu for google play
-            BUILD_FLAVOR_HUAWEI -> {
-                navView.menu.findItem(R.id.nav_donate).isVisible = false
-                navView.menu.findItem(R.id.nav_buypro).isVisible = false
-            }     // hide the donate menu for google play
-            BUILD_FLAVOR_OSE -> {
-                navView.menu.findItem(R.id.nav_adinfo).isVisible = false
-                navView.menu.findItem(R.id.nav_buypro).isVisible = false
-            }            // hide the adinfo for the OSE-edition
-        }
-    }
-
-
-    private fun setUpDrawer() {
-
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_main_layout)
-        val toggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
-        )
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
-
-        // React on selection in Navigation View
-        val navView: NavigationView = findViewById(R.id.nav_view)
-        navView.setNavigationItemSelectedListener { menuItem ->
-
-            //close drawer
-            drawerLayout.close()
-
-            // Handle menu item selected
-            when (menuItem.itemId) {
-
-                R.id.nav_board -> {
-                    if(findNavController(R.id.nav_host_fragment).currentDestination?.label != "icalListFragment")
-                        findNavController(R.id.nav_host_fragment)
-                            .navigate(R.id.action_global_icalListFragment)
-                }
-
-                R.id.nav_collections ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_collectionsFragment)
-                
-                R.id.nav_app_settings ->
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(R.id.action_global_settingsFragment)
-            }
-            true
-        }
-    }
 
     /**
      * Checks in the settings if night mode is enforced and switches to it if applicable
