@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
@@ -138,9 +139,6 @@ class CollectionsFragment : Fragment() {
         val arguments = CollectionsFragmentArgs.fromBundle((requireArguments()))
         arguments.iCalString?.let { iCalString2Import = it }
 
-        collectionsViewModel.isDavx5Compatible.observe(viewLifecycleOwner) {
-            optionsMenu?.findItem(R.id.menu_collections_add_remote)?.isVisible = it
-        }
 
         collectionsViewModel.resultInsertedFromICS.observe(viewLifecycleOwner) {
             if(it == null)
@@ -170,22 +168,8 @@ class CollectionsFragment : Fragment() {
                         color = MaterialTheme.colorScheme.background
                     ) {
                         CollectionsScreen(
-                            collectionsLive = collectionsViewModel.collections,
-                            isProcessing = collectionsViewModel.isProcessing,
-                            onCollectionChanged = { collection -> collectionsViewModel.saveCollection(collection) },
-                            onCollectionDeleted = { collection -> collectionsViewModel.deleteCollection(collection) },
-                            onEntriesMoved = { old, new -> collectionsViewModel.moveCollectionItems(old.collectionId, new.collectionId) },
-                            onImportFromICS = { collection -> importFromICS(collection) },
-                            onExportAsICS = { collection -> exportAsICS(collection) },
-                            onCollectionClicked = { collection ->
-                                iCalString2Import?.let {
-                                    collectionsViewModel.isProcessing.postValue(true)
-                                    collectionsViewModel.insertICSFromReader(collection.toICalCollection(), it)
-                                    iCalString2Import = null
-                                    iCalImportSnackbar?.dismiss()
-                                }
-                            },
-                            onDeleteAccount = { account -> collectionsViewModel.removeAccount(account) }
+                            collectionsViewModel = collectionsViewModel,
+                            navController = rememberNavController()
                         )
                     }
                 }
@@ -217,15 +201,6 @@ class CollectionsFragment : Fragment() {
         optionsMenu = menu
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.menu_collections_add_local -> showCollectionsAddDialog.value = true
-            R.id.menu_collections_add_remote -> openDAVx5AccountsActivity(context)
-            R.id.menu_collections_export_all -> exportAll()
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
 
     private fun importFromICS(currentCollection: CollectionsView) {
@@ -265,23 +240,6 @@ class CollectionsFragment : Fragment() {
             }
     }
 
-    private fun exportAll() {
-
-        val allCollections: MutableList<ICalCollection> = mutableListOf()
-        collectionsViewModel.collections.value?.forEach { collection ->
-            allCollections.add(collection.toICalCollection())
-        }
-        collectionsViewModel.requestAllForExport(allCollections)
-
-        collectionsViewModel.allCollectionICS.observe(viewLifecycleOwner) { allIcs ->
-            if(allIcs.isNullOrEmpty())
-                return@observe
-            this.allExportIcs.addAll(allIcs)
-            getFileUriForSavingAllCollections.launch("jtxBoard_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(), TimeZone.getDefault().id)}.zip")
-            collectionsViewModel.allCollectionICS.removeObservers(viewLifecycleOwner)
-            collectionsViewModel.allCollectionICS.postValue(null)
-        }
-    }
 }
 
 

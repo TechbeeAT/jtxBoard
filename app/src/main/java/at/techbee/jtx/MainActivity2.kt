@@ -19,10 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.databinding.FragmentCollectionsContainerBinding
 import at.techbee.jtx.databinding.FragmentSettingsContainerBinding
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.AboutViewModel
-import at.techbee.jtx.ui.CollectionsFragment
-import at.techbee.jtx.ui.SettingsFragment
-import at.techbee.jtx.ui.SyncViewModel
+import at.techbee.jtx.ui.*
 import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.compose.screens.*
 import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
@@ -30,6 +27,7 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 class MainActivity2 : FragmentActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
 //class MainActivity2 : ComponentActivity() {
+    // or maybe AppCompatActivity() was also proposed...
 
     val activity = this
 
@@ -72,9 +70,17 @@ fun MainNavHost(activity: Activity) {
                 ListScreenTabContainer(navController)
             }
             composable(NavigationDrawerDestination.COLLECTIONS.name) {
+                val collectionsViewModel: CollectionsViewModel = viewModel()
+
+                CollectionsScreen(
+                    navController = navController,
+                    collectionsViewModel = collectionsViewModel
+                )
+                /*
                 AndroidViewBinding(FragmentCollectionsContainerBinding::inflate) {
                     fragmentCollectionsContainerView.getFragment<CollectionsFragment>()
                 }
+                 */
             }
             composable(NavigationDrawerDestination.SYNC.name) {
                 val viewModel: SyncViewModel = viewModel()

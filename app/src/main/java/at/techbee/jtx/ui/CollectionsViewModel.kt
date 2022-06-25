@@ -31,7 +31,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
     val app = application
 
     val collectionICS = MutableLiveData<String>(null)
-    val allCollectionICS = MutableLiveData<List<Pair<String, String>>>(null)
+    val allCollectionsICS = MutableLiveData<List<Pair<String, String>>>(null)
 
     val isProcessing = MutableLiveData(false)
 
@@ -90,18 +90,16 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun requestAllForExport(collections: List<ICalCollection>) {
+    fun requestAllForExport() {
         isProcessing.postValue(true)
         val icsList: MutableList<Pair<String, String>> = mutableListOf()   // first of pair is filename/collectionname, second is ics
 
         viewModelScope.launch(Dispatchers.IO)  {
-            collections.forEach { collection ->
-                val account = collection.getAccount()
-                val collectionId = collection.collectionId
-                val ics = (Ical4androidUtil.getICSFormatForCollectionFromProvider(account, getApplication(), collectionId))
+            collections.value?.forEach { collection ->
+                val ics = (Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId))
                 ics?.let { icsList.add(Pair(collection.displayName?:collection.collectionId.toString(), it)) }
             }
-            allCollectionICS.postValue(icsList)
+            allCollectionsICS.postValue(icsList)
             isProcessing.postValue(false)
         }
     }

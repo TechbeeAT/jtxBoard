@@ -10,6 +10,12 @@ package at.techbee.jtx.ui.compose.screens
 
 import android.accounts.Account
 import android.accounts.AccountManager
+import android.app.Application
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -17,7 +23,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -33,17 +39,153 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
+import at.techbee.jtx.ui.CollectionsViewModel
+import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
+import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
+import at.techbee.jtx.ui.compose.appbars.OverflowMenu
 import at.techbee.jtx.ui.compose.cards.CollectionCard
+import at.techbee.jtx.ui.compose.dialogs.CollectionsAddOrEditDialog
+import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.util.DateTimeUtils
+import at.techbee.jtx.util.SyncUtil
+import java.io.BufferedOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.util.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CollectionsScreen(
+    navController: NavHostController,
+    collectionsViewModel: CollectionsViewModel
+) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val context = LocalContext.current
+    val isDAVx5available = SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
+
+    val resultExportAllFilepath = remember { mutableStateOf<Uri?>(null) }
+    val launcherExportAll = rememberLauncherForActivityResult(CreateDocument("text/calendar")) {
+        resultExportAllFilepath.value = it
+    }
+    val allCollectionsICS = collectionsViewModel.allCollectionsICS.observeAsState()
+    if(resultExportAllFilepath.value == null && !allCollectionsICS.value.isNullOrEmpty()) {
+        launcherExportAll.launch("jtxBoard_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(), TimeZone.getDefault().id)}.zip")
+    }
+    else if(resultExportAllFilepath.value != null && !allCollectionsICS.value.isNullOrEmpty()) {
+        try {
+            val output: OutputStream? = context.contentResolver?.openOutputStream(resultExportAllFilepath.value!!)
+            val bos = BufferedOutputStream(output)
+            ZipOutputStream(bos).use { zos ->
+                allCollectionsICS.value!!.forEach { ics ->
+                    // not available on BufferedOutputStream
+                    zos.putNextEntry(ZipEntry("${ics.first}.ics"))
+                    zos.write(ics.second.toByteArray())
+                    zos.closeEntry()
+                }
+            }
+            output?.flush()
+            output?.close()
+            Toast.makeText(context, R.string.collections_toast_export_all_ics_success, Toast.LENGTH_LONG).show()
+        } catch (e: IOException) {
+            Toast.makeText(context, R.string.collections_toast_export_all_ics_error, Toast.LENGTH_LONG).show()
+        } finally {
+            collectionsViewModel.allCollectionsICS.value = null
+            resultExportAllFilepath.value = null
+        }
+    }
+
+    var showCollectionsAddDialog by remember { mutableStateOf(false) }
+    if (showCollectionsAddDialog)
+        CollectionsAddOrEditDialog(
+            current = ICalCollection.createLocalCollection(context),
+            onCollectionChanged = { collection -> collectionsViewModel.saveCollection(collection) },
+            onDismiss = { showCollectionsAddDialog = false }
+        )
+
+    Scaffold(
+        topBar = { JtxTopAppBar(
+            drawerState = drawerState,
+            title = stringResource(id = R.string.navigation_drawer_collections),
+            actions = {
+
+                val menuExpanded = remember { mutableStateOf(false) }
+
+                OverflowMenu(menuExpanded = menuExpanded) {
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(id = R.string.menu_collections_add_local))  },
+                        onClick = {
+                            showCollectionsAddDialog = true
+                            menuExpanded.value = false
+                                  },
+                        leadingIcon = { Icon(Icons.Outlined.LocalLibrary, null) }
+                    )
+                    if(isDAVx5available) {
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.menu_collections_add_remote)) },
+                            onClick = {
+                                SyncUtil.openDAVx5AccountsActivity(context)
+                                menuExpanded.value = false
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.Backup, null) }
+                        )
+                    }
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(id = R.string.menu_collections_export_all))  },
+                        onClick = {
+                            collectionsViewModel.requestAllForExport()
+                            menuExpanded.value = false
+                                  },
+                        leadingIcon = { Icon(Icons.Outlined.FileDownload, null) }
+                    )
+                }
+            }
+        ) },
+        content = {
+            Column {
+                JtxNavigationDrawer(
+                    drawerState = drawerState,
+                    mainContent = { CollectionsScreenContent(
+                        collectionsLive = collectionsViewModel.collections,
+                        isProcessing = collectionsViewModel.isProcessing,
+                        onCollectionChanged = { collection -> collectionsViewModel.saveCollection(collection) },
+                        onCollectionDeleted = { collection -> collectionsViewModel.deleteCollection(collection) },
+                        onEntriesMoved = { old, new -> collectionsViewModel.moveCollectionItems(old.collectionId, new.collectionId) },
+                        onImportFromICS = { collection -> /* importFromICS(collection) */ /*TODO*/ },
+                        onExportAsICS = { /* collection -> exportAsICS(collection) */  /*TODO*/ },
+                        onCollectionClicked = { collection ->
+                            /*
+                            iCalString2Import?.let {
+                                collectionsViewModel.isProcessing.postValue(true)
+                                collectionsViewModel.insertICSFromReader(collection.toICalCollection(), it)
+                                iCalString2Import = null
+                                iCalImportSnackbar?.dismiss()
+                            }
+                             */  /*TODO*/
+                        },
+                        onDeleteAccount = { account -> collectionsViewModel.removeAccount(account) },
+                    )
+
+                    },
+                    navController = navController
+                )
+            }
+        }
+    )
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CollectionsScreen(
+fun CollectionsScreenContent(
     collectionsLive: LiveData<List<CollectionsView>>,
     isProcessing: LiveData<Boolean>,
     onCollectionChanged: (ICalCollection) -> Unit,
@@ -63,9 +205,12 @@ fun CollectionsScreen(
 
 
     Box {
-        AnimatedVisibility(visible = showProgressIndicator) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-        }
+        AnimatedVisibility(
+            visible = showProgressIndicator,
+            content = {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+        )
 
         Column(
             modifier = Modifier
@@ -173,7 +318,7 @@ fun CollectionsScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun CollectionsScreen_Preview() {
+fun CollectionsScreenContent_Preview() {
     JtxBoardTheme {
 
         val collection1 = CollectionsView(
@@ -205,8 +350,8 @@ fun CollectionsScreen_Preview() {
             accountName = "Another account",
             accountType = "at.bitfire.davx5"
         )
-        CollectionsScreen(
-            MutableLiveData(listOf(collection1, collection2, collection3)),
+        CollectionsScreenContent(
+            collectionsLive = MutableLiveData(listOf(collection1, collection2, collection3)),
             isProcessing = MutableLiveData(true),
             onCollectionChanged = { },
             onCollectionDeleted = { },
