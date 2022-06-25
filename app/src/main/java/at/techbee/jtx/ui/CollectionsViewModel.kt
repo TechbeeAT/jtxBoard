@@ -17,6 +17,7 @@ import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
@@ -30,8 +31,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
     val isDavx5Compatible = MutableLiveData(SyncUtil.isDAVx5CompatibleWithJTX(application))
     val app = application
 
-    val collectionICS = MutableLiveData<String>(null)
-    val allCollectionsICS = MutableLiveData<List<Pair<String, String>>>(null)
+    val collectionsICS = MutableLiveData<List<Pair<String, String>>>(null)
 
     val isProcessing = MutableLiveData(false)
 
@@ -79,27 +79,17 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun requestICSForCollection(collection: ICalCollection) {
-        isProcessing.postValue(true)
 
-        viewModelScope.launch(Dispatchers.IO)  {
-            val account = collection.getAccount()
-            val collectionId = collection.collectionId
-            collectionICS.postValue(Ical4androidUtil.getICSFormatForCollectionFromProvider(account, getApplication(), collectionId))
-            isProcessing.postValue(false)
-        }
-    }
-
-    fun requestAllForExport() {
+    fun requestICSForExport(collections: List<CollectionsView>) {
         isProcessing.postValue(true)
         val icsList: MutableList<Pair<String, String>> = mutableListOf()   // first of pair is filename/collectionname, second is ics
 
         viewModelScope.launch(Dispatchers.IO)  {
-            collections.value?.forEach { collection ->
+            collections.forEach { collection ->
                 val ics = (Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId))
                 ics?.let { icsList.add(Pair(collection.displayName?:collection.collectionId.toString(), it)) }
             }
-            allCollectionsICS.postValue(icsList)
+            collectionsICS.postValue(icsList)
             isProcessing.postValue(false)
         }
     }

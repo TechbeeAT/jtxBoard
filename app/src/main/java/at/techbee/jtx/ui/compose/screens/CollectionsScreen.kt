@@ -14,7 +14,6 @@ import android.app.Application
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -40,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -51,7 +49,6 @@ import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.appbars.OverflowMenu
 import at.techbee.jtx.ui.compose.cards.CollectionCard
 import at.techbee.jtx.ui.compose.dialogs.CollectionsAddOrEditDialog
-import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
@@ -73,20 +70,22 @@ fun CollectionsScreen(
     val context = LocalContext.current
     val isDAVx5available = SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
 
-    val resultExportAllFilepath = remember { mutableStateOf<Uri?>(null) }
+    val resultExportFilepath = remember { mutableStateOf<Uri?>(null) }
     val launcherExportAll = rememberLauncherForActivityResult(CreateDocument("text/calendar")) {
-        resultExportAllFilepath.value = it
+        resultExportFilepath.value = it
     }
-    val allCollectionsICS = collectionsViewModel.allCollectionsICS.observeAsState()
-    if(resultExportAllFilepath.value == null && !allCollectionsICS.value.isNullOrEmpty()) {
+    val collectionsICS = collectionsViewModel.collectionsICS.observeAsState()
+    if(resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size > 1) {
         launcherExportAll.launch("jtxBoard_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(), TimeZone.getDefault().id)}.zip")
+    } else if(resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size == 1) {
+        launcherExportAll.launch("${collectionsICS.value!!.first().first}_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(),null)}.ics")
     }
-    else if(resultExportAllFilepath.value != null && !allCollectionsICS.value.isNullOrEmpty()) {
+    else if(resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size > 1) {
         try {
-            val output: OutputStream? = context.contentResolver?.openOutputStream(resultExportAllFilepath.value!!)
+            val output: OutputStream? = context.contentResolver?.openOutputStream(resultExportFilepath.value!!)
             val bos = BufferedOutputStream(output)
             ZipOutputStream(bos).use { zos ->
-                allCollectionsICS.value!!.forEach { ics ->
+                collectionsICS.value!!.forEach { ics ->
                     // not available on BufferedOutputStream
                     zos.putNextEntry(ZipEntry("${ics.first}.ics"))
                     zos.write(ics.second.toByteArray())
@@ -99,8 +98,22 @@ fun CollectionsScreen(
         } catch (e: IOException) {
             Toast.makeText(context, R.string.collections_toast_export_all_ics_error, Toast.LENGTH_LONG).show()
         } finally {
-            collectionsViewModel.allCollectionsICS.value = null
-            resultExportAllFilepath.value = null
+            collectionsViewModel.collectionsICS.value = null
+            resultExportFilepath.value = null
+        }
+    } else if(resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size == 1) {
+        try {
+            val output: OutputStream? =
+                context.contentResolver?.openOutputStream(resultExportFilepath.value!!)
+            output?.write(collectionsICS.value!!.first().second.toByteArray())
+            output?.flush()
+            output?.close()
+            Toast.makeText(context, R.string.collections_toast_export_ics_success, Toast.LENGTH_LONG).show()
+        } catch (e: IOException) {
+            Toast.makeText(context, R.string.collections_toast_export_ics_error, Toast.LENGTH_LONG).show()
+        } finally {
+            collectionsViewModel.collectionsICS.value = null
+            resultExportFilepath.value = null
         }
     }
 
@@ -142,7 +155,7 @@ fun CollectionsScreen(
                     DropdownMenuItem(
                         text = { Text(text = stringResource(id = R.string.menu_collections_export_all))  },
                         onClick = {
-                            collectionsViewModel.requestAllForExport()
+                            collectionsViewModel.collections.value?.let { collectionsViewModel.requestICSForExport(it)}
                             menuExpanded.value = false
                                   },
                         leadingIcon = { Icon(Icons.Outlined.FileDownload, null) }
@@ -161,7 +174,7 @@ fun CollectionsScreen(
                         onCollectionDeleted = { collection -> collectionsViewModel.deleteCollection(collection) },
                         onEntriesMoved = { old, new -> collectionsViewModel.moveCollectionItems(old.collectionId, new.collectionId) },
                         onImportFromICS = { collection -> /* importFromICS(collection) */ /*TODO*/ },
-                        onExportAsICS = { /* collection -> exportAsICS(collection) */  /*TODO*/ },
+                        onExportAsICS = { collection -> collectionsViewModel.requestICSForExport(listOf(collection)) },
                         onCollectionClicked = { collection ->
                             /*
                             iCalString2Import?.let {

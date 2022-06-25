@@ -217,28 +217,6 @@ class CollectionsFragment : Fragment() {
         }
     }
 
-    private fun exportAsICS(collection: CollectionsView) {
-
-            collectionsViewModel.requestICSForCollection(collection.toICalCollection())
-            collectionsViewModel.collectionICS.observe(viewLifecycleOwner) { ics ->
-                if (ics.isNullOrEmpty())
-                    return@observe
-                this.ics = ics
-                getFileUriForSavingICS.launch(
-                    "${collection.displayName}_${
-                        DateTimeUtils.convertLongToYYYYMMDDString(
-                            System.currentTimeMillis(),
-                            null
-                        )
-                    }.ics"
-                )
-                //Log.d("collectionICS", ics)
-                collectionsViewModel.collectionICS.removeObservers(
-                    viewLifecycleOwner
-                )
-                collectionsViewModel.collectionICS.postValue(null)
-            }
-    }
 
 }
 
