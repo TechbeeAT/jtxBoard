@@ -18,10 +18,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -273,11 +269,30 @@ class IcalListFragment : Fragment() {
             R.id.menu_list_delete_visible -> deleteVisible()
             R.id.menu_list_syncnow -> SyncUtil.syncAllAccounts(context)
             /*
-            R.id.menu_list_viewmode_list -> icalListViewModel.viewMode = PREFS_VIEWMODE_LIST
-            R.id.menu_list_viewmode_grid -> icalListViewModel.viewMode = PREFS_VIEWMODE_GRID
-            R.id.menu_list_viewmode_compact -> icalListViewModel.viewMode = PREFS_VIEWMODE_COMPACT
-            R.id.menu_list_viewmode_kanban -> icalListViewModel.viewMode = PREFS_VIEWMODE_KANBAN
-
+            R.id.menu_list_viewmode_list -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_LIST)
+            R.id.menu_list_viewmode_grid -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_GRID)
+            R.id.menu_list_viewmode_compact -> {
+                if ((BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY && BillingManager.getInstance()?.isProPurchased?.value == false)) {
+                    val snackbar = Snackbar.make(requireView(), R.string.buypro_snackbar_please_purchase_pro, Snackbar.LENGTH_LONG)
+                    snackbar.setAction(R.string.more) {
+                        findNavController().navigate(R.id.action_global_buyProFragment)
+                    }
+                    snackbar.show()
+                } else {
+                    icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_COMPACT)
+                }
+            }
+            R.id.menu_list_viewmode_kanban -> {
+                if ((BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY && BillingManager.getInstance()?.isProPurchased?.value == false)) {
+                    val snackbar = Snackbar.make(requireView(), R.string.buypro_snackbar_please_purchase_pro, Snackbar.LENGTH_LONG)
+                    snackbar.setAction(R.string.more) {
+                        findNavController().navigate(R.id.action_global_buyProFragment)
+                    }
+                    snackbar.show()
+                } else {
+                    icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_KANBAN)
+                }
+            }
              */
         }
         return super.onOptionsItemSelected(item)

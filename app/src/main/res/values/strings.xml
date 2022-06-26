@@ -553,6 +553,7 @@
     <string name="buypro_success_thankyou">Thank you!</string>
     <string name="buypro_snackbar_remote_entries_blocked">Please purchase the Pro package to enable editing capabilities of remote collections.</string>
     <string name="buypro_snackbar_quick_entries_blocked">Please purchase the Pro package to enable quick-add capabilities.</string>
+    <string name="buypro_snackbar_please_purchase_pro">Please purchase the Pro package to enable this feature.</string>
     <string name="buypro_initial_dialog_message">Hello! jtx Board comes with a standard and a Pro version. Please check out the \"Buy Pro\" section to find out more about jtx Board Pro! \nThank you!</string>
 
     <string name="attachment_error_on_retrieving_file">Failed to retrieve file.</string>

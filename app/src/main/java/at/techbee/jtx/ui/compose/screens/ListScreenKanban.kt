@@ -8,6 +8,8 @@
 
 package at.techbee.jtx.ui.compose.screens
 
+import android.os.Build
+import android.os.VibrationEffect
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.Orientation
@@ -143,6 +145,8 @@ fun ListScreenKanban(
                                                 (iCalObject.property.status == StatusJournal.FINAL.name && offsetX < 0f) -> onStatusChanged(iCalObject.property.id, StatusJournal.DRAFT, iCalObject.property.isLinkedRecurringInstance, true)
                                             }
                                         }
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                                            VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
                                     }
 
                                     offsetX = 0f
