@@ -50,9 +50,11 @@ import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.appbars.OverflowMenu
 import at.techbee.jtx.ui.compose.cards.CollectionCard
 import at.techbee.jtx.ui.compose.dialogs.CollectionsAddOrEditDialog
+import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -60,11 +62,15 @@ import java.util.*
 @Composable
 fun CollectionsScreen(
     navController: NavHostController,
+    globalStateHolder: GlobalStateHolder,
     collectionsViewModel: CollectionsViewModel
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
     val isDAVx5available = SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     /* EXPORT FUNCTIONALITIES */
     val resultExportFilepath = remember { mutableStateOf<Uri?>(null) }
@@ -91,6 +97,7 @@ fun CollectionsScreen(
         resultImportFilepath.value = it
     }
     val importCollection = remember { mutableStateOf<CollectionsView?>(null) }
+    // import from file uri
     if(resultImportFilepath.value != null && importCollection.value != null) {
         context.contentResolver?.openInputStream(resultImportFilepath.value!!)?.use {
             val icsString = it.readBytes().decodeToString()
@@ -99,6 +106,22 @@ fun CollectionsScreen(
             resultImportFilepath.value = null
             it.close()}
     }
+    // import from intent
+    if(importCollection.value != null && globalStateHolder.icalString2Import.value != null) {
+        collectionsViewModel.insertICSFromReader(importCollection.value!!.toICalCollection(), globalStateHolder.icalString2Import.value!!)
+        importCollection.value = null
+        globalStateHolder.icalString2Import.value = null
+    }
+    if(importCollection.value == null && globalStateHolder.icalString2Import.value != null) {
+        val snackbarMessage = stringResource(id = R.string.collections_snackbar_select_collection_for_ics_import)
+        scope.launch {
+            snackbarHostState.showSnackbar(snackbarMessage, duration = SnackbarDuration.Indefinite)
+        }
+    } else {
+        snackbarHostState.currentSnackbarData?.dismiss()
+    }
+
+    // show result
     val insertResult by collectionsViewModel.resultInsertedFromICS.observeAsState()
     insertResult?.let {
         Toast.makeText(
@@ -172,14 +195,8 @@ fun CollectionsScreen(
                                           },
                         onExportAsICS = { collection -> collectionsViewModel.requestICSForExport(listOf(collection)) },
                         onCollectionClicked = { collection ->
-                            /*
-                            iCalString2Import?.let {
-                                collectionsViewModel.isProcessing.postValue(true)
-                                collectionsViewModel.insertICSFromReader(collection.toICalCollection(), it)
-                                iCalString2Import = null
-                                iCalImportSnackbar?.dismiss()
-                            }
-                             */  /*TODO*/
+                            if(globalStateHolder.icalString2Import.value?.isNotEmpty() == true)
+                                importCollection.value = collection
                         },
                         onDeleteAccount = { account -> collectionsViewModel.removeAccount(account) }
                     )
@@ -188,7 +205,10 @@ fun CollectionsScreen(
                     navController = navController
                 )
             }
-        }
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        },
     )
 }
 
