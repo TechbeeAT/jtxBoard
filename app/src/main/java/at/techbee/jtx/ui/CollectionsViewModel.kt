@@ -37,13 +37,10 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
 
     val database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
     val collections = database.getAllCollectionsView()
-    val isDavx5Compatible = MutableLiveData(SyncUtil.isDAVx5CompatibleWithJTX(application))
     val app = application
 
     val collectionsICS = MutableLiveData<List<Pair<String, String>>>(null)
-
     val isProcessing = MutableLiveData(false)
-
     val resultInsertedFromICS = MutableLiveData<Pair<Int, Int>?>(null)
 
 
@@ -108,6 +105,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         if(resultExportFilepath == null || collectionsICS.value == null)
             return
 
+        isProcessing.postValue(true)
         try {
             val output: OutputStream? = context.contentResolver?.openOutputStream(resultExportFilepath)
             val bos = BufferedOutputStream(output)
@@ -126,6 +124,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
             Toast.makeText(context, R.string.collections_toast_export_all_ics_error, Toast.LENGTH_LONG).show()
         } finally {
             collectionsICS.value = null
+            isProcessing.postValue(false)
         }
     }
 
@@ -134,6 +133,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         if(resultExportFilepath == null || collectionsICS.value == null)
             return
 
+        isProcessing.postValue(true)
         try {
             val output: OutputStream? =
                 context.contentResolver?.openOutputStream(resultExportFilepath)
@@ -143,17 +143,22 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
             Toast.makeText(context, R.string.collections_toast_export_ics_success, Toast.LENGTH_LONG).show()
         } catch (e: IOException) {
             Toast.makeText(context, R.string.collections_toast_export_ics_error, Toast.LENGTH_LONG).show()
+        } finally {
+            collectionsICS.value = null
+            isProcessing.postValue(false)
         }
     }
 
 
     fun insertICSFromReader(collection: ICalCollection, ics: String) {
 
+        isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO)  {
             val resultPair = Ical4androidUtil.insertFromReader(collection.getAccount(), getApplication(), collection.collectionId, ics.reader())
             if(collection.accountType != LOCAL_ACCOUNT_TYPE)
                 SyncUtil.notifyContentObservers(getApplication())
             resultInsertedFromICS.postValue(resultPair)
+            isProcessing.postValue(false)
         }
     }
 

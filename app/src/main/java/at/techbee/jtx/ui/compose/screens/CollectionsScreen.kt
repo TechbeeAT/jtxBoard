@@ -14,6 +14,7 @@ import android.app.Application
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -49,16 +50,10 @@ import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.appbars.OverflowMenu
 import at.techbee.jtx.ui.compose.cards.CollectionCard
 import at.techbee.jtx.ui.compose.dialogs.CollectionsAddOrEditDialog
-import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
-import java.io.BufferedOutputStream
-import java.io.IOException
-import java.io.OutputStream
 import java.util.*
-import java.util.zip.ZipEntry
-import java.util.zip.ZipOutputStream
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,6 +83,30 @@ fun CollectionsScreen(
     } else if(resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size == 1) {
         collectionsViewModel.exportICS(resultExportFilepath = resultExportFilepath.value, context = context)
         resultExportFilepath.value = null
+    }
+
+    /* IMPORT FUNCTIONALITIES */
+    val resultImportFilepath = remember { mutableStateOf<Uri?>(null) }
+    val launcherImport = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
+        resultImportFilepath.value = it
+    }
+    val importCollection = remember { mutableStateOf<CollectionsView?>(null) }
+    if(resultImportFilepath.value != null && importCollection.value != null) {
+        context.contentResolver?.openInputStream(resultImportFilepath.value!!)?.use {
+            val icsString = it.readBytes().decodeToString()
+            collectionsViewModel.insertICSFromReader(importCollection.value!!.toICalCollection(), icsString)
+            importCollection.value = null
+            resultImportFilepath.value = null
+            it.close()}
+    }
+    val insertResult by collectionsViewModel.resultInsertedFromICS.observeAsState()
+    insertResult?.let {
+        Toast.makeText(
+            context,
+            stringResource(R.string.collections_snackbar_x_items_added, it.first, it.second),
+            Toast.LENGTH_LONG
+        ).show()
+        collectionsViewModel.resultInsertedFromICS.value = null
     }
 
 
@@ -147,7 +166,10 @@ fun CollectionsScreen(
                         onCollectionChanged = { collection -> collectionsViewModel.saveCollection(collection) },
                         onCollectionDeleted = { collection -> collectionsViewModel.deleteCollection(collection) },
                         onEntriesMoved = { old, new -> collectionsViewModel.moveCollectionItems(old.collectionId, new.collectionId) },
-                        onImportFromICS = { collection -> /* importFromICS(collection) */ /*TODO*/ },
+                        onImportFromICS = { collection ->
+                            importCollection.value = collection
+                            launcherImport.launch(arrayOf("text/calendar"))
+                                          },
                         onExportAsICS = { collection -> collectionsViewModel.requestICSForExport(listOf(collection)) },
                         onCollectionClicked = { collection ->
                             /*
@@ -159,7 +181,7 @@ fun CollectionsScreen(
                             }
                              */  /*TODO*/
                         },
-                        onDeleteAccount = { account -> collectionsViewModel.removeAccount(account) },
+                        onDeleteAccount = { account -> collectionsViewModel.removeAccount(account) }
                     )
 
                     },
