@@ -11,7 +11,11 @@ package at.techbee.jtx.ui
 
 import android.accounts.Account
 import android.app.Application
+import android.content.Context
+import android.net.Uri
+import android.widget.Toast
 import androidx.lifecycle.*
+import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalDatabase
@@ -22,6 +26,11 @@ import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.BufferedOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 
 class CollectionsViewModel(application: Application) : AndroidViewModel(application) {
@@ -91,6 +100,49 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
             }
             collectionsICS.postValue(icsList)
             isProcessing.postValue(false)
+        }
+    }
+
+    fun exportICSasZIP(resultExportFilepath: Uri?,context: Context) {
+
+        if(resultExportFilepath == null || collectionsICS.value == null)
+            return
+
+        try {
+            val output: OutputStream? = context.contentResolver?.openOutputStream(resultExportFilepath)
+            val bos = BufferedOutputStream(output)
+            ZipOutputStream(bos).use { zos ->
+                collectionsICS.value?.forEach { ics ->
+                    // not available on BufferedOutputStream
+                    zos.putNextEntry(ZipEntry("${ics.first}.ics"))
+                    zos.write(ics.second.toByteArray())
+                    zos.closeEntry()
+                }
+            }
+            output?.flush()
+            output?.close()
+            Toast.makeText(context, R.string.collections_toast_export_all_ics_success, Toast.LENGTH_LONG).show()
+        } catch (e: IOException) {
+            Toast.makeText(context, R.string.collections_toast_export_all_ics_error, Toast.LENGTH_LONG).show()
+        } finally {
+            collectionsICS.value = null
+        }
+    }
+
+    fun exportICS(resultExportFilepath: Uri?, context: Context) {
+
+        if(resultExportFilepath == null || collectionsICS.value == null)
+            return
+
+        try {
+            val output: OutputStream? =
+                context.contentResolver?.openOutputStream(resultExportFilepath)
+            output?.write(collectionsICS.value?.first()?.second?.toByteArray())
+            output?.flush()
+            output?.close()
+            Toast.makeText(context, R.string.collections_toast_export_ics_success, Toast.LENGTH_LONG).show()
+        } catch (e: IOException) {
+            Toast.makeText(context, R.string.collections_toast_export_ics_error, Toast.LENGTH_LONG).show()
         }
     }
 

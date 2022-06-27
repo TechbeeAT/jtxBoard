@@ -49,6 +49,7 @@ import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.appbars.OverflowMenu
 import at.techbee.jtx.ui.compose.cards.CollectionCard
 import at.techbee.jtx.ui.compose.dialogs.CollectionsAddOrEditDialog
+import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
@@ -70,6 +71,7 @@ fun CollectionsScreen(
     val context = LocalContext.current
     val isDAVx5available = SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
 
+    /* EXPORT FUNCTIONALITIES */
     val resultExportFilepath = remember { mutableStateOf<Uri?>(null) }
     val launcherExportAll = rememberLauncherForActivityResult(CreateDocument("text/calendar")) {
         resultExportFilepath.value = it
@@ -81,41 +83,13 @@ fun CollectionsScreen(
         launcherExportAll.launch("${collectionsICS.value!!.first().first}_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(),null)}.ics")
     }
     else if(resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size > 1) {
-        try {
-            val output: OutputStream? = context.contentResolver?.openOutputStream(resultExportFilepath.value!!)
-            val bos = BufferedOutputStream(output)
-            ZipOutputStream(bos).use { zos ->
-                collectionsICS.value!!.forEach { ics ->
-                    // not available on BufferedOutputStream
-                    zos.putNextEntry(ZipEntry("${ics.first}.ics"))
-                    zos.write(ics.second.toByteArray())
-                    zos.closeEntry()
-                }
-            }
-            output?.flush()
-            output?.close()
-            Toast.makeText(context, R.string.collections_toast_export_all_ics_success, Toast.LENGTH_LONG).show()
-        } catch (e: IOException) {
-            Toast.makeText(context, R.string.collections_toast_export_all_ics_error, Toast.LENGTH_LONG).show()
-        } finally {
-            collectionsViewModel.collectionsICS.value = null
-            resultExportFilepath.value = null
-        }
+        collectionsViewModel.exportICSasZIP(resultExportFilepath = resultExportFilepath.value, context = context)
+        resultExportFilepath.value = null
     } else if(resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size == 1) {
-        try {
-            val output: OutputStream? =
-                context.contentResolver?.openOutputStream(resultExportFilepath.value!!)
-            output?.write(collectionsICS.value!!.first().second.toByteArray())
-            output?.flush()
-            output?.close()
-            Toast.makeText(context, R.string.collections_toast_export_ics_success, Toast.LENGTH_LONG).show()
-        } catch (e: IOException) {
-            Toast.makeText(context, R.string.collections_toast_export_ics_error, Toast.LENGTH_LONG).show()
-        } finally {
-            collectionsViewModel.collectionsICS.value = null
-            resultExportFilepath.value = null
-        }
+        collectionsViewModel.exportICS(resultExportFilepath = resultExportFilepath.value, context = context)
+        resultExportFilepath.value = null
     }
+
 
     var showCollectionsAddDialog by remember { mutableStateOf(false) }
     if (showCollectionsAddDialog)
