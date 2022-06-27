@@ -1,22 +1,18 @@
 package at.techbee.jtx.ui.compose.appbars
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.res.painterResource
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.ui.theme.montserratAlternates
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +26,7 @@ fun JtxTopAppBar(
     val coroutineScope = rememberCoroutineScope()
 
     CenterAlignedTopAppBar(
-        title = { Text(title)},
+        title = { Text(title, fontFamily = montserratAlternates)},
         navigationIcon = {
             IconButton(onClick = {
                 coroutineScope.launch {

@@ -73,7 +73,6 @@ class MainActivity : AppCompatActivity()  {
 
     private lateinit var toolbar: Toolbar
     private var settings: SharedPreferences? = null
-    private var lastProcessedIntentHash: Int? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

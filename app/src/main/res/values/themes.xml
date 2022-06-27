@@ -42,7 +42,7 @@
 
     </style>
 
-    <style name="jtx.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"></style>
+    <style name="jtx.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu" />
 
     <style name="jtx.TabLabel" parent="TextAppearance.Material3.LabelLarge">
         <item name="fontFamily">@font/montserrat_alternates</item>
