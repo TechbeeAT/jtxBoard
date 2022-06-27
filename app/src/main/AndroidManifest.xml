@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.INTERNET" /> <!-- START remove permissions would be merged by the ical4android manifest and that are not needed -->
+    <uses-permission android:name="android.permission.VIBRATE" />
     <!-- read/write Android calendars -->
     <uses-permission
         android:name="android.permission.READ_CALENDAR"

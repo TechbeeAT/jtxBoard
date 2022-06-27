@@ -8,6 +8,12 @@
 
 package at.techbee.jtx.ui.compose.screens
 
+import android.content.Context.VIBRATOR_MANAGER_SERVICE
+import android.content.Context.VIBRATOR_SERVICE
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.Orientation
@@ -52,6 +58,7 @@ fun ListScreenKanban(
     goToEdit: (itemId: Long) -> Unit
 ) {
 
+    val context = LocalContext.current
     val list by listLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
     val statusColumns = if(module == Module.TODO) setOf(StatusTodo.`NEEDS-ACTION`.name, StatusTodo.`IN-PROCESS`.name, StatusTodo.COMPLETED.name) else setOf(StatusJournal.DRAFT.name, StatusJournal.FINAL.name)
@@ -143,8 +150,19 @@ fun ListScreenKanban(
                                                 (iCalObject.property.status == StatusJournal.FINAL.name && offsetX < 0f) -> onStatusChanged(iCalObject.property.id, StatusJournal.DRAFT, iCalObject.property.isLinkedRecurringInstance, true)
                                             }
                                         }
+                                        // make a short vibration
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                            val vibratorManager = context.getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                                            val vibrator = vibratorManager.defaultVibrator
+                                            val vibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
+                                            vibrator.vibrate(vibrationEffect)
+                                        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            @Suppress("DEPRECATION")
+                                            val vibrator = context.getSystemService(VIBRATOR_SERVICE) as Vibrator
+                                            val vibrationEffect = VibrationEffect.createOneShot(150, 10)
+                                            vibrator.vibrate(vibrationEffect)
+                                        }
                                     }
-
                                     offsetX = 0f
                                 }
                             ),
@@ -153,8 +171,6 @@ fun ListScreenKanban(
             }
         }
     }
-
-
 }
 
 
