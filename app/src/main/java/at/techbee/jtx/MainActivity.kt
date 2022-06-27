@@ -71,67 +71,29 @@ class MainActivity : AppCompatActivity()  {
 
     }
 
-    private lateinit var toolbar: Toolbar
-    private var settings: SharedPreferences? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
 
-        BillingManager.getInstance()?.initialise(this)
-        if (!(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY && BillingManager.getInstance()?.isProPurchased?.value == false))
-            DynamicColors.applyToActivityIfAvailable(this)    // Google play gets dynamic colors only in pro!
-
         setContentView(R.layout.activity_main)
 
-        //load settings
-        settings = PreferenceManager.getDefaultSharedPreferences(this)
 
         // Register Notification Channel for Reminders
         createNotificationChannel()
 
-        // Set up the toolbar with the navigation drawer
-        toolbar = findViewById(R.id.topAppBar)
-        //setToolbarTitle("Board", null)
-        toolbar.setTitleTextAppearance(this, R.style.jtx_MontserratFont)
-        toolbar.setSubtitleTextAppearance(this, R.style.jtx_MontserratFont)
 
-        setSupportActionBar(toolbar)
-
-        // necessary for ical4j
-        TimeZoneRegistryFactory.getInstance().createRegistry()
-
-
-        checkThemeSetting()
-
-        val billingManager = BillingManager.getInstance()
-        billingManager?.isProPurchased?.observe(this) { isPurchased ->
-            if(!isPurchased)
-                AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)
-
-        }
-
+/*
         billingManager?.isProPurchasedLoaded?.observe(this) {
             // we show the dialog only when we are sure that the purchase was loaded
             if(it)
                 showProInfoDialog(billingManager.isProPurchased.value?: false)
         }
+        //TODO!
+ */
     }
 
 
-    /**
-     * Checks in the settings if night mode is enforced and switches to it if applicable
-     */
-    private fun checkThemeSetting() {
-        // user interface settings
-        when(settings?.getString(SettingsFragment.PREFERRED_THEME, SettingsFragment.THEME_SYSTEM)) {
-            SettingsFragment.THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            SettingsFragment.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            SettingsFragment.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        }
-    }
 
 
 
@@ -173,17 +135,6 @@ class MainActivity : AppCompatActivity()  {
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
-    }
-
-
-    /**
-     * Sets the toolbar with the given title and subtitle
-     * @param [title] to be set in the toolbar
-     * @param [subtitle] to be set in the toolbar
-     */
-    fun setToolbarTitle(title: String, subtitle: String?) {
-        toolbar.title = title
-        toolbar.subtitle = subtitle
     }
 
 
@@ -261,6 +212,8 @@ class MainActivity : AppCompatActivity()  {
 
     private fun showProInfoDialog(isPurchased: Boolean) {
         // show a one time message for users who did not buy the app
+
+        /*
         val proInfoShown = settings?.getBoolean(SETTINGS_PRO_INFO_SHOWN, false) ?: false
         val jtxProDialogMessage =
             if(!proInfoShown && isPurchased && this.packageManager.getPackageInfo(this.packageName, 0).firstInstallTime < 1654034400000L) {
@@ -287,7 +240,9 @@ class MainActivity : AppCompatActivity()  {
                 .show()
 
             settings?.edit()?.putBoolean(SETTINGS_PRO_INFO_SHOWN, true)?.apply()
-        }
+          }
+         */
+
 
     }
 }

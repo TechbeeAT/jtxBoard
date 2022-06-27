@@ -2,11 +2,11 @@ package at.techbee.jtx
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Configuration
-import android.os.Build
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.WindowInsetsController
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.preference.PreferenceManager
 import at.techbee.jtx.databinding.FragmentSettingsContainerBinding
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
@@ -34,20 +35,31 @@ import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.compose.screens.*
 import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
-import com.google.android.material.elevation.SurfaceColors
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 
-class MainActivity2 : FragmentActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
+class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
 //class MainActivity2 : ComponentActivity() {
-    // or maybe AppCompatActivity() was also proposed...
+    // or maybe FragmentActivity() was also proposed...
 
     private var lastProcessedIntentHash: Int? = null
     private val globalStateHolder = GlobalStateHolder(this)
+    private var settings: SharedPreferences? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        settings = PreferenceManager.getDefaultSharedPreferences(this)
+        TimeZoneRegistryFactory.getInstance().createRegistry() // necessary for ical4j
+        checkThemeSetting()
         BillingManager.getInstance()?.initialise(this)
+        /* TODO
+        billingManager?.isProPurchased?.observe(this) { isPurchased ->
+            if(!isPurchased)
+                AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)
+        }
+         */
+
 
         setContent {
             JtxBoardTheme {
@@ -66,22 +78,6 @@ class MainActivity2 : FragmentActivity() {       // fragment activity instead of
     override fun onResume() {
         super.onResume()
         AdManager.getInstance()?.resumeAds()
-
-        // coloring notification bar and navigation icon bar, see https://gitlab.com/techbeeat1/jtx/-/issues/202
-        //TODO: Check if there is a better way in jetpack compose
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.navigationBarColor = SurfaceColors.SURFACE_2.getColor(this)  // bottom navigation should fill
-            window.statusBarColor = SurfaceColors.SURFACE_0.getColor(this)
-
-            val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-            if(nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
-                window.decorView.windowInsetsController?.setSystemBarsAppearance(0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS)
-                window.decorView.windowInsetsController?.setSystemBarsAppearance(0,WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS)
-            } else {
-                window.decorView.windowInsetsController?.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS)
-                window.decorView.windowInsetsController?.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS, WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS)
-            }
-        }
 
         //hanlde intents, but only if it wasn't already handled
         if(intent.hashCode() != lastProcessedIntentHash) {
@@ -136,6 +132,19 @@ class MainActivity2 : FragmentActivity() {       // fragment activity instead of
     override fun onPause() {
         super.onPause()
         AdManager.getInstance()?.pauseAds()
+    }
+
+    /**
+     * Checks in the settings if night mode is enforced and switches to it if applicable
+     */
+    private fun checkThemeSetting() {
+        // user interface settings
+        when(settings?.getString(SettingsFragment.PREFERRED_THEME, SettingsFragment.THEME_SYSTEM)) {
+            SettingsFragment.THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            SettingsFragment.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            SettingsFragment.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
     }
 
 

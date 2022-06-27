@@ -1414,7 +1414,7 @@ class IcalEditFragment : Fragment() {
                 }
             }
 
-            activity.setToolbarTitle(toolbarText, binding.editFragmentTabGeneral.editSummaryEditTextinputfield.text.toString() )
+            //activity.setToolbarTitle(toolbarText, binding.editFragmentTabGeneral.editSummaryEditTextinputfield.text.toString() )
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }

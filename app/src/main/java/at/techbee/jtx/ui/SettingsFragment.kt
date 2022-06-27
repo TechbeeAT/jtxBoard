@@ -58,16 +58,4 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
     }
-
-    override fun onResume() {
-
-        try {
-            val activity = requireActivity() as MainActivity
-            activity.setToolbarTitle(getString(R.string.toolbar_text_settings), null)
-        } catch (e: ClassCastException) {
-            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
-        }
-        super.onResume()
-    }
-
 }

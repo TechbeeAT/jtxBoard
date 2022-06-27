@@ -1,10 +1,18 @@
 package at.techbee.jtx.ui.theme
 
+import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+import androidx.preference.PreferenceManager
+import at.techbee.jtx.flavored.BillingManager
 
 private val DarkColorScheme = darkColorScheme(
     primary = md_theme_light_primary,
@@ -15,10 +23,16 @@ private val DarkColorScheme = darkColorScheme(
     background = md_theme_dark_background,
     surface = md_theme_dark_surface,
     onPrimary = md_theme_dark_onPrimary,
+    primaryContainer = md_theme_dark_primaryContainer,
+    onPrimaryContainer = md_theme_dark_onPrimaryContainer,
     onSecondary = md_theme_dark_onSecondary,
+    secondaryContainer = md_theme_dark_secondaryContainer,
+    onSecondaryContainer = md_theme_dark_onSecondaryContainer,
     onTertiary = md_theme_dark_onTertiary,
     onBackground = md_theme_dark_onBackground,
-    onSurface = md_theme_dark_onSurface
+    onSurface = md_theme_dark_onSurface,
+    surfaceVariant = md_theme_dark_surfaceVariant,
+    onSurfaceVariant = md_theme_dark_onSurfaceVariant
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -30,10 +44,16 @@ private val LightColorScheme = lightColorScheme(
     background = md_theme_light_background,
     surface = md_theme_light_surface,
     onPrimary = md_theme_light_onPrimary,
+    primaryContainer = md_theme_light_primaryContainer,
+    onPrimaryContainer = md_theme_light_onPrimaryContainer,
     onSecondary = md_theme_dark_onSecondary,
+    secondaryContainer = md_theme_light_secondaryContainer,
+    onSecondaryContainer = md_theme_light_onSecondaryContainer,
     onTertiary = md_theme_light_onTertiary,
     onBackground = md_theme_light_onBackground,
-    onSurface = md_theme_light_onSurface
+    onSurface = md_theme_light_onSurface,
+    surfaceVariant = md_theme_light_surfaceVariant,
+    onSurfaceVariant = md_theme_light_onSurfaceVariant
 
 )
 
@@ -44,23 +64,33 @@ fun JtxBoardTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+
+    val view = LocalView.current
+    val activity  = view.context as Activity
+    BillingManager.getInstance()?.initialise(activity)
+    val settings = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
+
+
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+        // dynamic colors are only loaded in pro!
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && BillingManager.getInstance()?.isProPurchased?.value == true -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-    /*
-    val view = LocalView.current
+
     if (!view.isInEditMode) {
         SideEffect {
-            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
-            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                activity.window.navigationBarColor = colorScheme.primary.copy(alpha = 0.08f).compositeOver(colorScheme.surface.copy()).toArgb()
+                activity.window.statusBarColor = colorScheme.background.toArgb()
+                WindowCompat.getInsetsController(activity.window, view).isAppearanceLightStatusBars = !darkTheme
+                WindowCompat.getInsetsController(activity.window, view).isAppearanceLightNavigationBars = !darkTheme
+            }
         }
     }
-     */
 
     MaterialTheme(
         colorScheme = colorScheme,

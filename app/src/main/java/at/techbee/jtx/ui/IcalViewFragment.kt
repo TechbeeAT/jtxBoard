@@ -549,7 +549,7 @@ class IcalViewFragment : Fragment() {
                 Module.TODO.name -> getString(R.string.toolbar_text_view_task_details)
                 else -> ""
             }
-            activity.setToolbarTitle(toolbarText, icalViewViewModel.icalEntity.value?.property?.summary )
+            //activity.setToolbarTitle(toolbarText, icalViewViewModel.icalEntity.value?.property?.summary )
         } catch (e: ClassCastException) {
             Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
         }
