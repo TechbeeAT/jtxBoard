@@ -21,12 +21,12 @@ fun LabelledCheckbox(
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
 
-        Text(text = text)
         Checkbox(
             checked = isChecked,
             onCheckedChange = { onCheckedChanged(it) },
             enabled = true,
         )
+        Text(text = text)
     }
 }
 
