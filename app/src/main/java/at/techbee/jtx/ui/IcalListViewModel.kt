@@ -93,6 +93,14 @@ open class IcalListViewModel(application: Application, val module: Module) : And
 
     init {
         updateSearch()
+
+        // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
+        val firstInstall = application.packageManager?.getPackageInfo(application.packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
+        if(settings.getBoolean(PREFS_ISFIRSTRUN, true)) {
+            if (firstInstall > 1641596400000L)
+                addWelcomeEntries(application)
+            settings.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
+        }
     }
 
     companion object {
@@ -100,6 +108,8 @@ open class IcalListViewModel(application: Application, val module: Module) : And
         const val PREFS_LIST_JOURNALS = "prefsListJournals"
         const val PREFS_LIST_NOTES = "prefsListNotes"
         const val PREFS_LIST_TODOS = "prefsListTodos"
+
+        const val PREFS_ISFIRSTRUN = "isFirstRun"
     }
 
     private fun constructQuery(): SimpleSQLiteQuery {

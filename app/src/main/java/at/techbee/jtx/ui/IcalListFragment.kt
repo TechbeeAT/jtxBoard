@@ -64,8 +64,6 @@ class IcalListFragment : Fragment() {
     companion object {
         const val PREFS_LAST_USED_COLLECTION = "lastUsedCollection"
         const val PREFS_MODULE = "prefsModule"
-        const val PREFS_ISFIRSTRUN = "isFirstRun"
-
     }
 
 
@@ -84,17 +82,6 @@ class IcalListFragment : Fragment() {
         val modelNotes = IcalListViewModel(application, Module.NOTE)
         val modelTasks = IcalListViewModel(application, Module.TODO)
 
-
-        // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
-        /*
-        val firstInstall = context?.packageManager?.getPackageInfo(requireContext().packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
-        if(prefs.getBoolean(PREFS_ISFIRSTRUN, true)) {
-            if (firstInstall > 1641596400000L)
-                icalListViewModel.addWelcomeEntries(requireContext())
-            prefs.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
-        }
-        
-         */
 
 
 
