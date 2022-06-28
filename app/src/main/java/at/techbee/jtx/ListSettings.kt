@@ -68,7 +68,7 @@ data class ListSettings(
         orderBy.value = prefs.getString(PREFS_ORDERBY, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.DUE
         sortOrder.value = prefs.getString(PREFS_SORTORDER, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.ASC
 
-        viewMode.value = prefs.getString(PREFS_VIEWMODE, null)?.let { ViewMode.valueOf(it) } ?: ViewMode.LIST
+        viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { ViewMode.valueOf(it) } ?: ViewMode.LIST
     }
 
     fun save(prefs: SharedPreferences) {

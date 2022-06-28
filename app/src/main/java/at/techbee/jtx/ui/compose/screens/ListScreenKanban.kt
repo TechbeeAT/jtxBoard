@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
+import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.compose.cards.ListCardKanban
 import at.techbee.jtx.ui.theme.JtxBoardTheme
@@ -50,7 +50,7 @@ import kotlin.math.roundToInt
 @Composable
 fun ListScreenKanban(
     module: Module,
-    listLive: LiveData<List<ICal4ListWithRelatedto>>,
+    listLive: LiveData<List<ICal4List>>,
     scrollOnceId: MutableLiveData<Long?>,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
     onStatusChanged: (itemid: Long, status: StatusJournal, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean) -> Unit,
@@ -68,15 +68,15 @@ fun ListScreenKanban(
         statusColumns.forEach { status ->
 
             val listState = rememberLazyListState()
-            val listFilteredByStatus = list.filter { it.property.status == status      // below we handle also empty status for todos
-                    || (it.property.status == null && it.property.component == Component.VTODO.name && (it.property.percent == null || it.property.percent == 0) && status == StatusTodo.`NEEDS-ACTION`.name)
-                    || (it.property.status == null && it.property.component == Component.VTODO.name && it.property.percent in 1..99 && status == StatusTodo.`IN-PROCESS`.name)
-                    || (it.property.status == null && it.property.component == Component.VTODO.name && it.property.percent == 100 && status == StatusTodo.COMPLETED.name)
-                    || (it.property.status == null && it.property.component == Component.VJOURNAL.name && status == StatusJournal.FINAL.name)
+            val listFilteredByStatus = list.filter { it.status == status      // below we handle also empty status for todos
+                    || (it.status == null && it.component == Component.VTODO.name && (it.percent == null || it.percent == 0) && status == StatusTodo.`NEEDS-ACTION`.name)
+                    || (it.status == null && it.component == Component.VTODO.name && it.percent in 1..99 && status == StatusTodo.`IN-PROCESS`.name)
+                    || (it.status == null && it.component == Component.VTODO.name && it.percent == 100 && status == StatusTodo.COMPLETED.name)
+                    || (it.status == null && it.component == Component.VJOURNAL.name && status == StatusJournal.FINAL.name)
             }
             if(scrollId != null) {
                 LaunchedEffect(list) {
-                    val index = listFilteredByStatus.indexOfFirst { iCalObject -> iCalObject.property.id == scrollId }
+                    val index = listFilteredByStatus.indexOfFirst { iCalObject -> iCalObject.id == scrollId }
                     if(index > -1) {
                         listState.animateScrollToItem(index)
                         scrollOnceId.postValue(null)
@@ -107,7 +107,7 @@ fun ListScreenKanban(
 
                 items(
                     items = listFilteredByStatus,
-                    key = { item -> item.property.id }
+                    key = { item -> item.id }
                 )
                 { iCalObject ->
 
@@ -119,10 +119,10 @@ fun ListScreenKanban(
                         modifier = Modifier
                             .animateItemPlacement()
                             .combinedClickable(
-                                onClick = { goToView(iCalObject.property.id) },
+                                onClick = { goToView(iCalObject.id) },
                                 onLongClick = {
-                                    if (!iCalObject.property.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
-                                        goToEdit(iCalObject.property.id)
+                                    if (!iCalObject.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
+                                        goToEdit(iCalObject.id)
                                 }
                             )
                             .height(150.dp)
@@ -130,24 +130,24 @@ fun ListScreenKanban(
                             .draggable(
                                 orientation = Orientation.Horizontal,
                                 state = rememberDraggableState { delta ->
-                                    if(iCalObject.property.isReadOnly)   // no drag state for read only objects!
+                                    if(iCalObject.isReadOnly)   // no drag state for read only objects!
                                         return@rememberDraggableState
                                     if(abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
                                         offsetX += delta
                                 },
                                 onDragStopped = {
                                     if(abs(offsetX) > maxOffset / 2) {
-                                        if(iCalObject.property.component == Component.VTODO.name) {
+                                        if(iCalObject.component == Component.VTODO.name) {
                                             when {
-                                                (iCalObject.property.percent ?: 0) == 0 && offsetX > 0f -> onProgressChanged(iCalObject.property.id, 1, iCalObject.property.isLinkedRecurringInstance, true)   // positive change, from Needs Action to In Process
-                                                (iCalObject.property.percent ?: 0) in 1..99 && offsetX > 0f -> onProgressChanged(iCalObject.property.id, 100, iCalObject.property.isLinkedRecurringInstance, true)   // positive change, from In Process to Completed
-                                                (iCalObject.property.percent ?: 0) == 100 && offsetX < 0f -> onProgressChanged(iCalObject.property.id, 99, iCalObject.property.isLinkedRecurringInstance, true)   // negative change, from Completed to In Process
-                                                (iCalObject.property.percent ?: 0) in 1..99 && offsetX < 0f -> onProgressChanged(iCalObject.property.id, 0, iCalObject.property.isLinkedRecurringInstance, true)   // negative change, from In Process to Needs Action
+                                                (iCalObject.percent ?: 0) == 0 && offsetX > 0f -> onProgressChanged(iCalObject.id, 1, iCalObject.isLinkedRecurringInstance, true)   // positive change, from Needs Action to In Process
+                                                (iCalObject.percent ?: 0) in 1..99 && offsetX > 0f -> onProgressChanged(iCalObject.id, 100, iCalObject.isLinkedRecurringInstance, true)   // positive change, from In Process to Completed
+                                                (iCalObject.percent ?: 0) == 100 && offsetX < 0f -> onProgressChanged(iCalObject.id, 99, iCalObject.isLinkedRecurringInstance, true)   // negative change, from Completed to In Process
+                                                (iCalObject.percent ?: 0) in 1..99 && offsetX < 0f -> onProgressChanged(iCalObject.id, 0, iCalObject.isLinkedRecurringInstance, true)   // negative change, from In Process to Needs Action
                                             }
                                         } else {   // VJOURNAL
                                             when {
-                                                (iCalObject.property.status == StatusJournal.DRAFT.name && offsetX > 0f) -> onStatusChanged(iCalObject.property.id, StatusJournal.FINAL, iCalObject.property.isLinkedRecurringInstance, true)
-                                                (iCalObject.property.status == StatusJournal.FINAL.name && offsetX < 0f) -> onStatusChanged(iCalObject.property.id, StatusJournal.DRAFT, iCalObject.property.isLinkedRecurringInstance, true)
+                                                (iCalObject.status == StatusJournal.DRAFT.name && offsetX > 0f) -> onStatusChanged(iCalObject.id, StatusJournal.FINAL, iCalObject.isLinkedRecurringInstance, true)
+                                                (iCalObject.status == StatusJournal.FINAL.name && offsetX < 0f) -> onStatusChanged(iCalObject.id, StatusJournal.DRAFT, iCalObject.isLinkedRecurringInstance, true)
                                             }
                                         }
                                         // make a short vibration
@@ -180,31 +180,31 @@ fun ListScreenKanban(
 fun ListScreenKanban_TODO() {
     JtxBoardTheme {
 
-        val icalobject = ICal4ListWithRelatedto.getSample().apply {
-            property.id = 1L
-            property.component = Component.VTODO.name
-            property.module = Module.TODO.name
-            property.percent = 89
-            property.status = StatusTodo.`IN-PROCESS`.name
-            property.classification = Classification.PUBLIC.name
-            property.dtstart = null
-            property.due = null
-            property.numAttachments = 0
-            property.numSubnotes = 0
-            property.numSubtasks = 0
-            property.summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        val icalobject = ICal4List.getSample().apply {
+            id = 1L
+            component = Component.VTODO.name
+            module = Module.TODO.name
+            percent = 89
+            status = StatusTodo.`IN-PROCESS`.name
+            classification = Classification.PUBLIC.name
+            dtstart = null
+            due = null
+            numAttachments = 0
+            numSubnotes = 0
+            numSubtasks = 0
+            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         }
-        val icalobject2 = ICal4ListWithRelatedto.getSample().apply {
-            property.id = 2L
-            property.component = Component.VTODO.name
-            property.module = Module.TODO.name
-            property.percent = 89
-            property.status = StatusTodo.`NEEDS-ACTION`.name
-            property.classification = Classification.CONFIDENTIAL.name
-            property.dtstart = System.currentTimeMillis()
-            property.due = System.currentTimeMillis()
-            property.summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            property.colorItem = Color.Blue.toArgb()
+        val icalobject2 = ICal4List.getSample().apply {
+            id = 2L
+            component = Component.VTODO.name
+            module = Module.TODO.name
+            percent = 89
+            status = StatusTodo.`NEEDS-ACTION`.name
+            classification = Classification.CONFIDENTIAL.name
+            dtstart = System.currentTimeMillis()
+            due = System.currentTimeMillis()
+            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            colorItem = Color.Blue.toArgb()
         }
         ListScreenKanban(
             module = Module.TODO,
@@ -225,31 +225,31 @@ fun ListScreenKanban_TODO() {
 fun ListScreenKanban_JOURNAL() {
     JtxBoardTheme {
 
-        val icalobject = ICal4ListWithRelatedto.getSample().apply {
-            property.id = 1L
-            property.component = Component.VJOURNAL.name
-            property.module = Module.JOURNAL.name
-            property.percent = 89
-            property.status = StatusJournal.FINAL.name
-            property.classification = Classification.PUBLIC.name
-            property.dtstart = null
-            property.due = null
-            property.numAttachments = 0
-            property.numSubnotes = 0
-            property.numSubtasks = 0
-            property.summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        val icalobject = ICal4List.getSample().apply {
+            id = 1L
+            component = Component.VJOURNAL.name
+            module = Module.JOURNAL.name
+            percent = 89
+            status = StatusJournal.FINAL.name
+            classification = Classification.PUBLIC.name
+            dtstart = null
+            due = null
+            numAttachments = 0
+            numSubnotes = 0
+            numSubtasks = 0
+            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         }
-        val icalobject2 = ICal4ListWithRelatedto.getSample().apply {
-            property.id = 2L
-            property.component = Component.VJOURNAL.name
-            property.module = Module.JOURNAL.name
-            property.percent = 89
-            property.status = StatusJournal.DRAFT.name
-            property.classification = Classification.CONFIDENTIAL.name
-            property.dtstart = System.currentTimeMillis()
-            property.due = System.currentTimeMillis()
-            property.summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            property.colorItem = Color.Blue.toArgb()
+        val icalobject2 = ICal4List.getSample().apply {
+            id = 2L
+            component = Component.VJOURNAL.name
+            module = Module.JOURNAL.name
+            percent = 89
+            status = StatusJournal.DRAFT.name
+            classification = Classification.CONFIDENTIAL.name
+            dtstart = System.currentTimeMillis()
+            due = System.currentTimeMillis()
+            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            colorItem = Color.Blue.toArgb()
         }
         ListScreenKanban(
             module = Module.JOURNAL,

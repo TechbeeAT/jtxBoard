@@ -46,8 +46,9 @@ fun ListScreen(
             ViewMode.LIST -> {
                 ListScreenList(
                     listLive = icalListViewModel.iCal4List,
-                    subtasksLive = icalListViewModel.allSubtasks,
-                    subnotesLive = icalListViewModel.allSubnotes,
+                    subtasksLive = icalListViewModel.allSubtasksMap,
+                    subnotesLive = icalListViewModel.allSubnotesMap,
+                    attachmentsLive = icalListViewModel.allAttachmentsMap,
                     scrollOnceId = icalListViewModel.scrollOnceId,
                     listSettings = icalListViewModel.listSettings,
                     goToView = { itemId ->
@@ -107,7 +108,7 @@ fun ListScreen(
             ViewMode.COMPACT -> {
                 ListScreenCompact(
                     listLive = icalListViewModel.iCal4List,
-                    subtasksLive = icalListViewModel.allSubtasks,
+                    subtasksLive = icalListViewModel.allSubtasksMap,
                     scrollOnceId = icalListViewModel.scrollOnceId,
                     listSettings = icalListViewModel.listSettings,
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->

@@ -20,7 +20,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
 import at.techbee.jtx.database.properties.*
-import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
@@ -51,13 +50,25 @@ open class IcalListViewModel(application: Application, val module: Module) : And
 
 
     private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var iCal4List: LiveData<List<ICal4ListWithRelatedto>> = Transformations.switchMap(listQuery) {
-        database.getIcalObjectWithRelatedto(it)
+    var iCal4List: LiveData<List<ICal4List>> = Transformations.switchMap(listQuery) {
+        database.getIcal4List(it)
     }
 
         // TODO maybe retrieve all subtasks only when subtasks are needed!
-    val allSubtasks: LiveData<List<ICal4List>> = database.getAllSubtasks()
-    val allSubnotes: LiveData<List<ICal4List>> = database.getAllSubnotes()
+    private val allSubtasksList: LiveData<List<ICal4List>> = database.getAllSubtasks()
+    val allSubtasksMap = Transformations.map(allSubtasksList) { list ->
+        return@map list.groupBy { it.vtodoUidOfParent }
+    }
+
+    private val allSubnotesList: LiveData<List<ICal4List>> = database.getAllSubnotes()
+    val allSubnotesMap = Transformations.map(allSubnotesList) { list ->
+        return@map list.groupBy { it.vjournalUidOfParent }
+    }
+
+    private val allAttachmentsList: LiveData<List<Attachment>> = database.getAllAttachments()
+    val allAttachmentsMap = Transformations.map(allAttachmentsList) { list ->
+        return@map list.groupBy { it.icalObjectId }
+    }
 
     val allCategories = database.getAllCategories()   // filter FragmentDialog
     val allCollections = database.getAllCollections()

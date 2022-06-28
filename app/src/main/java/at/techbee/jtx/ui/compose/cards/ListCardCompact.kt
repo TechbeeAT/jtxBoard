@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.compose.elements.ListStatusBar
@@ -44,7 +43,7 @@ import at.techbee.jtx.util.DateTimeUtils
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ListCardCompact(
-    iCalObjectWithRelatedto: ICal4ListWithRelatedto,
+    iCalObject: ICal4List,
     subtasks: List<ICal4List>,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
@@ -52,7 +51,6 @@ fun ListCardCompact(
     goToEdit: (itemId: Long) -> Unit
     ) {
 
-    val iCalObject = iCalObjectWithRelatedto.property
     val statusBarVisible by remember {
         mutableStateOf(
             iCalObject.numAttendees > 0 || iCalObject.numAttachments > 0 || iCalObject.numComments > 0 || iCalObject.numResources > 0 || iCalObject.numAlarms > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0
@@ -252,10 +250,10 @@ fun ListCardCompact(
 fun ListCardCompact_JOURNAL() {
     JtxBoardTheme {
 
-        val icalobject = ICal4ListWithRelatedto.getSample().apply {
-            property.dtstart = System.currentTimeMillis()
-            property.colorItem = Color.Blue.toArgb()
-            property.colorCollection = Color.Magenta.toArgb()
+        val icalobject = ICal4List.getSample().apply {
+            dtstart = System.currentTimeMillis()
+            colorItem = Color.Blue.toArgb()
+            colorCollection = Color.Magenta.toArgb()
         }
         ListCardCompact(
             icalobject,
@@ -272,11 +270,11 @@ fun ListCardCompact_JOURNAL() {
 fun ListCardCompact_JOURNAL2() {
     JtxBoardTheme {
 
-        val icalobject = ICal4ListWithRelatedto.getSample().apply {
-            property.dtstart = System.currentTimeMillis()
-            property.colorItem = Color.Blue.toArgb()
-            property.colorCollection = Color.Magenta.toArgb()
-            property.categories = null
+        val icalobject = ICal4List.getSample().apply {
+            dtstart = System.currentTimeMillis()
+            colorItem = Color.Blue.toArgb()
+            colorCollection = Color.Magenta.toArgb()
+            categories = null
         }
         ListCardCompact(
             icalobject,
@@ -293,12 +291,12 @@ fun ListCardCompact_JOURNAL2() {
 fun ListCardCompact_NOTE() {
     JtxBoardTheme {
 
-        val icalobject = ICal4ListWithRelatedto.getSample().apply {
-            property.component = Component.VJOURNAL.name
-            property.module = Module.NOTE.name
-            property.dtstart = null
-            property.dtstartTimezone = null
-            property.status = StatusJournal.CANCELLED.name
+        val icalobject = ICal4List.getSample().apply {
+            component = Component.VJOURNAL.name
+            module = Module.NOTE.name
+            dtstart = null
+            dtstartTimezone = null
+            status = StatusJournal.CANCELLED.name
         }
         ListCardCompact(
             icalobject,
@@ -314,19 +312,19 @@ fun ListCardCompact_NOTE() {
 fun ListCardCompact_TODO() {
     JtxBoardTheme {
 
-        val icalobject = ICal4ListWithRelatedto.getSample().apply {
-            property.component = Component.VTODO.name
-            property.module = Module.TODO.name
-            property.percent = 89
-            property.status = StatusTodo.`IN-PROCESS`.name
-            property.classification = Classification.CONFIDENTIAL.name
-            property.dtstart = System.currentTimeMillis()
-            property.due = System.currentTimeMillis()
-            property.summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        val icalobject = ICal4List.getSample().apply {
+            component = Component.VTODO.name
+            module = Module.TODO.name
+            percent = 89
+            status = StatusTodo.`IN-PROCESS`.name
+            classification = Classification.CONFIDENTIAL.name
+            dtstart = System.currentTimeMillis()
+            due = System.currentTimeMillis()
+            summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         }
         ListCardCompact(
             icalobject,
-            subtasks = listOf(icalobject.property, icalobject.property),
+            subtasks = listOf(icalobject, icalobject),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { }
