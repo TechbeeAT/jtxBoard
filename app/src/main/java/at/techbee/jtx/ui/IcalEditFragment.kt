@@ -171,21 +171,6 @@ class IcalEditFragment : Fragment() {
         val markwonEditor = MarkwonEditor.create(markwon)
         binding.editFragmentTabGeneral.editDescriptionEdittext.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(markwonEditor))
 
-        // Check if the permission to read local contacts is already granted, otherwise make a dialog to ask for permission
-        if (ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            loadContacts()
-        } else if(!prefs.getBoolean(PREFS_CONTACTS_PERMISSION_SHOWN, false)) {
-            //request for permission to load contacts
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(getString(R.string.edit_fragment_app_permission))
-                .setMessage(getString(R.string.edit_fragment_app_permission_message))
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_READ_PERMISSION_CODE)
-                    prefs.edit().putBoolean(PREFS_CONTACTS_PERMISSION_SHOWN, true).apply()
-                }
-                .setNegativeButton(R.string.cancel) { _, _ -> }
-                .show()
-        }
 
         val model: IcalEditViewModel by viewModels { IcalEditViewModelFactory(application, arguments.icalentity) }
         icalEditViewModel = model
@@ -1994,53 +1979,6 @@ class IcalEditFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-
-    private fun loadContacts() {
-
-        /*
-        Template: https://stackoverflow.com/questions/10117049/get-only-email-address-from-contact-list-android
-         */
-
-        val context = activity
-        val cr = context!!.contentResolver
-        val projection = arrayOf(
-            ContactsContract.RawContacts._ID,
-            ContactsContract.Contacts.DISPLAY_NAME,
-            ContactsContract.CommonDataKinds.Email.DATA
-        )
-        val order = ContactsContract.Contacts.DISPLAY_NAME
-        val filter = ContactsContract.CommonDataKinds.Email.DATA + " NOT LIKE ''"
-        val cur = cr.query(
-            ContactsContract.CommonDataKinds.Email.CONTENT_URI,
-            projection,
-            filter,
-            null,
-            order
-        )
-
-        if (cur!!.count > 0) {
-            while (cur.moveToNext()) {
-
-                val name = cur.getString(1)    // according to projection 0 = DISPLAY_NAME, 1 = Email.DATA
-                val email = cur.getString(2)
-                if(email.isNotBlank()) {
-                    val attendee = Attendee(cn = name, caladdress = "mailto:$email")
-                    allContactsAsAttendees.add(attendee)
-                    allContactsSpinner.add(attendee.getDisplayString())
-                }
-            }
-            cur.close()
-        }
-
-        val arrayAdapterNameAndMail = ArrayAdapter(
-            application.applicationContext,
-            android.R.layout.simple_list_item_1,
-            allContactsSpinner
-        )
-
-        binding.editFragmentTabCar.editContactAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
-        binding.editFragmentTabCar.editAttendeesAddAutocomplete.setAdapter(arrayAdapterNameAndMail)
-    }
 
 
     private fun processFileAttachment(fileUri: Uri?) {

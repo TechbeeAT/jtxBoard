@@ -54,7 +54,6 @@ open class IcalListViewModel(application: Application, val module: Module) : And
         database.getIcal4List(it)
     }
 
-        // TODO maybe retrieve all subtasks only when subtasks are needed!
     private val allSubtasksList: LiveData<List<ICal4List>> = database.getAllSubtasks()
     val allSubtasksMap = Transformations.map(allSubtasksList) { list ->
         return@map list.groupBy { it.vtodoUidOfParent }
