@@ -1,0 +1,5 @@
+- jtx Board now comes with a compact list view and a KANBAN-View!
+- Locations can be selected on a map and the map is also shown in the detail view
+- You can now set a default due date for new tasks
+- Release notes are now visible in about dialog
+- Bugfixes
