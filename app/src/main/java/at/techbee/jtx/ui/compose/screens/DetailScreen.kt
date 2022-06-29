@@ -8,13 +8,18 @@
 
 package at.techbee.jtx.ui.compose.screens
 
+import android.Manifest
 import android.media.MediaPlayer
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +31,7 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.compose.dialogs.RequestContactsPermissionDialog
 import at.techbee.jtx.ui.compose.elements.CollectionsSpinner
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
 import at.techbee.jtx.ui.theme.JtxBoardTheme
@@ -46,6 +52,29 @@ fun DetailScreen(
 ) {
 
     val context = LocalContext.current
+    // Read contacts permission
+    val readContactsGrantedText = stringResource(id = R.string.permission_read_contacts_granted)
+    val readContactsDeniedText = stringResource(id = R.string.permission_read_contacts_denied)
+    var permissionsDialogShownOnce by rememberSaveable { mutableStateOf(true) }  // TODO: Set to false for release!
+
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Toast.makeText(context, readContactsGrantedText, Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(context, readContactsDeniedText, Toast.LENGTH_LONG).show()
+        }
+    }
+    if(!permissionsDialogShownOnce) {
+        RequestContactsPermissionDialog(
+            onConfirm = {
+                launcher.launch(Manifest.permission.READ_CONTACTS)
+                permissionsDialogShownOnce = true
+            },
+            onDismiss = { permissionsDialogShownOnce = true }
+        )
+    }
 
     /*
     var markwon = Markwon.builder(LocalContext.current)

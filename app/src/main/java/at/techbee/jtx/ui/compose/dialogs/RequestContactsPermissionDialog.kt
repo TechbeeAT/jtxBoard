@@ -24,25 +24,23 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
 @Composable
-fun CollectionsDeleteCollectionDialog(
-    current: CollectionsView,
-    onCollectionDeleted: (ICalCollection) -> Unit,
+fun RequestContactsPermissionDialog(
+    onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
 
-
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text(stringResource(id = R.string.collections_dialog_delete_local_title, current.displayName?:current.accountName?:"")) },
-        text = { Text(stringResource(id = R.string.collections_dialog_delete_local_message)) },
+        title = { Text(stringResource(id = R.string.edit_fragment_app_permission)) },
+        text = { Text(stringResource(id = R.string.edit_fragment_app_permission_message)) },
         confirmButton = {
             TextButton(
                 onClick = {
-                    onCollectionDeleted(current.toICalCollection())
+                    onConfirm()
                     onDismiss()
                 }
             ) {
-                Text(stringResource(id = R.string.delete))
+                Text(stringResource(id = R.string.ok))
             }
         },
         dismissButton = {
@@ -60,21 +58,11 @@ fun CollectionsDeleteCollectionDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun CollectionsDeleteCollectionDialog_Preview() {
+fun RequestContactsPermissionDialog_Preview() {
     MaterialTheme {
 
-        val collection1 = CollectionsView(
-            collectionId = 1L,
-            color = Color.Cyan.toArgb(),
-            displayName = "Collection Display Name",
-            description = "Here comes the desc",
-            accountName = "My account",
-            accountType = "LOCAL"
-        )
-
-        CollectionsDeleteCollectionDialog(
-            collection1,
-            onCollectionDeleted = { },
+        RequestContactsPermissionDialog(
+            onConfirm = { },
             onDismiss = { }
         )
     }
