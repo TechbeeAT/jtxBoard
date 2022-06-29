@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.compose.elements
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,23 +25,30 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @Composable
-fun ColoredEdge(colorItem: Int?, colorCollection: Int?) {
+fun ColoredEdge(
+    colorItem: Int?,
+    colorCollection: Int?,
+) {
 
     Box {
         colorCollection?.let {
             Icon(
-                painter = painterResource(R.drawable.ic_card_colored_edge),
+                painter = painterResource(R.drawable.ic_card_colored_edge2),
                 stringResource(R.string.color),
-                modifier = Modifier.size(60.dp).alpha(0.5f),
+                modifier = Modifier
+                    .size(60.dp, 30.dp)
+                    .alpha(0.5f),
                 tint = Color(it),
 
-            )
+                )
         }
         colorItem?.let {
             Icon(
-                painter = painterResource(R.drawable.ic_card_colored_edge),
+                painter = painterResource(R.drawable.ic_card_colored_edge2),
                 stringResource(R.string.color),
-                modifier = Modifier.size(30.dp).alpha(0.5f),
+                modifier = Modifier
+                    .size(30.dp, 15.dp)
+                    .alpha(0.5f),
                 tint = Color(it)
             )
         }
@@ -50,8 +58,7 @@ fun ColoredEdge(colorItem: Int?, colorCollection: Int?) {
 @Preview(showBackground = true)
 @Composable
 fun ColoredEdgePreview() {
-    JtxBoardTheme {
+    MaterialTheme {
         ColoredEdge(Color.Cyan.toArgb(), Color.Magenta.toArgb())
     }
 }
-

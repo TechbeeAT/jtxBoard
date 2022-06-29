@@ -1,6 +1,5 @@
 package at.techbee.jtx.ui.compose.elements
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -11,14 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.R
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionsSpinner(
     collections: List<ICalCollection>,
@@ -26,61 +23,68 @@ fun CollectionsSpinner(
     includeReadOnly: Boolean,
     includeVJOURNAL: Boolean,
     includeVTODO: Boolean,
-    onSelectionChanged: (collection: ICalCollection) -> Unit
+    onSelectionChanged: (collection: ICalCollection) -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
     var selected by remember { mutableStateOf(preselected) }
     var expanded by remember { mutableStateOf(false) } // initial value
 
-    Box {
-        Column {
-            OutlinedTextField(
-                value = selected.displayName + selected.accountName?.let { " (" + it + ")" },
-                onValueChange = { },
-                label = { Text(text = stringResource(id = R.string.collection)) },
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, null) },
-                readOnly = true
-            )
-            DropdownMenu(
-                modifier = Modifier.fillMaxWidth(),
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
+    OutlinedCard(
+        modifier = modifier.clickable {
+            expanded = !expanded
+        }
+    ) {
+
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            ColoredEdge(colorItem = null, colorCollection = selected.color)
+
+            Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top,
             ) {
-                collections.forEach { collection ->
 
-                    if((collection.readonly && !includeReadOnly)
-                        || (collection.supportsVTODO && !includeVTODO)
-                        || (collection.supportsVJOURNAL && ! includeVJOURNAL)
-                    )
-                        return@forEach
+                Text(
+                    text = selected.displayName + selected.accountName?.let { " (" + it + ")" },
+                    modifier = Modifier.weight(1f)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+                Icon(Icons.Outlined.ArrowDropDown, null, modifier = Modifier.padding(8.dp))
 
-                    DropdownMenuItem(
-                        //modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-                            selected = collection
-                            expanded = false
-                            onSelectionChanged(selected)
-                        },
-                        text = {
-                            Text(
-                                text = (collection.displayName?: collection.accountName) ?: " ",
-                                modifier = Modifier.wrapContentWidth().align(Alignment.Start))
-                        }
-                    )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    collections.forEach { collection ->
+
+                        if ((collection.readonly && !includeReadOnly)
+                            || (collection.supportsVTODO && !includeVTODO)
+                            || (collection.supportsVJOURNAL && !includeVJOURNAL)
+                        )
+                            return@forEach
+
+                        DropdownMenuItem(
+                            onClick = {
+                                selected = collection
+                                expanded = false
+                                onSelectionChanged(selected)
+                            },
+                            text = {
+                                Text(
+                                    text = (collection.displayName ?: collection.accountName)
+                                        ?: " ",
+                                    modifier = Modifier
+                                        .wrapContentWidth()
+                                        .align(Alignment.Start)
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
-
-        Spacer(
-            modifier = Modifier
-                .matchParentSize()
-                .background(Color.Transparent)
-                .padding(10.dp)
-                .clickable(
-                    onClick = { expanded = !expanded }
-                )
-        )
     }
 }
 
@@ -88,8 +92,7 @@ fun CollectionsSpinner(
 @Preview(showBackground = true)
 @Composable
 fun CollectionsSpinner_Preview() {
-    JtxBoardTheme {
-
+    MaterialTheme {
         val collection1 = ICalCollection(
             collectionId = 1L,
             color = Color.Cyan.toArgb(),
@@ -121,7 +124,8 @@ fun CollectionsSpinner_Preview() {
             includeReadOnly = true,
             includeVJOURNAL = true,
             includeVTODO = true,
-            onSelectionChanged = { }
+            onSelectionChanged = { },
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

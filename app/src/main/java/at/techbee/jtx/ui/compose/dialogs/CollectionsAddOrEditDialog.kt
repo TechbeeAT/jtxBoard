@@ -53,6 +53,7 @@ fun CollectionsAddOrEditDialog(
 
 
     AlertDialog(
+        modifier = Modifier.fillMaxWidth(),
         properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
         onDismissRequest = { onDismiss() },
         title = {
@@ -151,7 +152,7 @@ fun CollectionsAddOrEditDialog(
 @Preview(showBackground = true)
 @Composable
 fun CollectionsEditDialog_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val collection1 = ICalCollection(
             collectionId = 1L,
@@ -174,7 +175,7 @@ fun CollectionsEditDialog_Preview() {
 @Preview(showBackground = true)
 @Composable
 fun CollectionsEditDialog_Preview2() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val collection1 = ICalCollection(
             collectionId = 0L,

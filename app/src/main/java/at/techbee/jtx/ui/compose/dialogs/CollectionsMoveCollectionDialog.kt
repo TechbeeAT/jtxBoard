@@ -11,6 +11,7 @@ package at.techbee.jtx.ui.compose.dialogs
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -41,7 +42,6 @@ fun CollectionsMoveCollectionDialog(
         title = { Text(stringResource(id = R.string.collections_dialog_move_title, current.displayName?: "")) },
         text = {
             Box {
-                ColoredEdge(colorItem = null, colorCollection = newCollection.color)
 
                 Column {
                     CollectionsSpinner(
@@ -83,7 +83,7 @@ fun CollectionsMoveCollectionDialog(
 @Preview(showBackground = true)
 @Composable
 fun CollectionsMoveCollectionDialog_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         val collectionCurrent = CollectionsView(
             collectionId = 2L,
             color = Color.Cyan.toArgb(),
