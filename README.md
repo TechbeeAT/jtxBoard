@@ -62,4 +62,4 @@ jtx Board uses/requests the following permissions:
 
 
 ### Troubleshooting
-If you have any troubles with the synchronization, please check first the following article [https://jtx.techbee.at/troubles-with-the-synchronization-see-what-could-go-wrong] or the following discussion (https://jtx.techbee.at/troubles-with-the-synchronization-see-what-could-go-wrong) [https://gitlab.com/techbeeat1/jtx/-/issues/250](https://gitlab.com/techbeeat1/jtx/-/issues/250) before opening an issue.
+If you have any troubles with the synchronization, please check first the following article [https://jtx.techbee.at/troubles-with-the-synchronization-see-what-could-go-wrong] or the following discussion https://gitlab.com/techbeeat1/jtx/-/issues/250 before opening an issue.
