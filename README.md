@@ -59,3 +59,7 @@ jtx Board uses/requests the following permissions:
 - RECORD_AUDIO can be used to access the microphone for adding audio notes
 - READ_SYNC_STATS is used to show a progress bar when a synchronization through DAVx5 is currently in progress
 - INTERNET is used to retrieve the list of contributors for translations from POEditor.com
+
+
+### Troubleshooting
+If you have any troubles with the synchronization, please check first the following article [https://jtx.techbee.at/troubles-with-the-synchronization-see-what-could-go-wrong] or the following discussion https://gitlab.com/techbeeat1/jtx/-/issues/250 before opening an issue.
