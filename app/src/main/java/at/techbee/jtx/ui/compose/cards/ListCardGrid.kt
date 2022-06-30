@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
+import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
 import at.techbee.jtx.ui.compose.elements.ListStatusBar
 import at.techbee.jtx.ui.theme.JtxBoardTheme
@@ -36,12 +36,11 @@ import at.techbee.jtx.util.DateTimeUtils
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListCardGrid(
-    iCalObjectWithRelatedto: ICal4ListWithRelatedto,
+    iCalObject: ICal4List,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
 
-    val iCalObject = iCalObjectWithRelatedto.property
     val statusBarVisible by remember {
         mutableStateOf(
             iCalObject.numAttachments > 0 || iCalObject.numSubtasks > 0 || iCalObject.numSubnotes > 0 || iCalObject.isReadOnly || iCalObject.uploadPending || iCalObject.isRecurringInstance || iCalObject.isRecurringOriginal || iCalObject.isLinkedRecurringInstance
@@ -206,8 +205,8 @@ fun ListCardGrid(
 fun ListCardGrid_JOURNAL() {
     JtxBoardTheme {
 
-        val icalobject = ICal4ListWithRelatedto.getSample().apply {
-            property.dtstart = System.currentTimeMillis()
+        val icalobject = ICal4List.getSample().apply {
+            dtstart = System.currentTimeMillis()
         }
         ListCardGrid(
             icalobject,
@@ -223,12 +222,12 @@ fun ListCardGrid_JOURNAL() {
 fun ListCardGrid_NOTE() {
     JtxBoardTheme {
 
-        val icalobject = ICal4ListWithRelatedto.getSample().apply {
-            property.component = Component.VJOURNAL.name
-            property.module = Module.NOTE.name
-            property.dtstart = null
-            property.dtstartTimezone = null
-            property.status = StatusJournal.CANCELLED.name
+        val icalobject = ICal4List.getSample().apply {
+            component = Component.VJOURNAL.name
+            module = Module.NOTE.name
+            dtstart = null
+            dtstartTimezone = null
+            status = StatusJournal.CANCELLED.name
         }
         ListCardGrid(
             icalobject,
@@ -243,21 +242,21 @@ fun ListCardGrid_NOTE() {
 fun ListCardGrid_TODO() {
     JtxBoardTheme {
 
-        val icalobject = ICal4ListWithRelatedto.getSample().apply {
-            property.component = Component.VTODO.name
-            property.module = Module.TODO.name
-            property.percent = 89
-            property.status = StatusTodo.`IN-PROCESS`.name
-            property.classification = Classification.CONFIDENTIAL.name
-            property.dtstart = System.currentTimeMillis()
-            property.due = System.currentTimeMillis()
-            property.summary =
+        val icalobject = ICal4List.getSample().apply {
+            component = Component.VTODO.name
+            module = Module.TODO.name
+            percent = 89
+            status = StatusTodo.`IN-PROCESS`.name
+            classification = Classification.CONFIDENTIAL.name
+            dtstart = System.currentTimeMillis()
+            due = System.currentTimeMillis()
+            summary =
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            property.numSubtasks = 5
-            property.numAttachments = 4
-            property.numSubnotes = 1
-            property.uploadPending = true
-            property.isReadOnly = true
+            numSubtasks = 5
+            numAttachments = 4
+            numSubnotes = 1
+            uploadPending = true
+            isReadOnly = true
         }
         ListCardGrid(
             icalobject,

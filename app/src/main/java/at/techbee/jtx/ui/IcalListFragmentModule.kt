@@ -113,8 +113,9 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
                                         Module.NOTE -> icalListViewModel.iCal4ListNotes
                                         Module.TODO -> icalListViewModel.iCal4ListTodos
                                     },
-                                    subtasksLive = icalListViewModel.allSubtasks,
-                                    subnotesLive = icalListViewModel.allSubnotes,
+                                    subtasksLive = icalListViewModel.allSubtasksMap,
+                                    subnotesLive = icalListViewModel.allSubnotesMap,
+                                    attachmentsLive = icalListViewModel.allAttachmentsMap,
                                     scrollOnceId = icalListViewModel.scrollOnceId,
                                     isExcludeDone = icalListViewModel.isExcludeDone,
                                     goToView = { itemId ->
@@ -169,7 +170,7 @@ open class IcalListFragmentModule(val module: Module) : Fragment() {
                                         Module.NOTE -> icalListViewModel.iCal4ListNotes
                                         Module.TODO -> icalListViewModel.iCal4ListTodos
                                     },
-                                    subtasksLive = icalListViewModel.allSubtasks,
+                                    subtasksLive = icalListViewModel.allSubtasksMap,
                                     scrollOnceId = icalListViewModel.scrollOnceId,
                                     isExcludeDone = icalListViewModel.isExcludeDone,
                                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->

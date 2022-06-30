@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 11,
-    "identityHash": "bf94633da6768e4e500c8c09bedfab71",
+    "identityHash": "5ca0cc7396fae75ef8142673066a03f8",
     "entities": [
       {
         "tableName": "attendee",
@@ -418,7 +418,7 @@
       },
       {
         "tableName": "icalobject",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `module` TEXT NOT NULL, `component` TEXT NOT NULL, `summary` TEXT, `description` TEXT, `dtstart` INTEGER, `dtstarttimezone` TEXT, `dtend` INTEGER, `dtendtimezone` TEXT, `status` TEXT, `classification` TEXT, `url` TEXT, `contact` TEXT, `geolat` REAL, `geolong` REAL, `location` TEXT, `locationaltrep` TEXT, `percent` INTEGER, `priority` INTEGER, `due` INTEGER, `duetimezone` TEXT, `completed` INTEGER, `completedtimezone` TEXT, `duration` TEXT, `uid` TEXT NOT NULL, `created` INTEGER NOT NULL, `dtstamp` INTEGER NOT NULL, `lastmodified` INTEGER NOT NULL, `sequence` INTEGER NOT NULL, `rrule` TEXT, `exdate` TEXT, `rdate` TEXT, `recurid` TEXT, `recur_original_icalobjectid` INTEGER, `recur_islinkedinstance` INTEGER NOT NULL, `rstatus` TEXT, `color` INTEGER, `collectionId` INTEGER NOT NULL, `dirty` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `filename` TEXT, `etag` TEXT, `scheduletag` TEXT, `flags` INTEGER, FOREIGN KEY(`collectionId`) REFERENCES `collection`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `module` TEXT NOT NULL, `component` TEXT NOT NULL, `summary` TEXT, `description` TEXT, `dtstart` INTEGER, `dtstarttimezone` TEXT, `dtend` INTEGER, `dtendtimezone` TEXT, `status` TEXT, `classification` TEXT, `url` TEXT, `contact` TEXT, `geolat` REAL, `geolong` REAL, `location` TEXT, `locationaltrep` TEXT, `percent` INTEGER, `priority` INTEGER, `due` INTEGER, `duetimezone` TEXT, `completed` INTEGER, `completedtimezone` TEXT, `duration` TEXT, `uid` TEXT NOT NULL, `created` INTEGER NOT NULL, `dtstamp` INTEGER NOT NULL, `lastmodified` INTEGER NOT NULL, `sequence` INTEGER NOT NULL, `rrule` TEXT, `exdate` TEXT, `rdate` TEXT, `recurid` TEXT, `recur_original_icalobjectid` INTEGER, `recur_islinkedinstance` INTEGER NOT NULL, `rstatus` TEXT, `color` INTEGER, `collectionId` INTEGER NOT NULL, `dirty` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `filename` TEXT, `etag` TEXT, `scheduletag` TEXT, `flags` INTEGER, `subtasksExpanded` INTEGER, `subnotesExpanded` INTEGER, `attachmentsExpanded` INTEGER, `sortIndex` INTEGER, FOREIGN KEY(`collectionId`) REFERENCES `collection`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -681,6 +681,30 @@
           {
             "fieldPath": "flags",
             "columnName": "flags",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isSubtasksExpanded",
+            "columnName": "subtasksExpanded",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isSubnotesExpanded",
+            "columnName": "subnotesExpanded",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isAttachmentsExpanded",
+            "columnName": "attachmentsExpanded",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sortIndex",
+            "columnName": "sortIndex",
             "affinity": "INTEGER",
             "notNull": false
           }
@@ -1307,11 +1331,11 @@
     "views": [
       {
         "viewName": "ical4list",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT DISTINCT main_icalobject._id, main_icalobject.module, main_icalobject.component, main_icalobject.summary, main_icalobject.description, main_icalobject.location, main_icalobject.url, main_icalobject.contact, main_icalobject.dtstart, main_icalobject.dtstarttimezone, main_icalobject.dtend, main_icalobject.dtendtimezone, main_icalobject.status, main_icalobject.classification, main_icalobject.percent, main_icalobject.priority, main_icalobject.due, main_icalobject.duetimezone, main_icalobject.completed, main_icalobject.completedtimezone, main_icalobject.duration, main_icalobject.created, main_icalobject.dtstamp, main_icalobject.lastmodified, main_icalobject.sequence, collection.color as colorCollection, main_icalobject.color as colorItem, main_icalobject.collectionId, collection.accountname, collection.displayname, main_icalobject.deleted, CASE WHEN main_icalobject.dirty = 1 AND collection.accounttype != 'LOCAL' THEN 1 else 0 END as uploadPending, CASE WHEN main_icalobject.rrule IS NULL THEN 0 ELSE 1 END as isRecurringOriginal, CASE WHEN main_icalobject.recurid IS NULL THEN 0 ELSE 1 END as isRecurringInstance, main_icalobject.recur_islinkedinstance, CASE WHEN main_icalobject._id IN (SELECT sub_rel.linkedICalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.icalObjectId = sub_ical._id AND sub_ical.module = 'JOURNAL' AND sub_rel.reltype = 'CHILD') THEN 1 ELSE 0 END as isChildOfJournal, CASE WHEN main_icalobject._id IN (SELECT sub_rel.linkedICalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.icalObjectId = sub_ical._id AND sub_ical.module = 'NOTE' AND sub_rel.reltype = 'CHILD') THEN 1 ELSE 0 END as isChildOfNote, CASE WHEN main_icalobject._id IN (SELECT sub_rel.linkedICalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.icalObjectId = sub_ical._id AND sub_ical.module = 'TODO' AND sub_rel.reltype = 'CHILD') THEN 1 ELSE 0 END as isChildOfTodo, (SELECT group_concat(category.text, ', ') FROM category WHERE main_icalobject._id = category.icalObjectId GROUP BY category.icalObjectId) as categories, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.linkedICalObjectId AND sub_icalobject.component = 'VTODO' AND sub_relatedto.icalObjectId = main_icalobject._id AND sub_relatedto.reltype = 'CHILD') as numSubtasks, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.linkedICalObjectId AND sub_icalobject.component = 'VJOURNAL' AND sub_relatedto.icalObjectId = main_icalobject._id AND sub_relatedto.reltype = 'CHILD') as numSubnotes, (SELECT count(*) FROM attachment WHERE icalObjectId = main_icalobject._id  ) as numAttachments, (SELECT count(*) FROM attendee WHERE icalObjectId = main_icalobject._id  ) as numAttendees, (SELECT count(*) FROM comment WHERE icalObjectId = main_icalobject._id  ) as numComments, (SELECT count(*) FROM relatedto WHERE icalObjectId = main_icalobject._id  ) as numRelatedTodos, (SELECT count(*) FROM resource WHERE icalObjectId = main_icalobject._id  ) as numResources, (SELECT count(*) FROM alarm WHERE icalObjectId = main_icalobject._id  ) as numAlarms, (SELECT uri FROM attachment WHERE icalObjectId = main_icalobject._id AND fmttype LIKE 'audio/%' LIMIT 1 ) as audioAttachment, collection.readonly as isReadOnly FROM icalobject main_icalobject INNER JOIN collection collection ON main_icalobject.collectionId = collection._id WHERE main_icalobject.deleted = 0"
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT DISTINCT main_icalobject._id, main_icalobject.module, main_icalobject.component, main_icalobject.summary, main_icalobject.description, main_icalobject.location, main_icalobject.url, main_icalobject.contact, main_icalobject.dtstart, main_icalobject.dtstarttimezone, main_icalobject.dtend, main_icalobject.dtendtimezone, main_icalobject.status, main_icalobject.classification, main_icalobject.percent, main_icalobject.priority, main_icalobject.due, main_icalobject.duetimezone, main_icalobject.completed, main_icalobject.completedtimezone, main_icalobject.duration, main_icalobject.created, main_icalobject.dtstamp, main_icalobject.lastmodified, main_icalobject.sequence, collection.color as colorCollection, main_icalobject.color as colorItem, main_icalobject.collectionId, collection.accountname, collection.displayname, main_icalobject.deleted, CASE WHEN main_icalobject.dirty = 1 AND collection.accounttype != 'LOCAL' THEN 1 else 0 END as uploadPending, CASE WHEN main_icalobject.rrule IS NULL THEN 0 ELSE 1 END as isRecurringOriginal, CASE WHEN main_icalobject.recurid IS NULL THEN 0 ELSE 1 END as isRecurringInstance, main_icalobject.recur_islinkedinstance, CASE WHEN main_icalobject._id IN (SELECT sub_rel.linkedICalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.icalObjectId = sub_ical._id AND sub_ical.module = 'JOURNAL' AND sub_rel.reltype = 'CHILD') THEN 1 ELSE 0 END as isChildOfJournal, CASE WHEN main_icalobject._id IN (SELECT sub_rel.linkedICalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.icalObjectId = sub_ical._id AND sub_ical.module = 'NOTE' AND sub_rel.reltype = 'CHILD') THEN 1 ELSE 0 END as isChildOfNote, CASE WHEN main_icalobject._id IN (SELECT sub_rel.linkedICalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.icalObjectId = sub_ical._id AND sub_ical.module = 'TODO' AND sub_rel.reltype = 'CHILD') THEN 1 ELSE 0 END as isChildOfTodo, (SELECT sub_rel.text FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.icalObjectId = sub_ical._id AND sub_ical.component = 'VTODO' AND sub_rel.reltype = 'PARENT') as vtodoUidOfParent, (SELECT sub_rel.text FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.icalObjectId = sub_ical._id AND sub_ical.component = 'VJOURNAL' AND sub_rel.reltype = 'PARENT') as vjournalUidOfParent, (SELECT group_concat(category.text, ', ') FROM category WHERE main_icalobject._id = category.icalObjectId GROUP BY category.icalObjectId) as categories, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.linkedICalObjectId AND sub_icalobject.component = 'VTODO' AND sub_relatedto.icalObjectId = main_icalobject._id AND sub_relatedto.reltype = 'CHILD') as numSubtasks, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.linkedICalObjectId AND sub_icalobject.component = 'VJOURNAL' AND sub_relatedto.icalObjectId = main_icalobject._id AND sub_relatedto.reltype = 'CHILD') as numSubnotes, (SELECT count(*) FROM attachment WHERE icalObjectId = main_icalobject._id  ) as numAttachments, (SELECT count(*) FROM attendee WHERE icalObjectId = main_icalobject._id  ) as numAttendees, (SELECT count(*) FROM comment WHERE icalObjectId = main_icalobject._id  ) as numComments, (SELECT count(*) FROM relatedto WHERE icalObjectId = main_icalobject._id  ) as numRelatedTodos, (SELECT count(*) FROM resource WHERE icalObjectId = main_icalobject._id  ) as numResources, (SELECT count(*) FROM alarm WHERE icalObjectId = main_icalobject._id  ) as numAlarms, (SELECT uri FROM attachment WHERE icalObjectId = main_icalobject._id AND fmttype LIKE 'audio/%' LIMIT 1 ) as audioAttachment, collection.readonly as isReadOnly, main_icalobject.subtasksExpanded, main_icalobject.subnotesExpanded, main_icalobject.attachmentsExpanded, main_icalobject.sortIndex FROM icalobject main_icalobject INNER JOIN collection collection ON main_icalobject.collectionId = collection._id WHERE main_icalobject.deleted = 0"
       },
       {
         "viewName": "ical4viewNote",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT icalobject._id, icalobject.module, icalobject.component, icalobject.summary, icalobject.description, icalobject.created, icalobject.lastmodified, relatedto.icalObjectId, attachment.binary, attachment.fmttype, attachment.uri FROM icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId LEFT JOIN attachment ON icalobject._id = attachment.icalObjectId WHERE icalobject.deleted = 0 AND icalobject.module = 'NOTE'"
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT icalobject._id, icalobject.module, icalobject.component, icalobject.summary, icalobject.description, icalobject.created, icalobject.lastmodified, relatedto.icalObjectId, attachment.binary, attachment.fmttype, attachment.uri, icalobject.sortIndex FROM icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId LEFT JOIN attachment ON icalobject._id = attachment.icalObjectId WHERE icalobject.deleted = 0 AND icalobject.module = 'NOTE'"
       },
       {
         "viewName": "collectionsView",
@@ -1320,7 +1344,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bf94633da6768e4e500c8c09bedfab71')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5ca0cc7396fae75ef8142673066a03f8')"
     ]
   }
 }

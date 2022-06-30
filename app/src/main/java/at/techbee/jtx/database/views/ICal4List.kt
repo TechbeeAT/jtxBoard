@@ -58,6 +58,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "main_icalobject.$COLUMN_DTSTAMP, " +
             "main_icalobject.$COLUMN_LAST_MODIFIED, " +
             "main_icalobject.$COLUMN_SEQUENCE, " +
+            "main_icalobject.$COLUMN_UID, " +
             "collection.$COLUMN_COLLECTION_COLOR as colorCollection, " +
             "main_icalobject.$COLUMN_COLOR as colorItem, " +
             "main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID, " +
@@ -71,6 +72,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = sub_ical.$COLUMN_ID AND sub_ical.$COLUMN_MODULE = 'JOURNAL' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'CHILD') THEN 1 ELSE 0 END as isChildOfJournal, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = sub_ical.$COLUMN_ID AND sub_ical.$COLUMN_MODULE = 'NOTE' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'CHILD') THEN 1 ELSE 0 END as isChildOfNote, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = sub_ical.$COLUMN_ID AND sub_ical.$COLUMN_MODULE = 'TODO' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'CHILD') THEN 1 ELSE 0 END as isChildOfTodo, " +
+            "(SELECT sub_rel.$COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = sub_ical.$COLUMN_ID AND sub_ical.$COLUMN_COMPONENT = 'VTODO' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID) as vtodoUidOfParent, " +
+            "(SELECT sub_rel.$COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = sub_ical.$COLUMN_ID AND sub_ical.$COLUMN_COMPONENT = 'VJOURNAL' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID) as vjournalUidOfParent, " +
             "(SELECT group_concat($TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_TEXT, \', \') FROM $TABLE_NAME_CATEGORY WHERE main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID GROUP BY $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = \'VTODO\' AND sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'CHILD') as numSubtasks, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = \'VJOURNAL\' AND sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'CHILD') as numSubnotes, " +
@@ -124,6 +127,7 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_DTSTAMP) var dtstamp: Long,
     @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long,
     @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long,
+    @ColumnInfo(name = COLUMN_UID) var uid: String?,
 
     @ColumnInfo var colorCollection: Int?,
     @ColumnInfo var colorItem: Int?,
@@ -143,6 +147,9 @@ data class ICal4List(
     @ColumnInfo var isChildOfJournal: Boolean,
     @ColumnInfo var isChildOfNote: Boolean,
     @ColumnInfo var isChildOfTodo: Boolean,
+
+    @ColumnInfo var vtodoUidOfParent: String?,
+    @ColumnInfo var vjournalUidOfParent: String?,
 
     @ColumnInfo var categories: String?,
     @ColumnInfo var numSubtasks: Int,
@@ -193,6 +200,7 @@ data class ICal4List(
                 System.currentTimeMillis(),
                 System.currentTimeMillis(),
                 0,
+                null,
                 Color.Magenta.toArgb(),
                 Color.Cyan.toArgb(),
                 1L,
@@ -206,6 +214,8 @@ data class ICal4List(
                 isChildOfJournal = false,
                 isChildOfNote = false,
                 isChildOfTodo = false,
+                vtodoUidOfParent = null,
+                vjournalUidOfParent = null,
                 categories = "Category1, Whatever",
                 numSubtasks = 3,
                 numSubnotes = 2,

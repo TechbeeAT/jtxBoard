@@ -13,7 +13,6 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import at.techbee.jtx.database.properties.*
-import at.techbee.jtx.database.relations.ICal4ListWithRelatedto
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.*
 
@@ -168,7 +167,7 @@ SELECTs (global selects without parameter)
      * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
      */
     @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO' ORDER BY $COLUMN_SORT_INDEX")
+    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_UID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO' ORDER BY $COLUMN_SORT_INDEX")
     fun getAllSubtasks(): LiveData<List<ICal4List>>
 
     /**
@@ -178,8 +177,37 @@ SELECTs (global selects without parameter)
      * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
      */
     @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_LINKEDICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VJOURNAL' ORDER BY $COLUMN_SORT_INDEX")
+    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_UID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VJOURNAL' ORDER BY $COLUMN_SORT_INDEX")
     fun getAllSubnotes(): LiveData<List<ICal4List>>
+
+
+    /**
+     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
+     * by checking if the [ICalObject.UID] is listed as a [Relatedto.text].
+     *
+     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
+     */
+    @Transaction
+    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_UID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO' AND $VIEW_NAME_ICAL4LIST.$COLUMN_UID = :uid ORDER BY $COLUMN_SORT_INDEX")
+    fun getAllSubtasksOf(uid: String): LiveData<List<ICal4List>>
+
+    /**
+     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
+     * by checking if the [ICalObject.UID] is listed as a [Relatedto.text].
+     *
+     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
+     */
+    @Transaction
+    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_UID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VJOURNAL' AND $VIEW_NAME_ICAL4LIST.$COLUMN_UID = :uid ORDER BY $COLUMN_SORT_INDEX")
+    fun getAllSubnotesOf(uid: String): LiveData<List<ICal4List>>
+    
+    /**
+     * Retrieve an list of all  [Attachment]
+     * @return a list of [Attachment] as LiveData<List<[Attachment]>>
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT")
+    fun getAllAttachments(): LiveData<List<Attachment>>
 
 
     /**
@@ -548,8 +576,8 @@ DELETEs by Object
 
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class])
-    fun getIcalObjectWithRelatedto(query: SupportSQLiteQuery): LiveData<List<ICal4ListWithRelatedto>>
+    @RawQuery(observedEntities = [ICal4List::class])
+    fun getIcal4List(query: SupportSQLiteQuery): LiveData<List<ICal4List>>
 
 
     @Transaction
