@@ -136,7 +136,7 @@ class EspressoTestcase {
         onView(withContentDescription(R.string.about_tabitem_libraries)).perform(click())
         onView(withContentDescription(R.string.about_tabitem_jtx)).perform(click())
 
-        onView(withId(R.id.about_app_icon))
+        //onView(withId(R.id.about_app_icon))
     }
 
     @Test

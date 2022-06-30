@@ -370,8 +370,6 @@ class IcalViewFragment : Fragment() {
 
         }
 
-        icalViewViewModel.subtasksCountList.observe(viewLifecycleOwner) { }
-
         icalViewViewModel.relatedNotes.observe(viewLifecycleOwner) {
 
             if (playing)             // don't interrupt if audio is currently played
@@ -618,10 +616,9 @@ class IcalViewFragment : Fragment() {
 
         val subtaskBinding = FragmentIcalViewSubtaskBinding.inflate(inflater, linearLayout, false)
 
-       var subtaskSummary =subtask.summary
-        val subtaskCount = icalViewViewModel.subtasksCountList.value?.find { subtask.id == it.icalobjectId}?.count
-        if (subtaskCount != null)
-            subtaskSummary += " (+${subtaskCount})"
+        var subtaskSummary =subtask.summary
+        if (subtask.numSubtasks > 0)
+            subtaskSummary += " (+${subtask.numSubtasks})"
         subtaskBinding.viewSubtaskTextview.text = subtaskSummary
         subtaskBinding.viewSubtaskProgressSlider.value = subtask.percent?.toFloat() ?: 0F
         subtaskBinding.viewSubtaskProgressPercent.text = String.format("%.0f%%", subtask.percent?.toFloat() ?: 0F)

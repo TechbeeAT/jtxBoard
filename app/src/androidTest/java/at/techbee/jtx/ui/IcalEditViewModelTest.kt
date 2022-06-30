@@ -250,7 +250,7 @@ class IcalEditViewModelTest {
         icalEditViewModel = IcalEditViewModel(application, retrievedEntry!!)
         Thread.sleep(200)
         icalEditViewModel.iCalObjectUpdated.getOrAwaitValue(5)
-        icalEditViewModel.allRelatedto.getOrAwaitValue(5)
+        icalEditViewModel.isChild.getOrAwaitValue(5)
 
         icalEditViewModel.delete()
         Thread.sleep(200)
@@ -316,8 +316,8 @@ class IcalEditViewModelTest {
         //Delete the parent through the view model, all subtasks must also be deleted now
         val icalEditViewModelParent4Delete = IcalEditViewModel(application, retrievedParent)
         Thread.sleep(200)
-        icalEditViewModelParent4Delete.allRelatedto.getOrAwaitValue()
-        icalEditViewModelParent4Delete.allRelatedto.observeForever {  }
+        icalEditViewModelParent4Delete.isChild.getOrAwaitValue()
+        icalEditViewModelParent4Delete.isChild.observeForever {  }
         icalEditViewModelParent4Delete.iCalObjectUpdated.getOrAwaitValue(5)
         icalEditViewModelParent4Delete.delete()
         Thread.sleep(200)
@@ -384,8 +384,8 @@ class IcalEditViewModelTest {
         //Delete the parent through the view model, all subtasks must also be deleted now
         val icalEditViewModelParent4Delete = IcalEditViewModel(application, retrievedParent)
         Thread.sleep(200)
-        icalEditViewModelParent4Delete.allRelatedto.getOrAwaitValue()
-        icalEditViewModelParent4Delete.allRelatedto.observeForever {  }
+        icalEditViewModelParent4Delete.isChild.getOrAwaitValue()
+        icalEditViewModelParent4Delete.isChild.observeForever {  }
         icalEditViewModelParent4Delete.iCalObjectUpdated.getOrAwaitValue(5)
         icalEditViewModelParent4Delete.delete()
         Thread.sleep(200)

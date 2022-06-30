@@ -54,9 +54,9 @@ fun ListScreenList(
 ) {
 
     val list by listLive.observeAsState(emptyList())
-    val subtasks by subtasksLive.observeAsState(emptyMap())
-    val subnotes by subnotesLive.observeAsState(emptyMap())
-    val attachments by attachmentsLive.observeAsState(emptyMap())
+    val subtasks by subtasksLive.observeAsState()
+    val subnotes by subnotesLive.observeAsState()
+    val attachments by attachmentsLive.observeAsState()
 
 
     val scrollId by scrollOnceId.observeAsState(null)
@@ -91,18 +91,18 @@ fun ListScreenList(
         ) { iCalObject ->
 
 
-            var currentSubtasks = subtasks[iCalObject.uid]
+            var currentSubtasks = subtasks?.get(iCalObject.uid) ?: emptyList()
             if(excludeDone)   // exclude done if applicable
-                currentSubtasks = currentSubtasks?.filter { subtask -> subtask.percent != 100 }
+                currentSubtasks = currentSubtasks.filter { subtask -> subtask.percent != 100 }
 
-            val currentSubnotes = subnotes[iCalObject.uid]
-            val currentAttachments = attachments[iCalObject.id]
+            val currentSubnotes = subnotes?.get(iCalObject.uid) ?: emptyList()
+            val currentAttachments = attachments?.get(iCalObject.id) ?: emptyList()
 
             ICalObjectListCard(
                 iCalObject,
-                currentSubtasks ?: emptyList(),
-                currentSubnotes ?: emptyList(),
-                attachments = currentAttachments ?: emptyList(),
+                currentSubtasks,
+                currentSubnotes,
+                attachments = currentAttachments,
                 isSubtasksExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_SUBTASKS_DEFAULT, false),
                 isSubnotesExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_SUBNOTES_DEFAULT, false),
                 isAttachmentsExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_ATTACHMENTS_DEFAULT, false),

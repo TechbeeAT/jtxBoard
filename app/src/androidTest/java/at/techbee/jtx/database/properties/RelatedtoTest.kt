@@ -24,13 +24,12 @@ class RelatedtoTest {
             icalObjectId = 1L,
             linkedICalObjectId = 1L,
             text = "Random UID",
-            reltype = Reltype.CHILD.name,
+            reltype = Reltype.PARENT.name,
             other = "nothing"
         )
 
         val cv = ContentValues(5).apply {
             put(COLUMN_RELATEDTO_ICALOBJECT_ID, sampleRelatedto.icalObjectId)
-            put(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID, sampleRelatedto.linkedICalObjectId)
             put(COLUMN_RELATEDTO_TEXT, sampleRelatedto.text)
             put(COLUMN_RELATEDTO_RELTYPE, sampleRelatedto.reltype)
             put(COLUMN_RELATEDTO_OTHER, sampleRelatedto.other)

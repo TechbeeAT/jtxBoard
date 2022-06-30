@@ -91,8 +91,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
 
     lateinit var collectionText: LiveData<String?>
 
-    lateinit var subtasksCountList: LiveData<List<SubtaskCount>>
-
     var entryToEdit = MutableLiveData<ICalEntity?>().apply { postValue(null) }
 
 
@@ -107,8 +105,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
                 }
             else
                 database.get(icalItemId)
-
-            subtasksCountList = database.getSubtasksCount()
 
             relatedNotes = Transformations.switchMap(icalEntity) {
                 it?.property?.uid?.let { parentUid -> database.getAllSubnotesOf(parentUid) }
@@ -297,10 +293,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
                 return@map (recurrenceVisible.value == true && item?.property?.rdate?.isNotEmpty() == true)
             }
         }
-
-        viewModelScope.launch {
-            subtasksCountList = database.getSubtasksCount()
-        }
     }
 
     fun editingClicked() {
@@ -326,9 +318,9 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
             newIcalObject.collectionId = icalEntity.value?.ICalCollection?.collectionId ?: 1L
             val newNoteId = database.insertICalObject(newIcalObject)
 
-            // We insert both directions in the database
-            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newIcalObject.uid))
-            database.insertRelatedto(Relatedto(linkedICalObjectId = icalEntity.value!!.property.id, icalObjectId = newNoteId, reltype = Reltype.PARENT.name, text = icalEntity.value!!.property.uid))
+            // We insert both directions in the database - deprecated, only one direction
+            //database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newIcalObject.uid))
+            database.insertRelatedto(Relatedto(icalObjectId = newNoteId, reltype = Reltype.PARENT.name, text = icalEntity.value!!.property.uid))
 
             if(attachment != null) {
                 attachment.icalObjectId = newNoteId

@@ -81,6 +81,8 @@ data class Relatedto (
         var relatedtoId: Long = 0L,
 
         @ColumnInfo(index = true, name = COLUMN_RELATEDTO_ICALOBJECT_ID)    var icalObjectId: Long = 0L,
+
+        @Deprecated("This field should not be used anymore")
         @ColumnInfo(index = true, name = COLUMN_RELATEDTO_LINKEDICALOBJECT_ID) var linkedICalObjectId: Long? = 0L,
         @ColumnInfo(name = COLUMN_RELATEDTO_TEXT)                var text: String? = null,
         @ColumnInfo(name = COLUMN_RELATEDTO_RELTYPE)        var reltype: String? = null,
@@ -109,7 +111,7 @@ data class Relatedto (
         fun applyContentValues(values: ContentValues): Relatedto {
 
                 values.getAsLong(COLUMN_RELATEDTO_ICALOBJECT_ID)?.let { icalObjectId -> this.icalObjectId = icalObjectId }
-                values.getAsLong(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID)?.let { linkedICalObjectId -> this.linkedICalObjectId = linkedICalObjectId }
+                //values.getAsLong(COLUMN_RELATEDTO_LINKEDICALOBJECT_ID)?.let { linkedICalObjectId -> this.linkedICalObjectId = linkedICalObjectId }
                 values.getAsString(COLUMN_RELATEDTO_TEXT)?.let { text -> this.text = text }
                 values.getAsString(COLUMN_RELATEDTO_RELTYPE)?.let { reltype -> this.reltype = reltype }
                 values.getAsString(COLUMN_RELATEDTO_OTHER)?.let { other -> this.other = other }

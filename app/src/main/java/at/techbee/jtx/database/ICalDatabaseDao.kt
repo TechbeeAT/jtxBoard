@@ -115,7 +115,7 @@ SELECTs (global selects without parameter)
      * Retrieve a list of ICalObjectIds that are parents within a given Collection
      */
     @Transaction
-    @Query("SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ICALOBJECT_COLLECTIONID = :collectionId AND $COLUMN_ID NOT IN (SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_RELTYPE = 'CHILD')")
+    @Query("SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ICALOBJECT_COLLECTIONID = :collectionId AND $COLUMN_UID IN (SELECT $COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_RELTYPE = 'PARENT')")
     suspend fun getICalObjectIdsWithinCollection(collectionId: Long): List<Long>
 
 
@@ -162,22 +162,22 @@ SELECTs (global selects without parameter)
 
     /**
      * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.id] is listed as a [Relatedto.linkedICalObjectId].
+     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
      *
      * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
      */
     @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_UID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO' ORDER BY $COLUMN_SORT_INDEX")
+    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VTODO' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' ORDER BY $COLUMN_SORT_INDEX")
     fun getAllSubtasks(): LiveData<List<ICal4List>>
 
     /**
      * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
-     * by checking if the [ICalObject.id] is listed as a [Relatedto.linkedICalObjectId].
+     * by checking if the [ICalObject.uid] is listed as a [Relatedto.text].
      *
      * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
      */
     @Transaction
-    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_UID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_TEXT WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VJOURNAL' ORDER BY $COLUMN_SORT_INDEX")
+    @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VJOURNAL' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' ORDER BY $COLUMN_SORT_INDEX")
     fun getAllSubnotes(): LiveData<List<ICal4List>>
 
 
@@ -220,16 +220,14 @@ SELECTs (global selects without parameter)
     @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT")
     fun getAllAttachments(): LiveData<List<Attachment>>
 
-
     /**
-     * Retrieve an list the number of Subtasks of an [ICalObject] as a [SubtaskCount].
-     * This is especially used for Sub-Sub-Tasks to show the number of Sub-Sub-Tasks on a Sub-Task.
-     *
-     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
+     * Retrieve an list of all  [Attachment]
+     * @return a list of [Attachment] as LiveData<List<[Attachment]>>
      */
     @Transaction
-    @Query("SELECT icalobject._id as icalobjectId, count(*) as count from relatedto INNER JOIN icalobject ON icalobject._id = relatedto.icalObjectId WHERE icalobject.component = 'VTODO' AND $COLUMN_RELATEDTO_RELTYPE = 'CHILD' GROUP BY icalobjectId")
-    fun getSubtasksCount(): LiveData<List<SubtaskCount>>
+    @Query("SELECT CASE WHEN (EXISTS (SELECT * FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :id AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT')) THEN 1 ELSE 0 END")
+    fun isChild(id: Long): LiveData<Boolean>
+
 
     /**
      * Retrieve the number of items in the table of [ICalObject] as Int.
@@ -492,26 +490,6 @@ DELETEs by Object
 
 
     /**
-     * Delete a relatedto by parentId and childId.
-     *
-     * @param parentId The Id of the parent IcalObject.
-     * @param childId The Id of the child IcalObject.
-     */
-    @Query("DELETE FROM relatedto WHERE relatedto.icalObjectId = :parentId and relatedto.linkedICalObjectId = :childId")
-    fun deleteRelatedto(parentId: Long, childId: Long)
-
-
-
-    /**
-     * Delete all children of a parent ICalObject by the parent ID.
-     *
-     * @param parentKey The row ID of the parent.
-     */
-    @Transaction
-    @Query("DELETE FROM icalobject WHERE icalobject._id in (SELECT linkedICalObjectId FROM relatedto WHERE relatedto.icalObjectId = :parentKey)")
-    fun deleteRelatedChildren(parentKey: Long)
-
-    /**
      * Delete entities through a RawQuery.
      * This is especially used for the Content Provider
      *
@@ -532,21 +510,6 @@ DELETEs by Object
     @Transaction
     @RawQuery
     fun updateRAW(query: SupportSQLiteQuery): Int
-
-
-    /**
-     * Returns a list of related to where the linkeIcalObjectId is null or 0.
-     * Especially relevant after sync.
-     */
-    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = 0 OR $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID IS NULL")
-    fun getRelatedToWithoutLinkedId(): List<Relatedto>
-
-    /**
-     * Returns a list of related to where the TEXT (uid) is null or 0.
-     * Especially relevant after sync.
-     */
-    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_TEXT is null OR $COLUMN_RELATEDTO_TEXT = ''")
-    fun getRelatedToWithoutUID(): List<Relatedto>
 
 
 
@@ -610,19 +573,14 @@ DELETEs by Object
 
 
 
-    // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
+    /** This query returns all ids of child elements of the given [parentKey]  */
     @Transaction
-    @Query("SELECT icalobject.* from icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId WHERE relatedto.icalObjectId = :parentKey and icalobject.component = 'VTODO' AND $COLUMN_RELATEDTO_RELTYPE = 'CHILD' and icalobject.deleted = '0'")
-    fun getRelatedTodos(parentKey: Long): LiveData<List<ICalObject?>>
-
-    // This query makes a Join between icalobjects and the linked (child) elements (JOIN relatedto ON icalobject.id = relatedto.linkedICalObjectId ) and then filters for one specific parent element (WHERE relatedto.icalObjectId = :parentKey)
-    @Transaction
-    @Query("SELECT $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID from $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'CHILD'" )
+    @Query("SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID IN (SELECT rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO rel INNER JOIN $TABLE_NAME_ICALOBJECT ical ON rel.$COLUMN_RELATEDTO_TEXT = ical.$COLUMN_UID AND ical.$COLUMN_ID = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT')" )
     suspend fun getRelatedChildren(parentKey: Long): List<Long>
 
     @Transaction
-    @Query("SELECT * from $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectid AND $COLUMN_RELATEDTO_LINKEDICALOBJECT_ID = :linkedid AND $COLUMN_RELATEDTO_RELTYPE = :reltype")
-    fun findRelatedTo(icalobjectid: Long, linkedid: Long, reltype: String): Relatedto?
+    @Query("SELECT * from $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectid AND $COLUMN_RELATEDTO_TEXT = :linkedUID AND $COLUMN_RELATEDTO_RELTYPE = :reltype")
+    fun findRelatedTo(icalobjectid: Long, linkedUID: String, reltype: String): Relatedto?
 
 
     // This query returns all IcalObjects that have a specific ICalObjectId in the field for the OriginalIcalObjectId (ie. all generated items for a recurring entry)
@@ -668,15 +626,4 @@ DELETEs by Object
     @Transaction
     @Query("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RECUR_ORIGINALICALOBJECTID = :id AND $COLUMN_RECUR_ISLINKEDINSTANCE = 1")
     fun deleteRecurringInstances(id: Long)
-
-
-
 }
-
-
-class SubtaskCount {
-    var icalobjectId: Long = 0L
-    var count: Int = 0
-}
-
-
