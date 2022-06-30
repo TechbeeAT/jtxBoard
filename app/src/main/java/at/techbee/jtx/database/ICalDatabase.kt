@@ -20,7 +20,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.database.views.ICal4ViewNote
 
 
 /**
@@ -43,7 +42,6 @@ import at.techbee.jtx.database.views.ICal4ViewNote
         Attachment::class],
     views = [
         ICal4List::class,
-        ICal4ViewNote::class,
         CollectionsView::class],
     version = 12,
     exportSchema = true,

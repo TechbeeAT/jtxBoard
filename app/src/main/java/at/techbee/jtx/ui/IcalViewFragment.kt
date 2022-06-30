@@ -38,6 +38,7 @@ import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.databinding.*
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
@@ -378,26 +379,22 @@ class IcalViewFragment : Fragment() {
 
             if (it?.size != 0) {
                 binding.viewFeedbackLinearlayout.removeAllViews()
-                it.sortedBy { item -> item?.sortIndex }
+                it.sortedBy { item -> item.sortIndex }
                     .forEach { relatedNote ->
-                    if (relatedNote == null)
-                        return@forEach
 
-                    val commentBinding =
+                        val commentBinding =
                         FragmentIcalViewCommentBinding.inflate(inflater, container, false)
                     if (relatedNote.summary?.isNotEmpty() == true)
                         commentBinding.viewCommentTextview.text = relatedNote.summary
                     else
                         commentBinding.viewCommentTextview.visibility = View.GONE
 
-                    if (relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_MP4_AAC || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_3GPP || relatedNote.attachmentFmttype == Attachment.FMTTYPE_AUDIO_OGG) {
+                    relatedNote.audioAttachment?.let { audioUri ->
                         commentBinding.viewCommentPlaybutton.visibility = View.VISIBLE
                         commentBinding.viewCommentProgressbar.visibility = View.VISIBLE
-
-                        //playback on click
                         commentBinding.viewCommentPlaybutton.setOnClickListener {
 
-                            val uri = Uri.parse(relatedNote.attachmentUri)
+                            val uri = Uri.parse(audioUri)
                             togglePlayback(
                                 commentBinding.viewCommentProgressbar,
                                 commentBinding.viewCommentPlaybutton,
@@ -426,7 +423,7 @@ class IcalViewFragment : Fragment() {
         icalViewViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
             binding.viewSubtasksLinearlayout.removeAllViews()
-            it.sortedBy { item -> item?.sortIndex }
+            it.sortedBy { item -> item.sortIndex }
                 .forEach { singleSubtask ->
                     addSubtasksView(singleSubtask, binding.viewSubtasksLinearlayout)
                 }
@@ -496,15 +493,15 @@ class IcalViewFragment : Fragment() {
             override fun onStopTrackingTouch(slider: Slider) {
                 if (binding.viewProgressSlider.value.toInt() < 100)
                     resetProgress = binding.viewProgressSlider.value.toInt()
-                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, binding.viewProgressSlider.value.toInt())
+                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, binding.viewProgressSlider.value.toInt())
             }
         })
 
         binding.viewProgressCheckbox.setOnCheckedChangeListener { _, checked ->
             if (checked) {
-                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, 100)
+                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, 100)
             } else {
-                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, resetProgress)
+                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, resetProgress)
             }
         }
 
@@ -614,7 +611,7 @@ class IcalViewFragment : Fragment() {
     }
 
 
-    private fun addSubtasksView(subtask: ICalObject?, linearLayout: LinearLayout) {
+    private fun addSubtasksView(subtask: ICal4List?, linearLayout: LinearLayout) {
 
         if (subtask == null)
             return
@@ -639,15 +636,15 @@ class IcalViewFragment : Fragment() {
             }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                icalViewViewModel.updateProgress(subtask, subtaskBinding.viewSubtaskProgressSlider.value.toInt())
+                icalViewViewModel.updateProgress(subtask.id, subtaskBinding.viewSubtaskProgressSlider.value.toInt())
             }
         })
 
         subtaskBinding.viewSubtaskProgressCheckbox.setOnCheckedChangeListener { _, checked ->
             if (checked) {
-                icalViewViewModel.updateProgress(subtask, 100)
+                icalViewViewModel.updateProgress(subtask.id, 100)
             } else {
-                icalViewViewModel.updateProgress(subtask, 0)
+                icalViewViewModel.updateProgress(subtask.id, 0)
             }
 
         }

@@ -839,8 +839,7 @@ class IcalEditFragment : Fragment() {
             if(it.isNullOrEmpty())
                 return@observe
 
-            it.sortedBy { item -> item?.sortIndex }
-                .forEach { singleSubtask ->
+            it.sortedBy { item -> item.sortIndex }.forEach { singleSubtask ->
                 addSubtasksView(singleSubtask)
             }
             icalEditViewModel.relatedSubtasks.removeObservers(viewLifecycleOwner)
@@ -1893,10 +1892,7 @@ class IcalEditFragment : Fragment() {
     }
 
 
-    private fun addSubtasksView(subtask: ICalObject?) {
-
-        if (subtask == null)
-            return
+    private fun addSubtasksView(subtask: ICalObject) {
 
         val bindingSubtask = FragmentIcalEditSubtaskBinding.inflate(inflater, container, false)
         bindingSubtask.editSubtaskTextview.text = subtask.summary

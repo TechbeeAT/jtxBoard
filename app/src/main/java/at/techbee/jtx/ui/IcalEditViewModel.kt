@@ -54,7 +54,7 @@ class IcalEditViewModel(
     lateinit var allCollections: LiveData<List<ICalCollection>>
     lateinit var allRelatedto: LiveData<List<Relatedto>>
 
-    lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
+    lateinit var relatedSubtasks: LiveData<List<ICalObject>>
 
     var recurrenceList = mutableListOf<Long>()
 
@@ -173,7 +173,7 @@ class IcalEditViewModel(
 
         viewModelScope.launch {
 
-            relatedSubtasks = database.getRelatedTodos(iCalEntity.property.id)
+            relatedSubtasks = database.getAllSubtasksAsICalObjectOf(iCalEntity.property.uid)
 
             allCategories = database.getAllCategories()
             allResources = database.getAllResources()
