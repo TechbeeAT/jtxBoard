@@ -17,7 +17,7 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -49,7 +49,7 @@ class ICalDatabaseDaoTest {
 
 
     @Test
-    fun insertAndCount() = runBlockingTest {
+    fun insertAndCount() = runTest {
         assertEquals(database.getCount(), 0)
         database.insertICalObject(ICalObject.createJournal())
         assertEquals(database.getCount(), 1)
@@ -58,7 +58,7 @@ class ICalDatabaseDaoTest {
     }
 
     @Test
-    fun insert_and_retrieve_ICalObject() = runBlockingTest {
+    fun insert_and_retrieve_ICalObject() = runTest {
         val preparedEntry = ICalObject.createNote("myTestJournal")
         preparedEntry.id = database.insertICalObject(preparedEntry)
 
@@ -68,7 +68,7 @@ class ICalDatabaseDaoTest {
 
 
     @Test
-    fun insert_and_retrieve_ICalEntityObject() = runBlockingTest {
+    fun insert_and_retrieve_ICalEntityObject() = runTest {
         val preparedICalObject = ICalObject(dtstart = System.currentTimeMillis(), summary="myTestJournal")
         preparedICalObject.id = database.insertICalObject(preparedICalObject)
 
@@ -82,7 +82,7 @@ class ICalDatabaseDaoTest {
 
         val preparedSubNote = ICalObject.createNote("Subnote")
         preparedSubNote.id = database.insertICalObject(preparedSubNote)
-        val preparedRelatedto = Relatedto(icalObjectId = preparedICalObject.id, linkedICalObjectId = preparedSubNote.id, reltype = "Child")
+        val preparedRelatedto = Relatedto(icalObjectId = preparedICalObject.id, reltype = "parent")
 
         preparedAttendee.attendeeId = database.insertAttendee(preparedAttendee)
         preparedAttachment.attachmentId = database.insertAttachment(preparedAttachment)
@@ -105,6 +105,4 @@ class ICalDatabaseDaoTest {
     fun closeDb() {
         ICalDatabase.getInMemoryDB(context).close()
     }
-
-
 }

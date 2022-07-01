@@ -59,7 +59,6 @@ fun ListScreenList(
     val subnotes by subnotesLive.observeAsState(emptyMap())
     val attachments by attachmentsLive.observeAsState(emptyMap())
 
-
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
 

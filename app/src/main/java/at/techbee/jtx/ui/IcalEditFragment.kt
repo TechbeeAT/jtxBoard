@@ -824,8 +824,7 @@ class IcalEditFragment : Fragment() {
             if(it.isNullOrEmpty())
                 return@observe
 
-            it.sortedBy { item -> item?.sortIndex }
-                .forEach { singleSubtask ->
+            it.sortedBy { item -> item.sortIndex }.forEach { singleSubtask ->
                 addSubtasksView(singleSubtask)
             }
             icalEditViewModel.relatedSubtasks.removeObservers(viewLifecycleOwner)
@@ -911,11 +910,10 @@ class IcalEditFragment : Fragment() {
         }
 
         // initialize allRelatedto
-        icalEditViewModel.allRelatedto.observe(viewLifecycleOwner) {
+        icalEditViewModel.isChild.observe(viewLifecycleOwner) {
 
-            // if the current item can be found as linkedICalObjectId and the reltype is CHILD, then it must be a child and changing the collection is not allowed
-            // also making it recurring is not allowed
-            if (icalEditViewModel.iCalObjectUpdated.value?.id != 0L && it?.find { rel -> rel.linkedICalObjectId == icalEditViewModel.iCalObjectUpdated.value?.id && rel.reltype == Reltype.CHILD.name } != null) {
+            // if the current item is a child, changing the collection is not allowed; also making it recurring is not allowed
+            if (it) {
                 binding.editFragmentTabGeneral.editCollectionSpinner.isEnabled = false
                 binding.editFragmentIcalEditRecur.editRecurSwitch.isEnabled = false
             }
@@ -1878,10 +1876,7 @@ class IcalEditFragment : Fragment() {
     }
 
 
-    private fun addSubtasksView(subtask: ICalObject?) {
-
-        if (subtask == null)
-            return
+    private fun addSubtasksView(subtask: ICalObject) {
 
         val bindingSubtask = FragmentIcalEditSubtaskBinding.inflate(inflater, container, false)
         bindingSubtask.editSubtaskTextview.text = subtask.summary

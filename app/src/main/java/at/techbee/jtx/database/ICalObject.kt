@@ -702,20 +702,11 @@ data class ICalObject(
                         triggerTime?.let { trigger ->  it.scheduleNotification(context, trigger) }
                     }
 
-                    // relations need to be rebuilt from the new parent to the child
                     // relations need to be rebuilt from the new child to the parent
                     if (newParentId != null) {
-                        val relChild2Parent = Relatedto()
-                        relChild2Parent.icalObjectId = newParentId
-                        relChild2Parent.linkedICalObjectId = newId
-                        relChild2Parent.reltype = Reltype.CHILD.name
-                        relChild2Parent.text = item.property.uid
-                        database.insertRelatedto(relChild2Parent)
-
                         val parent = database.getSync(newParentId)
                         val relParent2Child = Relatedto()
                         relParent2Child.icalObjectId = newId
-                        relParent2Child.linkedICalObjectId = newParentId
                         relParent2Child.reltype = Reltype.PARENT.name
                         relParent2Child.text = parent?.property?.uid
                         database.insertRelatedto(relParent2Child)

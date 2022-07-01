@@ -154,7 +154,7 @@ class IcalViewViewModelTest {
         Thread.sleep(100)
         icalViewViewModel.icalEntity.getOrAwaitValue()
 
-        icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, 88)
+        icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, 88)
 
         database.getICalObjectById(icalViewViewModel.icalEntity.value!!.property.id)
         assertEquals(88, icalViewViewModel.icalEntity.value!!.property.percent)
@@ -194,9 +194,5 @@ class IcalViewViewModelTest {
         assertEquals(false, icalViewViewModel.completedVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.startedVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.resourcesVisible.getOrAwaitValue())
-
-
-        assertEquals(listOf<ICalObject>(), icalViewViewModel.subtasksCountList.getOrAwaitValue())
-
     }
 }

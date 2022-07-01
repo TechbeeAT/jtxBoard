@@ -17,11 +17,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Organizer
-import at.techbee.jtx.database.properties.Relatedto
-import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -77,7 +75,7 @@ class IcalListViewModelTest {
  */
 
     @Test
-    fun updateSearch_filter_Module_Journal() = runBlockingTest {
+    fun updateSearch_filter_Module_Journal() = runTest {
 
         icalListViewModel.iCal4ListJournals.observeForever {  }
         database.insertICalObject(ICalObject.createJournal())
@@ -89,7 +87,7 @@ class IcalListViewModelTest {
     }
 
     @Test
-    fun updateSearch_filter_Module_Note() = runBlockingTest {
+    fun updateSearch_filter_Module_Note() = runTest {
 
         icalListViewModel.iCal4ListNotes.observeForever {  }
         database.insertICalObject(ICalObject.createNote("Note1"))
@@ -100,7 +98,7 @@ class IcalListViewModelTest {
 
 
     @Test
-    fun updateSearch_filter_Module_Todo() = runBlockingTest {
+    fun updateSearch_filter_Module_Todo() = runTest {
 
         icalListViewModel.iCal4ListTodos.observeForever {  }
         database.insertICalObject(ICalObject.createTask("Task1"))
@@ -112,7 +110,7 @@ class IcalListViewModelTest {
     }
 
     @Test
-    fun updateSearch_filter_Text() = runBlockingTest {
+    fun updateSearch_filter_Text() = runTest {
 
         icalListViewModel.iCal4ListTodos.observeForever {  }
         database.insertICalObject(ICalObject.createTask("Task1_abc_Text"))
@@ -126,7 +124,7 @@ class IcalListViewModelTest {
     }
 
     @Test
-    fun updateSearch_filter_Categories() = runBlockingTest {
+    fun updateSearch_filter_Categories() = runTest {
 
         icalListViewModel.iCal4ListTodos.observeForever {  }
         icalListViewModel.iCal4ListNotes.observeForever {  }
@@ -158,7 +156,7 @@ class IcalListViewModelTest {
 
 
     @Test
-    fun updateSearch_filter_Collections() = runBlockingTest {
+    fun updateSearch_filter_Collections() = runTest {
 
         icalListViewModel.iCal4ListNotes.observeForever {  }
 
@@ -187,7 +185,7 @@ class IcalListViewModelTest {
     }
 
     @Test
-    fun updateSearch_filter_Organizer() = runBlockingTest {
+    fun updateSearch_filter_Organizer() = runTest {
 
         icalListViewModel.iCal4ListTodos.observeForever {  }
 
@@ -212,7 +210,7 @@ class IcalListViewModelTest {
     }
 
     @Test
-    fun updateSearch_filter_StatusJournal() = runBlockingTest {
+    fun updateSearch_filter_StatusJournal() = runTest {
 
         icalListViewModel.iCal4ListNotes.observeForever {  }
 
@@ -236,7 +234,7 @@ class IcalListViewModelTest {
     }
 
     @Test
-    fun updateSearch_filter_StatusTodo() = runBlockingTest {
+    fun updateSearch_filter_StatusTodo() = runTest {
 
         icalListViewModel.iCal4ListTodos.observeForever {  }
 
@@ -261,7 +259,7 @@ class IcalListViewModelTest {
     }
 
     @Test
-    fun updateSearch_filter_Classification() = runBlockingTest {
+    fun updateSearch_filter_Classification() = runTest {
 
         icalListViewModel.iCal4ListTodos.observeForever {  }
 
@@ -297,7 +295,7 @@ class IcalListViewModelTest {
     }
 
     @Test
-    fun updateProgress() = runBlockingTest {
+    fun updateProgress() = runTest {
 
         val id = database.insertICalObject(ICalObject.createTask("Test"))
         icalListViewModel.updateProgress(id, 50, false)
@@ -308,7 +306,7 @@ class IcalListViewModelTest {
     }
 
     @Test
-    fun updateProgress_withUnlink() = runBlockingTest {
+    fun updateProgress_withUnlink() = runTest {
 
         val item = ICalObject.createTask("Test")
         item.isRecurLinkedInstance = true
@@ -323,23 +321,9 @@ class IcalListViewModelTest {
     }
 
 
-    @Test
-    fun checkAllRelatedto() = runBlockingTest {
-
-        icalListViewModel.allSubtasks.observeForever {  }
-
-        val parent = database.insertICalObject(ICalObject.createTodo())
-        val child1 = database.insertICalObject(ICalObject.createTodo())
-        val child2 = database.insertICalObject(ICalObject.createTodo())
-
-        database.insertRelatedto(Relatedto(icalObjectId = parent, linkedICalObjectId = child1, reltype = Reltype.CHILD.name))
-        database.insertRelatedto(Relatedto(icalObjectId = parent, linkedICalObjectId = child2, reltype = Reltype.CHILD.name))
-
-        assertEquals(2, icalListViewModel.allSubtasks.value?.size)
-    }
 
     @Test
-    fun deleteVisible() = runBlockingTest {
+    fun deleteVisible() = runTest {
 
         icalListViewModel.iCal4ListTodos.observeForever {  }
 
@@ -370,7 +354,7 @@ class IcalListViewModelTest {
     }
 
     @Test
-    fun getAllCategories() = runBlockingTest {
+    fun getAllCategories() = runTest {
 
         icalListViewModel.allCategories.observeForever {  }
 

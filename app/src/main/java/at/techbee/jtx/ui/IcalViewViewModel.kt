@@ -16,7 +16,7 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.database.views.ICal4ViewNote
+import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
@@ -31,8 +31,8 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
     lateinit var icalEntity: LiveData<ICalEntity?>
-    lateinit var relatedNotes: LiveData<List<ICal4ViewNote?>>
-    lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
+    lateinit var relatedNotes: LiveData<List<ICal4List>>
+    lateinit var relatedSubtasks: LiveData<List<ICal4List>>
     lateinit var recurInstances: LiveData<List<ICalObject?>>
 
     lateinit var dtstartFormatted: LiveData<String>
@@ -91,8 +91,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
 
     lateinit var collectionText: LiveData<String?>
 
-    lateinit var subtasksCountList: LiveData<List<SubtaskCount>>
-
     var entryToEdit = MutableLiveData<ICalEntity?>().apply { postValue(null) }
 
 
@@ -108,14 +106,12 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
             else
                 database.get(icalItemId)
 
-            subtasksCountList = database.getSubtasksCount()
-
             relatedNotes = Transformations.switchMap(icalEntity) {
-                it?.property?.id?.let { parentId -> database.getRelatedNotes(parentId) }
+                it?.property?.uid?.let { parentUid -> database.getAllSubnotesOf(parentUid) }
             }
 
             relatedSubtasks = Transformations.switchMap(icalEntity) {
-                it?.property?.id?.let { parentId -> database.getRelatedTodos(parentId) }
+                it?.property?.uid?.let { parentUid -> database.getAllSubtasksOf(parentUid) }
             }
 
             recurInstances = Transformations.switchMap(icalEntity) {
@@ -297,10 +293,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
                 return@map (recurrenceVisible.value == true && item?.property?.rdate?.isNotEmpty() == true)
             }
         }
-
-        viewModelScope.launch {
-            subtasksCountList = database.getSubtasksCount()
-        }
     }
 
     fun editingClicked() {
@@ -326,9 +318,9 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
             newIcalObject.collectionId = icalEntity.value?.ICalCollection?.collectionId ?: 1L
             val newNoteId = database.insertICalObject(newIcalObject)
 
-            // We insert both directions in the database
-            database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newIcalObject.uid))
-            database.insertRelatedto(Relatedto(linkedICalObjectId = icalEntity.value!!.property.id, icalObjectId = newNoteId, reltype = Reltype.PARENT.name, text = icalEntity.value!!.property.uid))
+            // We insert both directions in the database - deprecated, only one direction
+            //database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newIcalObject.uid))
+            database.insertRelatedto(Relatedto(icalObjectId = newNoteId, reltype = Reltype.PARENT.name, text = icalEntity.value!!.property.uid))
 
             if(attachment != null) {
                 attachment.icalObjectId = newNoteId
@@ -341,10 +333,11 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     }
 
 
-    fun updateProgress(item: ICalObject, newPercent: Int) {
+    fun updateProgress(id: Long, newPercent: Int) {
 
-        makeRecurringExceptionIfNecessary(item)
         viewModelScope.launch(Dispatchers.IO) {
+            val item = database.getICalObjectById(id) ?: return@launch
+            makeRecurringExceptionIfNecessary(item)
             item.setUpdatedProgress(newPercent)
             database.update(item)
             SyncUtil.notifyContentObservers(getApplication())

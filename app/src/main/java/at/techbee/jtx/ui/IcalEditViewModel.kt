@@ -52,9 +52,8 @@ class IcalEditViewModel(
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allResources: LiveData<List<String>>
     lateinit var allCollections: LiveData<List<ICalCollection>>
-    lateinit var allRelatedto: LiveData<List<Relatedto>>
-
-    lateinit var relatedSubtasks: LiveData<List<ICalObject?>>
+    lateinit var isChild: LiveData<Boolean>
+    lateinit var relatedSubtasks: LiveData<List<ICalObject>>
 
     var recurrenceList = mutableListOf<Long>()
 
@@ -173,7 +172,7 @@ class IcalEditViewModel(
 
         viewModelScope.launch {
 
-            relatedSubtasks = database.getRelatedTodos(iCalEntity.property.id)
+            relatedSubtasks = database.getAllSubtasksAsICalObjectOf(iCalEntity.property.uid)
 
             allCategories = database.getAllCategories()
             allResources = database.getAllResources()
@@ -183,7 +182,7 @@ class IcalEditViewModel(
                 else -> database.getAllCollections() // should not happen!
             }
 
-            allRelatedto = database.getAllRelatedto()
+            isChild = database.isChild(iCalEntity.property.id)
 
         }
     }
@@ -341,28 +340,13 @@ class IcalEditViewModel(
                 subtask.id = database.insertSubtask(subtask)
                 Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
 
-                // upsert relation from the Parent to the Child
-                // check if the relation is there, if not we insert
-                val childRelation = database.findRelatedTo(insertedOrUpdatedItemId, subtask.id, Reltype.CHILD.name)
-                if(childRelation == null) {
-                    database.insertRelatedto(
-                        Relatedto(
-                            icalObjectId = insertedOrUpdatedItemId,
-                            linkedICalObjectId = subtask.id,
-                            reltype = Reltype.CHILD.name,
-                            text = subtask.uid
-                        )
-                    )
-                }
-
                 // upsert relation from the Child to the Parent
                 // check if the relation is there, if not we insert
-                val parentRelation = database.findRelatedTo(subtask.id, insertedOrUpdatedItemId, Reltype.PARENT.name)
+                val parentRelation = database.findRelatedTo(subtask.id, iCalObjectUpdated.value!!.uid, Reltype.PARENT.name)
                 if(parentRelation == null) {
                     database.insertRelatedto(
                         Relatedto(
                             icalObjectId = subtask.id,
-                            linkedICalObjectId = insertedOrUpdatedItemId,
                             reltype = Reltype.PARENT.name,
                             text = iCalObjectUpdated.value!!.uid
                         )

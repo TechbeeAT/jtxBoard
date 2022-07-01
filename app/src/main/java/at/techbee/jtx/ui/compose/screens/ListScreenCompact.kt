@@ -75,6 +75,7 @@ fun ListScreenCompact(
 
             var currentSubtasks = subtasks[iCalObject.uid]
             if(listSettings.isExcludeDone.value)   // exclude done if applicable
+
                 currentSubtasks = currentSubtasks?.filter { subtask -> subtask.percent != 100 }
 
             ListCardCompact(

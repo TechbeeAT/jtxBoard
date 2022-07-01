@@ -296,8 +296,8 @@ class IcalListFragment : Fragment() {
 
             override fun writeToParcel(dest: Parcel?, flags: Int) {}
             override fun isValid(date: Long): Boolean {
-                icalListViewModel.iCal4List.value?.forEach {
-                    val zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.property.dtstart?:0L), requireTzId(it.property.dtstartTimezone))
+                icalListViewModel.iCal4ListJournals.value?.forEach {
+                    val zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.dtstart?:0L), requireTzId(it.dtstartTimezone))
                     val zonedSelection = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault())
 
                     if(zonedDtstart.dayOfMonth == zonedSelection.dayOfMonth && zonedDtstart.monthValue == zonedSelection.monthValue && zonedDtstart.year == zonedSelection.year)
@@ -310,7 +310,7 @@ class IcalListFragment : Fragment() {
         // Build constraints.
         val constraintsBuilder =
             CalendarConstraints.Builder().apply {
-                var dates = icalListViewModel.iCal4List.value?.map { it.property.dtstart?:System.currentTimeMillis() }?.toList()
+                var dates = icalListViewModel.iCal4ListJournals.value?.map { it.dtstart?:System.currentTimeMillis() }?.toList()
                 if(dates.isNullOrEmpty())
                     dates = listOf(System.currentTimeMillis())
                 setStart(dates.minOf { it })
@@ -330,12 +330,12 @@ class IcalListFragment : Fragment() {
             val zonedSelection = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
 
             // find the item with the same date
-            val matchedItem = icalListViewModel.iCal4List.value?.find { item ->
-                val zonedMatch = ZonedDateTime.ofInstant(Instant.ofEpochMilli(item.property.dtstart ?: 0L), requireTzId(item.property.dtstartTimezone))
+            val matchedItem = icalListViewModel.iCal4ListJournals.value?.find { item ->
+                val zonedMatch = ZonedDateTime.ofInstant(Instant.ofEpochMilli(item.dtstart ?: 0L), requireTzId(item.dtstartTimezone))
                 zonedSelection.dayOfMonth == zonedMatch.dayOfMonth && zonedSelection.monthValue == zonedMatch.monthValue && zonedSelection.year == zonedMatch.year
             }
             if (matchedItem != null)
-                icalListViewModel.scrollOnceId.postValue(matchedItem.property.id)
+                icalListViewModel.scrollOnceId.postValue(matchedItem.id)
         }
 
         datePicker.show(parentFragmentManager, "menu_list_gotodate")
@@ -361,9 +361,16 @@ class IcalListFragment : Fragment() {
         /*
 
         val itemIds = mutableListOf<Long>()
-        icalListViewModel.iCal4List.value?.forEach {
-            if(!it.property.isLinkedRecurringInstance)
-                itemIds.add(it.property.id)
+
+        val baseList = when(icalListViewModel.searchModule) {
+            Module.JOURNAL.name -> icalListViewModel.iCal4ListJournals.value
+            Module.NOTE.name -> icalListViewModel.iCal4ListNotes.value
+            Module.TODO.name -> icalListViewModel.iCal4ListTodos.value
+            else -> emptyList()
+        }
+        baseList?.forEach {
+            if(!it.isLinkedRecurringInstance)
+                itemIds.add(it.id)
         }
 
         MaterialAlertDialogBuilder(requireContext())

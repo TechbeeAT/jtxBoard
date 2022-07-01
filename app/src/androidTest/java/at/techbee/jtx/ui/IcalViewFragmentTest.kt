@@ -113,7 +113,7 @@ class IcalViewFragmentTest {
 
 
         //insert sample entries
-        testScope.launch(TestCoroutineDispatcher()) {
+        testScope.launch {
             database.insertCollectionSync(sampleCollection)
             sampleJour.id = database.insertICalObjectSync(sampleJour)
             sampleNote.id = database.insertICalObjectSync(sampleNote)
@@ -278,7 +278,7 @@ class IcalViewFragmentTest {
         scenario.withFragment {
             this.binding.viewProgressSlider.value = 50F
             //the update would be done by the touch listener, this is a bit problematic in espresso, no proper solution was found yet, so we call the method of the listener manually:
-            this.icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, binding.viewProgressSlider.value.toInt())
+            this.icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, binding.viewProgressSlider.value.toInt())
 
             // wait for update to be done or until timeout is reached
             val timeout = 2000
@@ -311,7 +311,7 @@ class IcalViewFragmentTest {
         scenario.withFragment {
             this.binding.viewProgressSlider.value = 100F
             //the update would be done by the touch listener, this is a bit problematic in espresso, no proper solution was found yet, so we call the method of the listener manually:
-            this.icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property, binding.viewProgressSlider.value.toInt())
+            this.icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, binding.viewProgressSlider.value.toInt())
 
             // wait for update to be done or until timeout is reached
             val timeout = 2000
