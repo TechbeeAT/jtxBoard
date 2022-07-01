@@ -222,13 +222,6 @@ SELECTs (global selects without parameter)
     @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vjournalUidOfParent = :uid ORDER BY $COLUMN_SORT_INDEX")
     fun getAllSubnotesOf(uid: String): LiveData<List<ICal4List>>
     
-    /**
-     * Retrieve an list of all  [Attachment]
-     * @return a list of [Attachment] as LiveData<List<[Attachment]>>
-     */
-    @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT")
-    fun getAllAttachments(): LiveData<List<Attachment>>
 
     /**
      * Retrieve an list of all  [Attachment]
