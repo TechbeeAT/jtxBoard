@@ -46,7 +46,7 @@ class IcalListViewModelTest {
         context = InstrumentationRegistry.getInstrumentation().targetContext
         ICalDatabase.switchToInMemory(context)
         application = context.applicationContext as Application
-        icalListViewModel = IcalListViewModel(application)
+        //icalListViewModel = IcalListViewModel(application)
         database = ICalDatabase.getInstance(context).iCalDatabaseDao
         database.insertCollectionSync(ICalCollection(collectionId = 1L, displayName = "testcollection automated tests"))
     }
@@ -61,18 +61,8 @@ class IcalListViewModelTest {
     fun setFocusItem() {
         // covered by getFocusItemPosition()
     }
-/*
-    @Test
-    fun updateSearch() {
-        // Basic Test
-        val searchBefore = icalListViewModel.listQuery.value
-        icalListViewModel.searchModule = Module.TODO.name
-        icalListViewModel.searchCategories.add("Test")
-        icalListViewModel.updateSearch()
 
-        assertNotEquals(searchBefore, icalListViewModel.listQuery.value)
-    }
- */
+    /*
 
     @Test
     fun updateSearch_filter_Module_Journal() = runTest {
@@ -372,4 +362,6 @@ class IcalListViewModelTest {
         // only 3 should be returned as the query selects only DISTINCT values!
         assertEquals(3, icalListViewModel.allCategories.value?.size)
     }
+
+     */
 }

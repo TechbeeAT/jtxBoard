@@ -16,5 +16,4 @@ class GlobalStateHolder(context: Context) {
             isSyncInProgress.value = SyncUtil.isJtxSyncRunning(context)
         }
     }
-
 }

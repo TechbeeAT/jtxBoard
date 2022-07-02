@@ -9,11 +9,11 @@
 package at.techbee.jtx.ui.compose.elements
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,11 +30,12 @@ fun ProgressElement(
     progress: Int?,
     isReadOnly: Boolean,
     isLinkedRecurringInstance: Boolean,
+    sliderIncrement: Int = 1,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
 
-    //use progress in state!
-    var sliderPosition by remember { mutableStateOf(progress?.toFloat() ?: 0f) }
+    val initialProgress = progress?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
+    var sliderPosition by remember { mutableStateOf(initialProgress) }
 
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -51,9 +51,15 @@ fun ProgressElement(
         Slider(
             value = sliderPosition,
             valueRange = 0F..100F,
-            steps = 100,
+            steps = 100 / sliderIncrement,
             onValueChange = { sliderPosition = it },
-            onValueChangeFinished = { onProgressChanged(iCalObjectId, sliderPosition.toInt(), isLinkedRecurringInstance) },
+            onValueChangeFinished = {
+                onProgressChanged(
+                    iCalObjectId,
+                    sliderPosition.toInt(),
+                    isLinkedRecurringInstance
+                )
+            },
             modifier = Modifier.weight(1f),
             enabled = !isReadOnly
         )
@@ -62,10 +68,10 @@ fun ProgressElement(
             modifier = Modifier.padding(start = 8.dp, end = 8.dp)
         )
         Checkbox(
-            checked = sliderPosition==100f,
+            checked = sliderPosition == 100f,
             onCheckedChange = {
-                sliderPosition = if(it) 100f else 0f
-                onProgressChanged(iCalObjectId, if(it) 100 else 0, isLinkedRecurringInstance)
+                sliderPosition = if (it) 100f else 0f
+                onProgressChanged(iCalObjectId, if (it) 100 else 0, isLinkedRecurringInstance)
             },
             enabled = !isReadOnly
         )
@@ -75,15 +81,41 @@ fun ProgressElement(
 @Preview(showBackground = true)
 @Composable
 fun ProgressElementPreview() {
-    JtxBoardTheme {
-        ProgressElement(1L, 57, isReadOnly = false, isLinkedRecurringInstance = false) { _, _, _ -> }
+    MaterialTheme {
+        ProgressElement(
+            iCalObjectId = 1L,
+            progress = 57,
+            isReadOnly = false,
+            isLinkedRecurringInstance = false,
+            onProgressChanged = { _, _, _ -> })
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ProgressElementPreview_readonly() {
-    JtxBoardTheme {
-        ProgressElement(1L, 57, isReadOnly = true, isLinkedRecurringInstance = false) { _, _, _ -> }
+    MaterialTheme {
+        ProgressElement(
+            iCalObjectId = 1L,
+            progress = 57,
+            isReadOnly = true,
+            isLinkedRecurringInstance = false,
+            onProgressChanged = { _, _, _ -> })
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProgressElementPreview_increment25() {
+    MaterialTheme {
+        ProgressElement(
+            iCalObjectId = 1L,
+            progress = 57,
+            isReadOnly = false,
+            isLinkedRecurringInstance = false,
+            onProgressChanged = { _, _, _ -> },
+            sliderIncrement = 20
+        )
+
     }
 }

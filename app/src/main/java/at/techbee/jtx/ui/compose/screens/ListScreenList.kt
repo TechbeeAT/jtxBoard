@@ -16,25 +16,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.preference.PreferenceManager
 import at.techbee.jtx.ListSettings
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.SettingsFragment
 import at.techbee.jtx.ui.compose.cards.ICalObjectListCard
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
@@ -48,6 +43,11 @@ fun ListScreenList(
     attachmentsLive: LiveData<Map<Long, List<Attachment>>>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
+    isSubtasksExpandedDefault: MutableState<Boolean>,
+    isSubnotesExpandedDefault: MutableState<Boolean>,
+    isAttachmentsExpandedDefault: MutableState<Boolean>,
+    settingShowProgressMaintasks: MutableState<Boolean>,
+    settingShowProgressSubtasks: MutableState<Boolean>,
     goToView: (itemId: Long) -> Unit,
     goToEdit: (itemId: Long) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
@@ -63,9 +63,6 @@ fun ListScreenList(
     val listState = rememberLazyListState()
 
     val mediaPlayer = MediaPlayer()
-
-    //load settings
-    val settings = PreferenceManager.getDefaultSharedPreferences(LocalContext.current)
 
 
     if(scrollId != null) {
@@ -100,11 +97,11 @@ fun ListScreenList(
                 currentSubtasks ?: emptyList(),
                 currentSubnotes ?: emptyList(),
                 attachments = currentAttachments ?: emptyList(),
-                isSubtasksExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_SUBTASKS_DEFAULT, false),
-                isSubnotesExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_SUBNOTES_DEFAULT, false),
-                isAttachmentsExpandedDefault = settings.getBoolean(SettingsFragment.EXPAND_ATTACHMENTS_DEFAULT, false),
-                settingShowProgressMaintasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST, false),
-                settingShowProgressSubtasks = settings.getBoolean(SettingsFragment.SHOW_PROGRESS_FOR_SUBTASKS_IN_LIST, true),
+                isSubtasksExpandedDefault = isSubtasksExpandedDefault.value,
+                isSubnotesExpandedDefault = isSubnotesExpandedDefault.value,
+                isAttachmentsExpandedDefault = isAttachmentsExpandedDefault.value,
+                settingShowProgressMaintasks = settingShowProgressMaintasks.value,
+                settingShowProgressSubtasks = settingShowProgressSubtasks.value,
                 goToView = goToView,
                 goToEdit = goToEdit,
                 onProgressChanged = onProgressChanged,
@@ -165,6 +162,11 @@ fun ListScreenList_TODO() {
             subnotesLive = MutableLiveData(emptyMap()),
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
+            isSubtasksExpandedDefault = mutableStateOf(true),
+            isSubnotesExpandedDefault = mutableStateOf(true),
+            isAttachmentsExpandedDefault = mutableStateOf(true),
+            settingShowProgressMaintasks = mutableStateOf(true),
+            settingShowProgressSubtasks = mutableStateOf(true),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },
@@ -213,6 +215,11 @@ fun ListScreenList_JOURNAL() {
             subnotesLive = MutableLiveData(emptyMap()),
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
+            isSubtasksExpandedDefault = mutableStateOf(false),
+            isSubnotesExpandedDefault = mutableStateOf(false),
+            isAttachmentsExpandedDefault = mutableStateOf(false),
+            settingShowProgressMaintasks = mutableStateOf(false),
+            settingShowProgressSubtasks = mutableStateOf(false),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },

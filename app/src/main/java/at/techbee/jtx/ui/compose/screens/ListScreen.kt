@@ -8,11 +8,13 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.ViewMode
 import at.techbee.jtx.ui.compose.appbars.ListBottomAppBar
+import at.techbee.jtx.ui.compose.stateholder.SettingsStateHolder
 import kotlinx.coroutines.launch
 
 
@@ -25,6 +27,7 @@ fun ListScreen(
 
     val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
+    val settingsStateHolder = SettingsStateHolder(LocalContext.current)
 
     Scaffold(
         bottomBar = {
@@ -51,6 +54,11 @@ fun ListScreen(
                     attachmentsLive = icalListViewModel.allAttachmentsMap,
                     scrollOnceId = icalListViewModel.scrollOnceId,
                     listSettings = icalListViewModel.listSettings,
+                    isSubtasksExpandedDefault = settingsStateHolder.settingAutoExpandSubtasks,
+                    isSubnotesExpandedDefault = settingsStateHolder.settingAutoExpandSubnotes,
+                    isAttachmentsExpandedDefault = settingsStateHolder.settingAutoExpandAttachments,
+                    settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks,
+                    settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
                     goToView = { itemId ->
                         navController.navigate(
                             IcalListFragmentDirections

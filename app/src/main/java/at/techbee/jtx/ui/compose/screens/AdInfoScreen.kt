@@ -91,7 +91,7 @@ fun AdInfoScreen(navController: NavHostController, modifier: Modifier = Modifier
 @Preview(showBackground = true)
 @Composable
 fun AdInfoScreen_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         AdInfoScreen(rememberNavController())
     }
 }

@@ -2,7 +2,6 @@ package at.techbee.jtx
 
 import android.app.Activity
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -16,24 +15,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.viewinterop.AndroidViewBinding
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.preference.PreferenceManager
-import at.techbee.jtx.databinding.FragmentSettingsContainerBinding
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.settings.DropdownSettingOption
 import at.techbee.jtx.ui.AboutViewModel
 import at.techbee.jtx.ui.CollectionsViewModel
-import at.techbee.jtx.ui.SettingsFragment
 import at.techbee.jtx.ui.SyncViewModel
 import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.compose.screens.*
 import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
+import at.techbee.jtx.ui.compose.stateholder.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 
@@ -42,14 +38,15 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
     // or maybe FragmentActivity() was also proposed...
 
     private var lastProcessedIntentHash: Int? = null
-    private val globalStateHolder = GlobalStateHolder(this)
-    private var settings: SharedPreferences? = null
-
+    private lateinit var globalStateHolder: GlobalStateHolder
+    private lateinit var settingsStateHolder: SettingsStateHolder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        settings = PreferenceManager.getDefaultSharedPreferences(this)
+        globalStateHolder = GlobalStateHolder(this)
+        settingsStateHolder = SettingsStateHolder(this)
+
         TimeZoneRegistryFactory.getInstance().createRegistry() // necessary for ical4j
         checkThemeSetting()
         BillingManager.getInstance()?.initialise(this)
@@ -68,7 +65,7 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainNavHost(this, globalStateHolder)
+                    MainNavHost(this, globalStateHolder, settingsStateHolder)
                 }
             }
         }
@@ -139,23 +136,24 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
      */
     private fun checkThemeSetting() {
         // user interface settings
-        when(settings?.getString(SettingsFragment.PREFERRED_THEME, SettingsFragment.THEME_SYSTEM)) {
-            SettingsFragment.THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            SettingsFragment.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            SettingsFragment.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        when(settingsStateHolder.settingTheme.value) {
+            DropdownSettingOption.THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
     }
-
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainNavHost(activity: Activity, globalStateHolder: GlobalStateHolder) {
+fun MainNavHost(
+    activity: Activity,
+    globalStateHolder: GlobalStateHolder,
+    settingsStateHolder: SettingsStateHolder
+) {
 
     val navController = rememberNavController()
-    val context = LocalContext.current
 
     Scaffold {
 
@@ -213,9 +211,21 @@ fun MainNavHost(activity: Activity, globalStateHolder: GlobalStateHolder) {
                 )
             }
             composable(NavigationDrawerDestination.SETTINGS.name) {
-                AndroidViewBinding(FragmentSettingsContainerBinding::inflate) {
-                    fragmentSettingsContainerView.getFragment<SettingsFragment>()
-                }
+                SettingsScreen(
+                    navController = navController,
+                    currentTheme = settingsStateHolder.settingTheme,
+                    currentAudioFormat = settingsStateHolder.settingAudioFormat,
+                    autoExpandSubtasks = settingsStateHolder.settingAutoExpandSubtasks,
+                    autoExpandSubnotes = settingsStateHolder.settingAutoExpandSubnotes,
+                    autoExpandAttachments = settingsStateHolder.settingAutoExpandAttachments,
+                    showProgressForMainTasks = settingsStateHolder.settingShowProgressForMainTasks,
+                    showProgressForSubTasks = settingsStateHolder.settingShowProgressForSubTasks,
+                    showSubtasksInTasklist = settingsStateHolder.settingShowSubtasksInTasklist,
+                    showSubnotesInNoteslist = settingsStateHolder.settingShowSubnotesInNoteslist,
+                    showSubjournalsInJournallist = settingsStateHolder.settingShowSubjournalsInJournallist,
+                    currentDefaultStartDate = settingsStateHolder.settingDefaultStartDate,
+                    currentDefaultDueDate = settingsStateHolder.settingDefaultDueDate
+                )
             }
         }
 
@@ -228,6 +238,7 @@ fun MainNavHost(activity: Activity, globalStateHolder: GlobalStateHolder) {
 @Composable
 fun DefaultPreview() {
     JtxBoardTheme {
-        MainNavHost(Activity(), GlobalStateHolder(LocalContext.current))
+        val context = LocalContext.current
+        MainNavHost(context as Activity, GlobalStateHolder(context), SettingsStateHolder(context))
     }
 }

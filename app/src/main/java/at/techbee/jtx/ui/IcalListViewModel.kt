@@ -23,9 +23,7 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
-import at.techbee.jtx.ui.SettingsFragment.Companion.SETTINGS_SHOW_SUBJOURNALS_IN_LIST
-import at.techbee.jtx.ui.SettingsFragment.Companion.SETTINGS_SHOW_SUBNOTES_IN_LIST
-import at.techbee.jtx.ui.SettingsFragment.Companion.SETTINGS_SHOW_SUBTASKS_IN_LIST
+import at.techbee.jtx.settings.SwitchSetting
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
@@ -82,11 +80,11 @@ open class IcalListViewModel(application: Application, val module: Module) : And
 
 
     private val searchSettingShowAllSubtasksInTasklist: Boolean
-        get() = settings?.getBoolean(SETTINGS_SHOW_SUBTASKS_IN_LIST, false) ?: false
+        get() = settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBTASKS_IN_TASKLIST.key, false) ?: false
     private val searchSettingShowAllSubnotesInNoteslist: Boolean
-        get() =  settings?.getBoolean(SETTINGS_SHOW_SUBNOTES_IN_LIST, false) ?: false
+        get() =  settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBNOTES_IN_NOTESLIST.key, false) ?: false
     private val searchSettingShowAllSubjournalsinJournallist: Boolean
-        get() = settings?.getBoolean(SETTINGS_SHOW_SUBJOURNALS_IN_LIST, false) ?: false
+        get() = settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.key, false) ?: false
 
 
 

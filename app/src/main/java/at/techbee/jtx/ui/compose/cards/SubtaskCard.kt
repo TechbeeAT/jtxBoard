@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,11 +31,13 @@ fun SubtaskCard(
     subtask: ICal4List,
     modifier: Modifier = Modifier,
     showProgress: Boolean = true,
+    sliderIncrement: Int = 1,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
 
+    val initialProgress = subtask.percent?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
     //var sliderPosition by remember { mutableStateOf(subtask.percent?.toFloat() ?: 0f) }
-    var sliderPosition by mutableStateOf(subtask.percent?.toFloat() ?: 0f)
+    var sliderPosition by mutableStateOf(initialProgress)
 
     ElevatedCard(modifier = modifier) {
 
@@ -91,7 +92,7 @@ fun SubtaskCard(
 @Preview(showBackground = true)
 @Composable
 fun SubtaskCardPreview() {
-    JtxBoardTheme {
+    MaterialTheme {
         SubtaskCard(ICal4List.getSample().apply {
             this.summary = null
             this.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
@@ -101,7 +102,8 @@ fun SubtaskCardPreview() {
             this.isReadOnly = false
             this.numSubtasks = 0
         },
-            onProgressChanged = { _, _, _ -> }
+            onProgressChanged = { _, _, _ -> },
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -109,7 +111,7 @@ fun SubtaskCardPreview() {
 @Preview(showBackground = true)
 @Composable
 fun SubtaskCardPreview_readonly() {
-    JtxBoardTheme {
+    MaterialTheme {
         SubtaskCard(ICal4List.getSample().apply {
             this.component = Component.VTODO.name
             this.module = Module.TODO.name
@@ -117,7 +119,8 @@ fun SubtaskCardPreview_readonly() {
             this.isReadOnly = true
             this.numSubtasks = 7
         },
-            onProgressChanged = { _, _, _ -> }
+            onProgressChanged = { _, _, _ -> },
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -125,14 +128,15 @@ fun SubtaskCardPreview_readonly() {
 @Preview(showBackground = true)
 @Composable
 fun SubtaskCardPreview_without_progress() {
-    JtxBoardTheme {
+    MaterialTheme {
         SubtaskCard(ICal4List.getSample().apply {
             this.component = Component.VTODO.name
             this.module = Module.TODO.name
             this.percent = 34
         },
             showProgress = false,
-            onProgressChanged = { _, _, _ -> }
+            onProgressChanged = { _, _, _ -> },
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

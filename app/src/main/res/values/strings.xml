@@ -49,6 +49,7 @@
     <string name="reset">Reset</string>
     <string name="apply">Apply</string>
     <string name="more">More</string>
+    <string name="not_set2">Not set</string>
     <string name="not_available_abbreviation">n/a</string>
 
     <string name="collection">Collection</string>
@@ -464,6 +465,10 @@
     <string name="settings_select_theme_dark">Dark</string>
     <string name="settings_select_theme_light">Light</string>
     <string name="settings_select_theme_system">System default</string>
+
+    <string name="settings_audio_format_3gpp" translatable="false">3GPP (audio/3gpp)</string>
+    <string name="settings_audio_format_aac" translatable="false">AAC (audio/aac)</string>
+    <string name="settings_audio_format_ogg" translatable="false">OGG (audio/ogg)</string>
 
     <string name="settings_list">Settings for the item list</string>
     <string name="settings_default_expand_subtasks">Expand subtasks in list by default</string>

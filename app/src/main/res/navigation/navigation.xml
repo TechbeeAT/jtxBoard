@@ -114,15 +114,8 @@
             app:destination="@id/icalViewFragment"
             app:popUpTo="@id/icalListFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="at.techbee.jtx.ui.SettingsFragment"
-        android:label="SettingsFragment"/>
     <!--Global action-->
-    <action
-        android:id="@+id/action_global_settingsFragment"
-        app:destination="@id/settingsFragment"
-        app:popUpTo="@id/icalListFragment" />
+
     <action android:id="@+id/action_global_icalListFragment"
         app:destination="@id/icalListFragment"
         app:popUpTo="@id/icalListFragment"/>
