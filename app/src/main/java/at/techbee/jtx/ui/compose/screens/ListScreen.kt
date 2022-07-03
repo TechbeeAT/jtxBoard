@@ -8,12 +8,14 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.ViewMode
 import at.techbee.jtx.ui.compose.appbars.ListBottomAppBar
+import at.techbee.jtx.ui.compose.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.compose.stateholder.SettingsStateHolder
 import kotlinx.coroutines.launch
 
@@ -29,11 +31,31 @@ fun ListScreen(
     val coroutineScope = rememberCoroutineScope()
     val settingsStateHolder = SettingsStateHolder(LocalContext.current)
 
+    var showQuickAddDialog by remember { mutableStateOf(false) }
+    val allCollections = icalListViewModel.allCollections.observeAsState(emptyList())
+    if(showQuickAddDialog) {
+        QuickAddDialog(
+            module = icalListViewModel.module,
+            allCollections = allCollections.value,
+            onEntrySaved = { newICalObject, categories, editAfterSaving ->
+                icalListViewModel.insertQuickItem(newICalObject, categories)
+                /*  //TODO
+            if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)
+                AdManager.getInstance()?.showInterstitialAd(requireActivity())     // don't forget to show an ad if applicable ;-)
+             */
+                if (editAfterSaving)
+                    TODO("Not implemented")
+            },
+            onDismiss = { showQuickAddDialog = false }
+        )
+    }
+
     Scaffold(
         bottomBar = {
             ListBottomAppBar(
                 module = icalListViewModel.module,
-                onAddNewEntry = { newEntry ->  /* findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(newEntry)) */   /* TODO */ },
+                onAddNewEntry = { /* TODO */ },
+                onAddNewQuickEntry = { showQuickAddDialog = true },
                 listSettings = icalListViewModel.listSettings,
                 onListSettingsChanged = { icalListViewModel.updateSearch(saveListSettings = true) },
                 onFilterIconClicked = {

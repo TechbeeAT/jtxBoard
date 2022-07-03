@@ -11,17 +11,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @Composable
 fun ListBottomAppBar(
     module: Module,
     listSettings: ListSettings,
-    onAddNewEntry: (ICalEntity) -> Unit,
+    onAddNewQuickEntry: () -> Unit,
+    onAddNewEntry: () -> Unit,
     onListSettingsChanged: () -> Unit,
     onFilterIconClicked: () -> Unit
 ) {
@@ -123,7 +121,7 @@ fun ListBottomAppBar(
             IconButton(onClick = { onFilterIconClicked() }) {
                 Icon(Icons.Outlined.FilterList, contentDescription = stringResource(id = R.string.filter))
             }
-            IconButton(onClick = { /* doSomething() */ }) {
+            IconButton(onClick = { onAddNewQuickEntry() }) {
                 Icon(painterResource(
                     id = R.drawable.ic_add_quick),
                     contentDescription = stringResource(id = when(module) {
@@ -137,17 +135,10 @@ fun ListBottomAppBar(
         floatingActionButton = {
             // TODO(b/228588827): Replace with Secondary FAB when available.
             FloatingActionButton(
-                onClick = {
-                    val newEntry = when(module) {
-                        Module.JOURNAL -> ICalEntity(ICalObject.createJournal())
-                        Module.NOTE -> ICalEntity(ICalObject.createNote())
-                        Module.TODO -> ICalEntity(ICalObject.createTodo())
-                    }
-                    onAddNewEntry(newEntry)
-                },
+                onClick = { /* TODO */ },
                 elevation = BottomAppBarDefaults.floatingActionButtonElevation()
             ) {
-                Icon(Icons.Filled.Add, "Localized description")
+                Icon(Icons.Filled.Add, "New Entry")   // TODO: move to strings
             }
         }
     )
@@ -157,12 +148,13 @@ fun ListBottomAppBar(
 @Preview(showBackground = true)
 @Composable
 fun ListBottomAppBar_Preview_Journal() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         ListBottomAppBar(
                 module = Module.JOURNAL,
             listSettings = ListSettings(),
             onAddNewEntry = { },
+            onAddNewQuickEntry = { },
             onListSettingsChanged = {  },
             onFilterIconClicked = { }
             )
@@ -172,12 +164,13 @@ fun ListBottomAppBar_Preview_Journal() {
 @Preview(showBackground = true)
 @Composable
 fun ListBottomAppBar_Preview_Todo() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         ListBottomAppBar(
             module = Module.TODO,
             listSettings = ListSettings(),
             onAddNewEntry = { },
+            onAddNewQuickEntry = { },
             onListSettingsChanged = {  },
             onFilterIconClicked = { }
         )

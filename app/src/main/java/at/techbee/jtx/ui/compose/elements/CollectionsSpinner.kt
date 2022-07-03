@@ -21,8 +21,8 @@ fun CollectionsSpinner(
     collections: List<ICalCollection>,
     preselected: ICalCollection,
     includeReadOnly: Boolean,
-    includeVJOURNAL: Boolean,
-    includeVTODO: Boolean,
+    includeVJOURNAL: Boolean? = null,
+    includeVTODO: Boolean? = null,
     onSelectionChanged: (collection: ICalCollection) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -60,8 +60,8 @@ fun CollectionsSpinner(
                     collections.forEach { collection ->
 
                         if ((collection.readonly && !includeReadOnly)
-                            || (collection.supportsVTODO && !includeVTODO)
-                            || (collection.supportsVJOURNAL && !includeVJOURNAL)
+                            || (collection.supportsVTODO && includeVTODO == false)
+                            || (collection.supportsVJOURNAL && includeVJOURNAL == false)
                         )
                             return@forEach
 

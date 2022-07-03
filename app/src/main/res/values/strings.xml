@@ -212,6 +212,8 @@
     <string name="list_quickadd_dialog_sr_start_listening">Speech-to-text engine is listening.</string>
     <string name="list_quickadd_dialog_sr_stop_listening">Speech-to-text engine stopped listening.</string>
     <string name="list_quickadd_dialog_sr_error">Sorry, Speech-to-text engine encountered an error. (%1$s)</string>
+    <string name="list_quickadd_dialog_sr_start">Start speech recognition</string>
+    <string name="list_quickadd_dialog_sr_listening">Listening…</string>
     <string name="list_quickadd_toast_no_summary_description">Entry without summary/description cannot be created.</string>
 
     <string name="list_item_upload_pending">Upload pending</string>
