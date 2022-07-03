@@ -17,6 +17,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
+import androidx.core.util.PatternsCompat
 import androidx.preference.PreferenceManager
 import androidx.room.*
 import at.techbee.jtx.R
@@ -1129,6 +1130,21 @@ data class ICalObject(
         }
     }
 
+    /**
+     * Takes a string, extracts the first link matching the regex from the string and puts it into the URL field of the ICalObject
+     * @param [text] that should be parsed
+     */
+    fun parseURL(text: String?) {
+        if (text == null)
+            return
+
+        val matcher = PatternsCompat.WEB_URL.matcher(text)
+        while (matcher.find()) {
+            this.url = matcher.group()
+            return
+        }
+    }
+
     fun getRecurInfo(context: Context?): String? {
         if(context == null)
             return null
@@ -1297,16 +1313,6 @@ enum class StatusTodo(val stringResource: Int) : Parcelable {
                 set.add(it.name)
             }
             return set.toSet()
-        }
-
-        fun getFromString(string: String?): StatusTodo? {
-            return when (string) {
-                `NEEDS-ACTION`.name -> `NEEDS-ACTION`
-                COMPLETED.name -> COMPLETED
-                `IN-PROCESS`.name -> `IN-PROCESS`
-                CANCELLED.name -> CANCELLED
-                else -> null
-            }
         }
     }
 }

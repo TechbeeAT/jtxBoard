@@ -194,6 +194,7 @@ fun QuickAddDialog(
                 onClick = {
                     if(quickAddText.isNotBlank()) {
                         newICalObject.parseSummaryAndDescription(quickAddText)
+                        newICalObject.parseURL(quickAddText)
                         val categories = Category.extractHashtagsFromText(quickAddText)
                         onEntrySaved(newICalObject, categories, editAfterSaving)
                         onDismiss()

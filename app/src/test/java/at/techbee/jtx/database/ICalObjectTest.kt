@@ -681,6 +681,45 @@ class ICalObjectTest {
     }
 
     @Test
+    fun parseURLTest() {
+        val text = "This should be in the #summary." +
+                " This should be in the description\n" +
+                "This is my link https://www.orf.at/ " +
+                " Adding further #lines\nand #categories here\n"
+
+        val journal = ICalObject.createJournal()
+        journal.parseURL(text)
+
+        assertEquals("https://www.orf.at", journal.url)
+    }
+
+    @Test
+    fun parseURLTest2() {
+        val text = "This should be in the #summary." +
+                " This should be in the description\n" +
+                "This is my link www.orf.at" +
+                " Adding further #lines\nand #categories here\n"
+
+        val journal = ICalObject.createJournal()
+        journal.parseURL(text)
+
+        assertEquals("www.orf.at", journal.url)
+    }
+
+    @Test
+    fun parseURLTest3() {
+        val text = "This should be in the #summary." +
+                " This should be in the description\n" +
+                "This is my link https://orf.at" +
+                " Adding further #lines\nand #categories here\n"
+
+        val journal = ICalObject.createJournal()
+        journal.parseURL(text)
+
+        assertEquals("https://orf.at", journal.url)
+    }
+
+    @Test
     fun retrieveCount_count_present() {
         val todo = ICalObject.createTodo()
         todo.rrule = "FREQ=DAILY;COUNT=4;INTERVAL=5"
