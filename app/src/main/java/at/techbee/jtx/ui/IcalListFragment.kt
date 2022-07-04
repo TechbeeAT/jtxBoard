@@ -232,7 +232,6 @@ class IcalListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
-            R.id.menu_list_gotodate -> showScrollToDate()
             R.id.menu_list_clearfilter -> resetFilter()
             /*
             R.id.menu_list_viewmode_list -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_LIST)
@@ -283,63 +282,6 @@ class IcalListFragment : Fragment() {
     }
 
 
-    private fun showScrollToDate() {
-
-        /*
-        // Create a custom date validator to only enable dates that are in the list
-        val customDateValidator = object : CalendarConstraints.DateValidator {
-            override fun describeContents(): Int {
-                return 0
-            }
-
-            override fun writeToParcel(dest: Parcel?, flags: Int) {}
-            override fun isValid(date: Long): Boolean {
-                icalListViewModel.iCal4ListJournals.value?.forEach {
-                    val zonedDtstart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.dtstart?:0L), requireTzId(it.dtstartTimezone))
-                    val zonedSelection = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault())
-
-                    if(zonedDtstart.dayOfMonth == zonedSelection.dayOfMonth && zonedDtstart.monthValue == zonedSelection.monthValue && zonedDtstart.year == zonedSelection.year)
-                        return true
-                }
-                return false
-            }
-        }
-
-        // Build constraints.
-        val constraintsBuilder =
-            CalendarConstraints.Builder().apply {
-                var dates = icalListViewModel.iCal4ListJournals.value?.map { it.dtstart?:System.currentTimeMillis() }?.toList()
-                if(dates.isNullOrEmpty())
-                    dates = listOf(System.currentTimeMillis())
-                setStart(dates.minOf { it })
-                setEnd(dates.maxOf { it })
-                setValidator(customDateValidator)
-            }
-
-        val datePicker =
-            MaterialDatePicker.Builder.datePicker()
-                .setTitleText(R.string.edit_datepicker_dialog_select_date)
-                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                .setCalendarConstraints(constraintsBuilder.build())
-                .build()
-
-        datePicker.addOnPositiveButtonClickListener {
-            // Respond to positive button click.
-            val zonedSelection = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
-
-            // find the item with the same date
-            val matchedItem = icalListViewModel.iCal4ListJournals.value?.find { item ->
-                val zonedMatch = ZonedDateTime.ofInstant(Instant.ofEpochMilli(item.dtstart ?: 0L), requireTzId(item.dtstartTimezone))
-                zonedSelection.dayOfMonth == zonedMatch.dayOfMonth && zonedSelection.monthValue == zonedMatch.monthValue && zonedSelection.year == zonedMatch.year
-            }
-            if (matchedItem != null)
-                icalListViewModel.scrollOnceId.postValue(matchedItem.id)
-        }
-
-        datePicker.show(parentFragmentManager, "menu_list_gotodate")
-
-         */
-    }
 
 
     private fun isFilterActive() = false
@@ -354,34 +296,4 @@ class IcalListFragment : Fragment() {
 
          */
 
-    private fun deleteVisible() {
-
-        /*
-
-        val itemIds = mutableListOf<Long>()
-
-        val baseList = when(icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> icalListViewModel.iCal4ListJournals.value
-            Module.NOTE.name -> icalListViewModel.iCal4ListNotes.value
-            Module.TODO.name -> icalListViewModel.iCal4ListTodos.value
-            else -> emptyList()
-        }
-        baseList?.forEach {
-            if(!it.isLinkedRecurringInstance)
-                itemIds.add(it.id)
-        }
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.list_dialog_delete_visible_title))
-            .setMessage(getString(R.string.list_dialog_delete_visible_message, itemIds.size))
-            .setPositiveButton(R.string.delete) { _, _ ->
-                icalListViewModel.delete(itemIds)
-                Attachment.scheduleCleanupJob(requireContext())
-            }
-            .setNeutralButton(R.string.cancel) { _, _ ->  // nothing to do
-            }
-            .show()
-
-         */
-    }
 }

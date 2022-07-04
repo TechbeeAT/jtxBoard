@@ -54,6 +54,7 @@ fun ListScreen(
         bottomBar = {
             ListBottomAppBar(
                 module = icalListViewModel.module,
+                iCal4ListLive = icalListViewModel.iCal4List,
                 onAddNewEntry = { /* TODO */ },
                 onAddNewQuickEntry = { showQuickAddDialog = true },
                 listSettings = icalListViewModel.listSettings,
@@ -62,7 +63,8 @@ fun ListScreen(
                     coroutineScope.launch {
                         filterBottomSheetState.show()
                     }
-                }
+                },
+                onGoToDateSelected = { id -> icalListViewModel.scrollOnceId.postValue(id)}
             )
         }) {
 

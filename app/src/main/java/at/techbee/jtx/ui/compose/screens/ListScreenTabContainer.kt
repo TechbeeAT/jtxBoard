@@ -24,7 +24,6 @@ import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.destinations.ListTabDestination
 import at.techbee.jtx.ui.compose.dialogs.DeleteVisibleDialog
-import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
 import at.techbee.jtx.util.SyncUtil
 
 
