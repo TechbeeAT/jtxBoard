@@ -81,6 +81,7 @@ fun ListScreen(
                     isAttachmentsExpandedDefault = settingsStateHolder.settingAutoExpandAttachments,
                     settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks,
                     settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
+                    settingProgressIncrement = settingsStateHolder.settingStepForProgress,
                     goToView = { itemId ->
                         navController.navigate(
                             IcalListFragmentDirections

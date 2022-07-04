@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.EditCalendar
 import androidx.compose.material.icons.outlined.FormatPaint
 import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
@@ -74,6 +75,21 @@ enum class DropdownSetting(
             DropdownSettingOption.DEFAULT_DATE_FOUR_WEEKS,
         ),
         default = DropdownSettingOption.DEFAULT_DATE_NONE
+    ),
+    SETTING_PROGRESS_STEP(
+        key = "setting_progress_step",
+        icon = Icons.Outlined.Tune,
+        title = R.string.settings_progress_step,
+        options = listOf(
+            DropdownSettingOption.PROGRESS_STEP_1,
+            DropdownSettingOption.PROGRESS_STEP_2,
+            DropdownSettingOption.PROGRESS_STEP_5,
+            DropdownSettingOption.PROGRESS_STEP_10,
+            DropdownSettingOption.PROGRESS_STEP_20,
+            DropdownSettingOption.PROGRESS_STEP_25,
+            DropdownSettingOption.PROGRESS_STEP_50
+        ),
+        default = DropdownSettingOption.PROGRESS_STEP_1
     )
     ;
     fun save(newDropdownSettingOption: DropdownSettingOption, context: Context) {

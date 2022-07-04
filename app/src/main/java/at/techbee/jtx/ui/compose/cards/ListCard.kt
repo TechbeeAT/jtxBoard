@@ -57,6 +57,7 @@ fun ICalObjectListCard(
     isAttachmentsExpandedDefault: Boolean = true,
     settingShowProgressMaintasks: Boolean = false,
     settingShowProgressSubtasks: Boolean = true,
+    progressIncrement: Int,
     goToView: (itemId: Long) -> Unit,
     goToEdit: (itemId: Long) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
@@ -386,6 +387,7 @@ fun ICalObjectListCard(
                         progress = iCalObject.percent,
                         isReadOnly = iCalObject.isReadOnly,
                         isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
+                        sliderIncrement = progressIncrement,
                         onProgressChanged = onProgressChanged
                     )
 
@@ -398,6 +400,7 @@ fun ICalObjectListCard(
                                 subtask = subtask,
                                 showProgress = settingShowProgressSubtasks,
                                 onProgressChanged = onProgressChanged,
+                                sliderIncrement = progressIncrement,
                                 modifier = Modifier
                                     .padding(start = 8.dp, end = 8.dp)
                                     .combinedClickable(
@@ -460,6 +463,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
                 this.module = Module.NOTE.name
             }),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
+            progressIncrement = 1,
             goToView = { },
             goToEdit = { },
             onProgressChanged = { _, _, _ -> },
@@ -493,6 +497,7 @@ fun ICalObjectListCardPreview_NOTE() {
                 this.module = Module.NOTE.name
             }),
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
+            progressIncrement = 1,
             goToView = { },
             goToEdit = { },
             onProgressChanged = { _, _, _ -> },
@@ -534,6 +539,7 @@ fun ICalObjectListCardPreview_TODO() {
             goToView = { },
             goToEdit = { },
             settingShowProgressMaintasks = true,
+            progressIncrement = 1,
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
@@ -573,6 +579,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
             goToView = { },
             goToEdit = { },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
+            progressIncrement = 1,
             settingShowProgressMaintasks = false,
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
@@ -615,6 +622,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
             goToEdit = { },
             attachments = listOf(Attachment(uri = "https://www.orf.at/file.pdf")),
             settingShowProgressMaintasks = false,
+            progressIncrement = 1,
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null
@@ -657,6 +665,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
             goToEdit = { },
             attachments = listOf(),
             settingShowProgressMaintasks = false,
+            progressIncrement = 1,
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> },
             player = null

@@ -31,7 +31,7 @@ fun SubtaskCard(
     subtask: ICal4List,
     modifier: Modifier = Modifier,
     showProgress: Boolean = true,
-    sliderIncrement: Int = 1,
+    sliderIncrement: Int,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
 
@@ -65,9 +65,11 @@ fun SubtaskCard(
             Slider(
                 value = sliderPosition,
                 valueRange = 0F..100F,
-                steps = 100,
+                steps = (100 / sliderIncrement)-1,
                 onValueChange = { sliderPosition = it },
-                onValueChangeFinished = { onProgressChanged(subtask.id, sliderPosition.toInt(), subtask.isLinkedRecurringInstance) },
+                onValueChangeFinished = {
+                    onProgressChanged(subtask.id, (sliderPosition/sliderIncrement*sliderIncrement).toInt(), subtask.isLinkedRecurringInstance)
+                },
                 modifier = Modifier.width(100.dp),
                 enabled = !subtask.isReadOnly
             )
@@ -103,6 +105,7 @@ fun SubtaskCardPreview() {
             this.numSubtasks = 0
         },
             onProgressChanged = { _, _, _ -> },
+            sliderIncrement = 10,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -120,6 +123,7 @@ fun SubtaskCardPreview_readonly() {
             this.numSubtasks = 7
         },
             onProgressChanged = { _, _, _ -> },
+            sliderIncrement = 20,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -135,6 +139,7 @@ fun SubtaskCardPreview_without_progress() {
             this.percent = 34
         },
             showProgress = false,
+            sliderIncrement = 50,
             onProgressChanged = { _, _, _ -> },
             modifier = Modifier.fillMaxWidth()
         )

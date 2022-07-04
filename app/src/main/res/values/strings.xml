@@ -498,6 +498,18 @@
     <string name="settings_default_date_one_week">One week after</string>
     <string name="settings_default_date_two_weeks">Two weeks after</string>
     <string name="settings_default_date_four_weeks">Four weeks after</string>
+    <string name="settings_progress_step_1">Increment by 1 (100 steps)</string>
+    <string name="settings_progress_step_2">Increment by 2 (50 steps)</string>
+    <string name="settings_progress_step_5">Increment by 5 (20 steps)</string>
+    <string name="settings_progress_step_10">Increment by 10 (10 steps)</string>
+    <string name="settings_progress_step_20">Increment by 20 (5 steps)</string>
+    <string name="settings_progress_step_25">Increment by 25 (4 steps)</string>
+    <string name="settings_progress_step_50">Increment by 50 (2 steps)</string>
+    <string name="settings_progress_step">Set the step for the progress slider</string>
+
+
+
+
 
 
     <!-- Sync fragment -->

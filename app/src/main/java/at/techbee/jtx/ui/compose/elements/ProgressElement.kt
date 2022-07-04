@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.compose.elements
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 
-@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgressElement(
@@ -30,7 +28,7 @@ fun ProgressElement(
     progress: Int?,
     isReadOnly: Boolean,
     isLinkedRecurringInstance: Boolean,
-    sliderIncrement: Int = 1,
+    sliderIncrement: Int,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
 
@@ -51,12 +49,13 @@ fun ProgressElement(
         Slider(
             value = sliderPosition,
             valueRange = 0F..100F,
-            steps = 100 / sliderIncrement,
+            steps = (100 / sliderIncrement)-1,
             onValueChange = { sliderPosition = it },
             onValueChangeFinished = {
+                sliderPosition = sliderPosition/sliderIncrement*sliderIncrement
                 onProgressChanged(
                     iCalObjectId,
-                    sliderPosition.toInt(),
+                    (sliderPosition/sliderIncrement*sliderIncrement).toInt(),
                     isLinkedRecurringInstance
                 )
             },
@@ -70,7 +69,7 @@ fun ProgressElement(
         Checkbox(
             checked = sliderPosition == 100f,
             onCheckedChange = {
-                sliderPosition = if (it) 100f else 0f
+                sliderPosition = if (it) 100f else 0f     // update comes from state change!
                 onProgressChanged(iCalObjectId, if (it) 100 else 0, isLinkedRecurringInstance)
             },
             enabled = !isReadOnly
@@ -87,6 +86,7 @@ fun ProgressElementPreview() {
             progress = 57,
             isReadOnly = false,
             isLinkedRecurringInstance = false,
+            sliderIncrement = 50,
             onProgressChanged = { _, _, _ -> })
     }
 }
@@ -100,6 +100,7 @@ fun ProgressElementPreview_readonly() {
             progress = 57,
             isReadOnly = true,
             isLinkedRecurringInstance = false,
+            sliderIncrement = 5,
             onProgressChanged = { _, _, _ -> })
     }
 }

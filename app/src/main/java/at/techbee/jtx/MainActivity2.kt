@@ -214,7 +214,7 @@ fun MainNavHost(
                 SettingsScreen(
                     navController = navController,
                     currentTheme = settingsStateHolder.settingTheme,
-                    currentAudioFormat = settingsStateHolder.settingAudioFormat,
+                    audioFormat = settingsStateHolder.settingAudioFormat,
                     autoExpandSubtasks = settingsStateHolder.settingAutoExpandSubtasks,
                     autoExpandSubnotes = settingsStateHolder.settingAutoExpandSubnotes,
                     autoExpandAttachments = settingsStateHolder.settingAutoExpandAttachments,
@@ -223,8 +223,9 @@ fun MainNavHost(
                     showSubtasksInTasklist = settingsStateHolder.settingShowSubtasksInTasklist,
                     showSubnotesInNoteslist = settingsStateHolder.settingShowSubnotesInNoteslist,
                     showSubjournalsInJournallist = settingsStateHolder.settingShowSubjournalsInJournallist,
-                    currentDefaultStartDate = settingsStateHolder.settingDefaultStartDate,
-                    currentDefaultDueDate = settingsStateHolder.settingDefaultDueDate
+                    defaultStartDate = settingsStateHolder.settingDefaultStartDate,
+                    defaultDueDate = settingsStateHolder.settingDefaultDueDate,
+                    stepForProgress = settingsStateHolder.settingStepForProgress
                 )
             }
         }

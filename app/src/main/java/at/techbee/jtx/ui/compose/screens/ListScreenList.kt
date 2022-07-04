@@ -30,6 +30,7 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.settings.DropdownSettingOption
 import at.techbee.jtx.ui.compose.cards.ICalObjectListCard
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
@@ -48,6 +49,7 @@ fun ListScreenList(
     isAttachmentsExpandedDefault: MutableState<Boolean>,
     settingShowProgressMaintasks: MutableState<Boolean>,
     settingShowProgressSubtasks: MutableState<Boolean>,
+    settingProgressIncrement: MutableState<DropdownSettingOption>,
     goToView: (itemId: Long) -> Unit,
     goToEdit: (itemId: Long) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
@@ -102,6 +104,7 @@ fun ListScreenList(
                 isAttachmentsExpandedDefault = isAttachmentsExpandedDefault.value,
                 settingShowProgressMaintasks = settingShowProgressMaintasks.value,
                 settingShowProgressSubtasks = settingShowProgressSubtasks.value,
+                progressIncrement = settingProgressIncrement.value.getProgressStepKeyAsInt(),
                 goToView = goToView,
                 goToEdit = goToEdit,
                 onProgressChanged = onProgressChanged,
@@ -167,6 +170,7 @@ fun ListScreenList_TODO() {
             isAttachmentsExpandedDefault = mutableStateOf(true),
             settingShowProgressMaintasks = mutableStateOf(true),
             settingShowProgressSubtasks = mutableStateOf(true),
+            settingProgressIncrement = mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },
@@ -220,6 +224,7 @@ fun ListScreenList_JOURNAL() {
             isAttachmentsExpandedDefault = mutableStateOf(false),
             settingShowProgressMaintasks = mutableStateOf(false),
             settingShowProgressSubtasks = mutableStateOf(false),
+            settingProgressIncrement = mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1),
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },

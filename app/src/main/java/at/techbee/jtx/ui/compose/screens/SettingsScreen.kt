@@ -40,7 +40,7 @@ import at.techbee.jtx.settings.DropdownSetting.*
 fun SettingsScreen(
     navController: NavHostController,
     currentTheme: MutableState<DropdownSettingOption>,
-    currentAudioFormat: MutableState<DropdownSettingOption>,
+    audioFormat: MutableState<DropdownSettingOption>,
     autoExpandSubtasks: MutableState<Boolean>,
     autoExpandSubnotes: MutableState<Boolean>,
     autoExpandAttachments: MutableState<Boolean>,
@@ -49,8 +49,9 @@ fun SettingsScreen(
     showSubtasksInTasklist: MutableState<Boolean>,
     showSubnotesInNoteslist: MutableState<Boolean>,
     showSubjournalsInJournallist: MutableState<Boolean>,
-    currentDefaultStartDate: MutableState<DropdownSettingOption>,
-    currentDefaultDueDate: MutableState<DropdownSettingOption>,
+    defaultStartDate: MutableState<DropdownSettingOption>,
+    defaultDueDate: MutableState<DropdownSettingOption>,
+    stepForProgress: MutableState<DropdownSettingOption>,
     modifier: Modifier = Modifier
 ) {
 
@@ -107,9 +108,9 @@ fun SettingsScreen(
 
                         DropdownSetting(
                             setting = SETTING_AUDIO_FORMAT,
-                            preselected = currentAudioFormat.value,
+                            preselected = audioFormat.value,
                             onSelectionChanged = { selection ->
-                                currentAudioFormat.value = selection
+                                audioFormat.value = selection
                                 SETTING_AUDIO_FORMAT.save(selection, context = context)
                             }
                         )
@@ -218,18 +219,26 @@ fun SettingsScreen(
 
                         DropdownSetting(
                             setting = SETTING_DEFAULT_START_DATE,
-                            preselected = currentDefaultStartDate.value,
+                            preselected = defaultStartDate.value,
                             onSelectionChanged = { selection ->
-                                currentAudioFormat.value = selection
+                                audioFormat.value = selection
                                 SETTING_DEFAULT_START_DATE.save(selection, context = context)
                             }
                         )
                         DropdownSetting(
                             setting = SETTING_DEFAULT_DUE_DATE,
-                            preselected = currentDefaultDueDate.value,
+                            preselected = defaultDueDate.value,
                             onSelectionChanged = { selection ->
-                                currentAudioFormat.value = selection
+                                audioFormat.value = selection
                                 SETTING_DEFAULT_DUE_DATE.save(selection, context = context)
+                            }
+                        )
+                        DropdownSetting(
+                            setting = SETTING_PROGRESS_STEP,
+                            preselected = stepForProgress.value,
+                            onSelectionChanged = { selection ->
+                                stepForProgress.value = selection
+                                SETTING_PROGRESS_STEP.save(selection, context = context)
                             }
                         )
                     }
@@ -248,7 +257,7 @@ fun SettingsScreen_Preview() {
         SettingsScreen(
             rememberNavController(),
             currentTheme = mutableStateOf(SETTING_THEME.options.last()),
-            currentAudioFormat = mutableStateOf(SETTING_AUDIO_FORMAT.options.first()),
+            audioFormat = mutableStateOf(SETTING_AUDIO_FORMAT.options.first()),
             autoExpandSubtasks = mutableStateOf(false),
             autoExpandSubnotes = mutableStateOf(false),
             autoExpandAttachments = mutableStateOf(false),
@@ -257,8 +266,9 @@ fun SettingsScreen_Preview() {
             showSubtasksInTasklist = mutableStateOf(false),
             showSubnotesInNoteslist = mutableStateOf(false),
             showSubjournalsInJournallist = mutableStateOf(false),
-            currentDefaultStartDate = mutableStateOf(SETTING_DEFAULT_START_DATE.options.first()),
-            currentDefaultDueDate = mutableStateOf(SETTING_DEFAULT_DUE_DATE.options.first()),
+            defaultStartDate = mutableStateOf(SETTING_DEFAULT_START_DATE.options.first()),
+            defaultDueDate = mutableStateOf(SETTING_DEFAULT_DUE_DATE.options.first()),
+            stepForProgress = mutableStateOf(SETTING_PROGRESS_STEP.options.first())
         )
     }
 }
