@@ -26,93 +26,6 @@ fun ListBottomAppBar(
 
     var menuExpanded by remember { mutableStateOf(false) }
 
-
-    DropdownMenu(
-        expanded = menuExpanded,
-        onDismissRequest = { menuExpanded = false }
-    ) {
-        DropdownMenuItem(
-            text = { LabelledCheckbox(
-                text = stringResource(id = R.string.menu_list_todo_hide_completed),
-                isChecked = listSettings.isExcludeDone.value,
-                onCheckedChanged = { checked ->
-                    listSettings.isExcludeDone.value = checked
-                    onListSettingsChanged()
-                } )},
-            onClick = {
-                listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
-                onListSettingsChanged()
-            }
-        )
-        if(module == Module.TODO) {
-            DropdownMenuItem(
-                text = { LabelledCheckbox(
-                    text = stringResource(id = R.string.list_due_overdue),
-                    isChecked = listSettings.isFilterOverdue.value,
-                    onCheckedChanged = { checked ->
-                        listSettings.isFilterOverdue.value = checked
-                        onListSettingsChanged()
-                    } )},
-                onClick = {
-                    listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
-                    onListSettingsChanged()
-                }
-            )
-            DropdownMenuItem(
-                text = { LabelledCheckbox(
-                    text = stringResource(id = R.string.list_due_today),
-                    isChecked = listSettings.isFilterDueToday.value,
-                    onCheckedChanged = { checked ->
-                        listSettings.isFilterDueToday.value = checked
-                        onListSettingsChanged()
-                    } )},
-                onClick = {
-                    listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
-                    onListSettingsChanged()
-                }
-            )
-            DropdownMenuItem(
-                text = { LabelledCheckbox(
-                    text = stringResource(id = R.string.list_due_tomorrow),
-                    isChecked = listSettings.isFilterDueTomorrow.value,
-                    onCheckedChanged = { checked ->
-                        listSettings.isFilterDueTomorrow.value = checked
-                        onListSettingsChanged()
-                    } )},
-                onClick = {
-                    listSettings.isFilterDueTomorrow.value = !listSettings.isFilterDueTomorrow.value
-                    onListSettingsChanged()
-                }
-            )
-            DropdownMenuItem(
-                text = { LabelledCheckbox(
-                    text = stringResource(id = R.string.list_due_future),
-                    isChecked = listSettings.isFilterDueFuture.value,
-                    onCheckedChanged = { checked ->
-                        listSettings.isFilterDueFuture.value = checked
-                        onListSettingsChanged()
-                    } )},
-                onClick = {
-                    listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
-                    onListSettingsChanged()
-                }
-            )
-            DropdownMenuItem(
-                text = { LabelledCheckbox(
-                    text = stringResource(id = R.string.list_no_dates_set),
-                    isChecked = listSettings.isFilterNoDatesSet.value,
-                    onCheckedChanged = { checked ->
-                        listSettings.isFilterNoDatesSet.value = checked
-                        onListSettingsChanged()
-                    } )},
-                onClick = {
-                    listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
-                    onListSettingsChanged()
-                }
-            )
-        }
-    }
-
     BottomAppBar(
         icons = {
             IconButton(onClick = { menuExpanded = true }) {
@@ -130,6 +43,94 @@ fun ListBottomAppBar(
                         Module.TODO -> R.string.menu_list_quick_todo
                     })
                 )
+            }
+
+
+            // overflow menu
+            DropdownMenu(
+                expanded = menuExpanded,
+                onDismissRequest = { menuExpanded = false }
+            ) {
+                DropdownMenuItem(
+                    text = { LabelledCheckbox(
+                        text = stringResource(id = R.string.menu_list_todo_hide_completed),
+                        isChecked = listSettings.isExcludeDone.value,
+                        onCheckedChanged = { checked ->
+                            listSettings.isExcludeDone.value = checked
+                            onListSettingsChanged()
+                        } )},
+                    onClick = {
+                        listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
+                        onListSettingsChanged()
+                    }
+                )
+                if(module == Module.TODO) {
+                    DropdownMenuItem(
+                        text = { LabelledCheckbox(
+                            text = stringResource(id = R.string.list_due_overdue),
+                            isChecked = listSettings.isFilterOverdue.value,
+                            onCheckedChanged = { checked ->
+                                listSettings.isFilterOverdue.value = checked
+                                onListSettingsChanged()
+                            } )},
+                        onClick = {
+                            listSettings.isFilterOverdue.value = !listSettings.isFilterOverdue.value
+                            onListSettingsChanged()
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { LabelledCheckbox(
+                            text = stringResource(id = R.string.list_due_today),
+                            isChecked = listSettings.isFilterDueToday.value,
+                            onCheckedChanged = { checked ->
+                                listSettings.isFilterDueToday.value = checked
+                                onListSettingsChanged()
+                            } )},
+                        onClick = {
+                            listSettings.isFilterDueToday.value = !listSettings.isFilterDueToday.value
+                            onListSettingsChanged()
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { LabelledCheckbox(
+                            text = stringResource(id = R.string.list_due_tomorrow),
+                            isChecked = listSettings.isFilterDueTomorrow.value,
+                            onCheckedChanged = { checked ->
+                                listSettings.isFilterDueTomorrow.value = checked
+                                onListSettingsChanged()
+                            } )},
+                        onClick = {
+                            listSettings.isFilterDueTomorrow.value = !listSettings.isFilterDueTomorrow.value
+                            onListSettingsChanged()
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { LabelledCheckbox(
+                            text = stringResource(id = R.string.list_due_future),
+                            isChecked = listSettings.isFilterDueFuture.value,
+                            onCheckedChanged = { checked ->
+                                listSettings.isFilterDueFuture.value = checked
+                                onListSettingsChanged()
+                            } )},
+                        onClick = {
+                            listSettings.isFilterDueFuture.value = !listSettings.isFilterDueFuture.value
+                            onListSettingsChanged()
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { LabelledCheckbox(
+                            text = stringResource(id = R.string.list_no_dates_set),
+                            isChecked = listSettings.isFilterNoDatesSet.value,
+                            onCheckedChanged = { checked ->
+                                listSettings.isFilterNoDatesSet.value = checked
+                                onListSettingsChanged()
+                            } )},
+                        onClick = {
+                            listSettings.isFilterNoDatesSet.value = !listSettings.isFilterNoDatesSet.value
+                            onListSettingsChanged()
+                        }
+                    )
+                }
             }
         },
         floatingActionButton = {

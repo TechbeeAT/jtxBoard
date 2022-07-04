@@ -3,13 +3,14 @@ package at.techbee.jtx.ui.compose.screens
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -21,13 +22,17 @@ import at.techbee.jtx.ui.IcalListViewModelTodos
 import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.destinations.ListTabDestination
+import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
+import at.techbee.jtx.util.SyncUtil
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListScreenTabContainer(navController: NavHostController) {
+fun ListScreenTabContainer(
+    navController: NavHostController
+) {
 
-
+    val context = LocalContext.current
     val screens =
         listOf(ListTabDestination.Journals, ListTabDestination.Notes, ListTabDestination.Tasks)
     val destinationSaver = Saver<ListTabDestination, Int>(
@@ -41,6 +46,7 @@ fun ListScreenTabContainer(navController: NavHostController) {
             ListTabDestination.Journals
         )
     }
+    var topBarMenuExpanded by remember { mutableStateOf(false) }
 
 
     val icalListViewModelJournals: IcalListViewModelJournals = viewModel()
@@ -59,7 +65,31 @@ fun ListScreenTabContainer(navController: NavHostController) {
     Scaffold(
         topBar = { JtxTopAppBar(
             drawerState = drawerState, 
-            title = stringResource(id = R.string.navigation_drawer_board)
+            title = stringResource(id = R.string.navigation_drawer_board),
+            actions = {
+                IconButton(onClick = { topBarMenuExpanded = true }) {
+                    Icon(Icons.Outlined.MoreVert, contentDescription = stringResource(id = R.string.more))
+                }
+
+
+                DropdownMenu(
+                    expanded = topBarMenuExpanded,
+                    onDismissRequest = { topBarMenuExpanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(
+                            stringResource(id = R.string.sync_now))
+                        },
+                        leadingIcon = { Icon(Icons.Outlined.Sync, null) },
+                        onClick = {
+                            SyncUtil.syncAllAccounts(context)
+                            topBarMenuExpanded = false
+                        }
+                    )
+
+                    // TODO TBC
+                }
+            }
         ) },
         content = {
             Column {
@@ -89,8 +119,6 @@ fun ListScreenTabContainer(navController: NavHostController) {
             }
         }
     )
-
-
 }
 
 

@@ -163,7 +163,9 @@ fun MainNavHost(
             startDestination = NavigationDrawerDestination.BOARD.name
         ) {
             composable(NavigationDrawerDestination.BOARD.name) {
-                ListScreenTabContainer(navController)
+                ListScreenTabContainer(
+                    navController = navController
+                )
             }
             composable(NavigationDrawerDestination.COLLECTIONS.name) {
                 val collectionsViewModel: CollectionsViewModel = viewModel()
@@ -173,11 +175,6 @@ fun MainNavHost(
                     collectionsViewModel = collectionsViewModel,
                     globalStateHolder = globalStateHolder
                 )
-                /*
-                AndroidViewBinding(FragmentCollectionsContainerBinding::inflate) {
-                    fragmentCollectionsContainerView.getFragment<CollectionsFragment>()
-                }
-                 */
             }
             composable(NavigationDrawerDestination.SYNC.name) {
                 val viewModel: SyncViewModel = viewModel()
