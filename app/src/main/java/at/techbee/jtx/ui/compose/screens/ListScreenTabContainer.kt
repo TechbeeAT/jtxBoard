@@ -4,6 +4,7 @@ package at.techbee.jtx.ui.compose.screens
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.*
@@ -22,6 +23,7 @@ import at.techbee.jtx.ui.IcalListViewModelTodos
 import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.destinations.ListTabDestination
+import at.techbee.jtx.ui.compose.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
 import at.techbee.jtx.util.SyncUtil
 
@@ -47,6 +49,7 @@ fun ListScreenTabContainer(
         )
     }
     var topBarMenuExpanded by remember { mutableStateOf(false) }
+    var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
 
 
     val icalListViewModelJournals: IcalListViewModelJournals = viewModel()
@@ -61,6 +64,15 @@ fun ListScreenTabContainer(
         }
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+
+    if(showDeleteAllVisibleDialog) {
+        DeleteVisibleDialog(
+            numEntriesToDelete = getActiveViewModel().iCal4List.value?.size?: 0,
+            onConfirm = { getActiveViewModel().deleteVisible() },
+            onDismiss = { showDeleteAllVisibleDialog = false }
+        )
+    }
+
 
     Scaffold(
         topBar = { JtxTopAppBar(
@@ -83,6 +95,16 @@ fun ListScreenTabContainer(
                         leadingIcon = { Icon(Icons.Outlined.Sync, null) },
                         onClick = {
                             SyncUtil.syncAllAccounts(context)
+                            topBarMenuExpanded = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(
+                            stringResource(id = R.string.menu_list_delete_visible))
+                        },
+                        leadingIcon = { Icon(Icons.Outlined.DeleteOutline, null) },
+                        onClick = {
+                            showDeleteAllVisibleDialog = true
                             topBarMenuExpanded = false
                         }
                     )

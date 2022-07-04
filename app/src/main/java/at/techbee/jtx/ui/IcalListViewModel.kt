@@ -324,11 +324,17 @@ open class IcalListViewModel(application: Application, val module: Module) : And
 
     }
 
-
-    fun delete(itemIds: List<Long>) {
+    /*
+    Deletes all entries that are currently visible (present in iCal4List)
+     */
+    fun deleteVisible() {
         viewModelScope.launch(Dispatchers.IO) {
-            itemIds.forEach { id ->
-                ICalObject.deleteItemWithChildren(id, database)
+            iCal4List.value?.forEach { entry ->
+                if(entry.isReadOnly || entry.isLinkedRecurringInstance)
+                    return@forEach
+                else
+                    ICalObject.deleteItemWithChildren(entry.id, database)
+
             }
         }
     }

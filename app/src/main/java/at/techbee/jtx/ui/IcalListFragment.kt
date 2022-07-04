@@ -234,8 +234,6 @@ class IcalListFragment : Fragment() {
         when (item.itemId) {
             R.id.menu_list_gotodate -> showScrollToDate()
             R.id.menu_list_clearfilter -> resetFilter()
-            R.id.menu_list_delete_visible -> deleteVisible()
-            R.id.menu_list_syncnow -> SyncUtil.syncAllAccounts(context)
             /*
             R.id.menu_list_viewmode_list -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_LIST)
             R.id.menu_list_viewmode_grid -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_GRID)
