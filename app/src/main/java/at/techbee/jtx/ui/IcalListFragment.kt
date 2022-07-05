@@ -70,13 +70,6 @@ class IcalListFragment : Fragment() {
         if(arguments.item2focus != 0L)
             icalListViewModel.scrollOnceId.postValue(arguments.item2focus)
 
-        icalListViewModel.isSynchronizing.observe(viewLifecycleOwner) {
-            binding.listProgressIndicator.visibility = if(it) View.VISIBLE else View.INVISIBLE
-        }
-
-        icalListViewModel.iCal4List.observe(viewLifecycleOwner) {
-            updateMenuVisibilities()
-        }
 
         icalListViewModel.viewModeLive.observe(viewLifecycleOwner) {
             if(it == PREFS_VIEWMODE_LIST)
@@ -90,14 +83,6 @@ class IcalListFragment : Fragment() {
         }
         
          */
-
-
-
-        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-            modelJournals.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning(requireContext()))
-            modelNotes.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning(requireContext()))
-            modelTasks.isSynchronizing.postValue(SyncUtil.isJtxSyncRunning(requireContext()))
-        }
 
 
         return ComposeView(requireContext()).apply {
@@ -159,24 +144,6 @@ class IcalListFragment : Fragment() {
             }
         }
 
-        gotodateMenuItem?.isVisible = icalListViewModel.searchModule == Module.JOURNAL.name
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_journal).isVisible = icalListViewModel.searchModule == Module.JOURNAL.name
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_note).isVisible = icalListViewModel.searchModule == Module.NOTE.name
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_quick_todo).isVisible = icalListViewModel.searchModule == Module.TODO.name
-
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_toggle_completed_tasks).isChecked = icalListViewModel.isExcludeDone
-        if(icalListViewModel.searchModule == Module.TODO.name) {
-            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_overdue).isChecked = icalListViewModel.isFilterOverdue
-            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_today).isChecked = icalListViewModel.isFilterDueToday
-            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_tomorrow).isChecked = icalListViewModel.isFilterDueTomorrow
-            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_in_future).isChecked = icalListViewModel.isFilterDueFuture
-            binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_no_dates_set).isChecked = icalListViewModel.isFilterNoDatesSet
-        }
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_overdue).isVisible = icalListViewModel.searchModule == Module.TODO.name
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_today).isVisible = icalListViewModel.searchModule == Module.TODO.name
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_tomorrow).isVisible = icalListViewModel.searchModule == Module.TODO.name
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_due_in_future).isVisible = icalListViewModel.searchModule == Module.TODO.name
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter_no_dates_set).isVisible = icalListViewModel.searchModule == Module.TODO.name
 
         // don't show the option to clear the filter if no filter was set
         optionsMenu?.findItem(R.id.menu_list_clearfilter)?.isVisible = isFilterActive()

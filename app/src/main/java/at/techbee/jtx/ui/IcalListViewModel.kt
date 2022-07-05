@@ -74,8 +74,6 @@ open class IcalListViewModel(application: Application, val module: Module) : And
     val directEditEntity = MutableLiveData<ICalEntity?>(null)
     val scrollOnceId = MutableLiveData<Long?>(null)
 
-    val isSynchronizing = MutableLiveData(false)
-
 
     private val searchSettingShowAllSubtasksInTasklist: Boolean
         get() = settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBTASKS_IN_TASKLIST.key, false) ?: false

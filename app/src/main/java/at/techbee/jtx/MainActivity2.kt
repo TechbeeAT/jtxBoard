@@ -164,7 +164,8 @@ fun MainNavHost(
         ) {
             composable(NavigationDrawerDestination.BOARD.name) {
                 ListScreenTabContainer(
-                    navController = navController
+                    navController = navController,
+                    globalStateHolder = globalStateHolder
                 )
             }
             composable(NavigationDrawerDestination.COLLECTIONS.name) {
