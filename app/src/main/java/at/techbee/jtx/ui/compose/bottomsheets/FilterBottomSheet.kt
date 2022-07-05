@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.compose.screens
+package at.techbee.jtx.ui.compose.bottomsheets
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -36,7 +36,7 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterScreen(
+fun FilterBottomSheet(
     module: Module,
     listSettings: ListSettings,
     allCollectionsLive: LiveData<List<ICalCollection>>,
@@ -297,12 +297,12 @@ fun FilterScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun FilterScreen_Preview_TODO() {
+fun FilterBottomSheet_Preview_TODO() {
     JtxBoardTheme {
 
         val listSettings = ListSettings()
 
-        FilterScreen(
+        FilterBottomSheet(
             module = Module.TODO,
             listSettings = listSettings,
             allCollectionsLive = MutableLiveData(listOf(
@@ -318,12 +318,12 @@ fun FilterScreen_Preview_TODO() {
 
 @Preview(showBackground = true)
 @Composable
-fun FilterScreen_Preview_JOURNAL() {
+fun FilterBottomSheet_Preview_JOURNAL() {
     JtxBoardTheme {
 
         val listSettings = ListSettings()
 
-        FilterScreen(
+        FilterBottomSheet(
             module = Module.JOURNAL,
             listSettings = listSettings,
             allCollectionsLive = MutableLiveData(listOf(

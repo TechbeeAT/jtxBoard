@@ -1,26 +1,30 @@
 package at.techbee.jtx.ui.compose.screens
 
 
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation.NavController
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.ViewMode
 import at.techbee.jtx.ui.compose.appbars.ListBottomAppBar
+import at.techbee.jtx.ui.compose.bottomsheets.FilterBottomSheet
+import at.techbee.jtx.ui.compose.bottomsheets.SearchTextBottomSheet
 import at.techbee.jtx.ui.compose.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.compose.stateholder.SettingsStateHolder
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun ListScreen(
     icalListViewModel: IcalListViewModel,
@@ -28,8 +32,14 @@ fun ListScreen(
 ) {
 
     val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val searchTextBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
     val settingsStateHolder = SettingsStateHolder(LocalContext.current)
+    val keyboardController = LocalSoftwareKeyboardController.current
+    if(!searchTextBottomSheetState.isVisible)         // hide keyboard when bottom sheet is closed (ensure proper back pressed handling)
+        keyboardController?.hide()
+    val focusRequesterSearchText = remember { FocusRequester() }
+
 
     var showQuickAddDialog by remember { mutableStateOf(false) }
     val allCollections = icalListViewModel.allCollections.observeAsState(emptyList())
@@ -64,7 +74,13 @@ fun ListScreen(
                         filterBottomSheetState.show()
                     }
                 },
-                onGoToDateSelected = { id -> icalListViewModel.scrollOnceId.postValue(id)}
+                onGoToDateSelected = { id -> icalListViewModel.scrollOnceId.postValue(id)},
+                onSearchTextClicked = {
+                    coroutineScope.launch {
+                        searchTextBottomSheetState.show()
+                        focusRequesterSearchText.requestFocus()
+                    }
+                }
             )
         }) {
 
@@ -205,12 +221,26 @@ fun ListScreen(
         ModalBottomSheetLayout(
             sheetState = filterBottomSheetState,
             sheetContent = {
-                FilterScreen(
+                FilterBottomSheet(
                     module = icalListViewModel.module,
                     listSettings = icalListViewModel.listSettings,
                     allCollectionsLive = icalListViewModel.allCollections,
                     allCategoriesLive = icalListViewModel.allCategories,
                     onListSettingsChanged = { icalListViewModel.updateSearch(saveListSettings = true) }
+                )
+            }
+        ) {}
+
+        ModalBottomSheetLayout(
+            sheetState = searchTextBottomSheetState,
+            sheetContent = {
+                SearchTextBottomSheet(
+                    initialSeachText = icalListViewModel.listSettings.searchText.value,
+                    onSearchTextChanged = { newSearchText ->
+                        icalListViewModel.listSettings.searchText.value = newSearchText
+                        icalListViewModel.updateSearch(saveListSettings = false)
+                    },
+                    focusRequester = focusRequesterSearchText
                 )
             }
         ) {}

@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -38,6 +39,7 @@ fun ListBottomAppBar(
     onListSettingsChanged: () -> Unit,
     onFilterIconClicked: () -> Unit,
     onGoToDateSelected: (Long) -> Unit,
+    onSearchTextClicked: () -> Unit
 ) {
 
     var menuExpanded by remember { mutableStateOf(false) }
@@ -80,6 +82,13 @@ fun ListBottomAppBar(
                             Module.TODO -> R.string.menu_list_quick_todo
                         }
                     )
+                )
+            }
+            IconButton(onClick = { onSearchTextClicked() }) {
+                Icon(
+                    Icons.Outlined.Search,
+                    contentDescription = stringResource(id = R.string.search),
+                    tint = if (listSettings.searchText.value.isNotBlank()) MaterialTheme.colorScheme.primary else LocalContentColor.current
                 )
             }
 
@@ -286,12 +295,13 @@ fun ListBottomAppBar_Preview_Journal() {
         ListBottomAppBar(
             module = Module.JOURNAL,
             iCal4ListLive = MutableLiveData(emptyList()),
-            listSettings = ListSettings(),
+            listSettings = ListSettings(searchText = mutableStateOf("asdf")),
             onAddNewEntry = { },
             onAddNewQuickEntry = { },
             onListSettingsChanged = { },
             onFilterIconClicked = { },
-            onGoToDateSelected = { }
+            onGoToDateSelected = { },
+            onSearchTextClicked = { }
         )
     }
 }
@@ -309,7 +319,8 @@ fun ListBottomAppBar_Preview_Todo() {
             onAddNewQuickEntry = { },
             onListSettingsChanged = { },
             onFilterIconClicked = { },
-            onGoToDateSelected = { }
+            onGoToDateSelected = { },
+            onSearchTextClicked = { }
         )
     }
 }
@@ -328,7 +339,8 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             onAddNewQuickEntry = { },
             onListSettingsChanged = { },
             onFilterIconClicked = { },
-            onGoToDateSelected = { }
+            onGoToDateSelected = { },
+            onSearchTextClicked = { }
         )
     }
 }

@@ -76,8 +76,6 @@ open class IcalListViewModel(application: Application, val module: Module) : And
 
     val isSynchronizing = MutableLiveData(false)
 
-    var searchText: String = ""
-
 
     private val searchSettingShowAllSubtasksInTasklist: Boolean
         get() = settings?.getBoolean(SwitchSetting.SETTING_SHOW_SUBTASKS_IN_TASKLIST.key, false) ?: false
@@ -130,10 +128,10 @@ open class IcalListViewModel(application: Application, val module: Module) : And
         args.add(module.name)
 
         // Query for the given text search from the action bar
-        if (searchText.isNotEmpty() && searchText.length >= 2) {
+        if (listSettings.searchText.value.isNotEmpty() && listSettings.searchText.value.length >= 2) {
             queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) "
-            args.add(searchText)
-            args.add(searchText)
+            args.add("%" + listSettings.searchText.value + "%")
+            args.add("%" + listSettings.searchText.value + "%")
         }
 
         // Query for the passed filter criteria from VJournalFilterFragment

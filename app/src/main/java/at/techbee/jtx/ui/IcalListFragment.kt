@@ -194,40 +194,6 @@ class IcalListFragment : Fragment() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_ical_list, menu)
-        MenuCompat.setGroupDividerEnabled(menu, true)
-        optionsMenu = menu
-        gotodateMenuItem = menu.findItem(R.id.menu_list_gotodate)         // Tell the variable the menu item to later make it visible or invisible
-
-        // add listener for search!
-        val searchMenuItem = menu.findItem(R.id.menu_list_search)
-        val searchView = searchMenuItem.actionView as SearchView
-        searchView.queryHint = getString(R.string.search)
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
-            // nothing to do as the the search is already updated with the text input
-            override fun onQueryTextSubmit(query: String): Boolean { return false }
-
-            override fun onQueryTextChange(query: String): Boolean {
-
-                /*
-                if (query.isEmpty())
-                    icalListViewModel.searchText = "%"
-                else
-                    icalListViewModel.searchText = "%$query%"
-
-                icalListViewModel.updateSearch()
-
-
-                 */
-                return false
-
-            }
-        })
-    }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
