@@ -44,6 +44,15 @@ fun ListBottomAppBar(
     val iCal4List by iCal4ListLive.observeAsState()
     val context = LocalContext.current
 
+    val isFilterActive = listSettings.searchCategories.value.isNotEmpty()
+                //|| searchOrganizers.value.isNotEmpty()
+                || (module == Module.JOURNAL && listSettings.searchStatusJournal.value.isNotEmpty())
+                || (module == Module.NOTE && listSettings.searchStatusJournal.value.isNotEmpty())
+                || (module == Module.TODO && listSettings.searchStatusTodo.value.isNotEmpty())
+                || listSettings.searchClassification.value.isNotEmpty() || listSettings.searchCollection.value.isNotEmpty()
+                || listSettings.searchAccount.value.isNotEmpty()
+
+
     BottomAppBar(
         icons = {
             IconButton(onClick = { menuExpanded = true }) {
@@ -55,7 +64,8 @@ fun ListBottomAppBar(
             IconButton(onClick = { onFilterIconClicked() }) {
                 Icon(
                     Icons.Outlined.FilterList,
-                    contentDescription = stringResource(id = R.string.filter)
+                    contentDescription = stringResource(id = R.string.filter),
+                    tint = if (isFilterActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
                 )
             }
             IconButton(onClick = { onAddNewQuickEntry() }) {
@@ -295,6 +305,25 @@ fun ListBottomAppBar_Preview_Todo() {
             module = Module.TODO,
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = ListSettings(),
+            onAddNewEntry = { },
+            onAddNewQuickEntry = { },
+            onListSettingsChanged = { },
+            onFilterIconClicked = { },
+            onGoToDateSelected = { }
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun ListBottomAppBar_Preview_Todo_filterActive() {
+    MaterialTheme {
+
+        ListBottomAppBar(
+            module = Module.TODO,
+            iCal4ListLive = MutableLiveData(emptyList()),
+            listSettings = ListSettings(searchCategories = mutableStateOf(listOf("Whatever"))),
             onAddNewEntry = { },
             onAddNewQuickEntry = { },
             onListSettingsChanged = { },

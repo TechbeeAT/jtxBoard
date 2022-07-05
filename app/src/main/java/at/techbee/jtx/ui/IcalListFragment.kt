@@ -282,18 +282,4 @@ class IcalListFragment : Fragment() {
     }
 
 
-
-
-    private fun isFilterActive() = false
-        /*
-        icalListViewModel.searchCategories.isNotEmpty()
-                || icalListViewModel.searchOrganizer.isNotEmpty()
-                || (icalListViewModel.searchModule == Module.JOURNAL.name && icalListViewModel.searchStatusJournal.isNotEmpty())
-                || (icalListViewModel.searchModule == Module.NOTE.name && icalListViewModel.searchStatusJournal.isNotEmpty())
-                || (icalListViewModel.searchModule == Module.TODO.name && icalListViewModel.searchStatusTodo.isNotEmpty())
-                || icalListViewModel.searchClassification.isNotEmpty() || icalListViewModel.searchCollection.isNotEmpty()
-                || icalListViewModel.searchAccount.isNotEmpty()
-
-         */
-
 }
