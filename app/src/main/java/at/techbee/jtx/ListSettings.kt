@@ -12,24 +12,30 @@ import at.techbee.jtx.ui.ViewMode
 
 
 data class ListSettings(
-    var searchCategories: MutableState<List<String>> = mutableStateOf(emptyList()),
-    var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList()),
-    var searchStatusTodo: MutableState<List<StatusTodo>> = mutableStateOf(emptyList()),
-    var searchStatusJournal: MutableState<List<StatusJournal>> = mutableStateOf(emptyList()),
-    var searchClassification: MutableState<List<Classification>> = mutableStateOf(emptyList()),
-    var searchCollection: MutableState<List<String>> = mutableStateOf(emptyList()),
-    var searchAccount: MutableState<List<String>> = mutableStateOf(emptyList()),
-    var orderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED),
-    var sortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC),
-    var isExcludeDone: MutableState<Boolean> = mutableStateOf(false),
-    var isFilterOverdue: MutableState<Boolean> = mutableStateOf(false),
-    var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false),
-    var isFilterDueTomorrow: MutableState<Boolean> = mutableStateOf(false),
-    var isFilterDueFuture: MutableState<Boolean> = mutableStateOf(false),
-    var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false),
-    var searchText: MutableState<String> = mutableStateOf(""),        // search text is not saved!
-    var viewMode: MutableState<ViewMode> = mutableStateOf(ViewMode.LIST)
+    val prefs: SharedPreferences
 ) {
+
+    var searchCategories: MutableState<List<String>> = mutableStateOf(emptyList())
+    //var searchOrganizers: MutableState<List<String>> = mutableStateOf(emptyList())
+    var searchStatusTodo: MutableState<List<StatusTodo>> = mutableStateOf(emptyList())
+    var searchStatusJournal: MutableState<List<StatusJournal>> = mutableStateOf(emptyList())
+    var searchClassification: MutableState<List<Classification>> = mutableStateOf(emptyList())
+    var searchCollection: MutableState<List<String>> = mutableStateOf(emptyList())
+    var searchAccount: MutableState<List<String>> = mutableStateOf(emptyList())
+    var orderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
+    var sortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
+    var isExcludeDone: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterOverdue: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterDueTomorrow: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterDueFuture: MutableState<Boolean> = mutableStateOf(false)
+    var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
+    var searchText: MutableState<String> = mutableStateOf("")        // search text is not saved!
+    var viewMode: MutableState<ViewMode> = mutableStateOf(ViewMode.LIST)
+
+    init {
+        load()
+    }
 
 
     companion object {
@@ -51,7 +57,7 @@ data class ListSettings(
     }
 
 
-    fun load(prefs: SharedPreferences) {
+    private fun load() {
 
         isExcludeDone.value = prefs.getBoolean(PREFS_EXCLUDE_DONE, false)
         isFilterOverdue.value = prefs.getBoolean(PREFS_FILTER_OVERDUE, false)
@@ -72,7 +78,7 @@ data class ListSettings(
         viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { ViewMode.valueOf(it) } ?: ViewMode.LIST
     }
 
-    fun save(prefs: SharedPreferences) {
+    fun save() {
 
         prefs.edit().apply {
             putBoolean(PREFS_FILTER_OVERDUE, isFilterOverdue.value)

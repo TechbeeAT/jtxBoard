@@ -29,18 +29,7 @@ import at.techbee.jtx.util.SyncUtil
 
 class IcalListFragment : Fragment() {
 
-    private lateinit var application: Application
-
-    private var optionsMenu: Menu? = null
-    private var gotodateMenuItem: MenuItem? = null
-
-    private var settings: SharedPreferences? = null
     private lateinit var arguments: IcalListFragmentArgs
-
-    private var allCollections = listOf<ICalCollection>()
-    var currentWriteableCollections = listOf<ICalCollection>()
-
-
 
     companion object {
         const val PREFS_LAST_USED_COLLECTION = "lastUsedCollection"
@@ -51,18 +40,11 @@ class IcalListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        application = requireNotNull(this.activity).application
 
         // add menu
         setHasOptionsMenu(true)
 
-        settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
         arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
-
-        val modelJournals = IcalListViewModel(application, Module.JOURNAL)
-        val modelNotes = IcalListViewModel(application, Module.NOTE)
-        val modelTasks = IcalListViewModel(application, Module.TODO)
-
 
 
 
@@ -96,29 +78,6 @@ class IcalListFragment : Fragment() {
 
         super.onResume()
     }
-
-    /*
-        override fun onResume() {
-        super.onResume()
-
-        try {
-            val activity = requireActivity() as MainActivity
-            val toolbarText = getString(R.string.toolbar_text_jtx_board)
-            val toolbarSubtitle = when (module) {
-                Module.JOURNAL -> getString(R.string.toolbar_text_jtx_board_journals_overview)
-                Module.NOTE -> getString(R.string.toolbar_text_jtx_board_notes_overview)
-                Module.TODO -> getString(R.string.toolbar_text_jtx_board_tasks_overview)
-            }
-            activity.setToolbarTitle(toolbarText, toolbarSubtitle)
-        } catch (e: ClassCastException) {
-            Log.d(
-                "setToolbarText",
-                "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e"
-            )
-        }
-    }
-     */
-
 
 
     /**
@@ -166,32 +125,6 @@ class IcalListFragment : Fragment() {
 
         when (item.itemId) {
             R.id.menu_list_clearfilter -> resetFilter()
-            /*
-            R.id.menu_list_viewmode_list -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_LIST)
-            R.id.menu_list_viewmode_grid -> icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_GRID)
-            R.id.menu_list_viewmode_compact -> {
-                if ((BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY && BillingManager.getInstance()?.isProPurchased?.value == false)) {
-                    val snackbar = Snackbar.make(requireView(), R.string.buypro_snackbar_please_purchase_pro, Snackbar.LENGTH_LONG)
-                    snackbar.setAction(R.string.more) {
-                        findNavController().navigate(R.id.action_global_buyProFragment)
-                    }
-                    snackbar.show()
-                } else {
-                    icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_COMPACT)
-                }
-            }
-            R.id.menu_list_viewmode_kanban -> {
-                if ((BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY && BillingManager.getInstance()?.isProPurchased?.value == false)) {
-                    val snackbar = Snackbar.make(requireView(), R.string.buypro_snackbar_please_purchase_pro, Snackbar.LENGTH_LONG)
-                    snackbar.setAction(R.string.more) {
-                        findNavController().navigate(R.id.action_global_buyProFragment)
-                    }
-                    snackbar.show()
-                } else {
-                    icalListViewModel.viewMode.postValue(PREFS_VIEWMODE_KANBAN)
-                }
-            }
-             */
         }
         return super.onOptionsItemSelected(item)
     }

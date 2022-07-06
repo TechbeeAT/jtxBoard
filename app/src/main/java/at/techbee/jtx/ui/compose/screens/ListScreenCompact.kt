@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.compose.screens
 
+import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -30,6 +32,7 @@ import at.techbee.jtx.ListSettings
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.compose.cards.ListCardCompact
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
@@ -112,7 +115,12 @@ fun ListScreenCompact(
 @Preview(showBackground = true)
 @Composable
 fun ListScreenCompact_TODO() {
-    JtxBoardTheme {
+    MaterialTheme {
+
+        val application = LocalContext.current.applicationContext
+        val prefs = application.getSharedPreferences(IcalListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
+
+        val listSettings = ListSettings(prefs)
 
         val icalobject = ICal4List.getSample().apply {
             id = 1L
@@ -144,7 +152,7 @@ fun ListScreenCompact_TODO() {
             listLive = MutableLiveData(listOf(icalobject, icalobject2)),
             subtasksLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
-            listSettings = ListSettings(),
+            listSettings = listSettings,
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { }
@@ -157,7 +165,13 @@ fun ListScreenCompact_TODO() {
 @Preview(showBackground = true)
 @Composable
 fun ListScreenCompact_JOURNAL() {
-    JtxBoardTheme {
+    MaterialTheme {
+
+        val application = LocalContext.current.applicationContext
+        val prefs = application.getSharedPreferences(IcalListViewModel.PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
+
+        val listSettings = ListSettings(prefs)
+
 
         val icalobject = ICal4List.getSample().apply {
             id = 1L
@@ -189,7 +203,7 @@ fun ListScreenCompact_JOURNAL() {
             listLive = MutableLiveData(listOf(icalobject, icalobject2)),
             subtasksLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
-            listSettings = ListSettings(),
+            listSettings = listSettings,
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { }

@@ -8,6 +8,9 @@
 
 package at.techbee.jtx.ui.compose.bottomsheets
 
+import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,6 +23,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,6 +32,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
+import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.OrderBy
 import at.techbee.jtx.ui.SortOrder
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
@@ -298,9 +303,12 @@ fun FilterBottomSheet(
 @Preview(showBackground = true)
 @Composable
 fun FilterBottomSheet_Preview_TODO() {
-    JtxBoardTheme {
+    MaterialTheme {
 
-        val listSettings = ListSettings()
+        val application = LocalContext.current.applicationContext
+        val prefs = application.getSharedPreferences(IcalListViewModel.PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
+
+        val listSettings = ListSettings(prefs)
 
         FilterBottomSheet(
             module = Module.TODO,
@@ -319,9 +327,12 @@ fun FilterBottomSheet_Preview_TODO() {
 @Preview(showBackground = true)
 @Composable
 fun FilterBottomSheet_Preview_JOURNAL() {
-    JtxBoardTheme {
+    MaterialTheme {
 
-        val listSettings = ListSettings()
+        val application = LocalContext.current.applicationContext
+        val prefs = application.getSharedPreferences(IcalListViewModel.PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
+
+        val listSettings = ListSettings(prefs)
 
         FilterBottomSheet(
             module = Module.JOURNAL,

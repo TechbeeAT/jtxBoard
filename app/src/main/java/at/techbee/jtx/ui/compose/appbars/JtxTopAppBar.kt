@@ -1,6 +1,7 @@
 package at.techbee.jtx.ui.compose.appbars
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Favorite
@@ -8,10 +9,12 @@ import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.montserratAlternates
 import kotlinx.coroutines.launch
 
@@ -20,13 +23,30 @@ import kotlinx.coroutines.launch
 fun JtxTopAppBar(
     drawerState: DrawerState,
     title: String,
+    subtitle: String? = null,
     actions: @Composable () -> Unit = { }
 ) {
 
     val coroutineScope = rememberCoroutineScope()
 
     CenterAlignedTopAppBar(
-        title = { Text(title, fontFamily = montserratAlternates)},
+        title = {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = title,
+                    fontFamily = montserratAlternates
+                )
+                subtitle?.let {
+                    Text(
+                        text = subtitle,
+                        fontFamily = montserratAlternates,
+                        style = MaterialTheme.typography.labelMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+        },
         navigationIcon = {
             IconButton(onClick = {
                 coroutineScope.launch {
@@ -61,11 +81,35 @@ fun JtxTopAppBar(
 @Preview(showBackground = true)
 @Composable
 fun JtxTopAppBar_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         Scaffold(
             topBar = { JtxTopAppBar(
                 drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
                 title = "My Title comes here",
+                actions = {
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Favorite,
+                            contentDescription = "Localized description"
+                        )
+                    }
+                }
+            ) },
+            content = {}
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
+@Composable
+fun JtxTopAppBar_Preview_withSubtitle() {
+    MaterialTheme {
+        Scaffold(
+            topBar = { JtxTopAppBar(
+                drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+                title = "My Title comes here",
+                subtitle = "Here's my subtitle",
                 actions = {
                     IconButton(onClick = { /* doSomething() */ }) {
                         Icon(

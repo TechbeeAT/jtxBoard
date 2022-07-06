@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.compose.screens
 
+import android.content.Context
 import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -16,11 +17,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -31,6 +34,7 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.settings.DropdownSettingOption
+import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.compose.cards.ICalObjectListCard
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
@@ -131,7 +135,12 @@ fun ListScreenList(
 @Preview(showBackground = true)
 @Composable
 fun ListScreenList_TODO() {
-    JtxBoardTheme {
+    MaterialTheme {
+
+        val application = LocalContext.current.applicationContext
+        val prefs = application.getSharedPreferences(IcalListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
+
+        val listSettings = ListSettings(prefs)
 
         val icalobject = ICal4List.getSample().apply {
             id = 1L
@@ -174,7 +183,7 @@ fun ListScreenList_TODO() {
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },
-            listSettings = ListSettings(),
+            listSettings = listSettings,
             onExpandedChanged = { _, _, _, _ -> }
         )
     }
@@ -185,7 +194,13 @@ fun ListScreenList_TODO() {
 @Preview(showBackground = true)
 @Composable
 fun ListScreenList_JOURNAL() {
-    JtxBoardTheme {
+    MaterialTheme {
+
+        val application = LocalContext.current.applicationContext
+        val prefs = application.getSharedPreferences(IcalListViewModel.PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
+
+        val listSettings = ListSettings(prefs)
+
 
         val icalobject = ICal4List.getSample().apply {
             id = 1L
@@ -228,7 +243,7 @@ fun ListScreenList_JOURNAL() {
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },
-            listSettings = ListSettings(),
+            listSettings = listSettings,
             onExpandedChanged = { _, _, _, _ -> }
         )
     }

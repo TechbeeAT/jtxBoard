@@ -44,7 +44,7 @@ open class IcalListViewModel(application: Application, val module: Module) : And
         Module.TODO -> application.getSharedPreferences(PREFS_LIST_TODOS, Context.MODE_PRIVATE)
     }
 
-    val listSettings = ListSettings().apply { load(prefs) }
+    val listSettings = ListSettings(prefs)
 
 
     private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
@@ -273,7 +273,7 @@ open class IcalListViewModel(application: Application, val module: Module) : And
     fun updateSearch(saveListSettings: Boolean = false) {
         listQuery.postValue(constructQuery())
         if(saveListSettings)
-            listSettings.save(prefs)
+            listSettings.save()
     }
 
 
@@ -282,7 +282,7 @@ open class IcalListViewModel(application: Application, val module: Module) : And
      */
     fun clearFilter() {
         listSettings.reset()
-        listSettings.save(prefs)
+        listSettings.save()
         updateSearch()
     }
 

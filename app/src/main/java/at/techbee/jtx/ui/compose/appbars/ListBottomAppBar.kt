@@ -1,5 +1,6 @@
 package at.techbee.jtx.ui.compose.appbars
 
+import android.content.Context
 import android.os.Parcel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -21,6 +22,7 @@ import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
 import at.techbee.jtx.util.DateTimeUtils
 import com.google.android.material.datepicker.CalendarConstraints
@@ -292,10 +294,16 @@ fun ListBottomAppBar(
 fun ListBottomAppBar_Preview_Journal() {
     MaterialTheme {
 
+        val application = LocalContext.current.applicationContext
+        val prefs = application.getSharedPreferences(IcalListViewModel.PREFS_LIST_JOURNALS, Context.MODE_PRIVATE)
+
+        val listSettings = ListSettings(prefs)
+        listSettings.searchText.value = "whatever"
+
         ListBottomAppBar(
             module = Module.JOURNAL,
             iCal4ListLive = MutableLiveData(emptyList()),
-            listSettings = ListSettings(searchText = mutableStateOf("asdf")),
+            listSettings = listSettings,
             onAddNewEntry = { },
             onAddNewQuickEntry = { },
             onListSettingsChanged = { },
@@ -311,10 +319,16 @@ fun ListBottomAppBar_Preview_Journal() {
 fun ListBottomAppBar_Preview_Todo() {
     MaterialTheme {
 
+        val application = LocalContext.current.applicationContext
+        val prefs = application.getSharedPreferences(IcalListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
+
+        val listSettings = ListSettings(prefs)
+        listSettings.searchText.value = "whatever"
+
         ListBottomAppBar(
             module = Module.TODO,
             iCal4ListLive = MutableLiveData(emptyList()),
-            listSettings = ListSettings(),
+            listSettings = listSettings,
             onAddNewEntry = { },
             onAddNewQuickEntry = { },
             onListSettingsChanged = { },
@@ -331,10 +345,16 @@ fun ListBottomAppBar_Preview_Todo() {
 fun ListBottomAppBar_Preview_Todo_filterActive() {
     MaterialTheme {
 
+        val application = LocalContext.current.applicationContext
+        val prefs = application.getSharedPreferences(IcalListViewModel.PREFS_LIST_TODOS, Context.MODE_PRIVATE)
+
+        val listSettings = ListSettings(prefs)
+        listSettings.searchCategories.value = listOf("Whatever")
+
         ListBottomAppBar(
             module = Module.TODO,
             iCal4ListLive = MutableLiveData(emptyList()),
-            listSettings = ListSettings(searchCategories = mutableStateOf(listOf("Whatever"))),
+            listSettings = listSettings,
             onAddNewEntry = { },
             onAddNewQuickEntry = { },
             onListSettingsChanged = { },
