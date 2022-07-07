@@ -51,19 +51,6 @@ class IcalListFragment : Fragment() {
 /*
         if(arguments.item2focus != 0L)
             icalListViewModel.scrollOnceId.postValue(arguments.item2focus)
-
-
-        icalListViewModel.viewModeLive.observe(viewLifecycleOwner) {
-            if(it == PREFS_VIEWMODE_LIST)
-                optionsMenu?.findItem(R.id.menu_list_viewmode_list)?.isChecked = true
-            if(it == PREFS_VIEWMODE_GRID)
-                optionsMenu?.findItem(R.id.menu_list_viewmode_grid)?.isChecked = true
-            if(it == PREFS_VIEWMODE_COMPACT)
-                optionsMenu?.findItem(R.id.menu_list_viewmode_compact)?.isChecked = true
-            if(it == PREFS_VIEWMODE_KANBAN)
-                optionsMenu?.findItem(R.id.menu_list_viewmode_kanban)?.isChecked = true
-        }
-        
          */
 
 
@@ -104,42 +91,11 @@ class IcalListFragment : Fragment() {
         }
 
 
-        // don't show the option to clear the filter if no filter was set
-        optionsMenu?.findItem(R.id.menu_list_clearfilter)?.isVisible = isFilterActive()
-        binding.listBottomBar.menu.findItem(R.id.menu_list_bottom_filter)?.icon =
-            if(isFilterActive())
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_filter_delete)
-            else
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_filter)
-
         if(!SyncUtil.isDAVx5CompatibleWithJTX(application))
             optionsMenu?.findItem(R.id.menu_list_syncnow)?.isVisible = false
 
  */
 
-    }
-
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.menu_list_clearfilter -> resetFilter()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-
-    /**
-     * Resets the focus item
-     * Clears all filter criteria
-     * Clears the preferences with the saved search criteria
-     */
-    private fun resetFilter() {
-        /*
-        icalListViewModel.clearFilter()
-
-         */
     }
 
 

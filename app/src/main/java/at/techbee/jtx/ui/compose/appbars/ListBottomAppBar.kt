@@ -2,19 +2,19 @@ package at.techbee.jtx.ui.compose.appbars
 
 import android.content.Context
 import android.os.Parcel
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.FilterList
-import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.ListSettings
@@ -40,6 +40,7 @@ fun ListBottomAppBar(
     onAddNewEntry: () -> Unit,
     onListSettingsChanged: () -> Unit,
     onFilterIconClicked: () -> Unit,
+    onClearFilterClicked: () -> Unit,
     onGoToDateSelected: (Long) -> Unit,
     onSearchTextClicked: () -> Unit
 ) {
@@ -193,6 +194,7 @@ fun ListBottomAppBar(
                         onListSettingsChanged()
                     }
                 )
+
                 if (module == Module.TODO) {
                     DropdownMenuItem(
                         text = {
@@ -274,6 +276,14 @@ fun ListBottomAppBar(
                         }
                     )
                 }
+                if(isFilterActive) {
+                    Divider()
+                    DropdownMenuItem(
+                        text = { Text(stringResource(id = R.string.menu_list_clearfilter))  },
+                        leadingIcon = { Icon(Icons.Outlined.FilterListOff, null, modifier = Modifier.padding(8.dp)) },
+                        onClick = { onClearFilterClicked() }
+                    )
+                }
             }
         },
         floatingActionButton = {
@@ -309,7 +319,8 @@ fun ListBottomAppBar_Preview_Journal() {
             onListSettingsChanged = { },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
-            onSearchTextClicked = { }
+            onSearchTextClicked = { },
+            onClearFilterClicked = { }
         )
     }
 }
@@ -334,7 +345,8 @@ fun ListBottomAppBar_Preview_Todo() {
             onListSettingsChanged = { },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
-            onSearchTextClicked = { }
+            onSearchTextClicked = { },
+            onClearFilterClicked = { }
         )
     }
 }
@@ -360,7 +372,8 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             onListSettingsChanged = { },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
-            onSearchTextClicked = { }
+            onSearchTextClicked = { },
+            onClearFilterClicked = { }
         )
     }
 }

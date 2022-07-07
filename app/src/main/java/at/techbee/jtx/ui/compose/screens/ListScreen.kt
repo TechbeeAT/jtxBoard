@@ -74,6 +74,9 @@ fun ListScreen(
                         filterBottomSheetState.show()
                     }
                 },
+                onClearFilterClicked = {
+                    icalListViewModel.clearFilter()
+                },
                 onGoToDateSelected = { id -> icalListViewModel.scrollOnceId.postValue(id)},
                 onSearchTextClicked = {
                     coroutineScope.launch {
