@@ -214,7 +214,7 @@ fun ListStatusBar(
 @Preview(showBackground = true)
 @Composable
 fun ListStatusBar_Preview1() {
-    JtxBoardTheme {
+    MaterialTheme {
         ListStatusBar(
             numAttendees = 3,
             numAttachments = 4,
@@ -241,7 +241,7 @@ fun ListStatusBar_Preview1() {
 @Preview(showBackground = true)
 @Composable
 fun ListStatusBar_Preview2() {
-    JtxBoardTheme {
+    MaterialTheme {
         ListStatusBar(
             numAttendees = 155,
             numAttachments = 0,
@@ -268,7 +268,7 @@ fun ListStatusBar_Preview2() {
 @Preview(showBackground = true)
 @Composable
 fun ListStatusBar_Preview3() {
-    JtxBoardTheme {
+    MaterialTheme {
         ListStatusBar(
             numAttendees = 0,
             numAttachments = 0,
