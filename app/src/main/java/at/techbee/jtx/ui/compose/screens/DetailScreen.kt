@@ -13,34 +13,45 @@ import android.media.MediaPlayer
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.compose.dialogs.RequestContactsPermissionDialog
 import at.techbee.jtx.ui.compose.elements.CollectionsSpinner
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
+import at.techbee.jtx.ui.compose.elements.VerticalDateBlock
+import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import net.fortuna.ical4j.model.Component
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun DetailScreen(
-    iCalEntity: ICalEntity,
+    iCalEntityLive: LiveData<ICalEntity>,
     subtasks: List<ICal4List>,
     subnotes: List<ICal4List>,
     attachments: List<Attachment>,
@@ -56,6 +67,9 @@ fun DetailScreen(
     val readContactsGrantedText = stringResource(id = R.string.permission_read_contacts_granted)
     val readContactsDeniedText = stringResource(id = R.string.permission_read_contacts_denied)
     var permissionsDialogShownOnce by rememberSaveable { mutableStateOf(true) }  // TODO: Set to false for release!
+    var editMode by remember { mutableStateOf(false) }
+
+    val iCalEntity by iCalEntityLive.observeAsState(ICalEntity())
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -109,6 +123,31 @@ fun DetailScreen(
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
                 }
+                if(iCalEntity.property.dirty && iCalEntity.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_readonly),
+                        contentDescription = stringResource(id = R.string.readyonly),
+                    )
+                }
+                if(iCalEntity.ICalCollection?.readonly == true) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_readonly),
+                        contentDescription = stringResource(id = R.string.readyonly),
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp, start = 8.dp, end = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if(iCalEntity.property.module == Module.JOURNAL.name)
+                    iCalEntity.property.dtstart?.let {
+                        VerticalDateBlock(datetime = it, timezone = iCalEntity.property.dtstartTimezone)
+                    }
             }
         }
     }
@@ -119,7 +158,9 @@ fun DetailScreen(
 fun DetailScreen_JOURNAL() {
     MaterialTheme {
         DetailScreen(
-            iCalEntity = ICalEntity(),
+            iCalEntityLive = MutableLiveData(ICalEntity().apply {
+                this.property = ICalObject.createJournal("MySummary")
+            }),
             subtasks = emptyList(),
             subnotes = emptyList(),
             attachments = emptyList(),
