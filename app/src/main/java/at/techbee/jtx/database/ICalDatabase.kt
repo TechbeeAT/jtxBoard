@@ -43,7 +43,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 12,
+    version = 13,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -56,6 +56,7 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 9, to = 10),  // view update
         AutoMigration (from = 10, to = 11),  // view update
         AutoMigration (from = 11, to = 12),  // index update
+        AutoMigration (from = 12, to = 13),  // view update
     ]
 )
 //@TypeConverters(Converters::class)
