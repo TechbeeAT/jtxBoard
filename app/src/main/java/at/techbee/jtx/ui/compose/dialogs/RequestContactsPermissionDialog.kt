@@ -13,14 +13,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.views.CollectionsView
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
 @Composable
