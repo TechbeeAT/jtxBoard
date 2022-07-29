@@ -1,0 +1,1 @@
+- improved handling of subtasks and subnotes for synchronization
