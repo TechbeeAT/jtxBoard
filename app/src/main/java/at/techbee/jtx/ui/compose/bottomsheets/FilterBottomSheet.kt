@@ -8,9 +8,7 @@
 
 package at.techbee.jtx.ui.compose.bottomsheets
 
-import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,7 +16,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +35,6 @@ import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.OrderBy
 import at.techbee.jtx.ui.SortOrder
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -285,7 +283,7 @@ fun FilterBottomSheet(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
-                .padding(top = 16.dp)
+                .padding(top = 16.dp, bottom = 100.dp)
                 .fillMaxWidth()
         ) {
             Button(onClick = {
