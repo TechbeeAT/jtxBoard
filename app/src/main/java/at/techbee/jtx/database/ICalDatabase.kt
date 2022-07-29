@@ -43,9 +43,8 @@ import at.techbee.jtx.database.views.ICal4ViewNote
         Attachment::class],
     views = [
         ICal4List::class,
-        ICal4ViewNote::class,   // delete next time!
         CollectionsView::class],
-    version = 13,
+    version = 14,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -59,6 +58,7 @@ import at.techbee.jtx.database.views.ICal4ViewNote
         AutoMigration (from = 10, to = 11),  // view update
         AutoMigration (from = 11, to = 12),  // index update
         AutoMigration (from = 12, to = 13),  // view updates
+        AutoMigration (from = 13, to = 14),  // removed ICal4ViewNote
     ]
 )
 //@TypeConverters(Converters::class)
