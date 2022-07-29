@@ -20,7 +20,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.database.views.ICal4ViewNote
 
 
 /**
@@ -43,9 +42,8 @@ import at.techbee.jtx.database.views.ICal4ViewNote
         Attachment::class],
     views = [
         ICal4List::class,
-        ICal4ViewNote::class,   // delete next time!
         CollectionsView::class],
-    version = 13,
+    version = 14,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -58,7 +56,7 @@ import at.techbee.jtx.database.views.ICal4ViewNote
         AutoMigration (from = 9, to = 10),  // view update
         AutoMigration (from = 10, to = 11),  // view update
         AutoMigration (from = 11, to = 12),  // index update
-        AutoMigration (from = 12, to = 13),  // view updates
+        AutoMigration (from = 13, to = 14),  // view updates
     ]
 )
 //@TypeConverters(Converters::class)
@@ -91,6 +89,14 @@ abstract class ICalDatabase : RoomDatabase() {
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("DROP TABLE `contact`")
+            }
+        }
+
+        // WORKAROUND!!! Recreating the view that was not deleted properly
+        private val MIGRATION_12_13 = object : Migration(12, 13) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP VIEW IF EXISTS `ical4viewNote`")
+                database.execSQL("CREATE VIEW `ical4viewNote` AS SELECT icalobject._id, icalobject.module, icalobject.component, icalobject.summary, icalobject.description, icalobject.created, icalobject.lastmodified, relatedto.icalObjectId, attachment.binary, attachment.fmttype, attachment.uri, icalobject.sortIndex FROM icalobject INNER JOIN relatedto ON icalobject._id = relatedto.linkedICalObjectId LEFT JOIN attachment ON icalobject._id = attachment.icalObjectId WHERE icalobject.deleted = 0 AND icalobject.module = 'NOTE'")
             }
         }
 
@@ -130,7 +136,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             ICalDatabase::class.java,
                             "jtx_database"
                     )
-                        .addMigrations(MIGRATION_1_2)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13)
 
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about
