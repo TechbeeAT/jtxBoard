@@ -20,6 +20,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.database.views.ICal4ViewNote
 
 
 /**
@@ -42,8 +43,9 @@ import at.techbee.jtx.database.views.ICal4List
         Attachment::class],
     views = [
         ICal4List::class,
+        ICal4ViewNote::class,   // delete next time!
         CollectionsView::class],
-    version = 14,
+    version = 13,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -56,8 +58,7 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 9, to = 10),  // view update
         AutoMigration (from = 10, to = 11),  // view update
         AutoMigration (from = 11, to = 12),  // index update
-        AutoMigration (from = 12, to = 13),  // view update
-        AutoMigration (from = 13, to = 14),  // view update
+        AutoMigration (from = 12, to = 13),  // view updates
     ]
 )
 //@TypeConverters(Converters::class)
@@ -71,7 +72,6 @@ abstract class ICalDatabase : RoomDatabase() {
 
     @DeleteColumn(tableName = TABLE_NAME_ALARM, columnName = "trigger")
     class AutoMigration2to3: AutoMigrationSpec
-
 
     /**
      * Define a companion object, this allows us to add functions on the SleepDatabase class.
