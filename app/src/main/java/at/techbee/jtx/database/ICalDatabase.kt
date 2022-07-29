@@ -135,7 +135,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             ICalDatabase::class.java,
                             "jtx_database"
                     )
-                        .addMigrations(MIGRATION_1_2)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13)
 
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about
