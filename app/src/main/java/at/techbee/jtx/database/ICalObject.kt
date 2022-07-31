@@ -1269,6 +1269,15 @@ enum class StatusJournal(val stringResource: Int) : Parcelable {
             }
             return set.toSet()
         }
+
+        fun getNext(current: StatusJournal?): StatusJournal {
+            return when(current) {
+                null -> DRAFT
+                DRAFT -> FINAL
+                FINAL -> CANCELLED
+                CANCELLED -> DRAFT
+            }
+        }
     }
 }
 
@@ -1314,6 +1323,16 @@ enum class StatusTodo(val stringResource: Int) : Parcelable {
             }
             return set.toSet()
         }
+
+        fun getNext(current: StatusTodo?): StatusTodo {
+            return when(current) {
+                null -> `IN-PROCESS`
+                `NEEDS-ACTION` -> `IN-PROCESS`
+                `IN-PROCESS` -> COMPLETED
+                COMPLETED -> CANCELLED
+                CANCELLED -> `NEEDS-ACTION`
+            }
+        }
     }
 }
 
@@ -1355,6 +1374,15 @@ enum class Classification(val stringResource: Int) : Parcelable {
                 set.add(it.name)
             }
             return set.toSet()
+        }
+
+        fun getNext(current: Classification?): Classification {
+            return when(current) {
+                null -> PRIVATE
+                PRIVATE -> CONFIDENTIAL
+                CONFIDENTIAL -> PUBLIC
+                PUBLIC -> PRIVATE
+            }
         }
     }
 
