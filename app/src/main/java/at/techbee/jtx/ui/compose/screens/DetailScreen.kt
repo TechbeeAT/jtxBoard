@@ -15,11 +15,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ColorLens
-import androidx.compose.material.icons.outlined.GppMaybe
-import androidx.compose.material.icons.outlined.PublishedWithChanges
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -39,6 +39,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.compose.dialogs.RequestContactsPermissionDialog
@@ -78,6 +79,7 @@ fun DetailScreen(
     var status by remember { mutableStateOf(iCalEntity.value.property.status) }
     var classification by remember { mutableStateOf(iCalEntity.value.property.classification) }
     var priority by remember { mutableStateOf(iCalEntity.value.property.priority ?: 0) }
+    var categories by remember { mutableStateOf(iCalEntity.value.categories ?: emptyList()) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -288,6 +290,28 @@ fun DetailScreen(
                     )
                 }
             }
+
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp, start = 8.dp, end = 4.dp)
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                categories.forEach { category ->
+                    InputChip(
+                        onClick = {
+                            categories = categories.filter { it != category }
+                        },
+                        label = { Text(category.text) },
+                        leadingIcon = { Icon(Icons.Outlined.Label, stringResource(id = R.string.categories)) },
+                        trailingIcon = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) }
+                    )
+                }
+            }
         }
     }
 }
@@ -301,6 +325,11 @@ fun DetailScreen_JOURNAL() {
             //this.property.dtstart = System.currentTimeMillis()
         }
         entity.property.description = "Hello World, this \nis my description."
+        entity.categories = listOf(
+            Category(1,1,"MyCategory1", null, null),
+            Category(2,1,"My Dog likes Cats", null, null),
+            Category(3,1,"This is a very long category", null, null),
+        )
 
         DetailScreen(
             iCalEntity = mutableStateOf(entity),
