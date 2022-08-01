@@ -290,6 +290,27 @@ fun DetailScreen(
                     )
                 }
             }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp, start = 8.dp, end = 4.dp)
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.Label, stringResource(id = R.string.categories))
+                }
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.Person, stringResource(id = R.string.attendees))
+                }
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.Cases, stringResource(id = R.string.resources))
+                }
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.ContactMail, stringResource(id = R.string.contact))
+                }
+            }
 
 
             Row(
