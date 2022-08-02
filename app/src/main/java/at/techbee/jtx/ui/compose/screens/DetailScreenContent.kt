@@ -42,6 +42,8 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.compose.cards.PropertyCardContact
+import at.techbee.jtx.ui.compose.cards.PropertyCardUrl
 import at.techbee.jtx.ui.compose.dialogs.RequestContactsPermissionDialog
 import at.techbee.jtx.ui.compose.elements.*
 import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
@@ -52,7 +54,7 @@ import at.techbee.jtx.ui.theme.JtxBoardTheme
 @Composable
 fun DetailScreenContent(
     iCalEntity: State<ICalEntity>,
-    editSummaryDescriptionInitially: Boolean = false,
+    isEditMode: MutableState<Boolean>,
     subtasks: List<ICal4List>,
     subnotes: List<ICal4List>,
     attachments: List<Attachment>,
@@ -68,11 +70,11 @@ fun DetailScreenContent(
     val readContactsGrantedText = stringResource(id = R.string.permission_read_contacts_granted)
     val readContactsDeniedText = stringResource(id = R.string.permission_read_contacts_denied)
     var permissionsDialogShownOnce by rememberSaveable { mutableStateOf(true) }  // TODO: Set to false for release!
-    var editMode by remember { mutableStateOf(false) }
 
     var summary by remember { mutableStateOf(iCalEntity.value.property.summary ?: "") }
     var description by remember { mutableStateOf(iCalEntity.value.property.description ?: "") }
-    var editSummaryDescription by remember { mutableStateOf(editSummaryDescriptionInitially) }
+    var contact = remember { mutableStateOf(iCalEntity.value.property.contact ?: "") }
+    val url = remember { mutableStateOf(iCalEntity.value.property.url ?: "") }
     var status by remember { mutableStateOf(iCalEntity.value.property.status) }
     var classification by remember { mutableStateOf(iCalEntity.value.property.classification) }
     var priority by remember { mutableStateOf(iCalEntity.value.property.priority ?: 0) }
@@ -155,9 +157,8 @@ fun DetailScreenContent(
                     VerticalDateCard(datetime = iCalEntity.value.property.dtstart, timezone = iCalEntity.value.property.dtstartTimezone)
             }
 
-            AnimatedVisibility(!editSummaryDescription) {
+            AnimatedVisibility(!isEditMode.value) {
                 ElevatedCard(
-                    onClick = { editSummaryDescription = true },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp, vertical = 8.dp)
@@ -177,7 +178,7 @@ fun DetailScreenContent(
                 }
             }
 
-            AnimatedVisibility(editSummaryDescription) {
+            AnimatedVisibility(isEditMode.value) {
                 OutlinedTextField(
                     value = summary,
                     onValueChange = {
@@ -189,7 +190,7 @@ fun DetailScreenContent(
                         .padding(horizontal = 8.dp)
                 )
             }
-            AnimatedVisibility(editSummaryDescription) {
+            AnimatedVisibility(isEditMode.value) {
                 OutlinedTextField(
                     value = description,
                     onValueChange = {
@@ -288,6 +289,7 @@ fun DetailScreenContent(
                 }
             }
 
+
             /*
             Row(
                 modifier = Modifier
@@ -355,6 +357,24 @@ fun DetailScreenContent(
                     )
                 }
             }
+
+            AnimatedVisibility(contact.value.isNotBlank() || isEditMode.value) {
+                PropertyCardContact(
+                    contact = contact,
+                    isEditMode = isEditMode,
+                    onContactUpdated = { /*TODO*/ },
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+
+            AnimatedVisibility(url.value.isNotEmpty() || isEditMode.value) {
+                PropertyCardUrl(
+                    url = url,
+                    isEditMode = isEditMode,
+                    onUrlUpdated = { /*TODO*/ },
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
         }
     }
 }
@@ -368,6 +388,7 @@ fun DetailScreenContent_JOURNAL() {
             //this.property.dtstart = System.currentTimeMillis()
         }
         entity.property.description = "Hello World, this \nis my description."
+        entity.property.contact = "John Doe, +1 555 5545"
         entity.categories = listOf(
             Category(1,1,"MyCategory1", null, null),
             Category(2,1,"My Dog likes Cats", null, null),
@@ -376,6 +397,7 @@ fun DetailScreenContent_JOURNAL() {
 
         DetailScreenContent(
             iCalEntity = mutableStateOf(entity),
+            isEditMode = mutableStateOf(false),
             subtasks = emptyList(),
             subnotes = emptyList(),
             attachments = emptyList(),
@@ -394,13 +416,15 @@ fun DetailScreenContent_TODO_editInitially() {
     MaterialTheme {
         val entity = ICalEntity().apply {
             this.property = ICalObject.createTask("MySummary")
+
             //this.property.dtstart = System.currentTimeMillis()
         }
         entity.property.description = "Hello World, this \nis my description."
+        entity.property.contact = "John Doe, +1 555 5545"
 
         DetailScreenContent(
             iCalEntity = mutableStateOf(entity),
-            editSummaryDescriptionInitially = true,
+            isEditMode = mutableStateOf(true),
             subtasks = emptyList(),
             subnotes = emptyList(),
             attachments = emptyList(),
