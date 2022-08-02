@@ -17,6 +17,7 @@ import at.techbee.jtx.ui.ViewMode
 import at.techbee.jtx.ui.compose.appbars.ListBottomAppBar
 import at.techbee.jtx.ui.compose.bottomsheets.FilterBottomSheet
 import at.techbee.jtx.ui.compose.bottomsheets.SearchTextBottomSheet
+import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.compose.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.compose.stateholder.SettingsStateHolder
 import kotlinx.coroutines.launch
@@ -65,7 +66,10 @@ fun ListScreen(
             ListBottomAppBar(
                 module = icalListViewModel.module,
                 iCal4ListLive = icalListViewModel.iCal4List,
-                onAddNewEntry = { /* TODO */ },
+                onAddNewEntry = {
+                    navController.navigate(NavigationDrawerDestination.DETAILS.name)
+                    /* TODO */
+                                },
                 onAddNewQuickEntry = { showQuickAddDialog = true },
                 listSettings = icalListViewModel.listSettings,
                 onListSettingsChanged = { icalListViewModel.updateSearch(saveListSettings = true) },

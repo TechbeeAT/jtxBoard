@@ -168,6 +168,11 @@ fun MainNavHost(
                     globalStateHolder = globalStateHolder
                 )
             }
+            composable(NavigationDrawerDestination.DETAILS.name) {
+                DetailsScreen(
+                    navController = navController
+                )
+            }
             composable(NavigationDrawerDestination.COLLECTIONS.name) {
                 val collectionsViewModel: CollectionsViewModel = viewModel()
 

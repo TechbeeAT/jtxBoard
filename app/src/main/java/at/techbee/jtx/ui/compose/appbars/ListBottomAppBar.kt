@@ -289,7 +289,10 @@ fun ListBottomAppBar(
         floatingActionButton = {
             // TODO(b/228588827): Replace with Secondary FAB when available.
             FloatingActionButton(
-                onClick = { /* TODO */ },
+                onClick = {
+                          onAddNewEntry()
+                          /* TODO */
+                          },
                 elevation = BottomAppBarDefaults.floatingActionButtonElevation()
             ) {
                 Icon(Icons.Filled.Add, "New Entry")   // TODO: move to strings

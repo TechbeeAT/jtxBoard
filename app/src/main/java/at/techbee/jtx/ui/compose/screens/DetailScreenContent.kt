@@ -43,17 +43,14 @@ import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.compose.dialogs.RequestContactsPermissionDialog
-import at.techbee.jtx.ui.compose.elements.CollectionsSpinner
-import at.techbee.jtx.ui.compose.elements.ColoredEdge
-import at.techbee.jtx.ui.compose.elements.VerticalDateBlock
-import at.techbee.jtx.ui.compose.elements.VerticalDateCard
+import at.techbee.jtx.ui.compose.elements.*
 import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun DetailScreen(
+fun DetailScreenContent(
     iCalEntity: State<ICalEntity>,
     editSummaryDescriptionInitially: Boolean = false,
     subtasks: List<ICal4List>,
@@ -290,6 +287,8 @@ fun DetailScreen(
                     )
                 }
             }
+
+            /*
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -299,18 +298,41 @@ fun DetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.Label, stringResource(id = R.string.categories))
+                    Icon(Icons.Outlined.NewLabel, stringResource(id = R.string.categories))
                 }
                 ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.Person, stringResource(id = R.string.attendees))
+                    Icon(Icons.Outlined.PersonAdd, stringResource(id = R.string.attendees))
                 }
                 ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.Cases, stringResource(id = R.string.resources))
+                    Icon(Icons.Outlined.MedicalServices, stringResource(id = R.string.resources))
                 }
                 ElevatedButton(onClick = { /*TODO*/ }) {
                     Icon(Icons.Outlined.ContactMail, stringResource(id = R.string.contact))
                 }
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.EditLocation, stringResource(id = R.string.location))
+                }
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.AddLink, stringResource(id = R.string.url))
+                }
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.AddTask, stringResource(id = R.string.subtasks))
+                }
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.Attachment, stringResource(id = R.string.attachments))
+                }
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.Repeat, stringResource(id = R.string.recurrence))
+                }
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.NotificationAdd, stringResource(id = R.string.alarms))
+                }
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.AddComment, stringResource(id = R.string.comments))
+                }
             }
+
+             */
 
 
             Row(
@@ -339,7 +361,7 @@ fun DetailScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun DetailScreen_JOURNAL() {
+fun DetailScreenContent_JOURNAL() {
     MaterialTheme {
         val entity = ICalEntity().apply {
             this.property = ICalObject.createJournal("MySummary")
@@ -352,7 +374,7 @@ fun DetailScreen_JOURNAL() {
             Category(3,1,"This is a very long category", null, null),
         )
 
-        DetailScreen(
+        DetailScreenContent(
             iCalEntity = mutableStateOf(entity),
             subtasks = emptyList(),
             subnotes = emptyList(),
@@ -368,7 +390,7 @@ fun DetailScreen_JOURNAL() {
 
 @Preview(showBackground = true)
 @Composable
-fun DetailScreen_TODO_editInitially() {
+fun DetailScreenContent_TODO_editInitially() {
     MaterialTheme {
         val entity = ICalEntity().apply {
             this.property = ICalObject.createTask("MySummary")
@@ -376,7 +398,7 @@ fun DetailScreen_TODO_editInitially() {
         }
         entity.property.description = "Hello World, this \nis my description."
 
-        DetailScreen(
+        DetailScreenContent(
             iCalEntity = mutableStateOf(entity),
             editSummaryDescriptionInitially = true,
             subtasks = emptyList(),

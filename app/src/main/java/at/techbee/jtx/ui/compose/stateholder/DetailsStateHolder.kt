@@ -1,14 +1,10 @@
 package at.techbee.jtx.ui.compose.stateholder
 
-import android.R
-import android.content.ContentResolver
 import android.content.Context
 import android.provider.ContactsContract
-import android.widget.ArrayAdapter
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import at.techbee.jtx.database.properties.Attendee
-import at.techbee.jtx.util.SyncUtil
 
 class DetailsStateHolder(context: Context) {
 
