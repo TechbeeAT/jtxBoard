@@ -45,17 +45,7 @@ fun PropertyCardUrl(
     val uriHandler = LocalUriHandler.current
 
 
-    ElevatedCard(
-        onClick = {
-            try {
-                if (url.value.isNotBlank() && !isEditMode.value)
-                    uriHandler.openUri(url.value)
-            } catch (e: ActivityNotFoundException) {
-                Log.d("PropertyCardUrl", "Failed opening Uri $url\n$e")
-            }
-        },
-        modifier = modifier
-    ) {
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,21 +56,28 @@ fun PropertyCardUrl(
                 if (!it.value) {
 
                     Column {
-                        Text(headline, style = MaterialTheme.typography.labelSmall)
 
                         Row(
-                            horizontalArrangement = Arrangement.Start
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             Icon(Icons.Outlined.Link, headline)
-                            Text(
-                                url.value,
-                                modifier = Modifier
-                                    .padding(start = 8.dp, end = 8.dp)
-                                    .align(alignment = Alignment.CenterVertically),
-                            )
+                            Text(headline, style = MaterialTheme.typography.titleMedium)
                         }
+
+                        ElevatedAssistChip(onClick = {
+                            try {
+                                if (url.value.isNotBlank() && !isEditMode.value)
+                                    uriHandler.openUri(url.value)
+                            } catch (e: ActivityNotFoundException) {
+                                Log.d("PropertyCardUrl", "Failed opening Uri $url\n$e")
+                            }
+
+                        },
+                        label = { Text(url.value) }
+                        )
                     }
                 } else {
+
                     OutlinedTextField(
                         value = url.value,
                         leadingIcon = { Icon(Icons.Outlined.Link, headline) },
@@ -106,7 +103,7 @@ fun PropertyCardUrl(
                         modifier = Modifier
                             .fillMaxWidth()
                     )
-                }
+
             }
         }
     }

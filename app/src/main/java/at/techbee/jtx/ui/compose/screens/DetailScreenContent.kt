@@ -179,29 +179,32 @@ fun DetailScreenContent(
             }
 
             AnimatedVisibility(isEditMode.value) {
-                OutlinedTextField(
-                    value = summary,
-                    onValueChange = {
-                        summary = it
-                    },
-                    label = { Text(stringResource(id = R.string.summary)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                )
+
+                ElevatedCard(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)) {
+
+                    OutlinedTextField(
+                        value = summary,
+                        onValueChange = {
+                            summary = it
+                        },
+                        label = { Text(stringResource(id = R.string.summary)) },
+                        modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = description,
+                        onValueChange = {
+                            description = it
+                        },
+                        label = { Text(stringResource(id = R.string.description)) },
+                        modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    )
+                }
+
             }
-            AnimatedVisibility(isEditMode.value) {
-                OutlinedTextField(
-                    value = description,
-                    onValueChange = {
-                        description = it
-                    },
-                    label = { Text(stringResource(id = R.string.description)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                )
-            }
+
 
             Row(
                 modifier = Modifier

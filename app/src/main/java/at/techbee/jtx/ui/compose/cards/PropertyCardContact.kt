@@ -47,19 +47,15 @@ fun PropertyCardContact(
                 if(!it.value) {
 
                     Column {
-                        Text(contactHeadline, style = MaterialTheme.typography.labelSmall)
 
                         Row(
-                            horizontalArrangement = Arrangement.Start
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(Icons.Outlined.ContactMail, contactHeadline)
-                            Text(
-                                contact.value,
-                                modifier = Modifier
-                                    .padding(start = 8.dp, end = 8.dp)
-                                    .align(alignment = Alignment.CenterVertically),
-                            )
+                            Icon(Icons.Outlined.ContactMail, contactHeadline, modifier = Modifier.size(16.dp))
+                            Text(contactHeadline, style = MaterialTheme.typography.labelLarge)
                         }
+                        Text(contact.value)
                     }
                 } else {
                     OutlinedTextField(
