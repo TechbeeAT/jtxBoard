@@ -109,40 +109,70 @@ fun DetailScreenContent(
 
         ColoredEdge(iCalEntity.value.property.color, iCalEntity.value.ICalCollection?.color)
 
+
         Column(modifier = Modifier.fillMaxWidth()) {
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp, start = 8.dp, end = 4.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
 
-                CollectionsSpinner(
-                    collections = allCollections,
-                    preselected = iCalEntity.value.ICalCollection
-                        ?: allCollections.first(),   // TODO: Load last used collection for new entries
-                    includeReadOnly = false,
-                    includeVJOURNAL = false,
-                    includeVTODO = false,
-                    onSelectionChanged = { /* TODO */ },
-                    modifier = Modifier.weight(1f)
-                )
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
+            AnimatedVisibility(!isEditMode.value) {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ElevatedCard(
+                        modifier = Modifier.weight(1f)
+                    ) {
+
+                        Row(
+                            modifier = Modifier.padding(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(Icons.Outlined.Folder, stringResource(id = R.string.collection))
+                            Text(iCalEntity.value.ICalCollection?.displayName + iCalEntity.value.ICalCollection?.accountName?.let { " (" + it + ")" })
+                        }
+                    }
+
+                    if (iCalEntity.value.property.dirty && iCalEntity.value.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_readonly),
+                            contentDescription = stringResource(id = R.string.readyonly),
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                        )
+                    }
+                    if (iCalEntity.value.ICalCollection?.readonly == true) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_readonly),
+                            contentDescription = stringResource(id = R.string.readyonly),
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                        )
+                    }
                 }
-                if(iCalEntity.value.property.dirty && iCalEntity.value.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_readonly),
-                        contentDescription = stringResource(id = R.string.readyonly),
+            }
+
+            AnimatedVisibility(isEditMode.value) {
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp, start = 8.dp, end = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    CollectionsSpinner(
+                        collections = allCollections,
+                        preselected = iCalEntity.value.ICalCollection
+                            ?: allCollections.first(),   // TODO: Load last used collection for new entries
+                        includeReadOnly = false,
+                        includeVJOURNAL = false,
+                        includeVTODO = false,
+                        onSelectionChanged = { /* TODO */ },
+                        modifier = Modifier.weight(1f)
                     )
-                }
-                if(iCalEntity.value.ICalCollection?.readonly == true) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_readonly),
-                        contentDescription = stringResource(id = R.string.readyonly),
-                    )
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
+                    }
                 }
             }
 
@@ -190,7 +220,9 @@ fun DetailScreenContent(
                             summary = it
                         },
                         label = { Text(stringResource(id = R.string.summary)) },
-                        modifier = Modifier.fillMaxWidth().padding(8.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
                     )
 
                     OutlinedTextField(
@@ -199,7 +231,9 @@ fun DetailScreenContent(
                             description = it
                         },
                         label = { Text(stringResource(id = R.string.description)) },
-                        modifier = Modifier.fillMaxWidth().padding(8.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
                     )
                 }
 
