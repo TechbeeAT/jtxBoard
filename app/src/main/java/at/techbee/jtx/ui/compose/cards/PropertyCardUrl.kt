@@ -81,7 +81,7 @@ fun PropertyCardUrl(
                         }
                     }
                 } else {
-                    TextField(
+                    OutlinedTextField(
                         value = url.value,
                         leadingIcon = { Icon(Icons.Outlined.Link, headline) },
                         trailingIcon = {
