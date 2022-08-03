@@ -16,6 +16,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.outlined.ContactMail
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -45,36 +46,32 @@ fun PropertyCardUrl(
     val uriHandler = LocalUriHandler.current
 
 
-
+    ElevatedCard(modifier = modifier, onClick = {
+        try {
+            if (url.value.isNotBlank() && !isEditMode.value)
+                uriHandler.openUri(url.value)
+        } catch (e: ActivityNotFoundException) {
+            Log.d("PropertyCardUrl", "Failed opening Uri $url\n$e")
+        }
+    }) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
-        ) {
+                .padding(8.dp),) {
 
             Crossfade(isEditMode) {
-                if (!it.value) {
+                if(!it.value) {
 
                     Column {
 
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(Icons.Outlined.Link, headline)
                             Text(headline, style = MaterialTheme.typography.titleMedium)
                         }
-
-                        ElevatedAssistChip(onClick = {
-                            try {
-                                if (url.value.isNotBlank() && !isEditMode.value)
-                                    uriHandler.openUri(url.value)
-                            } catch (e: ActivityNotFoundException) {
-                                Log.d("PropertyCardUrl", "Failed opening Uri $url\n$e")
-                            }
-
-                        },
-                        label = { Text(url.value) }
-                        )
+                        Text(url.value)
                     }
                 } else {
 
@@ -103,6 +100,7 @@ fun PropertyCardUrl(
                         modifier = Modifier
                             .fillMaxWidth()
                     )
+                }
 
             }
         }

@@ -42,6 +42,7 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.compose.cards.PropertyCardCategories
 import at.techbee.jtx.ui.compose.cards.PropertyCardContact
 import at.techbee.jtx.ui.compose.cards.PropertyCardUrl
 import at.techbee.jtx.ui.compose.dialogs.RequestContactsPermissionDialog
@@ -78,7 +79,7 @@ fun DetailScreenContent(
     var status by remember { mutableStateOf(iCalEntity.value.property.status) }
     var classification by remember { mutableStateOf(iCalEntity.value.property.classification) }
     var priority by remember { mutableStateOf(iCalEntity.value.property.priority ?: 0) }
-    var categories by remember { mutableStateOf(iCalEntity.value.categories ?: emptyList()) }
+    val categories = remember { mutableStateOf(iCalEntity.value.categories ?: emptyList()) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -109,9 +110,7 @@ fun DetailScreenContent(
 
         ColoredEdge(iCalEntity.value.property.color, iCalEntity.value.ICalCollection?.color)
 
-
         Column(modifier = Modifier.fillMaxWidth()) {
-
 
             AnimatedVisibility(!isEditMode.value) {
 
@@ -374,6 +373,7 @@ fun DetailScreenContent(
              */
 
 
+            /*
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -393,6 +393,17 @@ fun DetailScreenContent(
                         trailingIcon = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) }
                     )
                 }
+            }
+
+             */
+
+            AnimatedVisibility(categories.value.isNotEmpty() || isEditMode.value) {
+                PropertyCardCategories(
+                    categories = categories,
+                    isEditMode = isEditMode,
+                    onCategoriesUpdated = { /*TODO*/ },
+                    modifier = Modifier.padding(8.dp)
+                )
             }
 
             AnimatedVisibility(contact.value.isNotBlank() || isEditMode.value) {
