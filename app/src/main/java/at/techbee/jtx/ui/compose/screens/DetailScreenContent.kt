@@ -18,6 +18,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -90,7 +91,7 @@ fun DetailScreenContent(
             Toast.makeText(context, readContactsDeniedText, Toast.LENGTH_LONG).show()
         }
     }
-    if(!permissionsDialogShownOnce) {
+    if (!permissionsDialogShownOnce) {
         RequestContactsPermissionDialog(
             onConfirm = {
                 launcher.launch(Manifest.permission.READ_CONTACTS)
@@ -115,7 +116,9 @@ fun DetailScreenContent(
             AnimatedVisibility(!isEditMode.value) {
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ElevatedCard(
@@ -182,36 +185,44 @@ fun DetailScreenContent(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if(iCalEntity.value.property.module == Module.JOURNAL.name && iCalEntity.value.property.dtstart != null)
-                    VerticalDateCard(datetime = iCalEntity.value.property.dtstart, timezone = iCalEntity.value.property.dtstartTimezone)
+                if (iCalEntity.value.property.module == Module.JOURNAL.name && iCalEntity.value.property.dtstart != null)
+                    VerticalDateCard(
+                        datetime = iCalEntity.value.property.dtstart,
+                        timezone = iCalEntity.value.property.dtstartTimezone
+                    )
             }
 
             AnimatedVisibility(!isEditMode.value) {
-                ElevatedCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 8.dp)
-                ) {
-                    if (summary.isNotBlank())
-                        Text(
-                            summary,
-                            modifier = Modifier.padding(8.dp),
-                            style = MaterialTheme.typography.titleMedium,
-                            //fontWeight = FontWeight.Bold
-                        )
-                    if (description.isNotBlank())
-                        Text(
-                            description,
-                            modifier = Modifier.padding(8.dp)
-                        )
+                SelectionContainer {
+                    ElevatedCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 8.dp)
+                    ) {
+
+                        if (summary.isNotBlank())
+                            Text(
+                                summary,
+                                modifier = Modifier.padding(8.dp),
+                                style = MaterialTheme.typography.titleMedium,
+                                //fontWeight = FontWeight.Bold
+                            )
+                        if (description.isNotBlank())
+                            Text(
+                                description,
+                                modifier = Modifier.padding(8.dp)
+                            )
+                    }
                 }
             }
 
             AnimatedVisibility(isEditMode.value) {
 
-                ElevatedCard(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)) {
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                ) {
 
                     OutlinedTextField(
                         value = summary,
@@ -303,7 +314,7 @@ fun DetailScreenContent(
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
-            if(iCalEntity.value.property.component == Component.VTODO.name) {
+            if (iCalEntity.value.property.component == Component.VTODO.name) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -438,9 +449,9 @@ fun DetailScreenContent_JOURNAL() {
         entity.property.description = "Hello World, this \nis my description."
         entity.property.contact = "John Doe, +1 555 5545"
         entity.categories = listOf(
-            Category(1,1,"MyCategory1", null, null),
-            Category(2,1,"My Dog likes Cats", null, null),
-            Category(3,1,"This is a very long category", null, null),
+            Category(1, 1, "MyCategory1", null, null),
+            Category(2, 1, "My Dog likes Cats", null, null),
+            Category(3, 1, "This is a very long category", null, null),
         )
 
         DetailScreenContent(
