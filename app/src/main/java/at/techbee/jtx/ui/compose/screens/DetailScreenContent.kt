@@ -19,6 +19,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -107,7 +108,7 @@ fun DetailScreenContent(
         .build()
      */
 
-    Box {
+    Box(Modifier.verticalScroll(rememberScrollState())) {
 
         ColoredEdge(iCalEntity.value.property.color, iCalEntity.value.ICalCollection?.color)
 
@@ -413,6 +414,7 @@ fun DetailScreenContent(
                     categories = categories,
                     isEditMode = isEditMode,
                     onCategoriesUpdated = { /*TODO*/ },
+                    allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")), // TODO
                     modifier = Modifier.padding(8.dp)
                 )
             }
