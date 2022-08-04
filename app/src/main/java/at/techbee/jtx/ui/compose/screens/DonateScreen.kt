@@ -45,7 +45,7 @@ fun DonateScreen(navController: NavHostController, modifier: Modifier = Modifier
             title = stringResource(id = R.string.navigation_drawer_donate)
         ) },
         content = {
-            Column {
+            Column(modifier = Modifier.padding(it)) {
                 JtxNavigationDrawer(
                     drawerState = drawerState,
                     mainContent = {

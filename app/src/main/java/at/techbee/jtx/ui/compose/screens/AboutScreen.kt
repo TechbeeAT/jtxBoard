@@ -3,8 +3,10 @@ package at.techbee.jtx.ui.compose.screens
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +16,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.destinations.AboutTabDestination
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,8 +41,8 @@ fun AboutScreen(
             drawerState = drawerState,
             title = stringResource(id = R.string.navigation_drawer_about)
         ) },
-        content = {
-            Column {
+        content = { paddingValues ->
+            Column(modifier = Modifier.padding(paddingValues)) {
                 JtxNavigationDrawer(
                     drawerState = drawerState,
                     mainContent = {
@@ -71,7 +72,6 @@ fun AboutScreen(
             }
         }
     )
-
 }
 
 
@@ -79,7 +79,7 @@ fun AboutScreen(
 @Preview(showBackground = true)
 @Composable
 fun AboutScreenPreview() {
-    JtxBoardTheme {
+    MaterialTheme {
         AboutScreen(
             MutableLiveData(
                 mutableSetOf(

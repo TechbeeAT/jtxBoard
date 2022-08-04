@@ -73,7 +73,7 @@ fun SyncScreen(
             }
         ) },
         content = {
-            Column {
+            Column(modifier = Modifier.padding(it)) {
                 JtxNavigationDrawer(
                     drawerState = drawerState,
                     mainContent = { SyncScreenContent(

@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.compose.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Share
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -82,7 +84,7 @@ fun DetailsScreen(
             }
         ) },
         content = {
-            Column {
+            Column(modifier = Modifier.padding(it)) {
                 JtxNavigationDrawer(
                     drawerState = drawerState,
                     mainContent = {

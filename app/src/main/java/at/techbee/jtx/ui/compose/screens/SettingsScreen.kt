@@ -68,7 +68,7 @@ fun SettingsScreen(
         },
 
         ) {
-        Column {
+        Column(modifier = Modifier.padding(it)) {
             JtxNavigationDrawer(
                 drawerState = drawerState,
                 mainContent = {

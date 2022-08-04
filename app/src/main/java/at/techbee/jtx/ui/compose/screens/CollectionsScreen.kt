@@ -180,7 +180,7 @@ fun CollectionsScreen(
             }
         ) },
         content = {
-            Column {
+            Column(modifier = Modifier.padding(it)) {
                 JtxNavigationDrawer(
                     drawerState = drawerState,
                     mainContent = { CollectionsScreenContent(

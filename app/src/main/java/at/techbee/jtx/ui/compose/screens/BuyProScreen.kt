@@ -60,7 +60,7 @@ fun BuyProScreen(
             title = stringResource(id = R.string.navigation_drawer_buypro)
         ) },
         content = {
-            Column {
+            Column(modifier = Modifier.padding(it)) {
                 JtxNavigationDrawer(
                     drawerState = drawerState,
                     mainContent = {

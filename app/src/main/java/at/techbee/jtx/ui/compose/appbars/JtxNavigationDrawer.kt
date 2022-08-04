@@ -28,7 +28,8 @@ import kotlinx.coroutines.launch
 fun JtxNavigationDrawer(
     drawerState: DrawerState,
     navController: NavController,
-    mainContent: @Composable () -> Unit
+    mainContent: @Composable () -> Unit,
+    paddingValues: PaddingValues = PaddingValues()
 ) {
     val scope = rememberCoroutineScope()
     val items = NavigationDrawerDestination.valuesFor(BuildConfig.FLAVOR).groupBy { it.groupResource }
@@ -42,7 +43,7 @@ fun JtxNavigationDrawer(
             )
         },
         content = { mainContent() },
-        modifier = Modifier.padding(top = 64.dp)
+        modifier = Modifier.padding(paddingValues)
     )
 }
 
