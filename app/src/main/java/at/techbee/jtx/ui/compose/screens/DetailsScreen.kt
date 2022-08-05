@@ -109,7 +109,7 @@ fun DetailsScreen(
                             isEditMode = isEditMode,
                             subtasks = emptyList(),
                             subnotes = emptyList(),
-                            attachments = emptyList(),
+                            //attachments = emptyList(),
                             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
                             //player = null,
                             onProgressChanged = { _, _, _ -> },

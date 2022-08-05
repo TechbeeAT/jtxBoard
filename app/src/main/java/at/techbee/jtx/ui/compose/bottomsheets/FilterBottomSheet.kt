@@ -74,7 +74,7 @@ fun FilterBottomSheet(
         ) {
 
             val allAccounts = allCollections?.groupBy { it.accountName ?: return@Row }
-            allAccounts?.keys?.forEach { account ->
+            allAccounts?.keys?.sortedBy { it.lowercase() }?.forEach { account ->
                 FilterChip(
                     selected = listSettings.searchAccount.value.contains(account),
                     onClick = {
@@ -103,7 +103,7 @@ fun FilterBottomSheet(
         ) {
 
             val allCollectionsGrouped = allCollections?.groupBy { it.displayName ?: return@Row }
-            allCollectionsGrouped?.keys?.forEach { collection ->
+            allCollectionsGrouped?.keys?.sortedBy { it.lowercase() }?.forEach { collection ->
                 FilterChip(
                     selected = listSettings.searchCollection.value.contains(collection),
                     onClick = {
