@@ -53,7 +53,7 @@ data class ListSettings(
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
         private const val PREFS_FILTER_DUE_FUTURE = "prefsFilterFuture"
         private const val PREFS_FILTER_NO_DATES_SET = "prefsFilterNoDatesSet"
-        private const val PREFS_VIEWMODE = "prefsViewmode"
+        private const val PREFS_VIEWMODE = "prefsViewmodeList"
     }
 
 
