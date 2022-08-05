@@ -656,7 +656,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                    app:drawableStartCompat="@drawable/ic_comments"
+                    app:drawableStartCompat="@drawable/ic_todo"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_barrier_taskdates_bottom" />
 
