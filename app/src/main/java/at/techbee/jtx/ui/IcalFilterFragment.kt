@@ -151,26 +151,35 @@ class IcalFilterFragment : BottomSheetDialogFragment() {
         //observe and set list for organizers
         icalListViewModel.allCollections.observe(viewLifecycleOwner) { collections ->
 
-            collections.forEach { collection ->
-                val chip = inflater.inflate(R.layout.fragment_ical_filter_chip, binding.collectionFilterChipgroup, false) as Chip
+            collections.sortedBy { it.displayName?.lowercase() }.forEach { collection ->
+                val chip = inflater.inflate(
+                    R.layout.fragment_ical_filter_chip,
+                    binding.collectionFilterChipgroup,
+                    false
+                ) as Chip
                 val collectionName = collection.displayName ?: collection.url
                 chip.text = collectionName
-                if(!isChiptextPresentInChipgroup(binding.collectionFilterChipgroup, collectionName)) {
+                if (!isChiptextPresentInChipgroup(
+                        binding.collectionFilterChipgroup,
+                        collectionName
+                    )
+                ) {
                     binding.collectionFilterChipgroup.addView(chip)
 
-                    if(icalListViewModel.searchCollection.contains(collectionName))
+                    if (icalListViewModel.searchCollection.contains(collectionName))
                         chip.isChecked = true
 
                     chip.setOnCheckedChangeListener { _, isChecked ->
-                        if(isChecked)
+                        if (isChecked)
                             icalListViewModel.searchCollection.add(collectionName)
                         else
                             icalListViewModel.searchCollection.remove(collectionName)
                         icalListViewModel.updateSearch()
                     }
                 }
+            }
 
-                // we already cover the accounts here
+            collections.sortedBy { it.accountName?.lowercase() }.forEach { collection ->
                 val chipAccount = inflater.inflate(R.layout.fragment_ical_filter_chip, binding.accountFilterChipgroup, false) as Chip
                 val accountName = collection.accountName ?: return@forEach
                 chipAccount.text = accountName
