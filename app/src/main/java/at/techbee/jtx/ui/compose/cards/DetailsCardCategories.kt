@@ -53,21 +53,24 @@ fun DetailsCardCategories(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
-                .horizontalScroll(rememberScrollState()),
+                .padding(8.dp),
         ) {
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(Icons.Outlined.Label, headline)
                 Text(headline, style = MaterialTheme.typography.titleMedium)
             }
 
             AnimatedVisibility(categories.value.isNotEmpty()) {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    categories.value.forEach { category ->
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
+                ) {
+                    categories.value.asReversed().forEach { category ->
                         InputChip(
                             onClick = {
                                 categories.value = categories.value.filter { it != category }
@@ -90,7 +93,10 @@ fun DetailsCardCategories(
             }
 
             AnimatedVisibility(newCategory.value.isNotEmpty()) {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
+                ) {
 
                     if(categories.value.none { existing -> existing.text == newCategory.value }) {
                         InputChip(
@@ -152,8 +158,7 @@ fun DetailsCardCategories(
                             /* TODO */
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
                             if(newCategory.value.isNotEmpty() && categories.value.none { existing -> existing.text == newCategory.value } )
