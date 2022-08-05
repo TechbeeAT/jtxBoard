@@ -136,21 +136,6 @@ fun DetailScreenContent(
                             Text(iCalEntity.value.ICalCollection?.displayName + iCalEntity.value.ICalCollection?.accountName?.let { " (" + it + ")" })
                         }
                     }
-
-                    if (iCalEntity.value.property.dirty && iCalEntity.value.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_readonly),
-                            contentDescription = stringResource(id = R.string.readyonly),
-                            modifier = Modifier.padding(horizontal = 8.dp),
-                        )
-                    }
-                    if (iCalEntity.value.ICalCollection?.readonly == true) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_readonly),
-                            contentDescription = stringResource(id = R.string.readyonly),
-                            modifier = Modifier.padding(horizontal = 8.dp),
-                        )
-                    }
                 }
             }
 
@@ -450,7 +435,9 @@ fun DetailScreenContent(
                     geoLat = geoLat.value,
                     geoLong = geoLong.value,
                     isEditMode = isEditMode,
-                    onLocationUpdated = { /*TODO*/ })
+                    onLocationUpdated = { /*TODO*/ },
+                    modifier = Modifier.padding(8.dp)
+                )
             }
         }
     }
