@@ -113,14 +113,15 @@ fun DetailScreenContent(
 
         ColoredEdge(iCalEntity.value.property.color, iCalEntity.value.ICalCollection?.color)
 
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
 
             AnimatedVisibility(!isEditMode.value) {
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ElevatedCard(
@@ -142,14 +143,10 @@ fun DetailScreenContent(
             AnimatedVisibility(isEditMode.value) {
 
                 ElevatedCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 4.dp, start = 8.dp, end = 4.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -171,26 +168,23 @@ fun DetailScreenContent(
                 }
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp, start = 8.dp, end = 4.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (iCalEntity.value.property.module == Module.JOURNAL.name && iCalEntity.value.property.dtstart != null)
+            if (iCalEntity.value.property.module == Module.JOURNAL.name && iCalEntity.value.property.dtstart != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     VerticalDateCard(
                         datetime = iCalEntity.value.property.dtstart,
                         timezone = iCalEntity.value.property.dtstartTimezone
                     )
+                }
             }
 
             AnimatedVisibility(!isEditMode.value) {
                 SelectionContainer {
                     ElevatedCard(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 8.dp)
+                        modifier = Modifier.fillMaxWidth()
                     ) {
 
                         if (summary.isNotBlank())
@@ -212,9 +206,7 @@ fun DetailScreenContent(
             AnimatedVisibility(isEditMode.value) {
 
                 ElevatedCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
 
                     OutlinedTextField(
@@ -244,10 +236,8 @@ fun DetailScreenContent(
 
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp, start = 8.dp, end = 4.dp),
-                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AssistChip(
@@ -304,14 +294,11 @@ fun DetailScreenContent(
                             Classification.getNext(null).name
                         }
                     },
-                    modifier = Modifier.padding(start = 8.dp)
                 )
             }
             if (iCalEntity.value.property.component == Component.VTODO.name) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 4.dp, start = 8.dp, end = 4.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -330,84 +317,12 @@ fun DetailScreenContent(
             }
 
 
-            /*
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp, start = 8.dp, end = 4.dp)
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.NewLabel, stringResource(id = R.string.categories))
-                }
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.PersonAdd, stringResource(id = R.string.attendees))
-                }
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.MedicalServices, stringResource(id = R.string.resources))
-                }
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.ContactMail, stringResource(id = R.string.contact))
-                }
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.EditLocation, stringResource(id = R.string.location))
-                }
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.AddLink, stringResource(id = R.string.url))
-                }
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.AddTask, stringResource(id = R.string.subtasks))
-                }
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.Attachment, stringResource(id = R.string.attachments))
-                }
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.Repeat, stringResource(id = R.string.recurrence))
-                }
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.NotificationAdd, stringResource(id = R.string.alarms))
-                }
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.AddComment, stringResource(id = R.string.comments))
-                }
-            }
-
-             */
-
-
-            /*
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp, start = 8.dp, end = 4.dp)
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                categories.forEach { category ->
-                    InputChip(
-                        onClick = {
-                            categories = categories.filter { it != category }
-                        },
-                        label = { Text(category.text) },
-                        leadingIcon = { Icon(Icons.Outlined.Label, stringResource(id = R.string.categories)) },
-                        trailingIcon = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) }
-                    )
-                }
-            }
-
-             */
-
             AnimatedVisibility(categories.value.isNotEmpty() || isEditMode.value) {
                 DetailsCardCategories(
                     categories = categories,
                     isEditMode = isEditMode,
                     onCategoriesUpdated = { /*TODO*/ },
                     allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")), // TODO
-                    modifier = Modifier.padding(8.dp)
                 )
             }
 
@@ -416,7 +331,6 @@ fun DetailScreenContent(
                     contact = contact,
                     isEditMode = isEditMode,
                     onContactUpdated = { /*TODO*/ },
-                    modifier = Modifier.padding(8.dp)
                 )
             }
 
@@ -425,7 +339,6 @@ fun DetailScreenContent(
                     url = url,
                     isEditMode = isEditMode,
                     onUrlUpdated = { /*TODO*/ },
-                    modifier = Modifier.padding(8.dp)
                 )
             }
 
@@ -436,7 +349,6 @@ fun DetailScreenContent(
                     geoLong = geoLong.value,
                     isEditMode = isEditMode,
                     onLocationUpdated = { /*TODO*/ },
-                    modifier = Modifier.padding(8.dp)
                 )
             }
         }
