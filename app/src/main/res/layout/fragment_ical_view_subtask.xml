@@ -29,10 +29,12 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:maxLines="3"
             app:layout_constraintBottom_toBottomOf="@+id/view_subtask_progress_slider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/view_subtask_progress_slider"
-            tools:text="Task #1 ..." />
+            tools:text="This is a very long subtask text, I would like to see how it breaks and if ellipsis works correctly." />
 
         <com.google.android.material.slider.Slider
             android:id="@+id/view_subtask_progress_slider"
