@@ -27,7 +27,7 @@ import at.techbee.jtx.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PropertyCardContact(
+fun DetailsCardContact(
     contact: MutableState<String>,
     isEditMode: MutableState<Boolean>,
     onContactUpdated: () -> Unit,
@@ -86,9 +86,9 @@ fun PropertyCardContact(
 
 @Preview(showBackground = true)
 @Composable
-fun PropertyCardPreview() {
+fun DetailsCardContact_Preview() {
     MaterialTheme {
-        PropertyCardContact(
+        DetailsCardContact(
             contact = mutableStateOf("John Doe, +1 555 5545"),
             isEditMode = mutableStateOf(false),
             onContactUpdated = { /*TODO*/ }
@@ -99,9 +99,9 @@ fun PropertyCardPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun PropertyCardPreview_edit() {
+fun DetailsCardContact_Preview_edit() {
     MaterialTheme {
-        PropertyCardContact(
+        DetailsCardContact(
             contact = mutableStateOf("John Doe, +1 555 5545"),
             isEditMode = mutableStateOf(true),
             onContactUpdated = { /*TODO*/ }

@@ -60,6 +60,8 @@ fun DetailsScreen(
     val enableComments = rememberSaveable { mutableStateOf(false) }
 
     val isEditMode = mutableStateOf(false)
+    val isReadOnly = mutableStateOf(false)
+
 
     Scaffold(
         topBar = { JtxTopAppBar(
@@ -143,6 +145,7 @@ fun DetailsScreen(
             DetailBottomAppBar(
                 module = Module.JOURNAL,   // TODO
                 isEditMode = isEditMode,
+                isReadOnly = isReadOnly,
                 enableCategories = enableCategories,
                 enableAttendees = enableAttendees,
                 enableResources = enableResources,

@@ -44,9 +44,7 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.ui.compose.cards.PropertyCardCategories
-import at.techbee.jtx.ui.compose.cards.PropertyCardContact
-import at.techbee.jtx.ui.compose.cards.PropertyCardUrl
+import at.techbee.jtx.ui.compose.cards.*
 import at.techbee.jtx.ui.compose.dialogs.RequestContactsPermissionDialog
 import at.techbee.jtx.ui.compose.elements.*
 import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
@@ -78,6 +76,9 @@ fun DetailScreenContent(
     var description by remember { mutableStateOf(iCalEntity.value.property.description ?: "") }
     var contact = remember { mutableStateOf(iCalEntity.value.property.contact ?: "") }
     val url = remember { mutableStateOf(iCalEntity.value.property.url ?: "") }
+    val location = remember { mutableStateOf(iCalEntity.value.property.location ?: "") }
+    val geoLat = remember { mutableStateOf(iCalEntity.value.property.geoLat) }
+    val geoLong = remember { mutableStateOf(iCalEntity.value.property.geoLong) }
     var status by remember { mutableStateOf(iCalEntity.value.property.status) }
     var classification by remember { mutableStateOf(iCalEntity.value.property.classification) }
     var priority by remember { mutableStateOf(iCalEntity.value.property.priority ?: 0) }
@@ -155,26 +156,32 @@ fun DetailScreenContent(
 
             AnimatedVisibility(isEditMode.value) {
 
-                Row(
+                ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 4.dp, start = 8.dp, end = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(8.dp)
                 ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp, start = 8.dp, end = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
 
-                    CollectionsSpinner(
-                        collections = allCollections,
-                        preselected = iCalEntity.value.ICalCollection
-                            ?: allCollections.first(),   // TODO: Load last used collection for new entries
-                        includeReadOnly = false,
-                        includeVJOURNAL = false,
-                        includeVTODO = false,
-                        onSelectionChanged = { /* TODO */ },
-                        modifier = Modifier.weight(1f)
-                    )
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
+                        CollectionsSpinner(
+                            collections = allCollections,
+                            preselected = iCalEntity.value.ICalCollection
+                                ?: allCollections.first(),   // TODO: Load last used collection for new entries
+                            includeReadOnly = false,
+                            includeVJOURNAL = false,
+                            includeVTODO = false,
+                            onSelectionChanged = { /* TODO */ },
+                            modifier = Modifier.weight(1f)
+                        )
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
+                        }
                     }
                 }
             }
@@ -222,7 +229,7 @@ fun DetailScreenContent(
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
+                        .padding(8.dp)
                 ) {
 
                     OutlinedTextField(
@@ -410,7 +417,7 @@ fun DetailScreenContent(
              */
 
             AnimatedVisibility(categories.value.isNotEmpty() || isEditMode.value) {
-                PropertyCardCategories(
+                DetailsCardCategories(
                     categories = categories,
                     isEditMode = isEditMode,
                     onCategoriesUpdated = { /*TODO*/ },
@@ -420,7 +427,7 @@ fun DetailScreenContent(
             }
 
             AnimatedVisibility(contact.value.isNotBlank() || isEditMode.value) {
-                PropertyCardContact(
+                DetailsCardContact(
                     contact = contact,
                     isEditMode = isEditMode,
                     onContactUpdated = { /*TODO*/ },
@@ -429,12 +436,21 @@ fun DetailScreenContent(
             }
 
             AnimatedVisibility(url.value.isNotEmpty() || isEditMode.value) {
-                PropertyCardUrl(
+                DetailsCardUrl(
                     url = url,
                     isEditMode = isEditMode,
                     onUrlUpdated = { /*TODO*/ },
                     modifier = Modifier.padding(8.dp)
                 )
+            }
+
+            AnimatedVisibility((location.value.isNotEmpty() || (geoLat.value != null && geoLong.value != null)) || isEditMode.value) {
+                DetailsCardLocation(
+                    location = location,
+                    geoLat = geoLat.value,
+                    geoLong = geoLong.value,
+                    isEditMode = isEditMode,
+                    onLocationUpdated = { /*TODO*/ })
             }
         }
     }

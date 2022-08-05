@@ -32,12 +32,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PropertyCardCategories(
+fun DetailsCardCategories(
     categories: MutableState<List<Category>>,
     isEditMode: MutableState<Boolean>,
     allCategories: List<Category>,
@@ -95,8 +94,8 @@ fun PropertyCardCategories(
                     if(categories.value.none { existing -> existing.text == newCategory.value }) {
                         InputChip(
                             onClick = {
-                                categories.value =
-                                    categories.value.plus(Category(text = newCategory.value))
+                                categories.value = categories.value.plus(Category(text = newCategory.value))
+                                newCategory.value = ""
                             },
                             label = { Text(newCategory.value) },
                             leadingIcon = {
@@ -113,6 +112,7 @@ fun PropertyCardCategories(
                             InputChip(
                                 onClick = {
                                     categories.value = categories.value.plus(Category(text = category.text))
+                                    newCategory.value = ""
                                 },
                                 label = { Text(category.text) },
                                 leadingIcon = {
@@ -166,9 +166,9 @@ fun PropertyCardCategories(
 
 @Preview(showBackground = true)
 @Composable
-fun PropertyCardCategories_Preview() {
+fun DetailsCardCategories_Preview() {
     MaterialTheme {
-        PropertyCardCategories(
+        DetailsCardCategories(
             categories = mutableStateOf(listOf(Category(text = "asdf"))),
             isEditMode = mutableStateOf(false),
             allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")),
@@ -180,9 +180,9 @@ fun PropertyCardCategories_Preview() {
 
 @Preview(showBackground = true)
 @Composable
-fun PropertyCardCategories_Preview_edit() {
+fun DetailsCardCategories_Preview_edit() {
     MaterialTheme {
-        PropertyCardCategories(
+        DetailsCardCategories(
             categories = mutableStateOf(listOf(Category(text = "asdf"))),
             isEditMode = mutableStateOf(true),
             allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")),

@@ -2,16 +2,22 @@ package at.techbee.jtx.ui.compose.appbars
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
@@ -22,6 +28,7 @@ import at.techbee.jtx.ui.compose.elements.SwitchSetting
 fun DetailBottomAppBar(
     module: Module,
     isEditMode: MutableState<Boolean>,
+    isReadOnly: MutableState<Boolean>,
     enableCategories: MutableState<Boolean>,
     enableAttendees: MutableState<Boolean>,
     enableResources: MutableState<Boolean>,
@@ -77,6 +84,14 @@ fun DetailBottomAppBar(
                     )
                 }
             }
+
+            //Box(modifier = Modifier.size(width = 48.dp, height = 1.dp))
+
+            Icon(
+                Icons.Outlined.CloudSync,
+                contentDescription = stringResource(id = R.string.upload_pending),
+                modifier = Modifier.alpha(0.2f)
+            )
 
 
 
@@ -177,16 +192,20 @@ fun DetailBottomAppBar(
             // TODO(b/228588827): Replace with Secondary FAB when available.
             FloatingActionButton(
                 onClick = {
-                          isEditMode.value = !isEditMode.value
+                    if(!isReadOnly.value)
+                        isEditMode.value = !isEditMode.value
                           /* TODO */
                           },
-                elevation = BottomAppBarDefaults.floatingActionButtonElevation()
+                elevation = BottomAppBarDefaults.floatingActionButtonElevation(),
             ) {
                 Crossfade(targetState = isEditMode.value) { isEditMode ->
                     if(isEditMode) {
                         Icon(Icons.Filled.Visibility, stringResource(id = R.string.save))
                     } else {
-                        Icon(Icons.Filled.Edit, stringResource(id = R.string.edit))
+                        if(isReadOnly.value)
+                            Icon(Icons.Filled.EditOff, stringResource(id = R.string.readyonly))
+                        else
+                            Icon(Icons.Filled.Edit, stringResource(id = R.string.edit))
                     }
                 }
 
@@ -204,6 +223,7 @@ fun DetailBottomAppBar_Preview_View() {
         DetailBottomAppBar(
             module = Module.JOURNAL,
             isEditMode = mutableStateOf(false),
+            isReadOnly = mutableStateOf(false),
             enableCategories = mutableStateOf(true),
             enableAttendees = mutableStateOf(false),
             enableResources = mutableStateOf(false),
@@ -229,6 +249,32 @@ fun DetailBottomAppBar_Preview_edit() {
         DetailBottomAppBar(
             module = Module.JOURNAL,
             isEditMode = mutableStateOf(true),
+            isReadOnly = mutableStateOf(false),
+            enableCategories = mutableStateOf(true),
+            enableAttendees = mutableStateOf(false),
+            enableResources = mutableStateOf(false),
+            enableContact = mutableStateOf(false),
+            enableLocation = mutableStateOf(false),
+            enableUrl = mutableStateOf(false),
+            enableSubtasks = mutableStateOf(true),
+            enableSubnotes = mutableStateOf(true),
+            enableAttachments = mutableStateOf(true),
+            enableRecurrence = mutableStateOf(false),
+            enableAlarms = mutableStateOf(false),
+            enableComments = mutableStateOf(false)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailBottomAppBar_Preview_View_readonly() {
+    MaterialTheme {
+
+        DetailBottomAppBar(
+            module = Module.JOURNAL,
+            isEditMode = mutableStateOf(false),
+            isReadOnly = mutableStateOf(true),
             enableCategories = mutableStateOf(true),
             enableAttendees = mutableStateOf(false),
             enableResources = mutableStateOf(false),

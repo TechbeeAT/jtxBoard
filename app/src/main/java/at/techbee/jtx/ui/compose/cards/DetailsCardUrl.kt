@@ -33,7 +33,7 @@ import at.techbee.jtx.util.UiUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PropertyCardUrl(
+fun DetailsCardUrl(
     url: MutableState<String>,
     isEditMode: MutableState<Boolean>,
     onUrlUpdated: () -> Unit,
@@ -109,9 +109,9 @@ fun PropertyCardUrl(
 
 @Preview(showBackground = true)
 @Composable
-fun PropertyCardUrl_Preview() {
+fun DetailsCardUrl_Preview() {
     MaterialTheme {
-        PropertyCardUrl(
+        DetailsCardUrl(
             url = mutableStateOf("www.orf.at"),
             isEditMode = mutableStateOf(false),
             onUrlUpdated = { /*TODO*/ }
@@ -122,9 +122,9 @@ fun PropertyCardUrl_Preview() {
 
 @Preview(showBackground = true)
 @Composable
-fun PropertyCardUrl_Preview_edit() {
+fun DetailsCardUrl_Preview_edit() {
     MaterialTheme {
-        PropertyCardUrl(
+        DetailsCardUrl(
             url = mutableStateOf("www.bitfire.at"),
             isEditMode = mutableStateOf(true),
             onUrlUpdated = { /*TODO*/ }
