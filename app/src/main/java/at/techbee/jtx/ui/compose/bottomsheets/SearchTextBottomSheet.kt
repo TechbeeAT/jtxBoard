@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchTextBottomSheet(
     initialSeachText: String?,

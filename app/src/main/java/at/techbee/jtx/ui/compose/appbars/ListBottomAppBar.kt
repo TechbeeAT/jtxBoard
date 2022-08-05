@@ -293,7 +293,6 @@ fun ListBottomAppBar(
                           onAddNewEntry()
                           /* TODO */
                           },
-                elevation = BottomAppBarDefaults.floatingActionButtonElevation()
             ) {
                 Icon(Icons.Filled.Add, "New Entry")   // TODO: move to strings
             }

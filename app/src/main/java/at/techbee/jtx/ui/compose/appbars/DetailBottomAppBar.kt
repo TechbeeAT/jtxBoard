@@ -196,7 +196,6 @@ fun DetailBottomAppBar(
                         isEditMode.value = !isEditMode.value
                           /* TODO */
                           },
-                elevation = BottomAppBarDefaults.floatingActionButtonElevation(),
             ) {
                 Crossfade(targetState = isEditMode.value) { isEditMode ->
                     if(isEditMode) {

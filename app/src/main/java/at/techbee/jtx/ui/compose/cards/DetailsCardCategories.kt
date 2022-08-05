@@ -82,7 +82,8 @@ fun DetailsCardCategories(
                             trailingIcon = {
                                 if (isEditMode.value)
                                     Icon(Icons.Outlined.Close, stringResource(id = R.string.delete))
-                            }
+                            },
+                            selected = false
                         )
                     }
                 }
@@ -103,7 +104,8 @@ fun DetailsCardCategories(
                                     Icons.Outlined.NewLabel,
                                     stringResource(id = R.string.add)
                                 )
-                            }
+                            },
+                            selected = false
                         )
                     }
 
@@ -120,7 +122,8 @@ fun DetailsCardCategories(
                                             Icons.Outlined.NewLabel,
                                             stringResource(id = R.string.add)
                                         )
-                                }
+                                },
+                                selected = false
                             )
                         }
                 }

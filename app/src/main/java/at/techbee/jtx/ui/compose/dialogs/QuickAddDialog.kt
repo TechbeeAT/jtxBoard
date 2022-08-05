@@ -45,6 +45,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuickAddDialog(
     module: Module,
