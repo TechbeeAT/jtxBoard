@@ -89,8 +89,8 @@ fun DetailsCardContact(
 fun DetailsCardContact_Preview() {
     MaterialTheme {
         DetailsCardContact(
-            contact = mutableStateOf("John Doe, +1 555 5545"),
-            isEditMode = mutableStateOf(false),
+            contact = remember { mutableStateOf("John Doe, +1 555 5545") },
+            isEditMode = remember { mutableStateOf(false) },
             onContactUpdated = { /*TODO*/ }
         )
     }
@@ -102,8 +102,8 @@ fun DetailsCardContact_Preview() {
 fun DetailsCardContact_Preview_edit() {
     MaterialTheme {
         DetailsCardContact(
-            contact = mutableStateOf("John Doe, +1 555 5545"),
-            isEditMode = mutableStateOf(true),
+            contact = remember { mutableStateOf("John Doe, +1 555 5545") },
+            isEditMode = remember { mutableStateOf(true) },
             onContactUpdated = { /*TODO*/ }
         )
     }

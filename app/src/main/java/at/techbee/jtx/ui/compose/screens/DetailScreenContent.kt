@@ -345,8 +345,8 @@ fun DetailScreenContent(
             AnimatedVisibility((location.value.isNotEmpty() || (geoLat.value != null && geoLong.value != null)) || isEditMode.value) {
                 DetailsCardLocation(
                     location = location,
-                    geoLat = geoLat.value,
-                    geoLong = geoLong.value,
+                    geoLat = geoLat,
+                    geoLong = geoLong,
                     isEditMode = isEditMode,
                     onLocationUpdated = { /*TODO*/ },
                 )
@@ -372,8 +372,8 @@ fun DetailScreenContent_JOURNAL() {
         )
 
         DetailScreenContent(
-            iCalEntity = mutableStateOf(entity),
-            isEditMode = mutableStateOf(false),
+            iCalEntity = remember { mutableStateOf(entity) },
+            isEditMode = remember { mutableStateOf(false) },
             subtasks = emptyList(),
             subnotes = emptyList(),
             //attachments = emptyList(),
@@ -399,8 +399,8 @@ fun DetailScreenContent_TODO_editInitially() {
         entity.property.contact = "John Doe, +1 555 5545"
 
         DetailScreenContent(
-            iCalEntity = mutableStateOf(entity),
-            isEditMode = mutableStateOf(true),
+            iCalEntity = remember { mutableStateOf(entity) },
+            isEditMode = remember { mutableStateOf(true) },
             subtasks = emptyList(),
             subnotes = emptyList(),
             //attachments = emptyList(),

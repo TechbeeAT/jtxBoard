@@ -174,8 +174,6 @@ dependencies {
     //implementation "com.huawei.hms:ads-lite:13.4.49.301"
     huaweiImplementation "com.huawei.hms:ads-consent:3.4.49.301"
 
-    gplayImplementation "com.google.android.gms:play-services-maps:18.0.2"
-
     // Workmanager support
     implementation("androidx.work:work-runtime-ktx:$version_work")
 
@@ -242,7 +240,10 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0-rc02"
     implementation "androidx.navigation:navigation-compose:2.5.1"
-    implementation  "com.google.maps.android:maps-compose:2.2.0"
+
+    // Google Maps
+    gplayImplementation  "com.google.maps.android:maps-compose:2.2.0"
+    gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
 
     //implementation "androidx.compose.ui:ui-viewbinding:$version_compose"     // to inflate XML view containers
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"
