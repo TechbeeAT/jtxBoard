@@ -10,8 +10,11 @@ package at.techbee.jtx.ui.compose.cards
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,6 +27,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -32,9 +37,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Category
+import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun DetailsCardCategories(
     categories: MutableState<List<Category>>,
@@ -47,6 +53,8 @@ fun DetailsCardCategories(
     val headline = stringResource(id = R.string.categories)
     val newCategory = remember { mutableStateOf("") }
 
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val coroutineScope = rememberCoroutineScope()
 
 
     ElevatedCard(modifier = modifier) {
@@ -111,11 +119,16 @@ fun DetailsCardCategories(
                                     stringResource(id = R.string.add)
                                 )
                             },
-                            selected = false
+                            selected = false,
+                            modifier = Modifier.onPlaced {
+                                coroutineScope.launch {
+                                    bringIntoViewRequester.bringIntoView()
+                                }
+                            }
                         )
                     }
 
-                    allCategories.filter { all -> all.text.contains(newCategory.value) && categories.value.none { existing -> existing.text == all.text }}
+                    allCategories.filter { all -> all.text.lowercase().contains(newCategory.value.lowercase()) && categories.value.none { existing -> existing.text.lowercase() == all.text.lowercase() }}
                         .forEach { category ->
                             InputChip(
                                 onClick = {
@@ -158,7 +171,7 @@ fun DetailsCardCategories(
                             /* TODO */
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().bringIntoViewRequester(bringIntoViewRequester),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
                             if(newCategory.value.isNotEmpty() && categories.value.none { existing -> existing.text == newCategory.value } )
@@ -177,8 +190,8 @@ fun DetailsCardCategories(
 fun DetailsCardCategories_Preview() {
     MaterialTheme {
         DetailsCardCategories(
-            categories = mutableStateOf(listOf(Category(text = "asdf"))),
-            isEditMode = mutableStateOf(false),
+            categories = remember { mutableStateOf(listOf(Category(text = "asdf"))) },
+            isEditMode = remember { mutableStateOf(false) },
             allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")),
             onCategoriesUpdated = { /*TODO*/ }
         )
@@ -191,8 +204,8 @@ fun DetailsCardCategories_Preview() {
 fun DetailsCardCategories_Preview_edit() {
     MaterialTheme {
         DetailsCardCategories(
-            categories = mutableStateOf(listOf(Category(text = "asdf"))),
-            isEditMode = mutableStateOf(true),
+            categories = remember { mutableStateOf(listOf(Category(text = "asdf"))) },
+            isEditMode = remember { mutableStateOf(true) },
             allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")),
             onCategoriesUpdated = { /*TODO*/ }
         )
