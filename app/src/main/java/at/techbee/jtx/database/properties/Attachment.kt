@@ -16,6 +16,7 @@ import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
+import android.os.FileUriExposedException
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
@@ -285,6 +286,13 @@ data class Attachment (
                 Toast.makeText(
                     context,
                     context.getText(R.string.attachment_error_no_app_found_to_open_file_or_uri),
+                    Toast.LENGTH_LONG
+                ).show()
+            } catch (e: FileUriExposedException) {
+                Log.i("FileUriExposed", "File Uri cannot be accessed\n$e")
+                Toast.makeText(
+                    context,
+                    "This file Uri cannot be accessed.",
                     Toast.LENGTH_LONG
                 ).show()
             }
