@@ -16,15 +16,16 @@ import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
-import android.os.FileUriExposedException
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
 import android.util.Size
-import android.view.View
 import android.widget.Toast
 import androidx.annotation.Nullable
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import androidx.work.*
 import at.techbee.jtx.FileCleanupJob
 import at.techbee.jtx.R
@@ -288,7 +289,7 @@ data class Attachment (
                     context.getText(R.string.attachment_error_no_app_found_to_open_file_or_uri),
                     Toast.LENGTH_LONG
                 ).show()
-            } catch (e: FileUriExposedException) {
+            } catch (e: Exception) {     // catches actually FileUriExposedException, but this is only available from SDK lvl 23
                 Log.i("FileUriExposed", "File Uri cannot be accessed\n$e")
                 Toast.makeText(
                     context,
@@ -332,9 +333,9 @@ data class Attachment (
             } catch (e: java.lang.NullPointerException) {
                 Log.i("UriEmpty", "Uri was empty or could not be parsed.")
             } catch (e: FileNotFoundException) {
-                Log.d("FileNotFound", "File with uri ${uri} not found.\n$e")
+                Log.d("FileNotFound", "File with uri $uri not found.\n$e")
             } catch (e: ImageDecoder.DecodeException) {
-                Log.i("ImageThumbnail", "Could not retrieve image thumbnail from file ${uri}")
+                Log.i("ImageThumbnail", "Could not retrieve image thumbnail from file $uri")
             }
         }
         return null
