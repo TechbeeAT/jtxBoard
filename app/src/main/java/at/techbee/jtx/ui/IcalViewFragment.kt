@@ -11,6 +11,7 @@ package at.techbee.jtx.ui
 import android.accounts.Account
 import android.app.AlertDialog
 import android.app.Application
+import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Intent
 import android.content.SharedPreferences
@@ -758,9 +759,15 @@ class IcalViewFragment : Fragment() {
                         Log.d("shareIntent", shareText)
 
                         // start the intent when the file is ready
-                        startActivity(Intent(shareIntent))
-                        icalViewViewModel.icsFileWritten.removeObservers(viewLifecycleOwner)
-                        icalViewViewModel.icsFileWritten.postValue(null)
+                        try {
+                            startActivity(Intent(shareIntent))
+                        } catch (e: ActivityNotFoundException) {
+                            Log.i("ActivityNotFound", "No activity found to send this entry.")
+                            Toast.makeText(requireContext(), "No app found to send this entry.", Toast.LENGTH_SHORT).show()
+                        } finally {
+                            icalViewViewModel.icsFileWritten.removeObservers(viewLifecycleOwner)
+                            icalViewViewModel.icsFileWritten.postValue(null)
+                        }
                     }
                 }
             }
@@ -770,15 +777,30 @@ class IcalViewFragment : Fragment() {
                     if(ics.isNullOrEmpty())
                         return@observe
 
-                    val shareIntent = Intent().apply {
+                    val icsShareIntent = Intent().apply {
                         action = Intent.ACTION_SEND
                         type = "text/calendar"
-                        //putExtra(Intent.EXTRA_TEXT, ics)
-                        putExtra(Intent.EXTRA_STREAM, ics)
                     }
-                    startActivity(Intent(shareIntent))
-                    icalViewViewModel.icsFormat.removeObservers(viewLifecycleOwner)
-                    icalViewViewModel.icsFormat.postValue(null)
+
+                    try {
+                        val icsFileName = "${requireContext().externalCacheDir}/ics_file.ics"
+                        val icsFile = File(icsFileName).apply {
+                            this.writeBytes(ics.toByteArray())
+                            createNewFile()
+                        }
+                        val uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, icsFile)
+                        icsShareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                        startActivity(Intent(icsShareIntent))
+                    } catch (e: ActivityNotFoundException) {
+                        Log.i("ActivityNotFound", "No activity found to open file.")
+                        Toast.makeText(requireContext(), "No app found to open this file.", Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        Log.i("fileprovider", "Failed to attach ICS File")
+                        Toast.makeText(requireContext(), "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
+                    } finally {
+                        icalViewViewModel.icsFormat.removeObservers(viewLifecycleOwner)
+                        icalViewViewModel.icsFormat.postValue(null)
+                    }
                 }
             }
             R.id.menu_view_copy_as_journal -> this.findNavController().navigate(
