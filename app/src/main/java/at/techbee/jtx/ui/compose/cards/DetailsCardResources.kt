@@ -20,8 +20,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.NewLabel
+import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -34,23 +34,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
 import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun DetailsCardCategories(
-    categories: MutableState<List<Category>>,
+fun DetailsCardResources(
+    resources: MutableState<List<Resource>>,
     isEditMode: MutableState<Boolean>,
-    allCategories: List<Category>,
-    onCategoriesUpdated: () -> Unit,
+    allResources: List<Resource>,
+    onResourcesUpdated: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    val headline = stringResource(id = R.string.categories)
-    val newCategory = remember { mutableStateOf("") }
+    val headline = stringResource(id = R.string.resources)
+    val newResource = remember { mutableStateOf("") }
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -63,25 +63,21 @@ fun DetailsCardCategories(
                 .padding(8.dp),
         ) {
 
-            HeadlineWithIcon(icon = Icons.Outlined.Label, iconDesc = headline, text = headline)
+            HeadlineWithIcon(icon = Icons.Outlined.WorkOutline, iconDesc = headline, text = headline)
 
-            AnimatedVisibility(categories.value.isNotEmpty()) {
+            AnimatedVisibility(resources.value.isNotEmpty()) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState())
                 ) {
-                    categories.value.asReversed().forEach { category ->
+                    resources.value.asReversed().forEach { resource ->
                         InputChip(
                             onClick = {
-                                categories.value = categories.value.filter { it != category }
+                                resources.value = resources.value.filter { it != resource }
                             },
-                            label = { Text(category.text) },
-                            /* leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.Label,
-                                    stringResource(id = R.string.categories)
-                                )
-                            }, */
+                            label = { Text(resource.text?:"") },
                             trailingIcon = {
                                 if (isEditMode.value)
                                     Icon(Icons.Outlined.Close, stringResource(id = R.string.delete))
@@ -92,19 +88,21 @@ fun DetailsCardCategories(
                 }
             }
 
-            AnimatedVisibility(newCategory.value.isNotEmpty()) {
+            AnimatedVisibility(newResource.value.isNotEmpty()) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState())
                 ) {
 
-                    if(categories.value.none { existing -> existing.text == newCategory.value }) {
+                    if(resources.value.none { existing -> existing.text == newResource.value }) {
                         InputChip(
                             onClick = {
-                                categories.value = categories.value.plus(Category(text = newCategory.value))
-                                //newCategory.value = ""
+                                resources.value = resources.value.plus(Resource(text = newResource.value))
+                                //newResource.value = ""
                             },
-                            label = { Text(newCategory.value) },
+                            label = { Text(newResource.value) },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.NewLabel,
@@ -120,14 +118,14 @@ fun DetailsCardCategories(
                         )
                     }
 
-                    allCategories.filter { all -> all.text.lowercase().contains(newCategory.value.lowercase()) && categories.value.none { existing -> existing.text.lowercase() == all.text.lowercase() }}
-                        .forEach { category ->
+                    allResources.filter { all -> all.text?.lowercase()?.contains(newResource.value.lowercase()) == true && resources.value.none { existing -> existing.text?.lowercase() == all.text?.lowercase() }}
+                        .forEach { resource ->
                             InputChip(
                                 onClick = {
-                                    categories.value = categories.value.plus(Category(text = category.text))
-                                    //newCategory.value = ""
+                                    resources.value = resources.value.plus(Resource(text = resource.text))
+                                    //newResource.value = ""
                                 },
-                                label = { Text(category.text) },
+                                label = { Text(resource.text?: "") },
                                 leadingIcon = {
                                         Icon(
                                             Icons.Outlined.NewLabel,
@@ -144,11 +142,11 @@ fun DetailsCardCategories(
                 if (it.value) {
 
                     OutlinedTextField(
-                        value = newCategory.value,
-                        leadingIcon = { Icon(Icons.Outlined.Label, headline) },
+                        value = newResource.value,
+                        leadingIcon = { Icon(Icons.Outlined.WorkOutline, headline) },
                         trailingIcon = {
-                            if (newCategory.value.isNotEmpty()) {
-                                IconButton(onClick = { newCategory.value = "" }) {
+                            if (newResource.value.isNotEmpty()) {
+                                IconButton(onClick = { newResource.value = "" }) {
                                     Icon(
                                         Icons.Outlined.Close,
                                         stringResource(id = R.string.delete)
@@ -158,17 +156,19 @@ fun DetailsCardCategories(
                         },
                         singleLine = true,
                         label = { Text(headline) },
-                        onValueChange = { newCategoryName ->
-                            newCategory.value = newCategoryName
+                        onValueChange = { newResourceName ->
+                            newResource.value = newResourceName
                             /* TODO */
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
-                        modifier = Modifier.fillMaxWidth().bringIntoViewRequester(bringIntoViewRequester),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .bringIntoViewRequester(bringIntoViewRequester),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
-                            if(newCategory.value.isNotEmpty() && categories.value.none { existing -> existing.text == newCategory.value } )
-                                categories.value = categories.value.plus(Category(text = newCategory.value))
-                            newCategory.value = ""
+                            if(newResource.value.isNotEmpty() && resources.value.none { existing -> existing.text == newResource.value } )
+                                resources.value = resources.value.plus(Resource(text = newResource.value))
+                            newResource.value = ""
                         })
                     )
                 }
@@ -179,13 +179,13 @@ fun DetailsCardCategories(
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardCategories_Preview() {
+fun DetailsCardResources_Preview() {
     MaterialTheme {
-        DetailsCardCategories(
-            categories = remember { mutableStateOf(listOf(Category(text = "asdf"))) },
+        DetailsCardResources(
+            resources = remember { mutableStateOf(listOf(Resource(text = "asdf"))) },
             isEditMode = remember { mutableStateOf(false) },
-            allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")),
-            onCategoriesUpdated = { /*TODO*/ }
+            allResources = listOf(Resource(text = "projector"), Resource(text = "overhead-thingy"), Resource(text = "Whatever")),
+            onResourcesUpdated = { /*TODO*/ }
         )
     }
 }
@@ -193,13 +193,13 @@ fun DetailsCardCategories_Preview() {
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardCategories_Preview_edit() {
+fun DetailsCardResources_Preview_edit() {
     MaterialTheme {
-        DetailsCardCategories(
-            categories = remember { mutableStateOf(listOf(Category(text = "asdf"))) },
+        DetailsCardResources(
+            resources = remember { mutableStateOf(listOf(Resource(text = "asdf"))) },
             isEditMode = remember { mutableStateOf(true) },
-            allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")),
-            onCategoriesUpdated = { /*TODO*/ }
+            allResources = listOf(Resource(text = "projector"), Resource(text = "overhead-thingy"), Resource(text = "Whatever")),
+            onResourcesUpdated = { /*TODO*/ }
         )
     }
 }

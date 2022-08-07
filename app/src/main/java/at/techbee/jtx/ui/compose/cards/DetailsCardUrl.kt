@@ -11,16 +11,14 @@ package at.techbee.jtx.ui.compose.cards
 import android.content.ActivityNotFoundException
 import android.util.Log
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
-import androidx.compose.material.icons.outlined.ContactMail
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
@@ -28,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
 import at.techbee.jtx.util.UiUtil
 
 
@@ -63,14 +62,7 @@ fun DetailsCardUrl(
                 if(!it.value) {
 
                     Column {
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(Icons.Outlined.Link, headline)
-                            Text(headline, style = MaterialTheme.typography.titleMedium)
-                        }
+                        HeadlineWithIcon(icon = Icons.Outlined.Link, iconDesc = headline, text = headline)
                         Text(url.value)
                     }
                 } else {
@@ -112,8 +104,8 @@ fun DetailsCardUrl(
 fun DetailsCardUrl_Preview() {
     MaterialTheme {
         DetailsCardUrl(
-            url = mutableStateOf("www.orf.at"),
-            isEditMode = mutableStateOf(false),
+            url = remember { mutableStateOf("www.orf.at") },
+            isEditMode = remember { mutableStateOf(false) },
             onUrlUpdated = { /*TODO*/ }
         )
     }
@@ -125,8 +117,8 @@ fun DetailsCardUrl_Preview() {
 fun DetailsCardUrl_Preview_edit() {
     MaterialTheme {
         DetailsCardUrl(
-            url = mutableStateOf("www.bitfire.at"),
-            isEditMode = mutableStateOf(true),
+            url = remember { mutableStateOf("www.bitfire.at") },
+            isEditMode = remember { mutableStateOf(true) },
             onUrlUpdated = { /*TODO*/ }
         )
     }

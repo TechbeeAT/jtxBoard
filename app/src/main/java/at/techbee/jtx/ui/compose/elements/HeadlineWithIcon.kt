@@ -52,7 +52,7 @@ fun HeadlineWithIcon(icon: ImageVector, iconDesc: String, text: String, modifier
 @Preview(showBackground = true)
 @Composable
 fun HeadlineWithIcon_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         HeadlineWithIcon(Icons.Outlined.Folder, "Collections", "Collections")
     }
 }

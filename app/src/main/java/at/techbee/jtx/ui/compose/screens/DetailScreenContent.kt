@@ -39,9 +39,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.compose.cards.*
@@ -83,6 +82,8 @@ fun DetailScreenContent(
     var classification by remember { mutableStateOf(iCalEntity.value.property.classification) }
     var priority by remember { mutableStateOf(iCalEntity.value.property.priority ?: 0) }
     val categories = remember { mutableStateOf(iCalEntity.value.categories ?: emptyList()) }
+    val resources = remember { mutableStateOf(iCalEntity.value.resources ?: emptyList()) }
+
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -323,6 +324,15 @@ fun DetailScreenContent(
                     isEditMode = isEditMode,
                     onCategoriesUpdated = { /*TODO*/ },
                     allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")), // TODO
+                )
+            }
+
+            AnimatedVisibility(resources.value.isNotEmpty() || isEditMode.value) {
+                DetailsCardResources(
+                    resources = resources,
+                    isEditMode = isEditMode,
+                    onResourcesUpdated = { /*TODO*/ },
+                    allResources = listOf(Resource(text = "projector"), Resource(text = "overhead-thingy"), Resource(text = "Whatever")),
                 )
             }
 

@@ -12,10 +12,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Clear
-import androidx.compose.material.icons.outlined.EditLocation
-import androidx.compose.material.icons.outlined.Map
-import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -26,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
@@ -56,14 +54,7 @@ fun DetailsCardLocation(
                 if(!it.value) {
 
                     Column {
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(Icons.Outlined.Place, headline)
-                            Text(headline, style = MaterialTheme.typography.titleMedium)
-                        }
+                        HeadlineWithIcon(icon = Icons.Outlined.Place, iconDesc = headline, text = headline)
                         Text(location.value)
                     }
                 } else {

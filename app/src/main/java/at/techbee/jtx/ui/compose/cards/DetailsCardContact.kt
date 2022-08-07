@@ -16,13 +16,13 @@ import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.ContactMail
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +34,7 @@ fun DetailsCardContact(
     modifier: Modifier = Modifier
 ) {
 
-    val contactHeadline = stringResource(id = R.string.contact)
+    val headline = stringResource(id = R.string.contact)
 
 
     ElevatedCard(modifier = modifier) {
@@ -47,20 +47,13 @@ fun DetailsCardContact(
                 if(!it.value) {
 
                     Column {
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(Icons.Outlined.ContactMail, contactHeadline, modifier = Modifier.size(16.dp))
-                            Text(contactHeadline, style = MaterialTheme.typography.labelLarge)
-                        }
+                        HeadlineWithIcon(icon = Icons.Outlined.ContactMail, iconDesc = headline, text = headline)
                         Text(contact.value)
                     }
                 } else {
                     OutlinedTextField(
                         value = contact.value,
-                        leadingIcon = { Icon(Icons.Outlined.ContactMail, contactHeadline) },
+                        leadingIcon = { Icon(Icons.Outlined.ContactMail, headline) },
                         trailingIcon = {
                             IconButton(onClick = {
                                 contact.value = ""
@@ -69,7 +62,7 @@ fun DetailsCardContact(
                                 Icon(Icons.Outlined.Clear, stringResource(id = R.string.delete))
                         }},
                         singleLine = true,
-                        label = { Text(contactHeadline) },
+                        label = { Text(headline) },
                         onValueChange = {
                                         contact.value = it
                                         /* TODO */ },
