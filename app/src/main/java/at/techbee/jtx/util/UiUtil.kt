@@ -40,7 +40,7 @@ object UiUtil {
         val order = ContactsContract.Contacts.DISPLAY_NAME
         val filter = ContactsContract.CommonDataKinds.Email.DATA + " LIKE '%$searchString%' " +
                 "OR " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%$searchString%'"
-        val cur = cr.query(
+        cr.query(
             ContactsContract.CommonDataKinds.Email.CONTENT_URI,
             projection,
             filter,

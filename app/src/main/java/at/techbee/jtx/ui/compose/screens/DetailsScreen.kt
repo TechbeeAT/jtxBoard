@@ -59,8 +59,8 @@ fun DetailsScreen(
     val enableAlarms = rememberSaveable { mutableStateOf(false) }
     val enableComments = rememberSaveable { mutableStateOf(false) }
 
-    val isEditMode = mutableStateOf(false)
-    val isReadOnly = mutableStateOf(false)
+    val isEditMode = rememberSaveable { mutableStateOf(false) }
+    val isReadOnly = rememberSaveable { mutableStateOf(false) }
 
 
     Scaffold(
@@ -105,7 +105,7 @@ fun DetailsScreen(
                         )
 
                         DetailScreenContent(
-                            iCalEntity = mutableStateOf(entity),
+                            iCalEntity = remember { mutableStateOf(entity) },
                             isEditMode = isEditMode,
                             subtasks = emptyList(),
                             subnotes = emptyList(),

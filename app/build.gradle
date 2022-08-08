@@ -250,5 +250,8 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$version_compose"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$version_compose"
 
+    // permissions from accompanist
+    implementation 'com.google.accompanist:accompanist-permissions:0.25.0'
+
 }
 

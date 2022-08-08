@@ -9,8 +9,6 @@
 package at.techbee.jtx.ui.compose.cards
 
 import android.Manifest
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -39,10 +37,13 @@ import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.ui.compose.dialogs.RequestContactsPermissionDialog
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
 import at.techbee.jtx.util.UiUtil
+import com.google.accompanist.permissions.*
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+    ExperimentalPermissionsApi::class
+)
 @Composable
 fun DetailsCardContact(
     contact: MutableState<String>,
@@ -51,14 +52,14 @@ fun DetailsCardContact(
     modifier: Modifier = Modifier
 ) {
 
+    val context = LocalContext.current
+
     val headline = stringResource(id = R.string.contact)
-    var showContactsPermissionDialog by remember { mutableStateOf(false) }
-    var contactsPermissionDialogShown by rememberSaveable { mutableStateOf(false) }
-    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {  }
+    val permissionState = rememberPermissionState(permission = Manifest.permission.READ_CONTACTS)
+    var showContactsPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
     var searchContacts = emptyList<Attendee>()
 
 
@@ -81,7 +82,8 @@ fun DetailsCardContact(
                         AnimatedVisibility(contact.value.isNotEmpty() && searchContacts.isNotEmpty()) {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
                                     .horizontalScroll(rememberScrollState())
                             ) {
 
@@ -117,7 +119,8 @@ fun DetailsCardContact(
                                     contact.value = ""
                                     /*TODO*/
                                 }) {
-                                    Icon(Icons.Outlined.Clear, stringResource(id = R.string.delete))
+                                    if(contact.value.isNotEmpty())
+                                        Icon(Icons.Outlined.Clear, stringResource(id = R.string.delete))
                                 }
                             },
                             singleLine = true,
@@ -126,7 +129,7 @@ fun DetailsCardContact(
                                 contact.value = newValue
 
                                 coroutineScope.launch {
-                                    if(newValue.length >= 3)
+                                    if(newValue.length >= 3 && permissionState.status.isGranted)
                                         searchContacts = UiUtil.getLocalContacts(context, newValue)
                                     else
                                         emptyList<Attendee>()
@@ -137,9 +140,8 @@ fun DetailsCardContact(
                                 .fillMaxWidth()
                                 .border(0.dp, Color.Transparent)
                                 .onFocusChanged { focusState ->
-                                    if (focusState.hasFocus && !showContactsPermissionDialog && !contactsPermissionDialogShown) {
+                                    if (focusState.hasFocus && !permissionState.status.shouldShowRationale && !permissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
                                         showContactsPermissionDialog = true
-                                        contactsPermissionDialogShown = true
                                     }
                                 }
                                 .bringIntoViewRequester(bringIntoViewRequester)
@@ -152,7 +154,7 @@ fun DetailsCardContact(
 
     if(showContactsPermissionDialog) {
         RequestContactsPermissionDialog(
-            onConfirm = { permissionLauncher.launch(Manifest.permission.READ_CONTACTS) },
+            onConfirm = { permissionState.launchPermissionRequest() },
             onDismiss = { showContactsPermissionDialog = false })
     }
 }

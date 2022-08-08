@@ -155,8 +155,7 @@ fun MainNavHost(
 
     val navController = rememberNavController()
 
-    Scaffold {
-
+    Scaffold { paddingValues ->
 
         NavHost(
             navController = navController,
