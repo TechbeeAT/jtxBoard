@@ -24,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,10 +59,12 @@ fun DetailScreenContent(
 
     val context = LocalContext.current
     var permissionsDialogShownOnce by rememberSaveable { mutableStateOf(false) }  // TODO: Set to false for release!
+    if(LocalInspectionMode.current)  // only for previews
+        permissionsDialogShownOnce = true
 
     var summary by remember { mutableStateOf(iCalEntity.value.property.summary ?: "") }
     var description by remember { mutableStateOf(iCalEntity.value.property.description ?: "") }
-    var contact = remember { mutableStateOf(iCalEntity.value.property.contact ?: "") }
+    val contact = remember { mutableStateOf(iCalEntity.value.property.contact ?: "") }
     val url = remember { mutableStateOf(iCalEntity.value.property.url ?: "") }
     val location = remember { mutableStateOf(iCalEntity.value.property.location ?: "") }
     val geoLat = remember { mutableStateOf(iCalEntity.value.property.geoLat) }
