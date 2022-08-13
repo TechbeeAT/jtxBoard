@@ -29,6 +29,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,9 +54,10 @@ fun DetailsCardContact(
 ) {
 
     val context = LocalContext.current
+    // preview would break if rememberPermissionState is used for preview, so we set it to null only for preview!
+    val contactsPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.READ_CONTACTS) else null
 
     val headline = stringResource(id = R.string.contact)
-    val permissionState = rememberPermissionState(permission = Manifest.permission.READ_CONTACTS)
     var showContactsPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
@@ -129,7 +131,7 @@ fun DetailsCardContact(
                                 contact.value = newValue
 
                                 coroutineScope.launch {
-                                    if(newValue.length >= 3 && permissionState.status.isGranted)
+                                    if(newValue.length >= 3 && contactsPermissionState?.status?.isGranted == true)
                                         searchContacts = UiUtil.getLocalContacts(context, newValue)
                                     else
                                         emptyList<Attendee>()
@@ -140,7 +142,7 @@ fun DetailsCardContact(
                                 .fillMaxWidth()
                                 .border(0.dp, Color.Transparent)
                                 .onFocusChanged { focusState ->
-                                    if (focusState.hasFocus && !permissionState.status.shouldShowRationale && !permissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
+                                    if (focusState.hasFocus && contactsPermissionState?.status?.shouldShowRationale == false && !contactsPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
                                         showContactsPermissionDialog = true
                                     }
                                 }
@@ -154,7 +156,7 @@ fun DetailsCardContact(
 
     if(showContactsPermissionDialog) {
         RequestContactsPermissionDialog(
-            onConfirm = { permissionState.launchPermissionRequest() },
+            onConfirm = { contactsPermissionState?.launchPermissionRequest() },
             onDismiss = { showContactsPermissionDialog = false })
     }
 }
