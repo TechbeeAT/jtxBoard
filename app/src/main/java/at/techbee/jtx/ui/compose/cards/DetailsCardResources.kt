@@ -74,13 +74,15 @@ fun DetailsCardResources(
                 ) {
                     resources.value.asReversed().forEach { resource ->
                         InputChip(
-                            onClick = {
-                                resources.value = resources.value.filter { it != resource }
-                            },
+                            onClick = { },
                             label = { Text(resource.text?:"") },
                             trailingIcon = {
                                 if (isEditMode.value)
-                                    Icon(Icons.Outlined.Close, stringResource(id = R.string.delete))
+                                    IconButton(
+                                        onClick = { resources.value = resources.value.filter { it != resource } },
+                                        content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
+                                        modifier = Modifier.size(24.dp)
+                                    )
                             },
                             selected = false
                         )

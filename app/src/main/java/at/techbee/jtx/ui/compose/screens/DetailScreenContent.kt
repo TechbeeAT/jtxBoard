@@ -58,9 +58,6 @@ fun DetailScreenContent(
 ) {
 
     val context = LocalContext.current
-    var permissionsDialogShownOnce by rememberSaveable { mutableStateOf(false) }  // TODO: Set to false for release!
-    if(LocalInspectionMode.current)  // only for previews
-        permissionsDialogShownOnce = true
 
     var summary by remember { mutableStateOf(iCalEntity.value.property.summary ?: "") }
     var description by remember { mutableStateOf(iCalEntity.value.property.description ?: "") }
@@ -74,14 +71,8 @@ fun DetailScreenContent(
     var priority by remember { mutableStateOf(iCalEntity.value.property.priority ?: 0) }
     val categories = remember { mutableStateOf(iCalEntity.value.categories ?: emptyList()) }
     val resources = remember { mutableStateOf(iCalEntity.value.resources ?: emptyList()) }
+    val attendees = remember { mutableStateOf(iCalEntity.value.attendees ?: emptyList()) }
 
-
-    if (!permissionsDialogShownOnce) {
-        RequestContactsPermissionDialog(
-            onConfirm = { permissionsDialogShownOnce = true },
-            onDismiss = { permissionsDialogShownOnce = true }
-        )
-    }
 
     /*
     var markwon = Markwon.builder(LocalContext.current)
@@ -322,6 +313,14 @@ fun DetailScreenContent(
                     contact = contact,
                     isEditMode = isEditMode,
                     onContactUpdated = { /*TODO*/ },
+                )
+            }
+
+            AnimatedVisibility(attendees.value.isNotEmpty() || isEditMode.value) {
+                DetailsCardAttendees(
+                    attendees = attendees,
+                    isEditMode = isEditMode,
+                    onAttendeesUpdated = { /*TODO*/ }
                 )
             }
 

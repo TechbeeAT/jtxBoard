@@ -1708,11 +1708,7 @@ class IcalEditFragment : Fragment() {
             false
         ) as Chip
         attendeeChip.text = attendee.getDisplayString()
-        attendeeChip.chipIcon = ResourcesCompat.getDrawable(
-            resources,
-            Role.getDrawableResourceByName(attendee.role),
-            null
-        )
+
         binding.editFragmentTabCar.editAttendeesChipgroup.addView(attendeeChip)
 
 
@@ -1731,11 +1727,6 @@ class IcalEditFragment : Fragment() {
                             Role.values().getOrNull(which)?.name      // update the roleparam
 
                     attendee.role = Role.values().getOrNull(which)?.name
-                    attendeeChip.chipIcon = ResourcesCompat.getDrawable(
-                        resources, Role.values().getOrNull(which)?.icon
-                            ?: R.drawable.ic_attendee_reqparticipant, null
-                    )
-
                 }
                 .setIcon(R.drawable.ic_attendee)
                 .show()

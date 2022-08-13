@@ -12,6 +12,15 @@ import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
 import androidx.annotation.Nullable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CoPresent
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.core.util.PatternsCompat
 import androidx.room.*
 import at.techbee.jtx.R
@@ -231,6 +240,7 @@ data class Attendee (
         fun getDisplayString() = when {
                         caladdress.removePrefix("mailto:").isNotEmpty() && cn?.isNotBlank() == true -> "$cn <${caladdress.removePrefix("mailto:")}>"
                         caladdress.removePrefix("mailto:").isNotEmpty() -> caladdress.removePrefix("mailto:")
+                        cn?.isNotEmpty() == true -> cn ?: ""
                         else -> ""
         }
 }
@@ -246,21 +256,15 @@ enum class Cutype  {
  * @param [icon] is a reference to the Drawable Resource within JTX
 
  */
-enum class Role (val stringResource: Int, val icon: Int) {
-        CHAIR (R.string.attendee_role_chair, R.drawable.ic_attendee_chair),            //Indicates chair of the calendar entity
-        `REQ-PARTICIPANT`(R.string.attendee_role_required_participant, R.drawable.ic_attendee_reqparticipant),  //Indicates a participant whose participation is required
-        `OPT-PARTICIPANT`(R.string.attendee_role_optional_participant, R.drawable.ic_attendee_optparticipant),  //Indicates a participant whose participation is optional
-        `NON-PARTICIPANT`(R.string.attendee_role_non_participant, R.drawable.ic_attendee_nonparticipant);  //Indicates a participant who is copied for information
+enum class Role (val stringResource: Int, val icon: ImageVector) {
+        CHAIR (R.string.attendee_role_chair, Icons.Default.CoPresent),            //Indicates chair of the calendar entity
+        `REQ-PARTICIPANT`(R.string.attendee_role_required_participant, Icons.Default.Person),  //Indicates a participant whose participation is required
+        `OPT-PARTICIPANT`(R.string.attendee_role_optional_participant, Icons.Outlined.Person),  //Indicates a participant whose participation is optional
+        `NON-PARTICIPANT`(R.string.attendee_role_non_participant, Icons.Default.Info);  //Indicates a participant who is copied for information
 
-
-        companion object {
-                fun getDrawableResourceByName(name: String?): Int {
-                        values().forEach {
-                                if (it.name == name)
-                                        return it.icon
-                        }
-                        return R.drawable.ic_attendee_reqparticipant  // default icon
-                }
+        @Composable
+        fun Icon() {
+                Icon(icon, stringResource(id = stringResource))
         }
 }
 

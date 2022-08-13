@@ -90,6 +90,10 @@ fun DetailsCardContact(
                             ) {
 
                                 searchContacts.forEach { searchContact ->
+
+                                    if(searchContact.getDisplayString() == contact.value)
+                                        return@forEach
+
                                     InputChip(
                                         onClick = {
                                             contact.value = searchContact.getDisplayString()

@@ -72,19 +72,14 @@ fun DetailsCardCategories(
                 ) {
                     categories.value.asReversed().forEach { category ->
                         InputChip(
-                            onClick = {
-                                categories.value = categories.value.filter { it != category }
-                            },
+                            onClick = { },
                             label = { Text(category.text) },
-                            /* leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.Label,
-                                    stringResource(id = R.string.categories)
-                                )
-                            }, */
                             trailingIcon = {
-                                if (isEditMode.value)
-                                    Icon(Icons.Outlined.Close, stringResource(id = R.string.delete))
+                                IconButton(
+                                    onClick = { categories.value = categories.value.filter { it != category } },
+                                    content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
+                                    modifier = Modifier.size(24.dp)
+                                )
                             },
                             selected = false
                         )
