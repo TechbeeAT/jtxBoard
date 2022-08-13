@@ -39,7 +39,7 @@ import at.techbee.jtx.ui.compose.elements.VerticalDateCard
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreenContent(
-    iCalEntity: State<ICalEntity>,
+    iCalEntity: State<ICalEntity?>,
     isEditMode: MutableState<Boolean>,
     subtasks: List<ICal4List>,
     subnotes: List<ICal4List>,
@@ -50,22 +50,24 @@ fun DetailScreenContent(
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
+    if(iCalEntity.value == null)
+        return
 
     val context = LocalContext.current
 
-    var summary by remember { mutableStateOf(iCalEntity.value.property.summary ?: "") }
-    var description by remember { mutableStateOf(iCalEntity.value.property.description ?: "") }
-    val contact = remember { mutableStateOf(iCalEntity.value.property.contact ?: "") }
-    val url = remember { mutableStateOf(iCalEntity.value.property.url ?: "") }
-    val location = remember { mutableStateOf(iCalEntity.value.property.location ?: "") }
-    val geoLat = remember { mutableStateOf(iCalEntity.value.property.geoLat) }
-    val geoLong = remember { mutableStateOf(iCalEntity.value.property.geoLong) }
-    var status by remember { mutableStateOf(iCalEntity.value.property.status) }
-    var classification by remember { mutableStateOf(iCalEntity.value.property.classification) }
-    var priority by remember { mutableStateOf(iCalEntity.value.property.priority ?: 0) }
-    val categories = remember { mutableStateOf(iCalEntity.value.categories ?: emptyList()) }
-    val resources = remember { mutableStateOf(iCalEntity.value.resources ?: emptyList()) }
-    val attendees = remember { mutableStateOf(iCalEntity.value.attendees ?: emptyList()) }
+    var summary by remember { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
+    var description by remember { mutableStateOf(iCalEntity.value?.property?.description ?: "") }
+    val contact = remember { mutableStateOf(iCalEntity.value?.property?.contact ?: "") }
+    val url = remember { mutableStateOf(iCalEntity.value?.property?.url ?: "") }
+    val location = remember { mutableStateOf(iCalEntity.value?.property?.location ?: "") }
+    val geoLat = remember { mutableStateOf(iCalEntity.value?.property?.geoLat) }
+    val geoLong = remember { mutableStateOf(iCalEntity.value?.property?.geoLong) }
+    var status by remember { mutableStateOf(iCalEntity.value?.property?.status) }
+    var classification by remember { mutableStateOf(iCalEntity.value?.property?.classification) }
+    var priority by remember { mutableStateOf(iCalEntity.value?.property?.priority ?: 0) }
+    val categories = remember { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
+    val resources = remember { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
+    val attendees = remember { mutableStateOf(iCalEntity.value?.attendees ?: emptyList()) }
 
 
     /*
@@ -76,7 +78,7 @@ fun DetailScreenContent(
 
     Box(Modifier.verticalScroll(rememberScrollState())) {
 
-        ColoredEdge(iCalEntity.value.property.color, iCalEntity.value.ICalCollection?.color)
+        ColoredEdge(iCalEntity.value?.property?.color, iCalEntity.value?.ICalCollection?.color)
 
         Column(
             modifier = Modifier
@@ -101,7 +103,7 @@ fun DetailScreenContent(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(Icons.Outlined.Folder, stringResource(id = R.string.collection))
-                            Text(iCalEntity.value.ICalCollection?.displayName + iCalEntity.value.ICalCollection?.accountName?.let { " (" + it + ")" })
+                            Text(iCalEntity.value?.ICalCollection?.displayName + iCalEntity.value?.ICalCollection?.accountName?.let { " (" + it + ")" })
                         }
                     }
                 }
@@ -120,7 +122,7 @@ fun DetailScreenContent(
 
                         CollectionsSpinner(
                             collections = allCollections,
-                            preselected = iCalEntity.value.ICalCollection
+                            preselected = iCalEntity.value?.ICalCollection
                                 ?: allCollections.first(),   // TODO: Load last used collection for new entries
                             includeReadOnly = false,
                             includeVJOURNAL = false,
@@ -135,15 +137,15 @@ fun DetailScreenContent(
                 }
             }
 
-            if (iCalEntity.value.property.module == Module.JOURNAL.name && iCalEntity.value.property.dtstart != null) {
+            if (iCalEntity.value?.property?.module == Module.JOURNAL.name && iCalEntity.value?.property?.dtstart != null) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     VerticalDateCard(
-                        datetime = iCalEntity.value.property.dtstart,
-                        timezone = iCalEntity.value.property.dtstartTimezone
+                        datetime = iCalEntity.value?.property?.dtstart,
+                        timezone = iCalEntity.value?.property?.dtstartTimezone
                     )
                 }
             }
@@ -213,7 +215,7 @@ fun DetailScreenContent(
 
                 AssistChip(
                     label = {
-                        if (iCalEntity.value.property.component == Component.VJOURNAL.name)
+                        if (iCalEntity.value?.property?.component == Component.VJOURNAL.name)
                             Text(StatusJournal.getStringResource(context, status) ?: status ?: "-")
                         else
                             Text(StatusTodo.getStringResource(context, status) ?: status ?: "-")
@@ -223,7 +225,7 @@ fun DetailScreenContent(
                             expanded = statusMenuExpanded,
                             onDismissRequest = { statusMenuExpanded = false }
                         ) {
-                            if (iCalEntity.value.property.component == Component.VJOURNAL.name) {
+                            if (iCalEntity.value?.property?.component == Component.VJOURNAL.name) {
                                 StatusJournal.values().forEach { statusJournal ->
                                     DropdownMenuItem(
                                         text = { Text(stringResource(id = statusJournal.stringResource)) },
@@ -291,7 +293,7 @@ fun DetailScreenContent(
                 )
 
                 val priorityStrings = stringArrayResource(id = R.array.priority)
-                if (iCalEntity.value.property.component == Component.VTODO.name) {
+                if (iCalEntity.value?.property?.component == Component.VTODO.name) {
 
                     AssistChip(
                         label = {

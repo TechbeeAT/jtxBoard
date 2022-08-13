@@ -23,11 +23,6 @@ enum class NavigationDrawerDestination (
         iconResource = R.drawable.ic_jtx,
         navigationAction = { navHost, _ -> navHost.navigate(BOARD.name)}
     ),
-    DETAILS( //Exception, not in Navigation Drawer!
-        titleResource = R.string.navigation_drawer_board,
-        iconResource = R.drawable.ic_jtx,
-        navigationAction = { navHost, _ -> navHost.navigate(DETAILS.name)}
-    ),
     COLLECTIONS(
         titleResource = R.string.navigation_drawer_collections,
         icon = Icons.Outlined.Folder,

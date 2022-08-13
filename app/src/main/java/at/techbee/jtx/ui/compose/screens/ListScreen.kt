@@ -3,7 +3,10 @@ package at.techbee.jtx.ui.compose.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
@@ -14,13 +17,15 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation.NavController
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.ViewMode
 import at.techbee.jtx.ui.compose.appbars.ListBottomAppBar
 import at.techbee.jtx.ui.compose.bottomsheets.FilterBottomSheet
 import at.techbee.jtx.ui.compose.bottomsheets.SearchTextBottomSheet
-import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.compose.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.compose.stateholder.SettingsStateHolder
 import kotlinx.coroutines.launch
@@ -39,7 +44,8 @@ fun ListScreen(
     val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val searchTextBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
-    val settingsStateHolder = SettingsStateHolder(LocalContext.current)
+    val context = LocalContext.current
+    val settingsStateHolder = SettingsStateHolder(context)
     val keyboardController = LocalSoftwareKeyboardController.current
     if (!searchTextBottomSheetState.isVisible)         // hide keyboard when bottom sheet is closed (ensure proper back pressed handling)
         keyboardController?.hide()
@@ -71,8 +77,17 @@ fun ListScreen(
                 module = icalListViewModel.module,
                 iCal4ListLive = icalListViewModel.iCal4List,
                 onAddNewEntry = {
-                    navController.navigate(NavigationDrawerDestination.DETAILS.name)
-                    /* TODO */
+                    coroutineScope.launch {
+                        val db = ICalDatabase.getInstance(context).iCalDatabaseDao
+                        val newICalObject = when(icalListViewModel.module) {
+                            Module.JOURNAL -> ICalObject.createJournal()
+                            Module.NOTE -> ICalObject.createNote()
+                            Module.TODO -> ICalObject.createTodo()
+                        }
+                        newICalObject.dirty = false
+                        val newIcalObjectId = db.insertICalObject(newICalObject)
+                        navController.navigate("details/$newIcalObjectId?isEditMode=true")
+                    }
                 },
                 onAddNewQuickEntry = { showQuickAddDialog = true },
                 listSettings = icalListViewModel.listSettings,

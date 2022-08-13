@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,10 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.relations.ICalEntity
+import at.techbee.jtx.ui.DetailViewModel
 import at.techbee.jtx.ui.compose.appbars.DetailBottomAppBar
 import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
@@ -38,6 +37,8 @@ import at.techbee.jtx.ui.compose.appbars.OverflowMenu
 @Composable
 fun DetailsScreen(
     navController: NavHostController,
+    detailViewModel: DetailViewModel,
+    editImmediately: Boolean = false,
     //globalStateHolder: GlobalStateHolder,
     //collectionsViewModel: CollectionsViewModel
 ) {
@@ -59,8 +60,10 @@ fun DetailsScreen(
     val enableAlarms = rememberSaveable { mutableStateOf(false) }
     val enableComments = rememberSaveable { mutableStateOf(false) }
 
-    val isEditMode = rememberSaveable { mutableStateOf(false) }
+    val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     val isReadOnly = rememberSaveable { mutableStateOf(false) }
+
+    val icalEntity = detailViewModel.icalEntity.observeAsState()
 
 
     Scaffold(
@@ -92,7 +95,7 @@ fun DetailsScreen(
                     mainContent = {
 
                                   // for testing only!
-
+/*
                         val entity = ICalEntity().apply {
                             this.property = ICalObject.createJournal("MySummary")
                             //this.property.dtstart = System.currentTimeMillis()
@@ -104,13 +107,19 @@ fun DetailsScreen(
                             Category(3,1,"This is a very long category", null, null),
                         )
 
+ */
+
                         DetailScreenContent(
-                            iCalEntity = remember { mutableStateOf(entity) },
+                            iCalEntity = icalEntity,
                             isEditMode = isEditMode,
                             subtasks = emptyList(),
                             subnotes = emptyList(),
                             //attachments = emptyList(),
-                            allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
+                            allCollections = listOf(
+                                ICalCollection.createLocalCollection(
+                                    LocalContext.current
+                                )
+                            ),
                             //player = null,
                             onProgressChanged = { _, _, _ -> },
                             onExpandedChanged = { _, _, _, _ -> }

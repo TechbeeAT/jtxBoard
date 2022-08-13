@@ -17,14 +17,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.settings.DropdownSettingOption
 import at.techbee.jtx.ui.AboutViewModel
 import at.techbee.jtx.ui.CollectionsViewModel
+import at.techbee.jtx.ui.DetailViewModel
 import at.techbee.jtx.ui.SyncViewModel
 import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.compose.screens.*
@@ -167,9 +170,27 @@ fun MainNavHost(
                     globalStateHolder = globalStateHolder
                 )
             }
-            composable(NavigationDrawerDestination.DETAILS.name) {
+            composable(
+                "details/{icalObjectId}?isEditMode={isEditMode}",
+                arguments = listOf(
+                    navArgument("icalObjectId") { type = NavType.LongType },
+                    navArgument("isEditMode") {
+                        type = NavType.BoolType
+                        defaultValue = false
+                    }
+                )
+            ) { backStackEntry ->
+
+                val icalObjectId = backStackEntry.arguments?.getLong("icalObjectId") ?: return@composable
+                val editImmediately = backStackEntry.arguments?.getBoolean("isEditMode") ?: false
+
+                val detailViewModel: DetailViewModel = viewModel()
+                detailViewModel.load(icalObjectId)
+
                 DetailsScreen(
-                    navController = navController
+                    navController = navController,
+                    detailViewModel = detailViewModel,
+                    editImmediately = editImmediately
                 )
             }
             composable(NavigationDrawerDestination.COLLECTIONS.name) {
