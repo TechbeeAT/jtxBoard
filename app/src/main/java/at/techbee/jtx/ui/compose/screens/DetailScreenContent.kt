@@ -33,7 +33,7 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.compose.cards.*
 import at.techbee.jtx.ui.compose.elements.CollectionsSpinner
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
-import at.techbee.jtx.ui.compose.elements.VerticalDateCard
+import at.techbee.jtx.ui.compose.cards.VerticalDateCard
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -145,7 +145,11 @@ fun DetailScreenContent(
                 ) {
                     VerticalDateCard(
                         datetime = iCalEntity.value?.property?.dtstart,
-                        timezone = iCalEntity.value?.property?.dtstartTimezone
+                        timezone = iCalEntity.value?.property?.dtstartTimezone,
+                        isEditMode = isEditMode,
+                        onDateTimeChanged = { datetime, timezone ->
+                            // TODO: Save new values!
+                        }
                     )
                 }
             }

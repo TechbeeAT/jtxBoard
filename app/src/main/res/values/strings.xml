@@ -50,6 +50,8 @@
     <string name="apply">Apply</string>
     <string name="more">More</string>
     <string name="details">Details</string>
+    <string name="date">Date</string>
+    <string name="timezone">Timezone</string>
     <string name="not_set2">Not set</string>
     <string name="not_available_abbreviation">n/a</string>
     <string name="preferences">Preferences</string>
@@ -124,6 +126,7 @@
     <string name="started">Start(ed)</string>
     <string name="add_time_switch">Add time</string>
     <string name="add_timezone_switch">Add timezone</string>
+    <string name="invalid_timezone_message">Please select a valid timezone!</string>
     <string name="progress">Progress</string>
     <string name="categories">Categories</string>
     <string name="subtasks">Subtasks</string>
