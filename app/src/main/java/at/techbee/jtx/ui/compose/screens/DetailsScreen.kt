@@ -72,7 +72,8 @@ fun DetailsScreen(
     Scaffold(
         topBar = { JtxTopAppBar(
             drawerState = drawerState,
-            title = "TODO",
+            title = stringResource(id = R.string.details),
+            subtitle = detailViewModel.icalEntity.value?.property?.summary,
             actions = {
 
                 val menuExpanded = remember { mutableStateOf(false) }
