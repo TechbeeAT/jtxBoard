@@ -36,7 +36,6 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.settings.DropdownSettingOption
 import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.compose.cards.ICalObjectListCard
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -68,7 +67,7 @@ fun ListScreenList(
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
 
-    val mediaPlayer = MediaPlayer()
+    val mediaPlayer = remember { MediaPlayer() }
 
 
     if(scrollId != null) {
@@ -174,12 +173,12 @@ fun ListScreenList_TODO() {
             subnotesLive = MutableLiveData(emptyMap()),
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
-            isSubtasksExpandedDefault = mutableStateOf(true),
-            isSubnotesExpandedDefault = mutableStateOf(true),
-            isAttachmentsExpandedDefault = mutableStateOf(true),
-            settingShowProgressMaintasks = mutableStateOf(true),
-            settingShowProgressSubtasks = mutableStateOf(true),
-            settingProgressIncrement = mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1),
+            isSubtasksExpandedDefault = remember { mutableStateOf(true) },
+            isSubnotesExpandedDefault = remember { mutableStateOf(true) },
+            isAttachmentsExpandedDefault = remember { mutableStateOf(true) },
+            settingShowProgressMaintasks = remember { mutableStateOf(true) },
+            settingShowProgressSubtasks = remember { mutableStateOf(true) },
+            settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },
@@ -234,12 +233,12 @@ fun ListScreenList_JOURNAL() {
             subnotesLive = MutableLiveData(emptyMap()),
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
-            isSubtasksExpandedDefault = mutableStateOf(false),
-            isSubnotesExpandedDefault = mutableStateOf(false),
-            isAttachmentsExpandedDefault = mutableStateOf(false),
-            settingShowProgressMaintasks = mutableStateOf(false),
-            settingShowProgressSubtasks = mutableStateOf(false),
-            settingProgressIncrement = mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1),
+            isSubtasksExpandedDefault = remember { mutableStateOf(false) },
+            isSubnotesExpandedDefault = remember { mutableStateOf(false) },
+            isAttachmentsExpandedDefault = remember { mutableStateOf(false) },
+            settingShowProgressMaintasks = remember { mutableStateOf(false) },
+            settingShowProgressSubtasks = remember { mutableStateOf(false) },
+            settingProgressIncrement = remember { mutableStateOf(DropdownSettingOption.PROGRESS_STEP_1) },
             onProgressChanged = { _, _, _ -> },
             goToView = { },
             goToEdit = { },

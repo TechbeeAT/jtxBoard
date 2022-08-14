@@ -31,6 +31,7 @@ import at.techbee.jtx.ui.compose.appbars.DetailBottomAppBar
 import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.appbars.OverflowMenu
+import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,12 +41,8 @@ fun DetailsScreen(
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
     //globalStateHolder: GlobalStateHolder,
-    //collectionsViewModel: CollectionsViewModel
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    //val context = LocalContext.current
-
-    //val scope = rememberCoroutineScope()
 
     val enableCategories = rememberSaveable { mutableStateOf(true) }
     val enableAttendees = rememberSaveable { mutableStateOf(false) }
@@ -64,6 +61,12 @@ fun DetailsScreen(
     val isReadOnly = rememberSaveable { mutableStateOf(false) }
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
+
+    if(detailViewModel.entryDeleted.value)
+        navController.navigate(NavigationDrawerDestination.BOARD.name) {
+            launchSingleTop = true
+        }
+
 
 
     Scaffold(
@@ -94,21 +97,6 @@ fun DetailsScreen(
                     drawerState = drawerState,
                     mainContent = {
 
-                                  // for testing only!
-/*
-                        val entity = ICalEntity().apply {
-                            this.property = ICalObject.createJournal("MySummary")
-                            //this.property.dtstart = System.currentTimeMillis()
-                        }
-                        entity.property.description = "Hello World, this \nis my description."
-                        entity.categories = listOf(
-                            Category(1,1,"MyCategory1", null, null),
-                            Category(2,1,"My Dog likes Cats", null, null),
-                            Category(3,1,"This is a very long category", null, null),
-                        )
-
- */
-
                         DetailScreenContent(
                             iCalEntity = icalEntity,
                             isEditMode = isEditMode,
@@ -124,27 +112,6 @@ fun DetailsScreen(
                             onProgressChanged = { _, _, _ -> },
                             onExpandedChanged = { _, _, _, _ -> }
                         )
-
-                        /*
-                        CollectionsScreenContent(
-                            collectionsLive = collectionsViewModel.collections,
-                            isProcessing = collectionsViewModel.isProcessing,
-                            onCollectionChanged = { collection -> collectionsViewModel.saveCollection(collection) },
-                            onCollectionDeleted = { collection -> collectionsViewModel.deleteCollection(collection) },
-                            onEntriesMoved = { old, new -> collectionsViewModel.moveCollectionItems(old.collectionId, new.collectionId) },
-                            onImportFromICS = { collection ->
-                                importCollection.value = collection
-                                launcherImport.launch(arrayOf("text/calendar"))
-                                              },
-                            onExportAsICS = { collection -> collectionsViewModel.requestICSForExport(listOf(collection)) },
-                            onCollectionClicked = { collection ->
-                                if(globalStateHolder.icalString2Import.value?.isNotEmpty() == true)
-                                    importCollection.value = collection
-                            },
-                            onDeleteAccount = { account -> collectionsViewModel.removeAccount(account) }
-                        )
-
-                         */
                     },
                     navController = navController
                 )
@@ -152,7 +119,12 @@ fun DetailsScreen(
         },
         bottomBar = {
             DetailBottomAppBar(
-                module = Module.JOURNAL,   // TODO
+                module = when(detailViewModel.icalEntity.value?.property?.module) {
+                    Module.JOURNAL.name -> Module.JOURNAL
+                    Module.NOTE.name -> Module.NOTE
+                    Module.TODO.name -> Module.TODO
+                    else -> Module.JOURNAL
+                },
                 isEditMode = isEditMode,
                 isReadOnly = isReadOnly,
                 enableCategories = enableCategories,
@@ -166,7 +138,10 @@ fun DetailsScreen(
                 enableAttachments = enableAttachments,
                 enableRecurrence = enableRecurrence,
                 enableAlarms = enableAlarms,
-                enableComments = enableComments
+                enableComments = enableComments,
+                onDeleteClicked = {
+                    detailViewModel.delete()
+                }
             )
         }
     )

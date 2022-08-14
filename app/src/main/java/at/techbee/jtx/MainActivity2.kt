@@ -7,9 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,11 +15,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.settings.DropdownSettingOption
@@ -29,6 +25,7 @@ import at.techbee.jtx.ui.AboutViewModel
 import at.techbee.jtx.ui.CollectionsViewModel
 import at.techbee.jtx.ui.DetailViewModel
 import at.techbee.jtx.ui.SyncViewModel
+import at.techbee.jtx.ui.compose.destinations.DetailDestination
 import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.compose.screens.*
 import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
@@ -148,7 +145,6 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavHost(
     activity: Activity,
@@ -158,99 +154,91 @@ fun MainNavHost(
 
     val navController = rememberNavController()
 
-    Scaffold { paddingValues ->
 
-        NavHost(
-            navController = navController,
-            startDestination = NavigationDrawerDestination.BOARD.name
-        ) {
-            composable(NavigationDrawerDestination.BOARD.name) {
-                ListScreenTabContainer(
-                    navController = navController,
-                    globalStateHolder = globalStateHolder
-                )
-            }
-            composable(
-                "details/{icalObjectId}?isEditMode={isEditMode}",
-                arguments = listOf(
-                    navArgument("icalObjectId") { type = NavType.LongType },
-                    navArgument("isEditMode") {
-                        type = NavType.BoolType
-                        defaultValue = false
-                    }
-                )
-            ) { backStackEntry ->
+    NavHost(
+        navController = navController,
+        startDestination = NavigationDrawerDestination.BOARD.name
+    ) {
+        composable(NavigationDrawerDestination.BOARD.name) {
+            ListScreenTabContainer(
+                navController = navController,
+                globalStateHolder = globalStateHolder
+            )
+        }
+        composable(
+            DetailDestination.Detail.route,
+            arguments = DetailDestination.Detail.args
+        ) { backStackEntry ->
 
-                val icalObjectId = backStackEntry.arguments?.getLong("icalObjectId") ?: return@composable
-                val editImmediately = backStackEntry.arguments?.getBoolean("isEditMode") ?: false
+            val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId) ?: return@composable
+            val editImmediately = backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) ?: false
 
-                val detailViewModel: DetailViewModel = viewModel()
-                detailViewModel.load(icalObjectId)
+            val detailViewModel: DetailViewModel = viewModel()
+            detailViewModel.load(icalObjectId)
 
-                DetailsScreen(
-                    navController = navController,
-                    detailViewModel = detailViewModel,
-                    editImmediately = editImmediately
-                )
-            }
-            composable(NavigationDrawerDestination.COLLECTIONS.name) {
-                val collectionsViewModel: CollectionsViewModel = viewModel()
+            DetailsScreen(
+                navController = navController,
+                detailViewModel = detailViewModel,
+                editImmediately = editImmediately
+            )
+        }
+        composable(NavigationDrawerDestination.COLLECTIONS.name) {
+            val collectionsViewModel: CollectionsViewModel = viewModel()
 
-                CollectionsScreen(
-                    navController = navController,
-                    collectionsViewModel = collectionsViewModel,
-                    globalStateHolder = globalStateHolder
-                )
-            }
-            composable(NavigationDrawerDestination.SYNC.name) {
-                val viewModel: SyncViewModel = viewModel()
-                SyncScreen(
-                    remoteCollectionsLive = viewModel.remoteCollections,
-                    isSyncInProgress = globalStateHolder.isSyncInProgress,
-                    navController = navController)
-            }
-            composable(NavigationDrawerDestination.DONATE.name) { DonateScreen(navController) }
-            composable(NavigationDrawerDestination.ADINFO.name) { AdInfoScreen(navController) }
-            composable(NavigationDrawerDestination.ABOUT.name) {
-                val viewModel: AboutViewModel = viewModel()
-                AboutScreen(
-                    translators = viewModel.translators,
-                    releaseinfo = viewModel.releaseinfos,
-                    navController = navController
-                )
-            }
-            composable(NavigationDrawerDestination.BUYPRO.name) {
-                BuyProScreen(
-                    isPurchasedLive = BillingManager.getInstance()?.isProPurchased
-                        ?: MutableLiveData(true),
-                    priceLive = BillingManager.getInstance()?.proPrice ?: MutableLiveData(""),
-                    purchaseDateLive = BillingManager.getInstance()?.proPurchaseDate
-                        ?: MutableLiveData("-"),
-                    orderIdLive = BillingManager.getInstance()?.proOrderId ?: MutableLiveData("-"),
-                    launchBillingFlow = {
-                        BillingManager.getInstance()?.launchBillingFlow(activity)
-                    },
-                    navController = navController
-                )
-            }
-            composable(NavigationDrawerDestination.SETTINGS.name) {
-                SettingsScreen(
-                    navController = navController,
-                    currentTheme = settingsStateHolder.settingTheme,
-                    audioFormat = settingsStateHolder.settingAudioFormat,
-                    autoExpandSubtasks = settingsStateHolder.settingAutoExpandSubtasks,
-                    autoExpandSubnotes = settingsStateHolder.settingAutoExpandSubnotes,
-                    autoExpandAttachments = settingsStateHolder.settingAutoExpandAttachments,
-                    showProgressForMainTasks = settingsStateHolder.settingShowProgressForMainTasks,
-                    showProgressForSubTasks = settingsStateHolder.settingShowProgressForSubTasks,
-                    showSubtasksInTasklist = settingsStateHolder.settingShowSubtasksInTasklist,
-                    showSubnotesInNoteslist = settingsStateHolder.settingShowSubnotesInNoteslist,
-                    showSubjournalsInJournallist = settingsStateHolder.settingShowSubjournalsInJournallist,
-                    defaultStartDate = settingsStateHolder.settingDefaultStartDate,
-                    defaultDueDate = settingsStateHolder.settingDefaultDueDate,
-                    stepForProgress = settingsStateHolder.settingStepForProgress
-                )
-            }
+            CollectionsScreen(
+                navController = navController,
+                collectionsViewModel = collectionsViewModel,
+                globalStateHolder = globalStateHolder
+            )
+        }
+        composable(NavigationDrawerDestination.SYNC.name) {
+            val viewModel: SyncViewModel = viewModel()
+            SyncScreen(
+                remoteCollectionsLive = viewModel.remoteCollections,
+                isSyncInProgress = globalStateHolder.isSyncInProgress,
+                navController = navController)
+        }
+        composable(NavigationDrawerDestination.DONATE.name) { DonateScreen(navController) }
+        composable(NavigationDrawerDestination.ADINFO.name) { AdInfoScreen(navController) }
+        composable(NavigationDrawerDestination.ABOUT.name) {
+            val viewModel: AboutViewModel = viewModel()
+            AboutScreen(
+                translators = viewModel.translators,
+                releaseinfo = viewModel.releaseinfos,
+                navController = navController
+            )
+        }
+        composable(NavigationDrawerDestination.BUYPRO.name) {
+            BuyProScreen(
+                isPurchasedLive = BillingManager.getInstance()?.isProPurchased
+                    ?: MutableLiveData(true),
+                priceLive = BillingManager.getInstance()?.proPrice ?: MutableLiveData(""),
+                purchaseDateLive = BillingManager.getInstance()?.proPurchaseDate
+                    ?: MutableLiveData("-"),
+                orderIdLive = BillingManager.getInstance()?.proOrderId ?: MutableLiveData("-"),
+                launchBillingFlow = {
+                    BillingManager.getInstance()?.launchBillingFlow(activity)
+                },
+                navController = navController
+            )
+        }
+        composable(NavigationDrawerDestination.SETTINGS.name) {
+            SettingsScreen(
+                navController = navController,
+                currentTheme = settingsStateHolder.settingTheme,
+                audioFormat = settingsStateHolder.settingAudioFormat,
+                autoExpandSubtasks = settingsStateHolder.settingAutoExpandSubtasks,
+                autoExpandSubnotes = settingsStateHolder.settingAutoExpandSubnotes,
+                autoExpandAttachments = settingsStateHolder.settingAutoExpandAttachments,
+                showProgressForMainTasks = settingsStateHolder.settingShowProgressForMainTasks,
+                showProgressForSubTasks = settingsStateHolder.settingShowProgressForSubTasks,
+                showSubtasksInTasklist = settingsStateHolder.settingShowSubtasksInTasklist,
+                showSubnotesInNoteslist = settingsStateHolder.settingShowSubnotesInNoteslist,
+                showSubjournalsInJournallist = settingsStateHolder.settingShowSubjournalsInJournallist,
+                defaultStartDate = settingsStateHolder.settingDefaultStartDate,
+                defaultDueDate = settingsStateHolder.settingDefaultDueDate,
+                stepForProgress = settingsStateHolder.settingStepForProgress
+            )
         }
 
         if(globalStateHolder.icalString2Import.value != null)

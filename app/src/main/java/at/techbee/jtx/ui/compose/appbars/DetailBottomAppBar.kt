@@ -43,6 +43,7 @@ fun DetailBottomAppBar(
     enableComments: MutableState<Boolean>,
     //iCal4ListLive: LiveData<List<ICal4List>>,
     //listSettings: ListSettings,
+    onDeleteClicked: () -> Unit,
     //onAddNewQuickEntry: () -> Unit,
     //onAddNewEntry: () -> Unit,
     //onListSettingsChanged: () -> Unit,
@@ -62,7 +63,7 @@ fun DetailBottomAppBar(
                 IconButton(onClick = { settingsMenuExpanded = true }) {
                     Icon(
                         Icons.Outlined.Settings,
-                        contentDescription = "Edit sttings"
+                        contentDescription = stringResource(id = R.string.preferences)
                     )
                 }
             }
@@ -77,7 +78,7 @@ fun DetailBottomAppBar(
             }
 
             AnimatedVisibility(!isEditMode.value) {
-                IconButton(onClick = { /* TODO */ }) {
+                IconButton(onClick = { onDeleteClicked() }) {
                     Icon(
                         Icons.Outlined.Delete,
                         contentDescription = stringResource(id = R.string.delete),
@@ -221,20 +222,21 @@ fun DetailBottomAppBar_Preview_View() {
 
         DetailBottomAppBar(
             module = Module.JOURNAL,
-            isEditMode = mutableStateOf(false),
-            isReadOnly = mutableStateOf(false),
-            enableCategories = mutableStateOf(true),
-            enableAttendees = mutableStateOf(false),
-            enableResources = mutableStateOf(false),
-            enableContact = mutableStateOf(false),
-            enableLocation = mutableStateOf(false),
-            enableUrl = mutableStateOf(false),
-            enableSubtasks = mutableStateOf(true),
-            enableSubnotes = mutableStateOf(true),
-            enableAttachments = mutableStateOf(true),
-            enableRecurrence = mutableStateOf(false),
-            enableAlarms = mutableStateOf(false),
-            enableComments = mutableStateOf(false)
+            isEditMode = remember { mutableStateOf(false) },
+            isReadOnly = remember { mutableStateOf(false) },
+            enableCategories = remember { mutableStateOf(true) },
+            enableAttendees = remember { mutableStateOf(false) },
+            enableResources = remember { mutableStateOf(false) },
+            enableContact = remember { mutableStateOf(false) },
+            enableLocation = remember { mutableStateOf(false) },
+            enableUrl = remember { mutableStateOf(false) },
+            enableSubtasks = remember { mutableStateOf(true) },
+            enableSubnotes = remember { mutableStateOf(true) },
+            enableAttachments = remember { mutableStateOf(true) },
+            enableRecurrence = remember { mutableStateOf(false) },
+            enableAlarms = remember { mutableStateOf(false) },
+            enableComments = remember { mutableStateOf(false) },
+            onDeleteClicked = { }
         )
     }
 }
@@ -247,20 +249,21 @@ fun DetailBottomAppBar_Preview_edit() {
 
         DetailBottomAppBar(
             module = Module.JOURNAL,
-            isEditMode = mutableStateOf(true),
-            isReadOnly = mutableStateOf(false),
-            enableCategories = mutableStateOf(true),
-            enableAttendees = mutableStateOf(false),
-            enableResources = mutableStateOf(false),
-            enableContact = mutableStateOf(false),
-            enableLocation = mutableStateOf(false),
-            enableUrl = mutableStateOf(false),
-            enableSubtasks = mutableStateOf(true),
-            enableSubnotes = mutableStateOf(true),
-            enableAttachments = mutableStateOf(true),
-            enableRecurrence = mutableStateOf(false),
-            enableAlarms = mutableStateOf(false),
-            enableComments = mutableStateOf(false)
+            isEditMode = remember { mutableStateOf(true) },
+            isReadOnly = remember { mutableStateOf(false) },
+            enableCategories = remember { mutableStateOf(true) },
+            enableAttendees = remember { mutableStateOf(false) },
+            enableResources = remember { mutableStateOf(false) },
+            enableContact = remember { mutableStateOf(false) },
+            enableLocation = remember { mutableStateOf(false) },
+            enableUrl = remember { mutableStateOf(false) },
+            enableSubtasks = remember { mutableStateOf(true) },
+            enableSubnotes = remember { mutableStateOf(true) },
+            enableAttachments = remember { mutableStateOf(true) },
+            enableRecurrence = remember { mutableStateOf(false) },
+            enableAlarms = remember { mutableStateOf(false) },
+            enableComments = remember { mutableStateOf(false) },
+            onDeleteClicked = { }
         )
     }
 }
@@ -272,20 +275,21 @@ fun DetailBottomAppBar_Preview_View_readonly() {
 
         DetailBottomAppBar(
             module = Module.JOURNAL,
-            isEditMode = mutableStateOf(false),
-            isReadOnly = mutableStateOf(true),
-            enableCategories = mutableStateOf(true),
-            enableAttendees = mutableStateOf(false),
-            enableResources = mutableStateOf(false),
-            enableContact = mutableStateOf(false),
-            enableLocation = mutableStateOf(false),
-            enableUrl = mutableStateOf(false),
-            enableSubtasks = mutableStateOf(true),
-            enableSubnotes = mutableStateOf(true),
-            enableAttachments = mutableStateOf(true),
-            enableRecurrence = mutableStateOf(false),
-            enableAlarms = mutableStateOf(false),
-            enableComments = mutableStateOf(false)
+            isEditMode = remember { mutableStateOf(false) },
+            isReadOnly = remember { mutableStateOf(true) },
+            enableCategories = remember { mutableStateOf(true) },
+            enableAttendees = remember { mutableStateOf(false) },
+            enableResources = remember { mutableStateOf(false) },
+            enableContact = remember { mutableStateOf(false) },
+            enableLocation = remember { mutableStateOf(false) },
+            enableUrl = remember { mutableStateOf(false) },
+            enableSubtasks = remember { mutableStateOf(true) },
+            enableSubnotes = remember { mutableStateOf(true) },
+            enableAttachments = remember { mutableStateOf(true) },
+            enableRecurrence = remember { mutableStateOf(false) },
+            enableAlarms = remember { mutableStateOf(false) },
+            enableComments = remember { mutableStateOf(false) },
+            onDeleteClicked = { }
         )
     }
 }

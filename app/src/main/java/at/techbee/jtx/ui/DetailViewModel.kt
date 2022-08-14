@@ -10,6 +10,7 @@ package at.techbee.jtx.ui
 
 import android.app.Application
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalDatabase
@@ -41,7 +42,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var icsFormat: MutableLiveData<String?> = MutableLiveData(null)
     var icsFileWritten: MutableLiveData<Boolean?> = MutableLiveData(null)
 
-    var entryDeleted: MutableLiveData<Boolean> = MutableLiveData(false)
+    var entryDeleted = mutableStateOf(false)
 
 
     init {
@@ -126,11 +127,13 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun delete(item: ICalObject) {
-
+    fun delete() {
+        // TODO: open dialog
         viewModelScope.launch(Dispatchers.IO) {
-            ICalObject.deleteItemWithChildren(item.id, database)
-            entryDeleted.postValue(true)
+            icalEntity.value?.property?.id?.let { id ->
+                ICalObject.deleteItemWithChildren(id, database)
+                entryDeleted.value = true
+            }
         }
     }
 
