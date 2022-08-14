@@ -20,12 +20,12 @@ import androidx.navigation.NavController
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.ui.IcalListFragmentDirections
 import at.techbee.jtx.ui.IcalListViewModel
 import at.techbee.jtx.ui.ViewMode
 import at.techbee.jtx.ui.compose.appbars.ListBottomAppBar
 import at.techbee.jtx.ui.compose.bottomsheets.FilterBottomSheet
 import at.techbee.jtx.ui.compose.bottomsheets.SearchTextBottomSheet
+import at.techbee.jtx.ui.compose.destinations.DetailDestination
 import at.techbee.jtx.ui.compose.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.compose.stateholder.SettingsStateHolder
 import kotlinx.coroutines.launch
@@ -70,6 +70,8 @@ fun ListScreen(
             onDismiss = { showQuickAddDialog = false }
         )
     }
+
+
 
     Scaffold(
         bottomBar = {
@@ -127,18 +129,8 @@ fun ListScreen(
                             settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks,
                             settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
                             settingProgressIncrement = settingsStateHolder.settingStepForProgress,
-                            goToView = { itemId ->
-                                navController.navigate(
-                                    IcalListFragmentDirections
-                                        .actionIcalListFragmentToIcalViewFragment()
-                                        .setItem2show(itemId)
-                                )
-                            },
-                            goToEdit = { itemId ->
-                                icalListViewModel.postDirectEditEntity(
-                                    itemId
-                                )
-                            },
+                            goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
+                            goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
                             onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                                 icalListViewModel.updateProgress(
                                     itemId,
@@ -167,18 +159,8 @@ fun ListScreen(
                                     isLinkedRecurringInstance
                                 )
                             },
-                            goToView = { itemId ->
-                                navController.navigate(
-                                    IcalListFragmentDirections
-                                        .actionIcalListFragmentToIcalViewFragment()
-                                        .setItem2show(itemId)
-                                )
-                            },
-                            goToEdit = { itemId ->
-                                icalListViewModel.postDirectEditEntity(
-                                    itemId
-                                )
-                            }
+                            goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
+                            goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
                         )
                     }
                     ViewMode.COMPACT -> {
@@ -194,18 +176,8 @@ fun ListScreen(
                                     isLinkedRecurringInstance
                                 )
                             },
-                            goToView = { itemId ->
-                                navController.navigate(
-                                    IcalListFragmentDirections
-                                        .actionIcalListFragmentToIcalViewFragment()
-                                        .setItem2show(itemId)
-                                )
-                            },
-                            goToEdit = { itemId ->
-                                icalListViewModel.postDirectEditEntity(
-                                    itemId
-                                )
-                            }
+                            goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
+                            goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
                         )
                     }
                     ViewMode.KANBAN -> {
@@ -229,18 +201,8 @@ fun ListScreen(
                                     scrollOnce
                                 )
                             },
-                            goToView = { itemId ->
-                                navController.navigate(
-                                    IcalListFragmentDirections
-                                        .actionIcalListFragmentToIcalViewFragment()
-                                        .setItem2show(itemId)
-                                )
-                            },
-                            goToEdit = { itemId ->
-                                icalListViewModel.postDirectEditEntity(
-                                    itemId
-                                )
-                            }
+                            goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
+                            goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
                         )
                     }
                 }

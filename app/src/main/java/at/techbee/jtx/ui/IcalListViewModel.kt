@@ -71,7 +71,6 @@ open class IcalListViewModel(application: Application, val module: Module) : And
     val allCollections = database.getAllCollections()
 
     val quickInsertedEntity = MutableLiveData<ICalEntity?>(null)
-    val directEditEntity = MutableLiveData<ICalEntity?>(null)
     val scrollOnceId = MutableLiveData<Long?>(null)
 
 
@@ -363,18 +362,6 @@ open class IcalListViewModel(application: Application, val module: Module) : And
         }
     }
 
-
-    /**
-     * This function takes an icalObjectId, retrives the icalObject and posts it  in the directEditEntity LiveData Object.
-     * This can be observed and will forward the user to the edit fragment.
-     * [icalObjectId] that should be opened in the edit view
-     */
-    fun postDirectEditEntity(icalObjectId: Long) {
-
-        viewModelScope.launch(Dispatchers.IO) {
-            directEditEntity.postValue(database.getSync(icalObjectId))
-        }
-    }
 
     /**
      * This function adds some welcome entries, this should only be used on the first install.
