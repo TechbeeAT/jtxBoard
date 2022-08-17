@@ -363,13 +363,6 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(contact.value.isNotBlank() || isEditMode.value) {
-                DetailsCardContact(
-                    contact = contact,
-                    isEditMode = isEditMode,
-                    onContactUpdated = { /*TODO*/ },
-                )
-            }
 
             AnimatedVisibility(attendees.value.isNotEmpty() || isEditMode.value) {
                 DetailsCardAttendees(
@@ -378,6 +371,15 @@ fun DetailScreenContent(
                     onAttendeesUpdated = { /*TODO*/ }
                 )
             }
+
+            AnimatedVisibility(contact.value.isNotBlank() || isEditMode.value) {
+                DetailsCardContact(
+                    contact = contact,
+                    isEditMode = isEditMode,
+                    onContactUpdated = { /*TODO*/ },
+                )
+            }
+
 
             AnimatedVisibility(url.value.isNotEmpty() || isEditMode.value) {
                 DetailsCardUrl(
