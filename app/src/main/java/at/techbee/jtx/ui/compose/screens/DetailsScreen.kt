@@ -110,6 +110,7 @@ fun DetailsScreen(
                                 )
                             ),
                             //player = null,
+                            saveIcalObject = { changedICalObject -> detailViewModel.save(changedICalObject) },
                             onProgressChanged = { _, _, _ -> },
                             onExpandedChanged = { _, _, _, _ -> }
                         )

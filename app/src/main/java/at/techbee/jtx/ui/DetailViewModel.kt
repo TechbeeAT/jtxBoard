@@ -127,6 +127,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun save(iCalObject: ICalObject) {
+       iCalObject.makeDirty()
+        viewModelScope.launch {
+            database.update(iCalObject)
+            SyncUtil.notifyContentObservers(getApplication())
+        }
+    }
+
     fun delete() {
         // TODO: open dialog
         viewModelScope.launch(Dispatchers.IO) {

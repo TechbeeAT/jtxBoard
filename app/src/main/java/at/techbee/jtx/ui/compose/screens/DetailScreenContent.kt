@@ -19,6 +19,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -47,6 +48,7 @@ fun DetailScreenContent(
     allCollections: List<ICalCollection>,
     modifier: Modifier = Modifier,
     //player: MediaPlayer?,
+    saveIcalObject: (ICalObject) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
@@ -148,7 +150,11 @@ fun DetailScreenContent(
                         timezone = iCalEntity.value?.property?.dtstartTimezone,
                         isEditMode = isEditMode,
                         onDateTimeChanged = { datetime, timezone ->
-                            // TODO: Save new values!
+                            iCalEntity.value?.property?.let {
+                                it.dtstart = datetime
+                                it.dtstartTimezone = timezone
+                                saveIcalObject(it)
+                            }
                         }
                     )
                 }
@@ -191,6 +197,16 @@ fun DetailScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
+                            .onFocusChanged { focusState ->
+                                if(!focusState.hasFocus) {
+                                    iCalEntity.value?.property?.let {
+                                        if(summary != it.summary) {
+                                            it.summary = summary
+                                            saveIcalObject(it)
+                                        }
+                                    }
+                                }
+                            }
                     )
 
                     OutlinedTextField(
@@ -202,6 +218,16 @@ fun DetailScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
+                            .onFocusChanged { focusState ->
+                                if(!focusState.hasFocus) {
+                                    iCalEntity.value?.property?.let {
+                                        if (description != it.description) {
+                                            it.description = description
+                                            saveIcalObject(it)
+                                        }
+                                    }
+                                }
+                            }
                     )
                 }
 
@@ -426,6 +452,7 @@ fun DetailScreenContent_JOURNAL() {
             //attachments = emptyList(),
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             //player = null,
+            saveIcalObject = {  },
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> }
         )
@@ -453,6 +480,7 @@ fun DetailScreenContent_TODO_editInitially() {
             //attachments = emptyList(),
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             //player = null,
+            saveIcalObject = {  },
             onProgressChanged = { _, _, _ -> },
             onExpandedChanged = { _, _, _, _ -> }
         )

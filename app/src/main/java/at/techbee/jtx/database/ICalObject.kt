@@ -857,7 +857,6 @@ data class ICalObject(
                 0 -> StatusTodo.`NEEDS-ACTION`.name
                 else -> StatusTodo.`NEEDS-ACTION`.name      // should never happen!
             }
-        lastModified = System.currentTimeMillis()
 
         if (completed == null && percent == 100) {
             completedTimezone = dueTimezone?:dtstartTimezone
@@ -870,11 +869,19 @@ data class ICalObject(
             completedTimezone = null
         }
 
-        sequence++
-        dirty = true
-        isRecurLinkedInstance = false     // in any case on update of the progress, the item becomes an exception
+        makeDirty()
 
         return
+    }
+
+    /**
+     * Sets the dirty flag, updates sequence and lastModified value, makes recurring entry an exception
+     */
+    fun makeDirty() {
+        lastModified = System.currentTimeMillis()
+        sequence = sequence++
+        dirty = true
+        isRecurLinkedInstance = false     // in any case on update of the progress, the item becomes an exception
     }
 
 
