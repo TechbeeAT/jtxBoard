@@ -27,7 +27,6 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttachmentCard(
     attachment: Attachment,

@@ -242,7 +242,7 @@ data class Attachment (
                 Log.i("Attachment", "Binary is empty and Uri could not be parsed: $uri. \n $e")
         }
 
-        // TODO: make sure that the additional fields are filled out (filename, filesize and extension)
+        // TODO: make sure that the additional fields are filled out (filesize)
 
         return this
     }
