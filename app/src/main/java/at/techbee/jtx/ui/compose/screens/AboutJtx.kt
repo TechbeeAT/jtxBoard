@@ -14,6 +14,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -26,7 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 import java.text.SimpleDateFormat
 
@@ -39,85 +40,112 @@ fun AboutJtx(modifier: Modifier = Modifier) {
 
     // let the bee talk, just for fun ;-)
     var clickCount by remember { mutableStateOf(-1) }
-    val messages = arrayOf("Bzzzz", "Bzzzzzzzzz", "I'm working here", "What's up?", "If it's for coffee, then yes")
+    val messages = arrayOf(
+        "Bzzzz",
+        "Bzzzzzzzzz",
+        "I'm working here",
+        "What's up?",
+        "If it's for coffee, then yes"
+    )
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_jtx_logo),
-            contentDescription = null,
-            modifier = Modifier
-                .size(150.dp)
-                .padding(top = 24.dp) )
-        Text(
-            text = stringResource(id = R.string.app_name),
-            modifier = Modifier.padding(top = 16.dp),
-            style = Typography.headlineMedium,
-        )
-        Text(
-            text = stringResource(id = R.string.about_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
-            modifier = Modifier.padding(top = 4.dp),
-            style = Typography.bodyLarge,
-        )
-        Text(
-            text = stringResource(id = R.string.about_app_codename, BuildConfig.versionCodename),
-            modifier = Modifier.padding(top = 4.dp),
-            style = Typography.bodyLarge,
-        )
-        Text(
-            text = stringResource(id = R.string.about_app_build_date, SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime)),
-            modifier = Modifier.padding(top = 4.dp),
-            style = Typography.bodyLarge,
-        )
+    SelectionContainer {
 
-        Text(
-            text = stringResource(id = R.string.about_app_terms),
-            modifier = Modifier.padding(top = 16.dp),
-            style = Typography.titleMedium,
-        )
-        TextButton(
-            content = {
-                Text(
-                    text = stringResource(id = R.string.link_jtx_terms),
-                    style = Typography.bodyLarge,
-                )
-            },
-            modifier = Modifier.padding(top = 4.dp),
-            onClick = {
-                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.link_jtx_terms))))
-            }
-        )
-        Text(
-            text = stringResource(id = R.string.about_app_copyright),
-            modifier = Modifier.padding(top = 16.dp),
-            style = Typography.bodyLarge,
-        )
-
-        Crossfade(targetState = clickCount) { clicks ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Image(
-                painter = if(clicks < 4) painterResource(id = R.drawable.logo_techbee) else painterResource(id = R.drawable.logo_techbee_front),
+                painter = painterResource(id = R.drawable.ic_jtx_logo),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(200.dp)
-                    .combinedClickable(
-                        enabled = true,
-                        onClickLabel = "Clickable image",
-                        onClick = {
-                            clickCount += 1
-                        }
-                    )
+                    .size(150.dp)
+                    .padding(top = 24.dp)
             )
-        }
-        AnimatedVisibility(visible = clickCount >= 0) {
+
             Text(
-                text = "\"" + messages[if(clickCount>4) 4 else clickCount] + "\"",
-                style = Typography.bodySmall,
+                text = stringResource(id = R.string.app_name),
+                modifier = Modifier.padding(top = 16.dp),
+                style = Typography.headlineMedium,
             )
+            Text(
+                text = stringResource(
+                    id = R.string.about_app_version,
+                    BuildConfig.VERSION_NAME,
+                    BuildConfig.VERSION_CODE
+                ),
+                modifier = Modifier.padding(top = 4.dp),
+                style = Typography.bodyLarge,
+            )
+            Text(
+                text = stringResource(
+                    id = R.string.about_app_codename,
+                    BuildConfig.versionCodename
+                ),
+                modifier = Modifier.padding(top = 4.dp),
+                style = Typography.bodyLarge,
+            )
+            Text(
+                text = stringResource(
+                    id = R.string.about_app_build_date,
+                    SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime)
+                ),
+                modifier = Modifier.padding(top = 4.dp),
+                style = Typography.bodyLarge,
+            )
+            Text(
+                text = stringResource(id = R.string.about_app_terms),
+                modifier = Modifier.padding(top = 16.dp),
+                style = Typography.titleMedium,
+            )
+            TextButton(
+                content = {
+                    Text(
+                        text = stringResource(id = R.string.link_jtx_terms),
+                        style = Typography.bodyLarge,
+                    )
+                },
+                modifier = Modifier.padding(top = 4.dp),
+                onClick = {
+                    context.startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(context.getString(R.string.link_jtx_terms))
+                        )
+                    )
+                }
+            )
+            Text(
+                text = stringResource(id = R.string.about_app_copyright),
+                modifier = Modifier.padding(top = 16.dp),
+                style = Typography.bodyLarge,
+            )
+
+            Crossfade(targetState = clickCount) { clicks ->
+                Image(
+                    painter = if (clicks < 4) painterResource(id = R.drawable.logo_techbee) else painterResource(
+                        id = R.drawable.logo_techbee_front
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .combinedClickable(
+                            enabled = true,
+                            onClickLabel = "Clickable image",
+                            onClick = {
+                                clickCount += 1
+                            }
+                        )
+                )
+            }
+            AnimatedVisibility(visible = clickCount >= 0) {
+                Text(
+                    text = "\"" + messages[if (clickCount > 4) 4 else clickCount] + "\"",
+                    style = Typography.bodySmall,
+                )
+            }
         }
     }
 }
@@ -125,7 +153,7 @@ fun AboutJtx(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun AboutJtx_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         AboutJtx()
     }
 }
