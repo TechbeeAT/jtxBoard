@@ -56,10 +56,10 @@ fun ListScreen(
     val allCollections = icalListViewModel.allCollections.observeAsState(emptyList())
     if (showQuickAddDialog) {
         QuickAddDialog(
-            module = icalListViewModel.module,
+            presetModule = icalListViewModel.module,
             allCollections = allCollections.value,
-            onEntrySaved = { newICalObject, categories, editAfterSaving ->
-                icalListViewModel.insertQuickItem(newICalObject, categories)
+            onEntrySaved = { newICalObject, categories, attachment, editAfterSaving ->
+                icalListViewModel.insertQuickItem(newICalObject, categories, attachment)
                 /*  //TODO
             if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)
                 AdManager.getInstance()?.showInterstitialAd(requireActivity())     // don't forget to show an ad if applicable ;-)

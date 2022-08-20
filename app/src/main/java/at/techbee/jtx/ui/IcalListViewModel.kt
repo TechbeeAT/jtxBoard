@@ -344,7 +344,7 @@ open class IcalListViewModel(application: Application, val module: Module) : And
      * @param icalObject to be inserted
      * @param categories the list of categories that should be linked to the icalObject
      */
-    fun insertQuickItem(icalObject: ICalObject, categories: List<Category>) {
+    fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachment: Attachment?) {
 
         viewModelScope.launch(Dispatchers.IO) {
             val newId = database.insertICalObject(icalObject)
@@ -353,6 +353,12 @@ open class IcalListViewModel(application: Application, val module: Module) : And
                 it.icalObjectId = newId
                 database.insertCategory(it)
             }
+
+            attachment?.let {
+                it.icalObjectId = newId
+                database.insertAttachment(it)
+            }
+
             scrollOnceId.postValue(newId)
             quickInsertedEntity.postValue(database.getSync(newId))
         }

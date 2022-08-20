@@ -2,7 +2,6 @@ package at.techbee.jtx.ui.compose.screens
 
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +13,7 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -34,6 +34,7 @@ import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.destinations.ListTabDestination
 import at.techbee.jtx.ui.compose.dialogs.DeleteVisibleDialog
+import at.techbee.jtx.ui.compose.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.compose.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
 import at.techbee.jtx.util.SyncUtil
@@ -82,6 +83,29 @@ fun ListScreenTabContainer(
             numEntriesToDelete = getActiveViewModel().iCal4List.value?.size ?: 0,
             onConfirm = { getActiveViewModel().deleteVisible() },
             onDismiss = { showDeleteAllVisibleDialog = false }
+        )
+    }
+
+    if (globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
+        val allCollections = getActiveViewModel().allCollections.observeAsState(emptyList())
+        QuickAddDialog(
+            presetModule = globalStateHolder.icalFromIntentModule.value,
+            presetText = globalStateHolder.icalFromIntentString.value ?: "",
+            presetAttachment = globalStateHolder.icalFromIntentAttachment.value,
+            allCollections = allCollections.value,
+            onEntrySaved = { newICalObject, categories, attachment, editAfterSaving ->
+                getActiveViewModel().insertQuickItem(newICalObject, categories, attachment)
+                /*  //TODO
+            if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)
+                AdManager.getInstance()?.showInterstitialAd(requireActivity())     // don't forget to show an ad if applicable ;-)
+             */
+                if (editAfterSaving)
+                    TODO("Not implemented")
+            },
+            onDismiss = {
+                globalStateHolder.icalFromIntentString.value = null
+                globalStateHolder.icalFromIntentAttachment.value = null
+            }
         )
     }
 
@@ -170,11 +194,27 @@ fun ListScreenTabContainer(
                             }
 
                             Box {
-                                Crossfade(targetState = selectedTab) {
-                                    ListScreen(
-                                        icalListViewModel = getActiveViewModel(),
-                                        navController = navController
-                                    )
+                                Crossfade(targetState = selectedTab) { tab ->
+                                    when (tab) {
+                                        ListTabDestination.Journals -> {
+                                            ListScreen(
+                                                icalListViewModel = icalListViewModelJournals,
+                                                navController = navController
+                                            )
+                                        }
+                                        ListTabDestination.Notes -> {
+                                            ListScreen(
+                                                icalListViewModel = icalListViewModelNotes,
+                                                navController = navController
+                                            )
+                                        }
+                                        ListTabDestination.Tasks -> {
+                                            ListScreen(
+                                                icalListViewModel = icalListViewModelTodos,
+                                                navController = navController
+                                            )
+                                        }
+                                    }
                                 }
 
                                 if(globalStateHolder.isSyncInProgress.value) {
