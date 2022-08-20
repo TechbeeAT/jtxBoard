@@ -255,8 +255,13 @@ open class IcalListViewModel(application: Application, val module: Module) : And
             }
         }
 
+        queryString += "ORDER BY "
         queryString += listSettings.orderBy.value.queryAppendix
         listSettings.sortOrder.let { queryString += it.value.queryAppendix }
+
+        queryString += ", "
+        queryString += listSettings.orderBy2.value.queryAppendix
+        listSettings.sortOrder2.let { queryString += it.value.queryAppendix }
 
         //Log.println(Log.INFO, "queryString", queryString)
         //Log.println(Log.INFO, "queryStringArgs", args.joinToString(separator = ", "))
@@ -418,13 +423,13 @@ open class IcalListViewModelTodos(application: Application) : IcalListViewModel(
 
 
 enum class OrderBy(val stringResource: Int, val queryAppendix: String) {
-    START(R.string.started, "ORDER BY $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
-    DUE(R.string.due, "ORDER BY $COLUMN_DUE IS NULL, $COLUMN_DUE "),
-    COMPLETED(R.string.completed, "ORDER BY $COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED "),
-    CREATED(R.string.filter_created, "ORDER BY $COLUMN_CREATED "),
-    LAST_MODIFIED(R.string.filter_last_modified, "ORDER BY $COLUMN_LAST_MODIFIED "),
-    SUMMARY(R.string.summary, "ORDER BY $COLUMN_SUMMARY "),
-    PRIORITY(R.string.priority, "ORDER BY $COLUMN_PRIORITY IS NULL, $COLUMN_PRIORITY ");
+    START(R.string.started, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
+    DUE(R.string.due, "$COLUMN_DUE IS NULL, $COLUMN_DUE "),
+    COMPLETED(R.string.completed, "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED "),
+    CREATED(R.string.filter_created, "$COLUMN_CREATED "),
+    LAST_MODIFIED(R.string.filter_last_modified, "$COLUMN_LAST_MODIFIED "),
+    SUMMARY(R.string.summary, "$COLUMN_SUMMARY "),
+    PRIORITY(R.string.priority, "$COLUMN_PRIORITY IS NULL, $COLUMN_PRIORITY ");
 
     companion object {
         fun getValuesFor(module: Module): Array<OrderBy> =
@@ -436,8 +441,8 @@ enum class OrderBy(val stringResource: Int, val queryAppendix: String) {
 }
 
 enum class SortOrder(val stringResource: Int, val queryAppendix: String) {
-    ASC(R.string.filter_asc, "ASC "),
-    DESC(R.string.filter_desc, "DESC ")
+    ASC(R.string.filter_asc, "ASC"),
+    DESC(R.string.filter_desc, "DESC")
 }
 
 enum class ViewMode(val stringResource: Int) {

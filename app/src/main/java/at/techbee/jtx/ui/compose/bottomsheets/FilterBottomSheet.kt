@@ -295,6 +295,8 @@ fun FilterBottomSheet(
             text = stringResource(id = R.string.filter_order_by),
             modifier = Modifier.padding(top = 8.dp)
         )
+
+        // SORT ORDER 1
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -332,6 +334,49 @@ fun FilterBottomSheet(
             }
         }
 
+
+        // SORT ORDER 2
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(top = 8.dp)
+        ) {
+            OrderBy.getValuesFor(module).forEach { orderBy ->
+                if(orderBy == listSettings.orderBy.value) // don't show criteria that was already selected
+                    return@forEach
+
+                FilterChip(
+                    selected = listSettings.orderBy2.value == orderBy,
+                    onClick = {
+                        if (listSettings.orderBy2.value != orderBy)
+                            listSettings.orderBy2.value = orderBy
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = orderBy.stringResource)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+        ) {
+            SortOrder.values().forEach { sortOrder ->
+                FilterChip(
+                    selected = listSettings.sortOrder2.value == sortOrder,
+                    onClick = {
+                        if (listSettings.sortOrder2.value != sortOrder)
+                            listSettings.sortOrder2.value = sortOrder
+                        onListSettingsChanged()
+                    },
+                    label = { Text(stringResource(id = sortOrder.stringResource)) },
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
@@ -347,7 +392,6 @@ fun FilterBottomSheet(
                 Text(stringResource(id = R.string.reset))
             }
         }
-
     }
 }
 
