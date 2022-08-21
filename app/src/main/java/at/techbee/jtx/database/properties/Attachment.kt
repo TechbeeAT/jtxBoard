@@ -12,21 +12,27 @@ import android.content.ActivityNotFoundException
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
+import android.os.ParcelFileDescriptor
 import android.os.Parcelable
 import android.provider.BaseColumns
+import android.provider.OpenableColumns
 import android.util.Log
 import android.util.Size
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.annotation.Nullable
+import androidx.core.content.FileProvider
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.work.*
+import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.FileCleanupJob
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
@@ -219,7 +225,69 @@ data class Attachment (
             123000
         )
 
+        /**
+         * Takes an uri, creates a new file, stores the content of the uri in the file and returns a new Attachment
+         * @param [uri] of the file to be stored as Attachment
+         * @return [Attachment] with the new link to the Attachment (without ICalObjectId)
+         */
+        fun getNewAttachmentFromUri(uri: Uri, context: Context): Attachment? {
+            try {
+                val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+                val filename = "${System.currentTimeMillis()}.$extension"
+                val newFile = File(getAttachmentDirectory(context), filename)
+                newFile.createNewFile()
 
+                val attachmentDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
+                val attachmentBytes =
+                    ParcelFileDescriptor.AutoCloseInputStream(attachmentDescriptor).readBytes()
+                newFile.writeBytes(attachmentBytes)
+
+                return Attachment(
+                    uri = FileProvider.getUriForFile(
+                        context,
+                        AUTHORITY_FILEPROVIDER,
+                        newFile
+                    ).toString(),
+                    filename = getFileNameFromUri(context, uri) ?: filename,
+                    extension = extension,
+                    fmttype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                )
+            } catch (e: IOException) {
+                Log.w("IOException", "Failed to process file\n$e")
+                return null
+            }
+        }
+
+        private fun getFileNameFromUri(context: Context, uri: Uri): String? {
+            var fileName: String? = null
+            context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                val indexDisplayName = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if(cursor.count > 0 && indexDisplayName >= 0) {
+                    cursor.moveToFirst()
+                    fileName = cursor.getString(indexDisplayName)
+                }
+                cursor.close()
+            }
+            return fileName
+        }
+
+        fun getNewAttachmentUriForPhoto(context: Context): Uri? {
+            if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                try {
+                    val storageDir = getAttachmentDirectory(context)
+                    val file = File.createTempFile("jtx_", ".jpg", storageDir)
+                    //Log.d("externalFilesPath", file.absolutePath)
+                    return FileProvider.getUriForFile(context, AUTHORITY_FILEPROVIDER, file)
+                } catch (e: ActivityNotFoundException) {
+                    Log.e("takePictureIntent", "Failed to open camera\n$e")
+                    Toast.makeText(context, "Failed to open camera", Toast.LENGTH_LONG).show()
+                } catch (e: IOException) {
+                    Log.e("takePictureIntent", "Failed to access storage\n$e")
+                    Toast.makeText(context, "Failed to access storage", Toast.LENGTH_LONG).show()
+                }
+            }
+            return null
+        }
     }
 
     fun applyContentValues(values: ContentValues): Attachment {
@@ -250,53 +318,38 @@ data class Attachment (
     fun openFile(context: Context) {
 
         val uri = Uri.parse(this.uri) ?: return
+        val noAppFoundToast = Toast.makeText(
+            context,
+            context.getText(R.string.attachment_error_no_app_found_to_open_file_or_uri),
+            Toast.LENGTH_LONG
+        )
 
-        if(uri.toString().startsWith("content://", true)) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
 
-            try {
-                val intent = Intent()
-                intent.action = Intent.ACTION_VIEW
+            if (uri.toString().startsWith("content://", true)) {
                 intent.setDataAndType(Uri.parse(this.uri), this.fmttype)
                 intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
-
-            } catch (e: IOException) {
-                Log.i("fileprovider", "Failed to retrieve file\n$e")
-                Toast.makeText(
-                    context,
-                    context.getText(R.string.attachment_error_on_retrieving_file),
-                    Toast.LENGTH_LONG
-                ).show()
-            } catch (e: ActivityNotFoundException) {
-                Log.i("ActivityNotFound", "No activity found to open file\n$e")
-                Toast.makeText(
-                    context,
-                    context.getText(R.string.attachment_error_no_app_found_to_open_file_or_uri),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        } else {
-            try {
-                //TODO: Improve the handling here, the uri might be without https:// then the call would fail
-                val intent = Intent(Intent.ACTION_VIEW)
+            } else if (uri.scheme?.startsWith("http") == true) {
                 intent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.data = uri
                 context.startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                Log.i("ActivityNotFound", "No activity found to open file\n$e")
-                Toast.makeText(
-                    context,
-                    context.getText(R.string.attachment_error_no_app_found_to_open_file_or_uri),
-                    Toast.LENGTH_LONG
-                ).show()
-            } catch (e: Exception) {     // catches actually FileUriExposedException, but this is only available from SDK lvl 23
-                Log.i("FileUriExposed", "File Uri cannot be accessed\n$e")
-                Toast.makeText(
-                    context,
-                    "This file Uri cannot be accessed.",
-                    Toast.LENGTH_LONG
-                ).show()
+            } else if(uri.scheme == null) {
+                val uriWithHttps = Uri.parse("https://" + uri.toString())
+                intent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.data = uriWithHttps
+                context.startActivity(intent)
             }
+        } catch (e: IOException) {
+            Log.i("fileprovider", "Failed to retrieve file\n$e")
+            noAppFoundToast.show()
+        } catch (e: ActivityNotFoundException) {
+            Log.i("ActivityNotFound", "No activity found to open file\n$e")
+            noAppFoundToast.show()
+        } catch (e: Exception) {     // catches actually FileUriExposedException, but this is only available from SDK lvl 23
+            Log.i("FileUriExposed", "File Uri cannot be accessed\n$e")
+            Toast.makeText(context, "This file Uri cannot be accessed.", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -311,8 +364,8 @@ data class Attachment (
     fun getFilenameOrLink(): String? {
 
         return when {
-            uri?.startsWith("http") == true -> uri
             filename?.isNotEmpty() == true -> filename
+            uri?.isNotEmpty() == true -> uri
             fmttype?.isNotEmpty() == true -> fmttype
             else -> null
         }

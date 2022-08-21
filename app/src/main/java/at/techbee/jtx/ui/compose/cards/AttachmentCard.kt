@@ -30,6 +30,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attachment
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttachmentCard(
     attachment: Attachment,
@@ -37,6 +38,8 @@ fun AttachmentCard(
     modifier: Modifier = Modifier,
     onAttachmentDeleted: () -> Unit
 ) {
+
+    val context = LocalContext.current
 
     if (isEditMode.value) {
         OutlinedCard(modifier = modifier) {
@@ -48,7 +51,7 @@ fun AttachmentCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                val preview = attachment.getPreview(LocalContext.current)
+                val preview = attachment.getPreview(context)
                 if (preview == null)
                     Icon(Icons.Outlined.FilePresent, stringResource(R.string.attachments))
                 else
@@ -68,7 +71,10 @@ fun AttachmentCard(
             }
         }
     } else {
-        ElevatedCard(modifier = modifier) {
+        ElevatedCard(
+            onClick = { attachment.openFile(context) },
+            modifier = modifier
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -77,7 +83,7 @@ fun AttachmentCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                val preview = attachment.getPreview(LocalContext.current)
+                val preview = attachment.getPreview(context)
                 if (preview == null)
                     Icon(Icons.Outlined.FilePresent, stringResource(R.string.attachments))
                 else

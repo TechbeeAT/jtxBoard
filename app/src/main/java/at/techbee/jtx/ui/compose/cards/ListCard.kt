@@ -374,11 +374,8 @@ fun ICalObjectListCard(
                                 attachment = attachment,
                                 isEditMode = remember { mutableStateOf(false) },
                                 onAttachmentDeleted = { /* nothing to do, no edit here */ },
-                                modifier = Modifier
-                                    .padding(start = 8.dp, end = 8.dp)
-                                    .combinedClickable(
-                                        onClick = { attachment.openFile(context) }
-                                    ))
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            )
                         }
                     }
                 }

@@ -4,10 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.ParcelFileDescriptor
 import android.os.Parcelable
-import android.util.Log
-import android.webkit.MimeTypeMap
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -18,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -40,8 +36,7 @@ import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
 import at.techbee.jtx.ui.compose.stateholder.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
-import java.io.File
-import java.io.IOException
+
 
 class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
 //class MainActivity2 : ComponentActivity() {
@@ -109,32 +104,9 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
                     when {
                         intent.type == "text/plain" -> globalStateHolder.icalFromIntentString.value = intent.getStringExtra(Intent.EXTRA_TEXT)
                         intent.type?.startsWith("image/") == true || intent.type == "application/pdf" -> {
-                            (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
-
-                                try {
-                                    val extension = MimeTypeMap.getSingleton()
-                                        .getExtensionFromMimeType(intent.type)
-                                    val filename = "${System.currentTimeMillis()}.$extension"
-                                    val newFile = File(Attachment.getAttachmentDirectory(this), filename)
-                                    newFile.createNewFile()
-
-                                    val attachmentDescriptor = this.contentResolver.openFileDescriptor(it, "r")
-                                    val attachmentBytes = ParcelFileDescriptor.AutoCloseInputStream(attachmentDescriptor).readBytes()
-                                    newFile.writeBytes(attachmentBytes)
-
-                                    val newAttachment = Attachment(
-                                        uri = FileProvider.getUriForFile(
-                                            this,
-                                            AUTHORITY_FILEPROVIDER,
-                                            newFile
-                                        ).toString(),
-                                        filename = newFile.name,
-                                        extension = newFile.extension,
-                                        fmttype = intent.type
-                                    )
+                            (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { uri ->
+                                Attachment.getNewAttachmentFromUri(uri, this)?.let { newAttachment ->
                                     globalStateHolder.icalFromIntentAttachment.value = newAttachment
-                                } catch (e: IOException) {
-                                    Log.w("IOException", "Failed to process file\n$e")
                                 }
                             }
                         }
