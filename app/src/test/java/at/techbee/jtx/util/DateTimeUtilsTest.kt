@@ -12,12 +12,9 @@ import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToYYYYMMDDString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
-import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import at.techbee.jtx.util.DateTimeUtils.getDateWithoutTime
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.getTodayAsLong
-import at.techbee.jtx.util.DateTimeUtils.isValidEmail
-import at.techbee.jtx.util.DateTimeUtils.isValidURL
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -50,22 +47,6 @@ class DateTimeUtilsTest {
     }
 
     @Test fun convertLongToYYYYMMDDString_test() = assertEquals("2022-01-24", convertLongToYYYYMMDDString(1643019619464L, "UTC"))
-
-
-    @Test fun isValidEmail_testTrue() = assertTrue(isValidEmail("valid@email.com"))
-    @Test fun isValidEmail_testFalse1() = assertFalse(isValidEmail("invalid.com"))
-    @Test fun isValidEmail_testFalse2() = assertFalse(isValidEmail("invalid@com"))
-
-    @Test fun isValidURL_testTrue1() = assertTrue(isValidURL("example.com"))
-    @Test fun isValidURL_testTrue2() = assertTrue(isValidURL("www.example.com"))
-    @Test fun isValidURL_testTrue3() = assertTrue(isValidURL("http://example.com"))
-    @Test fun isValidURL_testTrue4() = assertTrue(isValidURL("https://www.example.com/asdf"))
-    @Test fun isValidURL_testFalse1() = assertFalse(isValidURL("AABB"))
-    @Test fun isValidURL_testFalse2() = assertFalse(isValidURL("asdf://AABB.com"))
-
-    @Test fun getAttachmentSizeString_bytes() = assertEquals("100 Bytes", getAttachmentSizeString(100))
-    @Test fun getAttachmentSizeString_kilobytes() = assertEquals("1 KB", getAttachmentSizeString(1024))
-    @Test fun getAttachmentSizeString_megabytes() = assertEquals("1 MB", getAttachmentSizeString(1048576))
 
     @Test fun addLongToCSVString_test() = assertEquals(("1622800800000,1622887200000,1624010400000"), addLongToCSVString("1622800800000,1622887200000", 1624010400000L))
     @Test fun addLongToCSVString_noDuplicate() = assertEquals(("1622800800000,1622887200000,1624010400000"), addLongToCSVString("1622800800000,1622887200000,1624010400000", 1624010400000L))

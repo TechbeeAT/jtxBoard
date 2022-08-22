@@ -238,8 +238,7 @@ data class Attachment (
                 newFile.createNewFile()
 
                 val attachmentDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
-                val attachmentBytes =
-                    ParcelFileDescriptor.AutoCloseInputStream(attachmentDescriptor).readBytes()
+                val attachmentBytes = ParcelFileDescriptor.AutoCloseInputStream(attachmentDescriptor).readBytes()
                 newFile.writeBytes(attachmentBytes)
 
                 return Attachment(
@@ -250,6 +249,7 @@ data class Attachment (
                     ).toString(),
                     filename = getFileNameFromUri(context, uri) ?: filename,
                     extension = extension,
+                    filesize = newFile.length(),
                     fmttype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
                 )
             } catch (e: IOException) {
@@ -353,11 +353,11 @@ data class Attachment (
         }
     }
 
-    fun getFilesize(context: Context): Long {
+    fun getFilesize(context: Context): Long? {
         return try {
-            context.contentResolver.openFileDescriptor(Uri.parse(this.uri), "r")?.statSize ?: 0L
+            context.contentResolver.openFileDescriptor(Uri.parse(this.uri), "r")?.statSize
         } catch (e: Exception) {
-            0L
+            null
         }
     }
 

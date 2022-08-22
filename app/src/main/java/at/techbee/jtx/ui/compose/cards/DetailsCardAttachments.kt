@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.compose.cards
 
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -74,12 +75,7 @@ fun DetailsCardAttachments(
         }
     }
     var showAddLinkAttachmentDialog by remember { mutableStateOf(false) }
-
     val headline = stringResource(id = R.string.attachments)
-    //val newAttendee = remember { mutableStateOf("") }
-
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    val coroutineScope = rememberCoroutineScope()
 
     if(showAddLinkAttachmentDialog) {
         AddAttachmentLinkDialog(
@@ -132,13 +128,19 @@ fun DetailsCardAttachments(
                     Button(onClick = { pickFileLauncher.launch("*/*") }) {
                         Icon(Icons.Outlined.Upload, stringResource(id = R.string.edit_attachment_button_text))
                     }
-                    Button(onClick = {
-                        Attachment.getNewAttachmentUriForPhoto(context)?.let {
-                            newPictureUri.value = it
-                            takePictureLauncher.launch(newPictureUri.value)
+                    // don't show the button if the device does not have a camera
+                    if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                        Button(onClick = {
+                            Attachment.getNewAttachmentUriForPhoto(context)?.let {
+                                newPictureUri.value = it
+                                takePictureLauncher.launch(newPictureUri.value)
+                            }
+                        }) {
+                            Icon(
+                                Icons.Outlined.CameraAlt,
+                                stringResource(id = R.string.edit_take_picture_button_text)
+                            )
                         }
-                    }) {
-                        Icon(Icons.Outlined.CameraAlt, stringResource(id = R.string.edit_take_picture_button_text))
                     }
                     Button(onClick = { showAddLinkAttachmentDialog = true }) {
                         Icon(Icons.Outlined.AddLink, stringResource(id = R.string.edit_add_link_button_text))

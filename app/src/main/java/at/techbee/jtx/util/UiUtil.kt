@@ -22,6 +22,11 @@ object UiUtil {
         return PatternsCompat.WEB_URL.matcher(urlString.toString()).matches()
     }
 
+    fun isValidEmail(emailString: String?): Boolean {
+        return emailString?.isNotEmpty() == true && PatternsCompat.EMAIL_ADDRESS.matcher(emailString).matches()
+    }
+
+
     /**
      * Extracts links out of a text using Patterns.WEB_URL.matcher(text)
      * @param [text] the input text out of which links should be extracted
@@ -80,5 +85,13 @@ object UiUtil {
             cur.close()
         }
         return allContacts
+    }
+
+    fun getAttachmentSizeString(filesize: Long): String {
+        return when {
+            filesize < 1024 -> "$filesize Bytes"
+            filesize / 1024 < 1024 -> "${filesize / 1024} KB"
+            else -> "${filesize / 1024 / 1024} MB"
+        }
     }
 }
