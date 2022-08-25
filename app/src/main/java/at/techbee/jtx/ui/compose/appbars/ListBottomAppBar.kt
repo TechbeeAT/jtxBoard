@@ -59,7 +59,7 @@ fun ListBottomAppBar(
 
 
     BottomAppBar(
-        icons = {
+        actions = {
             IconButton(onClick = { menuExpanded = true }) {
                 Icon(
                     Icons.Outlined.MoreVert,
@@ -99,11 +99,8 @@ fun ListBottomAppBar(
                 IconButton(onClick = {
                     // Create a custom date validator to only enable dates that are in the list
                     val customDateValidator = object : CalendarConstraints.DateValidator {
-                        override fun describeContents(): Int {
-                            return 0
-                        }
-
-                        override fun writeToParcel(dest: Parcel?, flags: Int) {}
+                        override fun describeContents(): Int { return 0 }
+                        override fun writeToParcel(p0: Parcel, p1: Int) { }
                         override fun isValid(date: Long): Boolean {
                             iCal4List?.forEach {
                                 val zonedDtstart = ZonedDateTime.ofInstant(

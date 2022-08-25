@@ -1,12 +1,10 @@
 package at.techbee.jtx.ui.compose.appbars
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,7 +18,6 @@ import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +29,8 @@ fun JtxNavigationDrawer(
     paddingValues: PaddingValues = PaddingValues()
 ) {
     val scope = rememberCoroutineScope()
-    val items = NavigationDrawerDestination.valuesFor(BuildConfig.FLAVOR).groupBy { it.groupResource }
+    val items =
+        NavigationDrawerDestination.valuesFor(BuildConfig.FLAVOR).groupBy { it.groupResource }
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -43,7 +41,7 @@ fun JtxNavigationDrawer(
             )
         },
         content = { mainContent() },
-        modifier = Modifier.padding(paddingValues)
+        modifier = Modifier.padding(paddingValues),
     )
 }
 
@@ -52,12 +50,12 @@ fun JtxNavigationDrawer(
 @Preview(showBackground = true)
 @Composable
 fun JtxNavigationDrawer_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         JtxNavigationDrawer(
             drawerState = rememberDrawerState(DrawerValue.Open),
             navController = rememberNavController(),
-            mainContent = {      }
+            mainContent = { }
         )
     }
 }
@@ -73,7 +71,9 @@ fun JtxNavigationDrawerMenu(
 
     val context = LocalContext.current
 
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+    ModalDrawerSheet(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ) {
 
         Row(
             modifier = Modifier
@@ -86,9 +86,22 @@ fun JtxNavigationDrawerMenu(
                 contentDescription = null,
                 modifier = Modifier
             )
-            Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center) {
-                Text(stringResource(id = R.string.app_name), color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                Text(stringResource(id = R.string.navigation_drawer_subtitle), color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleMedium)
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    stringResource(id = R.string.app_name),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    stringResource(id = R.string.navigation_drawer_subtitle),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
         }
         Spacer(modifier = Modifier.padding(top = 16.dp))
@@ -133,7 +146,7 @@ fun JtxNavigationDrawerMenu(
 @Preview(showBackground = true)
 @Composable
 fun JtxNavigationDrawerMenu_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         val items =
             NavigationDrawerDestination.valuesFor(BuildConfig.FLAVOR).groupBy { it.groupResource }
 

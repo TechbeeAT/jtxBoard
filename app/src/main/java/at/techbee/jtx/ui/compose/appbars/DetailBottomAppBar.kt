@@ -58,7 +58,7 @@ fun DetailBottomAppBar(
     val context = LocalContext.current
 
     BottomAppBar(
-        icons = {
+        actions = {
             AnimatedVisibility(isEditMode.value) {
                 IconButton(onClick = { settingsMenuExpanded = true }) {
                     Icon(

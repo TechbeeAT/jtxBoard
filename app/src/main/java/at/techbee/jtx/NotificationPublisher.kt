@@ -49,7 +49,7 @@ class NotificationPublisher : BroadcastReceiver() {
                 alarm.alarmId = ICalDatabase.getInstance(context).iCalDatabaseDao.insertAlarm(alarm)
                 ICalDatabase.getInstance(context).iCalDatabaseDao.updateSetDirty(alarm.icalObjectId, System.currentTimeMillis())
                 SyncUtil.notifyContentObservers(context)
-                alarm.scheduleNotification(context, nextAlarm)
+                alarm.scheduleNotification(context, nextAlarm, false)  // if we ended here, the entry cannot be read only
             }
         } else if (intent.action == ACTION_DONE) {
             notificationManager.cancel(id.toInt())
@@ -61,7 +61,7 @@ class NotificationPublisher : BroadcastReceiver() {
                 SyncUtil.notifyContentObservers(context)
             }
         } else {
-            // no action, so here we notify
+            // no action, so here we notify. if we offer snooze depends on the intent (this was decided already on creation of the intent)
             CoroutineScope(Dispatchers.IO).launch {
                 val alarm = ICalDatabase.getInstance(context).iCalDatabaseDao.getAlarmSync(id)
                 if (alarm != null)     // notify only if the alarm still exists

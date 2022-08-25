@@ -62,7 +62,7 @@ fun DetailsScreen(
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
 
-    if(detailViewModel.entryDeleted.value)
+    if (detailViewModel.entryDeleted.value)
         navController.navigate(NavigationDrawerDestination.BOARD.name) {
             launchSingleTop = true
         }
@@ -70,58 +70,63 @@ fun DetailsScreen(
 
 
     Scaffold(
-        topBar = { JtxTopAppBar(
-            drawerState = drawerState,
-            title = stringResource(id = R.string.details),
-            subtitle = detailViewModel.icalEntity.value?.property?.summary,
-            actions = {
+        topBar = {
+            JtxTopAppBar(
+                drawerState = drawerState,
+                title = stringResource(id = R.string.details),
+                subtitle = detailViewModel.icalEntity.value?.property?.summary,
+                actions = {
 
-                val menuExpanded = remember { mutableStateOf(false) }
+                    val menuExpanded = remember { mutableStateOf(false) }
 
-                OverflowMenu(menuExpanded = menuExpanded) {
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(id = R.string.menu_view_share_text))  },
-                        onClick = { /* TODO */ },
-                        leadingIcon = { Icon(Icons.Outlined.Share, null) }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(id = R.string.menu_view_share_ics))  },
-                        onClick = { /* TODO */ },
-                        leadingIcon = { Icon(Icons.Outlined.Description, null) }
-                    )
-                }
-            }
-        ) },
-        content = {
-            Column(modifier = Modifier.padding(it)) {
-                JtxNavigationDrawer(
-                    drawerState = drawerState,
-                    mainContent = {
-
-                        DetailScreenContent(
-                            iCalEntity = icalEntity,
-                            isEditMode = isEditMode,
-                            subtasks = emptyList(),
-                            subnotes = emptyList(),
-                            //attachments = emptyList(),
-                            allCollections = listOf(
-                                ICalCollection.createLocalCollection(
-                                    LocalContext.current
-                                )
-                            ),
-                            //player = null,
-                            saveIcalObject = { changedICalObject -> detailViewModel.save(changedICalObject) },
-                            onProgressChanged = { _, _, _ -> },
-                            onExpandedChanged = { _, _, _, _ -> }
+                    OverflowMenu(menuExpanded = menuExpanded) {
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.menu_view_share_text)) },
+                            onClick = { /* TODO */ },
+                            leadingIcon = { Icon(Icons.Outlined.Share, null) }
                         )
-                    },
-                    navController = navController
-                )
-            }
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
+                            onClick = { /* TODO */ },
+                            leadingIcon = { Icon(Icons.Outlined.Description, null) }
+                        )
+                    }
+                }
+            )
+        },
+        content = { paddingValues ->
+            JtxNavigationDrawer(
+                drawerState = drawerState,
+                mainContent = {
+
+                    DetailScreenContent(
+                        iCalEntity = icalEntity,
+                        isEditMode = isEditMode,
+                        subtasks = emptyList(),
+                        subnotes = emptyList(),
+                        //attachments = emptyList(),
+                        allCollections = listOf(
+                            ICalCollection.createLocalCollection(
+                                LocalContext.current
+                            )
+                        ),
+                        //player = null,
+                        saveIcalObject = { changedICalObject ->
+                            detailViewModel.save(
+                                changedICalObject
+                            )
+                        },
+                        onProgressChanged = { _, _, _ -> },
+                        onExpandedChanged = { _, _, _, _ -> }
+                    )
+                },
+                navController = navController,
+                paddingValues = paddingValues
+            )
         },
         bottomBar = {
             DetailBottomAppBar(
-                module = when(detailViewModel.icalEntity.value?.property?.module) {
+                module = when (detailViewModel.icalEntity.value?.property?.module) {
                     Module.JOURNAL.name -> Module.JOURNAL
                     Module.NOTE.name -> Module.NOTE
                     Module.TODO.name -> Module.TODO

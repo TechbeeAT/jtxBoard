@@ -34,7 +34,6 @@ import at.techbee.jtx.settings.SwitchSetting.*
 import at.techbee.jtx.settings.DropdownSetting.*
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
@@ -67,185 +66,184 @@ fun SettingsScreen(
             )
         },
 
-        ) {
-        Column(modifier = Modifier.padding(it)) {
-            JtxNavigationDrawer(
-                drawerState = drawerState,
-                mainContent = {
+        ) { paddingValues ->
+        JtxNavigationDrawer(
+            drawerState = drawerState,
+            mainContent = {
 
-                    Column(
-                        modifier = modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(8.dp),
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+                Column(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-                        Text(
-                            text = stringResource(id = R.string.settings_app),
-                            style = MaterialTheme.typography.labelMedium,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
+                    Text(
+                        text = stringResource(id = R.string.settings_app),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
 
-                        DropdownSetting(
-                            setting = SETTING_THEME,
-                            preselected = currentTheme.value,
-                            onSelectionChanged = { selection ->
-                                currentTheme.value = selection
-                                SETTING_THEME.save(selection, context = context)
-                                when (selection) {
-                                    DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(
-                                        AppCompatDelegate.MODE_NIGHT_YES
-                                    )
-                                    DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(
-                                        AppCompatDelegate.MODE_NIGHT_NO
-                                    )
-                                    else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                                }
-                            }
-                        )
-
-                        DropdownSetting(
-                            setting = SETTING_AUDIO_FORMAT,
-                            preselected = audioFormat.value,
-                            onSelectionChanged = { selection ->
-                                audioFormat.value = selection
-                                SETTING_AUDIO_FORMAT.save(selection, context = context)
-                            }
-                        )
-
-                        Divider(
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                                .alpha(0.5f)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.settings_list),
-                            style = MaterialTheme.typography.labelMedium,
-                            modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
-                        )
-
-                        SwitchSetting(
-                            setting = SETTING_AUTO_EXPAND_SUBTASKS,
-                            initiallyChecked = autoExpandSubtasks.value,
-                            onCheckedChanged = {
-                                autoExpandSubtasks.value = it
-                                SETTING_AUTO_EXPAND_SUBTASKS.save(it, context)
-                            })
-                        SwitchSetting(
-                            setting = SETTING_AUTO_EXPAND_SUBNOTES,
-                            initiallyChecked = autoExpandSubnotes.value,
-                            onCheckedChanged = {
-                                autoExpandSubnotes.value = it
-                                SETTING_AUTO_EXPAND_SUBNOTES.save(it, context)
-                            })
-                        SwitchSetting(
-                            setting = SETTING_AUTO_EXPAND_ATTACHMENTS,
-                            initiallyChecked = autoExpandAttachments.value,
-                            onCheckedChanged = {
-                                autoExpandAttachments.value = it
-                                SETTING_AUTO_EXPAND_ATTACHMENTS.save(it, context)
-                            })
-                        SwitchSetting(
-                            setting = SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST,
-                            initiallyChecked = showProgressForMainTasks.value,
-                            onCheckedChanged = {
-                                showProgressForMainTasks.value = it
-                                SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.save(it, context)
-                            })
-
-                        Divider(
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                                .alpha(0.5f)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.settings_group_settings_for_subentries),
-                            style = MaterialTheme.typography.labelMedium,
-                            modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
-                        )
-
-                        AnimatedVisibility(subSectionExpanded.value.not()) {
-                            TextButton(onClick = { subSectionExpanded.value = true }) {
-                                Text(stringResource(id = R.string.list_expand))
+                    DropdownSetting(
+                        setting = SETTING_THEME,
+                        preselected = currentTheme.value,
+                        onSelectionChanged = { selection ->
+                            currentTheme.value = selection
+                            SETTING_THEME.save(selection, context = context)
+                            when (selection) {
+                                DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(
+                                    AppCompatDelegate.MODE_NIGHT_YES
+                                )
+                                DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(
+                                    AppCompatDelegate.MODE_NIGHT_NO
+                                )
+                                else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                             }
                         }
+                    )
 
-                        AnimatedVisibility(subSectionExpanded.value) {
-                            Column {
-                                SwitchSetting(
-                                    setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
-                                    initiallyChecked = showProgressForSubTasks.value,
-                                    onCheckedChanged = {
-                                        showProgressForSubTasks.value = it
-                                        SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
-                                    })
-                                SwitchSetting(
-                                    setting = SETTING_SHOW_SUBTASKS_IN_TASKLIST,
-                                    initiallyChecked = showSubtasksInTasklist.value,
-                                    onCheckedChanged = {
-                                        showSubtasksInTasklist.value = it
-                                        SETTING_SHOW_SUBTASKS_IN_TASKLIST.save(it, context)
-                                    })
-                                SwitchSetting(
-                                    setting = SETTING_SHOW_SUBNOTES_IN_NOTESLIST,
-                                    initiallyChecked = showSubnotesInNoteslist.value,
-                                    onCheckedChanged = {
-                                        showSubnotesInNoteslist.value = it
-                                        SETTING_SHOW_SUBNOTES_IN_NOTESLIST.save(it, context)
-                                    })
-                                SwitchSetting(
-                                    setting = SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST,
-                                    initiallyChecked = showSubjournalsInJournallist.value,
-                                    onCheckedChanged = {
-                                        showSubjournalsInJournallist.value = it
-                                        SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.save(it, context)
-                                    })
-                            }
-
+                    DropdownSetting(
+                        setting = SETTING_AUDIO_FORMAT,
+                        preselected = audioFormat.value,
+                        onSelectionChanged = { selection ->
+                            audioFormat.value = selection
+                            SETTING_AUDIO_FORMAT.save(selection, context = context)
                         }
+                    )
 
-                        Divider(
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                                .alpha(0.5f)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.settings_tasks),
-                            style = MaterialTheme.typography.labelMedium,
-                            modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
-                        )
+                    Divider(
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .alpha(0.5f)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.settings_list),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
+                    )
 
-                        DropdownSetting(
-                            setting = SETTING_DEFAULT_START_DATE,
-                            preselected = defaultStartDate.value,
-                            onSelectionChanged = { selection ->
-                                audioFormat.value = selection
-                                SETTING_DEFAULT_START_DATE.save(selection, context = context)
-                            }
-                        )
-                        DropdownSetting(
-                            setting = SETTING_DEFAULT_DUE_DATE,
-                            preselected = defaultDueDate.value,
-                            onSelectionChanged = { selection ->
-                                audioFormat.value = selection
-                                SETTING_DEFAULT_DUE_DATE.save(selection, context = context)
-                            }
-                        )
-                        DropdownSetting(
-                            setting = SETTING_PROGRESS_STEP,
-                            preselected = stepForProgress.value,
-                            onSelectionChanged = { selection ->
-                                stepForProgress.value = selection
-                                SETTING_PROGRESS_STEP.save(selection, context = context)
-                            }
-                        )
+                    SwitchSetting(
+                        setting = SETTING_AUTO_EXPAND_SUBTASKS,
+                        initiallyChecked = autoExpandSubtasks.value,
+                        onCheckedChanged = {
+                            autoExpandSubtasks.value = it
+                            SETTING_AUTO_EXPAND_SUBTASKS.save(it, context)
+                        })
+                    SwitchSetting(
+                        setting = SETTING_AUTO_EXPAND_SUBNOTES,
+                        initiallyChecked = autoExpandSubnotes.value,
+                        onCheckedChanged = {
+                            autoExpandSubnotes.value = it
+                            SETTING_AUTO_EXPAND_SUBNOTES.save(it, context)
+                        })
+                    SwitchSetting(
+                        setting = SETTING_AUTO_EXPAND_ATTACHMENTS,
+                        initiallyChecked = autoExpandAttachments.value,
+                        onCheckedChanged = {
+                            autoExpandAttachments.value = it
+                            SETTING_AUTO_EXPAND_ATTACHMENTS.save(it, context)
+                        })
+                    SwitchSetting(
+                        setting = SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST,
+                        initiallyChecked = showProgressForMainTasks.value,
+                        onCheckedChanged = {
+                            showProgressForMainTasks.value = it
+                            SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.save(it, context)
+                        })
+
+                    Divider(
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .alpha(0.5f)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.settings_group_settings_for_subentries),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
+                    )
+
+                    AnimatedVisibility(subSectionExpanded.value.not()) {
+                        TextButton(onClick = { subSectionExpanded.value = true }) {
+                            Text(stringResource(id = R.string.list_expand))
+                        }
                     }
-                },
-                navController = navController
-            )
-        }
+
+                    AnimatedVisibility(subSectionExpanded.value) {
+                        Column {
+                            SwitchSetting(
+                                setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
+                                initiallyChecked = showProgressForSubTasks.value,
+                                onCheckedChanged = {
+                                    showProgressForSubTasks.value = it
+                                    SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
+                                })
+                            SwitchSetting(
+                                setting = SETTING_SHOW_SUBTASKS_IN_TASKLIST,
+                                initiallyChecked = showSubtasksInTasklist.value,
+                                onCheckedChanged = {
+                                    showSubtasksInTasklist.value = it
+                                    SETTING_SHOW_SUBTASKS_IN_TASKLIST.save(it, context)
+                                })
+                            SwitchSetting(
+                                setting = SETTING_SHOW_SUBNOTES_IN_NOTESLIST,
+                                initiallyChecked = showSubnotesInNoteslist.value,
+                                onCheckedChanged = {
+                                    showSubnotesInNoteslist.value = it
+                                    SETTING_SHOW_SUBNOTES_IN_NOTESLIST.save(it, context)
+                                })
+                            SwitchSetting(
+                                setting = SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST,
+                                initiallyChecked = showSubjournalsInJournallist.value,
+                                onCheckedChanged = {
+                                    showSubjournalsInJournallist.value = it
+                                    SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.save(it, context)
+                                })
+                        }
+
+                    }
+
+                    Divider(
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .alpha(0.5f)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.settings_tasks),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
+                    )
+
+                    DropdownSetting(
+                        setting = SETTING_DEFAULT_START_DATE,
+                        preselected = defaultStartDate.value,
+                        onSelectionChanged = { selection ->
+                            audioFormat.value = selection
+                            SETTING_DEFAULT_START_DATE.save(selection, context = context)
+                        }
+                    )
+                    DropdownSetting(
+                        setting = SETTING_DEFAULT_DUE_DATE,
+                        preselected = defaultDueDate.value,
+                        onSelectionChanged = { selection ->
+                            audioFormat.value = selection
+                            SETTING_DEFAULT_DUE_DATE.save(selection, context = context)
+                        }
+                    )
+                    DropdownSetting(
+                        setting = SETTING_PROGRESS_STEP,
+                        preselected = stepForProgress.value,
+                        onSelectionChanged = { selection ->
+                            stepForProgress.value = selection
+                            SETTING_PROGRESS_STEP.save(selection, context = context)
+                        }
+                    )
+                }
+            },
+            navController = navController,
+            paddingValues = paddingValues
+        )
     }
 }
 
@@ -256,19 +254,19 @@ fun SettingsScreen_Preview() {
 
         SettingsScreen(
             rememberNavController(),
-            currentTheme = mutableStateOf(SETTING_THEME.options.last()),
-            audioFormat = mutableStateOf(SETTING_AUDIO_FORMAT.options.first()),
-            autoExpandSubtasks = mutableStateOf(false),
-            autoExpandSubnotes = mutableStateOf(false),
-            autoExpandAttachments = mutableStateOf(false),
-            showProgressForMainTasks = mutableStateOf(true),
-            showProgressForSubTasks = mutableStateOf(true),
-            showSubtasksInTasklist = mutableStateOf(false),
-            showSubnotesInNoteslist = mutableStateOf(false),
-            showSubjournalsInJournallist = mutableStateOf(false),
-            defaultStartDate = mutableStateOf(SETTING_DEFAULT_START_DATE.options.first()),
-            defaultDueDate = mutableStateOf(SETTING_DEFAULT_DUE_DATE.options.first()),
-            stepForProgress = mutableStateOf(SETTING_PROGRESS_STEP.options.first())
+            currentTheme = remember { mutableStateOf(SETTING_THEME.options.last()) },
+            audioFormat = remember { mutableStateOf(SETTING_AUDIO_FORMAT.options.first()) },
+            autoExpandSubtasks = remember { mutableStateOf(false) },
+            autoExpandSubnotes = remember { mutableStateOf(false) },
+            autoExpandAttachments = remember { mutableStateOf(false) },
+            showProgressForMainTasks = remember { mutableStateOf(true) },
+            showProgressForSubTasks = remember { mutableStateOf(true) },
+            showSubtasksInTasklist = remember { mutableStateOf(false) },
+            showSubnotesInNoteslist = remember { mutableStateOf(false) },
+            showSubjournalsInJournallist = remember { mutableStateOf(false) },
+            defaultStartDate = remember { mutableStateOf(SETTING_DEFAULT_START_DATE.options.first()) },
+            defaultDueDate = remember { mutableStateOf(SETTING_DEFAULT_DUE_DATE.options.first()) },
+            stepForProgress = remember { mutableStateOf(SETTING_PROGRESS_STEP.options.first()) }
         )
     }
 }

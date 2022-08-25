@@ -325,7 +325,7 @@ class IcalEditViewModel(
                     newAlarm.triggerRelativeDuration != null -> newAlarm.getDatetimeFromTriggerDuration(iCalObjectUpdated.value?.dtstart, iCalObjectUpdated.value?.dtstartTimezone)
                     else -> null
                 }
-                triggerTime?.let { newAlarm.scheduleNotification(getApplication(), it) }
+                triggerTime?.let { newAlarm.scheduleNotification(getApplication(), it, false) }
             }
 
             // if a collection was selected that doesn't support VTODO, we do not update/insert any subtasks

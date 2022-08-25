@@ -700,7 +700,7 @@ data class ICalObject(
                             it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(item.property.dtstart, item.property.dtstartTimezone)
                             else -> null
                         }
-                        triggerTime?.let { trigger ->  it.scheduleNotification(context, trigger) }
+                        triggerTime?.let { trigger ->  it.scheduleNotification(context, trigger, item.ICalCollection?.readonly?: true) }
                     }
 
                     // relations need to be rebuilt from the new child to the parent
@@ -1109,7 +1109,7 @@ data class ICalObject(
                         it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(instance.property.dtstart, instance.property.dtstartTimezone)
                         else -> null
                     }
-                    triggerTime?.let { trigger -> it.scheduleNotification(context, trigger) }
+                    triggerTime?.let { trigger -> it.scheduleNotification(context, trigger, instance.ICalCollection?.readonly ?: true) }
                 }
             }
 

@@ -180,10 +180,12 @@ class IcalEditFragment : Fragment() {
             // Build constraints.
             // Create a custom date validator to only enable dates that are in the list
             val onlyFutureDatesValidator = object : CalendarConstraints.DateValidator {
+                override fun writeToParcel(p0: Parcel, p1: Int) { }
                 override fun describeContents(): Int { return 0 }
-                override fun writeToParcel(dest: Parcel?, flags: Int) {}
                 override fun isValid(date: Long): Boolean = date >= DateTimeUtils.getTodayAsLong()
             }
+
+
             val constraints = CalendarConstraints.Builder().apply {
                 setStart(zonedTimestamp.toInstant().toEpochMilli())
                 setValidator(onlyFutureDatesValidator)
@@ -196,6 +198,8 @@ class IcalEditFragment : Fragment() {
                     .build()
 
             val clockFormat = if (is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+
+
 
             val timePicker =
                 MaterialTimePicker.Builder()
@@ -993,7 +997,7 @@ class IcalEditFragment : Fragment() {
                 // Create a custom date validator to only enable dates that are in the list
                 val customDateValidator = object : CalendarConstraints.DateValidator {
                     override fun describeContents(): Int { return 0 }
-                    override fun writeToParcel(dest: Parcel?, flags: Int) {}
+                    override fun writeToParcel(p0: Parcel, p1: Int) {   }
                     override fun isValid(date: Long): Boolean {
                         if(tag == TAG_PICKER_DUE && icalEditViewModel.iCalObjectUpdated.value?.dtstart != null && date < getDateWithoutTime(icalEditViewModel.iCalObjectUpdated.value!!.dtstart!!, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone))
                             return false

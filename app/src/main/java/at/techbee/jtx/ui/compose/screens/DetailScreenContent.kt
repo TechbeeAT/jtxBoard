@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -56,20 +57,39 @@ fun DetailScreenContent(
 
     val context = LocalContext.current
 
-    var summary by remember { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
-    var description by remember { mutableStateOf(iCalEntity.value?.property?.description ?: "") }
-    val contact = remember { mutableStateOf(iCalEntity.value?.property?.contact ?: "") }
-    val url = remember { mutableStateOf(iCalEntity.value?.property?.url ?: "") }
-    val location = remember { mutableStateOf(iCalEntity.value?.property?.location ?: "") }
-    val geoLat = remember { mutableStateOf(iCalEntity.value?.property?.geoLat) }
-    val geoLong = remember { mutableStateOf(iCalEntity.value?.property?.geoLong) }
-    var status by remember { mutableStateOf(iCalEntity.value?.property?.status) }
-    var classification by remember { mutableStateOf(iCalEntity.value?.property?.classification) }
-    var priority by remember { mutableStateOf(iCalEntity.value?.property?.priority ?: 0) }
-    val categories = remember { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
-    val resources = remember { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
-    val attendees = remember { mutableStateOf(iCalEntity.value?.attendees ?: emptyList()) }
-    val attachments = remember { mutableStateOf(iCalEntity.value?.attachments ?: emptyList()) }
+    var summary by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
+    var description by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.description ?: "") }
+
+    var dtstart by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.dtstart) }
+    var dtstartTimezone by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.dtstartTimezone) }
+    var due by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.due) }
+    var dueTimezone by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.dueTimezone) }
+    var completed by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.completed) }
+    var completedTimezone by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.completedTimezone) }
+
+    val contact = rememberSaveable { mutableStateOf(iCalEntity.value?.property?.contact ?: "") }
+    val url = rememberSaveable { mutableStateOf(iCalEntity.value?.property?.url ?: "") }
+    val location = rememberSaveable { mutableStateOf(iCalEntity.value?.property?.location ?: "") }
+    val geoLat = rememberSaveable { mutableStateOf(iCalEntity.value?.property?.geoLat) }
+    val geoLong = rememberSaveable { mutableStateOf(iCalEntity.value?.property?.geoLong) }
+    var status by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.status) }
+    var classification by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.classification) }
+    var priority by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.priority ?: 0) }
+    val categories = rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
+    val resources = rememberSaveable { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
+    val attendees = rememberSaveable { mutableStateOf(iCalEntity.value?.attendees ?: emptyList()) }
+    val attachments = rememberSaveable { mutableStateOf(iCalEntity.value?.attachments ?: emptyList()) }
+    val alarms = rememberSaveable { mutableStateOf(iCalEntity.value?.alarms ?: emptyList()) }
+
+    fun save() {
+        iCalEntity.value?.property?.let {
+            it.summary = if(summary.isNotBlank()) summary else null
+            it.description = if(description.isNotBlank()) description else null
+            it.dtstart = dtstart
+            it.dtstartTimezone = dtstartTimezone
+            saveIcalObject(it)
+        }
+    }
 
 
     /*
@@ -139,22 +159,20 @@ fun DetailScreenContent(
                 }
             }
 
-            if (iCalEntity.value?.property?.module == Module.JOURNAL.name && iCalEntity.value?.property?.dtstart != null) {
+            if (iCalEntity.value?.property?.module == Module.JOURNAL.name && dtstart != null) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     VerticalDateCard(
-                        datetime = iCalEntity.value?.property?.dtstart,
-                        timezone = iCalEntity.value?.property?.dtstartTimezone,
+                        datetime = dtstart,
+                        timezone = dtstartTimezone,
                         isEditMode = isEditMode,
                         onDateTimeChanged = { datetime, timezone ->
-                            iCalEntity.value?.property?.let {
-                                it.dtstart = datetime
-                                it.dtstartTimezone = timezone
-                                saveIcalObject(it)
-                            }
+                            dtstart = datetime
+                            dtstartTimezone = timezone
+                            save()
                         }
                     )
                 }
@@ -202,7 +220,7 @@ fun DetailScreenContent(
                                     iCalEntity.value?.property?.let {
                                         if (summary != it.summary) {
                                             it.summary = summary
-                                            saveIcalObject(it)
+                                            save()
                                         }
                                     }
                                 }
@@ -223,14 +241,13 @@ fun DetailScreenContent(
                                     iCalEntity.value?.property?.let {
                                         if (description != it.description) {
                                             it.description = description
-                                            saveIcalObject(it)
+                                            save()
                                         }
                                     }
                                 }
                             }
                     )
                 }
-
             }
 
 
@@ -432,6 +449,14 @@ fun DetailScreenContent(
                     isEditMode = isEditMode,
                     onAttachmentsUpdated = { /*TODO*/ }
                 )
+            }
+
+            AnimatedVisibility(alarms.value.isNotEmpty() || isEditMode.value) {
+                DetailsCardAlarms(
+                    alarms = alarms,
+                    icalObject = iCalEntity.value?.property!!,
+                    isEditMode = isEditMode,
+                    onAlarmsUpdated = { /*TODO*/ })
             }
         }
     }

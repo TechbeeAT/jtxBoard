@@ -348,9 +348,15 @@
     <string name="edit_fragment_recur_unsupported_duration_dialog_message">A duration was detected for this entry in the background. Handling a duration is currently not supported by jtx Board. Please use the start, due and end date instead. If you save this entry, the existing duration will be deleted.</string>
 
     <!-- alarms -->
+    <string name="alarms_alarm">Alarm</string>
     <string name="alarms_onstart">On start</string>
     <string name="alarms_ondue">On due</string>
     <string name="alarms_custom">Custom</string>
+    <string name="alarms_before">before</string>
+    <string name="alarms_after">after</string>
+    <string name="alarms_start">start</string>
+    <string name="alarms_due">due</string>
+
     <string name="alarms_before_start">before Start</string>
     <string name="alarms_after_start">after Start</string>
     <string name="alarms_before_due">before Due</string>
