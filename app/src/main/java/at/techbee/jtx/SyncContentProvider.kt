@@ -559,7 +559,8 @@ class SyncContentProvider : ContentProvider() {
             attachment.binary = null
             attachment.uri = attachmentUri.toString()
             attachment.extension = ".$fileExtension"
-            attachment.filename = file.name
+            if(attachment.filename.isNullOrEmpty())
+                attachment.filename = file.name
             attachment.filesize = file.length()
             database.updateAttachment(attachment)
         } catch (e: IOException) {

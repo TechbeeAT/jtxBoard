@@ -38,8 +38,11 @@ class SyncUtil {
          * @return true if a sync is running for the JTX Sync Provider Authority (no matter which account)
          */
         fun isJtxSyncRunning(context: Context?): Boolean {
-            val accounts = AccountManager.get(context).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
-            return accounts.any { ContentResolver.isSyncActive(it, SYNC_PROVIDER_AUTHORITY) }   // else false
+            context?.let { currentContext ->
+                val accounts = AccountManager.get(currentContext).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
+                return accounts.any { ContentResolver.isSyncActive(it, SYNC_PROVIDER_AUTHORITY) }   // else false
+            }
+            return false
         }
 
         /**

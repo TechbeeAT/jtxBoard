@@ -266,6 +266,7 @@
                             android:text="@{model.icalEntity.property.summary}"
                             android:textSize="18sp"
                             android:textStyle="bold"
+                            android:textIsSelectable="true"
                             tools:text="Summary ... Lorem ipsum dolor sit amet" />
 
 
@@ -279,6 +280,7 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:paddingBottom="8dp"
+                            android:textIsSelectable="true"
                             tools:text="Description ... Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -656,7 +658,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="@{model.subtasksVisible ? View.VISIBLE : View.GONE}"
-                    app:drawableStartCompat="@drawable/ic_comments"
+                    app:drawableStartCompat="@drawable/ic_todo"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_barrier_taskdates_bottom" />
 
