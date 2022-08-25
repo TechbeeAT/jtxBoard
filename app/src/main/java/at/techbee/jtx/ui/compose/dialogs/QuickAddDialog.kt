@@ -19,7 +19,9 @@ import android.speech.SpeechRecognizer
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Mic
@@ -31,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,7 +42,9 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.ui.compose.cards.AttachmentCard
 import at.techbee.jtx.ui.compose.elements.CollectionsSpinner
 import java.util.*
 import kotlin.collections.ArrayList
@@ -48,9 +53,11 @@ import kotlin.collections.ArrayList
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuickAddDialog(
-    module: Module,
+    presetModule: Module?,
+    presetText: String = "",
+    presetAttachment: Attachment? = null,
     allCollections: List<ICalCollection>,
-    onEntrySaved: (newEntry: ICalObject, categories: List<Category>, editAfterSaving: Boolean) -> Unit,
+    onEntrySaved: (newEntry: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
 
@@ -59,22 +66,20 @@ fun QuickAddDialog(
 
     val context = LocalContext.current
     val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {  }
-    var showAudioPermissionDialog by remember { mutableStateOf(false) }
-    var lastUsedCollectionId by rememberSaveable { mutableStateOf(allCollections.first().collectionId) }   // TODO: For some reason the state is not saved!
-    val newICalObject = when(module) {
-        Module.JOURNAL -> ICalObject.createJournal()
-        Module.NOTE -> ICalObject.createNote()
-        Module.TODO -> ICalObject.createTodo().apply {
-            this.setDefaultDueDateFromSettings(context)
-            this.setDefaultStartDateFromSettings(context)
-        }
-    }
-    var quickAddText by remember { mutableStateOf("") }
-    var noTextError by remember { mutableStateOf(false) }
+    var showAudioPermissionDialog by rememberSaveable { mutableStateOf(false) }
+    var currentCollection by rememberSaveable { mutableStateOf(allCollections.first()) }
+    // TODO: Load last used collection!
+
+    var currentModule by rememberSaveable { mutableStateOf(presetModule ?: Module.JOURNAL) }
+    var currentText by rememberSaveable { mutableStateOf(presetText) }
+    var currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
+    var noTextError by rememberSaveable { mutableStateOf(false) }
     var editAfterSaving by rememberSaveable { mutableStateOf(false) }
+    // TODO save in settings
 
 
     val sr: SpeechRecognizer? = when {
+        LocalInspectionMode.current -> null   // enables preview
         SpeechRecognizer.isRecognitionAvailable(context) -> SpeechRecognizer.createSpeechRecognizer(context)
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && SpeechRecognizer.isOnDeviceRecognitionAvailable(context) -> SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
         else -> null
@@ -87,7 +92,7 @@ fun QuickAddDialog(
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = { Text(
-            stringResource(id = when(module) {
+            stringResource(id = when(currentModule) {
                 Module.JOURNAL -> R.string.menu_list_quick_journal
                 Module.NOTE -> R.string.menu_list_quick_note
                 Module.TODO -> R.string.menu_list_quick_todo
@@ -99,20 +104,41 @@ fun QuickAddDialog(
                 Column {
                     CollectionsSpinner(
                         collections = allCollections,
-                        preselected = allCollections.find { it.collectionId == lastUsedCollectionId } ?: allCollections.first(),
+                        preselected = allCollections.find { it == currentCollection } ?: allCollections.first(),
                         includeReadOnly = false,
-                        includeVJOURNAL = if(module == Module.JOURNAL || module == Module.NOTE) true else null,
-                        includeVTODO = if(module == Module.TODO) true else null,
-                        onSelectionChanged = { selected ->
-                            newICalObject.collectionId = selected.collectionId
-                            lastUsedCollectionId = selected.collectionId
-                        }
+                        includeVJOURNAL = if(currentModule == Module.JOURNAL || currentModule == Module.NOTE) true else null,
+                        includeVTODO = if(currentModule == Module.TODO) true else null,
+                        onSelectionChanged = { selected -> currentCollection = selected }
                     )
 
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .horizontalScroll(rememberScrollState())
+                            .align(Alignment.CenterHorizontally)
+                    ) {
+                       FilterChip(
+                           selected = currentModule == Module.JOURNAL,
+                           onClick = { currentModule = Module.JOURNAL },
+                           label = { Text(stringResource(id = R.string.journal))}
+                       )
+                        FilterChip(
+                            selected = currentModule == Module.NOTE,
+                            onClick = { currentModule = Module.NOTE },
+                            label = { Text(stringResource(id = R.string.note))}
+                        )
+                        FilterChip(
+                            selected = currentModule == Module.TODO,
+                            onClick = { currentModule = Module.TODO },
+                            label = { Text(stringResource(id = R.string.task))}
+                        )
+                    }
+
                     OutlinedTextField(
-                        value = quickAddText,
+                        value = currentText,
                         onValueChange = {
-                            quickAddText = it
+                            currentText = it
                             noTextError = false
                                         },
                         label = { Text(stringResource(id = R.string.list_quickadd_dialog_summary_description_hint)) },
@@ -150,11 +176,11 @@ fun QuickAddDialog(
                                             override fun onResults(bundle: Bundle?) {
                                                 srTextResult = ""
                                                 val data: ArrayList<String>? = bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                                                if(quickAddText.isNotBlank())   // add a return if there is already text present to add it in a new line
-                                                    quickAddText += "\n"
+                                                if(currentText.isNotBlank())   // add a return if there is already text present to add it in a new line
+                                                    currentText += "\n"
                                                 // the bundle contains multiple possible results with the result of the highest probability on top. We show only the must likely result at position 0.
                                                 if (data?.isNotEmpty() == true)
-                                                    quickAddText += data[0]
+                                                    currentText += data[0]
                                             }
                                         })
                                         sr.startListening(srIntent)
@@ -165,7 +191,8 @@ fun QuickAddDialog(
                             }
                         },
                         maxLines = 3,
-                        modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         isError = noTextError,
                     )
 
@@ -176,6 +203,15 @@ fun QuickAddDialog(
                     }
                     AnimatedVisibility(srTextResult.isNotBlank()) {
                         Text(srTextResult, modifier = Modifier.padding(vertical = 8.dp))
+                    }
+
+                    AnimatedVisibility(currentAttachment != null) {
+                        AttachmentCard(
+                            attachment = currentAttachment!!,
+                            isEditMode = remember { mutableStateOf(false) },
+                            onAttachmentDeleted = { /* no editing here */ },
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
                     }
 
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
@@ -193,11 +229,20 @@ fun QuickAddDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    if(quickAddText.isNotBlank()) {
-                        newICalObject.parseSummaryAndDescription(quickAddText)
-                        newICalObject.parseURL(quickAddText)
-                        val categories = Category.extractHashtagsFromText(quickAddText)
-                        onEntrySaved(newICalObject, categories, editAfterSaving)
+                    if(currentText.isNotBlank()) {
+                        val newICalObject = when(currentModule) {
+                            Module.JOURNAL -> ICalObject.createJournal()
+                            Module.NOTE -> ICalObject.createNote()
+                            Module.TODO -> ICalObject.createTodo().apply {
+                                this.setDefaultDueDateFromSettings(context)
+                                this.setDefaultStartDateFromSettings(context)
+                            }
+                        }
+                        newICalObject.collectionId = currentCollection.collectionId
+                        newICalObject.parseSummaryAndDescription(currentText)
+                        newICalObject.parseURL(currentText)
+                        val categories = Category.extractHashtagsFromText(currentText)
+                        onEntrySaved(newICalObject, categories, currentAttachment, editAfterSaving)
                         onDismiss()
                     } else {
                         noTextError = true
@@ -257,10 +302,12 @@ fun QuickAddDialog_Preview() {
         )
 
         QuickAddDialog(
-            module = Module.JOURNAL,
+            presetModule = Module.JOURNAL,
             allCollections = listOf(collection1, collection2, collection3),
             onDismiss = { },
-            onEntrySaved = { _, _, _ -> }
+            onEntrySaved = { _, _, _, _ -> },
+            presetText = "This is my preset text",
+            presetAttachment = Attachment(filename = "My File.PDF")
         )
     }
 }

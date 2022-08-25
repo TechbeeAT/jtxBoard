@@ -164,7 +164,7 @@ fun DetailsCardAttendees(
                         if(attendees.value.none { existing -> existing.getDisplayString() == newAttendee.value }) {
                             InputChip(
                                 onClick = {
-                                    val newAttendeeObject = if(DateTimeUtils.isValidEmail(newAttendee.value))
+                                    val newAttendeeObject = if(UiUtil.isValidEmail(newAttendee.value))
                                         Attendee(caladdress = "mailto:" + newAttendee)
                                     else
                                         Attendee(cn = newAttendee.value)
@@ -252,7 +252,7 @@ fun DetailsCardAttendees(
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
                             //if(newAttendee.value.isNotEmpty() && attendees.value.none { existing -> existing.getDisplayString() == newAttendee.value } )
-                            val newAttendeeObject = if(DateTimeUtils.isValidEmail(newAttendee.value))
+                            val newAttendeeObject = if(UiUtil.isValidEmail(newAttendee.value))
                                 Attendee(caladdress = "mailto:" + newAttendee)
                             else
                                 Attendee(cn = newAttendee.value)

@@ -116,24 +116,6 @@ object DateTimeUtils {
         return zonedDateTime.toLocalDateTime().format(formatter)
     }
 
-
-    fun isValidEmail(emailString: String?): Boolean {
-        return emailString?.isNotEmpty() == true && PatternsCompat.EMAIL_ADDRESS.matcher(emailString).matches()
-    }
-
-    fun isValidURL(urlString: String?): Boolean {
-        return PatternsCompat.WEB_URL.matcher(urlString.toString()).matches()
-    }
-
-    fun getAttachmentSizeString(filesize: Long): String {
-        return when {
-            filesize < 1024 -> "$filesize Bytes"
-            filesize / 1024 < 1024 -> "${filesize / 1024} KB"
-            else -> "${filesize / 1024 / 1024} MB"
-        }
-    }
-
-
     fun getLocalizedOrdinal(from: Int, to: Int, includeEmpty: Boolean): Array<String> {
 
         val ordinalValues: MutableList<String> = mutableListOf()

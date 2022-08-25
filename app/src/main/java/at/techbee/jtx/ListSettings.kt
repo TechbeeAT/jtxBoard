@@ -24,6 +24,8 @@ data class ListSettings(
     var searchAccount: MutableState<List<String>> = mutableStateOf(emptyList())
     var orderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
     var sortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
+    var orderBy2: MutableState<OrderBy> = mutableStateOf(OrderBy.SUMMARY)
+    var sortOrder2: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var isExcludeDone: MutableState<Boolean> = mutableStateOf(false)
     var isFilterOverdue: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false)
@@ -48,6 +50,8 @@ data class ListSettings(
         private const val PREFS_EXCLUDE_DONE = "prefsExcludeDone"
         private const val PREFS_ORDERBY = "prefsOrderBy"
         private const val PREFS_SORTORDER = "prefsSortOrder"
+        private const val PREFS_ORDERBY2 = "prefsOrderBy2"
+        private const val PREFS_SORTORDER2 = "prefsSortOrder2"
         private const val PREFS_FILTER_OVERDUE = "prefsFilterOverdue"
         private const val PREFS_FILTER_DUE_TODAY = "prefsFilterToday"
         private const val PREFS_FILTER_DUE_TOMORROW = "prefsFilterTomorrow"
@@ -74,6 +78,8 @@ data class ListSettings(
         searchAccount.value = prefs.getStringSet(PREFS_ACCOUNT, null)?.toMutableList() ?: mutableListOf()
         orderBy.value = prefs.getString(PREFS_ORDERBY, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.DUE
         sortOrder.value = prefs.getString(PREFS_SORTORDER, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.ASC
+        orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { OrderBy.valueOf(it) } ?: OrderBy.DUE
+        sortOrder2.value = prefs.getString(PREFS_SORTORDER2, null)?.let { SortOrder.valueOf(it) } ?: SortOrder.ASC
 
         viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { ViewMode.valueOf(it) } ?: ViewMode.LIST
     }
@@ -88,6 +94,8 @@ data class ListSettings(
             putBoolean(PREFS_FILTER_NO_DATES_SET, isFilterNoDatesSet.value)
             putString(PREFS_ORDERBY, orderBy.value.name)
             putString(PREFS_SORTORDER, sortOrder.value.name)
+            putString(PREFS_ORDERBY2, orderBy2.value.name)
+            putString(PREFS_SORTORDER2, sortOrder2.value.name)
             putBoolean(PREFS_EXCLUDE_DONE, isExcludeDone.value)
 
             putStringSet(PREFS_CATEGORIES, searchCategories.value.toSet())

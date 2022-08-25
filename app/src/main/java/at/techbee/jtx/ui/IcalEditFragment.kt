@@ -8,54 +8,48 @@
 
 package at.techbee.jtx.ui
 
-import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Application
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
-import android.provider.ContactsContract
-import android.provider.MediaStore
-import android.provider.OpenableColumns
 import android.text.InputType
 import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
-import android.util.Size
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.webkit.MimeTypeMap
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import at.techbee.jtx.*
+import at.techbee.jtx.BuildConfig
+import at.techbee.jtx.MainActivity
+import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.Component
-import at.techbee.jtx.database.properties.*
-import at.techbee.jtx.databinding.*
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.AlarmRelativeTo
+import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Comment
+import at.techbee.jtx.databinding.FragmentIcalEditBinding
+import at.techbee.jtx.databinding.FragmentIcalEditColorpickerDialogBinding
+import at.techbee.jtx.databinding.FragmentIcalEditCommentBinding
+import at.techbee.jtx.databinding.FragmentIcalEditSubtaskBinding
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.JtxReviewManager
+import at.techbee.jtx.flavored.MapManager
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_AFTER
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_NEVER
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_END_ON
-import at.techbee.jtx.flavored.MapManager
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_DAY
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_MONTH
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.RECURRENCE_MODE_UNSUPPORTED
@@ -75,11 +69,8 @@ import at.techbee.jtx.util.DateTimeUtils.getDateWithoutTime
 import at.techbee.jtx.util.DateTimeUtils.getLocalizedWeekdays
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.isLocalizedWeekstartMonday
-import at.techbee.jtx.util.DateTimeUtils.isValidEmail
-import at.techbee.jtx.util.DateTimeUtils.isValidURL
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import at.techbee.jtx.util.SyncUtil
-import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -91,9 +82,6 @@ import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
 import net.fortuna.ical4j.model.*
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
 import java.time.*
 import java.time.temporal.ChronoUnit
 
@@ -110,29 +98,9 @@ class IcalEditFragment : Fragment() {
     private var container: ViewGroup? = null
     private var menu: Menu? = null
 
-    private val allContactsSpinner: MutableList<String> = mutableListOf()
-    private val allContactsAsAttendees: MutableList<Attendee> = mutableListOf()
-    //private val allContactsNameAndMail: MutableList<String> = mutableListOf()
     private var rruleUntil: Long = System.currentTimeMillis()
 
-    private var photoUri: Uri? = null     // Uri for captured photo
-
-    private var filepickerLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                processFileAttachment(result.data?.data)
-            }
-        }
-
-    private var photoAttachmentLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                processPhotoAttachment()
-            }
-        }
-
     private var toastNoDtstart: Toast? = null
-
 
 
     companion object {
@@ -178,22 +146,6 @@ class IcalEditFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
 
-        val priorityItems = resources.getStringArray(R.array.priority)
-
-        var classificationItems: Array<String> = arrayOf()
-        Classification.values().forEach {
-            classificationItems = classificationItems.plus(getString(it.stringResource))
-        }
-
-        var statusItems: Array<String> = arrayOf()
-        if (icalEditViewModel.iCalEntity.property.component == Component.VTODO.name) {
-            StatusTodo.values()
-                .forEach { statusItems = statusItems.plus(getString(it.stringResource)) }
-        } else {
-            StatusJournal.values()
-                .forEach { statusItems = statusItems.plus(getString(it.stringResource)) }
-        }
-
         //Don't show the recurring tab for Notes
         if(icalEditViewModel.iCalEntity.property.module == Module.NOTE.name && binding.icalEditTabs.tabCount >= TAB_RECURRING)
             binding.icalEditTabs.getTabAt(TAB_RECURRING)?.view?.visibility = View.GONE
@@ -208,7 +160,6 @@ class IcalEditFragment : Fragment() {
                 override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
                     icalEditViewModel.selectedCollectionId = icalEditViewModel.allCollections.value?.get(pos)?.collectionId ?: return
                     icalEditViewModel.iCalObjectUpdated.value?.collectionId = icalEditViewModel.selectedCollectionId ?: icalEditViewModel.allCollections.value?.first()?.collectionId ?: return
-                    updateCollectionColor()
 
                     //Don't show the subtasks tab if the collection doesn't support VTODO
                     val currentCollection = icalEditViewModel.allCollections.value?.find { col -> col.collectionId == icalEditViewModel.iCalObjectUpdated.value?.collectionId }
@@ -516,10 +467,6 @@ class IcalEditFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
         })
 
-        binding.editFragmentTabGeneral.editSummaryEditTextinputfield.addTextChangedListener {
-            updateToolbarText()
-        }
-
         binding.editFragmentTabGeneral.editColorItem.setOnClickListener {
 
             val colorPickerBinding = FragmentIcalEditColorpickerDialogBinding.inflate(inflater)
@@ -650,26 +597,8 @@ class IcalEditFragment : Fragment() {
 
         icalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {
 
-            updateToolbarText()
-
             binding.editFragmentTabGeneral.editProgressPercent.text = String.format("%.0f%%", it.percent?.toFloat() ?: 0F)
 
-            // Set the default value of the priority Chip
-            when (it.priority) {
-                null -> binding.editFragmentTabGeneral.editPriorityChip.text = priorityItems[0]
-                in 0..9 -> binding.editFragmentTabGeneral.editPriorityChip.text =
-                    priorityItems[it.priority!!]  // if supported show the priority according to the String Array
-                else -> binding.editFragmentTabGeneral.editPriorityChip.text = it.priority.toString()
-            }
-
-            // Set the default value of the Status Chip
-            when (it.component) {
-                Component.VTODO.name -> binding.editFragmentTabGeneral.editStatusChip.text =
-                    StatusTodo.getStringResource(requireContext(), it.status) ?: it.status
-                Component.VJOURNAL.name -> binding.editFragmentTabGeneral.editStatusChip.text =
-                    StatusJournal.getStringResource(requireContext(), it.status) ?: it.status
-                else -> binding.editFragmentTabGeneral.editStatusChip.text = it.status
-            }       // if unsupported just show whatever is there
 
             // show the reset dates menu item if it is a to-do
             if(it.module == Module.TODO.name)
@@ -691,8 +620,6 @@ class IcalEditFragment : Fragment() {
             updateRRule()
             icalEditViewModel.updateVisibility()
 
-            // update color for collection if possible
-            updateCollectionColor()
             // update color for item if possible
             ICalObject.applyColorOrHide(binding.editFragmentTabGeneral.editColorbarItem, it.color)
 
@@ -847,33 +774,6 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-        icalEditViewModel.iCalEntity.attachments?.forEach { singleAttachment ->
-            if(!icalEditViewModel.attachmentUpdated.contains(singleAttachment)) {
-                icalEditViewModel.attachmentUpdated.add(singleAttachment)
-                addAttachmentView(singleAttachment)
-            }
-        }
-
-        icalEditViewModel.iCalEntity.categories?.forEach { singleCategory ->
-            if(!icalEditViewModel.categoryUpdated.contains(singleCategory)) {
-                icalEditViewModel.categoryUpdated.add(singleCategory)
-                addCategoryChip(singleCategory)
-            }
-        }
-
-        icalEditViewModel.iCalEntity.attendees?.forEach { singleAttendee ->
-            if(!icalEditViewModel.attendeeUpdated.contains(singleAttendee)) {
-                icalEditViewModel.attendeeUpdated.add(singleAttendee)
-                addAttendeeChip(singleAttendee)
-            }
-        }
-
-        icalEditViewModel.iCalEntity.resources?.forEach { singleResource ->
-            if(!icalEditViewModel.resourceUpdated.contains(singleResource)) {
-                icalEditViewModel.resourceUpdated.add(singleResource)
-                addResourceChip(singleResource)
-            }
-        }
 
         icalEditViewModel.iCalEntity.alarms?.forEach { singleAlarm ->
             if(!icalEditViewModel.alarmUpdated.contains(singleAlarm)) {
@@ -918,52 +818,6 @@ class IcalEditFragment : Fragment() {
                 binding.editFragmentIcalEditRecur.editRecurSwitch.isEnabled = false
             }
         }
-
-        icalEditViewModel.allCollections.observe(viewLifecycleOwner) {
-
-            if (it.isNullOrEmpty())
-                return@observe
-
-            // do not update anything about the collections anymore, as the user might have changed the selection and interference must be avoided!
-            if (icalEditViewModel.selectedCollectionId != null)
-                return@observe
-
-            // set up the adapter for the organizer spinner
-            val spinner: Spinner = binding.editFragmentTabGeneral.editCollectionSpinner
-            val allCollectionNames: MutableList<String> = mutableListOf()
-            icalEditViewModel.allCollections.value?.forEach { collection ->
-                if (collection.displayName?.isNotEmpty() == true && collection.accountName?.isNotEmpty() == true)
-                    allCollectionNames.add(collection.displayName + " (" + collection.accountName + ")")
-                else
-                    allCollectionNames.add(collection.displayName ?: "-")
-            }
-            val adapter = ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                allCollectionNames
-            )
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
-
-            // set the default selection for the spinner.
-            val selectedCollectionPos: Int = if (icalEditViewModel.iCalEntity.property.id == 0L) {
-                val lastUsedCollectionId = prefs.getLong(PREFS_LAST_COLLECTION, 1L)
-                val lastUsedCollection =
-                    icalEditViewModel.allCollections.value?.find { colList -> colList.collectionId == lastUsedCollectionId }
-                icalEditViewModel.allCollections.value?.indexOf(lastUsedCollection) ?: 0
-            } else {
-                icalEditViewModel.allCollections.value?.indexOf(icalEditViewModel.iCalEntity.ICalCollection)
-                    ?: 0
-            }
-            binding.editFragmentTabGeneral.editCollectionSpinner.setSelection(selectedCollectionPos)
-
-            //as loading the collections might take longer than loading the icalObject, we additionally set the color here
-            updateCollectionColor()
-
-            //don't observe anymore when steps are done
-            icalEditViewModel.allCollections.removeObservers(viewLifecycleOwner)
-        }
-
 
         binding.editFragmentTabGeneral.editDtstartCard.setOnClickListener {
             showDatePicker(
@@ -1060,187 +914,6 @@ class IcalEditFragment : Fragment() {
         }
 
 
-        // Transform the category input into a chip when the Add-Button is clicked
-        binding.editFragmentTabGeneral.editCategoriesAdd.setEndIconOnClickListener {
-            addNewCategory()
-        }
-
-        // Transform the category input into a chip when the Done button in the keyboard is clicked
-        binding.editFragmentTabGeneral.editCategoriesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
-            return@setOnEditorActionListener when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    addNewCategory()
-                    true
-                }
-                else -> false
-            }
-        }
-
-        binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
-            binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.setText(binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.adapter?.getItem(i).toString())
-            addNewCategory()
-        }
-
-
-        binding.editFragmentTabCar.editResourcesAdd.setEndIconOnClickListener {
-            addNewResource()
-        }
-
-        // Transform the resource input into a chip when the Done button in the keyboard is clicked
-        binding.editFragmentTabCar.editResourcesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
-            return@setOnEditorActionListener when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    addNewResource()
-                    true
-                }
-                else -> false
-            }
-        }
-
-        binding.editFragmentTabCar.editResourcesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
-            binding.editFragmentTabCar.editResourcesAddAutocomplete.setText(binding.editFragmentTabCar.editResourcesAddAutocomplete.adapter?.getItem(i).toString())
-            addNewResource()
-        }
-
-        binding.editFragmentTabCar.editAttendeesAddAutocomplete.setOnItemClickListener { _, _, i, _ ->
-            val selection = binding.editFragmentTabCar.editAttendeesAddAutocomplete.adapter.getItem(i).toString()
-            val selectionPos = allContactsSpinner.indexOf(selection)
-            if(selectionPos == -1)
-                return@setOnItemClickListener
-            val attendee = allContactsAsAttendees[selectionPos]
-
-            //binding.editAttendeesAddAutocomplete.setText(binding.editAttendeesAddAutocomplete.adapter.getItem(i).toString())
-            addNewAttendee(attendee)
-        }
-
-        binding.editFragmentTabCar.editAttendeesAdd.setEndIconOnClickListener {
-            addNewAttendee(Attendee.fromString(binding.editFragmentTabCar.editAttendeesAdd.editText?.text.toString()))
-        }
-
-        // Transform the category input into a chip when the Done button in the keyboard is clicked
-        binding.editFragmentTabCar.editAttendeesAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
-            return@setOnEditorActionListener when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    addNewAttendee(Attendee.fromString(binding.editFragmentTabCar.editAttendeesAdd.editText?.text.toString()))
-                    true
-                }
-                else -> false
-            }
-        }
-
-        binding.editFragmentTabUlc.editCommentAdd.setEndIconOnClickListener {
-            // Respond to end icon presses
-            if(binding.editFragmentTabUlc.editCommentAdd.editText?.text.isNullOrEmpty())
-                return@setEndIconOnClickListener
-            val newComment = Comment(text = binding.editFragmentTabUlc.editCommentAdd.editText?.text.toString())
-            icalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
-            addCommentView(newComment)      // add the new comment
-            binding.editFragmentTabUlc.editCommentAdd.editText?.text?.clear()  // clear the field
-
-        }
-
-        // Transform the comment input into a view when the Done button in the keyboard is clicked
-        binding.editFragmentTabUlc.editCommentAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
-            when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    if(binding.editFragmentTabUlc.editCommentAdd.editText?.text.isNullOrEmpty())
-                        return@setOnEditorActionListener false
-                    val newComment =
-                        Comment(text = binding.editFragmentTabUlc.editCommentAdd.editText?.text.toString())
-                    icalEditViewModel.commentUpdated.add(newComment)    // store the comment for saving
-                    addCommentView(newComment)      // add the new comment
-                    binding.editFragmentTabUlc.editCommentAdd.editText?.text?.clear()  // clear the field
-                    true
-                }
-                else -> false
-            }
-        }
-
-        binding.editFragmentTabAttachments.buttonAttachmentAdd.setOnClickListener {
-            var chooseFile = Intent(Intent.ACTION_GET_CONTENT)
-            chooseFile.type = "*/*"
-            chooseFile = Intent.createChooser(chooseFile, "Choose a file")
-            try {
-                filepickerLauncher.launch(chooseFile)
-            } catch (e: ActivityNotFoundException) {
-                Log.e("chooseFileIntent", "Failed to open filepicker\n$e")
-                Toast.makeText(context, "Failed to open filepicker", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        // don't show the button if the device does not have a camera
-        if (!requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY))
-            binding.editFragmentTabAttachments.buttonAttachmentTakePicture.visibility = View.GONE
-
-        binding.editFragmentTabAttachments.buttonAttachmentTakePicture.setOnClickListener {
-
-            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-                try {
-                    val storageDir = Attachment.getAttachmentDirectory(requireContext())
-                    val file = File.createTempFile("jtx_", ".jpg", storageDir)
-                    //Log.d("externalFilesPath", file.absolutePath)
-
-                    photoUri =
-                        FileProvider.getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, file)
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-                    photoAttachmentLauncher.launch(takePictureIntent)
-
-                } catch (e: ActivityNotFoundException) {
-                    Log.e("takePictureIntent", "Failed to open camera\n$e")
-                    Toast.makeText(context, "Failed to open camera", Toast.LENGTH_LONG).show()
-                } catch (e: IOException) {
-                    Log.e("takePictureIntent", "Failed to access storage\n$e")
-                    Toast.makeText(context, "Failed to access storage", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-
-        binding.editFragmentTabAttachments.buttonAttachmentAddLink.setOnClickListener {
-
-            val addlinkBindingDialog = FragmentIcalEditAttachmentAddlinkDialogBinding.inflate(inflater)
-
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle(R.string.edit_attachment_add_link_dialog)
-            builder.setIcon(R.drawable.ic_link)
-            builder.setView(addlinkBindingDialog.root)
-            builder.setPositiveButton(R.string.save) { _, _ ->
-
-                if(isValidURL(addlinkBindingDialog.editAttachmentAddDialogEdittext.text.toString())) {
-
-                    val uri = Uri.parse(addlinkBindingDialog.editAttachmentAddDialogEdittext.text.toString())
-
-                    if(uri != null) {
-                        val filename = uri.lastPathSegment
-                        val extension = filename?.substringAfterLast('.', "")
-
-                        val newAttachment = Attachment(
-                            //fmttype = mimeType,
-                            uri = uri.toString(),
-                            filename = uri.toString(),
-                            extension = extension,
-                            fmttype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                        )
-
-                        icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
-                        addAttachmentView(newAttachment)      // add the new attachment
-                        return@setPositiveButton
-                    }
-                }
-
-                // only reached when attachment could not be added
-                Toast.makeText(context, "Invalid URL, please provide a valid URL to add a linked attachment.", Toast.LENGTH_LONG).show()
-
-            }
-
-            builder.setNegativeButton(R.string.cancel) { _, _ ->
-                // Do nothing, just close the message
-            }
-
-            addlinkBindingDialog.editAttachmentAddDialogEdittext.requestFocusFromTouch()
-            builder.show()
-        }
-
         binding.editFragmentTabSubtasks.editSubtasksAdd.setEndIconOnClickListener {
             // Respond to end icon presses
             if(binding.editFragmentTabSubtasks.editSubtasksAdd.editText?.text.toString().isNotBlank()) {
@@ -1270,92 +943,6 @@ class IcalEditFragment : Fragment() {
         }
 
 
-        binding.editFragmentTabGeneral.editStatusChip.setOnClickListener {
-
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.status)
-                .setItems(statusItems) { _, which ->
-                    // Respond to item chosen
-                    if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VTODO.name) {
-                        icalEditViewModel.iCalObjectUpdated.value!!.status =
-                            StatusTodo.values().getOrNull(which)!!.name
-                        binding.editFragmentTabGeneral.editStatusChip.text = StatusTodo.getStringResource(
-                            requireContext(),
-                            icalEditViewModel.iCalObjectUpdated.value!!.status
-                        )
-                    }
-
-                    if (icalEditViewModel.iCalObjectUpdated.value!!.component == Component.VJOURNAL.name) {
-                        icalEditViewModel.iCalObjectUpdated.value!!.status =
-                            StatusJournal.values().getOrNull(which)!!.name
-                        binding.editFragmentTabGeneral.editStatusChip.text = StatusJournal.getStringResource(
-                            requireContext(),
-                            icalEditViewModel.iCalObjectUpdated.value!!.status
-                        )
-                    }
-
-                }
-                .setIcon(R.drawable.ic_status)
-                .setNegativeButton(R.string.reset) { _, _ ->
-                    icalEditViewModel.iCalObjectUpdated.value!!.status = null
-                    binding.editFragmentTabGeneral.editStatusChip.text = ""
-                }
-                .setNeutralButton(R.string.cancel) { _, _ -> return@setNeutralButton }
-                .show()
-        }
-
-
-        binding.editFragmentTabGeneral.editClassificationChip.setOnClickListener {
-
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.classification)
-                .setItems(classificationItems) { _, which ->
-                    // Respond to item chosen
-                    icalEditViewModel.iCalObjectUpdated.value!!.classification =
-                        Classification.values().getOrNull(which)!!.name
-                    binding.editFragmentTabGeneral.editClassificationChip.text = Classification.getStringResource(
-                        requireContext(),
-                        icalEditViewModel.iCalObjectUpdated.value!!.classification
-                    )    // don't forget to update the UI
-                }
-                .setIcon(R.drawable.ic_classification)
-                .setNegativeButton(R.string.reset) { _, _ ->
-                    icalEditViewModel.iCalObjectUpdated.value!!.classification = null
-                    binding.editFragmentTabGeneral.editClassificationChip.text = ""
-                }
-                .setNeutralButton(R.string.cancel) { _, _ -> return@setNeutralButton }
-                .show()
-        }
-
-
-        binding.editFragmentTabGeneral.editPriorityChip.setOnClickListener {
-
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.priority)
-                .setItems(priorityItems) { _, which ->
-                    // Respond to item chosen
-                    icalEditViewModel.iCalObjectUpdated.value!!.priority = which
-                    binding.editFragmentTabGeneral.editPriorityChip.text =
-                        priorityItems[which]     // don't forget to update the UI
-                }
-                .setIcon(R.drawable.ic_priority)
-                .show()
-        }
-
-
-        binding.editFragmentTabUlc.editUrlEdit.editText?.setOnFocusChangeListener { _, _ ->
-            if ((binding.editFragmentTabUlc.editUrlEdit.editText?.text?.isNotBlank() == true && !isValidURL(binding.editFragmentTabUlc.editUrlEdit.editText?.text.toString())))
-                icalEditViewModel.urlError.value = "Please enter a valid URL"
-        }
-
-        binding.editFragmentTabCar.editAttendeesAdd.editText?.setOnFocusChangeListener { _, _ ->
-            if ((binding.editFragmentTabCar.editAttendeesAdd.editText?.text?.isNotBlank() == true && !isValidEmail(
-                    binding.editFragmentTabCar.editAttendeesAdd.editText?.text.toString()
-                ))
-            )
-                icalEditViewModel.attendeesError.value = "Please enter a valid E-Mail address"
-        }
-
         binding.editBottomBar.setOnMenuItemClickListener { menuItem ->
             when(menuItem.itemId) {
                 R.id.menu_edit_bottom_delete -> icalEditViewModel.deleteClicked()
@@ -1368,7 +955,6 @@ class IcalEditFragment : Fragment() {
     }
 
     override fun onResume() {
-        updateToolbarText()
         icalEditViewModel.updateVisibility()
         super.onResume()
     }
@@ -1378,42 +964,7 @@ class IcalEditFragment : Fragment() {
         _binding = null
     }
 
-    private fun updateToolbarText() {
-        try {
-            val activity = requireActivity() as MainActivity
-            val toolbarText = if(icalEditViewModel.iCalEntity.property.id == 0L) {
-                when (icalEditViewModel.iCalObjectUpdated.value?.module) {
-                    Module.JOURNAL.name -> getString(R.string.toolbar_text_add_journal)
-                    Module.NOTE.name -> getString(R.string.toolbar_text_add_note)
-                    Module.TODO.name -> getString(R.string.toolbar_text_add_task)
-                    else -> ""
-                }
-            } else {
-                when (icalEditViewModel.iCalObjectUpdated.value?.module) {
-                    Module.JOURNAL.name -> getString(R.string.toolbar_text_edit_journal)
-                    Module.NOTE.name -> getString(R.string.toolbar_text_edit_note)
-                    Module.TODO.name -> getString(R.string.toolbar_text_edit_task)
-                    else -> ""
-                }
-            }
 
-            //activity.setToolbarTitle(toolbarText, binding.editFragmentTabGeneral.editSummaryEditTextinputfield.text.toString() )
-        } catch (e: ClassCastException) {
-            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
-        }
-    }
-
-    /**
-     * This function updates the color of the colored edge with the color of the selected collection
-     */
-    private fun updateCollectionColor() {
-        val selectedCollection = icalEditViewModel.allCollections.value?.find { collection ->
-            collection.collectionId == (icalEditViewModel.selectedCollectionId
-                ?: icalEditViewModel.iCalObjectUpdated.value?.collectionId)
-        }
-        // applying the color
-        ICalObject.applyColorOrHide(binding.editFragmentTabGeneral.editColorbarCollection, selectedCollection?.color)
-    }
 
     private fun showDatePicker(presetTime: Long, timezone: String?, tag: String) {
 
@@ -1642,102 +1193,6 @@ class IcalEditFragment : Fragment() {
     }
 
 
-    private fun addCategoryChip(category: Category) {
-
-        if (category.text.isBlank())
-            return
-
-        val categoryChip = inflater.inflate(
-            R.layout.fragment_ical_edit_categories_chip,
-            binding.editFragmentTabGeneral.editCategoriesChipgroup,
-            false
-        ) as Chip
-        categoryChip.text = category.text
-        binding.editFragmentTabGeneral.editCategoriesChipgroup.addView(categoryChip)
-        //displayedCategoryChips.add(category)
-
-        categoryChip.setOnClickListener {
-            // Responds to chip click
-        }
-
-        categoryChip.setOnCloseIconClickListener { chip ->
-            icalEditViewModel.categoryUpdated.remove(category)  // add the category to the list for categories to be deleted
-            chip.visibility = View.GONE
-        }
-
-        categoryChip.setOnCheckedChangeListener { _, _ ->
-            // Responds to chip checked/unchecked
-        }
-    }
-
-
-    private fun addResourceChip(resource: Resource) {
-
-        if (resource.text.isNullOrBlank())
-            return
-
-        val resourceChip = inflater.inflate(
-            R.layout.fragment_ical_edit_resource_chip,
-            binding.editFragmentTabCar.editResourcesChipgroup,
-            false
-        ) as Chip
-        resourceChip.text = resource.text
-        binding.editFragmentTabCar.editResourcesChipgroup.addView(resourceChip)
-
-        resourceChip.setOnClickListener {   }
-
-        resourceChip.setOnCloseIconClickListener { chip ->
-            icalEditViewModel.resourceUpdated.remove(resource)  // add the category to the list for categories to be deleted
-            chip.visibility = View.GONE
-        }
-        resourceChip.setOnCheckedChangeListener { _, _ ->   }
-    }
-
-
-    private fun addAttendeeChip(attendee: Attendee) {
-
-        if (attendee.caladdress.isBlank())
-            return
-
-        var attendeeRoles: Array<String> = arrayOf()
-        Role.values().forEach { attendeeRoles = attendeeRoles.plus(getString(it.stringResource)) }
-
-        val attendeeChip = inflater.inflate(
-            R.layout.fragment_ical_edit_attendees_chip,
-            binding.editFragmentTabCar.editAttendeesChipgroup,
-            false
-        ) as Chip
-        attendeeChip.text = attendee.getDisplayString()
-
-        binding.editFragmentTabCar.editAttendeesChipgroup.addView(attendeeChip)
-
-
-        attendeeChip.setOnClickListener {
-
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.edit_dialog_set_attendee_role)
-                .setItems(attendeeRoles) { _, which ->
-                    // Respond to item chosen
-                    val curIndex =
-                        icalEditViewModel.attendeeUpdated.indexOf(attendee)    // find the attendee in the original list
-                    if (curIndex == -1)
-                        icalEditViewModel.attendeeUpdated.add(attendee)                   // add the attendee to the list of updated items if it was not there yet
-                    else
-                        icalEditViewModel.attendeeUpdated[curIndex].role =
-                            Role.values().getOrNull(which)?.name      // update the roleparam
-
-                    attendee.role = Role.values().getOrNull(which)?.name
-                }
-                .setIcon(R.drawable.ic_attendee)
-                .show()
-        }
-
-        attendeeChip.setOnCloseIconClickListener { chip ->
-            icalEditViewModel.attendeeUpdated.remove(attendee)  // add the category to the list for categories to be deleted
-            chip.visibility = View.GONE
-        }
-    }
-
 
     private fun addCommentView(comment: Comment) {
 
@@ -1809,61 +1264,6 @@ class IcalEditFragment : Fragment() {
             binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout.removeView(bindingAlarm.root)
         }
         binding.editFragmentIcalEditAlarm.editAlarmsLinearlayout.addView(bindingAlarm?.root)
-    }
-
-
-    private fun addAttachmentView(attachment: Attachment) {
-
-        val bindingAttachment =
-            FragmentIcalEditAttachmentItemBinding.inflate(inflater, container, false)
-        bindingAttachment.editAttachmentItemTextview.text = attachment.getFilenameOrLink()
-
-        var thumbUri: Uri? = null
-
-        try {
-            val thumbSize = Size(50, 50)
-            thumbUri = Uri.parse(attachment.uri)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val thumbBitmap = context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
-                bindingAttachment.editAttachmentItemPictureThumbnail.setImageBitmap(thumbBitmap)
-            }
-
-
-            // the method with the MediaMetadataRetriever might be useful when also PDF-thumbnails should be displayed. But currently this is not working...
-            /*
-            thumbUri = Uri.parse(attachment.uri)
-
-            val mmr = MediaMetadataRetriever()
-            mmr.setDataSource(requireContext(), thumbUri)
-
-            //show a thumbnail if possible
-            if(mmr.embeddedPicture != null) {
-                val bitmap = BitmapFactory.decodeByteArray(mmr.embeddedPicture, 0, mmr.embeddedPicture!!.size)
-                bindingAttachment.editAttachmentPictureThumbnail.setImageBitmap(bitmap)
-                bindingAttachment.editAttachmentPictureThumbnail.visibility = View.VISIBLE
-            }
-
-            mmr.release()
-
-             */
-
-        } catch (e: IllegalArgumentException) {
-            Log.d("MediaMetadataRetriever", "Failed to retrive thumbnail \nUri: $thumbUri\n$e")
-        } catch (e: FileNotFoundException) {
-            Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
-        }
-
-
-
-
-        binding.editFragmentTabAttachments.editAttachmentsLinearlayout.addView(bindingAttachment.root)
-
-        // delete the attachment on click on the X
-        bindingAttachment.editAttachmentItemDelete.setOnClickListener {
-            icalEditViewModel.attachmentUpdated.remove(attachment)
-            bindingAttachment.root.visibility = View.GONE
-        }
     }
 
 
@@ -1950,130 +1350,6 @@ class IcalEditFragment : Fragment() {
         }
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_ical_edit, menu)
-        this.menu = menu
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.menu_edit_delete -> icalEditViewModel.deleteClicked()
-            R.id.menu_edit_save -> icalEditViewModel.savingClicked()
-            R.id.menu_edit_clear_dates -> icalEditViewModel.clearDates()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-
-
-    private fun processFileAttachment(fileUri: Uri?) {
-
-        val filePath = fileUri?.path
-        Log.d("fileUri", fileUri.toString())
-        Log.d("filePath", filePath.toString())
-        Log.d("fileName", fileUri?.lastPathSegment.toString())
-
-        val mimeType = fileUri?.let { returnUri ->
-            requireContext().contentResolver.getType(returnUri)
-        }
-
-        var filesize: Long? = null
-        var filename: String? = null
-        var fileextension: String? = null
-        fileUri?.let { returnUri ->
-            requireContext().contentResolver.query(returnUri, null, null, null, null)
-        }?.use { cursor ->
-            // Get the column indexes of the data in the Cursor, move to the first row in the Cursor, get the data, and display it.
-            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-            cursor.moveToFirst()
-            filename = cursor.getString(nameIndex)
-            filesize = cursor.getLong(sizeIndex)
-            fileextension = "." + filename?.substringAfterLast('.', "")
-        }
-
-
-        if (filePath?.isNotEmpty() == true) {
-
-            try {
-                //val newFilePath = "${}/${System.currentTimeMillis()}$fileextension"
-                val newFile = File(
-                    Attachment.getAttachmentDirectory(requireContext()),
-                    "${System.currentTimeMillis()}$fileextension"
-                )
-                newFile.createNewFile()
-
-                val stream = requireContext().contentResolver.openInputStream(fileUri)
-                if (stream != null) {
-                    newFile.writeBytes(stream.readBytes())
-
-                    val newAttachment = Attachment(
-                        fmttype = mimeType,
-                        //uri = "/${Attachment.ATTACHMENT_DIR}/${newFile.name}",
-                        uri = FileProvider.getUriForFile(
-                            requireContext(),
-                            AUTHORITY_FILEPROVIDER,
-                            newFile
-                        ).toString(),
-                        filename = filename,
-                        extension = fileextension,
-                        filesize = filesize
-                    )
-                    icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
-                    addAttachmentView(newAttachment)      // add the new attachment
-                    stream.close()
-                }
-            } catch (e: IOException) {
-                Log.e("IOException", "Failed to process file\n$e")
-            }
-        }
-    }
-
-    private fun processPhotoAttachment() {
-
-        Log.d("photoUri", "photoUri is now $photoUri")
-
-        if (photoUri != null) {
-
-            val mimeType =
-                photoUri?.let { returnUri -> requireContext().contentResolver.getType(returnUri) }
-
-            var filesize: Long? = null
-            var filename: String? = null
-            var fileextension: String? = null
-            photoUri?.let { returnUri ->
-                requireContext().contentResolver.query(returnUri, null, null, null, null)
-            }?.use { cursor ->
-                // Get the column indexes of the data in the Cursor, move to the first row in the Cursor, get the data, and display it.
-                val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-
-                cursor.moveToFirst()
-                filename = cursor.getString(nameIndex)
-                filesize = cursor.getLong(sizeIndex)
-                fileextension = "." + filename?.substringAfterLast('.', "")
-            }
-
-            val newAttachment = Attachment(
-                fmttype = mimeType,
-                uri = photoUri.toString(),
-                filename = filename,
-                extension = fileextension,
-                filesize = filesize
-            )
-            icalEditViewModel.attachmentUpdated.add(newAttachment)    // store the attachment for saving
-
-            addAttachmentView(newAttachment)      // add the new attachment
-
-            // Scanning the file makes it available in the gallery (currently not working) TODO
-            //MediaScannerConnection.scanFile(requireContext(), arrayOf(photoUri.toString()), arrayOf(mimeType), null)
-
-        } else {
-            Log.e("REQUEST_IMAGE_CAPTURE", "Failed to process and store picture")
-        }
-        photoUri = null
-    }
 
 
     private fun updateRRule() {
@@ -2266,39 +1542,6 @@ class IcalEditFragment : Fragment() {
         binding.editFragmentIcalEditRecur.editRecurAllOccurencesItems.text = allOccurrencesString
         binding.editFragmentIcalEditRecur.editRecurExceptionItems.text = allExceptionsString
         binding.editFragmentIcalEditRecur.editRecurAdditionsItems.text = allAdditionsString
-    }
-
-
-    private fun addNewCategory() {
-        if(binding.editFragmentTabGeneral.editCategoriesAdd.editText?.text.isNullOrEmpty())
-            return
-        val newCat = Category(text = binding.editFragmentTabGeneral.editCategoriesAdd.editText?.text.toString())
-        if (!icalEditViewModel.categoryUpdated.contains(newCat)) {
-            icalEditViewModel.categoryUpdated.add(newCat)
-            addCategoryChip(newCat)
-        }
-        binding.editFragmentTabGeneral.editCategoriesAdd.editText?.text?.clear()
-    }
-
-    private fun addNewResource() {
-        if(binding.editFragmentTabCar.editResourcesAdd.editText?.text.isNullOrEmpty())
-            return
-        val newRes = Resource(text = binding.editFragmentTabCar.editResourcesAdd.editText?.text.toString())
-        if(!icalEditViewModel.resourceUpdated.contains(newRes)) {
-            icalEditViewModel.resourceUpdated.add(newRes)
-            addResourceChip(newRes)
-        }
-        binding.editFragmentTabCar.editResourcesAdd.editText?.text?.clear()
-    }
-
-    private fun addNewAttendee(attendee: Attendee?) {
-        if (attendee == null || !isValidEmail(attendee.caladdress.removePrefix("mailto:")))
-            icalEditViewModel.attendeesError.value = getString(R.string.edit_attendees_error)
-        else if (!icalEditViewModel.attendeeUpdated.contains(attendee)) {
-            addAttendeeChip(attendee)
-            icalEditViewModel.attendeeUpdated.add(attendee)
-            binding.editFragmentTabCar.editAttendeesAddAutocomplete.text.clear()
-        }
     }
 
 

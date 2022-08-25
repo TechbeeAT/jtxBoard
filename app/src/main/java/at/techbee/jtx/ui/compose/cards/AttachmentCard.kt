@@ -11,56 +11,129 @@ package at.techbee.jtx.ui.compose.cards
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.FilePresent
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.util.UiUtil
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttachmentCard(
     attachment: Attachment,
-    modifier: Modifier = Modifier
+    isEditMode: MutableState<Boolean>,
+    modifier: Modifier = Modifier,
+    onAttachmentDeleted: () -> Unit
 ) {
 
-    ElevatedCard(modifier = modifier) {
+    val context = LocalContext.current
 
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
-            horizontalArrangement = Arrangement.Start
-        ) {
-
-            val preview = attachment.getPreview(LocalContext.current)
-            if(preview == null)
-                Icon(Icons.Outlined.FilePresent, stringResource(R.string.attachments))
-            else
-                Image(bitmap = preview.asImageBitmap(), contentDescription = null)
-            Text(attachment.getFilenameOrLink() ?: "",
+    if (isEditMode.value) {
+        OutlinedCard(modifier = modifier) {
+            Row(
                 modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp)
-                    .align(alignment = Alignment.CenterVertically),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                val preview = attachment.getPreview(context)
+                if (preview == null)
+                    Icon(Icons.Outlined.FilePresent, stringResource(R.string.attachments))
+                else
+                    Image(bitmap = preview.asImageBitmap(), contentDescription = null)
+                Text(
+                    attachment.getFilenameOrLink() ?: "",
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp)
+                        .align(alignment = Alignment.CenterVertically)
+                        .weight(1f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                IconButton(onClick = { onAttachmentDeleted() }) {
+                    Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
+                }
+            }
+        }
+    } else {
+        ElevatedCard(
+            onClick = { attachment.openFile(context) },
+            modifier = modifier
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                val preview = attachment.getPreview(context)
+                val filesize = attachment.getFilesize(context)
+                if (preview == null)
+                    Icon(Icons.Outlined.FilePresent, stringResource(R.string.attachments))
+                else
+                    Image(bitmap = preview.asImageBitmap(), contentDescription = null)
+                Text(
+                    attachment.getFilenameOrLink() ?: "",
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp)
+                        .align(alignment = Alignment.CenterVertically)
+                        .weight(1f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                filesize?.let {
+                    Text(
+                        text = UiUtil.getAttachmentSizeString(it),
+                        maxLines = 1,
+                        fontStyle = FontStyle.Italic,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
+            }
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun AttachmentCardPreview() {
-    JtxBoardTheme {
-        AttachmentCard(Attachment.getSample())
+fun AttachmentCardPreview_view() {
+    MaterialTheme {
+        AttachmentCard(
+            attachment = Attachment.getSample(),
+            isEditMode = remember { mutableStateOf(false) },
+            onAttachmentDeleted = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AttachmentCardPreview_edit() {
+    MaterialTheme {
+        AttachmentCard(
+            attachment = Attachment.getSample(),
+            isEditMode = remember { mutableStateOf(true) },
+            onAttachmentDeleted = { }
+        )
     }
 }

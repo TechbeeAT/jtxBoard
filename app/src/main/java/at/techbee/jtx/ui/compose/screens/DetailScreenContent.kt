@@ -44,7 +44,6 @@ fun DetailScreenContent(
     isEditMode: MutableState<Boolean>,
     subtasks: List<ICal4List>,
     subnotes: List<ICal4List>,
-    //attachments: List<Attachment>,
     allCollections: List<ICalCollection>,
     modifier: Modifier = Modifier,
     //player: MediaPlayer?,
@@ -70,6 +69,7 @@ fun DetailScreenContent(
     val categories = remember { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
     val resources = remember { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
     val attendees = remember { mutableStateOf(iCalEntity.value?.attendees ?: emptyList()) }
+    val attachments = remember { mutableStateOf(iCalEntity.value?.attachments ?: emptyList()) }
 
 
     /*
@@ -198,9 +198,9 @@ fun DetailScreenContent(
                             .fillMaxWidth()
                             .padding(8.dp)
                             .onFocusChanged { focusState ->
-                                if(!focusState.hasFocus) {
+                                if (!focusState.hasFocus) {
                                     iCalEntity.value?.property?.let {
-                                        if(summary != it.summary) {
+                                        if (summary != it.summary) {
                                             it.summary = summary
                                             saveIcalObject(it)
                                         }
@@ -219,7 +219,7 @@ fun DetailScreenContent(
                             .fillMaxWidth()
                             .padding(8.dp)
                             .onFocusChanged { focusState ->
-                                if(!focusState.hasFocus) {
+                                if (!focusState.hasFocus) {
                                     iCalEntity.value?.property?.let {
                                         if (description != it.description) {
                                             it.description = description
@@ -422,6 +422,15 @@ fun DetailScreenContent(
                     geoLong = geoLong,
                     isEditMode = isEditMode,
                     onLocationUpdated = { /*TODO*/ },
+                )
+            }
+
+
+            AnimatedVisibility(attachments.value.isNotEmpty() || isEditMode.value) {
+                DetailsCardAttachments(
+                    attachments = attachments,
+                    isEditMode = isEditMode,
+                    onAttachmentsUpdated = { /*TODO*/ }
                 )
             }
         }

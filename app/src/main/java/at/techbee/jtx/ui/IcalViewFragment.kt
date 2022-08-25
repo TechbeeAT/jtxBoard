@@ -15,13 +15,14 @@ import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.ImageDecoder
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import android.util.Size
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.LinearLayout
@@ -29,35 +30,41 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider.getUriForFile
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import at.techbee.jtx.*
+import at.techbee.jtx.AUTHORITY_FILEPROVIDER
+import at.techbee.jtx.NavigationDirections
+import at.techbee.jtx.PermissionsHelper
+import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.AlarmRelativeTo
+import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.databinding.*
+import at.techbee.jtx.databinding.FragmentIcalViewAudioDialogBinding
+import at.techbee.jtx.databinding.FragmentIcalViewBinding
+import at.techbee.jtx.databinding.FragmentIcalViewCommentBinding
+import at.techbee.jtx.databinding.FragmentIcalViewSubtaskBinding
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.MapManager
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
-import at.techbee.jtx.util.DateTimeUtils.getAttachmentSizeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.SyncUtil
-import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.slider.Slider
 import com.google.android.material.snackbar.Snackbar
 import io.noties.markwon.Markwon
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
-import java.io.*
-import java.lang.ClassCastException
-import java.lang.NullPointerException
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 
 
 class IcalViewFragment : Fragment() {
@@ -106,9 +113,6 @@ class IcalViewFragment : Fragment() {
         val markwon = Markwon.builder(requireContext())
             .usePlugin(StrikethroughPlugin.create())
             .build()
-
-        // add menu
-        setHasOptionsMenu(true)
 
         settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val settingMimetype = settings.getString("setting_audio_format", Attachment.FMTTYPE_AUDIO_3GPP) ?: Attachment.FMTTYPE_AUDIO_3GPP
@@ -215,8 +219,6 @@ class IcalViewFragment : Fragment() {
                 snackbar.show()
             }
 
-            updateToolbarText()
-
             if (!SyncUtil.isDAVx5CompatibleWithJTX(application) || it.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE)
                 optionsMenu?.findItem(R.id.menu_view_syncnow)?.isVisible = false
 
@@ -269,73 +271,10 @@ class IcalViewFragment : Fragment() {
                 binding.viewCommentsLinearlayout.addView(commentBinding.root)
             }
 
-            binding.viewAttachmentsLinearlayout.removeAllViews()
-            it.attachments?.forEach { attachment ->
-                val attachmentBinding =
-                    FragmentIcalViewAttachmentBinding.inflate(inflater, container, false)
-
-                //open the attachment on click
-                attachmentBinding.viewAttachmentCardview.setOnClickListener {
-                    attachment.openFile(requireContext())
-                }
-                attachmentBinding.viewAttachmentTextview.text = attachment.getFilenameOrLink()
-
-                val filesize = attachment.getFilesize(requireContext())
-                if (filesize == 0L)
-                    attachmentBinding.viewAttachmentFilesize.visibility = View.GONE
-                else
-                    attachmentBinding.viewAttachmentFilesize.text =
-                        getAttachmentSizeString(filesize)
-
-
-                // load thumbnail if possible
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    try {
-                        val thumbSize = Size(50, 50)
-                        val thumbUri = Uri.parse(attachment.uri)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            val thumbBitmap =
-                                context?.contentResolver!!.loadThumbnail(thumbUri, thumbSize, null)
-                            attachmentBinding.viewAttachmentPictureThumbnail.setImageBitmap(
-                                thumbBitmap
-                            )
-                            attachmentBinding.viewAttachmentPictureThumbnail.visibility =
-                                View.VISIBLE
-                        }
-                    } catch (e: NullPointerException) {
-                        Log.i("UriEmpty", "Uri was empty or could not be parsed.")
-                    } catch (e: FileNotFoundException) {
-                        Log.d("FileNotFound", "File with uri ${attachment.uri} not found.\n$e")
-                    } catch (e: ImageDecoder.DecodeException) {
-                        Log.i(
-                            "ImageThumbnail",
-                            "Could not retrieve image thumbnail from file ${attachment.uri}"
-                        )
-                    }
-                }
-
-                binding.viewAttachmentsLinearlayout.addView(attachmentBinding.root)
-            }
 
             binding.viewAlarmsLinearlayout.removeAllViews()      // remove all views if something has changed to rebuild from scratch
             it.alarms?.forEach { alarm ->
                 addAlarmView(alarm)
-            }
-
-            binding.viewCategoriesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
-            it.categories?.forEach { category ->
-                addCategoryChip(category)
-            }
-
-            binding.viewResourcesChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
-            it.resources?.forEach { resource ->
-                addResourceChip(resource)
-            }
-
-            binding.viewAttendeeChipgroup.removeAllViews()      // remove all views if something has changed to rebuild from scratch
-            it.attendees?.forEach { attendee ->
-                addAttendeeChip(attendee)
             }
 
             // applying the color
@@ -525,59 +464,10 @@ class IcalViewFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-
-        updateToolbarText()
-        super.onResume()
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun updateToolbarText() {
-        try {
-            val activity = requireActivity() as MainActivity
-            val toolbarText = when(icalViewViewModel.icalEntity.value?.property?.module) {
-                Module.JOURNAL.name -> getString(R.string.toolbar_text_view_journal_details)
-                Module.NOTE.name -> getString(R.string.toolbar_text_view_note_details)
-                Module.TODO.name -> getString(R.string.toolbar_text_view_task_details)
-                else -> ""
-            }
-            //activity.setToolbarTitle(toolbarText, icalViewViewModel.icalEntity.value?.property?.summary )
-        } catch (e: ClassCastException) {
-            Log.d("setToolbarText", "Class cast to MainActivity failed (this is common for tests but doesn't really matter)\n$e")
-        }
-    }
-
-    private fun addCategoryChip(category: Category) {
-
-        if (category.text.isBlank())     // don't add empty categories
-            return
-
-        val categoryChip = inflater.inflate(R.layout.fragment_ical_view_categories_chip, binding.viewCategoriesChipgroup, false) as Chip
-        categoryChip.text = category.text
-        binding.viewCategoriesChipgroup.addView(categoryChip)
-    }
-
-    private fun addResourceChip(resource: Resource) {
-
-        if (resource.text.isNullOrBlank())     // don't add empty categories
-            return
-
-        val resourceChip = inflater.inflate(R.layout.fragment_ical_view_resources_chip, binding.viewResourcesChipgroup, false) as Chip
-        resourceChip.text = resource.text
-        binding.viewResourcesChipgroup.addView(resourceChip)
-    }
-
-
-    private fun addAttendeeChip(attendee: Attendee) {
-
-        val attendeeChip = inflater.inflate(R.layout.fragment_ical_view_attendees_chip, binding.viewAttendeeChipgroup, false) as Chip
-        attendeeChip.text = attendee.getDisplayString()
-
-        binding.viewAttendeeChipgroup.addView(attendeeChip)
     }
 
     private fun addAlarmView(alarm: Alarm) {

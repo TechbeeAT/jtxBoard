@@ -2,7 +2,9 @@ package at.techbee.jtx
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -18,6 +20,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.settings.DropdownSettingOption
@@ -32,6 +36,7 @@ import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
 import at.techbee.jtx.ui.compose.stateholder.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+
 
 class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
 //class MainActivity2 : ComponentActivity() {
@@ -57,7 +62,6 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
         }
          */
 
-
         setContent {
             JtxBoardTheme {
                 // A surface container using the 'background' color from the theme
@@ -71,7 +75,6 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
         }
     }
 
-
     override fun onResume() {
         super.onResume()
         AdManager.getInstance()?.resumeAds()
@@ -83,37 +86,33 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
 
             // handle the intents for the shortcuts
             when (intent?.action) {
-                /*
                 "addJournal" -> {
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(
-                            IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
-                                ICalEntity(ICalObject.createJournal())
-                            )
-                        )
+                    globalStateHolder.icalFromIntentModule.value = Module.JOURNAL
+                    globalStateHolder.icalFromIntentString.value = ""
                 }
                 "addNote" -> {
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(
-                            IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
-                                ICalEntity(ICalObject.createNote())
-                            )
-                        )
+                    globalStateHolder.icalFromIntentModule.value = Module.NOTE
+                    globalStateHolder.icalFromIntentString.value = ""
                 }
                 "addTodo" -> {
-                    findNavController(R.id.nav_host_fragment)
-                        .navigate(
-                            IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(
-                                ICalEntity(ICalObject.createTodo())
-                            )
-                        )
+                    globalStateHolder.icalFromIntentModule.value = Module.TODO
+                    globalStateHolder.icalFromIntentString.value = ""
                 }
+
                 // Take data also from other sharing intents
                 Intent.ACTION_SEND -> {
-                    if(intent.type == "text/plain" || intent.type?.startsWith("image/") == true || intent.type == "application/pdf")
-                        showAddContentDialog()
+                    when {
+                        intent.type == "text/plain" -> globalStateHolder.icalFromIntentString.value = intent.getStringExtra(Intent.EXTRA_TEXT)
+                        intent.type?.startsWith("image/") == true || intent.type == "application/pdf" -> {
+                            (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { uri ->
+                                Attachment.getNewAttachmentFromUri(uri, this)?.let { newAttachment ->
+                                    globalStateHolder.icalFromIntentAttachment.value = newAttachment
+                                }
+                            }
+                        }
+                    }
                 }
-                 */
+
                 Intent.ACTION_VIEW -> {
                     if (intent.type == "text/calendar") {
                         val ics = intent.data ?: return

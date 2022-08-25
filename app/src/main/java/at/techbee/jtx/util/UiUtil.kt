@@ -10,13 +10,39 @@ package at.techbee.jtx.util
 
 import android.content.Context
 import android.provider.ContactsContract
+import android.util.Log
 import androidx.core.util.PatternsCompat
 import at.techbee.jtx.database.properties.Attendee
+import java.util.regex.Matcher
+
 
 object UiUtil {
 
     fun isValidURL(urlString: String?): Boolean {
         return PatternsCompat.WEB_URL.matcher(urlString.toString()).matches()
+    }
+
+    fun isValidEmail(emailString: String?): Boolean {
+        return emailString?.isNotEmpty() == true && PatternsCompat.EMAIL_ADDRESS.matcher(emailString).matches()
+    }
+
+
+    /**
+     * Extracts links out of a text using Patterns.WEB_URL.matcher(text)
+     * @param [text] the input text out of which links should be extracted
+     * @return a list of links as strings
+     */
+    fun extractLinks(text: String?): List<String> {
+        if(text.isNullOrEmpty())
+            return emptyList()
+        val links = mutableListOf<String>()
+        val matcher: Matcher = PatternsCompat.WEB_URL.matcher(text)
+        while (matcher.find()) {
+            val url: String = matcher.group()
+            Log.d("extractLinks", "URL extracted: $url")
+            links.add(url)
+        }
+        return links
     }
 
 
@@ -59,5 +85,13 @@ object UiUtil {
             cur.close()
         }
         return allContacts
+    }
+
+    fun getAttachmentSizeString(filesize: Long): String {
+        return when {
+            filesize < 1024 -> "$filesize Bytes"
+            filesize / 1024 < 1024 -> "${filesize / 1024} KB"
+            else -> "${filesize / 1024 / 1024} MB"
+        }
     }
 }
