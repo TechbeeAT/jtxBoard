@@ -136,9 +136,16 @@ object DateTimeUtils {
 
             }
         }
-
         return ordinalValues.toTypedArray()
+    }
 
+    fun getLocalizedOrdinalFor(number: Int): String {
+         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val formatter = MessageFormat("{0,ordinal}", Locale.getDefault())
+                formatter.format(arrayOf(number))
+            } else {
+                number.toString()
+            }
     }
 
     fun getLocalizedWeekdays(): Array<String> {

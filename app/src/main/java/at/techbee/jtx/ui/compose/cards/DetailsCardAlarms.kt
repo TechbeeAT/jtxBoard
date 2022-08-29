@@ -77,7 +77,7 @@ fun DetailsCardAlarms(
             onDismiss = { showDurationPicker = false })
     }
 
-    ElevatedCard(modifier = modifier) {      // TODO: Was ist besser, ElevatedCard oder Card?
+    ElevatedCard(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

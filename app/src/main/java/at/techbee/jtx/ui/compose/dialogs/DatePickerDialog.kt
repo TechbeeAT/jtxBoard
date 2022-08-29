@@ -44,6 +44,7 @@ import java.util.*
 fun DatePickerDialog(
     datetime: Long,
     timezone: String?,
+    dateOnly: Boolean = false,
     onConfirm: (newDateTime: Long, newTimezone: String?) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -71,68 +72,72 @@ fun DatePickerDialog(
         text = {
 
             Column {
-                TabRow(selectedTabIndex = selectedTab) {
-                    Tab(selected = selectedTab == tabIndexDate,
-                        onClick = { selectedTab = tabIndexDate },
-                        text = {
-                            Icon(
-                                Icons.Outlined.Today,
-                                stringResource(id = R.string.date),
-                                modifier = Modifier.size(24.dp)
-                            )
-                        })
 
-                    Tab(selected = selectedTab == tabIndexTime,
-                        onClick = { selectedTab = tabIndexTime },
-                        enabled = newTimezone != TZ_ALLDAY,
-                        text = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
-                            ) {
-                                Checkbox(
-                                    checked = newTimezone != TZ_ALLDAY,
-                                    enabled = true,
-                                    onCheckedChange = {
-                                        newTimezone = if (it) null else TZ_ALLDAY
-                                        selectedTab = if (it) tabIndexTime else tabIndexDate
-                                    },
-                                    modifier = Modifier.size(24.dp)
-                                )
-                                Icon(
-                                    Icons.Outlined.MoreTime,
-                                    stringResource(id = R.string.add_time_switch),
-                                    modifier = Modifier.size(24.dp)
-                                )
-                            }
-                        })
+                if(!dateOnly) {
 
-                    Tab(selected = selectedTab == tabIndexTimezone,
-                        onClick = { selectedTab = tabIndexTimezone },
-                        enabled = newTimezone != TZ_ALLDAY && newTimezone != null,
-                        text = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
-                            ) {
-                                Checkbox(
-                                    checked = newTimezone != TZ_ALLDAY && newTimezone != null,
-                                    enabled = newTimezone != TZ_ALLDAY,
-                                    onCheckedChange = {
-                                        newTimezone = if (it) defaultTimezone else null
-                                        selectedTab = if (it) tabIndexTimezone else tabIndexTime
-                                    },
-                                    modifier = Modifier.size(24.dp)
-                                )
+                    TabRow(selectedTabIndex = selectedTab) {
+                        Tab(selected = selectedTab == tabIndexDate,
+                            onClick = { selectedTab = tabIndexDate },
+                            text = {
                                 Icon(
-                                    Icons.Outlined.TravelExplore,
-                                    stringResource(id = R.string.timezone),
+                                    Icons.Outlined.Today,
+                                    stringResource(id = R.string.date),
                                     modifier = Modifier.size(24.dp)
                                 )
-                            }
-                        })
+                            })
+
+                        Tab(selected = selectedTab == tabIndexTime,
+                            onClick = { selectedTab = tabIndexTime },
+                            enabled = newTimezone != TZ_ALLDAY,
+                            text = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                ) {
+                                    Checkbox(
+                                        checked = newTimezone != TZ_ALLDAY,
+                                        enabled = true,
+                                        onCheckedChange = {
+                                            newTimezone = if (it) null else TZ_ALLDAY
+                                            selectedTab = if (it) tabIndexTime else tabIndexDate
+                                        },
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                    Icon(
+                                        Icons.Outlined.MoreTime,
+                                        stringResource(id = R.string.add_time_switch),
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                            })
+
+                        Tab(selected = selectedTab == tabIndexTimezone,
+                            onClick = { selectedTab = tabIndexTimezone },
+                            enabled = newTimezone != TZ_ALLDAY && newTimezone != null,
+                            text = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                ) {
+                                    Checkbox(
+                                        checked = newTimezone != TZ_ALLDAY && newTimezone != null,
+                                        enabled = newTimezone != TZ_ALLDAY,
+                                        onCheckedChange = {
+                                            newTimezone = if (it) defaultTimezone else null
+                                            selectedTab = if (it) tabIndexTimezone else tabIndexTime
+                                        },
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                    Icon(
+                                        Icons.Outlined.TravelExplore,
+                                        stringResource(id = R.string.timezone),
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                            })
+                    }
                 }
 
 
@@ -146,16 +151,16 @@ fun DatePickerDialog(
                                     val datepicker = DatePicker(context)
                                     datepicker.init(
                                         newDateTime.year,
-                                        newDateTime.monthValue,
+                                        newDateTime.monthValue-1,
                                         newDateTime.dayOfMonth
                                     ) { _, year, monthOfYear, dayOfMonth ->
                                         newDateTime =
-                                            newDateTime.withYear(year).withMonth(monthOfYear)
+                                            newDateTime.withYear(year).withMonth(monthOfYear+1)
                                                 .withDayOfMonth(dayOfMonth)
                                     }
                                     datepicker.updateDate(
                                         newDateTime.year,
-                                        newDateTime.monthValue,
+                                        newDateTime.monthValue-1,
                                         newDateTime.dayOfMonth
                                     )
                                     datepicker.rootView
@@ -241,3 +246,18 @@ fun DatePickerDialog_Preview() {
     }
 }
 
+
+@Preview(showBackground = true)
+@Composable
+fun DatePickerDialog_Preview_dateonly() {
+    MaterialTheme {
+
+        DatePickerDialog(
+            datetime = 1660500481224,   // 14 Aug 2022  18:09
+            timezone = TZ_ALLDAY,
+            dateOnly = true,
+            onConfirm = { _, _ -> },
+            onDismiss = { }
+        )
+    }
+}

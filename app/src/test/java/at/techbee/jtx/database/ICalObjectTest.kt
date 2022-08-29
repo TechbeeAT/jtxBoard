@@ -11,6 +11,7 @@ package at.techbee.jtx.database
 import android.content.Context
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
+import net.fortuna.ical4j.model.Recur
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -305,6 +306,38 @@ class ICalObjectTest {
     @Test
     fun classification_getStringResource_confidential() {
         assertEquals(mockContext.getString(R.string.classification_confidential), Classification.getStringResource(mockContext, Classification.CONFIDENTIAL.name))
+    }
+
+    @Test
+    fun getRecur1() {
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622494800000L
+            this.rrule = "FREQ=YEARLY;COUNT=3;INTERVAL=2"
+        }
+        val recur = item.getRecur()
+        assertEquals(Recur.Frequency.YEARLY, recur?.frequency)
+        assertEquals(3, recur?.count)
+        assertEquals(2, recur?.interval)
+    }
+
+    @Test
+    fun getRecur_empty() {
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622494800000L
+            this.rrule = null
+        }
+        val recur = item.getRecur()
+        assertNull(recur)
+    }
+
+    @Test
+    fun getRecur_null() {
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622494800000L
+            this.rrule = "asdf"
+        }
+        val recur = item.getRecur()
+        assertNull(recur)
     }
 
     @Test

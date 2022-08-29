@@ -37,6 +37,7 @@ import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.property.DtStart
+import java.text.ParseException
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -884,10 +885,25 @@ data class ICalObject(
         isRecurLinkedInstance = false     // in any case on update of the progress, the item becomes an exception
     }
 
+    /**
+     * @return a Recur Object based on the given rrule or null
+     */
+    fun getRecur(): Recur? {
+        if(this.rrule.isNullOrEmpty())
+            return null
 
+        return try {
+            Recur(this.rrule)
+        } catch (e: ParseException) {
+            Log.w("getRrule", "Illegal representation of UNTIL\n$e")
+            null
+        } catch (e: IllegalArgumentException) {
+            Log.w("getRrule", "Unrecognized rrule\n$e")
+            null
+        }
+    }
 
     fun getInstancesFromRrule(): List<Long> {
-
         val recurList = mutableListOf<Long>()
 
         // don't continue if this function is called with an empty dtstart
@@ -1005,7 +1021,6 @@ data class ICalObject(
         else
             DEFAULT_MAX_RECUR_INSTANCES
     }
-
 
 
     fun recreateRecurring(database: ICalDatabaseDao, context: Context) {

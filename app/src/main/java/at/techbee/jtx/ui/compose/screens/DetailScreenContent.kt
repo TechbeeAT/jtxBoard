@@ -75,6 +75,7 @@ fun DetailScreenContent(
     var status by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.status) }
     var classification by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.classification) }
     var priority by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.priority ?: 0) }
+    var rrule by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.rrule) }
     val categories = rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
     val resources = rememberSaveable { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
     val attendees = rememberSaveable { mutableStateOf(iCalEntity.value?.attendees ?: emptyList()) }
@@ -457,6 +458,13 @@ fun DetailScreenContent(
                     icalObject = iCalEntity.value?.property!!,
                     isEditMode = isEditMode,
                     onAlarmsUpdated = { /*TODO*/ })
+            }
+
+            AnimatedVisibility(rrule != null || isEditMode.value) {
+                DetailsCardRecur(
+                    icalObject = iCalEntity.value?.property!!,
+                    isEditMode = isEditMode,
+                    onRecurUpdated = { /*TODO*/ })
             }
         }
     }
