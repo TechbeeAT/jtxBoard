@@ -97,13 +97,11 @@ fun DetailsCardContact(
                                     InputChip(
                                         onClick = {
                                             contact.value = searchContact.getDisplayString()
+                                            onContactUpdated()
                                         },
                                         label = { Text(searchContact.getDisplayString()) },
                                         leadingIcon = {
-                                            Icon(
-                                                Icons.Outlined.ContactMail,
-                                                stringResource(id = R.string.contact)
-                                            )
+                                            Icon(Icons.Outlined.ContactMail, stringResource(id = R.string.contact))
                                         },
                                         selected = false,
                                         modifier = Modifier.onPlaced {
@@ -123,16 +121,18 @@ fun DetailsCardContact(
                             trailingIcon = {
                                 IconButton(onClick = {
                                     contact.value = ""
-                                    /*TODO*/
+                                    onContactUpdated()
                                 }) {
-                                    if(contact.value.isNotEmpty())
+                                    AnimatedVisibility(contact.value.isNotEmpty()) {
                                         Icon(Icons.Outlined.Clear, stringResource(id = R.string.delete))
+                                    }
                                 }
                             },
                             singleLine = true,
                             label = { Text(headline) },
                             onValueChange = { newValue ->
                                 contact.value = newValue
+                                onContactUpdated()
 
                                 coroutineScope.launch {
                                     if(newValue.length >= 3 && contactsPermissionState?.status?.isGranted == true)
@@ -140,7 +140,6 @@ fun DetailsCardContact(
                                     else
                                         emptyList<Attendee>()
                                 }
-                                /* TODO */
                             },
                             modifier = Modifier
                                 .fillMaxWidth()

@@ -49,6 +49,7 @@ fun AlarmCard(
         DatePickerDialog(
             datetime = alarm.triggerTime!!,
             timezone = alarm.triggerTimezone,
+            allowNull = false,
             onConfirm = { changedDateTime, changedTimezone ->
                 alarm.triggerTime = changedDateTime
                 alarm.triggerTimezone = changedTimezone

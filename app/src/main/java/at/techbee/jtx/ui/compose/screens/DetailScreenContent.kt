@@ -20,7 +20,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -28,8 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.properties.Resource
+import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.compose.cards.*
@@ -48,18 +46,17 @@ fun DetailScreenContent(
     allCollections: List<ICalCollection>,
     modifier: Modifier = Modifier,
     //player: MediaPlayer?,
-    saveIcalObject: (ICalObject) -> Unit,
+    saveIcalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
-    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
     if(iCalEntity.value == null)
         return
 
     val context = LocalContext.current
 
+
     var summary by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
     var description by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.description ?: "") }
-
     var dtstart by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.dtstart) }
     var dtstartTimezone by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.dtstartTimezone) }
     var due by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.due) }
@@ -76,6 +73,8 @@ fun DetailScreenContent(
     var classification by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.classification) }
     var priority by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.priority ?: 0) }
     var rrule by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.rrule) }
+
+    val icalObject by rememberSaveable { mutableStateOf(iCalEntity.value?.property ?: ICalObject()) }
     val categories = rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
     val resources = rememberSaveable { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
     val attendees = rememberSaveable { mutableStateOf(iCalEntity.value?.attendees ?: emptyList()) }
@@ -83,15 +82,10 @@ fun DetailScreenContent(
     val attachments = rememberSaveable { mutableStateOf(iCalEntity.value?.attachments ?: emptyList()) }
     val alarms = rememberSaveable { mutableStateOf(iCalEntity.value?.alarms ?: emptyList()) }
 
-    fun save() {
-        iCalEntity.value?.property?.let {
-            it.summary = summary.ifBlank { null }
-            it.description = description.ifBlank { null }
-            it.dtstart = dtstart
-            it.dtstartTimezone = dtstartTimezone
-            saveIcalObject(it)
-        }
-    }
+    val previousIsEditModeState = rememberSaveable { mutableStateOf(isEditMode.value) }
+    if(previousIsEditModeState.value && !isEditMode.value)  //changed from edit to view mode
+        saveIcalObject(icalObject, categories.value, comments.value, attendees.value, resources.value, attachments.value, alarms.value)
+    previousIsEditModeState.value = isEditMode.value
 
 
     /*
@@ -100,7 +94,7 @@ fun DetailScreenContent(
         .build()
      */
 
-    Box(Modifier.verticalScroll(rememberScrollState())) {
+    Box(modifier = modifier.verticalScroll(rememberScrollState())) {
 
         ColoredEdge(iCalEntity.value?.property?.color, iCalEntity.value?.ICalCollection?.color)
 
@@ -161,22 +155,63 @@ fun DetailScreenContent(
                 }
             }
 
-            if (iCalEntity.value?.property?.module == Module.JOURNAL.name && dtstart != null) {
+            if (dtstart != null || due != null || completed != null || iCalEntity.value?.property?.module == Module.TODO.name) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    VerticalDateCard(
-                        datetime = dtstart,
-                        timezone = dtstartTimezone,
-                        isEditMode = isEditMode,
-                        onDateTimeChanged = { datetime, timezone ->
-                            dtstart = datetime
-                            dtstartTimezone = timezone
-                            save()
-                        }
-                    )
+                    if(iCalEntity.value?.property?.module == Module.JOURNAL.name
+                        || iCalEntity.value?.property?.module == Module.TODO.name ) {
+                        VerticalDateCard(
+                            datetime = dtstart,
+                            timezone = dtstartTimezone,
+                            isEditMode = isEditMode,
+                            onDateTimeChanged = { datetime, timezone ->
+                                dtstart = datetime
+                                dtstartTimezone = timezone
+                                icalObject.dtstart = dtstart
+                                icalObject.dtstartTimezone = dtstartTimezone
+                            },
+                            modifier = Modifier.weight(0.33f),
+                            labelTop = if(iCalEntity.value?.property?.module == Module.TODO.name)
+                                stringResource(id = R.string.started)
+                            else
+                                null,
+                            allowNull = iCalEntity.value?.property?.module == Module.TODO.name
+                        )
+                    }
+
+                    if(iCalEntity.value?.property?.module == Module.TODO.name) {
+                        VerticalDateCard(
+                            datetime = due,
+                            timezone = dueTimezone,
+                            isEditMode = isEditMode,
+                            onDateTimeChanged = { datetime, timezone ->
+                                due = datetime
+                                dueTimezone = timezone
+                                icalObject.due = due
+                                icalObject.dueTimezone = dueTimezone
+                            },
+                            modifier = Modifier.weight(0.33f),
+                            labelTop = stringResource(id = R.string.due),
+                            allowNull = iCalEntity.value?.property?.module == Module.TODO.name
+                        )
+                        VerticalDateCard(
+                            datetime = completed,
+                            timezone = completedTimezone,
+                            isEditMode = isEditMode,
+                            onDateTimeChanged = { datetime, timezone ->
+                                completed = datetime
+                                completedTimezone = timezone
+                                icalObject.completed = completed
+                                icalObject.completedTimezone = completedTimezone
+                            },
+                            modifier = Modifier.weight(0.33f),
+                            labelTop = stringResource(id = R.string.completed),
+                            allowNull = iCalEntity.value?.property?.module == Module.TODO.name
+                        )
+                    }
                 }
             }
 
@@ -212,42 +247,24 @@ fun DetailScreenContent(
                         value = summary,
                         onValueChange = {
                             summary = it
+                            icalObject.summary = it.ifEmpty { null }
                         },
                         label = { Text(stringResource(id = R.string.summary)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
-                            .onFocusChanged { focusState ->
-                                if (!focusState.hasFocus) {
-                                    iCalEntity.value?.property?.let {
-                                        if (summary != it.summary) {
-                                            it.summary = summary
-                                            save()
-                                        }
-                                    }
-                                }
-                            }
                     )
 
                     OutlinedTextField(
                         value = description,
                         onValueChange = {
                             description = it
+                            icalObject.description = it.ifEmpty { null }
                         },
                         label = { Text(stringResource(id = R.string.description)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
-                            .onFocusChanged { focusState ->
-                                if (!focusState.hasFocus) {
-                                    iCalEntity.value?.property?.let {
-                                        if (description != it.description) {
-                                            it.description = description
-                                            save()
-                                        }
-                                    }
-                                }
-                            }
                     )
                 }
             }
@@ -269,7 +286,6 @@ fun DetailScreenContent(
                         else
                             Text(StatusTodo.getStringResource(context, status) ?: status ?: "-")
 
-
                         DropdownMenu(
                             expanded = statusMenuExpanded,
                             onDismissRequest = { statusMenuExpanded = false }
@@ -281,7 +297,7 @@ fun DetailScreenContent(
                                         onClick = {
                                             status = statusJournal.name
                                             statusMenuExpanded = false
-                                            /*TODO: Save*/
+                                            icalObject.status = status
                                         }
                                     )
                                 }
@@ -292,7 +308,7 @@ fun DetailScreenContent(
                                         onClick = {
                                             status = statusJournal.name
                                             statusMenuExpanded = false
-                                            /*TODO: Save*/
+                                            icalObject.status = status
                                         }
                                     )
                                 }
@@ -326,7 +342,7 @@ fun DetailScreenContent(
                                     onClick = {
                                         classification = clazzification.name
                                         classificationMenuExpanded = false
-                                        /*TODO: Save*/
+                                        icalObject.classification = classification
                                     }
                                 )
                             }
@@ -363,7 +379,7 @@ fun DetailScreenContent(
                                         onClick = {
                                             priority = index
                                             priorityMenuExpanded = false
-                                            /*TODO: Save*/
+                                            icalObject.priority = priority
                                         }
                                     )
                                 }
@@ -391,7 +407,7 @@ fun DetailScreenContent(
                         Category(text = "category1"),
                         Category(text = "category2"),
                         Category(text = "Whatever")
-                    ), // TODO
+                    ),
                 )
             }
 
@@ -421,7 +437,7 @@ fun DetailScreenContent(
                 DetailsCardContact(
                     contact = contact,
                     isEditMode = isEditMode,
-                    onContactUpdated = { /*TODO*/ },
+                    onContactUpdated = { icalObject.contact = contact.value.ifEmpty { null } },
                 )
             }
 
@@ -430,7 +446,7 @@ fun DetailScreenContent(
                 DetailsCardUrl(
                     url = url,
                     isEditMode = isEditMode,
-                    onUrlUpdated = { /*TODO*/ },
+                    onUrlUpdated = { icalObject.url = url.value.ifEmpty { null } },
                 )
             }
 
@@ -440,7 +456,11 @@ fun DetailScreenContent(
                     geoLat = geoLat,
                     geoLong = geoLong,
                     isEditMode = isEditMode,
-                    onLocationUpdated = { /*TODO*/ },
+                    onLocationUpdated = {
+                        icalObject.geoLat = geoLat.value
+                        icalObject.geoLong = geoLong.value
+                        icalObject.location = location.value
+                    },
                 )
             }
 
@@ -503,9 +523,8 @@ fun DetailScreenContent_JOURNAL() {
             //attachments = emptyList(),
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             //player = null,
-            saveIcalObject = {  },
+            saveIcalObject = { _, _, _, _, _, _, _ ->   },
             onProgressChanged = { _, _, _ -> },
-            onExpandedChanged = { _, _, _, _ -> }
         )
     }
 }
@@ -531,9 +550,8 @@ fun DetailScreenContent_TODO_editInitially() {
             //attachments = emptyList(),
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             //player = null,
-            saveIcalObject = {  },
+            saveIcalObject = { _, _, _, _, _, _, _ ->   },
             onProgressChanged = { _, _, _ -> },
-            onExpandedChanged = { _, _, _, _ -> }
         )
     }
 }

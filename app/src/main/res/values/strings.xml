@@ -103,6 +103,7 @@
 
     <string name="readyonly">Read only</string>
     <string name="upload_pending">Upload pending</string>
+    <string name="sync_in_progress">Sync in progress</string>
     <string name="url">URL</string>
     <string name="location">Location</string>
     <string name="attendees">Attendees</string>

@@ -8,10 +8,14 @@
 
 package at.techbee.jtx.ui.compose.cards
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -23,7 +27,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.compose.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.compose.elements.VerticalDateBlock
-import at.techbee.jtx.util.DateTimeUtils
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,12 +35,14 @@ fun VerticalDateCard(
     datetime: Long?,
     timezone: String?,
     isEditMode: MutableState<Boolean>,
+    allowNull: Boolean,
     modifier: Modifier = Modifier,
-    onDateTimeChanged: (Long, String?) -> Unit = { _, _ -> }
+    labelTop: String? = null,
+    onDateTimeChanged: (Long?, String?) -> Unit = { _, _ -> }
     ) {
 
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
-    var newDateTime by rememberSaveable { mutableStateOf(datetime ?: DateTimeUtils.getTodayAsLong() )}
+    var newDateTime by rememberSaveable { mutableStateOf(datetime)}
     var newTimezone by rememberSaveable { mutableStateOf(timezone) }
 
     if(isEditMode.value) {
@@ -48,20 +53,17 @@ fun VerticalDateCard(
 
             Row(
                 modifier = Modifier
-                    .requiredWidth(60.dp)
+                    .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (datetime != null) {
-                    VerticalDateBlock(
-                        datetime = newDateTime,
-                        timezone = newTimezone,
-                        modifier = Modifier.padding(bottom = 4.dp, start = 8.dp, end = 8.dp)
-                    )
-                } else {
-                    Icon(Icons.Outlined.DateRange, stringResource(id = R.string.not_set2))
-                }
+                VerticalDateBlock(
+                    datetime = newDateTime,
+                    timezone = newTimezone,
+                    modifier = Modifier.padding(4.dp),
+                    labelTop = labelTop,
+                )
             }
         }
     } else {
@@ -71,20 +73,17 @@ fun VerticalDateCard(
 
             Row(
                 modifier = Modifier
-                    .requiredWidth(60.dp)
+                    .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (datetime != null) {
-                    VerticalDateBlock(
-                        datetime = newDateTime,
-                        timezone = newTimezone,
-                        modifier = Modifier.padding(bottom = 4.dp, start = 8.dp, end = 8.dp)
-                    )
-                } else {
-                    Icon(Icons.Outlined.DateRange, stringResource(id = R.string.not_set2))
-                }
+                VerticalDateBlock(
+                    datetime = newDateTime,
+                    timezone = newTimezone,
+                    modifier = Modifier.padding(4.dp),
+                    labelTop = labelTop
+                )
             }
         }
     }
@@ -93,6 +92,7 @@ fun VerticalDateCard(
         DatePickerDialog(
             datetime = newDateTime,
             timezone = newTimezone,
+            allowNull = allowNull,
             onConfirm = { time, tz ->
                 newDateTime = time
                 newTimezone = tz
@@ -110,6 +110,7 @@ fun VerticalDateCard_Preview_Allday() {
         VerticalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = ICalObject.TZ_ALLDAY,
+            allowNull = true,
             isEditMode = remember { mutableStateOf(false) },
             onDateTimeChanged = { _, _, -> }
         )
@@ -123,6 +124,7 @@ fun VerticalDateCard_Preview_Allday_edit() {
         VerticalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = ICalObject.TZ_ALLDAY,
+            allowNull = true,
             isEditMode = remember { mutableStateOf(true) },
             onDateTimeChanged = { _, _ -> }
         )
@@ -137,7 +139,9 @@ fun VerticalDateCard_Preview_WithTime() {
             datetime = System.currentTimeMillis(),
             timezone = null,
             isEditMode = remember { mutableStateOf(false) },
-            onDateTimeChanged = { _, _ -> }
+            allowNull = true,
+            onDateTimeChanged = { _, _ -> },
+            labelTop = stringResource(id = R.string.completed)
 
         )
     }
@@ -151,6 +155,7 @@ fun VerticalDateCard_Preview_WithTimezone() {
             datetime = System.currentTimeMillis(),
             timezone = "Europe/Vienna",
             isEditMode = remember { mutableStateOf(false) },
+            allowNull = true,
             onDateTimeChanged = { _, _ -> }
         )
     }
@@ -164,6 +169,7 @@ fun VerticalDateCard_Preview_WithTimezone2() {
             datetime = System.currentTimeMillis(),
             timezone = "Africa/Addis_Ababa",
             isEditMode = remember { mutableStateOf(false) },
+            allowNull = true,
             onDateTimeChanged = { _, _ -> }
         )
     }
@@ -177,7 +183,9 @@ fun VerticalDateCard_Preview_NotSet() {
             datetime = null,
             timezone = null,
             isEditMode = remember { mutableStateOf(false) },
-            onDateTimeChanged = { _, _ -> }
+            allowNull = true,
+            onDateTimeChanged = { _, _ -> },
+            labelTop = stringResource(id = R.string.due)
         )
     }
 }

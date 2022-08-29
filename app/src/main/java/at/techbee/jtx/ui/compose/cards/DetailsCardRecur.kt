@@ -59,6 +59,7 @@ fun DetailsCardRecur(
             datetime = updatedRRule?.until?.time ?: icalObject.dtstart ?: System.currentTimeMillis(),
             timezone = TZ_ALLDAY,
             dateOnly = true,
+            allowNull = false,
             onConfirm = { datetime, _ ->
                 updatedRRule = Recur.Builder().apply {
                     interval(updatedRRule?.interval ?: 1)
@@ -66,7 +67,7 @@ fun DetailsCardRecur(
                     //    count(updatedRRule?.count)
                     if(updatedRRule?.frequency != null)
                         frequency(updatedRRule?.frequency ?: Recur.Frequency.DAILY)
-                    until(Date(datetime))
+                    until(Date(datetime!!))
                     updatedRRule?.dayList?.let { dayList(it) }
                     updatedRRule?.monthDayList?.let { monthDayList(it) }
                 }.build() },

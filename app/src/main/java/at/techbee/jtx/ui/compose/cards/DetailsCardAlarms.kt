@@ -55,8 +55,9 @@ fun DetailsCardAlarms(
         DatePickerDialog(
             datetime = initialDateTime,
             timezone = initialTimeZone,
+            allowNull = false,
             onConfirm = { newDateTime, newTimeZone ->
-                val newAlarm = Alarm.createDisplayAlarm(newDateTime, newTimeZone)
+                val newAlarm = Alarm.createDisplayAlarm(newDateTime!!, newTimeZone)
                 alarms.value = alarms.value.plus(newAlarm)
                 onAlarmsUpdated() },
             onDismiss = { showDateTimePicker = false }
