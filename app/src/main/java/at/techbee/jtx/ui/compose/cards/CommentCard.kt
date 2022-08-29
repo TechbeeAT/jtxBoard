@@ -1,0 +1,105 @@
+/*
+ * Copyright (c) Techbee e.U.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ */
+
+package at.techbee.jtx.ui.compose.cards
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import at.techbee.jtx.R
+import at.techbee.jtx.database.properties.Comment
+
+
+@Composable
+fun CommentCard(
+    comment: Comment,
+    isEditMode: MutableState<Boolean>,
+    modifier: Modifier = Modifier,
+    onCommentDeleted: () -> Unit
+) {
+
+    if (isEditMode.value) {
+        OutlinedCard(modifier = modifier) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    comment.text,
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp)
+                        .align(alignment = Alignment.CenterVertically)
+                        .weight(1f)
+                )
+                IconButton(onClick = { onCommentDeleted() }) {
+                    Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
+                }
+            }
+        }
+    } else {
+        ElevatedCard(
+            modifier = modifier
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    comment.text,
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp)
+                        .align(alignment = Alignment.CenterVertically)
+                        .weight(1f)
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CommentCardPreview_view() {
+    MaterialTheme {
+        CommentCard(
+            comment = Comment(text = "This is my comment"),
+            isEditMode = remember { mutableStateOf(false) },
+            onCommentDeleted = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CommentCardPreview_edit() {
+    MaterialTheme {
+        CommentCard(
+            comment = Comment(text = "This is my comment"),
+            isEditMode = remember { mutableStateOf(true) },
+            onCommentDeleted = { }
+        )
+    }
+}

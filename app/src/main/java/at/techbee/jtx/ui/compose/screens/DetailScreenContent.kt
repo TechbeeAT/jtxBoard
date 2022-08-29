@@ -79,13 +79,14 @@ fun DetailScreenContent(
     val categories = rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
     val resources = rememberSaveable { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
     val attendees = rememberSaveable { mutableStateOf(iCalEntity.value?.attendees ?: emptyList()) }
+    val comments = rememberSaveable { mutableStateOf(iCalEntity.value?.comments ?: emptyList()) }
     val attachments = rememberSaveable { mutableStateOf(iCalEntity.value?.attachments ?: emptyList()) }
     val alarms = rememberSaveable { mutableStateOf(iCalEntity.value?.alarms ?: emptyList()) }
 
     fun save() {
         iCalEntity.value?.property?.let {
-            it.summary = if(summary.isNotBlank()) summary else null
-            it.description = if(description.isNotBlank()) description else null
+            it.summary = summary.ifBlank { null }
+            it.description = description.ifBlank { null }
             it.dtstart = dtstart
             it.dtstartTimezone = dtstartTimezone
             saveIcalObject(it)
@@ -440,6 +441,14 @@ fun DetailScreenContent(
                     geoLong = geoLong,
                     isEditMode = isEditMode,
                     onLocationUpdated = { /*TODO*/ },
+                )
+            }
+
+            AnimatedVisibility(comments.value.isNotEmpty() || isEditMode.value) {
+                DetailsCardComments(
+                    comments = comments,
+                    isEditMode = isEditMode,
+                    onCommentsUpdated = { /*TODO*/ }
                 )
             }
 
