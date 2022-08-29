@@ -81,7 +81,7 @@ fun DetailsCardComments(
                 OutlinedTextField(
                     value = newComment,
                     trailingIcon = {
-                        if (newComment.isNotEmpty()) {
+                        AnimatedVisibility(newComment.isNotEmpty()) {
                             IconButton(onClick = {
                                 comments.value = comments.value.plus(Comment(text = newComment))
                                 newComment = ""
