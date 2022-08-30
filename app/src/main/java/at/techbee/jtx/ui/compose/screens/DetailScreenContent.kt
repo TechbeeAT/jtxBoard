@@ -34,6 +34,7 @@ import at.techbee.jtx.ui.compose.cards.*
 import at.techbee.jtx.ui.compose.elements.CollectionsSpinner
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
 import at.techbee.jtx.ui.compose.cards.VerticalDateCard
+import at.techbee.jtx.ui.compose.dialogs.ColorPickerDialog
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,6 +56,7 @@ fun DetailScreenContent(
     val context = LocalContext.current
 
 
+    var color by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.color) }
     var summary by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
     var description by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.description ?: "") }
     var dtstart by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.dtstart) }
@@ -82,6 +84,7 @@ fun DetailScreenContent(
     val attachments = rememberSaveable { mutableStateOf(iCalEntity.value?.attachments ?: emptyList()) }
     val alarms = rememberSaveable { mutableStateOf(iCalEntity.value?.alarms ?: emptyList()) }
 
+    var showColorPicker by rememberSaveable { mutableStateOf(false) }
     val previousIsEditModeState = rememberSaveable { mutableStateOf(isEditMode.value) }
     if(previousIsEditModeState.value && !isEditMode.value)  //changed from edit to view mode
         saveIcalObject(icalObject, categories.value, comments.value, attendees.value, resources.value, attachments.value, alarms.value)
@@ -93,10 +96,22 @@ fun DetailScreenContent(
         .usePlugin(StrikethroughPlugin.create())
         .build()
      */
+    if(showColorPicker) {
+        ColorPickerDialog(
+            initialColor = color,
+            onColorChanged = { newColor ->
+                color = newColor
+                icalObject.color = newColor
+            },
+            onDismiss = {
+                showColorPicker = false
+            }
+        )
+    }
 
     Box(modifier = modifier.verticalScroll(rememberScrollState())) {
 
-        ColoredEdge(iCalEntity.value?.property?.color, iCalEntity.value?.ICalCollection?.color)
+        ColoredEdge(color, iCalEntity.value?.ICalCollection?.color)
 
         Column(
             modifier = Modifier
@@ -148,7 +163,7 @@ fun DetailScreenContent(
                             onSelectionChanged = { /* TODO */ },
                             modifier = Modifier.weight(1f)
                         )
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = { showColorPicker = true }) {
                             Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
                         }
                     }

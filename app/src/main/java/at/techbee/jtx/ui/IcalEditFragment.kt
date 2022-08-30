@@ -450,27 +450,6 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-        binding.icalEditTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-
-                when (tab?.position) {
-                    TAB_GENERAL -> icalEditViewModel.activeTab.postValue(TAB_GENERAL)
-                    TAB_PEOPLE_RES -> icalEditViewModel.activeTab.postValue(TAB_PEOPLE_RES)
-                    TAB_LOC_COMMENTS -> icalEditViewModel.activeTab.postValue(TAB_LOC_COMMENTS)
-                    TAB_ATTACHMENTS -> icalEditViewModel.activeTab.postValue(TAB_ATTACHMENTS)
-                    TAB_SUBTASKS -> icalEditViewModel.activeTab.postValue(TAB_SUBTASKS)
-                    TAB_RECURRING -> icalEditViewModel.activeTab.postValue(TAB_RECURRING)
-                    TAB_ALARMS -> icalEditViewModel.activeTab.postValue(TAB_ALARMS)
-                    else -> icalEditViewModel.activeTab.postValue(TAB_GENERAL)
-                }
-                hideKeyboard()
-                icalEditViewModel.updateVisibility()
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
-            override fun onTabReselected(tab: TabLayout.Tab?) {  /* nothing to do */  }
-        })
-
         binding.editFragmentTabGeneral.editColorItem.setOnClickListener {
 
             val colorPickerBinding = FragmentIcalEditColorpickerDialogBinding.inflate(inflater)
@@ -552,14 +531,8 @@ class IcalEditFragment : Fragment() {
 
             if (it != 0L) {
                 // saving is done now
-                hideKeyboard()
+                //hideKeyboard()
                 SyncUtil.notifyContentObservers(context)
-
-                // show Ad if necessary
-                if (AdManager.getInstance()
-                        ?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false
-                )
-                    AdManager.getInstance()?.showInterstitialAd(requireActivity())
 
                 // ask for a review (if applicable)
                 JtxReviewManager(requireActivity()).launch()
@@ -582,7 +555,7 @@ class IcalEditFragment : Fragment() {
 
             if (it) {
                 // saving is done now
-                hideKeyboard()
+                //hideKeyboard()
                 SyncUtil.notifyContentObservers(context)
                 icalEditViewModel.entryDeleted.value = false
 
@@ -1170,7 +1143,7 @@ class IcalEditFragment : Fragment() {
         builder.setMessage(getString(R.string.edit_dialog_sure_to_discard_message))
         builder.setPositiveButton(R.string.discard) { _, _ ->
 
-            hideKeyboard()
+            //hideKeyboard()
             context?.let { context -> Attachment.scheduleCleanupJob(context) }
 
             val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
@@ -1189,7 +1162,7 @@ class IcalEditFragment : Fragment() {
         builder.setTitle(getString(R.string.edit_dialog_sure_to_delete_title, icalEditViewModel.iCalObjectUpdated.value?.summary))
         builder.setMessage(getString(R.string.edit_dialog_sure_to_delete_message, icalEditViewModel.iCalObjectUpdated.value?.summary))
         builder.setPositiveButton(R.string.delete) { _, _ ->
-            hideKeyboard()
+            //hideKeyboard()
             icalEditViewModel.delete()
         }
         builder.setNegativeButton(R.string.cancel) { _, _ ->  }   // Do nothing, just close the message
@@ -1598,19 +1571,6 @@ class IcalEditFragment : Fragment() {
 
         return isValid
 
-    }
-
-
-
-
-    /**
-     * This function makes sure that the soft keyboard gets closed
-     */
-    private fun hideKeyboard() {
-
-        val imm =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-        imm?.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
 }

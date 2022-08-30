@@ -8,14 +8,11 @@
 
 package at.techbee.jtx.ui.compose.dialogs
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,11 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.ui.compose.elements.ColorSelectorRow
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 
@@ -47,30 +42,32 @@ fun CollectionsAddOrEditDialog(
 
     val keyboardController = LocalSoftwareKeyboardController.current
     var collectionName by remember { mutableStateOf(current.displayName ?: "") }
-    var collectionColor by remember { mutableStateOf(Color(current.color ?: Color.White.toArgb())) }
-    var colorActivated by remember { mutableStateOf(current.color != null) }
+    var collectionColor by remember { mutableStateOf(current.color?.let { Color(it) }) }
     var noCollectionNameError by remember { mutableStateOf(false) }
 
 
     AlertDialog(
-        modifier = Modifier.fillMaxWidth(),
-        properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
+        //modifier = Modifier.fillMaxWidth(),
+        //properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
         onDismissRequest = { onDismiss() },
         title = {
-            if(current.collectionId == 0L)
+            if (current.collectionId == 0L)
                 Text(text = stringResource(id = R.string.collections_dialog_add_local_collection_title))
             else
                 Text(text = stringResource(id = R.string.collections_dialog_edit_local_collection_title))
         },
         text = {
-            Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 )
-                 {
+                {
                     OutlinedTextField(
                         value = collectionName,
                         onValueChange = { collectionName = it },
@@ -85,49 +82,34 @@ fun CollectionsAddOrEditDialog(
                         modifier = Modifier.weight(1f),
                         isError = noCollectionNameError
                     )
-
-                    Switch(
-                        checked = colorActivated,
-                        onCheckedChange = {
-                            colorActivated = it
-                        },
-                        thumbContent = { Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color)) },
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
                 }
+                ColorSelectorRow(
+                    initialColor = collectionColor,
+                    onColorChanged = { newColor -> collectionColor = newColor },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState())
+                        .padding(8.dp)
+                )
 
-                AnimatedVisibility(visible = colorActivated) {
-                    ColorSelectorRow(
-                        selectedColor = collectionColor,
-                        onColorChanged = {  newColor -> collectionColor = newColor },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .horizontalScroll(rememberScrollState())
-                            .padding(8.dp)
-                    )
-                }
-
-                AnimatedVisibility(visible = colorActivated) {
-                    HarmonyColorPicker(
-                        color = collectionColor,
-                        harmonyMode = ColorHarmonyMode.NONE,
-                        modifier = Modifier.size(300.dp),
-                        onColorChanged = { hsvColor ->
-                            collectionColor = hsvColor.toColor()
-                        })
-                }
+                HarmonyColorPicker(
+                    color = collectionColor ?: Color.White,
+                    harmonyMode = ColorHarmonyMode.NONE,
+                    modifier = Modifier.size(300.dp),
+                    onColorChanged = { hsvColor ->
+                        collectionColor = hsvColor.toColor()
+                    })
 
             }
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    if(collectionName.isBlank())
+                    if (collectionName.isBlank())
                         noCollectionNameError = true
                     else {
                         current.displayName = collectionName
-                        if (colorActivated)
-                            current.color = collectionColor.toArgb()
+                        current.color = collectionColor?.toArgb()
                         onCollectionChanged(current)
                         onDismiss()
                     }
@@ -142,12 +124,12 @@ fun CollectionsAddOrEditDialog(
                     onDismiss()
                 }
             ) {
-                Text( stringResource(id = R.string.cancel))
+                Text(stringResource(id = R.string.cancel))
             }
         }
     )
 
- }
+}
 
 @Preview(showBackground = true)
 @Composable
