@@ -28,8 +28,10 @@ import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
 import at.techbee.jtx.ui.compose.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
 import at.techbee.jtx.util.DateTimeUtils
-import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
+import net.fortuna.ical4j.model.NumberList
+import net.fortuna.ical4j.model.Recur
+import net.fortuna.ical4j.model.WeekDay
 import java.time.DayOfWeek
 import java.util.*
 
@@ -98,13 +100,19 @@ fun DetailsCardRecur(
                 AnimatedVisibility(isEditMode.value) {
                     Switch(
                         checked = updatedRRule != null,
+                        enabled = icalObject.dtstart != null,
                         onCheckedChange = {
                             updatedRRule = if (it)
                                 Recur("FREQ=DAILY;COUNT=1;INTERVAL=1")
                             else
                                 null
-                        })
+                        }
+                    )
                 }
+            }
+
+            AnimatedVisibility(isEditMode.value && icalObject.dtstart == null) {
+                Text(stringResource(id = R.string.edit_recur_toast_requires_start_date))
             }
 
             AnimatedVisibility(isEditMode.value && updatedRRule != null) {
@@ -598,6 +606,42 @@ fun DetailsCardRecur_Preview_edit_off() {
                 dueTimezone = null
             },
             isEditMode = remember { mutableStateOf(true) },
+            onRecurUpdated = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardRecur_Preview_edit_no_dtstart() {
+    MaterialTheme {
+
+        DetailsCardRecur(
+            icalObject = ICalObject.createTodo().apply {
+                dtstart = null
+                dtstartTimezone = null
+                due = null
+                dueTimezone = null
+            },
+            isEditMode = remember { mutableStateOf(true) },
+            onRecurUpdated = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardRecur_Preview_view_no_dtstart() {
+    MaterialTheme {
+
+        DetailsCardRecur(
+            icalObject = ICalObject.createTodo().apply {
+                dtstart = null
+                dtstartTimezone = null
+                due = null
+                dueTimezone = null
+            },
+            isEditMode = remember { mutableStateOf(false) },
             onRecurUpdated = { }
         )
     }

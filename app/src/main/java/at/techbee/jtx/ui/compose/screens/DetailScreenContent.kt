@@ -35,6 +35,7 @@ import at.techbee.jtx.ui.compose.elements.CollectionsSpinner
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
 import at.techbee.jtx.ui.compose.cards.VerticalDateCard
 import at.techbee.jtx.ui.compose.dialogs.ColorPickerDialog
+import at.techbee.jtx.util.DateTimeUtils
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -188,6 +189,7 @@ fun DetailScreenContent(
                                 icalObject.dtstart = dtstart
                                 icalObject.dtstartTimezone = dtstartTimezone
                             },
+                            pickerMaxDate = DateTimeUtils.getDateWithoutTime(due, dueTimezone),
                             modifier = Modifier.weight(0.33f),
                             labelTop = if(iCalEntity.value?.property?.module == Module.TODO.name)
                                 stringResource(id = R.string.started)
@@ -208,6 +210,7 @@ fun DetailScreenContent(
                                 icalObject.due = due
                                 icalObject.dueTimezone = dueTimezone
                             },
+                            pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone),
                             modifier = Modifier.weight(0.33f),
                             labelTop = stringResource(id = R.string.due),
                             allowNull = iCalEntity.value?.property?.module == Module.TODO.name
@@ -222,6 +225,7 @@ fun DetailScreenContent(
                                 icalObject.completed = completed
                                 icalObject.completedTimezone = completedTimezone
                             },
+                            pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone),
                             modifier = Modifier.weight(0.33f),
                             labelTop = stringResource(id = R.string.completed),
                             allowNull = iCalEntity.value?.property?.module == Module.TODO.name

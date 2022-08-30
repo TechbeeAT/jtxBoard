@@ -48,6 +48,8 @@ fun DatePickerDialog(
     timezone: String?,
     allowNull: Boolean,
     dateOnly: Boolean = false,
+    minDate: Long? = null,
+    maxDate: Long? = null,
     onConfirm: (newDateTime: Long?, newTimezone: String?) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -186,6 +188,8 @@ fun DatePickerDialog(
                                             dateTime.monthValue - 1,
                                             dateTime.dayOfMonth
                                         )
+                                        minDate?.let { datepicker.minDate = it }
+                                        maxDate?.let { datepicker.maxDate = it }
                                         datepicker.rootView
                                     }
                                 )

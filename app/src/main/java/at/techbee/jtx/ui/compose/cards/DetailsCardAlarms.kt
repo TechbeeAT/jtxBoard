@@ -31,6 +31,7 @@ import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.ui.compose.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.compose.dialogs.DurationPickerDialog
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
+import at.techbee.jtx.util.DateTimeUtils
 import java.time.Duration
 
 
@@ -56,6 +57,7 @@ fun DetailsCardAlarms(
             datetime = initialDateTime,
             timezone = initialTimeZone,
             allowNull = false,
+            minDate = DateTimeUtils.getTodayAsLong(),
             onConfirm = { newDateTime, newTimeZone ->
                 val newAlarm = Alarm.createDisplayAlarm(newDateTime!!, newTimeZone)
                 alarms.value = alarms.value.plus(newAlarm)

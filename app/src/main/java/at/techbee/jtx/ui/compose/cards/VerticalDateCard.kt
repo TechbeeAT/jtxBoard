@@ -38,6 +38,8 @@ fun VerticalDateCard(
     allowNull: Boolean,
     modifier: Modifier = Modifier,
     labelTop: String? = null,
+    pickerMinDate: Long? = null,
+    pickerMaxDate: Long? = null,
     onDateTimeChanged: (Long?, String?) -> Unit = { _, _ -> }
     ) {
 
@@ -93,6 +95,8 @@ fun VerticalDateCard(
             datetime = newDateTime,
             timezone = newTimezone,
             allowNull = allowNull,
+            minDate = pickerMinDate,
+            maxDate = pickerMaxDate,
             onConfirm = { time, tz ->
                 newDateTime = time
                 newTimezone = tz
@@ -112,7 +116,7 @@ fun VerticalDateCard_Preview_Allday() {
             timezone = ICalObject.TZ_ALLDAY,
             allowNull = true,
             isEditMode = remember { mutableStateOf(false) },
-            onDateTimeChanged = { _, _, -> }
+            onDateTimeChanged = { _, _ -> }
         )
     }
 }
