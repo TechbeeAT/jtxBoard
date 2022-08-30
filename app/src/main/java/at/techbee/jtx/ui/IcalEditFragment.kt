@@ -40,9 +40,6 @@ import at.techbee.jtx.flavored.MapManager
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_ALARMS
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_RECURRING
 import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_SUBTASKS
-import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
-import at.techbee.jtx.util.DateTimeUtils.getLocalizedWeekdays
-import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -63,8 +60,6 @@ class IcalEditFragment : Fragment() {
     private lateinit var inflater: LayoutInflater
     private var container: ViewGroup? = null
     private var menu: Menu? = null
-
-    private var rruleUntil: Long = System.currentTimeMillis()
 
 
     companion object {
@@ -146,43 +141,6 @@ class IcalEditFragment : Fragment() {
         }
 
 
-        val weekdays = getLocalizedWeekdays()
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.text = weekdays[0]
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.text = weekdays[1]
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.text = weekdays[2]
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.text = weekdays[3]
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.text = weekdays[4]
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.text = weekdays[5]
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.text = weekdays[6]
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip0.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip1.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip2.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip3.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip4.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip5.setOnCheckedChangeListener { _, _ -> updateRRule() }
-        binding.editFragmentIcalEditRecur.editRecurWeekdayChip6.setOnCheckedChangeListener { _, _ -> updateRRule() }
-
-        binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.wrapSelectorWheel = false
-        binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.minValue = 1
-        binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.maxValue = 31
-        binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.setOnValueChangedListener { _, _, _ -> updateRRule() }
-
-        binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.wrapSelectorWheel = false
-        binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.minValue = 1
-        binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.maxValue = ICalObject.DEFAULT_MAX_RECUR_INSTANCES
-        binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.setOnValueChangedListener { _, _, _ -> updateRRule() }
-
-        binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.wrapSelectorWheel = false
-        binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.minValue = 1
-        binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.maxValue = 31
-        binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.setOnValueChangedListener { _, _, _ -> updateRRule() }
-
-
-
-        rruleUntil = icalEditViewModel.iCalEntity.property.rrule?.let { Recur(it).until?.time } ?: icalEditViewModel.iCalEntity.property.dtstart ?: System.currentTimeMillis()
-        binding.editFragmentIcalEditRecur.editRecurEndsOnDateText.text = convertLongToFullDateTimeString(rruleUntil, icalEditViewModel.iCalEntity.property.dtstartTimezone)
-
-
 
         //pre-set rules if rrule is present
         if(icalEditViewModel.iCalEntity.property.rrule!= null) {
@@ -230,27 +188,6 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-        binding.editFragmentTabGeneral.editColorItem.setOnClickListener {
-
-            val colorPickerBinding = FragmentIcalEditColorpickerDialogBinding.inflate(inflater)
-            icalEditViewModel.iCalObjectUpdated.value?.color?.let{ colorPickerBinding.colorPicker.color = it }
-            colorPickerBinding.colorPicker.showOldCenterColor = false
-
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.color)
-                .setView(colorPickerBinding.root)
-                .setIcon(R.drawable.ic_color)
-                .setPositiveButton(R.string.ok)  { _, _ ->
-                    icalEditViewModel.iCalObjectUpdated.value?.color = colorPickerBinding.colorPicker.color
-                    icalEditViewModel.iCalObjectUpdated.postValue(icalEditViewModel.iCalObjectUpdated.value)
-                }
-                .setNeutralButton(R.string.cancel)  { _, _ -> return@setNeutralButton  /* nothing to do */  }
-                .setNegativeButton(R.string.reset) { _, _ ->
-                    icalEditViewModel.iCalObjectUpdated.value?.color = null
-                    icalEditViewModel.iCalObjectUpdated.postValue(icalEditViewModel.iCalObjectUpdated.value)
-                }
-                .show()
-        }
 
         if(BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY) {
             binding.editFragmentTabUlc.editLocationEdit.setEndIconOnClickListener {
@@ -295,15 +232,6 @@ class IcalEditFragment : Fragment() {
             builder.show()
         }
 
-        icalEditViewModel.deleteClicked.observe(viewLifecycleOwner) {
-            if (it == true) {
-
-                if (icalEditViewModel.iCalObjectUpdated.value?.id == 0L)
-                    showDiscardMessage()
-                else
-                    showDeleteMessage()
-            }
-        }
 
         icalEditViewModel.returnIcalObjectId.observe(viewLifecycleOwner) {
 
@@ -372,14 +300,6 @@ class IcalEditFragment : Fragment() {
 
 
 
-        icalEditViewModel.addTimezoneJournalChecked.observe(viewLifecycleOwner) { addJournalTimezone ->
-
-            if (icalEditViewModel.iCalObjectUpdated.value == null)     // don't do anything if the object was not initialized yet
-                return@observe
-
-        }
-
-
         icalEditViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
 
             if (icalEditViewModel.savingClicked.value == true)    // don't do anything if saving was clicked, saving could interfere here!
@@ -398,40 +318,6 @@ class IcalEditFragment : Fragment() {
 
         //TODO: Check if the Sequence was updated in the meantime and notify user!
 
-
-        icalEditViewModel.iCalEntity.comments?.forEach { singleComment ->
-            if(!icalEditViewModel.commentUpdated.contains(singleComment)) {
-                icalEditViewModel.commentUpdated.add(singleComment)
-                addCommentView(singleComment)
-            }
-        }
-
-
-        // Set up items to suggest for categories
-        icalEditViewModel.allCategories.observe(viewLifecycleOwner) {
-            // Create the adapter and set it to the AutoCompleteTextView
-            if (icalEditViewModel.allCategories.value != null) {
-                val arrayAdapter = ArrayAdapter(
-                    application.applicationContext,
-                    android.R.layout.simple_list_item_1,
-                    icalEditViewModel.allCategories.value!!
-                )
-                binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.setAdapter(arrayAdapter)
-            }
-        }
-
-        // Set up items to suggest for resources
-        icalEditViewModel.allResources.observe(viewLifecycleOwner) {
-            // Create the adapter and set it to the AutoCompleteTextView
-            if (icalEditViewModel.allResources.value != null) {
-                val arrayAdapter = ArrayAdapter(
-                    application.applicationContext,
-                    android.R.layout.simple_list_item_1,
-                    icalEditViewModel.allResources.value!!
-                )
-                binding.editFragmentTabCar.editResourcesAddAutocomplete.setAdapter(arrayAdapter)
-            }
-        }
 
         // initialize allRelatedto
         icalEditViewModel.isChild.observe(viewLifecycleOwner) {
@@ -524,52 +410,7 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-
-        binding.editBottomBar.setOnMenuItemClickListener { menuItem ->
-            when(menuItem.itemId) {
-                R.id.menu_edit_bottom_delete -> icalEditViewModel.deleteClicked()
-            }
-            true
-        }
-
-
         return binding.root
-    }
-
-
-
-    private fun showDiscardMessage() {
-
-        // show Alert Dialog before the item gets really deleted
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(getString(R.string.edit_dialog_sure_to_discard_title))
-        builder.setMessage(getString(R.string.edit_dialog_sure_to_discard_message))
-        builder.setPositiveButton(R.string.discard) { _, _ ->
-
-            //hideKeyboard()
-            context?.let { context -> Attachment.scheduleCleanupJob(context) }
-
-            val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
-            direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
-            this.findNavController().navigate(direction)
-        }
-        builder.setNegativeButton(R.string.cancel) { _, _ ->  }   // Do nothing, just close the message
-        builder.show()
-
-    }
-
-    private fun showDeleteMessage() {
-
-        // show Alert Dialog before the item gets really deleted
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(getString(R.string.edit_dialog_sure_to_delete_title, icalEditViewModel.iCalObjectUpdated.value?.summary))
-        builder.setMessage(getString(R.string.edit_dialog_sure_to_delete_message, icalEditViewModel.iCalObjectUpdated.value?.summary))
-        builder.setPositiveButton(R.string.delete) { _, _ ->
-            //hideKeyboard()
-            icalEditViewModel.delete()
-        }
-        builder.setNegativeButton(R.string.cancel) { _, _ ->  }   // Do nothing, just close the message
-        builder.show()
     }
 
 
@@ -694,33 +535,6 @@ class IcalEditFragment : Fragment() {
             }
             builder.show()
         }
-    }
-
-
-
-    private fun updateRRule() {
-
-        val lastOccurrenceString = convertLongToFullDateTimeString(icalEditViewModel.recurrenceList.lastOrNull(), icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone)
-
-        var allOccurrencesString = ""
-        icalEditViewModel.recurrenceList.forEach {
-            allOccurrencesString += convertLongToFullDateTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone) + "\n"
-        }
-
-        var allExceptionsString = ""
-        getLongListfromCSVString(icalEditViewModel.iCalObjectUpdated.value?.exdate).forEach {
-            allExceptionsString += convertLongToFullDateTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone) + "\n"
-        }
-
-        var allAdditionsString = ""
-        getLongListfromCSVString(icalEditViewModel.iCalObjectUpdated.value?.rdate).forEach {
-            allAdditionsString += convertLongToFullDateTimeString(it, icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone) + "\n"
-        }
-
-        binding.editFragmentIcalEditRecur.editRecurLastOccurenceItem.text = lastOccurrenceString
-        binding.editFragmentIcalEditRecur.editRecurAllOccurencesItems.text = allOccurrencesString
-        binding.editFragmentIcalEditRecur.editRecurExceptionItems.text = allExceptionsString
-        binding.editFragmentIcalEditRecur.editRecurAdditionsItems.text = allAdditionsString
     }
 
 

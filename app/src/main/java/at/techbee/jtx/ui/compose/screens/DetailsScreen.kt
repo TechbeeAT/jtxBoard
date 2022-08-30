@@ -29,6 +29,7 @@ import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.appbars.OverflowMenu
 import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
+import at.techbee.jtx.ui.compose.dialogs.DeleteEntryDialog
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,6 +58,8 @@ fun DetailsScreen(
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     val isReadOnly = rememberSaveable { mutableStateOf(false) }
 
+    val showDeleteDialog = rememberSaveable { mutableStateOf(false) }
+
     val icalEntity = detailViewModel.icalEntity.observeAsState()
 
     if (detailViewModel.entryDeleted.value)
@@ -64,6 +67,13 @@ fun DetailsScreen(
             launchSingleTop = true
         }
 
+    if(showDeleteDialog.value) {
+        DeleteEntryDialog(
+            icalObject = detailViewModel.icalEntity.value?.property!!,
+            onConfirm = { detailViewModel.delete() },
+            onDismiss = { showDeleteDialog.value = false }
+        )
+    }
 
 
     Scaffold(
@@ -148,9 +158,7 @@ fun DetailsScreen(
                 enableRecurrence = enableRecurrence,
                 enableAlarms = enableAlarms,
                 enableComments = enableComments,
-                onDeleteClicked = {
-                    detailViewModel.delete()
-                }
+                onDeleteClicked = { showDeleteDialog.value = true }
             )
         }
     )

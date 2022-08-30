@@ -464,7 +464,7 @@ fun DetailsCardRecur(
                                         expanded = endAfterExpaneded,
                                         onDismissRequest = { endAfterExpaneded = false }
                                     ) {
-                                        for (number in 1..100) {
+                                        for (number in 1..ICalObject.DEFAULT_MAX_RECUR_INSTANCES) {
                                             DropdownMenuItem(
                                                 onClick = {
                                                     updatedRRule = Recur.Builder().apply {

@@ -880,7 +880,7 @@ data class ICalObject(
      */
     fun makeDirty() {
         lastModified = System.currentTimeMillis()
-        sequence = sequence++
+        sequence += 1
         dirty = true
         isRecurLinkedInstance = false     // in any case on update of the progress, the item becomes an exception
     }
