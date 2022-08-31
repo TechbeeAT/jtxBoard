@@ -2,27 +2,26 @@ package at.techbee.jtx.ui.compose.appbars
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
-import at.techbee.jtx.ui.compose.elements.LabelledSwitch
-import at.techbee.jtx.ui.compose.elements.SwitchSetting
 
 @Composable
 fun DetailBottomAppBar(
@@ -55,10 +54,20 @@ fun DetailBottomAppBar(
 
     var settingsMenuExpanded by remember { mutableStateOf(false) }
     //val iCal4List by iCal4ListLive.observeAsState()
-    val context = LocalContext.current
+
+    val syncIconAnimation = rememberInfiniteTransition()
+    val angle by syncIconAnimation.animateFloat(
+        initialValue = 0f,
+        targetValue = -360f,
+        animationSpec = infiniteRepeatable(
+            animation = keyframes {
+                durationMillis = 2000
+            }
+        )
+    )
 
     BottomAppBar(
-        icons = {
+        actions = {
             AnimatedVisibility(isEditMode.value) {
                 IconButton(onClick = { settingsMenuExpanded = true }) {
                     Icon(
@@ -94,6 +103,15 @@ fun DetailBottomAppBar(
                 modifier = Modifier.alpha(0.2f)
             )
 
+            Icon(
+                Icons.Outlined.Sync,
+                contentDescription = stringResource(id = R.string.sync_in_progress),
+                modifier = Modifier
+                    .alpha(0.2f)
+                    .graphicsLayer {
+                        rotationZ = angle
+                    }
+            )
 
 
             // overflow menu

@@ -37,55 +37,57 @@ fun AdInfoScreen(navController: NavHostController, modifier: Modifier = Modifier
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     Scaffold(
-        topBar = { JtxTopAppBar(
-            drawerState = drawerState,
-            title = stringResource(id = R.string.navigation_drawer_adinfo)
-        ) },
-        content = {
-            Column {
-                JtxNavigationDrawer(
-                    drawerState = drawerState,
-                    mainContent = {
+        topBar = {
+            JtxTopAppBar(
+                drawerState = drawerState,
+                title = stringResource(id = R.string.navigation_drawer_adinfo)
+            )
+        },
+        content = { paddingValues ->
+            JtxNavigationDrawer(
+                drawerState = drawerState,
+                mainContent = {
 
-                        Column(
-                            modifier = modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
-                                .padding(8.dp),
-                            verticalArrangement = Arrangement.Top,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
+                    Column(
+                        modifier = modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(8.dp),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
 
-                            Image(
-                                painter = painterResource(id = R.drawable.bg_adfree),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(240.dp)
-                                    .padding(top = 32.dp, bottom = 32.dp) )
-                            Text(
-                                text = stringResource(id = R.string.adinfo_text),
-                                modifier = Modifier.padding(top = 16.dp),
-                                style = Typography.bodyLarge,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                text = stringResource(id = R.string.adinfo_huwei_only_non_personalized_text),
-                                modifier = Modifier.padding(top = 16.dp),
-                                style = Typography.bodyLarge,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    },
-                    navController = navController
-                )
-            }
+                        Image(
+                            painter = painterResource(id = R.drawable.bg_adfree),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(240.dp)
+                                .padding(top = 32.dp, bottom = 32.dp)
+                        )
+                        Text(
+                            text = stringResource(id = R.string.adinfo_text),
+                            modifier = Modifier.padding(top = 16.dp),
+                            style = Typography.bodyLarge,
+                            textAlign = TextAlign.Center
+                        )
+                        Text(
+                            text = stringResource(id = R.string.adinfo_huwei_only_non_personalized_text),
+                            modifier = Modifier.padding(top = 16.dp),
+                            style = Typography.bodyLarge,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                },
+                navController = navController,
+                paddingValues = paddingValues
+            )
 
 
         },
 
-    )
+        )
 }
 
 @Preview(showBackground = true)

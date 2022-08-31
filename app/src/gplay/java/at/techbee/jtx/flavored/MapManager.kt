@@ -96,7 +96,7 @@ class MapManager(val context: Context): MapManagerDefinition {
                 val geocoder = Geocoder(context, Locale.getDefault())
                 val addresses = geocoder.getFromLocation(it.latitude, it.longitude, 5)
                 locationPickerDialog.fragmentIcalEditLocationpickerDialogChipgroup.removeAllViews()
-                addresses.forEach { address ->
+                addresses?.forEach { address ->
                     if(address.maxAddressLineIndex >= 0) {
                         val chip = FragmentIcalEditLocationpickerDialogChipBinding.inflate(inflater).root
                         chip.text = address.getAddressLine(0)

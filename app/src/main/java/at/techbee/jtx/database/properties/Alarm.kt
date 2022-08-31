@@ -289,7 +289,6 @@ data class Alarm (
     /**
      * @return The parsed triggerRelativeDuration of this alarm as Duration or null if the value cannot be parsed
      */
-    @VisibleForTesting
     fun getTriggerAsDuration() = try {
         Duration.parse(this.triggerRelativeDuration)
     } catch (e: DateTimeParseException) {
@@ -303,7 +302,6 @@ data class Alarm (
     /**
      * @return the duration as a human readible string, e.g. "7 days before start" or null (if the triggerDuration could not be parsed)
      */
-    @VisibleForTesting
     fun getTriggerDurationAsString(context: Context): String? {
 
         val dur = getTriggerAsDuration() ?: return null
@@ -338,6 +336,7 @@ data class Alarm (
         }
     }
 
+    @Deprecated("Don't use binding anymore")
     fun getAlarmCardBinding(inflater: LayoutInflater, container: LinearLayout, referenceDate: Long?, referenceTZ: String?): CardAlarmBinding? {
 
         // we don't add alarm of which the DateTime is not set or cannot be determined
@@ -361,7 +360,7 @@ data class Alarm (
         return bindingAlarm
     }
 
-    fun scheduleNotification(context: Context, triggerTime: Long) {
+    fun scheduleNotification(context: Context, triggerTime: Long, isReadOnly: Boolean) {
 
         if(triggerTime < System.currentTimeMillis())
             return
@@ -418,9 +417,23 @@ data class Alarm (
                 priority = NotificationCompat.PRIORITY_HIGH
                 setCategory(NotificationCompat.CATEGORY_ALARM)     //  CATEGORY_REMINDER might also be an alternative
                 //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
-                addAction(R.drawable.ic_snooze, context.getString(R.string.notification_add_1h), snooze1hPendingIntent)
-                addAction(R.drawable.ic_snooze, context.getString(R.string.notification_add_1d), snooze1dPendingIntent)
-                addAction(R.drawable.ic_todo, context.getString(R.string.notification_done), donePendingIntent)
+                if(!isReadOnly) {
+                    addAction(
+                        R.drawable.ic_snooze,
+                        context.getString(R.string.notification_add_1h),
+                        snooze1hPendingIntent
+                    )
+                    addAction(
+                        R.drawable.ic_snooze,
+                        context.getString(R.string.notification_add_1d),
+                        snooze1dPendingIntent
+                    )
+                    addAction(
+                        R.drawable.ic_todo,
+                        context.getString(R.string.notification_done),
+                        donePendingIntent
+                    )
+                }
             }
                 .build()
             notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL

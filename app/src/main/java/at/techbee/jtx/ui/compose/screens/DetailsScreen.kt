@@ -8,8 +8,6 @@
 
 package at.techbee.jtx.ui.compose.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Share
@@ -19,7 +17,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -32,6 +29,7 @@ import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.appbars.OverflowMenu
 import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
+import at.techbee.jtx.ui.compose.dialogs.DeleteEntryDialog
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,68 +58,87 @@ fun DetailsScreen(
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     val isReadOnly = rememberSaveable { mutableStateOf(false) }
 
+    val showDeleteDialog = rememberSaveable { mutableStateOf(false) }
+
     val icalEntity = detailViewModel.icalEntity.observeAsState()
 
-    if(detailViewModel.entryDeleted.value)
+    if (detailViewModel.entryDeleted.value)
         navController.navigate(NavigationDrawerDestination.BOARD.name) {
             launchSingleTop = true
         }
 
+    if(showDeleteDialog.value) {
+        DeleteEntryDialog(
+            icalObject = detailViewModel.icalEntity.value?.property!!,
+            onConfirm = { detailViewModel.delete() },
+            onDismiss = { showDeleteDialog.value = false }
+        )
+    }
 
 
     Scaffold(
-        topBar = { JtxTopAppBar(
-            drawerState = drawerState,
-            title = stringResource(id = R.string.details),
-            subtitle = detailViewModel.icalEntity.value?.property?.summary,
-            actions = {
+        topBar = {
+            JtxTopAppBar(
+                drawerState = drawerState,
+                title = stringResource(id = R.string.details),
+                subtitle = detailViewModel.icalEntity.value?.property?.summary,
+                actions = {
 
-                val menuExpanded = remember { mutableStateOf(false) }
+                    val menuExpanded = remember { mutableStateOf(false) }
 
-                OverflowMenu(menuExpanded = menuExpanded) {
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(id = R.string.menu_view_share_text))  },
-                        onClick = { /* TODO */ },
-                        leadingIcon = { Icon(Icons.Outlined.Share, null) }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(id = R.string.menu_view_share_ics))  },
-                        onClick = { /* TODO */ },
-                        leadingIcon = { Icon(Icons.Outlined.Description, null) }
-                    )
-                }
-            }
-        ) },
-        content = {
-            Column(modifier = Modifier.padding(it)) {
-                JtxNavigationDrawer(
-                    drawerState = drawerState,
-                    mainContent = {
-
-                        DetailScreenContent(
-                            iCalEntity = icalEntity,
-                            isEditMode = isEditMode,
-                            subtasks = emptyList(),
-                            subnotes = emptyList(),
-                            //attachments = emptyList(),
-                            allCollections = listOf(
-                                ICalCollection.createLocalCollection(
-                                    LocalContext.current
-                                )
-                            ),
-                            //player = null,
-                            saveIcalObject = { changedICalObject -> detailViewModel.save(changedICalObject) },
-                            onProgressChanged = { _, _, _ -> },
-                            onExpandedChanged = { _, _, _, _ -> }
+                    OverflowMenu(menuExpanded = menuExpanded) {
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.menu_view_share_text)) },
+                            onClick = { /* TODO */ },
+                            leadingIcon = { Icon(Icons.Outlined.Share, null) }
                         )
-                    },
-                    navController = navController
-                )
-            }
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
+                            onClick = { /* TODO */ },
+                            leadingIcon = { Icon(Icons.Outlined.Description, null) }
+                        )
+                    }
+                }
+            )
+        },
+        content = { paddingValues ->
+            JtxNavigationDrawer(
+                drawerState = drawerState,
+                mainContent = {
+
+                    DetailScreenContent(
+                        iCalEntity = icalEntity,
+                        isEditMode = isEditMode,
+                        subtasks = emptyList(),
+                        subnotes = emptyList(),
+                        //attachments = emptyList(),
+                        allCollections = listOf(
+                            ICalCollection.createLocalCollection(
+                                LocalContext.current
+                            )
+                        ),
+                        //player = null,
+                        saveIcalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
+                            detailViewModel.save(
+                                changedICalObject,
+                                changedCategories,
+                                changedComments,
+                                changedAttendees,
+                                changedResources,
+                                changedAttachments,
+                                changedAlarms
+                            )
+                        },
+                        onProgressChanged = { _, _, _ -> },
+                    )
+                },
+                navController = navController,
+                paddingValues = paddingValues
+            )
         },
         bottomBar = {
             DetailBottomAppBar(
-                module = when(detailViewModel.icalEntity.value?.property?.module) {
+                module = when (detailViewModel.icalEntity.value?.property?.module) {
                     Module.JOURNAL.name -> Module.JOURNAL
                     Module.NOTE.name -> Module.NOTE
                     Module.TODO.name -> Module.TODO
@@ -141,9 +158,7 @@ fun DetailsScreen(
                 enableRecurrence = enableRecurrence,
                 enableAlarms = enableAlarms,
                 enableComments = enableComments,
-                onDeleteClicked = {
-                    detailViewModel.delete()
-                }
+                onDeleteClicked = { showDeleteDialog.value = true }
             )
         }
     )

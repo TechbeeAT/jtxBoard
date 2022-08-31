@@ -110,9 +110,7 @@ fun ListScreen(
                     }
                 }
             )
-        }, content = {
-
-                paddingValues ->
+        }, content = {  paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {
                 when (icalListViewModel.listSettings.viewMode.value) {
                     ViewMode.LIST -> {

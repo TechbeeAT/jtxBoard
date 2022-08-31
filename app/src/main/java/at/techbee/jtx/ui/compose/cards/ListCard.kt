@@ -174,7 +174,7 @@ fun ICalObjectListCard(
 
                     if (iCalObject.module == Module.JOURNAL.name)
                         VerticalDateBlock(
-                            iCalObject.dtstart ?: System.currentTimeMillis(),
+                            iCalObject.dtstart,
                             iCalObject.dtstartTimezone,
                             modifier = Modifier.padding(
                                 start = 8.dp,
@@ -442,7 +442,7 @@ fun ICalObjectListCard(
 @Preview(showBackground = true)
 @Composable
 fun ICalObjectListCardPreview_JOURNAL() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             uploadPending = false
@@ -475,7 +475,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
 @Preview(showBackground = true)
 @Composable
 fun ICalObjectListCardPreview_NOTE() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             component = Component.VJOURNAL.name
@@ -509,7 +509,7 @@ fun ICalObjectListCardPreview_NOTE() {
 @Preview(showBackground = true)
 @Composable
 fun ICalObjectListCardPreview_TODO() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             component = Component.VTODO.name
@@ -549,7 +549,7 @@ fun ICalObjectListCardPreview_TODO() {
 @Preview(showBackground = true)
 @Composable
 fun ICalObjectListCardPreview_TODO_no_progress() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             component = Component.VTODO.name
@@ -590,7 +590,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
 @Preview(showBackground = true)
 @Composable
 fun ICalObjectListCardPreview_TODO_recur_exception() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             summary =
@@ -633,7 +633,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
 @Preview(showBackground = true)
 @Composable
 fun ICalObjectListCardPreview_NOTE_simple() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             summary =

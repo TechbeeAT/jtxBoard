@@ -16,12 +16,12 @@ apply plugin: 'androidx.navigation.safeargs'
 
 android {
     namespace 'at.techbee.jtx'
-    compileSdkVersion 32
+    compileSdkVersion 33
     defaultConfig {
         applicationId "at.techbee.jtx"
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 102040008
         versionName "1.02.04-rc08"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Putin's war must end!\""
@@ -65,7 +65,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion version_compose
+        kotlinCompilerExtensionVersion "1.3.0"
     }
 
     packagingOptions {
@@ -231,7 +231,9 @@ dependencies {
     // jetpack compose
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation 'androidx.compose.material3:material3:1.0.0-alpha15'
+    implementation 'androidx.compose.material3:material3:1.0.0-beta01'
+    implementation "androidx.compose.material3:material3-window-size-class:1.0.0-beta01"
+
     implementation "androidx.compose.material:material:$version_compose"    // material 2 support as bottom sheet is missing in m3
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'

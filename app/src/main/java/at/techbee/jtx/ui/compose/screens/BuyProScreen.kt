@@ -55,81 +55,83 @@ fun BuyProScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     Scaffold(
-        topBar = { JtxTopAppBar(
-            drawerState = drawerState,
-            title = stringResource(id = R.string.navigation_drawer_buypro)
-        ) },
-        content = {
-            Column(modifier = Modifier.padding(it)) {
-                JtxNavigationDrawer(
-                    drawerState = drawerState,
-                    mainContent = {
+        topBar = {
+            JtxTopAppBar(
+                drawerState = drawerState,
+                title = stringResource(id = R.string.navigation_drawer_buypro)
+            )
+        },
+        content = { paddingValues ->
+            JtxNavigationDrawer(
+                drawerState = drawerState,
+                mainContent = {
 
-                        Column(
-                            modifier = modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
-                                .padding(8.dp),
-                            verticalArrangement = Arrangement.Top,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
+                    Column(
+                        modifier = modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(8.dp),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
 
-                            Image(
-                                painter = painterResource(id = R.drawable.bg_adfree),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp)
-                                    .padding(top = 32.dp, bottom = 32.dp) )
-                            Text(
-                                text = stringResource(id = R.string.buypro_text),
-                                modifier = Modifier.padding(top = 16.dp),
-                                style = Typography.bodyLarge,
-                                textAlign = TextAlign.Center
-                            )
+                        Image(
+                            painter = painterResource(id = R.drawable.bg_adfree),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .padding(top = 32.dp, bottom = 32.dp)
+                        )
+                        Text(
+                            text = stringResource(id = R.string.buypro_text),
+                            modifier = Modifier.padding(top = 16.dp),
+                            style = Typography.bodyLarge,
+                            textAlign = TextAlign.Center
+                        )
 
-                            Crossfade(targetState = isPurchased) {
+                        Crossfade(targetState = isPurchased) {
 
-                                Column(modifier = Modifier.padding(top = 16.dp)) {
-                                    if (!it) {
-                                        BuyProCard(
-                                            priceLive = priceLive,
-                                            Modifier.clickable {
-                                                launchBillingFlow()
-                                            }
-                                        )
-                                    } else {
-                                        BuyProCardPurchased(
-                                            purchaseDateLive = purchaseDateLive,
-                                            orderIdLive = orderIdLive
-                                        )
-                                        Text(
-                                            text = stringResource(id = R.string.buypro_success_thankyou),
-                                            modifier = Modifier
-                                                .padding(top = 16.dp)
-                                                .fillMaxWidth(),
-                                            style = Typography.displaySmall,
-                                            textAlign = TextAlign.Center,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        Image(
-                                            painter = painterResource(id = R.drawable.bg_thankyou),
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(240.dp)
-                                                .padding(top = 32.dp, bottom = 32.dp)
-                                        )
-                                    }
+                            Column(modifier = Modifier.padding(top = 16.dp)) {
+                                if (!it) {
+                                    BuyProCard(
+                                        priceLive = priceLive,
+                                        Modifier.clickable {
+                                            launchBillingFlow()
+                                        }
+                                    )
+                                } else {
+                                    BuyProCardPurchased(
+                                        purchaseDateLive = purchaseDateLive,
+                                        orderIdLive = orderIdLive
+                                    )
+                                    Text(
+                                        text = stringResource(id = R.string.buypro_success_thankyou),
+                                        modifier = Modifier
+                                            .padding(top = 16.dp)
+                                            .fillMaxWidth(),
+                                        style = Typography.displaySmall,
+                                        textAlign = TextAlign.Center,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Image(
+                                        painter = painterResource(id = R.drawable.bg_thankyou),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(240.dp)
+                                            .padding(top = 32.dp, bottom = 32.dp)
+                                    )
                                 }
-
                             }
                         }
-                    },
-                    navController = navController
-                )
-            }
+                    }
+                },
+                navController = navController,
+                paddingValues = paddingValues
+            )
+
         }
     )
 

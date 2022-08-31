@@ -13,10 +13,8 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddLink
@@ -40,7 +38,6 @@ import at.techbee.jtx.ui.compose.dialogs.AddAttachmentLinkDialog
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailsCardAttachments(
     attachments: MutableState<List<Attachment>>,
@@ -50,15 +47,12 @@ fun DetailsCardAttachments(
 ) {
 
     val context = LocalContext.current
-    // preview would break if rememberPermissionState is used for preview, so we set it to null only for preview!
-    //val contactsPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.READ_CONTACTS) else null
-    //var showContactsPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
     val pickFileLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             Attachment.getNewAttachmentFromUri(uri, context)?.let { newAttachment ->
                 attachments.value = attachments.value.plus(newAttachment)
-                //onAttachmentsUpdated()   // TODO
+                onAttachmentsUpdated()
             }
         }
     }
@@ -69,7 +63,7 @@ fun DetailsCardAttachments(
                 Attachment.getNewAttachmentFromUri(it, context)?.let { newAttachment ->
                     attachments.value = attachments.value.plus(newAttachment)
                     newPictureUri.value = null
-                    //onAttachmentsUpdated()   // TODO
+                    onAttachmentsUpdated()
                 }
             }
         }
@@ -82,7 +76,7 @@ fun DetailsCardAttachments(
             onConfirm = { attachmentLink ->
                 val newAttachment = Attachment(uri = attachmentLink)
                 attachments.value = attachments.value.plus(newAttachment)
-                // TODO: Save!
+                onAttachmentsUpdated()
             },
             onDismiss = { showAddLinkAttachmentDialog = false }
         )
@@ -108,7 +102,10 @@ fun DetailsCardAttachments(
                         AttachmentCard(
                             attachment = attachment,
                             isEditMode = isEditMode,
-                            onAttachmentDeleted = { /* TODO */ }
+                            onAttachmentDeleted = {
+                                attachments.value = attachments.value.minus(attachment)
+                                onAttachmentsUpdated()
+                            }
                         )
                     }
                 }
@@ -160,7 +157,7 @@ fun DetailsCardAttachments_Preview() {
         DetailsCardAttachments(
             attachments = remember { mutableStateOf(listOf(Attachment(filename = "test.pdf"))) },
             isEditMode = remember { mutableStateOf(false) },
-            onAttachmentsUpdated = { /*TODO*/ }
+            onAttachmentsUpdated = { }
         )
     }
 }
@@ -173,7 +170,7 @@ fun DetailsCardAttachments_Preview_edit() {
         DetailsCardAttachments(
             attachments = remember { mutableStateOf(listOf(Attachment(filename = "test.pdf"))) },
             isEditMode = remember { mutableStateOf(true) },
-            onAttachmentsUpdated = { /*TODO*/ }
+            onAttachmentsUpdated = { }
         )
     }
 }

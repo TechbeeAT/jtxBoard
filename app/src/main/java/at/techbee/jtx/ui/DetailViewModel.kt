@@ -16,9 +16,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.properties.Relatedto
-import at.techbee.jtx.database.properties.Reltype
+import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.util.Ical4androidUtil
@@ -127,10 +125,76 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun save(iCalObject: ICalObject) {
-       iCalObject.makeDirty()
-        viewModelScope.launch {
-            database.update(iCalObject)
+    fun save(iCalObject: ICalObject,
+             categories: List<Category>,
+             comments: List<Comment>,
+             attendees: List<Attendee>,
+             resources: List<Resource>,
+             attachments: List<Attachment>,
+             alarms: List<Alarm>
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            if(icalEntity.value?.categories != categories) {
+                iCalObject.makeDirty()
+                database.deleteCategories(iCalObject.id)
+                categories.forEach { changedCategory ->
+                    changedCategory.icalObjectId = iCalObject.id
+                    database.insertCategory(changedCategory)
+                }
+            }
+
+            if(icalEntity.value?.comments != comments) {
+                iCalObject.makeDirty()
+                database.deleteComments(iCalObject.id)
+                comments.forEach { changedComment ->
+                    changedComment.icalObjectId = iCalObject.id
+                    database.insertComment(changedComment)
+                }
+            }
+
+            if(icalEntity.value?.attendees != attendees) {
+                iCalObject.makeDirty()
+                database.deleteAttendees(iCalObject.id)
+                attendees.forEach { changedAttendee ->
+                    changedAttendee.icalObjectId = iCalObject.id
+                    database.insertAttendee(changedAttendee)
+                }
+            }
+
+            if(icalEntity.value?.resources != resources) {
+                iCalObject.makeDirty()
+                database.deleteResources(iCalObject.id)
+                resources.forEach { changedResource ->
+                    changedResource.icalObjectId = iCalObject.id
+                    database.insertResource(changedResource)
+                }
+            }
+
+            if(icalEntity.value?.attachments != attachments) {
+                iCalObject.makeDirty()
+                database.deleteAttachments(iCalObject.id)
+                attachments.forEach { changedAttachment ->
+                    changedAttachment.icalObjectId = iCalObject.id
+                    database.insertAttachment(changedAttachment)
+                }
+                Attachment.scheduleCleanupJob(getApplication())
+            }
+
+            if(icalEntity.value?.alarms != alarms) {
+                iCalObject.makeDirty()
+                database.deleteAlarms(iCalObject.id)
+                alarms.forEach { changedAlarm ->
+                    changedAlarm.icalObjectId = iCalObject.id
+                    database.insertAlarm(changedAlarm)
+                    //changedAlarm.scheduleNotification()   // TODO!
+                }
+            }
+
+            if(icalEntity.value?.property != iCalObject) {
+                iCalObject.makeDirty()
+                database.update(iCalObject)
+            }
             SyncUtil.notifyContentObservers(getApplication())
         }
     }

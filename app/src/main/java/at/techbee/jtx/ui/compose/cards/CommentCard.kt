@@ -8,11 +8,12 @@
 
 package at.techbee.jtx.ui.compose.cards
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.FilePresent
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -20,30 +21,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.util.UiUtil
+import at.techbee.jtx.database.properties.Comment
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AttachmentCard(
-    attachment: Attachment,
+fun CommentCard(
+    comment: Comment,
     isEditMode: MutableState<Boolean>,
     modifier: Modifier = Modifier,
-    onAttachmentDeleted: () -> Unit
+    onCommentDeleted: () -> Unit
 ) {
-
-    val context = LocalContext.current
-    val preview = attachment.getPreview(context)
-    val filesize = attachment.getFilesize(context)
 
     if (isEditMode.value) {
         OutlinedCard(modifier = modifier) {
@@ -54,27 +45,20 @@ fun AttachmentCard(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (preview == null)
-                    Icon(Icons.Outlined.FilePresent, stringResource(R.string.attachments))
-                else
-                    Image(bitmap = preview.asImageBitmap(), contentDescription = null)
                 Text(
-                    attachment.getFilenameOrLink() ?: "",
+                    comment.text,
                     modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp)
                         .align(alignment = Alignment.CenterVertically)
-                        .weight(1f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                        .weight(1f)
                 )
-                IconButton(onClick = { onAttachmentDeleted() }) {
+                IconButton(onClick = { onCommentDeleted() }) {
                     Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
                 }
             }
         }
     } else {
         ElevatedCard(
-            onClick = { attachment.openFile(context) },
             modifier = modifier
         ) {
             Row(
@@ -84,27 +68,13 @@ fun AttachmentCard(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (preview == null)
-                    Icon(Icons.Outlined.FilePresent, stringResource(R.string.attachments))
-                else
-                    Image(bitmap = preview.asImageBitmap(), contentDescription = null)
                 Text(
-                    attachment.getFilenameOrLink() ?: "",
+                    comment.text,
                     modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp)
                         .align(alignment = Alignment.CenterVertically)
-                        .weight(1f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                        .weight(1f)
                 )
-                filesize?.let {
-                    Text(
-                        text = UiUtil.getAttachmentSizeString(it),
-                        maxLines = 1,
-                        fontStyle = FontStyle.Italic,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
             }
         }
     }
@@ -112,24 +82,24 @@ fun AttachmentCard(
 
 @Preview(showBackground = true)
 @Composable
-fun AttachmentCardPreview_view() {
+fun CommentCardPreview_view() {
     MaterialTheme {
-        AttachmentCard(
-            attachment = Attachment.getSample(),
+        CommentCard(
+            comment = Comment(text = "This is my comment"),
             isEditMode = remember { mutableStateOf(false) },
-            onAttachmentDeleted = { }
+            onCommentDeleted = { }
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun AttachmentCardPreview_edit() {
+fun CommentCardPreview_edit() {
     MaterialTheme {
-        AttachmentCard(
-            attachment = Attachment.getSample(),
+        CommentCard(
+            comment = Comment(text = "This is my comment"),
             isEditMode = remember { mutableStateOf(true) },
-            onAttachmentDeleted = { }
+            onCommentDeleted = { }
         )
     }
 }

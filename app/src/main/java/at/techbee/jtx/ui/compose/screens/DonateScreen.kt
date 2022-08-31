@@ -40,20 +40,21 @@ fun DonateScreen(navController: NavHostController, modifier: Modifier = Modifier
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     Scaffold(
-        topBar = { JtxTopAppBar(
-            drawerState = drawerState, 
-            title = stringResource(id = R.string.navigation_drawer_donate)
-        ) },
-        content = {
-            Column(modifier = Modifier.padding(it)) {
-                JtxNavigationDrawer(
-                    drawerState = drawerState,
-                    mainContent = {
-                        DonateScreenContent()
-                    },
-                    navController = navController
-                )
-            }
+        topBar = {
+            JtxTopAppBar(
+                drawerState = drawerState,
+                title = stringResource(id = R.string.navigation_drawer_donate)
+            )
+        },
+        content = { paddingValues ->
+            JtxNavigationDrawer(
+                drawerState = drawerState,
+                mainContent = {
+                    DonateScreenContent()
+                },
+                navController = navController,
+                paddingValues = paddingValues
+            )
         }
     )
 }
@@ -88,7 +89,8 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(240.dp)
-                .padding(top = 32.dp, bottom = 32.dp) )
+                .padding(top = 32.dp, bottom = 32.dp)
+        )
         Text(
             text = stringResource(id = R.string.donate_header_text),
             modifier = Modifier.padding(top = 16.dp),
@@ -145,7 +147,12 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
             },
             modifier = Modifier.padding(top = 8.dp),
             onClick = {
-                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.link_jtx_donate))))
+                context.startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(context.getString(R.string.link_jtx_donate))
+                    )
+                )
             }
         )
     }

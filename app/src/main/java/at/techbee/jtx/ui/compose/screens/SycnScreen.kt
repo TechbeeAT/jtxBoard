@@ -58,37 +58,39 @@ fun SyncScreen(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
-    val isDAVx5available = SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
+    val isDAVx5available =
+        SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
 
     Scaffold(
-        topBar = { JtxTopAppBar(
-            drawerState = drawerState,
-            title = stringResource(id = R.string.navigation_drawer_sync), 
-            actions = { 
-                if(isDAVx5available) {
-                    IconButton(onClick = { SyncUtil.syncAllAccounts(context) }) {
-                        Icon(Icons.Outlined.Sync, stringResource(id = R.string.sync_now))
+        topBar = {
+            JtxTopAppBar(
+                drawerState = drawerState,
+                title = stringResource(id = R.string.navigation_drawer_sync),
+                actions = {
+                    if (isDAVx5available) {
+                        IconButton(onClick = { SyncUtil.syncAllAccounts(context) }) {
+                            Icon(Icons.Outlined.Sync, stringResource(id = R.string.sync_now))
+                        }
                     }
                 }
-            }
-        ) },
-        content = {
-            Column(modifier = Modifier.padding(it)) {
-                JtxNavigationDrawer(
-                    drawerState = drawerState,
-                    mainContent = { SyncScreenContent(
+            )
+        },
+        content = { paddingValues ->
+            JtxNavigationDrawer(
+                drawerState = drawerState,
+                mainContent = {
+                    SyncScreenContent(
                         remoteCollectionsLive = remoteCollectionsLive,
                         isDAVx5available = isDAVx5available,
                         isSyncInProgress = isSyncInProgress,
                         goToCollections = { navController.navigate(NavigationDrawerDestination.COLLECTIONS.name) })
-                    },
-                    navController = navController
-                )
-            }
+                },
+                navController = navController,
+                paddingValues = paddingValues
+            )
         }
     )
 }
-
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -302,7 +304,7 @@ fun SyncScreen_Preview_no_DAVX5() {
     JtxBoardTheme {
         SyncScreen(
             remoteCollectionsLive = MutableLiveData(emptyList()),
-            isSyncInProgress = mutableStateOf(false),
+            isSyncInProgress = remember { mutableStateOf(false) },
             navController = rememberNavController(),
         )
     }
@@ -315,7 +317,7 @@ fun SyncScreenContent_Preview_no_DAVX5() {
     JtxBoardTheme {
         SyncScreenContent(
             isDAVx5available = false,
-            isSyncInProgress = mutableStateOf(false),
+            isSyncInProgress = remember { mutableStateOf(false) },
             remoteCollectionsLive = MutableLiveData(emptyList()),
             goToCollections = { },
         )
@@ -329,7 +331,7 @@ fun SyncScreenContent_Preview_DAVx5_no_collections() {
     JtxBoardTheme {
         SyncScreenContent(
             isDAVx5available = true,
-            isSyncInProgress = mutableStateOf(false),
+            isSyncInProgress = remember { mutableStateOf(false) },
             remoteCollectionsLive = MutableLiveData(
                 emptyList()
             ),
@@ -345,7 +347,7 @@ fun SyncScreenContent_Preview_DAVx5_with_collections() {
     JtxBoardTheme {
         SyncScreenContent(
             isDAVx5available = true,
-            isSyncInProgress = mutableStateOf(true),
+            isSyncInProgress = remember { mutableStateOf(true) },
             remoteCollectionsLive = MutableLiveData(
                 listOf(
                     ICalCollection().apply { this.collectionId = 1 },

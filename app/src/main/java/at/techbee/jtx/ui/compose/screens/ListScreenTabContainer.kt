@@ -6,7 +6,6 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.MoreVert
@@ -128,7 +127,6 @@ fun ListScreenTabContainer(
                         )
                     }
 
-
                     DropdownMenu(
                         expanded = topBarMenuExpanded,
                         onDismissRequest = { topBarMenuExpanded = false }
@@ -178,7 +176,6 @@ fun ListScreenTabContainer(
             )
         },
         content = { paddingValues ->
-            Column(modifier = Modifier.padding(paddingValues)) {
                 JtxNavigationDrawer(
                     drawerState,
                     mainContent = {
@@ -223,9 +220,9 @@ fun ListScreenTabContainer(
                             }
                         }
                     },
-                    navController = navController
+                    navController = navController,
+                    paddingValues = paddingValues
                 )
-            }
         }
     )
 }

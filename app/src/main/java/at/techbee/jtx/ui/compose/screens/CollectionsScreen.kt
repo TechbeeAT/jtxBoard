@@ -67,7 +67,8 @@ fun CollectionsScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
-    val isDAVx5available = SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
+    val isDAVx5available =
+        SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -78,16 +79,35 @@ fun CollectionsScreen(
         resultExportFilepath.value = it
     }
     val collectionsICS = collectionsViewModel.collectionsICS.observeAsState()
-    if(resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size > 1) {
-        launcherExportAll.launch("jtxBoard_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(), TimeZone.getDefault().id)}.zip")
-    } else if(resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size == 1) {
-        launcherExportAll.launch("${collectionsICS.value!!.first().first}_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(),null)}.ics")
-    }
-    else if(resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size > 1) {
-        collectionsViewModel.exportICSasZIP(resultExportFilepath = resultExportFilepath.value, context = context)
+    if (resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size > 1) {
+        launcherExportAll.launch(
+            "jtxBoard_${
+                DateTimeUtils.convertLongToYYYYMMDDString(
+                    System.currentTimeMillis(),
+                    TimeZone.getDefault().id
+                )
+            }.zip"
+        )
+    } else if (resultExportFilepath.value == null && collectionsICS.value != null && collectionsICS.value!!.size == 1) {
+        launcherExportAll.launch(
+            "${collectionsICS.value!!.first().first}_${
+                DateTimeUtils.convertLongToYYYYMMDDString(
+                    System.currentTimeMillis(),
+                    null
+                )
+            }.ics"
+        )
+    } else if (resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size > 1) {
+        collectionsViewModel.exportICSasZIP(
+            resultExportFilepath = resultExportFilepath.value,
+            context = context
+        )
         resultExportFilepath.value = null
-    } else if(resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size == 1) {
-        collectionsViewModel.exportICS(resultExportFilepath = resultExportFilepath.value, context = context)
+    } else if (resultExportFilepath.value != null && !collectionsICS.value.isNullOrEmpty() && collectionsICS.value!!.size == 1) {
+        collectionsViewModel.exportICS(
+            resultExportFilepath = resultExportFilepath.value,
+            context = context
+        )
         resultExportFilepath.value = null
     }
 
@@ -98,22 +118,30 @@ fun CollectionsScreen(
     }
     val importCollection = remember { mutableStateOf<CollectionsView?>(null) }
     // import from file uri
-    if(resultImportFilepath.value != null && importCollection.value != null) {
+    if (resultImportFilepath.value != null && importCollection.value != null) {
         context.contentResolver?.openInputStream(resultImportFilepath.value!!)?.use {
             val icsString = it.readBytes().decodeToString()
-            collectionsViewModel.insertICSFromReader(importCollection.value!!.toICalCollection(), icsString)
+            collectionsViewModel.insertICSFromReader(
+                importCollection.value!!.toICalCollection(),
+                icsString
+            )
             importCollection.value = null
             resultImportFilepath.value = null
-            it.close()}
+            it.close()
+        }
     }
     // import from intent
-    if(importCollection.value != null && globalStateHolder.icalString2Import.value != null) {
-        collectionsViewModel.insertICSFromReader(importCollection.value!!.toICalCollection(), globalStateHolder.icalString2Import.value!!)
+    if (importCollection.value != null && globalStateHolder.icalString2Import.value != null) {
+        collectionsViewModel.insertICSFromReader(
+            importCollection.value!!.toICalCollection(),
+            globalStateHolder.icalString2Import.value!!
+        )
         importCollection.value = null
         globalStateHolder.icalString2Import.value = null
     }
-    if(importCollection.value == null && globalStateHolder.icalString2Import.value != null) {
-        val snackbarMessage = stringResource(id = R.string.collections_snackbar_select_collection_for_ics_import)
+    if (importCollection.value == null && globalStateHolder.icalString2Import.value != null) {
+        val snackbarMessage =
+            stringResource(id = R.string.collections_snackbar_select_collection_for_ics_import)
         scope.launch {
             snackbarHostState.showSnackbar(snackbarMessage, duration = SnackbarDuration.Indefinite)
         }
@@ -142,69 +170,92 @@ fun CollectionsScreen(
         )
 
     Scaffold(
-        topBar = { JtxTopAppBar(
-            drawerState = drawerState,
-            title = stringResource(id = R.string.navigation_drawer_collections),
-            actions = {
+        topBar = {
+            JtxTopAppBar(
+                drawerState = drawerState,
+                title = stringResource(id = R.string.navigation_drawer_collections),
+                actions = {
 
-                val menuExpanded = remember { mutableStateOf(false) }
+                    val menuExpanded = remember { mutableStateOf(false) }
 
-                OverflowMenu(menuExpanded = menuExpanded) {
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(id = R.string.menu_collections_add_local))  },
-                        onClick = {
-                            showCollectionsAddDialog = true
-                            menuExpanded.value = false
-                                  },
-                        leadingIcon = { Icon(Icons.Outlined.LocalLibrary, null) }
-                    )
-                    if(isDAVx5available) {
+                    OverflowMenu(menuExpanded = menuExpanded) {
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(id = R.string.menu_collections_add_remote)) },
+                            text = { Text(text = stringResource(id = R.string.menu_collections_add_local)) },
                             onClick = {
-                                SyncUtil.openDAVx5AccountsActivity(context)
+                                showCollectionsAddDialog = true
                                 menuExpanded.value = false
                             },
-                            leadingIcon = { Icon(Icons.Outlined.Backup, null) }
+                            leadingIcon = { Icon(Icons.Outlined.LocalLibrary, null) }
+                        )
+                        if (isDAVx5available) {
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.menu_collections_add_remote)) },
+                                onClick = {
+                                    SyncUtil.openDAVx5AccountsActivity(context)
+                                    menuExpanded.value = false
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.Backup, null) }
+                            )
+                        }
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.menu_collections_export_all)) },
+                            onClick = {
+                                collectionsViewModel.collections.value?.let {
+                                    collectionsViewModel.requestICSForExport(
+                                        it
+                                    )
+                                }
+                                menuExpanded.value = false
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.FileDownload, null) }
                         )
                     }
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(id = R.string.menu_collections_export_all))  },
-                        onClick = {
-                            collectionsViewModel.collections.value?.let { collectionsViewModel.requestICSForExport(it)}
-                            menuExpanded.value = false
-                                  },
-                        leadingIcon = { Icon(Icons.Outlined.FileDownload, null) }
-                    )
                 }
-            }
-        ) },
-        content = {
-            Column(modifier = Modifier.padding(it)) {
-                JtxNavigationDrawer(
-                    drawerState = drawerState,
-                    mainContent = { CollectionsScreenContent(
+            )
+        },
+        content = { paddingValues ->
+            JtxNavigationDrawer(
+                drawerState = drawerState,
+                mainContent = {
+                    CollectionsScreenContent(
                         collectionsLive = collectionsViewModel.collections,
                         isProcessing = collectionsViewModel.isProcessing,
-                        onCollectionChanged = { collection -> collectionsViewModel.saveCollection(collection) },
-                        onCollectionDeleted = { collection -> collectionsViewModel.deleteCollection(collection) },
-                        onEntriesMoved = { old, new -> collectionsViewModel.moveCollectionItems(old.collectionId, new.collectionId) },
+                        onCollectionChanged = { collection ->
+                            collectionsViewModel.saveCollection(
+                                collection
+                            )
+                        },
+                        onCollectionDeleted = { collection ->
+                            collectionsViewModel.deleteCollection(
+                                collection
+                            )
+                        },
+                        onEntriesMoved = { old, new ->
+                            collectionsViewModel.moveCollectionItems(
+                                old.collectionId,
+                                new.collectionId
+                            )
+                        },
                         onImportFromICS = { collection ->
                             importCollection.value = collection
                             launcherImport.launch(arrayOf("text/calendar"))
-                                          },
-                        onExportAsICS = { collection -> collectionsViewModel.requestICSForExport(listOf(collection)) },
+                        },
+                        onExportAsICS = { collection ->
+                            collectionsViewModel.requestICSForExport(
+                                listOf(collection)
+                            )
+                        },
                         onCollectionClicked = { collection ->
-                            if(globalStateHolder.icalString2Import.value?.isNotEmpty() == true)
+                            if (globalStateHolder.icalString2Import.value?.isNotEmpty() == true)
                                 importCollection.value = collection
                         },
                         onDeleteAccount = { account -> collectionsViewModel.removeAccount(account) }
                     )
 
-                    },
-                    navController = navController
-                )
-            }
+                },
+                navController = navController,
+                paddingValues = paddingValues
+            )
         },
         snackbarHost = {
             SnackbarHost(snackbarHostState)
@@ -230,7 +281,8 @@ fun CollectionsScreenContent(
     val grouped = list.groupBy { Account(it.accountName, it.accountType) }
     val showProgressIndicator by isProcessing.observeAsState(false)
 
-    val foundAccounts = AccountManager.get(LocalContext.current).getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
+    val foundAccounts = AccountManager.get(LocalContext.current)
+        .getAccountsByType(ICalCollection.DAVX5_ACCOUNT_TYPE)
 
 
     Box {
@@ -417,9 +469,11 @@ fun CollectionsAccountHeader(
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
             Text(
                 account.name,
                 style = MaterialTheme.typography.titleLarge,
@@ -438,7 +492,10 @@ fun CollectionsAccountHeader(
 
         if (!isFoundInAccountmanager)
             IconButton(onClick = { showDeleteAccountDialog = true }) {
-                Icon(Icons.Outlined.Delete, contentDescription = stringResource(id = R.string.delete))
+                Icon(
+                    Icons.Outlined.Delete,
+                    contentDescription = stringResource(id = R.string.delete)
+                )
             }
     }
 }
@@ -472,7 +529,6 @@ fun CollectionsAccountHeader_Preview2() {
 }
 
 
-
 @Composable
 fun AccountDeleteDialog(
     account: Account,
@@ -482,7 +538,14 @@ fun AccountDeleteDialog(
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text(stringResource(R.string.collections_account_delete_dialog_title, account.name)) },
+        title = {
+            Text(
+                stringResource(
+                    R.string.collections_account_delete_dialog_title,
+                    account.name
+                )
+            )
+        },
         text = { Text(stringResource(R.string.collections_account_delete_dialog_message)) },
         confirmButton = {
             TextButton(
@@ -500,7 +563,7 @@ fun AccountDeleteDialog(
                     onDismiss()
                 }
             ) {
-                Text( stringResource(id = R.string.cancel))
+                Text(stringResource(id = R.string.cancel))
             }
         }
     )

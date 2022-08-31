@@ -37,6 +37,7 @@ import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.property.DtStart
+import java.text.ParseException
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -700,7 +701,7 @@ data class ICalObject(
                             it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(item.property.dtstart, item.property.dtstartTimezone)
                             else -> null
                         }
-                        triggerTime?.let { trigger ->  it.scheduleNotification(context, trigger) }
+                        triggerTime?.let { trigger ->  it.scheduleNotification(context, trigger, item.ICalCollection?.readonly?: true) }
                     }
 
                     // relations need to be rebuilt from the new child to the parent
@@ -879,15 +880,30 @@ data class ICalObject(
      */
     fun makeDirty() {
         lastModified = System.currentTimeMillis()
-        sequence = sequence++
+        sequence += 1
         dirty = true
         isRecurLinkedInstance = false     // in any case on update of the progress, the item becomes an exception
     }
 
+    /**
+     * @return a Recur Object based on the given rrule or null
+     */
+    fun getRecur(): Recur? {
+        if(this.rrule.isNullOrEmpty())
+            return null
 
+        return try {
+            Recur(this.rrule)
+        } catch (e: ParseException) {
+            Log.w("getRrule", "Illegal representation of UNTIL\n$e")
+            null
+        } catch (e: IllegalArgumentException) {
+            Log.w("getRrule", "Unrecognized rrule\n$e")
+            null
+        }
+    }
 
     fun getInstancesFromRrule(): List<Long> {
-
         val recurList = mutableListOf<Long>()
 
         // don't continue if this function is called with an empty dtstart
@@ -1007,7 +1023,6 @@ data class ICalObject(
     }
 
 
-
     fun recreateRecurring(database: ICalDatabaseDao, context: Context) {
 
         val original = database.getSync(id) ?: return
@@ -1109,7 +1124,7 @@ data class ICalObject(
                         it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(instance.property.dtstart, instance.property.dtstartTimezone)
                         else -> null
                     }
-                    triggerTime?.let { trigger -> it.scheduleNotification(context, trigger) }
+                    triggerTime?.let { trigger -> it.scheduleNotification(context, trigger, instance.ICalCollection?.readonly ?: true) }
                 }
             }
 

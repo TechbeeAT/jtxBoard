@@ -35,16 +35,6 @@ class IcalEditViewModel(
         const val TAB_SUBTASKS = 4
         const val TAB_ALARMS = 5
         const val TAB_RECURRING = 6
-
-        const val RECURRENCE_MODE_UNSUPPORTED = -1
-        const val RECURRENCE_MODE_DAY = 0
-        const val RECURRENCE_MODE_WEEK = 1
-        const val RECURRENCE_MODE_MONTH = 2
-        const val RECURRENCE_MODE_YEAR = 3
-
-        const val RECURRENCE_END_AFTER = 0
-        const val RECURRENCE_END_ON = 1
-        const val RECURRENCE_END_NEVER = 2
     }
 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
@@ -80,10 +70,6 @@ class IcalEditViewModel(
     var alarmUpdated: MutableList<Alarm> = mutableListOf()
     var subtaskUpdated: MutableList<ICalObject> = mutableListOf()
     var subtaskDeleted: MutableList<ICalObject> = mutableListOf()
-
-
-    var possibleTimezones: MutableList<String> =
-        mutableListOf("").also { it.addAll(TimeZone.getAvailableIDs().toList()) }
 
     var activeTab: MutableLiveData<Int> = MutableLiveData<Int>(TAB_GENERAL)
     var tabGeneralVisible = Transformations.map(activeTab) { it == TAB_GENERAL }
@@ -125,43 +111,7 @@ class IcalEditViewModel(
     var addTimezoneTodoChecked: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && ((iCalEntity.property.dueTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.dueTimezone?.isNotEmpty() == true) || (iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.dtstartTimezone?.isNotEmpty() == true) || (iCalEntity.property.completedTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.completedTimezone?.isNotEmpty() == true)))
 
-    var recurrenceChecked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>(iCalEntity.property.rrule?.isNotBlank())
-    //todo make test, pre-fill
-    var recurrenceMode: MutableLiveData<Int> = MutableLiveData<Int>(
-        try {
-            if (iCalEntity.property.rrule.isNullOrEmpty())
-                RECURRENCE_MODE_DAY
-            else {
-                when ((Recur(iCalEntity.property.rrule).frequency)) {
-                    Recur.Frequency.YEARLY -> RECURRENCE_MODE_YEAR
-                    Recur.Frequency.MONTHLY -> RECURRENCE_MODE_MONTH
-                    Recur.Frequency.WEEKLY -> RECURRENCE_MODE_WEEK
-                    Recur.Frequency.DAILY -> RECURRENCE_MODE_DAY
-                    else -> RECURRENCE_MODE_UNSUPPORTED
-                }
-            }
-        } catch (e: Exception) {
-            Log.w("LoadRRule", "Failed to preset UI according to provided RRule\n$e")
-            RECURRENCE_MODE_DAY
-        })
 
-    var recurrenceEnd: MutableLiveData<Int> = MutableLiveData<Int>(
-        try {
-            if (Recur(iCalEntity.property.rrule).until == null &&(Recur(iCalEntity.property.rrule).count == -1))
-                RECURRENCE_END_NEVER
-            else if ((Recur(iCalEntity.property.rrule).until != null))
-                RECURRENCE_END_ON
-            else
-                RECURRENCE_END_AFTER
-        } catch (e: Exception) {
-            Log.w("LoadRRule", "Failed to preset UI according to provided RRule\n$e")
-            RECURRENCE_END_AFTER
-        })
-
-
-    val urlError = MutableLiveData<String?>()
-    val attendeesError = MutableLiveData<String?>()
 
     private var selectedTab = TAB_GENERAL
 
@@ -202,11 +152,6 @@ class IcalEditViewModel(
         starteddateVisible.postValue( iCalEntity.property.module == Module.TODO.name)
         startedtimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
         addStartedAndDueTimeVisible.postValue((selectedTab == TAB_GENERAL) && iCalEntity.property.module == Module.TODO.name)
-        recurrenceGeneralVisible.postValue(recurrenceChecked.value?:false)
-        recurrenceWeekdaysVisible.postValue(recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_WEEK)
-        recurrenceDayOfMonthVisible.postValue(recurrenceChecked.value?:false && recurrenceMode.value == RECURRENCE_MODE_MONTH)
-        recurrenceCountVisible.postValue(recurrenceChecked.value?:false && recurrenceEnd.value == RECURRENCE_END_AFTER)
-        recurrenceUntilVisible.postValue(recurrenceChecked.value?:false && recurrenceEnd.value == RECURRENCE_END_ON)
         recurrenceExceptionsVisible.postValue(iCalEntity.property.exdate?.isNotEmpty() == true)
         recurrenceAdditionsVisible.postValue(iCalEntity.property.rdate?.isNotEmpty() == true)
     }
@@ -218,17 +163,6 @@ class IcalEditViewModel(
     fun deleteClicked() {
         deleteClicked.value = true
     }
-
-    fun clearDates() {
-        iCalObjectUpdated.value!!.dtstart = null
-        iCalObjectUpdated.value!!.due = null
-        iCalObjectUpdated.value!!.completed = null
-        addTimezoneTodoChecked.postValue(false)
-        addTimeChecked.postValue(false)
-        iCalObjectUpdated.postValue(iCalObjectUpdated.value)
-    }
-
-
 
     fun update() {
         var insertedOrUpdatedItemId: Long
@@ -325,7 +259,7 @@ class IcalEditViewModel(
                     newAlarm.triggerRelativeDuration != null -> newAlarm.getDatetimeFromTriggerDuration(iCalObjectUpdated.value?.dtstart, iCalObjectUpdated.value?.dtstartTimezone)
                     else -> null
                 }
-                triggerTime?.let { newAlarm.scheduleNotification(getApplication(), it) }
+                triggerTime?.let { newAlarm.scheduleNotification(getApplication(), it, false) }
             }
 
             // if a collection was selected that doesn't support VTODO, we do not update/insert any subtasks
@@ -391,15 +325,6 @@ class IcalEditViewModel(
             ICalObject.deleteItemWithChildren(iCalObjectUpdated.value!!.id, database)
             entryDeleted.postValue(true)
         }
-    }
-
-
-    fun clearUrlError() {
-        urlError.value = null
-    }
-
-    fun clearAttendeeError() {
-        attendeesError.value = null
     }
 }
 
