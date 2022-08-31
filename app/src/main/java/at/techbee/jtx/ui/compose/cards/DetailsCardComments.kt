@@ -67,7 +67,11 @@ fun DetailsCardComments(
                         CommentCard(
                             comment = comment,
                             isEditMode = isEditMode,
-                            onCommentDeleted = { /* TODO */ }
+                            onCommentDeleted = { comments.value = comments.value.minus(comment) },
+                            onCommentUpdated = { updatedComment ->
+                                comment.text = updatedComment.text
+                                comments.value = comments.value
+                            }
                         )
                     }
                 }

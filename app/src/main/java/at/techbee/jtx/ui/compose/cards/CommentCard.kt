@@ -15,10 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,24 +23,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Comment
+import at.techbee.jtx.ui.compose.dialogs.EditCommentDialog
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentCard(
     comment: Comment,
     isEditMode: MutableState<Boolean>,
     modifier: Modifier = Modifier,
-    onCommentDeleted: () -> Unit
+    onCommentDeleted: () -> Unit,
+    onCommentUpdated: (Comment) -> Unit
 ) {
 
+    var showCommentEditDialog by remember { mutableStateOf(false) }
+
+    if(showCommentEditDialog) {
+        EditCommentDialog(
+            comment = comment,
+            onConfirm = { updatedComment -> onCommentUpdated(updatedComment) },
+            onDismiss = { showCommentEditDialog = false }
+        )
+    }
+
     if (isEditMode.value) {
-        OutlinedCard(modifier = modifier) {
+        OutlinedCard(
+            modifier = modifier,
+            onClick = {showCommentEditDialog = true}
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     comment.text,
@@ -87,7 +100,8 @@ fun CommentCardPreview_view() {
         CommentCard(
             comment = Comment(text = "This is my comment"),
             isEditMode = remember { mutableStateOf(false) },
-            onCommentDeleted = { }
+            onCommentDeleted = { },
+            onCommentUpdated = { }
         )
     }
 }
@@ -99,7 +113,8 @@ fun CommentCardPreview_edit() {
         CommentCard(
             comment = Comment(text = "This is my comment"),
             isEditMode = remember { mutableStateOf(true) },
-            onCommentDeleted = { }
+            onCommentDeleted = { },
+            onCommentUpdated = { }
         )
     }
 }

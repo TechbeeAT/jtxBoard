@@ -284,6 +284,7 @@
     <string name="edit_contact_helper">Contact information of the responsible or owner of this entry</string>
     <string name="edit_comment_hint">Your comment…</string>
     <string name="edit_comment_helper">Add a comment</string>
+    <string name="edit_comment">Edit comment</string>
     <string name="edit_attachment_button_text">Add attachment</string>
     <string name="edit_take_picture_button_text">Take picture</string>
     <string name="edit_add_link_button_text">Add attachment link</string>
