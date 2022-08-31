@@ -61,6 +61,7 @@ fun DetailsScreen(
     val showDeleteDialog = rememberSaveable { mutableStateOf(false) }
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
+    val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
 
     if (detailViewModel.entryDeleted.value)
         navController.navigate(NavigationDrawerDestination.BOARD.name) {
@@ -109,7 +110,7 @@ fun DetailsScreen(
                     DetailScreenContent(
                         iCalEntity = icalEntity,
                         isEditMode = isEditMode,
-                        subtasks = emptyList(),
+                        subtasks = subtasks,
                         subnotes = emptyList(),
                         //attachments = emptyList(),
                         allCollections = listOf(
@@ -129,7 +130,12 @@ fun DetailsScreen(
                                 changedAlarms
                             )
                         },
-                        onProgressChanged = { _, _, _ -> },
+                        onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
+                            detailViewModel.updateProgress(itemId, newPercent)
+                        },
+                        onSubEntryAdded = { icalObject -> detailViewModel.addSubEntry(icalObject) },
+                        onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
+                        onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) }
                     )
                 },
                 navController = navController,

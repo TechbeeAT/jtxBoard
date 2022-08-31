@@ -307,9 +307,6 @@ INSERTs (Asyncronously / Suspend)
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun upsertCollection(ICalCollection: ICalCollection): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSubtask(subtask: ICalObject): Long
-
 
 /*
 INSERTs (Synchronously)

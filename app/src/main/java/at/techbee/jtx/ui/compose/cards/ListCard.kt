@@ -399,6 +399,8 @@ fun ICalObjectListCard(
                                 subtask = subtask,
                                 showProgress = settingShowProgressSubtasks,
                                 onProgressChanged = onProgressChanged,
+                                onDeleteClicked = { },   // no edit possible here
+                                onSubtaskUpdated = { },  // no edit possible here
                                 sliderIncrement = progressIncrement,
                                 modifier = Modifier
                                     .padding(start = 8.dp, end = 8.dp)

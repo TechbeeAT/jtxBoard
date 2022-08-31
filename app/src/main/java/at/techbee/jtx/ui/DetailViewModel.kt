@@ -52,13 +52,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     postValue(ICalEntity(ICalObject(), null, null, null, null, null))
                 }
 
-            relatedNotes = Transformations.switchMap(icalEntity) {
-                it?.property?.uid?.let { parentUid -> database.getAllSubnotesOf(parentUid) }
-            }
-
-            relatedSubtasks = Transformations.switchMap(icalEntity) {
-                it?.property?.uid?.let { parentUid -> database.getAllSubtasksOf(parentUid) }
-            }
+            relatedNotes = MutableLiveData(emptyList())
+            relatedSubtasks = MutableLiveData(emptyList())
 
             recurInstances = Transformations.switchMap(icalEntity) {
                 it?.property?.id?.let { originalId -> database.getRecurInstances(originalId) }
@@ -73,11 +68,21 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun load(icalObjectId: Long) {
         viewModelScope.launch {
             icalEntity = database.get(icalObjectId)
+
+            relatedNotes = Transformations.switchMap(icalEntity) {
+                it?.property?.uid?.let { parentUid -> database.getAllSubnotesOf(parentUid) }
+            }
+
+            relatedSubtasks = Transformations.switchMap(icalEntity) {
+                it?.property?.uid?.let { parentUid ->
+                    database.getAllSubtasksOf(parentUid)
+                }
+            }
         }
 
     }
 
-
+/*
     fun insertRelated(newIcalObject: ICalObject, attachment: Attachment?) {
 
         this.icalEntity.value?.property?.let {
@@ -102,28 +107,32 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+ */
+
 
     fun updateProgress(id: Long, newPercent: Int) {
-
         viewModelScope.launch(Dispatchers.IO) {
             val item = database.getICalObjectById(id) ?: return@launch
-            makeRecurringExceptionIfNecessary(item)
+            if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
+                Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+            }
             item.setUpdatedProgress(newPercent)
             database.update(item)
             SyncUtil.notifyContentObservers(getApplication())
         }
     }
 
-    private fun makeRecurringExceptionIfNecessary(item: ICalObject) {
-
-        if(item.isRecurLinkedInstance) {
-            viewModelScope.launch(Dispatchers.IO) {
-                ICalObject.makeRecurringException(item, database)
-                SyncUtil.notifyContentObservers(getApplication())
-            }
-            Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+    fun updateSummary(icalObjectId: Long, newSummary: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val icalObject = database.getICalObjectById(icalObjectId) ?: return@launch
+            icalObject.summary = newSummary
+            icalObject.makeDirty()
+            database.update(icalObject)
+            SyncUtil.notifyContentObservers(getApplication())
         }
     }
+
 
     fun save(iCalObject: ICalObject,
              categories: List<Category>,
@@ -194,17 +203,66 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             if(icalEntity.value?.property != iCalObject) {
                 iCalObject.makeDirty()
                 database.update(iCalObject)
+
+                if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
+                    Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+                }
             }
             SyncUtil.notifyContentObservers(getApplication())
         }
     }
 
-    fun delete() {
-        // TODO: open dialog
+
+    fun addSubEntry(subEntry: ICalObject) {
         viewModelScope.launch(Dispatchers.IO) {
+            subEntry.collectionId = icalEntity.value?.property?.collectionId!!
+            val subEntryId = database.insertICalObject(subEntry)
+
+            database.insertRelatedto(
+                Relatedto(
+                    icalObjectId = subEntryId,
+                    reltype = Reltype.PARENT.name,
+                    text = icalEntity.value?.property?.uid!!
+                )
+            )
+            if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
+                Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+            }
+            SyncUtil.notifyContentObservers(getApplication())
+        }
+    }
+
+
+    fun delete() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
+                Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+            }
             icalEntity.value?.property?.id?.let { id ->
                 ICalObject.deleteItemWithChildren(id, database)
                 entryDeleted.value = true
+            }
+        }
+    }
+
+    /**
+     * Delete function for subtasks and subnotes
+     * @param [icalObjectId] of the subtask/subnote to be deleted
+     */
+    fun deleteById(icalObjectId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            /*
+            if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
+                Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+            }
+             */
+            icalEntity.value?.property?.id?.let { id ->
+                ICalObject.deleteItemWithChildren(icalObjectId, database)
+                //entryDeleted.value = true
             }
         }
     }

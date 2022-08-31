@@ -723,8 +723,7 @@ data class ICalObject(
             if(item.isRecurLinkedInstance) {
 
                 item.recurOriginalIcalObjectId?.let { originalId ->
-                    val newExceptionList =
-                        addLongToCSVString(database.getRecurExceptions(originalId), item.dtstart)
+                    val newExceptionList = addLongToCSVString(database.getRecurExceptions(originalId), item.dtstart)
                     database.setRecurExceptions(
                         originalId,
                         newExceptionList,

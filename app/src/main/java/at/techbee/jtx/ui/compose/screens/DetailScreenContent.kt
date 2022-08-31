@@ -43,13 +43,16 @@ import at.techbee.jtx.util.DateTimeUtils
 fun DetailScreenContent(
     iCalEntity: State<ICalEntity?>,
     isEditMode: MutableState<Boolean>,
-    subtasks: List<ICal4List>,
+    subtasks: State<List<ICal4List>>,
     subnotes: List<ICal4List>,
     allCollections: List<ICalCollection>,
     modifier: Modifier = Modifier,
     //player: MediaPlayer?,
     saveIcalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onSubEntryAdded: (icalObject: ICalObject) -> Unit,
+    onSubEntryDeleted: (icalObjectId: Long) -> Unit,
+    onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit
 ) {
     if(iCalEntity.value == null)
         return
@@ -415,6 +418,18 @@ fun DetailScreenContent(
                 }
             }
 
+            AnimatedVisibility(subtasks.value.isNotEmpty() || isEditMode.value) {
+                DetailsCardSubtasks(
+                    subtasks = subtasks.value,
+                    isEditMode = isEditMode,
+                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
+                        onProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
+                    },
+                    onSubtaskAdded = { subtask -> onSubEntryAdded(subtask) },
+                    onSubtaskUpdated = { icalObjectId, newText -> onSubEntryUpdated(icalObjectId, newText) },
+                    onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) }
+                )
+            }
 
 
             AnimatedVisibility(categories.value.isNotEmpty() || isEditMode.value) {
@@ -537,13 +552,16 @@ fun DetailScreenContent_JOURNAL() {
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(false) },
-            subtasks = emptyList(),
+            subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = emptyList(),
             //attachments = emptyList(),
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             //player = null,
             saveIcalObject = { _, _, _, _, _, _, _ ->   },
             onProgressChanged = { _, _, _ -> },
+            onSubEntryAdded = { },
+            onSubEntryDeleted = { },
+            onSubEntryUpdated = { _, _ -> }
         )
     }
 }
@@ -564,13 +582,16 @@ fun DetailScreenContent_TODO_editInitially() {
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(true) },
-            subtasks = emptyList(),
+            subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = emptyList(),
             //attachments = emptyList(),
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             //player = null,
             saveIcalObject = { _, _, _, _, _, _, _ ->   },
             onProgressChanged = { _, _, _ -> },
+            onSubEntryAdded = { },
+            onSubEntryDeleted = { },
+            onSubEntryUpdated = { _, _ -> }
         )
     }
 }

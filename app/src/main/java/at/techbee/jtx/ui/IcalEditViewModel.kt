@@ -18,8 +18,6 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import net.fortuna.ical4j.model.Recur
-import java.util.*
 
 
 class IcalEditViewModel(
@@ -271,7 +269,7 @@ class IcalEditViewModel(
             subtaskUpdated.forEach { subtask ->
                 subtask.setUpdatedProgress(subtask.percent?:0)
                 subtask.collectionId = iCalObjectUpdated.value!!.collectionId
-                subtask.id = database.insertSubtask(subtask)
+                subtask.id = database.insertICalObject(subtask)
                 Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
 
                 // upsert relation from the Child to the Parent
