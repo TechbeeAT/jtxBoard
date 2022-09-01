@@ -19,10 +19,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.EditNote
+import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.Note
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -34,7 +36,9 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.compose.dialogs.AddAudioNoteDialog
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
 import net.fortuna.ical4j.model.Component
 
@@ -44,7 +48,7 @@ import net.fortuna.ical4j.model.Component
 fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
-    onSubnoteAdded: (subnote: ICalObject) -> Unit,
+    onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
     player: MediaPlayer?,
@@ -54,12 +58,21 @@ fun DetailsCardSubnotes(
     val headline = stringResource(id = R.string.view_feedback_linked_notes)
     var newSubnoteText by rememberSaveable { mutableStateOf("") }
 
+    var showAddAudioNoteDialog by rememberSaveable { mutableStateOf(false) }
+    if(showAddAudioNoteDialog) {
+        AddAudioNoteDialog(
+            player = player,
+            onConfirm = { newEntry, attachment -> onSubnoteAdded(newEntry, attachment) },
+            onDismiss = { showAddAudioNoteDialog = false }
+        )
+    }
+
 
     ElevatedCard(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
         ) {
 
             HeadlineWithIcon(icon = Icons.Outlined.Note, iconDesc = headline, text = headline)
@@ -89,7 +102,7 @@ fun DetailsCardSubnotes(
                         AnimatedVisibility(newSubnoteText.isNotEmpty()) {
                             IconButton(onClick = {
                                 if(newSubnoteText.isNotEmpty())
-                                    onSubnoteAdded(ICalObject.createNote(newSubnoteText))
+                                    onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
                                 newSubnoteText = ""
                             }) {
                                 Icon(
@@ -107,10 +120,24 @@ fun DetailsCardSubnotes(
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
                         if(newSubnoteText.isNotEmpty())
-                            onSubnoteAdded(ICalObject.createNote(newSubnoteText))
+                            onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
                         newSubnoteText = ""
                     })
                 )
+            }
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Button(
+                    onClick = { showAddAudioNoteDialog = true },
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    Icon(Icons.Outlined.Mic, null, modifier = Modifier.padding(end = 4.dp))
+                    Text(stringResource(id = R.string.view_add_audio_note))
+                }
             }
         }
     }
@@ -130,7 +157,7 @@ fun DetailsCardSubnotes_Preview() {
                         }
                     ),
             isEditMode = remember { mutableStateOf(false) },
-            onSubnoteAdded = { },
+            onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             player = null
@@ -152,7 +179,7 @@ fun DetailsCardSubnotes_Preview_edit() {
                 }
             ),
             isEditMode = remember { mutableStateOf(true) },
-            onSubnoteAdded = { },
+            onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             player = null

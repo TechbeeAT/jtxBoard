@@ -9,21 +9,13 @@
 package at.techbee.jtx.ui.compose.cards
 
 import android.media.MediaPlayer
-import android.net.Uri
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.PauseCircle
-import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,8 +25,7 @@ import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.compose.dialogs.EditSubnoteDialog
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import at.techbee.jtx.ui.compose.elements.AudioPlaybackElement
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,7 +74,6 @@ fun SubnoteCard(
 }
 
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun SubnoteCardContent(
     subnote: ICal4List,
@@ -92,113 +82,27 @@ private fun SubnoteCardContent(
     onDeleteClicked: (itemId: Long) -> Unit,
 ) {
 
-    var playing by remember { mutableStateOf(false) }
-    var position by remember { mutableStateOf(0F) }
-    var duration by remember { mutableStateOf(0) }
-
-    val coroutineScope = rememberCoroutineScope()
-
-    val context = LocalContext.current
-
-    suspend fun updatePosition() {
-        val delayInMillis = 10L
-        val curDuration = player?.duration
-
-        while (player?.isPlaying == true && curDuration == player.duration) {
-            position = player.currentPosition.toFloat()
-            delay(delayInMillis)
-        }
-        player?.stop()
-        player?.reset()
-        playing = false
-        position = 0F
-    }
-
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            subnote.audioAttachment?.let {
-                Row(
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp)
-                ) {
-                    IconButton(onClick = {
-                        if (player?.isPlaying == true) {
-                            player.stop()
-                            playing = false
-                        }
-                        player?.reset()
-                        player?.setDataSource(context, Uri.parse(subnote.audioAttachment))
-                        player?.prepare()
-                        duration = player?.duration ?: 0
-                        player?.start()
-                        playing = true
-                        coroutineScope.launch {
-                            updatePosition()
-                        }
-                    }) {
-                        AnimatedVisibility(
-                            visible = !playing,
-                            enter = scaleIn(),
-                            exit = scaleOut()
-                        ) {
-                            Icon(
-                                Icons.Outlined.PlayCircle,
-                                stringResource(R.string.view_comment_playbutton_content_desc),
-                                modifier = Modifier.padding(end = 8.dp)
-                            )
-                        }
-                        AnimatedVisibility(
-                            visible = playing,
-                            enter = scaleIn(),
-                            exit = scaleOut()
-                        ) {
-                            Icon(
-                                Icons.Outlined.PauseCircle,
-                                stringResource(R.string.view_comment_pausebutton_content_desc),
-                                modifier = Modifier.padding(end = 8.dp)
-                            )
-                        }
-
-                    }
-                    Slider(
-                        value = position,
-                        valueRange = 0F..duration.toFloat(),
-                        steps = duration / 100,
-                        onValueChange = {
-                            position = it
-                            player?.seekTo(it.toInt())
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 8.dp)
-                    )
-                }
+            subnote.getAudioAttachmentAsUri()?.let {
+                AudioPlaybackElement(
+                    uri = it,
+                    player = player,
+                    modifier = Modifier.fillMaxWidth().padding(4.dp)
+                )
             }
 
             if (subnote.summary?.isNotBlank() == true || subnote.description?.isNotBlank() == true) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-
-                    Text(
-                        subnote.summary ?: subnote.description ?: "",
-                        modifier = Modifier
-                            .weight(1f),
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+                Text(
+                    subnote.summary ?: subnote.description ?: "",
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
         if (isEditMode) {
@@ -243,6 +147,7 @@ fun SubnoteCardPreview_audio() {
                 this.module = Module.TODO.name
                 this.isReadOnly = true
                 this.numSubtasks = 7
+                this.audioAttachment = "https://www.orf.at/blabla.mp3"
             },
             player = null,
             isEditMode = false,
@@ -261,6 +166,7 @@ fun SubnoteCardPreview_audio_with_text() {
                 this.component = Component.VTODO.name
                 this.module = Module.TODO.name
                 this.percent = 34
+                this.audioAttachment = "https://www.orf.at/blabla.mp3"
             },
             player = null,
             isEditMode = false,

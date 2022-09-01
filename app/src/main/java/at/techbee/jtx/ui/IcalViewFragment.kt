@@ -9,26 +9,16 @@
 package at.techbee.jtx.ui
 
 import android.accounts.Account
-import android.app.AlertDialog
 import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Intent
 import android.content.SharedPreferences
-import android.media.MediaPlayer
-import android.media.MediaRecorder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.*
-import android.view.inputmethod.EditorInfo
-import android.widget.LinearLayout
-import android.widget.SeekBar
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -37,34 +27,23 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.NavigationDirections
-import at.techbee.jtx.PermissionsHelper
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.properties.Alarm
-import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.databinding.FragmentIcalViewAudioDialogBinding
 import at.techbee.jtx.databinding.FragmentIcalViewBinding
-import at.techbee.jtx.databinding.FragmentIcalViewCommentBinding
-import at.techbee.jtx.databinding.FragmentIcalViewSubtaskBinding
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.MapManager
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
-import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.slider.Slider
 import com.google.android.material.snackbar.Snackbar
 import io.noties.markwon.Markwon
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileNotFoundException
-import java.io.IOException
 
 
 class IcalViewFragment : Fragment() {
@@ -78,24 +57,11 @@ class IcalViewFragment : Fragment() {
     lateinit var icalViewViewModel: IcalViewViewModel
     private var optionsMenu: Menu? = null
 
-    private var fileName: Uri? = null
-    private var recorder: MediaRecorder? = null
-    private var player: MediaPlayer? = null
-
-    private val seekbarHandler = Handler(Looper.getMainLooper())
-
-    private var recording: Boolean = false
-    private var playing: Boolean = false
-
     private var summary2delete: String = ""
 
     private lateinit var settings: SharedPreferences
 
-    // set default audio format (might be overwritten by settings)
-    private var audioFileExtension = "3gp"
-    private var audioOutputFormat = MediaRecorder.OutputFormat.MPEG_4
-    private var audioEncoder = MediaRecorder.AudioEncoder.AAC
-    private var audioMimetype: String = Attachment.FMTTYPE_AUDIO_3GPP
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -115,20 +81,7 @@ class IcalViewFragment : Fragment() {
             .build()
 
         settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        val settingMimetype = settings.getString("setting_audio_format", Attachment.FMTTYPE_AUDIO_3GPP) ?: Attachment.FMTTYPE_AUDIO_3GPP
-        if(settingMimetype == Attachment.FMTTYPE_AUDIO_MP4_AAC) {
-            audioFileExtension = "aac"
-            audioOutputFormat = MediaRecorder.OutputFormat.MPEG_4
-            audioEncoder = MediaRecorder.AudioEncoder.AAC
-        } else if (settingMimetype == Attachment.FMTTYPE_AUDIO_OGG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            audioFileExtension = "ogg"
-            audioOutputFormat = MediaRecorder.OutputFormat.OGG
-            audioEncoder = MediaRecorder.AudioEncoder.OPUS
-        } else {  // settingMimetype == Attachment.FMTTYPE_AUDIO_3GPP is also the default format
-            audioFileExtension = "3gp"
-            audioOutputFormat = MediaRecorder.OutputFormat.THREE_GPP
-            audioEncoder = MediaRecorder.AudioEncoder.AMR_NB
-        }
+
 
         // set up view model
         val model: IcalViewViewModel by viewModels { IcalViewViewModelFactory(application, arguments.item2show) }
@@ -263,24 +216,6 @@ class IcalViewFragment : Fragment() {
             if(it.property.geoLat != null && it.property.geoLong != null)
                 MapManager(requireContext()).addMap(binding.viewLocationMap, it.property.geoLat!!, it.property.geoLong!!, it.property.location)
 
-            binding.viewCommentsLinearlayout.removeAllViews()
-            it.comments?.forEach { comment ->
-                val commentBinding =
-                    FragmentIcalViewCommentBinding.inflate(inflater, container, false)
-                commentBinding.viewCommentTextview.text = comment.text
-                binding.viewCommentsLinearlayout.addView(commentBinding.root)
-            }
-
-
-            binding.viewAlarmsLinearlayout.removeAllViews()      // remove all views if something has changed to rebuild from scratch
-            it.alarms?.forEach { alarm ->
-                addAlarmView(alarm)
-            }
-
-            // applying the color
-            ICalObject.applyColorOrHide(binding.viewColorbarCollection, it.ICalCollection?.color)
-            ICalObject.applyColorOrHide(binding.viewColorbarCollectionItem, it.property.color)
-
 
             it.property.recurOriginalIcalObjectId?.let { origId ->
                 binding.viewRecurrenceGotooriginalButton.setOnClickListener { view ->
@@ -289,159 +224,8 @@ class IcalViewFragment : Fragment() {
                     )
                 }
             }
+      }
 
-            var allExceptionsString = ""
-            getLongListfromCSVString(it.property.exdate).forEach { exdate ->
-                allExceptionsString += convertLongToFullDateTimeString(
-                    exdate,
-                    it.property.dtstartTimezone
-                ) + "\n"
-            }
-            binding.viewRecurrenceExceptionItems.text = allExceptionsString
-
-            var allAdditionsString = ""
-            getLongListfromCSVString(it.property.rdate).forEach { rdate ->
-                allAdditionsString += convertLongToFullDateTimeString(
-                    rdate,
-                    it.property.dtstartTimezone
-                ) + "\n"
-            }
-            binding.viewRecurrenceAdditionsItems.text = allAdditionsString
-
-        }
-
-        icalViewViewModel.relatedNotes.observe(viewLifecycleOwner) {
-
-            if (playing)             // don't interrupt if audio is currently played
-                return@observe
-
-            if (it?.size != 0) {
-                binding.viewFeedbackLinearlayout.removeAllViews()
-                it.sortedBy { item -> item.sortIndex }
-                    .forEach { relatedNote ->
-
-                        val commentBinding =
-                        FragmentIcalViewCommentBinding.inflate(inflater, container, false)
-                    if (relatedNote.summary?.isNotEmpty() == true)
-                        commentBinding.viewCommentTextview.text = relatedNote.summary
-                    else
-                        commentBinding.viewCommentTextview.visibility = View.GONE
-
-                    relatedNote.audioAttachment?.let { audioUri ->
-                        commentBinding.viewCommentPlaybutton.visibility = View.VISIBLE
-                        commentBinding.viewCommentProgressbar.visibility = View.VISIBLE
-                        commentBinding.viewCommentPlaybutton.setOnClickListener {
-
-                            val uri = Uri.parse(audioUri)
-                            togglePlayback(
-                                commentBinding.viewCommentProgressbar,
-                                commentBinding.viewCommentPlaybutton,
-                                uri
-                            )
-                        }
-                    }
-                    commentBinding.root.setOnClickListener { view ->
-                        view.findNavController().navigate(
-                            IcalViewFragmentDirections.actionIcalViewFragmentSelf()
-                                .setItem2show(relatedNote.id)
-                        )
-                    }
-                    commentBinding.root.setOnLongClickListener {
-                        icalViewViewModel.retrieveSubEntryToEdit(relatedNote.id)
-                        true
-                    }
-                    binding.viewFeedbackLinearlayout.addView(commentBinding.root)
-                }
-            } else if (it.isEmpty() && icalViewViewModel.icalEntity.value?.ICalCollection?.readonly == true) {   // don't show header for subnotes if read only and no subnotes are present
-                binding.viewFeedbackHeader.visibility = View.GONE
-                binding.viewFeedbackLinearlayout.visibility = View.GONE
-            }
-        }
-
-        icalViewViewModel.relatedSubtasks.observe(viewLifecycleOwner) {
-
-            binding.viewSubtasksLinearlayout.removeAllViews()
-            it.sortedBy { item -> item.sortIndex }
-                .forEach { singleSubtask ->
-                    addSubtasksView(singleSubtask, binding.viewSubtasksLinearlayout)
-                }
-        }
-
-        icalViewViewModel.recurInstances.observe(viewLifecycleOwner) { instanceList ->
-            val recurDates = mutableListOf<String>()
-            instanceList.forEach { instance ->
-                instance?.let {
-                    recurDates.add(convertLongToFullDateTimeString(it.dtstart, it.dtstartTimezone))
-                }
-            }
-            binding.viewRecurrenceItems.text = recurDates.joinToString(separator = "\n")
-        }
-
-
-        binding.viewAddNoteTextinputlayout.setEndIconOnClickListener {
-            if(binding.viewAddNoteEdittext.text.toString().isNotEmpty())
-                icalViewViewModel.insertRelated(ICalObject.createNote(binding.viewAddNoteEdittext.text.toString()), null)
-            binding.viewAddNoteEdittext.text?.clear()
-        }
-
-        binding.viewAddNoteTextinputlayout.editText?.setOnEditorActionListener { _, actionId, _ ->
-            return@setOnEditorActionListener when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    if(binding.viewAddNoteEdittext.text.toString().isNotEmpty()) {
-                        icalViewViewModel.insertRelated(ICalObject.createNote(binding.viewAddNoteEdittext.text.toString()),null)
-                        binding.viewAddNoteEdittext.text?.clear()
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
-
-        // handling audio recording
-        binding.viewAddAudioNote.setOnClickListener {
-            openAddAudioNoteDialog()
-        }
-
-        binding.viewSubtasksAdd.setEndIconOnClickListener {
-            if(binding.viewSubtasksAddEdittext.text.toString().isNotEmpty())
-                icalViewViewModel.insertRelated(ICalObject.createTask(binding.viewSubtasksAddEdittext.text.toString()), null)
-            binding.viewSubtasksAddEdittext.text?.clear()
-        }
-
-        binding.viewSubtasksAdd.editText?.setOnEditorActionListener { _, actionId, _ ->
-            return@setOnEditorActionListener when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    if(binding.viewSubtasksAddEdittext.text.toString().isNotEmpty()) {
-                        icalViewViewModel.insertRelated(ICalObject.createTask(binding.viewSubtasksAddEdittext.text.toString()),null)
-                        binding.viewSubtasksAddEdittext.text?.clear()
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
-
-        var resetProgress = icalViewViewModel.icalEntity.value?.property?.percent ?: 0             // remember progress to be reset if the checkbox is unchecked
-
-        binding.viewProgressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-
-            override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
-            }
-
-            override fun onStopTrackingTouch(slider: Slider) {
-                if (binding.viewProgressSlider.value.toInt() < 100)
-                    resetProgress = binding.viewProgressSlider.value.toInt()
-                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, binding.viewProgressSlider.value.toInt())
-            }
-        })
-
-        binding.viewProgressCheckbox.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, 100)
-            } else {
-                icalViewViewModel.updateProgress(icalViewViewModel.icalEntity.value!!.property.id, resetProgress)
-            }
-        }
 
 
         binding.viewBottomBar.setOnMenuItemClickListener { menuItem ->
@@ -449,7 +233,7 @@ class IcalViewFragment : Fragment() {
                 R.id.menu_view_bottom_copy -> this.findNavController().navigate(
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value?.getIcalEntityCopy(icalViewViewModel.icalEntity.value?.property?.module) ?: return@setOnMenuItemClickListener false)
                 )
-                R.id.menu_view_bottom_delete -> deleteItem()
+                //R.id.menu_view_bottom_delete -> deleteItem()
             }
             false
         }
@@ -460,99 +244,9 @@ class IcalViewFragment : Fragment() {
         else
             binding.viewAdContainer.visibility = View.GONE
 
-
         return binding.root
     }
 
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    private fun addAlarmView(alarm: Alarm) {
-
-        // we don't add alarm of which the DateTime is not set or cannot be determined
-        if(alarm.triggerTime == null && alarm.triggerRelativeDuration == null)
-            return
-
-        val bindingAlarm = when {
-            alarm.triggerTime != null ->
-                alarm.getAlarmCardBinding(inflater, binding.viewAlarmsLinearlayout, null, null )
-            alarm.triggerRelativeDuration?.isNotEmpty() == true -> {
-
-                val referenceDate = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name)
-                    icalViewViewModel.icalEntity.value?.property?.due ?: return
-                else
-                    icalViewViewModel.icalEntity.value?.property?.dtstart ?: return
-
-                val referenceTZ = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name)
-                    icalViewViewModel.icalEntity.value?.property?.dueTimezone
-                else
-                    icalViewViewModel.icalEntity.value?.property?.dtstartTimezone
-                alarm.getAlarmCardBinding(inflater, binding.viewAlarmsLinearlayout, referenceDate, referenceTZ )
-            }
-            else -> return
-        }
-        bindingAlarm?.cardAlarmDelete?.visibility = View.GONE
-        binding.viewAlarmsLinearlayout.addView(bindingAlarm?.root)
-    }
-
-
-    private fun addSubtasksView(subtask: ICal4List?, linearLayout: LinearLayout) {
-
-        if (subtask == null)
-            return
-
-        val subtaskBinding = FragmentIcalViewSubtaskBinding.inflate(inflater, linearLayout, false)
-
-        var subtaskSummary =subtask.summary
-        if (subtask.numSubtasks > 0)
-            subtaskSummary += " (+${subtask.numSubtasks})"
-        subtaskBinding.viewSubtaskTextview.text = subtaskSummary
-        subtaskBinding.viewSubtaskProgressSlider.value = subtask.percent?.toFloat() ?: 0F
-        subtaskBinding.viewSubtaskProgressPercent.text = String.format("%.0f%%", subtask.percent?.toFloat() ?: 0F)
-        subtaskBinding.viewSubtaskProgressCheckbox.isChecked = subtask.percent == 100
-
-        // Instead of implementing here
-        //        subtaskView.subtask_progress_slider.addOnChangeListener { slider, value, fromUser ->  vJournalItemViewModel.updateProgress(subtask, value.toInt())    }
-        //   the approach here is to update only onStopTrackingTouch. The OnCangeListener would update on several times on sliding causing lags and unnecessary updates  */
-        subtaskBinding.viewSubtaskProgressSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-
-            override fun onStartTrackingTouch(slider: Slider) {   /* Nothing to do */
-            }
-
-            override fun onStopTrackingTouch(slider: Slider) {
-                icalViewViewModel.updateProgress(subtask.id, subtaskBinding.viewSubtaskProgressSlider.value.toInt())
-            }
-        })
-
-        subtaskBinding.viewSubtaskProgressCheckbox.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                icalViewViewModel.updateProgress(subtask.id, 100)
-            } else {
-                icalViewViewModel.updateProgress(subtask.id, 0)
-            }
-
-        }
-
-        subtaskBinding.root.setOnClickListener {
-            it.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(subtask.id))
-        }
-
-        subtaskBinding.root.setOnLongClickListener {
-            icalViewViewModel.retrieveSubEntryToEdit(subtask.id)
-            true
-        }
-
-        if(icalViewViewModel.icalEntity.value?.ICalCollection?.readonly == true) {
-            subtaskBinding.viewSubtaskProgressCheckbox.isEnabled = false
-            subtaskBinding.viewSubtaskProgressSlider.isEnabled = false
-        }
-
-        linearLayout.addView(subtaskBinding.root)
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_ical_view, menu)
@@ -704,142 +398,12 @@ class IcalViewFragment : Fragment() {
                     IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value?.getIcalEntityCopy(Module.TODO.name) ?: return false)
                 )
 
-            R.id.menu_view_delete_item -> deleteItem()
             R.id.menu_view_syncnow -> SyncUtil.syncAccount(Account(icalViewViewModel.icalEntity.value?.ICalCollection?.accountName, icalViewViewModel.icalEntity.value?.ICalCollection?.accountType))
         }
         return super.onOptionsItemSelected(item)
     }
 
 
-    private fun startRecording() {
-        recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-            MediaRecorder(requireContext())
-        else
-            MediaRecorder()
-        recorder?.apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(audioOutputFormat)
-            setAudioEncoder(audioEncoder)
-            setOutputFile(fileName.toString())
-            setMaxDuration(60000)
-
-            try {
-                prepare()
-            } catch (e: IOException) {
-                Log.e("startRecording()", "prepare() failed")
-            }
-            start()
-        }
-    }
-
-    private fun stopRecording() {
-        recorder?.apply {
-            stop()
-            release()
-        }
-        recorder = null
-
-        // initialise the player
-        player = MediaPlayer().apply {
-            try {
-                setDataSource(fileName.toString())
-                prepare()
-            } catch (e: IOException) {
-                Log.e("preparePlaying()", "prepare() failed")
-            }
-        }
-    }
-
-    private fun startPlaying() {
-        // make sure the player is not running
-        stopPlaying()
-
-        // initialise the player
-        fileName?.let {  fname ->
-            player = MediaPlayer().apply {
-                try {
-                    setDataSource(requireContext(), fname)
-                    //setDataSource(fileName)
-                    prepare()
-                } catch (e: IOException) {
-                    Log.e("preparePlaying()", "prepare() failed: \n$e")
-                }
-            }
-            player?.start()
-        }
-    }
-
-    private fun stopPlaying() {
-
-        player?.release()
-        player = null
-    }
-
-    private fun initialiseSeekBar(seekbar: SeekBar) {
-
-        seekbar.max = player?.duration ?: 0
-
-        seekbarHandler.postDelayed(object: Runnable {
-            override fun run() {
-                try {
-                    if(playing) {
-                        seekbar.progress = player?.currentPosition ?: 0
-                        seekbarHandler.postDelayed(this, 10)
-                    }
-                } catch (e: Exception) {
-                    seekbar.progress = 0
-
-                }
-            }
-        }, 0)
-    }
-
-
-    private fun togglePlayback(seekbar: SeekBar, button: FloatingActionButton, fileToPlay: Uri?) {
-
-
-        //stop playing if playback is on - but only with the current file. If the player is playing another file, then don't react
-        if(playing && fileName == fileToPlay) {
-            stopPlaying()
-            button.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
-            playing = false
-            seekbar.progress = 0
-        } else if (!playing) {
-            // write the base64 decoded Bytestream in a file and use it as an input for the player
-            //val fileBytestream = Base64.decode(relatedNote.attachmentValue, Base64.DEFAULT)
-            fileName = fileToPlay
-
-            startPlaying()
-            initialiseSeekBar(seekbar)
-            button.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
-            playing = true
-
-            // make sure to set the icon back to the play icon when the player reached the end
-            player?.setOnCompletionListener {
-                button.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play))
-                playing = false
-            }
-        }
-    }
-
-    /**
-     * Shows a Dialog if the user really wants to delete the item.
-     * If yes, a Toast is shown and the user is forwarded to the list view
-     * If no, the dialog is closed.
-     */
-    private fun deleteItem() {
-
-        // show Alert Dialog before the item gets really deleted
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(getString(R.string.view_dialog_sure_to_delete_title, icalViewViewModel.icalEntity.value?.property?.summary ?: ""))
-        builder.setMessage(getString(R.string.view_dialog_sure_to_delete_message, icalViewViewModel.icalEntity.value?.property?.summary ?: ""))
-        builder.setPositiveButton(R.string.delete) { _, _ ->
-            summary2delete = icalViewViewModel.icalEntity.value?.property?.summary ?: ""
-            icalViewViewModel.delete(icalViewViewModel.icalEntity.value?.property!!)
-        }
-        builder.setNegativeButton(R.string.cancel) { _, _ -> }
-        builder.show()
-    }
 
 
     private fun hideEditingOptions() {
@@ -857,109 +421,6 @@ class IcalViewFragment : Fragment() {
         binding.viewAddNoteTextinputlayout.isEnabled = false
         binding.viewProgressSlider.isEnabled = false
         binding.viewProgressCheckbox.isEnabled = false
-    }
-
-
-    private fun openAddAudioNoteDialog() {
-
-        // Check if the permission to record audio is already granted, otherwise make a dialog to ask for permission
-        if (PermissionsHelper.checkPermissionRecordAudio(requireActivity())) {
-
-            val audioDialogBinding = FragmentIcalViewAudioDialogBinding.inflate(inflater)
-
-            audioDialogBinding.viewAudioDialogStartrecordingFab.setOnClickListener {
-
-                if(!recording) {
-                    fileName = Uri.parse("${requireContext().cacheDir}/recorded.$audioFileExtension")
-                    audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_stop))
-                    startRecording()
-                    audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = false
-                    recording = true
-                } else {
-                    stopRecording()
-                    audioDialogBinding.viewAudioDialogStartrecordingFab.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_microphone))
-                    audioDialogBinding.viewAudioDialogStartplayingFab.isEnabled = true
-                    recording = false
-
-                    player?.duration?.let { audioDialogBinding.viewAudioDialogProgressbar.max = it }
-                    player?.currentPosition?.let { audioDialogBinding.viewAudioDialogProgressbar.progress = it }
-                }
-            }
-
-            audioDialogBinding.viewAudioDialogStartplayingFab.setOnClickListener {
-                togglePlayback(audioDialogBinding.viewAudioDialogProgressbar, audioDialogBinding.viewAudioDialogStartplayingFab, fileName)
-            }
-
-            audioDialogBinding.viewAudioDialogProgressbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    if (fromUser)
-                        player?.seekTo(progress)
-                }
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {   }
-                override fun onStopTrackingTouch(seekBar: SeekBar?)  {   }
-            })
-
-            //Prepare the builder to open dialog to record audio
-            val audioRecorderAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
-                .setTitle(getString(R.string.view_fragment_audio_dialog_add_audio_note))
-                //.setMessage(getString(R.string.view_fragment_audio_permission_message))
-                .setView(audioDialogBinding.root)
-                .setPositiveButton(R.string.save) { _, _ ->
-                    stopRecording()
-                    stopPlaying()
-
-                    if(fileName != null) {
-
-                        try {
-                            val cachedFile = File(fileName.toString())
-                            val newFilename = "${System.currentTimeMillis()}.$audioFileExtension"
-                            val newFile = File(
-                                Attachment.getAttachmentDirectory(requireContext()),
-                                newFilename
-                            )
-                            newFile.createNewFile()
-                            newFile.writeBytes(cachedFile.readBytes())
-
-                            val newAttachment = Attachment(
-                                fmttype = audioMimetype,
-                                uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, newFile).toString(),
-                                filename = newFilename,
-                                extension = audioFileExtension,
-                            )
-                            icalViewViewModel.insertRelated(ICalObject.createNote(), newAttachment)
-
-                        } catch (e: IOException) {
-                            Log.e("IOException", "Failed to process file\n$e")
-                        }
-                    }
-                }
-                .setNegativeButton(R.string.discard) { _, _ ->
-                    stopRecording()
-                    stopPlaying()
-                }
-
-            // if the item is an instance of a recurring entry, make sure that the user is aware of this
-            val originalId = icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
-            if(originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
-
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
-                    .setMessage(getString(R.string.view_recurrence_note_to_original))
-                    .setPositiveButton(R.string.cont) { _, _ ->
-                        audioRecorderAlertDialogBuilder.show()
-                    }
-                    .setNegativeButton(R.string.view_recurrence_go_to_original_button) { _, _ ->
-                        this.findNavController().navigate(
-                            IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(
-                                originalId
-                            )
-                        )
-                    }
-                    .show()
-            } else {
-                audioRecorderAlertDialogBuilder.show()
-            }
-        }
     }
 }
 

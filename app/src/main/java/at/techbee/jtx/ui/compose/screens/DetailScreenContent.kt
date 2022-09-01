@@ -51,7 +51,7 @@ fun DetailScreenContent(
     player: MediaPlayer?,
     saveIcalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
-    onSubEntryAdded: (icalObject: ICalObject) -> Unit,
+    onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit
 ) {
@@ -426,7 +426,7 @@ fun DetailScreenContent(
                     onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                         onProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
                     },
-                    onSubtaskAdded = { subtask -> onSubEntryAdded(subtask) },
+                    onSubtaskAdded = { subtask -> onSubEntryAdded(subtask, null) },
                     onSubtaskUpdated = { icalObjectId, newText -> onSubEntryUpdated(icalObjectId, newText) },
                     onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) }
                 )
@@ -436,7 +436,7 @@ fun DetailScreenContent(
                 DetailsCardSubnotes(
                     subnotes = subnotes.value,
                     isEditMode = isEditMode,
-                    onSubnoteAdded = { subnote -> onSubEntryAdded(subnote) },
+                    onSubnoteAdded = { subnote, attachment -> onSubEntryAdded(subnote, attachment) },
                     onSubnoteUpdated = { icalObjectId, newText -> onSubEntryUpdated(icalObjectId, newText) },
                     onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
                     player = player
@@ -570,7 +570,7 @@ fun DetailScreenContent_JOURNAL() {
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             saveIcalObject = { _, _, _, _, _, _, _ ->   },
             onProgressChanged = { _, _, _ -> },
-            onSubEntryAdded = { },
+            onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> }
         )
@@ -597,7 +597,7 @@ fun DetailScreenContent_TODO_editInitially() {
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             saveIcalObject = { _, _, _, _, _, _, _ ->   },
             onProgressChanged = { _, _, _ -> },
-            onSubEntryAdded = { },
+            onSubEntryAdded = { _, _ ->  },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> }
         )

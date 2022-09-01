@@ -9,6 +9,7 @@
 package at.techbee.jtx.database.views
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.room.ColumnInfo
@@ -83,7 +84,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "(SELECT count(*) FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numRelatedTodos, " +
             "(SELECT count(*) FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numResources, " +
             "(SELECT count(*) FROM $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAlarms, " +
-            "(SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND $COLUMN_ATTACHMENT_FMTTYPE LIKE 'audio/%' LIMIT 1 ) as audioAttachment, " +
+            "(SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND ($COLUMN_ATTACHMENT_FMTTYPE LIKE 'audio/%' OR $COLUMN_ATTACHMENT_FMTTYPE LIKE 'video/%') LIMIT 1 ) as audioAttachment, " +
             "collection.$COLUMN_COLLECTION_READONLY as isReadOnly, " +
             "main_icalobject.$COLUMN_SUBTASKS_EXPANDED, " +
             "main_icalobject.$COLUMN_SUBNOTES_EXPANDED, " +
@@ -278,6 +279,18 @@ data class ICal4List(
             millisLeft >= 0L && daysLeft <= 1L && dueTimezone != ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_inXhours, hoursLeft)
             millisLeft >= 0L && daysLeft >= 2L -> context.getString(R.string.list_due_inXdays, daysLeft)
             else -> null      //should not be possible
+        }
+    }
+
+    /**
+     * @return the audioAttachment as Uri or null
+     */
+    fun getAudioAttachmentAsUri(): Uri? {
+        // TODO add a test
+        return try {
+            Uri.parse(audioAttachment)
+        } catch (e: Exception) {
+            null
         }
     }
 }

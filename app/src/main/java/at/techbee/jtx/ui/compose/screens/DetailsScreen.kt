@@ -133,7 +133,7 @@ fun DetailsScreen(
                         onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                             detailViewModel.updateProgress(itemId, newPercent)
                         },
-                        onSubEntryAdded = { icalObject -> detailViewModel.addSubEntry(icalObject) },
+                        onSubEntryAdded = { icalObject, attachment -> detailViewModel.addSubEntry(icalObject, attachment) },
                         onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                         onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                         player = detailViewModel.mediaPlayer

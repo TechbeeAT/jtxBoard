@@ -56,6 +56,11 @@
     <string name="invert_selection">Invert selection</string>
     <string name="not_available_abbreviation">n/a</string>
     <string name="preferences">Preferences</string>
+    <string name="audio_play">Play</string>
+    <string name="audio_record">Record</string>
+    <string name="audio_stop">Stop</string>
+    <string name="audio_pause">Pause</string>
+    <string name="audio_error_toast">Sorry, can\'t start playback…</string>
 
     <string name="collection">Collection</string>
     <string name="color">Color</string>

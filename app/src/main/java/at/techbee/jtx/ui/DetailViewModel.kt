@@ -216,10 +216,15 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
 
-    fun addSubEntry(subEntry: ICalObject) {
+    fun addSubEntry(subEntry: ICalObject, attachment: Attachment?) {
         viewModelScope.launch(Dispatchers.IO) {
             subEntry.collectionId = icalEntity.value?.property?.collectionId!!
             val subEntryId = database.insertICalObject(subEntry)
+
+            attachment?.let {
+                it.icalObjectId = subEntryId
+                database.insertAttachment(it)
+            }
 
             database.insertRelatedto(
                 Relatedto(
