@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.compose.cards
 
-import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
@@ -17,6 +16,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.PauseCircle
 import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material3.*
@@ -32,19 +32,64 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.ui.compose.dialogs.EditSubnoteDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterial3Api::class,
-    ExperimentalAnimationApi::class
-)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubnoteCard(
     subnote: ICal4List,
     player: MediaPlayer?,
-    modifier: Modifier = Modifier
+    isEditMode: Boolean,
+    modifier: Modifier = Modifier,
+    onDeleteClicked: (itemId: Long) -> Unit,
+    onSubnoteUpdated: (newText: String) -> Unit
+) {
+
+    var showEditSubnoteDialog by remember { mutableStateOf(false) }
+
+    if (showEditSubnoteDialog) {
+        EditSubnoteDialog(
+            text = subnote.summary,
+            onConfirm = { newText -> onSubnoteUpdated(newText) },
+            onDismiss = { showEditSubnoteDialog = false }
+        )
+    }
+
+    if(isEditMode) {
+        OutlinedCard(
+            modifier = modifier,
+            onClick = { showEditSubnoteDialog = true }
+        ) {
+            SubnoteCardContent(
+                subnote = subnote,
+                player = player,
+                isEditMode = isEditMode,
+                onDeleteClicked = onDeleteClicked,
+            )
+        }
+    } else {
+        ElevatedCard(modifier = modifier) {
+            SubnoteCardContent(
+                subnote = subnote,
+                player = player,
+                isEditMode = isEditMode,
+                onDeleteClicked = onDeleteClicked,
+            )
+        }
+    }
+}
+
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+private fun SubnoteCardContent(
+    subnote: ICal4List,
+    player: MediaPlayer?,
+    isEditMode: Boolean,
+    onDeleteClicked: (itemId: Long) -> Unit,
 ) {
 
     var playing by remember { mutableStateOf(false) }
@@ -59,7 +104,7 @@ fun SubnoteCard(
         val delayInMillis = 10L
         val curDuration = player?.duration
 
-        while(player?.isPlaying == true && curDuration == player.duration) {
+        while (player?.isPlaying == true && curDuration == player.duration) {
             position = player.currentPosition.toFloat()
             delay(delayInMillis)
         }
@@ -69,8 +114,12 @@ fun SubnoteCard(
         position = 0F
     }
 
-    ElevatedCard(modifier = modifier) {
-        Column {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
             subnote.audioAttachment?.let {
                 Row(
                     horizontalArrangement = Arrangement.Start,
@@ -80,7 +129,7 @@ fun SubnoteCard(
                         .padding(start = 8.dp, end = 8.dp)
                 ) {
                     IconButton(onClick = {
-                        if(player?.isPlaying == true) {
+                        if (player?.isPlaying == true) {
                             player.stop()
                             playing = false
                         }
@@ -121,7 +170,7 @@ fun SubnoteCard(
                     Slider(
                         value = position,
                         valueRange = 0F..duration.toFloat(),
-                        steps = duration/100,
+                        steps = duration / 100,
                         onValueChange = {
                             position = it
                             player?.seekTo(it.toInt())
@@ -133,7 +182,7 @@ fun SubnoteCard(
                 }
             }
 
-            if(subnote.summary?.isNotBlank() == true || subnote.description?.isNotBlank() == true) {
+            if (subnote.summary?.isNotBlank() == true || subnote.description?.isNotBlank() == true) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -142,20 +191,6 @@ fun SubnoteCard(
                         .padding(8.dp)
                 ) {
 
-                    /*
-                    OutlinedIconButton(
-                        onClick = { /*TODO*/ },
-                        border = null
-                    ) {
-                        Icon(
-                            Icons.Outlined.DragHandle,
-                            "Up",
-                            //stringResource("Up"),
-                        )
-                    }
-                     */
-
-
                     Text(
                         subnote.summary ?: subnote.description ?: "",
                         modifier = Modifier
@@ -163,18 +198,22 @@ fun SubnoteCard(
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
-
                 }
             }
         }
+        if (isEditMode) {
+            IconButton(onClick = { onDeleteClicked(subnote.id) }) {
+                Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
+            }
+        }
     }
-
 }
+
 
 @Preview(showBackground = true)
 @Composable
 fun SubnoteCardPreview() {
-    JtxBoardTheme {
+    MaterialTheme {
         SubnoteCard(
             subnote = ICal4List.getSample().apply {
                 this.summary = null
@@ -185,6 +224,9 @@ fun SubnoteCardPreview() {
                 this.isReadOnly = false
             },
             player = null,
+            isEditMode = false,
+            onDeleteClicked = { },
+            onSubnoteUpdated = { }
         )
     }
 }
@@ -192,7 +234,7 @@ fun SubnoteCardPreview() {
 @Preview(showBackground = true)
 @Composable
 fun SubnoteCardPreview_audio() {
-    JtxBoardTheme {
+    MaterialTheme {
         SubnoteCard(
             subnote = ICal4List.getSample().apply {
                 this.summary = null
@@ -203,6 +245,9 @@ fun SubnoteCardPreview_audio() {
                 this.numSubtasks = 7
             },
             player = null,
+            isEditMode = false,
+            onDeleteClicked = { },
+            onSubnoteUpdated = { }
         )
     }
 }
@@ -210,7 +255,7 @@ fun SubnoteCardPreview_audio() {
 @Preview(showBackground = true)
 @Composable
 fun SubnoteCardPreview_audio_with_text() {
-    JtxBoardTheme {
+    MaterialTheme {
         SubnoteCard(
             subnote = ICal4List.getSample().apply {
                 this.component = Component.VTODO.name
@@ -218,6 +263,30 @@ fun SubnoteCardPreview_audio_with_text() {
                 this.percent = 34
             },
             player = null,
+            isEditMode = false,
+            onDeleteClicked = { },
+            onSubnoteUpdated = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SubnoteCardPreview_edit() {
+    MaterialTheme {
+        SubnoteCard(
+            subnote = ICal4List.getSample().apply {
+                this.summary = "this is to edit"
+                this.description = null
+                this.component = Component.VTODO.name
+                this.module = Module.TODO.name
+                this.isReadOnly = true
+                this.numSubtasks = 7
+            },
+            player = null,
+            isEditMode = true,
+            onDeleteClicked = { },
+            onSubnoteUpdated = { }
         )
     }
 }

@@ -39,7 +39,6 @@ import at.techbee.jtx.ui.compose.elements.ColoredEdge
 import at.techbee.jtx.ui.compose.elements.ListStatusBar
 import at.techbee.jtx.ui.compose.elements.ProgressElement
 import at.techbee.jtx.ui.compose.elements.VerticalDateBlock
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
 
@@ -431,7 +430,10 @@ fun ICalObjectListCard(
                                             if (!subnote.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
                                                 goToEdit(subnote.id)
                                         },
-                                    )
+                                    ),
+                                isEditMode = false, //no editing here
+                                onDeleteClicked = { }, //no editing here
+                                onSubnoteUpdated = { } //no editing here
                             )
                         }
                     }

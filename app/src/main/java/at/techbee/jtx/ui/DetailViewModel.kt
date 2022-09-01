@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui
 
 import android.app.Application
+import android.media.MediaPlayer
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
@@ -31,7 +32,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
     lateinit var icalEntity: LiveData<ICalEntity?>
-    lateinit var relatedNotes: LiveData<List<ICal4List>>
+    lateinit var relatedSubnotes: LiveData<List<ICal4List>>
     lateinit var relatedSubtasks: LiveData<List<ICal4List>>
     lateinit var recurInstances: LiveData<List<ICalObject?>>
 
@@ -42,6 +43,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     var entryDeleted = mutableStateOf(false)
 
+    val mediaPlayer = MediaPlayer()
 
     init {
 
@@ -52,7 +54,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     postValue(ICalEntity(ICalObject(), null, null, null, null, null))
                 }
 
-            relatedNotes = MutableLiveData(emptyList())
+            relatedSubnotes = MutableLiveData(emptyList())
             relatedSubtasks = MutableLiveData(emptyList())
 
             recurInstances = Transformations.switchMap(icalEntity) {
@@ -69,7 +71,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             icalEntity = database.get(icalObjectId)
 
-            relatedNotes = Transformations.switchMap(icalEntity) {
+            relatedSubnotes = Transformations.switchMap(icalEntity) {
                 it?.property?.uid?.let { parentUid -> database.getAllSubnotesOf(parentUid) }
             }
 

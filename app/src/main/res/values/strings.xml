@@ -299,7 +299,9 @@
 
     <string name="edit_subtasks_add_hint">Your subtask</string>
     <string name="edit_subtasks_add_helper">Add a subtask</string>
+    <string name="edit_subnote_add_helper">Add a subnote</string>
     <string name="edit_subtask">Edit subtask</string>
+    <string name="edit_subnote">Edit subnote</string>
     <string name="edit_attachment_delete_attachment">Delete attachment</string>
     <string name="edit_attachment_add_link_dialog">Add attachment link</string>
     <string name="edit_recur_last_occurrence">Last occurrence</string>

@@ -67,7 +67,7 @@ fun ListScreenList(
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
 
-    val mediaPlayer = remember { MediaPlayer() }
+    val mediaPlayer = remember { MediaPlayer() }   // todo: Move to viewmodel?
 
 
     if(scrollId != null) {

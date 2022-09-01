@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.compose.screens
 
+import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -44,10 +45,10 @@ fun DetailScreenContent(
     iCalEntity: State<ICalEntity?>,
     isEditMode: MutableState<Boolean>,
     subtasks: State<List<ICal4List>>,
-    subnotes: List<ICal4List>,
+    subnotes: State<List<ICal4List>>,
     allCollections: List<ICalCollection>,
     modifier: Modifier = Modifier,
-    //player: MediaPlayer?,
+    player: MediaPlayer?,
     saveIcalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onSubEntryAdded: (icalObject: ICalObject) -> Unit,
@@ -431,6 +432,17 @@ fun DetailScreenContent(
                 )
             }
 
+            AnimatedVisibility(subnotes.value.isNotEmpty() || isEditMode.value) {
+                DetailsCardSubnotes(
+                    subnotes = subnotes.value,
+                    isEditMode = isEditMode,
+                    onSubnoteAdded = { subnote -> onSubEntryAdded(subnote) },
+                    onSubnoteUpdated = { icalObjectId, newText -> onSubEntryUpdated(icalObjectId, newText) },
+                    onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
+                    player = player
+                )
+            }
+
 
             AnimatedVisibility(categories.value.isNotEmpty() || isEditMode.value) {
                 DetailsCardCategories(
@@ -553,10 +565,9 @@ fun DetailScreenContent_JOURNAL() {
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(false) },
             subtasks = remember { mutableStateOf(emptyList()) },
-            subnotes = emptyList(),
-            //attachments = emptyList(),
+            subnotes = remember { mutableStateOf(emptyList()) },
+            player = null,
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
-            //player = null,
             saveIcalObject = { _, _, _, _, _, _, _ ->   },
             onProgressChanged = { _, _, _ -> },
             onSubEntryAdded = { },
@@ -573,8 +584,6 @@ fun DetailScreenContent_TODO_editInitially() {
     MaterialTheme {
         val entity = ICalEntity().apply {
             this.property = ICalObject.createTask("MySummary")
-
-            //this.property.dtstart = System.currentTimeMillis()
         }
         entity.property.description = "Hello World, this \nis my description."
         entity.property.contact = "John Doe, +1 555 5545"
@@ -583,10 +592,9 @@ fun DetailScreenContent_TODO_editInitially() {
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(true) },
             subtasks = remember { mutableStateOf(emptyList()) },
-            subnotes = emptyList(),
-            //attachments = emptyList(),
+            subnotes = remember { mutableStateOf(emptyList()) },
+            player = null,
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
-            //player = null,
             saveIcalObject = { _, _, _, _, _, _, _ ->   },
             onProgressChanged = { _, _, _ -> },
             onSubEntryAdded = { },

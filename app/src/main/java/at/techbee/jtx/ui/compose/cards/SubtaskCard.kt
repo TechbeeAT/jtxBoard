@@ -39,14 +39,9 @@ fun SubtaskCard(
     onDeleteClicked: (itemId: Long) -> Unit,
     onSubtaskUpdated: (newText: String) -> Unit
 ) {
-
-    val initialProgress =
-        subtask.percent?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
-    //var sliderPosition by remember { mutableStateOf(subtask.percent?.toFloat() ?: 0f) }
-    var sliderPosition by mutableStateOf(initialProgress)
     var showEditSubtaskDialog by remember { mutableStateOf(false) }
-    
-    if(showEditSubtaskDialog) {
+
+    if (showEditSubtaskDialog) {
         EditSubtaskDialog(
             text = subtask.summary,
             onConfirm = { newText -> onSubtaskUpdated(newText) },
@@ -54,73 +49,55 @@ fun SubtaskCard(
         )
     }
 
-    if(isEditMode) {
+    if (isEditMode) {
         OutlinedCard(
             modifier = modifier,
-            onClick = {showEditSubtaskDialog = true}
+            onClick = { showEditSubtaskDialog = true }
         ) {
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-
-                //use progress in state!
-
-                var subtaskText = subtask.summary ?: subtask.description ?: ""
-                if (subtask.numSubtasks > 0)
-                    subtaskText += " (+${subtask.numSubtasks})"
-
-                Text(
-                    subtaskText,
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp)
-                        .weight(1f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                if (showProgress) {
-                    Slider(
-                        value = sliderPosition,
-                        valueRange = 0F..100F,
-                        steps = (100 / sliderIncrement) - 1,
-                        onValueChange = { sliderPosition = it },
-                        onValueChangeFinished = {
-                            onProgressChanged(
-                                subtask.id,
-                                (sliderPosition / sliderIncrement * sliderIncrement).toInt(),
-                                subtask.isLinkedRecurringInstance
-                            )
-                        },
-                        modifier = Modifier.width(100.dp),
-                        enabled = !subtask.isReadOnly
-                    )
-                    Text(
-                        String.format("%.0f%%", sliderPosition),
-                        modifier = Modifier.padding(start = 8.dp, end = 8.dp)
-                    )
-                }
-                Checkbox(
-                    checked = sliderPosition == 100f,
-                    onCheckedChange = {
-                        sliderPosition = if (it) 100f else 0f
-                        onProgressChanged(
-                            subtask.id,
-                            sliderPosition.toInt(),
-                            subtask.isLinkedRecurringInstance
-                        )
-                    },
-                    enabled = !subtask.isReadOnly
-                )
-                IconButton(onClick = { onDeleteClicked(subtask.id) }) {
-                    Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
-                }
-            }
+            SubtaskCardContent(
+                subtask = subtask,
+                showProgress = showProgress,
+                isEditMode = isEditMode,
+                sliderIncrement = sliderIncrement,
+                onProgressChanged = onProgressChanged,
+                onDeleteClicked = onDeleteClicked,
+            )
         }
     } else {
 
-    ElevatedCard(modifier = modifier) {
+        ElevatedCard(modifier = modifier) {
+            SubtaskCardContent(
+                subtask = subtask,
+                showProgress = showProgress,
+                isEditMode = isEditMode,
+                sliderIncrement = sliderIncrement,
+                onProgressChanged = onProgressChanged,
+                onDeleteClicked = onDeleteClicked,
+            )
+        }
+    }
+}
+
+
+@SuppressLint("UnrememberedMutableState")
+@Composable
+fun SubtaskCardContent(
+    subtask: ICal4List,
+    modifier: Modifier = Modifier,
+    showProgress: Boolean = true,
+    isEditMode: Boolean = false,
+    sliderIncrement: Int,
+    onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onDeleteClicked: (itemId: Long) -> Unit,
+) {
+
+    val initialProgress =
+        subtask.percent?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
+    //var sliderPosition by remember { mutableStateOf(subtask.percent?.toFloat() ?: 0f) }
+    var sliderPosition by mutableStateOf(initialProgress)
+
+
+    Column(modifier = modifier.fillMaxWidth()) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -174,11 +151,15 @@ fun SubtaskCard(
                 },
                 enabled = !subtask.isReadOnly
             )
+            if (isEditMode) {
+                IconButton(onClick = { onDeleteClicked(subtask.id) }) {
+                    Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
+                }
+            }
         }
     }
-    }
-
 }
+
 
 @Preview(showBackground = true)
 @Composable

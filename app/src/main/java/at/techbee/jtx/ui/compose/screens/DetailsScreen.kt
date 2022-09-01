@@ -62,6 +62,8 @@ fun DetailsScreen(
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
+    val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
+
 
     if (detailViewModel.entryDeleted.value)
         navController.navigate(NavigationDrawerDestination.BOARD.name) {
@@ -111,14 +113,12 @@ fun DetailsScreen(
                         iCalEntity = icalEntity,
                         isEditMode = isEditMode,
                         subtasks = subtasks,
-                        subnotes = emptyList(),
-                        //attachments = emptyList(),
+                        subnotes = subnotes,
                         allCollections = listOf(
                             ICalCollection.createLocalCollection(
                                 LocalContext.current
                             )
                         ),
-                        //player = null,
                         saveIcalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                             detailViewModel.save(
                                 changedICalObject,
@@ -135,7 +135,8 @@ fun DetailsScreen(
                         },
                         onSubEntryAdded = { icalObject -> detailViewModel.addSubEntry(icalObject) },
                         onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
-                        onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) }
+                        onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
+                        player = detailViewModel.mediaPlayer
                     )
                 },
                 navController = navController,
