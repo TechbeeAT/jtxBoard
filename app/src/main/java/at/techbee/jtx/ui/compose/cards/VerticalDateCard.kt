@@ -34,7 +34,7 @@ import at.techbee.jtx.ui.compose.elements.VerticalDateBlock
 fun VerticalDateCard(
     datetime: Long?,
     timezone: String?,
-    isEditMode: MutableState<Boolean>,
+    isEditMode: Boolean,
     allowNull: Boolean,
     modifier: Modifier = Modifier,
     labelTop: String? = null,
@@ -47,7 +47,7 @@ fun VerticalDateCard(
     var newDateTime by rememberSaveable { mutableStateOf(datetime)}
     var newTimezone by rememberSaveable { mutableStateOf(timezone) }
 
-    if(isEditMode.value) {
+    if(isEditMode) {
         OutlinedCard(
             onClick = { showDatePickerDialog = true },
             modifier = modifier
@@ -115,7 +115,7 @@ fun VerticalDateCard_Preview_Allday() {
             datetime = System.currentTimeMillis(),
             timezone = ICalObject.TZ_ALLDAY,
             allowNull = true,
-            isEditMode = remember { mutableStateOf(false) },
+            isEditMode = false,
             onDateTimeChanged = { _, _ -> }
         )
     }
@@ -129,7 +129,7 @@ fun VerticalDateCard_Preview_Allday_edit() {
             datetime = System.currentTimeMillis(),
             timezone = ICalObject.TZ_ALLDAY,
             allowNull = true,
-            isEditMode = remember { mutableStateOf(true) },
+            isEditMode = true,
             onDateTimeChanged = { _, _ -> }
         )
     }
@@ -142,7 +142,7 @@ fun VerticalDateCard_Preview_WithTime() {
         VerticalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = null,
-            isEditMode = remember { mutableStateOf(false) },
+            isEditMode = false,
             allowNull = true,
             onDateTimeChanged = { _, _ -> },
             labelTop = stringResource(id = R.string.completed)
@@ -158,7 +158,7 @@ fun VerticalDateCard_Preview_WithTimezone() {
         VerticalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = "Europe/Vienna",
-            isEditMode = remember { mutableStateOf(false) },
+            isEditMode = false,
             allowNull = true,
             onDateTimeChanged = { _, _ -> }
         )
@@ -172,7 +172,7 @@ fun VerticalDateCard_Preview_WithTimezone2() {
         VerticalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = "Africa/Addis_Ababa",
-            isEditMode = remember { mutableStateOf(false) },
+            isEditMode = false,
             allowNull = true,
             onDateTimeChanged = { _, _ -> }
         )
@@ -186,7 +186,7 @@ fun VerticalDateCard_Preview_NotSet() {
         VerticalDateCard(
             datetime = null,
             timezone = null,
-            isEditMode = remember { mutableStateOf(false) },
+            isEditMode = false,
             allowNull = true,
             onDateTimeChanged = { _, _ -> },
             labelTop = stringResource(id = R.string.due)

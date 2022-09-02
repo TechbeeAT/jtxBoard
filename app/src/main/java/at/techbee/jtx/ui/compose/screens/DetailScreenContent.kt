@@ -15,7 +15,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.ColorLens
+import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -26,16 +27,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.compose.cards.*
+import at.techbee.jtx.ui.compose.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.compose.elements.CollectionsSpinner
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
-import at.techbee.jtx.ui.compose.cards.VerticalDateCard
-import at.techbee.jtx.ui.compose.dialogs.ColorPickerDialog
-import at.techbee.jtx.util.DateTimeUtils
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,18 +57,10 @@ fun DetailScreenContent(
     if(iCalEntity.value == null)
         return
 
-    val context = LocalContext.current
-
 
     var color by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.color) }
     var summary by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
     var description by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.description ?: "") }
-    var dtstart by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.dtstart) }
-    var dtstartTimezone by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.dtstartTimezone) }
-    var due by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.due) }
-    var dueTimezone by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.dueTimezone) }
-    var completed by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.completed) }
-    var completedTimezone by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.completedTimezone) }
 
     val contact = rememberSaveable { mutableStateOf(iCalEntity.value?.property?.contact ?: "") }
     val url = rememberSaveable { mutableStateOf(iCalEntity.value?.property?.url ?: "") }
@@ -171,68 +163,22 @@ fun DetailScreenContent(
                 }
             }
 
-            if (dtstart != null || due != null || completed != null || iCalEntity.value?.property?.module == Module.TODO.name) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if(iCalEntity.value?.property?.module == Module.JOURNAL.name
-                        || iCalEntity.value?.property?.module == Module.TODO.name ) {
-                        VerticalDateCard(
-                            datetime = dtstart,
-                            timezone = dtstartTimezone,
-                            isEditMode = isEditMode,
-                            onDateTimeChanged = { datetime, timezone ->
-                                dtstart = datetime
-                                dtstartTimezone = timezone
-                                icalObject.dtstart = dtstart
-                                icalObject.dtstartTimezone = dtstartTimezone
-                            },
-                            pickerMaxDate = DateTimeUtils.getDateWithoutTime(due, dueTimezone),
-                            modifier = Modifier.weight(0.33f),
-                            labelTop = if(iCalEntity.value?.property?.module == Module.TODO.name)
-                                stringResource(id = R.string.started)
-                            else
-                                null,
-                            allowNull = iCalEntity.value?.property?.module == Module.TODO.name
-                        )
-                    }
-
-                    if(iCalEntity.value?.property?.module == Module.TODO.name) {
-                        VerticalDateCard(
-                            datetime = due,
-                            timezone = dueTimezone,
-                            isEditMode = isEditMode,
-                            onDateTimeChanged = { datetime, timezone ->
-                                due = datetime
-                                dueTimezone = timezone
-                                icalObject.due = due
-                                icalObject.dueTimezone = dueTimezone
-                            },
-                            pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone),
-                            modifier = Modifier.weight(0.33f),
-                            labelTop = stringResource(id = R.string.due),
-                            allowNull = iCalEntity.value?.property?.module == Module.TODO.name
-                        )
-                        VerticalDateCard(
-                            datetime = completed,
-                            timezone = completedTimezone,
-                            isEditMode = isEditMode,
-                            onDateTimeChanged = { datetime, timezone ->
-                                completed = datetime
-                                completedTimezone = timezone
-                                icalObject.completed = completed
-                                icalObject.completedTimezone = completedTimezone
-                            },
-                            pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone),
-                            modifier = Modifier.weight(0.33f),
-                            labelTop = stringResource(id = R.string.completed),
-                            allowNull = iCalEntity.value?.property?.module == Module.TODO.name
-                        )
-                    }
-                }
-            }
+            DetailsCardDates(
+                icalObject = icalObject,
+                isEditMode = isEditMode.value,
+                onDtstartChanged = { datetime, timezone ->
+                    icalObject.dtstart = datetime
+                    icalObject.dtstartTimezone = timezone
+                },
+                onDueChanged = { datetime, timezone ->
+                    icalObject.due = datetime
+                    icalObject.dueTimezone = timezone
+                },
+                onCompletedChanged = { datetime, timezone ->
+                    icalObject.completed = datetime
+                    icalObject.completedTimezone = timezone
+                },
+            )
 
             AnimatedVisibility(!isEditMode.value) {
                 SelectionContainer {
