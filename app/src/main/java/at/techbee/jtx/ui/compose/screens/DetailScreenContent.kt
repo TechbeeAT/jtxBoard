@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
@@ -36,6 +37,7 @@ import at.techbee.jtx.ui.compose.cards.*
 import at.techbee.jtx.ui.compose.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.compose.elements.CollectionsSpinner
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
+import at.techbee.jtx.ui.compose.elements.ProgressElement
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -230,6 +232,21 @@ fun DetailScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
+                    )
+                }
+            }
+
+            if(icalObject.module == Module.TODO.name) {
+                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+                    ProgressElement(
+                        iCalObjectId = icalObject.id,
+                        progress = icalObject.percent,
+                        isReadOnly = !isEditMode.value,
+                        isLinkedRecurringInstance = icalObject.isRecurLinkedInstance,
+                        sliderIncrement = 1,   // TODO
+                        onProgressChanged = onProgressChanged,
+                        showProgressLabel = true,
+                        showSlider = true
                     )
                 }
             }
