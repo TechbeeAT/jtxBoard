@@ -1,5 +1,6 @@
 package at.techbee.jtx.ui.compose.appbars
 
+import android.content.ContentResolver
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloat
@@ -14,20 +15,25 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
-import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalCollection.Factory.DAVX5_ACCOUNT_TYPE
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
+import at.techbee.jtx.util.SyncUtil
 
 @Composable
 fun DetailBottomAppBar(
-    module: Module,
+    icalObject: ICalObject?,
+    collection: ICalCollection?,
     isEditMode: MutableState<Boolean>,
-    isReadOnly: MutableState<Boolean>,
     enableCategories: MutableState<Boolean>,
     enableAttendees: MutableState<Boolean>,
     enableResources: MutableState<Boolean>,
@@ -43,15 +49,13 @@ fun DetailBottomAppBar(
     //iCal4ListLive: LiveData<List<ICal4List>>,
     //listSettings: ListSettings,
     onDeleteClicked: () -> Unit,
-    //onAddNewQuickEntry: () -> Unit,
-    //onAddNewEntry: () -> Unit,
-    //onListSettingsChanged: () -> Unit,
-    //onFilterIconClicked: () -> Unit,
-    //onClearFilterClicked: () -> Unit,
-    //onGoToDateSelected: (Long) -> Unit,
-    //onSearchTextClicked: () -> Unit
+    //onListSettingsChanged: () -> Unit
 ) {
 
+    if(icalObject == null || collection == null)
+        return
+
+    val context = LocalContext.current
     var settingsMenuExpanded by remember { mutableStateOf(false) }
     //val iCal4List by iCal4ListLive.observeAsState()
 
@@ -65,6 +69,25 @@ fun DetailBottomAppBar(
             }
         )
     )
+
+    val isPreview = LocalInspectionMode.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var isSyncInProgress by remember { mutableStateOf(false) }
+    DisposableEffect(lifecycleOwner) {
+
+        val listener = if(isPreview)
+            null
+        else {
+            ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
+                isSyncInProgress = SyncUtil.isJtxSyncRunning(context)
+            }
+        }
+        onDispose {
+            if(!isPreview)
+                ContentResolver.removeStatusChangeListener(listener)
+        }
+    }
+
 
     BottomAppBar(
         actions = {
@@ -95,24 +118,33 @@ fun DetailBottomAppBar(
                 }
             }
 
-            //Box(modifier = Modifier.size(width = 48.dp, height = 1.dp))
-
-            Icon(
-                Icons.Outlined.CloudSync,
-                contentDescription = stringResource(id = R.string.upload_pending),
-                modifier = Modifier.alpha(0.2f)
-            )
-
-            Icon(
-                Icons.Outlined.Sync,
-                contentDescription = stringResource(id = R.string.sync_in_progress),
-                modifier = Modifier
-                    .alpha(0.2f)
-                    .graphicsLayer {
-                        rotationZ = angle
+            AnimatedVisibility(collection.accountType != LOCAL_ACCOUNT_TYPE && (isSyncInProgress || icalObject.dirty)) {
+                IconButton(
+                    onClick = {
+                        if (!isSyncInProgress)
+                            collection.getAccount().let { SyncUtil.syncAccount(it) }
+                    },
+                    enabled = icalObject.dirty && !isSyncInProgress
+                ) {
+                    Crossfade(isSyncInProgress) { synchronizing ->
+                        if (synchronizing) {
+                            Icon(
+                                Icons.Outlined.Sync,
+                                contentDescription = stringResource(id = R.string.sync_in_progress),
+                                modifier = Modifier
+                                    .graphicsLayer {
+                                        rotationZ = angle
+                                    }
+                            )
+                        } else {
+                            Icon(
+                                Icons.Outlined.CloudSync,
+                                contentDescription = stringResource(id = R.string.upload_pending),
+                            )
+                        }
                     }
-            )
-
+                }
+            }
 
             // overflow menu
             DropdownMenu(
@@ -211,16 +243,15 @@ fun DetailBottomAppBar(
             // TODO(b/228588827): Replace with Secondary FAB when available.
             FloatingActionButton(
                 onClick = {
-                    if(!isReadOnly.value)
+                    if(!collection.readonly)
                         isEditMode.value = !isEditMode.value
-                          /* TODO */
                           },
             ) {
                 Crossfade(targetState = isEditMode.value) { isEditMode ->
                     if(isEditMode) {
                         Icon(Icons.Filled.Visibility, stringResource(id = R.string.save))
                     } else {
-                        if(isReadOnly.value)
+                        if(collection.readonly)
                             Icon(Icons.Filled.EditOff, stringResource(id = R.string.readyonly))
                         else
                             Icon(Icons.Filled.Edit, stringResource(id = R.string.edit))
@@ -238,10 +269,15 @@ fun DetailBottomAppBar(
 fun DetailBottomAppBar_Preview_View() {
     MaterialTheme {
 
+        val collection = ICalCollection().apply {
+            this.readonly = false
+            this.accountType = DAVX5_ACCOUNT_TYPE
+        }
+
         DetailBottomAppBar(
-            module = Module.JOURNAL,
+            icalObject = ICalObject.createNote().apply { dirty = true },
+            collection = collection,
             isEditMode = remember { mutableStateOf(false) },
-            isReadOnly = remember { mutableStateOf(false) },
             enableCategories = remember { mutableStateOf(true) },
             enableAttendees = remember { mutableStateOf(false) },
             enableResources = remember { mutableStateOf(false) },
@@ -261,14 +297,21 @@ fun DetailBottomAppBar_Preview_View() {
 
 
 @Preview(showBackground = true)
+
 @Composable
 fun DetailBottomAppBar_Preview_edit() {
     MaterialTheme {
 
+        val collection = ICalCollection().apply {
+            this.readonly = false
+            this.accountType = DAVX5_ACCOUNT_TYPE
+        }
+
+
         DetailBottomAppBar(
-            module = Module.JOURNAL,
+            icalObject = ICalObject.createNote().apply { dirty = true },
+            collection = collection,
             isEditMode = remember { mutableStateOf(true) },
-            isReadOnly = remember { mutableStateOf(false) },
             enableCategories = remember { mutableStateOf(true) },
             enableAttendees = remember { mutableStateOf(false) },
             enableResources = remember { mutableStateOf(false) },
@@ -291,10 +334,48 @@ fun DetailBottomAppBar_Preview_edit() {
 fun DetailBottomAppBar_Preview_View_readonly() {
     MaterialTheme {
 
+        val collection = ICalCollection().apply {
+            this.readonly = true
+            this.accountType = DAVX5_ACCOUNT_TYPE
+        }
+
         DetailBottomAppBar(
-            module = Module.JOURNAL,
+            icalObject = ICalObject.createNote().apply { dirty = false },
+            collection = collection,
             isEditMode = remember { mutableStateOf(false) },
-            isReadOnly = remember { mutableStateOf(true) },
+            enableCategories = remember { mutableStateOf(true) },
+            enableAttendees = remember { mutableStateOf(false) },
+            enableResources = remember { mutableStateOf(false) },
+            enableContact = remember { mutableStateOf(false) },
+            enableLocation = remember { mutableStateOf(false) },
+            enableUrl = remember { mutableStateOf(false) },
+            enableSubtasks = remember { mutableStateOf(true) },
+            enableSubnotes = remember { mutableStateOf(true) },
+            enableAttachments = remember { mutableStateOf(true) },
+            enableRecurrence = remember { mutableStateOf(false) },
+            enableAlarms = remember { mutableStateOf(false) },
+            enableComments = remember { mutableStateOf(false) },
+            onDeleteClicked = { }
+        )
+    }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun DetailBottomAppBar_Preview_View_local() {
+    MaterialTheme {
+
+        val collection = ICalCollection().apply {
+            this.readonly = false
+            this.accountType = LOCAL_ACCOUNT_TYPE
+        }
+
+        DetailBottomAppBar(
+            icalObject = ICalObject.createNote().apply { dirty = true },
+            collection = collection,
+            isEditMode = remember { mutableStateOf(false) },
             enableCategories = remember { mutableStateOf(true) },
             enableAttendees = remember { mutableStateOf(false) },
             enableResources = remember { mutableStateOf(false) },

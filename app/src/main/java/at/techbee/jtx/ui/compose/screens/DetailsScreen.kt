@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.DetailViewModel
 import at.techbee.jtx.ui.compose.appbars.DetailBottomAppBar
 import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
@@ -38,7 +37,6 @@ fun DetailsScreen(
     navController: NavHostController,
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
-    //globalStateHolder: GlobalStateHolder,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
@@ -56,7 +54,6 @@ fun DetailsScreen(
     val enableComments = rememberSaveable { mutableStateOf(false) }
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
-    val isReadOnly = rememberSaveable { mutableStateOf(false) }
 
     val showDeleteDialog = rememberSaveable { mutableStateOf(false) }
 
@@ -145,14 +142,9 @@ fun DetailsScreen(
         },
         bottomBar = {
             DetailBottomAppBar(
-                module = when (detailViewModel.icalEntity.value?.property?.module) {
-                    Module.JOURNAL.name -> Module.JOURNAL
-                    Module.NOTE.name -> Module.NOTE
-                    Module.TODO.name -> Module.TODO
-                    else -> Module.JOURNAL
-                },
+                icalObject = icalEntity.value?.property,
+                collection = icalEntity.value?.ICalCollection,
                 isEditMode = isEditMode,
-                isReadOnly = isReadOnly,
                 enableCategories = enableCategories,
                 enableAttendees = enableAttendees,
                 enableResources = enableResources,
