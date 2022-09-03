@@ -8,10 +8,7 @@
 
 package at.techbee.jtx.ui.compose.elements
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgressElement(
     iCalObjectId: Long,
@@ -29,43 +25,51 @@ fun ProgressElement(
     isReadOnly: Boolean,
     isLinkedRecurringInstance: Boolean,
     sliderIncrement: Int,
+    modifier: Modifier = Modifier,
+    showProgressLabel: Boolean = true,
+    showSlider: Boolean = true,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit
 ) {
 
-    val initialProgress = progress?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
-    var sliderPosition by remember { mutableStateOf(initialProgress) }
+    var sliderPosition by remember { mutableStateOf(
+        progress?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
+    ) }
 
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier
     ) {
 
 
-        Text(
-            stringResource(id = R.string.progress),
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp)
-        )
-        Slider(
-            value = sliderPosition,
-            valueRange = 0F..100F,
-            steps = (100 / sliderIncrement)-1,
-            onValueChange = { sliderPosition = it },
-            onValueChangeFinished = {
-                sliderPosition = sliderPosition/sliderIncrement*sliderIncrement
-                onProgressChanged(
-                    iCalObjectId,
-                    (sliderPosition/sliderIncrement*sliderIncrement).toInt(),
-                    isLinkedRecurringInstance
-                )
-            },
-            modifier = Modifier.weight(1f),
-            enabled = !isReadOnly
-        )
-        Text(
-            String.format("%.0f%%", sliderPosition),
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp)
-        )
+        if(showProgressLabel) {
+            Text(
+                stringResource(id = R.string.progress),
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+        if(showSlider) {
+            Slider(
+                value = sliderPosition,
+                valueRange = 0F..100F,
+                steps = (100 / sliderIncrement) - 1,
+                onValueChange = { sliderPosition = it },
+                onValueChangeFinished = {
+                    sliderPosition = sliderPosition / sliderIncrement * sliderIncrement
+                    onProgressChanged(
+                        iCalObjectId,
+                        (sliderPosition / sliderIncrement * sliderIncrement).toInt(),
+                        isLinkedRecurringInstance
+                    )
+                },
+                modifier = Modifier.weight(1f),
+                enabled = !isReadOnly
+            )
+            Text(
+                String.format("%.0f%%", sliderPosition),
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
         Checkbox(
             checked = sliderPosition == 100f,
             onCheckedChange = {
@@ -116,6 +120,41 @@ fun ProgressElementPreview_increment25() {
             isLinkedRecurringInstance = false,
             onProgressChanged = { _, _, _ -> },
             sliderIncrement = 20
+        )
+
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProgressElementPreview_without_label() {
+    MaterialTheme {
+        ProgressElement(
+            iCalObjectId = 1L,
+            progress = 57,
+            isReadOnly = false,
+            isLinkedRecurringInstance = false,
+            onProgressChanged = { _, _, _ -> },
+            sliderIncrement = 1,
+            showProgressLabel = false
+        )
+
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProgressElementPreview_without_label_and_slider() {
+    MaterialTheme {
+        ProgressElement(
+            iCalObjectId = 1L,
+            progress = 57,
+            isReadOnly = false,
+            isLinkedRecurringInstance = false,
+            onProgressChanged = { _, _, _ -> },
+            sliderIncrement = 1,
+            showProgressLabel = false,
+            showSlider = false
         )
 
     }

@@ -63,7 +63,6 @@ fun ICalObjectListCard(
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
-    val context = LocalContext.current
 
     /*
     var markwon = Markwon.builder(LocalContext.current)
@@ -386,7 +385,8 @@ fun ICalObjectListCard(
                         isReadOnly = iCalObject.isReadOnly,
                         isLinkedRecurringInstance = iCalObject.isLinkedRecurringInstance,
                         sliderIncrement = progressIncrement,
-                        onProgressChanged = onProgressChanged
+                        onProgressChanged = onProgressChanged,
+                        modifier = Modifier.fillMaxWidth()
                     )
 
 

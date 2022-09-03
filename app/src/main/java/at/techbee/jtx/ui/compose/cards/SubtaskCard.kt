@@ -25,6 +25,7 @@ import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.compose.dialogs.EditSubtaskDialog
+import at.techbee.jtx.ui.compose.elements.ProgressElement
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState")
@@ -91,12 +92,6 @@ fun SubtaskCardContent(
     onDeleteClicked: (itemId: Long) -> Unit,
 ) {
 
-    val initialProgress =
-        subtask.percent?.let { ((it / sliderIncrement) * sliderIncrement).toFloat() } ?: 0f
-    //var sliderPosition by remember { mutableStateOf(subtask.percent?.toFloat() ?: 0f) }
-    var sliderPosition by mutableStateOf(initialProgress)
-
-
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -104,11 +99,10 @@ fun SubtaskCardContent(
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            //use progress in state!
-
             var subtaskText = subtask.summary ?: subtask.description ?: ""
             if (subtask.numSubtasks > 0)
                 subtaskText += " (+${subtask.numSubtasks})"
+
 
             Text(
                 subtaskText,
@@ -118,44 +112,26 @@ fun SubtaskCardContent(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            if (showProgress) {
-                Slider(
-                    value = sliderPosition,
-                    valueRange = 0F..100F,
-                    steps = (100 / sliderIncrement) - 1,
-                    onValueChange = { sliderPosition = it },
-                    onValueChangeFinished = {
-                        onProgressChanged(
-                            subtask.id,
-                            (sliderPosition / sliderIncrement * sliderIncrement).toInt(),
-                            subtask.isLinkedRecurringInstance
-                        )
-                    },
-                    modifier = Modifier.width(100.dp),
-                    enabled = !subtask.isReadOnly
-                )
-                Text(
-                    String.format("%.0f%%", sliderPosition),
-                    modifier = Modifier.padding(start = 8.dp, end = 8.dp)
-                )
-            }
-            Checkbox(
-                checked = sliderPosition == 100f,
-                onCheckedChange = {
-                    sliderPosition = if (it) 100f else 0f
-                    onProgressChanged(
-                        subtask.id,
-                        sliderPosition.toInt(),
-                        subtask.isLinkedRecurringInstance
-                    )
-                },
-                enabled = !subtask.isReadOnly
+
+            ProgressElement(
+                iCalObjectId = subtask.id,
+                progress = subtask.percent,
+                isReadOnly = subtask.isReadOnly,
+                isLinkedRecurringInstance = subtask.isLinkedRecurringInstance,
+                sliderIncrement = sliderIncrement,
+                showProgressLabel = false,
+                showSlider = showProgress,
+                onProgressChanged = onProgressChanged,
+                modifier = Modifier.width(if(showProgress) 200.dp else 50.dp),
             )
+
             if (isEditMode) {
                 IconButton(onClick = { onDeleteClicked(subtask.id) }) {
                     Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
                 }
             }
+
+
         }
     }
 }
@@ -232,7 +208,7 @@ fun SubtaskCardPreview_edit() {
     MaterialTheme {
         SubtaskCard(
             ICal4List.getSample().apply {
-                this.summary = null
+                this.summary = "Subtask here"
                 this.description =
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
                 this.component = Component.VTODO.name

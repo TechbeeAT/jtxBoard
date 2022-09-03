@@ -244,7 +244,7 @@ fun DetailScreenContent(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            AnimatedVisibility(subtasks.value.isNotEmpty() || isEditMode.value) {
+            AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true)) {
                 DetailsCardSubtasks(
                     subtasks = subtasks.value,
                     isEditMode = isEditMode,
@@ -257,7 +257,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(subnotes.value.isNotEmpty() || isEditMode.value) {
+            AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVJOURNAL == true)) {
                 DetailsCardSubnotes(
                     subnotes = subnotes.value,
                     isEditMode = isEditMode,
