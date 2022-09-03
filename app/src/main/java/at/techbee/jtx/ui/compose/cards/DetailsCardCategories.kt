@@ -75,11 +75,12 @@ fun DetailsCardCategories(
                             onClick = { },
                             label = { Text(category.text) },
                             trailingIcon = {
-                                IconButton(
-                                    onClick = { categories.value = categories.value.filter { it != category } },
-                                    content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
-                                    modifier = Modifier.size(24.dp)
-                                )
+                                if (isEditMode.value)
+                                    IconButton(
+                                        onClick = { categories.value = categories.value.filter { it != category } },
+                                        content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
+                                        modifier = Modifier.size(24.dp)
+                                    )
                             },
                             selected = false
                         )
@@ -180,7 +181,7 @@ fun DetailsCardCategories_Preview() {
             categories = remember { mutableStateOf(listOf(Category(text = "asdf"))) },
             isEditMode = remember { mutableStateOf(false) },
             allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")),
-            onCategoriesUpdated = { /*TODO*/ }
+            onCategoriesUpdated = {  }
         )
     }
 }
@@ -194,7 +195,7 @@ fun DetailsCardCategories_Preview_edit() {
             categories = remember { mutableStateOf(listOf(Category(text = "asdf"))) },
             isEditMode = remember { mutableStateOf(true) },
             allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")),
-            onCategoriesUpdated = { /*TODO*/ }
+            onCategoriesUpdated = {  }
         )
     }
 }
