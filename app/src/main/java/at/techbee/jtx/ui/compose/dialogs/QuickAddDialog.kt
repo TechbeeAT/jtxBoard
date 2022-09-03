@@ -208,7 +208,7 @@ fun QuickAddDialog(
                     AnimatedVisibility(currentAttachment != null) {
                         AttachmentCard(
                             attachment = currentAttachment!!,
-                            isEditMode = remember { mutableStateOf(false) },
+                            isEditMode = false,
                             onAttachmentDeleted = { /* no editing here */ },
                             modifier = Modifier.padding(vertical = 8.dp)
                         )

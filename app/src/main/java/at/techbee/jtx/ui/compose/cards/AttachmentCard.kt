@@ -9,15 +9,15 @@
 package at.techbee.jtx.ui.compose.cards
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.FilePresent
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -36,7 +36,7 @@ import at.techbee.jtx.util.UiUtil
 @Composable
 fun AttachmentCard(
     attachment: Attachment,
-    isEditMode: MutableState<Boolean>,
+    isEditMode: Boolean,
     modifier: Modifier = Modifier,
     onAttachmentDeleted: () -> Unit
 ) {
@@ -45,7 +45,7 @@ fun AttachmentCard(
     val preview = attachment.getPreview(context)
     val filesize = attachment.getFilesize(context)
 
-    if (isEditMode.value) {
+    if (isEditMode) {
         OutlinedCard(modifier = modifier) {
             Row(
                 modifier = Modifier
@@ -116,7 +116,7 @@ fun AttachmentCardPreview_view() {
     MaterialTheme {
         AttachmentCard(
             attachment = Attachment.getSample(),
-            isEditMode = remember { mutableStateOf(false) },
+            isEditMode = false,
             onAttachmentDeleted = { }
         )
     }
@@ -128,7 +128,7 @@ fun AttachmentCardPreview_edit() {
     MaterialTheme {
         AttachmentCard(
             attachment = Attachment.getSample(),
-            isEditMode = remember { mutableStateOf(true) },
+            isEditMode = true,
             onAttachmentDeleted = { }
         )
     }

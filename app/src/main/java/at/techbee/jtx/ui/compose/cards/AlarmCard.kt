@@ -35,7 +35,7 @@ import java.time.Duration
 fun AlarmCard(
     alarm: Alarm,
     icalObject: ICalObject,
-    isEditMode: MutableState<Boolean>,
+    isEditMode: Boolean,
     modifier: Modifier = Modifier,
     onAlarmDeleted: () -> Unit,
     onAlarmChanged: (Alarm) -> Unit
@@ -57,9 +57,9 @@ fun AlarmCard(
         }
     }
 
-    if (isEditMode.value) {
+    if (isEditMode) {
         OutlinedCard(
-            onClick = { /* TODO */
+            onClick = {
                       if(alarm.triggerTime != null)
                           showDateTimePickerDialog = true
                       },
@@ -188,9 +188,9 @@ fun AlarmCardPreview_DateTime_view() {
         AlarmCard(
             alarm = Alarm.createDisplayAlarm(System.currentTimeMillis(), null),
             icalObject = ICalObject.createTodo().apply { dtstart = System.currentTimeMillis() },
-            isEditMode = remember { mutableStateOf(false) },
-            onAlarmDeleted = { /*TODO*/ },
-            onAlarmChanged = { /*TODO*/ }
+            isEditMode = false,
+            onAlarmDeleted = {  },
+            onAlarmChanged = {  }
         )
     }
 }
@@ -202,9 +202,9 @@ fun AlarmCardPreview_Duration_START_view() {
         AlarmCard(
             alarm = Alarm.createDisplayAlarm(Duration.ofMinutes(-15), AlarmRelativeTo.START),
             icalObject = ICalObject.createTodo().apply { dtstart = System.currentTimeMillis() },
-            isEditMode = remember { mutableStateOf(false) },
-            onAlarmDeleted = { /*TODO*/ },
-            onAlarmChanged = { /*TODO*/ }
+            isEditMode = false,
+            onAlarmDeleted = {  },
+            onAlarmChanged = {  }
         )
     }
 }
@@ -220,9 +220,9 @@ fun AlarmCardPreview_Duration_END_view() {
                 due = System.currentTimeMillis()
                 dueTimezone = null
                                                        },
-            isEditMode = remember { mutableStateOf(false) },
-            onAlarmDeleted = { /*TODO*/ },
-            onAlarmChanged = { /*TODO*/ }
+            isEditMode = false,
+            onAlarmDeleted = {  },
+            onAlarmChanged = {  }
         )
     }
 }
@@ -237,9 +237,9 @@ fun AlarmCardPreview_edit() {
                 triggerTime = System.currentTimeMillis()
             ),
             icalObject = ICalObject.createTodo().apply { dtstart = System.currentTimeMillis() },
-            isEditMode = remember { mutableStateOf(true) },
-            onAlarmDeleted = { /*TODO*/ },
-            onAlarmChanged = { /*TODO*/ }
+            isEditMode = true,
+            onAlarmDeleted = {  },
+            onAlarmChanged = {  }
         )
     }
 }

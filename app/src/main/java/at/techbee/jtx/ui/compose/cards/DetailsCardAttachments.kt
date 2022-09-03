@@ -40,19 +40,20 @@ import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
 
 @Composable
 fun DetailsCardAttachments(
-    attachments: MutableState<List<Attachment>>,
-    isEditMode: MutableState<Boolean>,
-    onAttachmentsUpdated: () -> Unit,
+    initialAttachments: List<Attachment>,
+    isEditMode: Boolean,
+    onAttachmentsUpdated: (List<Attachment>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val context = LocalContext.current
+    var attachments by remember { mutableStateOf(initialAttachments) }
 
     val pickFileLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             Attachment.getNewAttachmentFromUri(uri, context)?.let { newAttachment ->
-                attachments.value = attachments.value.plus(newAttachment)
-                onAttachmentsUpdated()
+                attachments = attachments.plus(newAttachment)
+                onAttachmentsUpdated(attachments)
             }
         }
     }
@@ -61,9 +62,9 @@ fun DetailsCardAttachments(
         if(taken) {
             newPictureUri.value?.let {
                 Attachment.getNewAttachmentFromUri(it, context)?.let { newAttachment ->
-                    attachments.value = attachments.value.plus(newAttachment)
+                    attachments = attachments.plus(newAttachment)
                     newPictureUri.value = null
-                    onAttachmentsUpdated()
+                    onAttachmentsUpdated(attachments)
                 }
             }
         }
@@ -75,8 +76,8 @@ fun DetailsCardAttachments(
         AddAttachmentLinkDialog(
             onConfirm = { attachmentLink ->
                 val newAttachment = Attachment(uri = attachmentLink)
-                attachments.value = attachments.value.plus(newAttachment)
-                onAttachmentsUpdated()
+                attachments = attachments.plus(newAttachment)
+                onAttachmentsUpdated(attachments)
             },
             onDismiss = { showAddLinkAttachmentDialog = false }
         )
@@ -91,27 +92,27 @@ fun DetailsCardAttachments(
 
             HeadlineWithIcon(icon = Icons.Outlined.Attachment, iconDesc = headline, text = headline)
 
-            AnimatedVisibility(attachments.value.isNotEmpty()) {
+            AnimatedVisibility(attachments.isNotEmpty()) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    attachments.value.asReversed().forEach { attachment ->
+                    attachments.asReversed().forEach { attachment ->
 
                         AttachmentCard(
                             attachment = attachment,
                             isEditMode = isEditMode,
                             onAttachmentDeleted = {
-                                attachments.value = attachments.value.minus(attachment)
-                                onAttachmentsUpdated()
+                                attachments = attachments.minus(attachment)
+                                onAttachmentsUpdated(attachments)
                             }
                         )
                     }
                 }
             }
 
-            AnimatedVisibility(isEditMode.value) {
+            AnimatedVisibility(isEditMode) {
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
@@ -155,8 +156,8 @@ fun DetailsCardAttachments_Preview() {
     MaterialTheme {
 
         DetailsCardAttachments(
-            attachments = remember { mutableStateOf(listOf(Attachment(filename = "test.pdf"))) },
-            isEditMode = remember { mutableStateOf(false) },
+            initialAttachments = listOf(Attachment(filename = "test.pdf")),
+            isEditMode = false,
             onAttachmentsUpdated = { }
         )
     }
@@ -168,8 +169,8 @@ fun DetailsCardAttachments_Preview() {
 fun DetailsCardAttachments_Preview_edit() {
     MaterialTheme {
         DetailsCardAttachments(
-            attachments = remember { mutableStateOf(listOf(Attachment(filename = "test.pdf"))) },
-            isEditMode = remember { mutableStateOf(true) },
+            initialAttachments = listOf(Attachment(filename = "test.pdf")),
+            isEditMode = true,
             onAttachmentsUpdated = { }
         )
     }

@@ -1290,15 +1290,6 @@ enum class StatusJournal(val stringResource: Int) : Parcelable {
             }
             return set.toSet()
         }
-
-        fun getNext(current: StatusJournal?): StatusJournal {
-            return when(current) {
-                null -> DRAFT
-                DRAFT -> FINAL
-                FINAL -> CANCELLED
-                CANCELLED -> DRAFT
-            }
-        }
     }
 }
 

@@ -67,7 +67,7 @@ open class IcalListViewModel(application: Application, val module: Module) : And
         return@map list.groupBy { it.icalObjectId }
     }
 
-    val allCategories = database.getAllCategories()   // filter FragmentDialog
+    val allCategories = database.getAllCategoriesAsText()   // filter FragmentDialog
     val allCollections = database.getAllCollections()
 
     val quickInsertedEntity = MutableLiveData<ICalEntity?>(null)

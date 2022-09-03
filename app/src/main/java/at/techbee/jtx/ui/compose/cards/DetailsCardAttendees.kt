@@ -46,7 +46,6 @@ import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.database.properties.Role
 import at.techbee.jtx.ui.compose.dialogs.RequestContactsPermissionDialog
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
-import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.UiUtil
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -60,9 +59,9 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun DetailsCardAttendees(
-    attendees: MutableState<List<Attendee>>,
-    isEditMode: MutableState<Boolean>,
-    onAttendeesUpdated: () -> Unit,
+    initialAttendees: List<Attendee>,
+    isEditMode: Boolean,
+    onAttendeesUpdated: (List<Attendee>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -71,6 +70,7 @@ fun DetailsCardAttendees(
     val contactsPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.READ_CONTACTS) else null
     var showContactsPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
+    var attendees by remember { mutableStateOf(initialAttendees) }
     var searchAttendees = emptyList<Attendee>()
 
     val headline = stringResource(id = R.string.attendees)
@@ -88,20 +88,20 @@ fun DetailsCardAttendees(
 
             HeadlineWithIcon(icon = Icons.Outlined.Groups, iconDesc = headline, text = headline)
 
-            AnimatedVisibility(attendees.value.isNotEmpty()) {
+            AnimatedVisibility(attendees.isNotEmpty()) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .horizontalScroll(rememberScrollState())
                 ) {
-                    attendees.value.asReversed().forEach { attendee ->
+                    attendees.asReversed().forEach { attendee ->
 
                         val overflowMenuExpanded = remember { mutableStateOf(false) }
 
                         InputChip(
                             onClick = {
-                                if(isEditMode.value)
+                                if(isEditMode)
                                     overflowMenuExpanded.value = true
                                       },
                             label = { Text(attendee.getDisplayString()) },
@@ -113,9 +113,12 @@ fun DetailsCardAttendees(
                                     Role.`REQ-PARTICIPANT`.Icon()
                             },
                             trailingIcon = {
-                                if (isEditMode.value)
+                                if (isEditMode)
                                     IconButton(
-                                        onClick = { attendees.value = attendees.value.filter { it != attendee } },
+                                        onClick = {
+                                            attendees = attendees.filter { it != attendee }
+                                            onAttendeesUpdated(attendees)
+                                                  },
                                         content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
                                         modifier = Modifier.size(24.dp)
                                     )
@@ -141,9 +144,9 @@ fun DetailsCardAttendees(
                                     },
                                     onClick = {
                                         attendee.role = role.name
-                                        attendees.value = attendees.value  //notify
+                                        //attendees = attendees  //notify
+                                        onAttendeesUpdated(attendees)
                                         overflowMenuExpanded.value = false
-                                        /*TODO: Save it*/
                                     })
                             }
                         }
@@ -151,7 +154,7 @@ fun DetailsCardAttendees(
                 }
             }
 
-            AnimatedVisibility(isEditMode.value && newAttendee.value.isNotEmpty()) {
+            AnimatedVisibility(isEditMode && newAttendee.value.isNotEmpty()) {
 
 
                 Row(
@@ -161,14 +164,15 @@ fun DetailsCardAttendees(
                         .horizontalScroll(rememberScrollState())
                 ) {
 
-                        if(attendees.value.none { existing -> existing.getDisplayString() == newAttendee.value }) {
+                        if(attendees.none { existing -> existing.getDisplayString() == newAttendee.value }) {
                             InputChip(
                                 onClick = {
                                     val newAttendeeObject = if(UiUtil.isValidEmail(newAttendee.value))
                                         Attendee(caladdress = "mailto:" + newAttendee)
                                     else
                                         Attendee(cn = newAttendee.value)
-                                    attendees.value = attendees.value.plus(newAttendeeObject)
+                                    attendees = attendees.plus(newAttendeeObject)
+                                    onAttendeesUpdated(attendees)
                                 },
                                 label = { Text(newAttendee.value) },
                                 leadingIcon = {
@@ -188,14 +192,15 @@ fun DetailsCardAttendees(
 
                     searchAttendees.filter { all ->
                         all.getDisplayString().lowercase()
-                            .contains(newAttendee.value.lowercase()) && attendees.value.none { existing ->
+                            .contains(newAttendee.value.lowercase()) && attendees.none { existing ->
                             existing.getDisplayString().lowercase() == all.getDisplayString()
                                 .lowercase()
                         }
                     }.forEach { attendee ->
                         InputChip(
                             onClick = {
-                                attendees.value = attendees.value.plus(attendee)
+                                attendees = attendees.plus(attendee)
+                                onAttendeesUpdated(attendees)
                             },
                             label = { Text(attendee.getDisplayString()) },
                             leadingIcon = {
@@ -212,7 +217,7 @@ fun DetailsCardAttendees(
 
 
             Crossfade(isEditMode) {
-                if (it.value) {
+                if (it) {
 
                     OutlinedTextField(
                         value = newAttendee.value,
@@ -256,7 +261,8 @@ fun DetailsCardAttendees(
                                 Attendee(caladdress = "mailto:" + newAttendee)
                             else
                                 Attendee(cn = newAttendee.value)
-                            attendees.value = attendees.value.plus(newAttendeeObject)
+                            attendees = attendees.plus(newAttendeeObject)
+                            onAttendeesUpdated(attendees)
                             newAttendee.value = ""
                         })
                     )
@@ -278,9 +284,9 @@ fun DetailsCardAttendees_Preview() {
     MaterialTheme {
 
         DetailsCardAttendees(
-            attendees = remember { mutableStateOf(listOf(Attendee(caladdress = "mailto:patrick@techbee.at", cn = "Patrick"))) },
-            isEditMode = remember { mutableStateOf(false) },
-            onAttendeesUpdated = { /*TODO*/ }
+            initialAttendees = listOf(Attendee(caladdress = "mailto:patrick@techbee.at", cn = "Patrick")),
+            isEditMode = false,
+            onAttendeesUpdated = { }
         )
     }
 }
@@ -291,9 +297,9 @@ fun DetailsCardAttendees_Preview() {
 fun DetailsCardAttendees_Preview_edit() {
     MaterialTheme {
         DetailsCardAttendees(
-            attendees = remember { mutableStateOf(listOf(Attendee(caladdress = "mailto:patrick@techbee.at", cn = "Patrick"))) },
-            isEditMode = remember { mutableStateOf(true) },
-            onAttendeesUpdated = { /*TODO*/ }
+            initialAttendees = listOf(Attendee(caladdress = "mailto:patrick@techbee.at", cn = "Patrick")),
+            isEditMode = true,
+            onAttendeesUpdated = { }
         )
     }
 }

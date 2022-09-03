@@ -37,13 +37,14 @@ import java.time.Duration
 
 @Composable
 fun DetailsCardAlarms(
-    alarms: MutableState<List<Alarm>>,
+    initialAlarms: List<Alarm>,
     icalObject: ICalObject,
-    isEditMode: MutableState<Boolean>,
-    onAlarmsUpdated: () -> Unit,
+    isEditMode: Boolean,
+    onAlarmsUpdated: (List<Alarm>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
+    var alarms by remember { mutableStateOf(initialAlarms) }
     val headline = stringResource(id = R.string.alarms)
 
     var showDateTimePicker by rememberSaveable { mutableStateOf(false) }
@@ -60,8 +61,8 @@ fun DetailsCardAlarms(
             minDate = DateTimeUtils.getTodayAsLong(),
             onConfirm = { newDateTime, newTimeZone ->
                 val newAlarm = Alarm.createDisplayAlarm(newDateTime!!, newTimeZone)
-                alarms.value = alarms.value.plus(newAlarm)
-                onAlarmsUpdated() },
+                alarms = alarms.plus(newAlarm)
+                onAlarmsUpdated(alarms) },
             onDismiss = { showDateTimePicker = false }
         )
     }
@@ -74,8 +75,8 @@ fun DetailsCardAlarms(
             ),
             icalObject = icalObject,
             onConfirm = { newAlarm ->
-                alarms.value = alarms.value.plus(newAlarm)
-                onAlarmsUpdated()
+                alarms = alarms.plus(newAlarm)
+                onAlarmsUpdated(alarms)
             },
             onDismiss = { showDurationPicker = false })
     }
@@ -89,33 +90,34 @@ fun DetailsCardAlarms(
 
             HeadlineWithIcon(icon = Icons.Outlined.Alarm, iconDesc = headline, text = headline)
 
-            AnimatedVisibility(alarms.value.isNotEmpty()) {
+            AnimatedVisibility(alarms.isNotEmpty()) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    alarms.value.forEach { alarm ->
+                    alarms.forEach { alarm ->
 
                         AlarmCard(
                             alarm = alarm,
                             icalObject = icalObject,
                             isEditMode = isEditMode,
                             onAlarmDeleted = {
-                                alarms.value = alarms.value.minus(alarm)
-                                onAlarmsUpdated()
+                                alarms = alarms.minus(alarm)
+                                onAlarmsUpdated(alarms)
                                              },
                             onAlarmChanged = { changedAlarm ->
                                 changedAlarm.alarmId = 0L
-                                alarms.value = alarms.value.minus(alarm)
-                                alarms.value = alarms.value.plus(changedAlarm)
+                                alarms = alarms.minus(alarm)
+                                alarms = alarms.plus(changedAlarm)
+                                onAlarmsUpdated(alarms)
                             }
                         )
                     }
                 }
             }
 
-            AnimatedVisibility(isEditMode.value) {
+            AnimatedVisibility(isEditMode) {
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
@@ -139,10 +141,10 @@ fun DetailsCardAlarms(
                     }
 
                     val alarmOnStart = Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.START)
-                    AnimatedVisibility(icalObject.dtstart != null && !alarms.value.contains(alarmOnStart)) {
+                    AnimatedVisibility(icalObject.dtstart != null && !alarms.contains(alarmOnStart)) {
                         TextButton(onClick = {
-                            alarms.value = alarms.value.plus(Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.START))
-                            onAlarmsUpdated()
+                            alarms = alarms.plus(Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.START))
+                            onAlarmsUpdated(alarms)
                         }) {
                             Icon(Icons.Outlined.AlarmAdd, null, modifier = Modifier.padding(end = 8.dp))
                             Text(stringResource(id = R.string.alarms_onstart))
@@ -150,10 +152,10 @@ fun DetailsCardAlarms(
                     }
 
                     val alarmOnDue = Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.END)
-                    AnimatedVisibility(icalObject.due != null && !alarms.value.contains(alarmOnDue)) {
+                    AnimatedVisibility(icalObject.due != null && !alarms.contains(alarmOnDue)) {
                         TextButton(onClick = {
-                            alarms.value = alarms.value.plus(Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.END))
-                            onAlarmsUpdated()
+                            alarms = alarms.plus(Alarm.createDisplayAlarm(Duration.ZERO, AlarmRelativeTo.END))
+                            onAlarmsUpdated(alarms)
                         }) {
                             Icon(Icons.Outlined.AlarmAdd, null, modifier = Modifier.padding(end = 8.dp))
                             Text(stringResource(id = R.string.alarms_ondue))
@@ -172,23 +174,18 @@ fun DetailsCardAlarms_Preview() {
     MaterialTheme {
 
         DetailsCardAlarms(
-            alarms = remember {
-                mutableStateOf(
-                    listOf(
+            initialAlarms = listOf(
                         Alarm.createDisplayAlarm(System.currentTimeMillis(), null),
-                        Alarm.createDisplayAlarm(Duration.ofDays(1), AlarmRelativeTo.START
-                        )
-                    )
-                )
-            },
+                        Alarm.createDisplayAlarm(Duration.ofDays(1), AlarmRelativeTo.START)
+            ),
             icalObject = ICalObject.createTodo().apply {
                 dtstart = System.currentTimeMillis()
                 dtstartTimezone = null
                 due = System.currentTimeMillis()
                 dueTimezone = null
                                                        },
-            isEditMode = remember { mutableStateOf(false) },
-            onAlarmsUpdated = { /*TODO*/ }
+            isEditMode = false,
+            onAlarmsUpdated = {  }
         )
     }
 }
@@ -199,23 +196,18 @@ fun DetailsCardAlarms_Preview() {
 fun DetailsCardAlarms_Preview_edit() {
     MaterialTheme {
         DetailsCardAlarms(
-            alarms = remember {
-                mutableStateOf(
-                    listOf(
+            initialAlarms = listOf(
                         Alarm.createDisplayAlarm(System.currentTimeMillis(), null),
-                        Alarm.createDisplayAlarm(Duration.ofDays(1), AlarmRelativeTo.START
-                        )
-                    )
-                )
-            },
+                        Alarm.createDisplayAlarm(Duration.ofDays(1), AlarmRelativeTo.START)
+            ),
             icalObject = ICalObject.createTodo().apply {
                 dtstart = System.currentTimeMillis()
                 dtstartTimezone = null
                 due = System.currentTimeMillis()
                 dueTimezone = null
             },
-            isEditMode = remember { mutableStateOf(true) },
-            onAlarmsUpdated = { /*TODO*/ }
+            isEditMode = true,
+            onAlarmsUpdated = {  }
         )
     }
 }

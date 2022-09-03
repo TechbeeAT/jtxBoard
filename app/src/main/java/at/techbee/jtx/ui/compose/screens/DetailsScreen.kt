@@ -17,11 +17,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.ui.DetailViewModel
 import at.techbee.jtx.ui.compose.appbars.DetailBottomAppBar
 import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
@@ -54,12 +52,16 @@ fun DetailsScreen(
     val enableComments = rememberSaveable { mutableStateOf(false) }
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
+    val contentsChanged = remember { mutableStateOf<Boolean?>(null) }
 
     val showDeleteDialog = rememberSaveable { mutableStateOf(false) }
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
     val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
+    val allCategories = detailViewModel.allCategories.observeAsState(emptyList())
+    val allResources = detailViewModel.allResources.observeAsState(emptyList())
+    val allCollections = detailViewModel.allCollections.observeAsState(emptyList())
 
 
     if (detailViewModel.entryDeleted.value)
@@ -109,13 +111,12 @@ fun DetailsScreen(
                     DetailScreenContent(
                         iCalEntity = icalEntity,
                         isEditMode = isEditMode,
+                        contentsChanged = contentsChanged,
                         subtasks = subtasks,
                         subnotes = subnotes,
-                        allCollections = listOf(
-                            ICalCollection.createLocalCollection(
-                                LocalContext.current
-                            )
-                        ),
+                        allCollections = allCollections.value,
+                        allCategories = allCategories.value,
+                        allResources = allResources.value,
                         saveIcalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                             detailViewModel.save(
                                 changedICalObject,
@@ -133,7 +134,7 @@ fun DetailsScreen(
                         onSubEntryAdded = { icalObject, attachment -> detailViewModel.addSubEntry(icalObject, attachment) },
                         onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                         onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
-                        player = detailViewModel.mediaPlayer
+                        player = detailViewModel.mediaPlayer,
                     )
                 },
                 navController = navController,
@@ -145,6 +146,7 @@ fun DetailsScreen(
                 icalObject = icalEntity.value?.property,
                 collection = icalEntity.value?.ICalCollection,
                 isEditMode = isEditMode,
+                contentsChanged = contentsChanged,
                 enableCategories = enableCategories,
                 enableAttendees = enableAttendees,
                 enableResources = enableResources,

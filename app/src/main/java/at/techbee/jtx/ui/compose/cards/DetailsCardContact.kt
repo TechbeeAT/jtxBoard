@@ -47,9 +47,9 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun DetailsCardContact(
-    contact: MutableState<String>,
-    isEditMode: MutableState<Boolean>,
-    onContactUpdated: () -> Unit,
+    initialContact: String,
+    isEditMode: Boolean,
+    onContactUpdated: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -57,6 +57,7 @@ fun DetailsCardContact(
     // preview would break if rememberPermissionState is used for preview, so we set it to null only for preview!
     val contactsPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.READ_CONTACTS) else null
 
+    var contact by rememberSaveable { mutableStateOf(initialContact) }
     val headline = stringResource(id = R.string.contact)
     var showContactsPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -72,16 +73,16 @@ fun DetailsCardContact(
                 .padding(8.dp),) {
 
             Crossfade(isEditMode) {
-                if(!it.value) {
+                if(!it) {
 
                     Column {
                         HeadlineWithIcon(icon = Icons.Outlined.ContactMail, iconDesc = headline, text = headline)
-                        Text(contact.value)
+                        Text(contact)
                     }
                 } else {
 
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        AnimatedVisibility(contact.value.isNotEmpty() && searchContacts.isNotEmpty()) {
+                        AnimatedVisibility(contact.isNotEmpty() && searchContacts.isNotEmpty()) {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier
@@ -91,13 +92,13 @@ fun DetailsCardContact(
 
                                 searchContacts.forEach { searchContact ->
 
-                                    if(searchContact.getDisplayString() == contact.value)
+                                    if(searchContact.getDisplayString() == contact)
                                         return@forEach
 
                                     InputChip(
                                         onClick = {
-                                            contact.value = searchContact.getDisplayString()
-                                            onContactUpdated()
+                                            contact = searchContact.getDisplayString()
+                                            onContactUpdated(contact)
                                         },
                                         label = { Text(searchContact.getDisplayString()) },
                                         leadingIcon = {
@@ -116,14 +117,14 @@ fun DetailsCardContact(
 
 
                         OutlinedTextField(
-                            value = contact.value,
+                            value = contact,
                             leadingIcon = { Icon(Icons.Outlined.ContactMail, headline) },
                             trailingIcon = {
                                 IconButton(onClick = {
-                                    contact.value = ""
-                                    onContactUpdated()
+                                    contact = ""
+                                    onContactUpdated(contact)
                                 }) {
-                                    AnimatedVisibility(contact.value.isNotEmpty()) {
+                                    AnimatedVisibility(contact.isNotEmpty()) {
                                         Icon(Icons.Outlined.Clear, stringResource(id = R.string.delete))
                                     }
                                 }
@@ -131,8 +132,8 @@ fun DetailsCardContact(
                             singleLine = true,
                             label = { Text(headline) },
                             onValueChange = { newValue ->
-                                contact.value = newValue
-                                onContactUpdated()
+                                contact = newValue
+                                onContactUpdated(contact)
 
                                 coroutineScope.launch {
                                     if(newValue.length >= 3 && contactsPermissionState?.status?.isGranted == true)
@@ -169,9 +170,9 @@ fun DetailsCardContact(
 fun DetailsCardContact_Preview() {
     MaterialTheme {
         DetailsCardContact(
-            contact = remember { mutableStateOf("John Doe, +1 555 5545") },
-            isEditMode = remember { mutableStateOf(false) },
-            onContactUpdated = { /*TODO*/ }
+            initialContact = "John Doe, +1 555 5545",
+            isEditMode = false,
+            onContactUpdated = {  }
         )
     }
 }
@@ -182,9 +183,9 @@ fun DetailsCardContact_Preview() {
 fun DetailsCardContact_Preview_edit() {
     MaterialTheme {
         DetailsCardContact(
-            contact = remember { mutableStateOf("John Doe, +1 555 5545") },
-            isEditMode = remember { mutableStateOf(true) },
-            onContactUpdated = { /*TODO*/ }
+            initialContact = "John Doe, +1 555 5545",
+            isEditMode = true,
+            onContactUpdated = {  }
         )
     }
 }

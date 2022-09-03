@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
@@ -33,13 +34,14 @@ import at.techbee.jtx.util.UiUtil
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsCardUrl(
-    url: MutableState<String>,
-    isEditMode: MutableState<Boolean>,
-    onUrlUpdated: () -> Unit,
+    initialUrl: String,
+    isEditMode: Boolean,
+    onUrlUpdated: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val headline = stringResource(id = R.string.url)
+    var url by rememberSaveable { mutableStateOf(initialUrl) }
     var urlError by remember { mutableStateOf(false) }
 
     val uriHandler = LocalUriHandler.current
@@ -47,8 +49,8 @@ fun DetailsCardUrl(
 
     ElevatedCard(modifier = modifier, onClick = {
         try {
-            if (url.value.isNotBlank() && !isEditMode.value)
-                uriHandler.openUri(url.value)
+            if (url.isNotBlank() && !isEditMode)
+                uriHandler.openUri(url)
         } catch (e: ActivityNotFoundException) {
             Log.d("PropertyCardUrl", "Failed opening Uri $url\n$e")
         }
@@ -59,23 +61,23 @@ fun DetailsCardUrl(
                 .padding(8.dp),) {
 
             Crossfade(isEditMode) {
-                if(!it.value) {
+                if(!it) {
 
                     Column {
                         HeadlineWithIcon(icon = Icons.Outlined.Link, iconDesc = headline, text = headline)
-                        Text(url.value)
+                        Text(url)
                     }
                 } else {
 
                     OutlinedTextField(
-                        value = url.value,
+                        value = url,
                         leadingIcon = { Icon(Icons.Outlined.Link, headline) },
                         trailingIcon = {
                             IconButton(onClick = {
-                                url.value = ""
-                                /*TODO*/
+                                url = ""
+                                onUrlUpdated(url)
                             }) {
-                                if (url.value.isNotEmpty())
+                                if (url.isNotEmpty())
                                     Icon(Icons.Outlined.Clear, stringResource(id = R.string.delete))
                             }
                         },
@@ -83,10 +85,9 @@ fun DetailsCardUrl(
                         isError = urlError,
                         label = { Text(headline) },
                         onValueChange = { newUrl ->
-                            urlError = url.value.isNotEmpty() && !UiUtil.isValidURL(newUrl)
-                            url.value = newUrl
-
-                            /* TODO */
+                            urlError = url.isNotEmpty() && !UiUtil.isValidURL(newUrl)
+                            url = newUrl
+                            onUrlUpdated(url)
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                         modifier = Modifier
@@ -104,9 +105,9 @@ fun DetailsCardUrl(
 fun DetailsCardUrl_Preview() {
     MaterialTheme {
         DetailsCardUrl(
-            url = remember { mutableStateOf("www.orf.at") },
-            isEditMode = remember { mutableStateOf(false) },
-            onUrlUpdated = { /*TODO*/ }
+            initialUrl = "www.orf.at",
+            isEditMode = false,
+            onUrlUpdated = { }
         )
     }
 }
@@ -117,9 +118,9 @@ fun DetailsCardUrl_Preview() {
 fun DetailsCardUrl_Preview_edit() {
     MaterialTheme {
         DetailsCardUrl(
-            url = remember { mutableStateOf("www.bitfire.at") },
-            isEditMode = remember { mutableStateOf(true) },
-            onUrlUpdated = { /*TODO*/ }
+            initialUrl = "www.bitfire.at",
+            isEditMode = true,
+            onUrlUpdated = {  }
         )
     }
 }

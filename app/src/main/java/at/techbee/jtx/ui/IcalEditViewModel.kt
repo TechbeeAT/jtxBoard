@@ -122,8 +122,8 @@ class IcalEditViewModel(
 
             relatedSubtasks = database.getAllSubtasksAsICalObjectOf(iCalEntity.property.uid)
 
-            allCategories = database.getAllCategories()
-            allResources = database.getAllResources()
+            allCategories = database.getAllCategoriesAsText()
+            allResources = database.getAllResourcesAsText()
             allCollections = when (iCalEntity.property.component) {
                 Component.VTODO.name -> database.getAllWriteableVTODOCollections()
                 Component.VJOURNAL.name -> database.getAllWriteableVJOURNALCollections()

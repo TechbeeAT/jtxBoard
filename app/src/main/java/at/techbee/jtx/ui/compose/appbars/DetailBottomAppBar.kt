@@ -34,6 +34,7 @@ fun DetailBottomAppBar(
     icalObject: ICalObject?,
     collection: ICalCollection?,
     isEditMode: MutableState<Boolean>,
+    contentsChanged: MutableState<Boolean?>,
     enableCategories: MutableState<Boolean>,
     enableAttendees: MutableState<Boolean>,
     enableResources: MutableState<Boolean>,
@@ -145,6 +146,27 @@ fun DetailBottomAppBar(
                     }
                 }
             }
+
+            AnimatedVisibility(contentsChanged.value != null) {
+                IconButton(
+                    onClick = { },
+                    enabled = false
+                ) {
+                    Crossfade(contentsChanged.value) { changed ->
+                        if(changed == false)
+                            Icon(
+                                Icons.Outlined.Save,
+                                contentDescription = stringResource(id = R.string.saving)
+                            )
+                        else if(changed == true)
+                            Icon(
+                                Icons.Outlined.DriveFileRenameOutline,
+                                contentDescription = stringResource(id = R.string.saving)
+                            )
+                    }
+                }
+            }
+
 
             // overflow menu
             DropdownMenu(
@@ -278,6 +300,7 @@ fun DetailBottomAppBar_Preview_View() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
+            contentsChanged = remember { mutableStateOf(true) },
             enableCategories = remember { mutableStateOf(true) },
             enableAttendees = remember { mutableStateOf(false) },
             enableResources = remember { mutableStateOf(false) },
@@ -312,6 +335,7 @@ fun DetailBottomAppBar_Preview_edit() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
+            contentsChanged = remember { mutableStateOf(false) },
             enableCategories = remember { mutableStateOf(true) },
             enableAttendees = remember { mutableStateOf(false) },
             enableResources = remember { mutableStateOf(false) },
@@ -343,6 +367,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             icalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
+            contentsChanged = remember { mutableStateOf(null) },
             enableCategories = remember { mutableStateOf(true) },
             enableAttendees = remember { mutableStateOf(false) },
             enableResources = remember { mutableStateOf(false) },
@@ -376,6 +401,7 @@ fun DetailBottomAppBar_Preview_View_local() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
+            contentsChanged = remember { mutableStateOf(null) },
             enableCategories = remember { mutableStateOf(true) },
             enableAttendees = remember { mutableStateOf(false) },
             enableResources = remember { mutableStateOf(false) },

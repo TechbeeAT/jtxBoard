@@ -32,16 +32,21 @@ import com.google.maps.android.compose.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsCardLocation(
-    location: MutableState<String>,
-    geoLat: MutableState<Double?>,
-    geoLong: MutableState<Double?>,
-    isEditMode: MutableState<Boolean>,
-    onLocationUpdated: () -> Unit,
+    initialLocation: String?,
+    initialGeoLat: Double?,
+    initialGeoLong: Double?,
+    isEditMode: Boolean,
+    onLocationUpdated: (String, Double?, Double?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val headline = stringResource(id = R.string.location)
     var showMap by rememberSaveable { mutableStateOf(false) }
+
+    var location by remember { mutableStateOf(initialLocation ?: "")}
+    var geoLat by remember { mutableStateOf(initialGeoLat)}
+    var geoLong by remember { mutableStateOf(initialGeoLong)}
+
 
 
     ElevatedCard(modifier = modifier) {
@@ -51,24 +56,23 @@ fun DetailsCardLocation(
                 .padding(8.dp),) {
 
             Crossfade(isEditMode) {
-                if(!it.value) {
+                if(!it) {
 
                     Column {
                         HeadlineWithIcon(icon = Icons.Outlined.Place, iconDesc = headline, text = headline)
-                        Text(location.value)
+                        Text(location)
                     }
                 } else {
 
                     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         OutlinedTextField(
-                            value = location.value,
+                            value = location,
                             leadingIcon = { Icon(Icons.Outlined.EditLocation, headline) },
                             trailingIcon = {
                                 IconButton(onClick = {
-                                    location.value = ""
-                                    /*TODO*/
+                                    location = ""
                                 }) {
-                                    if (location.value.isNotEmpty())
+                                    if (location.isNotEmpty())
                                         Icon(
                                             Icons.Outlined.Clear,
                                             stringResource(id = R.string.delete)
@@ -77,10 +81,9 @@ fun DetailsCardLocation(
                             },
                             singleLine = true,
                             label = { Text(headline) },
-                            onValueChange = { newUrl ->
-                                location.value = newUrl
-
-                                /* TODO */
+                            onValueChange = { newLocation ->
+                                location = newLocation
+                                onLocationUpdated(newLocation, geoLat, geoLong)
                             },
                             colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                             modifier = Modifier.weight(1f)
@@ -89,8 +92,8 @@ fun DetailsCardLocation(
                         IconButton(onClick = {
                             showMap = !showMap
                             if(!showMap) {
-                                geoLat.value = null
-                                geoLong.value = null
+                                geoLat = null
+                                geoLong = null
                             }
                         }) {
                             Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
@@ -99,7 +102,7 @@ fun DetailsCardLocation(
                 }
             }
 
-            AnimatedVisibility((geoLat.value != null && geoLong.value != null) || (isEditMode.value && showMap)) {
+            AnimatedVisibility((geoLat != null && geoLong != null) || (isEditMode && showMap)) {
 
                 val uiSettings by remember {
                     mutableStateOf(
@@ -121,8 +124,8 @@ fun DetailsCardLocation(
                     )
                 }
 
-                val marker = if(geoLat.value != null && geoLong.value != null)
-                    LatLng(geoLat.value!!, geoLong.value!!)
+                val marker = if(geoLat != null && geoLong != null)
+                    LatLng(geoLat!!, geoLong!!)
                 else
                     null
                 val cameraPositionState = rememberCameraPositionState {
@@ -138,9 +141,9 @@ fun DetailsCardLocation(
                         .padding(top = 8.dp),
                     cameraPositionState = cameraPositionState,
                     onPOIClick = { poi ->
-                        location.value = poi.name
-                        geoLat.value = poi.latLng.latitude
-                        geoLong.value = poi.latLng.longitude
+                        location = poi.name
+                        geoLat = poi.latLng.latitude
+                        geoLong = poi.latLng.longitude
                     },
                     properties = properties,
                     uiSettings = uiSettings
@@ -148,7 +151,7 @@ fun DetailsCardLocation(
                     if(marker != null)
                     Marker(
                         state = MarkerState(position = marker),
-                        title = location.value,
+                        title = location,
                         //snippet = "Marker in Singapore"
                     )
                 }
@@ -162,11 +165,11 @@ fun DetailsCardLocation(
 fun DetailsCardLocation_Preview() {
     MaterialTheme {
         DetailsCardLocation(
-            location = remember { mutableStateOf("Vienna, Stephansplatz") },
-            geoLat = remember { mutableStateOf(null) },
-            geoLong = remember { mutableStateOf(null) },
-            isEditMode = remember { mutableStateOf(false) },
-            onLocationUpdated = { /*TODO*/ }
+            initialLocation = "Vienna, Stephansplatz",
+            initialGeoLat = null,
+            initialGeoLong = null,
+            isEditMode = false,
+            onLocationUpdated = { _, _, _ -> }
         )
     }
 }
@@ -177,11 +180,11 @@ fun DetailsCardLocation_Preview() {
 fun DetailsCardLocation_Preview_edit() {
     MaterialTheme {
         DetailsCardLocation(
-            location = remember { mutableStateOf("Vienna, Stephansplatz") },
-            geoLat = remember { mutableStateOf(null) },
-            geoLong = remember { mutableStateOf(null) },
-            isEditMode = remember { mutableStateOf(true) },
-            onLocationUpdated = { /*TODO*/ }
+            initialLocation = "Vienna, Stephansplatz",
+            initialGeoLat = null,
+            initialGeoLong = null,
+            isEditMode = true,
+            onLocationUpdated = { _, _, _ -> }
         )
     }
 }

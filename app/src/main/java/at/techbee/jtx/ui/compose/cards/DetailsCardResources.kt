@@ -42,15 +42,16 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun DetailsCardResources(
-    resources: MutableState<List<Resource>>,
-    isEditMode: MutableState<Boolean>,
-    allResources: List<Resource>,
-    onResourcesUpdated: () -> Unit,
+    initialResources: List<Resource>,
+    isEditMode: Boolean,
+    allResources: List<String>,
+    onResourcesUpdated: (List<Resource>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val headline = stringResource(id = R.string.resources)
-    val newResource = remember { mutableStateOf("") }
+    var resources by remember { mutableStateOf(initialResources) }
+    var newResource by remember { mutableStateOf("") }
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -65,21 +66,24 @@ fun DetailsCardResources(
 
             HeadlineWithIcon(icon = Icons.Outlined.WorkOutline, iconDesc = headline, text = headline)
 
-            AnimatedVisibility(resources.value.isNotEmpty()) {
+            AnimatedVisibility(resources.isNotEmpty()) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .horizontalScroll(rememberScrollState())
                 ) {
-                    resources.value.asReversed().forEach { resource ->
+                    resources.asReversed().forEach { resource ->
                         InputChip(
                             onClick = { },
                             label = { Text(resource.text?:"") },
                             trailingIcon = {
-                                if (isEditMode.value)
+                                if (isEditMode)
                                     IconButton(
-                                        onClick = { resources.value = resources.value.filter { it != resource } },
+                                        onClick = {
+                                            resources = resources.filter { it != resource }
+                                            onResourcesUpdated(resources)
+                                                  },
                                         content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
                                         modifier = Modifier.size(24.dp)
                                     )
@@ -90,7 +94,7 @@ fun DetailsCardResources(
                 }
             }
 
-            AnimatedVisibility(newResource.value.isNotEmpty()) {
+            AnimatedVisibility(newResource.isNotEmpty()) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
@@ -98,13 +102,14 @@ fun DetailsCardResources(
                         .horizontalScroll(rememberScrollState())
                 ) {
 
-                    if(resources.value.none { existing -> existing.text == newResource.value }) {
+                    if(resources.none { existing -> existing.text == newResource }) {
                         InputChip(
                             onClick = {
-                                resources.value = resources.value.plus(Resource(text = newResource.value))
+                                resources = resources.plus(Resource(text = newResource))
+                                onResourcesUpdated(resources)
                                 //newResource.value = ""
                             },
-                            label = { Text(newResource.value) },
+                            label = { Text(newResource) },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.NewLabel,
@@ -120,14 +125,15 @@ fun DetailsCardResources(
                         )
                     }
 
-                    allResources.filter { all -> all.text?.lowercase()?.contains(newResource.value.lowercase()) == true && resources.value.none { existing -> existing.text?.lowercase() == all.text?.lowercase() }}
+                    allResources.filter { all -> all.lowercase().contains(newResource.lowercase()) && resources.none { existing -> existing.text?.lowercase() == all.lowercase() }}
                         .forEach { resource ->
                             InputChip(
                                 onClick = {
-                                    resources.value = resources.value.plus(Resource(text = resource.text))
+                                    resources = resources.plus(Resource(text = resource))
+                                    onResourcesUpdated(resources)
                                     //newResource.value = ""
                                 },
-                                label = { Text(resource.text?: "") },
+                                label = { Text(resource) },
                                 leadingIcon = {
                                         Icon(
                                             Icons.Outlined.NewLabel,
@@ -141,14 +147,14 @@ fun DetailsCardResources(
             }
 
             Crossfade(isEditMode) {
-                if (it.value) {
+                if (it) {
 
                     OutlinedTextField(
-                        value = newResource.value,
+                        value = newResource,
                         leadingIcon = { Icon(Icons.Outlined.WorkOutline, headline) },
                         trailingIcon = {
-                            if (newResource.value.isNotEmpty()) {
-                                IconButton(onClick = { newResource.value = "" }) {
+                            if (newResource.isNotEmpty()) {
+                                IconButton(onClick = { newResource = "" }) {
                                     Icon(
                                         Icons.Outlined.Close,
                                         stringResource(id = R.string.delete)
@@ -159,8 +165,7 @@ fun DetailsCardResources(
                         singleLine = true,
                         label = { Text(headline) },
                         onValueChange = { newResourceName ->
-                            newResource.value = newResourceName
-                            /* TODO */
+                            newResource = newResourceName
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                         modifier = Modifier
@@ -168,9 +173,10 @@ fun DetailsCardResources(
                             .bringIntoViewRequester(bringIntoViewRequester),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
-                            if(newResource.value.isNotEmpty() && resources.value.none { existing -> existing.text == newResource.value } )
-                                resources.value = resources.value.plus(Resource(text = newResource.value))
-                            newResource.value = ""
+                            if(newResource.isNotEmpty() && resources.none { existing -> existing.text == newResource } ) {
+                                resources = resources.plus(Resource(text = newResource))
+                            }
+                            newResource = ""
                         })
                     )
                 }
@@ -184,10 +190,10 @@ fun DetailsCardResources(
 fun DetailsCardResources_Preview() {
     MaterialTheme {
         DetailsCardResources(
-            resources = remember { mutableStateOf(listOf(Resource(text = "asdf"))) },
-            isEditMode = remember { mutableStateOf(false) },
-            allResources = listOf(Resource(text = "projector"), Resource(text = "overhead-thingy"), Resource(text = "Whatever")),
-            onResourcesUpdated = { /*TODO*/ }
+            initialResources = listOf(Resource(text = "asdf")),
+            isEditMode = false,
+            allResources = listOf("projector", "overhead-thingy", "Whatever"),
+            onResourcesUpdated = { }
         )
     }
 }
@@ -198,10 +204,10 @@ fun DetailsCardResources_Preview() {
 fun DetailsCardResources_Preview_edit() {
     MaterialTheme {
         DetailsCardResources(
-            resources = remember { mutableStateOf(listOf(Resource(text = "asdf"))) },
-            isEditMode = remember { mutableStateOf(true) },
-            allResources = listOf(Resource(text = "projector"), Resource(text = "overhead-thingy"), Resource(text = "Whatever")),
-            onResourcesUpdated = { /*TODO*/ }
+            initialResources = listOf(Resource(text = "asdf")),
+            isEditMode = true,
+            allResources = listOf("projector", "overhead-thingy", "Whatever"),
+            onResourcesUpdated = { }
         )
     }
 }

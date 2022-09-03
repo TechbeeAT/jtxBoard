@@ -14,9 +14,7 @@ import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.ICalDatabaseDao
-import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
@@ -36,7 +34,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var relatedSubtasks: LiveData<List<ICal4List>>
     lateinit var recurInstances: LiveData<List<ICalObject?>>
 
-    lateinit var progressIndicatorVisible: LiveData<Boolean>
+    lateinit var allCategories: LiveData<List<String>>
+    lateinit var allResources: LiveData<List<String>>
+    lateinit var allCollections: LiveData<List<ICalCollection>>
 
     var icsFormat: MutableLiveData<String?> = MutableLiveData(null)
     var icsFileWritten: MutableLiveData<Boolean?> = MutableLiveData(null)
@@ -54,15 +54,21 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     postValue(ICalEntity(ICalObject(), null, null, null, null, null))
                 }
 
+            allCategories = database.getAllCategoriesAsText()
+            allResources = database.getAllResourcesAsText()
+            allCollections = Transformations.switchMap(icalEntity) {
+                when (it?.property?.component) {
+                    Component.VTODO.name -> database.getAllWriteableVTODOCollections()
+                    Component.VJOURNAL.name -> database.getAllWriteableVJOURNALCollections()
+                    else -> database.getAllCollections() // should not happen!
+                }
+            }
+
             relatedSubnotes = MutableLiveData(emptyList())
             relatedSubtasks = MutableLiveData(emptyList())
 
             recurInstances = Transformations.switchMap(icalEntity) {
                 it?.property?.id?.let { originalId -> database.getRecurInstances(originalId) }
-            }
-
-            progressIndicatorVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property == null     // show progress indicator as long as item.property is null
             }
         }
     }

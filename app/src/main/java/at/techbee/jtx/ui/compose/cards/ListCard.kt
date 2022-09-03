@@ -370,7 +370,7 @@ fun ICalObjectListCard(
                         attachments.forEach { attachment ->
                             AttachmentCard(
                                 attachment = attachment,
-                                isEditMode = remember { mutableStateOf(false) },
+                                isEditMode = false,
                                 onAttachmentDeleted = { /* nothing to do, no edit here */ },
                                 modifier = Modifier.padding(horizontal = 8.dp)
                             )

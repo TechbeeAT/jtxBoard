@@ -34,7 +34,7 @@ SELECTs (global selects without parameter)
      */
     @Transaction
     @Query("SELECT DISTINCT text FROM $TABLE_NAME_CATEGORY ORDER BY text ASC")
-    fun getAllCategories(): LiveData<List<String>>
+    fun getAllCategoriesAsText(): LiveData<List<String>>
 
     /**
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
@@ -43,7 +43,7 @@ SELECTs (global selects without parameter)
      */
     @Transaction
     @Query("SELECT DISTINCT text FROM $TABLE_NAME_RESOURCE ORDER BY text ASC")
-    fun getAllResources(): LiveData<List<String>>
+    fun getAllResourcesAsText(): LiveData<List<String>>
 
 
     /**

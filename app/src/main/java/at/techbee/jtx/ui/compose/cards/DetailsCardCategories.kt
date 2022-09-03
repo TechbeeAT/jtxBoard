@@ -42,15 +42,16 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun DetailsCardCategories(
-    categories: MutableState<List<Category>>,
-    isEditMode: MutableState<Boolean>,
-    allCategories: List<Category>,
-    onCategoriesUpdated: () -> Unit,
+    initialCategories: List<Category>,
+    isEditMode: Boolean,
+    allCategories: List<String>,
+    onCategoriesUpdated: (List<Category>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val headline = stringResource(id = R.string.categories)
-    val newCategory = remember { mutableStateOf("") }
+    var newCategory by remember { mutableStateOf("") }
+    var categories by remember { mutableStateOf(initialCategories) }
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -65,19 +66,22 @@ fun DetailsCardCategories(
 
             HeadlineWithIcon(icon = Icons.Outlined.Label, iconDesc = headline, text = headline)
 
-            AnimatedVisibility(categories.value.isNotEmpty()) {
+            AnimatedVisibility(categories.isNotEmpty()) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
                 ) {
-                    categories.value.asReversed().forEach { category ->
+                    categories.asReversed().forEach { category ->
                         InputChip(
                             onClick = { },
                             label = { Text(category.text) },
                             trailingIcon = {
-                                if (isEditMode.value)
+                                if (isEditMode)
                                     IconButton(
-                                        onClick = { categories.value = categories.value.filter { it != category } },
+                                        onClick = {
+                                            categories = categories.filter { it != category }
+                                            onCategoriesUpdated(categories)
+                                                  },
                                         content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
                                         modifier = Modifier.size(24.dp)
                                     )
@@ -88,19 +92,20 @@ fun DetailsCardCategories(
                 }
             }
 
-            AnimatedVisibility(newCategory.value.isNotEmpty()) {
+            AnimatedVisibility(newCategory.isNotEmpty()) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
                 ) {
 
-                    if(categories.value.none { existing -> existing.text == newCategory.value }) {
+                    if(categories.none { existing -> existing.text == newCategory }) {
                         InputChip(
                             onClick = {
-                                categories.value = categories.value.plus(Category(text = newCategory.value))
+                                categories = categories.plus(Category(text = newCategory))
+                                onCategoriesUpdated(categories)
                                 //newCategory.value = ""
                             },
-                            label = { Text(newCategory.value) },
+                            label = { Text(newCategory) },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.NewLabel,
@@ -116,14 +121,15 @@ fun DetailsCardCategories(
                         )
                     }
 
-                    allCategories.filter { all -> all.text.lowercase().contains(newCategory.value.lowercase()) && categories.value.none { existing -> existing.text.lowercase() == all.text.lowercase() }}
+                    allCategories.filter { all -> all.lowercase().contains(newCategory.lowercase()) && categories.none { existing -> existing.text.lowercase() == all.lowercase() }}
                         .forEach { category ->
                             InputChip(
                                 onClick = {
-                                    categories.value = categories.value.plus(Category(text = category.text))
+                                    categories = categories.plus(Category(text = category))
+                                    onCategoriesUpdated(categories)
                                     //newCategory.value = ""
                                 },
-                                label = { Text(category.text) },
+                                label = { Text(category) },
                                 leadingIcon = {
                                         Icon(
                                             Icons.Outlined.NewLabel,
@@ -137,14 +143,14 @@ fun DetailsCardCategories(
             }
 
             Crossfade(isEditMode) {
-                if (it.value) {
+                if (it) {
 
                     OutlinedTextField(
-                        value = newCategory.value,
+                        value = newCategory,
                         leadingIcon = { Icon(Icons.Outlined.Label, headline) },
                         trailingIcon = {
-                            if (newCategory.value.isNotEmpty()) {
-                                IconButton(onClick = { newCategory.value = "" }) {
+                            if (newCategory.isNotEmpty()) {
+                                IconButton(onClick = { newCategory = "" }) {
                                     Icon(
                                         Icons.Outlined.Close,
                                         stringResource(id = R.string.delete)
@@ -155,16 +161,17 @@ fun DetailsCardCategories(
                         singleLine = true,
                         label = { Text(headline) },
                         onValueChange = { newCategoryName ->
-                            newCategory.value = newCategoryName
-                            /* TODO */
+                            newCategory = newCategoryName
+                            onCategoriesUpdated(categories)
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                         modifier = Modifier.fillMaxWidth().bringIntoViewRequester(bringIntoViewRequester),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
-                            if(newCategory.value.isNotEmpty() && categories.value.none { existing -> existing.text == newCategory.value } )
-                                categories.value = categories.value.plus(Category(text = newCategory.value))
-                            newCategory.value = ""
+                            if(newCategory.isNotEmpty() && categories.none { existing -> existing.text == newCategory } )
+                                categories = categories.plus(Category(text = newCategory))
+                            newCategory = ""
+                            onCategoriesUpdated(categories)
                         })
                     )
                 }
@@ -178,9 +185,9 @@ fun DetailsCardCategories(
 fun DetailsCardCategories_Preview() {
     MaterialTheme {
         DetailsCardCategories(
-            categories = remember { mutableStateOf(listOf(Category(text = "asdf"))) },
-            isEditMode = remember { mutableStateOf(false) },
-            allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")),
+            initialCategories = listOf(Category(text = "asdf")),
+            isEditMode = false,
+            allCategories = listOf("category1", "category2", "Whatever"),
             onCategoriesUpdated = {  }
         )
     }
@@ -192,9 +199,9 @@ fun DetailsCardCategories_Preview() {
 fun DetailsCardCategories_Preview_edit() {
     MaterialTheme {
         DetailsCardCategories(
-            categories = remember { mutableStateOf(listOf(Category(text = "asdf"))) },
-            isEditMode = remember { mutableStateOf(true) },
-            allCategories = listOf(Category(text = "category1"), Category(text = "category2"), Category(text = "Whatever")),
+            initialCategories = listOf(Category(text = "asdf")),
+            isEditMode = true,
+            allCategories = listOf("category1", "category2", "Whatever"),
             onCategoriesUpdated = {  }
         )
     }

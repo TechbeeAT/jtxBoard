@@ -30,7 +30,7 @@ import at.techbee.jtx.ui.compose.dialogs.EditCommentDialog
 @Composable
 fun CommentCard(
     comment: Comment,
-    isEditMode: MutableState<Boolean>,
+    isEditMode: Boolean,
     modifier: Modifier = Modifier,
     onCommentDeleted: () -> Unit,
     onCommentUpdated: (Comment) -> Unit
@@ -46,7 +46,7 @@ fun CommentCard(
         )
     }
 
-    if (isEditMode.value) {
+    if (isEditMode) {
         OutlinedCard(
             modifier = modifier,
             onClick = {showCommentEditDialog = true}
@@ -99,7 +99,7 @@ fun CommentCardPreview_view() {
     MaterialTheme {
         CommentCard(
             comment = Comment(text = "This is my comment"),
-            isEditMode = remember { mutableStateOf(false) },
+            isEditMode = false,
             onCommentDeleted = { },
             onCommentUpdated = { }
         )
@@ -112,7 +112,7 @@ fun CommentCardPreview_edit() {
     MaterialTheme {
         CommentCard(
             comment = Comment(text = "This is my comment"),
-            isEditMode = remember { mutableStateOf(true) },
+            isEditMode = true,
             onCommentDeleted = { },
             onCommentUpdated = { }
         )

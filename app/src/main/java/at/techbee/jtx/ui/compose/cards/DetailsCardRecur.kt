@@ -41,8 +41,8 @@ import java.util.*
 @Composable
 fun DetailsCardRecur(
     icalObject: ICalObject,
-    isEditMode: MutableState<Boolean>,
-    onRecurUpdated: () -> Unit,
+    isEditMode: Boolean,
+    onRecurUpdated: (Recur?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -73,7 +73,9 @@ fun DetailsCardRecur(
                     until(Date(datetime!!))
                     updatedRRule?.dayList?.let { dayList(it) }
                     updatedRRule?.monthDayList?.let { monthDayList(it) }
-                }.build() },
+                }.build()
+                onRecurUpdated(updatedRRule)
+            },
             onDismiss = { showDatepicker = false }
         )
     }
@@ -98,7 +100,7 @@ fun DetailsCardRecur(
                     text = headline
                 )
 
-                AnimatedVisibility(isEditMode.value) {
+                AnimatedVisibility(isEditMode) {
                     Switch(
                         checked = updatedRRule != null,
                         enabled = icalObject.dtstart != null,
@@ -107,16 +109,17 @@ fun DetailsCardRecur(
                                 Recur("FREQ=DAILY;COUNT=1;INTERVAL=1")
                             else
                                 null
+                            onRecurUpdated(updatedRRule)
                         }
                     )
                 }
             }
 
-            AnimatedVisibility(isEditMode.value && icalObject.dtstart == null) {
+            AnimatedVisibility(isEditMode && icalObject.dtstart == null) {
                 Text(stringResource(id = R.string.edit_recur_toast_requires_start_date))
             }
 
-            AnimatedVisibility(isEditMode.value && updatedRRule != null) {
+            AnimatedVisibility(isEditMode && updatedRRule != null) {
 
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -165,6 +168,7 @@ fun DetailsCardRecur(
                                                     updatedRRule?.monthDayList?.let { monthDayList(it) }
                                                 }.build()
                                                 intervalExpanded = false
+                                                onRecurUpdated(updatedRRule)
                                             },
                                             text = {
                                                 Text(DateTimeUtils.getLocalizedOrdinalFor(number))
@@ -207,6 +211,7 @@ fun DetailsCardRecur(
                                                     if(frequency == Recur.Frequency.MONTHLY)
                                                         updatedRRule?.monthDayList?.let { monthDayList(it) }
                                                 }.build()
+                                                onRecurUpdated(updatedRRule)
                                                 frequencyExpanded = false
                                             },
                                             text = {
@@ -284,6 +289,7 @@ fun DetailsCardRecur(
                                                 dayList(updatedRRule?.dayList)
                                             //updatedRRule?.monthDayList?.let { monthDayList(it) }
                                         }.build()
+                                        onRecurUpdated(updatedRRule)
                                     },
                                     label = {
                                         Text(
@@ -365,6 +371,7 @@ fun DetailsCardRecur(
                                                         monthDayList(NumberList(number.toString()))
                                                     }.build()
                                                     monthDayListExpanded = false
+                                                    onRecurUpdated(updatedRRule)
                                                 },
                                                 text = {
                                                     Text(DateTimeUtils.getLocalizedOrdinalFor(number))
@@ -417,6 +424,7 @@ fun DetailsCardRecur(
                                                 updatedRRule?.monthDayList?.let { monthDayList(it) }
                                             }.build()
                                             endsExpanded = false
+                                            onRecurUpdated(updatedRRule)
                                         },
                                         text = { Text(stringResource(id = R.string.edit_recur_ends_after)) }
                                     )
@@ -432,6 +440,7 @@ fun DetailsCardRecur(
                                                 updatedRRule?.monthDayList?.let { monthDayList(it) }
                                             }.build()
                                             endsExpanded = false
+                                            onRecurUpdated(updatedRRule)
                                         },
                                         text = { Text(stringResource(id = R.string.edit_recur_ends_on)) }
                                     )
@@ -447,6 +456,7 @@ fun DetailsCardRecur(
                                                 updatedRRule?.monthDayList?.let { monthDayList(it) }
                                             }.build()
                                             endsExpanded = false
+                                            onRecurUpdated(updatedRRule)
                                         },
                                         text = { Text(stringResource(id = R.string.edit_recur_ends_never)) }
                                     )
@@ -476,6 +486,7 @@ fun DetailsCardRecur(
                                                         updatedRRule?.monthDayList?.let { monthDayList(it) }
                                                     }.build()
                                                     endAfterExpaneded = false
+                                                    onRecurUpdated(updatedRRule)
                                                 },
                                                 text = {
                                                     Text(number.toString())
@@ -578,7 +589,7 @@ fun DetailsCardRecur_Preview() {
                 exdate = "1661890454701,1661990454701"
                 rdate = "1661890454701,1661990454701"
             },
-            isEditMode = remember { mutableStateOf(false) },
+            isEditMode = false,
             onRecurUpdated = { }
         )
     }
@@ -604,7 +615,7 @@ fun DetailsCardRecur_Preview_edit() {
                 dueTimezone = null
                 rrule = recur.toString()
             },
-            isEditMode = remember { mutableStateOf(true) },
+            isEditMode = true,
             onRecurUpdated = { }
         )
     }
@@ -624,7 +635,7 @@ fun DetailsCardRecur_Preview_off() {
                 due = System.currentTimeMillis()
                 dueTimezone = null
             },
-            isEditMode = remember { mutableStateOf(false) },
+            isEditMode = false,
             onRecurUpdated = { }
         )
     }
@@ -642,7 +653,7 @@ fun DetailsCardRecur_Preview_edit_off() {
                 due = System.currentTimeMillis()
                 dueTimezone = null
             },
-            isEditMode = remember { mutableStateOf(true) },
+            isEditMode = true,
             onRecurUpdated = { }
         )
     }
@@ -660,7 +671,7 @@ fun DetailsCardRecur_Preview_edit_no_dtstart() {
                 due = null
                 dueTimezone = null
             },
-            isEditMode = remember { mutableStateOf(true) },
+            isEditMode = true,
             onRecurUpdated = { }
         )
     }
@@ -678,7 +689,7 @@ fun DetailsCardRecur_Preview_view_no_dtstart() {
                 due = null
                 dueTimezone = null
             },
-            isEditMode = remember { mutableStateOf(false) },
+            isEditMode = false,
             onRecurUpdated = { }
         )
     }
