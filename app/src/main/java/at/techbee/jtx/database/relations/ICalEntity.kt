@@ -20,7 +20,6 @@ import at.techbee.jtx.database.properties.Comment
 import at.techbee.jtx.database.properties.Organizer
 import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.parcelize.Parcelize
-import java.lang.IllegalArgumentException
 
 
 @Parcelize
