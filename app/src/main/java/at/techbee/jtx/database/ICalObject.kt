@@ -1248,6 +1248,15 @@ data class ICalObject(
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
+
+    fun getModuleFromString(): Module {
+        return when (this.module) {
+            Module.JOURNAL.name -> Module.JOURNAL
+            Module.NOTE.name -> Module.NOTE
+            Module.TODO.name -> Module.TODO
+            else -> Module.NOTE
+        }
+    }
 }
 
 /** This enum class defines the possible values for the attribute [ICalObject.status] for Notes/Journals

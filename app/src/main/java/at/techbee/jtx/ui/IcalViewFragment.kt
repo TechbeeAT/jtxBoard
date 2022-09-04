@@ -228,16 +228,6 @@ class IcalViewFragment : Fragment() {
 
 
 
-        binding.viewBottomBar.setOnMenuItemClickListener { menuItem ->
-            when(menuItem.itemId) {
-                R.id.menu_view_bottom_copy -> this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value?.getIcalEntityCopy(icalViewViewModel.icalEntity.value?.property?.module) ?: return@setOnMenuItemClickListener false)
-                )
-                //R.id.menu_view_bottom_delete -> deleteItem()
-            }
-            false
-        }
-
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only)
         if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)
             AdManager.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), AdManager.getInstance()?.unitIdBannerView)
@@ -386,17 +376,6 @@ class IcalViewFragment : Fragment() {
                     }
                 }
             }
-            R.id.menu_view_copy_as_journal -> this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value?.getIcalEntityCopy(Module.JOURNAL.name) ?: return false)
-                )
-
-            R.id.menu_view_copy_as_note -> this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value?.getIcalEntityCopy(Module.NOTE.name) ?: return false)
-                )
-
-            R.id.menu_view_copy_as_todo -> this.findNavController().navigate(
-                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(icalViewViewModel.icalEntity.value?.getIcalEntityCopy(Module.TODO.name) ?: return false)
-                )
 
             R.id.menu_view_syncnow -> SyncUtil.syncAccount(Account(icalViewViewModel.icalEntity.value?.ICalCollection?.accountName, icalViewViewModel.icalEntity.value?.ICalCollection?.accountType))
         }

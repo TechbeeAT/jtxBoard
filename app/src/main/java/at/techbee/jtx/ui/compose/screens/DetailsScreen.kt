@@ -69,6 +69,11 @@ fun DetailsScreen(
             launchSingleTop = true
         }
 
+    detailViewModel.navigateToId.value?.let {
+        detailViewModel.navigateToId.value = null
+        navController.navigate("details/$it?isEditMode=true")
+    }
+
     if(showDeleteDialog.value) {
         DeleteEntryDialog(
             icalObject = detailViewModel.icalEntity.value?.property!!,
@@ -159,7 +164,8 @@ fun DetailsScreen(
                 enableRecurrence = enableRecurrence,
                 enableAlarms = enableAlarms,
                 enableComments = enableComments,
-                onDeleteClicked = { showDeleteDialog.value = true }
+                onDeleteClicked = { showDeleteDialog.value = true },
+                onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) }
             )
         }
     )

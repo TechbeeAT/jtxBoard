@@ -26,6 +26,7 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.DAVX5_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
 import at.techbee.jtx.util.SyncUtil
 
@@ -50,6 +51,7 @@ fun DetailBottomAppBar(
     //iCal4ListLive: LiveData<List<ICal4List>>,
     //listSettings: ListSettings,
     onDeleteClicked: () -> Unit,
+    onCopyRequested: (Module) -> Unit,
     //onListSettingsChanged: () -> Unit
 ) {
 
@@ -58,7 +60,7 @@ fun DetailBottomAppBar(
 
     val context = LocalContext.current
     var settingsMenuExpanded by remember { mutableStateOf(false) }
-    //val iCal4List by iCal4ListLive.observeAsState()
+    var copyOptionsExpanded by remember { mutableStateOf(false) }
 
     val syncIconAnimation = rememberInfiniteTransition()
     val angle by syncIconAnimation.animateFloat(
@@ -102,11 +104,41 @@ fun DetailBottomAppBar(
             }
 
             AnimatedVisibility(!isEditMode.value) {
-                IconButton(onClick = { /* TODO */ }) {
+                IconButton(onClick = { copyOptionsExpanded = true }) {
                     Icon(
                         Icons.Outlined.ContentCopy,
                         contentDescription = stringResource(id = R.string.menu_view_copy_item),
                     )
+                    DropdownMenu(
+                        expanded = copyOptionsExpanded,
+                        onDismissRequest = { copyOptionsExpanded = false }
+                    ) {
+                        if(collection.supportsVJOURNAL) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.menu_view_copy_as_journal)) },
+                                onClick = {
+                                    onCopyRequested(Module.JOURNAL)
+                                    copyOptionsExpanded = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.menu_view_copy_as_note)) },
+                                onClick = {
+                                    onCopyRequested(Module.NOTE)
+                                    copyOptionsExpanded = false
+                                }
+                            )
+                        }
+                        if(collection.supportsVTODO) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.menu_view_copy_as_todo)) },
+                                onClick = {
+                                    onCopyRequested(Module.TODO)
+                                    copyOptionsExpanded = false
+                                }
+                            )
+                        }
+                    }
                 }
             }
 
@@ -313,7 +345,8 @@ fun DetailBottomAppBar_Preview_View() {
             enableRecurrence = remember { mutableStateOf(false) },
             enableAlarms = remember { mutableStateOf(false) },
             enableComments = remember { mutableStateOf(false) },
-            onDeleteClicked = { }
+            onDeleteClicked = { },
+            onCopyRequested = { }
         )
     }
 }
@@ -348,7 +381,8 @@ fun DetailBottomAppBar_Preview_edit() {
             enableRecurrence = remember { mutableStateOf(false) },
             enableAlarms = remember { mutableStateOf(false) },
             enableComments = remember { mutableStateOf(false) },
-            onDeleteClicked = { }
+            onDeleteClicked = { },
+            onCopyRequested = { }
         )
     }
 }
@@ -380,7 +414,8 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             enableRecurrence = remember { mutableStateOf(false) },
             enableAlarms = remember { mutableStateOf(false) },
             enableComments = remember { mutableStateOf(false) },
-            onDeleteClicked = { }
+            onDeleteClicked = { },
+            onCopyRequested = { }
         )
     }
 }
@@ -414,7 +449,8 @@ fun DetailBottomAppBar_Preview_View_local() {
             enableRecurrence = remember { mutableStateOf(false) },
             enableAlarms = remember { mutableStateOf(false) },
             enableComments = remember { mutableStateOf(false) },
-            onDeleteClicked = { }
+            onDeleteClicked = { },
+            onCopyRequested = { }
         )
     }
 }

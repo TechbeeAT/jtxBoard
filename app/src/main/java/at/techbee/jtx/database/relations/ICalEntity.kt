@@ -79,12 +79,11 @@ data class ICalEntity(
     /**
      * This function creates a copy of the ICalEntity in the selected module.
      * This also applies some transformations, e.g. when a task is copied to a note
-     * @param [moduleString] the new module of the copied entity
+     * @param [newModule] the new module of the copied entity
      * @return The [ICalEntity] in transformed to the new module (or as journal, if the moduleString was faulty)
      */
-    fun getIcalEntityCopy(moduleString: String?): ICalEntity {
+    fun getIcalEntityCopy(newModule: Module): ICalEntity {
 
-        val newModule = try { Module.valueOf(moduleString ?: "JOURNAL") } catch (e: IllegalArgumentException) { Module.JOURNAL }     // Fallback is Journal, but this should not happen anyway
         val newEntity = ICalEntity()
         newEntity.property = property.copy()
         newEntity.attendees = attendees?.toList()     // using toList() to create a copy of the list

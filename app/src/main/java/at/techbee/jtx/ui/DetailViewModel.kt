@@ -42,6 +42,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var icsFileWritten: MutableLiveData<Boolean?> = MutableLiveData(null)
 
     var entryDeleted = mutableStateOf(false)
+    var navigateToId = mutableStateOf<Long?>(null)
 
     val mediaPlayer = MediaPlayer()
 
@@ -277,6 +278,56 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 ICalObject.deleteItemWithChildren(icalObjectId, database)
                 //entryDeleted.value = true
             }
+        }
+    }
+
+    fun createCopy(newModule: Module) {
+        icalEntity.value?.let { createCopy(it, newModule) }
+    }
+
+    private fun createCopy(icalEntityToCopy: ICalEntity, newModule: Module, newParentUID: String? = null) {
+        val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val newId = database.insertICalObject(newEntity.property)
+            newEntity.alarms?.forEach { alarm ->
+                database.insertAlarm(alarm.copy(alarmId = 0L, icalObjectId = newId ))   // TODO: Schedule Alarm!
+            }
+            newEntity.attachments?.forEach { attachment ->
+                database.insertAttachment(attachment.copy(icalObjectId = newId, attachmentId = 0L))
+            }
+            newEntity.attendees?.forEach { attendee ->
+                database.insertAttendee(attendee.copy(icalObjectId = newId, attendeeId = 0L))
+            }
+            newEntity.categories?.forEach { category ->
+                database.insertCategory(category.copy(icalObjectId = newId, categoryId = 0L))
+            }
+            newEntity.comments?.forEach { comment ->
+                database.insertComment(comment.copy(icalObjectId = newId, commentId = 0L))
+            }
+            newEntity.resources?.forEach { resource ->
+                database.insertResource(resource.copy(icalObjectId = newId,  resourceId = 0L))
+            }
+            newEntity.unknown?.forEach { unknown ->
+                database.insertUnknownSync(unknown.copy(icalObjectId = newId, unknownId = 0L))
+            }
+            newEntity.organizer?.let { organizer ->
+                database.insertOrganizer(organizer.copy(icalObjectId = newId, organizerId = 0L))
+            }
+
+            newEntity.relatedto?.forEach { relatedto ->
+                if (relatedto.reltype == Reltype.PARENT.name && newParentUID != null) {
+                    database.insertRelatedto(relatedto.copy(relatedtoId = 0L, icalObjectId = newId, text = newParentUID))
+                }
+            }
+
+            val children = database.getRelatedChildren(icalEntityToCopy.property.id)
+            children.forEach { child ->
+                database.getSync(child)?.let { createCopy(icalEntityToCopy = it, newModule = it.property.getModuleFromString(), newParentUID = newEntity.property.uid) }
+            }
+
+            if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
+                navigateToId.value = newId
         }
     }
 
