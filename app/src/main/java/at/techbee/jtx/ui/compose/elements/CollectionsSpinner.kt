@@ -15,16 +15,15 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.ICalCollection
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionsSpinner(
     collections: List<ICalCollection>,
     preselected: ICalCollection,
+    modifier: Modifier = Modifier,
     includeReadOnly: Boolean,
     includeVJOURNAL: Boolean? = null,
     includeVTODO: Boolean? = null,
-    onSelectionChanged: (collection: ICalCollection) -> Unit,
-    modifier: Modifier = Modifier
+    onSelectionChanged: (collection: ICalCollection) -> Unit
 ) {
 
     var selected by remember { mutableStateOf(preselected) }
@@ -59,11 +58,11 @@ fun CollectionsSpinner(
                 ) {
                     collections.forEach { collection ->
 
-                        if ((collection.readonly && !includeReadOnly)
-                            || (collection.supportsVTODO && includeVTODO == false)
-                            || (collection.supportsVJOURNAL && includeVJOURNAL == false)
-                        )
+                        if (collection.readonly && !includeReadOnly)
                             return@forEach
+
+                        includeVJOURNAL?.let { if(!it) return@forEach }
+                        includeVTODO?.let { if(!it) return@forEach }
 
                         DropdownMenuItem(
                             onClick = {
