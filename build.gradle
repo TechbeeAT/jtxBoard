@@ -19,7 +19,7 @@
 buildscript {
 
     ext {
-        version_core = "1.9.0-rc01"
+        version_core = "1.8.0"
         version_coroutine = "1.6.1"
         version_constraint_layout = "2.1.4"
         version_gradle = '7.2.2'
@@ -29,7 +29,7 @@ buildscript {
         version_navigation = '2.5.1'
         version_room = '2.4.3'
         version_material = '1.7.0-alpha03'
-        version_appcompat = "1.6.0-beta01"
+        version_appcompat = "1.4.2"
         version_work = "2.7.1"
         version_fragment = "1.4.0-alpha09"
         version_billing = "5.0.0"
