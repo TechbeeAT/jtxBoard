@@ -606,6 +606,8 @@
 
     <string name="attachment_error_on_retrieving_file">Failed to retrieve file.</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">No app was found to open this file/URL.</string>
+    <string name="error_no_app_found_to_open_entry">No app found to send this entry..</string>
+
 
     <string name="toast_item_is_now_recu_exception">Recurring item is now an exception.</string>
     <string name="toast_adfree_for_a_week">No more video-ads for a week now :-)</string>

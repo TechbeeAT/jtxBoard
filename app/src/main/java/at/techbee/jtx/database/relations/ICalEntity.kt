@@ -8,9 +8,11 @@
 
 package at.techbee.jtx.database.relations
 
+import android.content.Context
 import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Relation
+import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
@@ -158,5 +160,53 @@ data class ICalEntity(
             alarms?.forEach { it.alarmId = 0L }
             unknown?.forEach { it.unknownId = 0L }
         }
+    }
+
+    /**
+     * @return a text that can be put in an email containing all information
+     */
+    fun getShareText(context: Context): String {
+
+        var shareText = ""
+        property.dtstart?.let {
+            if(property.component == Component.VJOURNAL.name)
+                shareText += DateTimeUtils.convertLongToFullDateTimeString(it, property.dtstartTimezone) + System.lineSeparator() + System.lineSeparator()
+            else
+                shareText += context.getString(R.string.view_started) + ": " + DateTimeUtils.convertLongToFullDateTimeString(it, property.dtstartTimezone) + System.lineSeparator() + System.lineSeparator()
+        }
+        property.due?.let { shareText += context.getString(R.string.view_due) + ": " + DateTimeUtils.convertLongToFullDateTimeString(it, property.dueTimezone) + System.lineSeparator() }
+        property.completed?.let { shareText += context.getString(R.string.view_completed) + ": " + DateTimeUtils.convertLongToFullDateTimeString(it, property.completedTimezone) + System.lineSeparator() }
+        property.getRecurInfo(context)?.let { shareText += it }
+        property.summary?.let { shareText += it + System.lineSeparator() }
+        property.description?.let { shareText += it + System.lineSeparator() + System.lineSeparator() }
+
+        val categories: MutableList<String> = mutableListOf()
+        this.categories?.forEach { categories.add(it.text) }
+        if(categories.isNotEmpty())
+            shareText += context.getString(R.string.categories) + ": " + categories.joinToString(separator=", ") + System.lineSeparator()
+
+        if(property.contact?.isNotEmpty() == true)
+            shareText += context.getString(R.string.contact) + ": " + property.contact + System.lineSeparator()
+
+        if(property.location?.isNotEmpty() == true)
+            shareText += context.getString(R.string.location) + ": " + property.location + System.lineSeparator()
+
+        if(property.url?.isNotEmpty() == true)
+            shareText += context.getString(R.string.url) + ": " + property.url + System.lineSeparator()
+
+        val resources: MutableList<String> = mutableListOf()
+        this.resources?.forEach { resource -> resource.text?.let { resources.add(it) } }
+        if(resources.isNotEmpty())
+            shareText += context.getString(R.string.resources) + ": " + resources.joinToString(separator=", ") + System.lineSeparator()
+
+        val attachments: MutableList<String> = mutableListOf()
+        this.attachments?.forEach { attachment ->
+            if(attachment.uri?.startsWith("http") == true)
+                attachments.add(attachment.uri!!)
+        }
+        if(attachments.isNotEmpty())
+            shareText += context.getString(R.string.attachments) + ": " + System.lineSeparator() + attachments.joinToString(separator=System.lineSeparator()) + System.lineSeparator()
+
+        return shareText.trim()
     }
 }

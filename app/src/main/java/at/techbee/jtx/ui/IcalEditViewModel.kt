@@ -165,20 +165,6 @@ class IcalEditViewModel(
     fun update() {
         var insertedOrUpdatedItemId: Long
 
-        //TODO: check if the item got a new sequence in the meantime!
-
-        iCalObjectUpdated.value!!.lastModified = System.currentTimeMillis()
-        iCalObjectUpdated.value!!.dtstamp = System.currentTimeMillis()
-        iCalObjectUpdated.value!!.sequence++
-
-        if(iCalObjectUpdated.value!!.duration != null)
-            iCalObjectUpdated.value!!.duration = null     // we make sure that the unsupported duration is set to null, the user was warned before
-
-        iCalObjectUpdated.value!!.dirty = true
-
-        if(iCalObjectUpdated.value!!.module == Module.TODO.name)
-            iCalObjectUpdated.value!!.setUpdatedProgress(iCalObjectUpdated.value!!.percent)
-
         viewModelScope.launch(Dispatchers.IO) {
             // the case that an item gets deleted at the same time the user was already editing this item, is currently not handled.
             // On save the user would not get an error, he would return to the overview with the deleted item missing
@@ -200,43 +186,6 @@ class IcalEditViewModel(
                 return@launch
             }
 
-            // delete the list attributes, then insert again the once that are still in the list (or were added)
-            database.deleteCategories(insertedOrUpdatedItemId)
-            database.deleteComments(insertedOrUpdatedItemId)
-            database.deleteAttachments(insertedOrUpdatedItemId)
-            database.deleteAttendees(insertedOrUpdatedItemId)
-            database.deleteResources(insertedOrUpdatedItemId)
-            database.deleteAlarms(insertedOrUpdatedItemId)
-
-            subtaskDeleted.forEach { subtask2del ->
-                ICalObject.deleteItemWithChildren(subtask2del.id, database)
-                Log.println(Log.INFO, "Subtask", "${subtask2del.summary} deleted")
-            }
-
-            // now insert or update the item and take care of all attributes
-            // insert new Categories
-            categoryUpdated.forEach { newCategory ->
-                newCategory.icalObjectId = insertedOrUpdatedItemId
-                database.insertCategory(newCategory)
-            }
-            commentUpdated.forEach { newComment ->
-                newComment.icalObjectId =
-                    insertedOrUpdatedItemId                    //Update the foreign key for newly added comments
-                database.insertComment(newComment)
-            }
-            attachmentUpdated.forEach { newAttachment ->
-                newAttachment.icalObjectId =
-                    insertedOrUpdatedItemId                    //Update the foreign key for newly added attachments
-                database.insertAttachment(newAttachment)
-            }
-            attendeeUpdated.forEach { newAttendee ->
-                newAttendee.icalObjectId = insertedOrUpdatedItemId
-                database.insertAttendee(newAttendee)
-            }
-            resourceUpdated.forEach { newResource ->
-                newResource.icalObjectId = insertedOrUpdatedItemId
-                database.insertResource(newResource)
-            }
             alarmUpdated.forEach { newAlarm ->
                 newAlarm.icalObjectId = insertedOrUpdatedItemId
                 if(newAlarm.action.isNullOrEmpty())
@@ -299,6 +248,7 @@ class IcalEditViewModel(
                 )
             }
 
+            /* DONE MIGRATION
             if(iCalEntity.ICalCollection?.collectionId != selectedCollectionId
                 && selectedCollectionId != null
                 && iCalEntity.property.id != 0L) {
@@ -313,6 +263,7 @@ class IcalEditViewModel(
             if (recurrenceList.size > 0 || iCalObjectUpdated.value!!.id != 0L)    // recreateRecurring if the recurrenceList is not empty, but also when it is an update, as the recurrence might have been deactivated and it is necessary to delete instances
                 iCalObjectUpdated.value?.recreateRecurring(database, getApplication())
 
+             */
 
             returnIcalObjectId.postValue(insertedOrUpdatedItemId)
         }

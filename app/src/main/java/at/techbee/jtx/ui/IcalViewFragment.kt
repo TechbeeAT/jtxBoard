@@ -8,42 +8,31 @@
 
 package at.techbee.jtx.ui
 
-import android.accounts.Account
 import android.app.Application
-import android.content.ActivityNotFoundException
-import android.content.ContentResolver
-import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.core.content.FileProvider.getUriForFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.NavigationDirections
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.databinding.FragmentIcalViewBinding
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.MapManager
-import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import io.noties.markwon.Markwon
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileNotFoundException
 
 
 class IcalViewFragment : Fragment() {
@@ -89,12 +78,7 @@ class IcalViewFragment : Fragment() {
         binding.model = icalViewViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-            icalViewViewModel.showSyncProgressIndicator.postValue(
-                SyncUtil.isJtxSyncRunningForAccount(
-                    Account(icalViewViewModel.icalEntity.value?.ICalCollection?.accountName, icalViewViewModel.icalEntity.value?.ICalCollection?.accountType)
-                ))
-        }
+
 
         // set up observers
         icalViewViewModel.entryToEdit.observe(viewLifecycleOwner) {
@@ -146,7 +130,6 @@ class IcalViewFragment : Fragment() {
                 this.findNavController().navigate(direction)
                 icalViewViewModel.entryDeleted.value = false
             }
-
         }
 
         icalViewViewModel.icalEntity.observe(viewLifecycleOwner) {
@@ -176,30 +159,6 @@ class IcalViewFragment : Fragment() {
                 optionsMenu?.findItem(R.id.menu_view_syncnow)?.isVisible = false
 
 
-            when (it.property.component) {
-                Component.VTODO.name -> {
-                    binding.viewStatusChip.text =
-                        StatusTodo.getStringResource(requireContext(), it.property.status)
-                            ?: it.property.status
-                }
-                Component.VJOURNAL.name -> {
-                    binding.viewStatusChip.text =
-                        StatusJournal.getStringResource(requireContext(), it.property.status)
-                            ?: it.property.status
-                }
-                else -> {
-                    binding.viewStatusChip.text = it.property.status
-                }
-            }
-
-            binding.viewClassificationChip.text =
-                Classification.getStringResource(requireContext(), it.property.classification)
-                    ?: it.property.classification
-
-            val priorityArray = resources.getStringArray(R.array.priority)
-            if (it.property.priority in 0..9)
-                binding.viewPriorityChip.text =
-                    priorityArray[icalViewViewModel.icalEntity.value?.property?.priority ?: 0]
 
             // don't show the option to add notes if VJOURNAL is not supported (only relevant if the current entry is a VTODO)
             if (it.ICalCollection?.supportsVJOURNAL != true) {
@@ -243,143 +202,6 @@ class IcalViewFragment : Fragment() {
         this.optionsMenu = menu
         if(icalViewViewModel.icalEntity.value?.ICalCollection?.readonly == true)
             hideEditingOptions()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_view_share_text -> {
-
-                var shareText = ""
-                icalViewViewModel.icalEntity.value?.property?.dtstart?.let { shareText += getString(R.string.view_started) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dtstartTimezone) + System.lineSeparator() + System.lineSeparator()}
-                icalViewViewModel.icalEntity.value?.property?.due?.let { shareText += getString(R.string.view_due) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.dueTimezone) + System.lineSeparator() }
-                icalViewViewModel.icalEntity.value?.property?.completed?.let { shareText += getString(R.string.view_completed) + ": " + convertLongToFullDateTimeString(it, icalViewViewModel.icalEntity.value?.property?.completedTimezone) + System.lineSeparator() }
-                icalViewViewModel.icalEntity.value?.property?.getRecurInfo(context)?.let { shareText += it }
-                icalViewViewModel.icalEntity.value?.property?.summary?.let { shareText += it + System.lineSeparator() }
-                icalViewViewModel.icalEntity.value?.property?.description?.let { shareText += it + System.lineSeparator() + System.lineSeparator() }
-
-                val categories: MutableList<String> = mutableListOf()
-                icalViewViewModel.icalEntity.value?.categories?.forEach { categories.add(it.text) }
-                if(categories.isNotEmpty())
-                    shareText += getString(R.string.categories) + ": " + categories.joinToString(separator=", ") + System.lineSeparator()
-
-                if(icalViewViewModel.icalEntity.value?.property?.contact?.isNotEmpty() == true)
-                    shareText += getString(R.string.contact) + ": " + icalViewViewModel.icalEntity.value?.property?.contact + System.lineSeparator()
-
-                if(icalViewViewModel.icalEntity.value?.property?.location?.isNotEmpty() == true)
-                    shareText += getString(R.string.location) + ": " + icalViewViewModel.icalEntity.value?.property?.location + System.lineSeparator()
-
-                if(icalViewViewModel.icalEntity.value?.property?.url?.isNotEmpty() == true)
-                    shareText += getString(R.string.url) + ": " + icalViewViewModel.icalEntity.value?.property?.url + System.lineSeparator()
-
-                val resources: MutableList<String> = mutableListOf()
-                icalViewViewModel.icalEntity.value?.resources?.forEach { resource -> resource.text?.let { resources.add(it) } }
-                if(resources.isNotEmpty())
-                    shareText += getString(R.string.resources) + ": " + resources.joinToString(separator=", ") + System.lineSeparator()
-
-                val attachments: MutableList<String> = mutableListOf()
-                icalViewViewModel.icalEntity.value?.attachments?.forEach { attachment ->
-                    if(attachment.uri?.startsWith("http") == true)
-                        attachments.add(attachment.uri!!)
-                }
-                if(attachments.isNotEmpty())
-                    shareText += getString(R.string.attachments) + ": " + System.lineSeparator() + attachments.joinToString(separator=System.lineSeparator()) + System.lineSeparator()
-
-                shareText = shareText.trim()
-
-                val attendees: MutableList<String> = mutableListOf()
-                icalViewViewModel.icalEntity.value?.attendees?.forEach { attendees.add(it.caladdress.removePrefix("mailto:")) }
-
-                val shareIntent = Intent().apply {
-                    action = Intent.ACTION_SEND_MULTIPLE
-                    type = "text/plain"
-                    icalViewViewModel.icalEntity.value?.property?.summary?.let { putExtra(Intent.EXTRA_SUBJECT, it) }
-                    putExtra(Intent.EXTRA_TEXT, shareText)
-                    putExtra(Intent.EXTRA_EMAIL, attendees.toTypedArray())
-                }
-                val files = ArrayList<Uri>()
-
-                // prepare output stream for the ics attachment, the file is stored in the externalCacheDir and then provided through a FileProvider
-                // further processing happens in the observer!
-                val os = ByteArrayOutputStream()
-                icalViewViewModel.writeICSFile(os)
-
-                icalViewViewModel.icalEntity.value?.attachments?.forEach {
-                    try {
-                        files.add(Uri.parse(it.uri))
-                    } catch (e: NullPointerException) {
-                        Log.i("Attachment", "Attachment Uri could not be parsed")
-                    } catch (e: FileNotFoundException) {
-                        Log.i("Attachment", "Attachment-File could not be accessed.")
-                    }
-                }
-
-                icalViewViewModel.icsFileWritten.observe(viewLifecycleOwner) {
-                    if (it == true) {
-                        try {
-                            val icsFileName = "${requireContext().externalCacheDir}/ics_file.ics"
-                            val icsFile = File(icsFileName).apply {
-                                this.writeBytes(os.toByteArray())
-                                createNewFile()
-                            }
-                            val uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, icsFile)
-                            files.add(uri)
-                        } catch (e: Exception) {
-                            Log.i("fileprovider", "Failed to attach ICS File")
-                            Toast.makeText(requireContext(), "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
-                        }
-
-                        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files)
-                        Log.d("shareIntent", shareText)
-
-                        // start the intent when the file is ready
-                        try {
-                            startActivity(Intent(shareIntent))
-                        } catch (e: ActivityNotFoundException) {
-                            Log.i("ActivityNotFound", "No activity found to send this entry.")
-                            Toast.makeText(requireContext(), "No app found to send this entry.", Toast.LENGTH_SHORT).show()
-                        } finally {
-                            icalViewViewModel.icsFileWritten.removeObservers(viewLifecycleOwner)
-                            icalViewViewModel.icsFileWritten.postValue(null)
-                        }
-                    }
-                }
-            }
-            R.id.menu_view_share_ics -> {
-                icalViewViewModel.retrieveICSFormat()
-                icalViewViewModel.icsFormat.observe(viewLifecycleOwner) { ics ->
-                    if(ics.isNullOrEmpty())
-                        return@observe
-
-                    val icsShareIntent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        type = "text/calendar"
-                    }
-
-                    try {
-                        val icsFileName = "${requireContext().externalCacheDir}/ics_file.ics"
-                        val icsFile = File(icsFileName).apply {
-                            this.writeBytes(ics.toByteArray())
-                            createNewFile()
-                        }
-                        val uri = getUriForFile(requireContext(), AUTHORITY_FILEPROVIDER, icsFile)
-                        icsShareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-                        startActivity(Intent(icsShareIntent))
-                    } catch (e: ActivityNotFoundException) {
-                        Log.i("ActivityNotFound", "No activity found to open file.")
-                        Toast.makeText(requireContext(), "No app found to open this file.", Toast.LENGTH_SHORT).show()
-                    } catch (e: Exception) {
-                        Log.i("fileprovider", "Failed to attach ICS File")
-                        Toast.makeText(requireContext(), "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
-                    } finally {
-                        icalViewViewModel.icsFormat.removeObservers(viewLifecycleOwner)
-                        icalViewViewModel.icsFormat.postValue(null)
-                    }
-                }
-            }
-
-            R.id.menu_view_syncnow -> SyncUtil.syncAccount(Account(icalViewViewModel.icalEntity.value?.ICalCollection?.accountName, icalViewViewModel.icalEntity.value?.ICalCollection?.accountType))
-        }
-        return super.onOptionsItemSelected(item)
     }
 
 

@@ -17,6 +17,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
@@ -37,6 +38,7 @@ fun DetailsScreen(
     editImmediately: Boolean = false,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val context = LocalContext.current
 
     val enableCategories = rememberSaveable { mutableStateOf(true) }
     val enableAttendees = rememberSaveable { mutableStateOf(false) }
@@ -96,12 +98,18 @@ fun DetailsScreen(
                     OverflowMenu(menuExpanded = menuExpanded) {
                         DropdownMenuItem(
                             text = { Text(text = stringResource(id = R.string.menu_view_share_text)) },
-                            onClick = { /* TODO */ },
+                            onClick = {
+                                detailViewModel.shareAsText(context)
+                                menuExpanded.value = false
+                                      },
                             leadingIcon = { Icon(Icons.Outlined.Share, null) }
                         )
                         DropdownMenuItem(
                             text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
-                            onClick = { /* TODO */ },
+                            onClick = {
+                                detailViewModel.shareAsICS(context)
+                                menuExpanded.value = false
+                                      },
                             leadingIcon = { Icon(Icons.Outlined.Description, null) }
                         )
                     }
@@ -136,7 +144,7 @@ fun DetailsScreen(
                         onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                             detailViewModel.updateProgress(itemId, newPercent)
                         },
-                        onMoveToNewCollection = { icalObject, newCollection -> detailViewModel.moveToNewCollection(icalObject.id, newCollection.collectionId) },
+                        onMoveToNewCollection = { icalObject, newCollection -> detailViewModel.moveToNewCollection(icalObject, newCollection.collectionId) },
                         onSubEntryAdded = { icalObject, attachment -> detailViewModel.addSubEntry(icalObject, attachment) },
                         onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                         onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },

@@ -9,10 +9,17 @@
 package at.techbee.jtx.ui
 
 import android.app.Application
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
 import android.media.MediaPlayer
+import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.FileProvider
 import androidx.lifecycle.*
+import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
@@ -23,6 +30,8 @@ import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileNotFoundException
 
 
 class DetailViewModel(application: Application) : AndroidViewModel(application) {
@@ -37,9 +46,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allResources: LiveData<List<String>>
     lateinit var allCollections: LiveData<List<ICalCollection>>
-
-    var icsFormat: MutableLiveData<String?> = MutableLiveData(null)
-    var icsFileWritten: MutableLiveData<Boolean?> = MutableLiveData(null)
 
     var entryDeleted = mutableStateOf(false)
     var navigateToId = mutableStateOf<Long?>(null)
@@ -280,7 +286,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun deleteById(icalObjectId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            /*
+            /* TODO
             if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
                 ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
                 Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
@@ -343,25 +349,100 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun retrieveICSFormat() {
+    fun shareAsICS(context: Context) {
 
         viewModelScope.launch(Dispatchers.IO)  {
             val account = icalEntity.value?.ICalCollection?.getAccount() ?: return@launch
             val collectionId = icalEntity.value?.property?.collectionId ?: return@launch
             val iCalObjectId = icalEntity.value?.property?.id ?: return@launch
             val ics = Ical4androidUtil.getICSFormatFromProvider(account, getApplication(), collectionId, iCalObjectId) ?: return@launch
-            icsFormat.postValue(ics)
+
+            val icsShareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "text/calendar"
+            }
+
+            try {
+                val icsFileName = "${context.externalCacheDir}/ics_file.ics"
+                val icsFile = File(icsFileName).apply {
+                    this.writeBytes(ics.toByteArray())
+                    createNewFile()
+                }
+                val uri =
+                    FileProvider.getUriForFile(context, AUTHORITY_FILEPROVIDER, icsFile)
+                icsShareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                context.startActivity(Intent(icsShareIntent))
+            } catch (e: ActivityNotFoundException) {
+                Log.i("ActivityNotFound", "No activity found to open file.")
+                Toast.makeText(context, "No app found to open this file.", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Log.i("fileprovider", "Failed to attach ICS File")
+                Toast.makeText(context, "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    fun writeICSFile(os: ByteArrayOutputStream) {
+    fun shareAsText(context: Context) {
 
         viewModelScope.launch(Dispatchers.IO)  {
             val account = icalEntity.value?.ICalCollection?.getAccount() ?: return@launch
             val collectionId = icalEntity.value?.property?.collectionId ?: return@launch
             val iCalObjectId = icalEntity.value?.property?.id ?: return@launch
-            icsFileWritten.postValue(Ical4androidUtil.writeICSFormatFromProviderToOS(account, getApplication(), collectionId, iCalObjectId, os))
+
+            val shareText = icalEntity.value?.getShareText(context) ?: ""
+
+            val attendees: MutableList<String> = mutableListOf()
+            icalEntity.value?.attendees?.forEach { attendees.add(it.caladdress.removePrefix("mailto:")) }
+
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND_MULTIPLE
+                type = "text/plain"
+                icalEntity.value?.property?.summary?.let { putExtra(Intent.EXTRA_SUBJECT, it) }
+                putExtra(Intent.EXTRA_TEXT, shareText)
+                putExtra(Intent.EXTRA_EMAIL, attendees.toTypedArray())
+            }
+            val files = ArrayList<Uri>()
+
+            icalEntity.value?.attachments?.forEach {
+                try {
+                    files.add(Uri.parse(it.uri))
+                } catch (e: NullPointerException) {
+                    Log.i("Attachment", "Attachment Uri could not be parsed")
+                } catch (e: FileNotFoundException) {
+                    Log.i("Attachment", "Attachment-File could not be accessed.")
+                }
+            }
+
+            try {
+                val os = ByteArrayOutputStream()
+                Ical4androidUtil.writeICSFormatFromProviderToOS(account, getApplication(), collectionId, iCalObjectId, os)
+
+                val icsFileName = "${context.externalCacheDir}/ics_file.ics"
+                val icsFile = File(icsFileName).apply {
+                    this.writeBytes(os.toByteArray())
+                    createNewFile()
+                }
+                val uri = FileProvider.getUriForFile(context, AUTHORITY_FILEPROVIDER, icsFile)
+                files.add(uri)
+            } catch (e: Exception) {
+                Log.i("fileprovider", "Failed to attach ICS File")
+                Toast.makeText(context, "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
+            }
+
+            shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files)
+            //Log.d("shareIntent", shareText)
+
+            try {
+                context.startActivity(Intent(shareIntent))
+            } catch (e: ActivityNotFoundException) {
+                Log.i("ActivityNotFound", "No activity found to send this entry.")
+                Toast.makeText(context, R.string.error_no_app_found_to_open_entry, Toast.LENGTH_SHORT).show()
+            }
         }
+
+
+
+
 
     }
 }
