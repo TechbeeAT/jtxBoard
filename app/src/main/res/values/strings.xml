@@ -436,6 +436,9 @@
     <string name="collections_account_delete_dialog_message">Are you sure that you want to delete this account from jtx Board? All collections within this account will be removed. This operation cannot be undone.</string>
 
 
+    <string name="dialog_move_item_to_collection_title">Move this entry to \"%1$s\"?</string>
+    <string name="dialog_move_item_to_collection_text">Please note that all changes are saved immediately.</string>
+
     <!-- menus -->
     <string name="menu_edit_clear_dates">Clear dates</string>
 

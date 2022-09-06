@@ -136,6 +136,7 @@ fun DetailsScreen(
                         onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                             detailViewModel.updateProgress(itemId, newPercent)
                         },
+                        onMoveToNewCollection = { icalObject, newCollection -> detailViewModel.moveToNewCollection(icalObject.id, newCollection.collectionId) },
                         onSubEntryAdded = { icalObject, attachment -> detailViewModel.addSubEntry(icalObject, attachment) },
                         onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                         onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },

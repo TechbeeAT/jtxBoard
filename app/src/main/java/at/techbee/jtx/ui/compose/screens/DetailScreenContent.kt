@@ -36,6 +36,7 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.compose.cards.*
 import at.techbee.jtx.ui.compose.dialogs.ColorPickerDialog
+import at.techbee.jtx.ui.compose.dialogs.MoveItemToCollectionDialog
 import at.techbee.jtx.ui.compose.elements.CollectionsSpinner
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
 import at.techbee.jtx.ui.compose.elements.ProgressElement
@@ -58,6 +59,7 @@ fun DetailScreenContent(
     player: MediaPlayer?,
     saveIcalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
+    onMoveToNewCollection: (icalObject: ICalObject, newCollection: ICalCollection) -> Unit,
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit
@@ -78,6 +80,8 @@ fun DetailScreenContent(
     val alarms = rememberSaveable { mutableStateOf(iCalEntity.value?.alarms ?: emptyList()) }
 
     var showColorPicker by rememberSaveable { mutableStateOf(false) }
+    var showMoveItemToCollectionDialog by rememberSaveable { mutableStateOf<ICalCollection?>(null) }
+
     val previousIsEditModeState = rememberSaveable { mutableStateOf(isEditMode.value) }
     if(previousIsEditModeState.value && !isEditMode.value)  //changed from edit to view mode
         saveIcalObject(icalObject, categories.value, comments.value, attendees.value, resources.value, attachments.value, alarms.value)
@@ -93,6 +97,17 @@ fun DetailScreenContent(
             delay(Duration.ofSeconds(2).toMillis())  // reset after a second
             contentsChanged.value = null
         }
+    }
+
+    showMoveItemToCollectionDialog?.let {
+        MoveItemToCollectionDialog(
+            newCollection = it,
+            onMoveConfirmed = {
+                saveIcalObject(icalObject, categories.value, comments.value, attendees.value, resources.value, attachments.value, alarms.value)
+                onMoveToNewCollection(icalObject, it)
+            },
+            onDismiss = { showMoveItemToCollectionDialog = null }
+        )
     }
 
     /*
@@ -165,9 +180,10 @@ fun DetailScreenContent(
                             includeReadOnly = false,
                             includeVJOURNAL = if(iCalEntity.value?.property?.component == Component.VJOURNAL.name) true else null,
                             includeVTODO = if(iCalEntity.value?.property?.component == Component.VTODO.name) true else null,
-                            onSelectionChanged = {
-                                                 /* TODO */
-                                                 },
+                            onSelectionChanged = { newCollection ->
+                                if (icalObject.collectionId != newCollection.collectionId)
+                                    showMoveItemToCollectionDialog = newCollection
+                            },
                             modifier = Modifier.weight(1f)
                         )
                         IconButton(onClick = { showColorPicker = true }) {
@@ -460,6 +476,7 @@ fun DetailScreenContent_JOURNAL() {
             allResources = emptyList(),
             saveIcalObject = { _, _, _, _, _, _, _ ->   },
             onProgressChanged = { _, _, _ -> },
+            onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
@@ -490,6 +507,7 @@ fun DetailScreenContent_TODO_editInitially() {
             allResources = emptyList(),
             saveIcalObject = { _, _, _, _, _, _, _ ->   },
             onProgressChanged = { _, _, _ -> },
+            onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ ->  },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },

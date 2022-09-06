@@ -142,6 +142,16 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun moveToNewCollection(icalObjectId: Long, newCollectionId: Long) {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val newId = ICalObject.updateCollectionWithChildren(icalObjectId, null, newCollectionId, getApplication())
+            // once the newId is there, the local entries can be deleted (or marked as deleted)
+            ICalObject.deleteItemWithChildren(icalObjectId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+            navigateToId.value = newId
+        }
+    }
+
 
     fun save(iCalObject: ICalObject,
              categories: List<Category>,
