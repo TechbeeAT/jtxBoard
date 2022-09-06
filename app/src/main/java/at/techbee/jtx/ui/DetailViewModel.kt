@@ -142,12 +142,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun moveToNewCollection(icalObjectId: Long, newCollectionId: Long) {
+    fun moveToNewCollection(icalObject: ICalObject, newCollectionId: Long) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            val newId = ICalObject.updateCollectionWithChildren(icalObjectId, null, newCollectionId, getApplication())
+            val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, getApplication())
             // once the newId is there, the local entries can be deleted (or marked as deleted)
-            ICalObject.deleteItemWithChildren(icalObjectId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+            ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+            if (icalObject.rrule != null)
+                icalObject.recreateRecurring(database, getApplication())
             navigateToId.value = newId
         }
     }
