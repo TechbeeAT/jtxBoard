@@ -241,14 +241,23 @@ fun DetailBottomAppBar(
                     text = stringResource(id = R.string.attachments),
                     isChecked = detailSettings.enableAttachments.value,
                     onCheckedChanged = { detailSettings.enableAttachments.value = !detailSettings.enableAttachments.value })
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.recurrence),
-                    isChecked = detailSettings.enableRecurrence.value,
-                    onCheckedChanged = { detailSettings.enableRecurrence.value = !detailSettings.enableRecurrence.value })
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.alarms),
-                    isChecked = detailSettings.enableAlarms.value,
-                    onCheckedChanged = { detailSettings.enableAlarms.value = !detailSettings.enableAlarms.value })
+                if(icalObject.module != Module.NOTE.name) {   //Never show the recurring tab for Notes
+
+                    LabelledCheckbox(
+                        text = stringResource(id = R.string.recurrence),
+                        isChecked = detailSettings.enableRecurrence.value,
+                        onCheckedChanged = {
+                            detailSettings.enableRecurrence.value = !detailSettings.enableRecurrence.value
+                        })
+                }
+                if(icalObject.module == Module.TODO.name) {    //Never show the recurring tab for Journals and Notes, only for Todos
+                    LabelledCheckbox(
+                        text = stringResource(id = R.string.alarms),
+                        isChecked = detailSettings.enableAlarms.value,
+                        onCheckedChanged = {
+                            detailSettings.enableAlarms.value = !detailSettings.enableAlarms.value
+                        })
+                }
                 LabelledCheckbox(
                     text = stringResource(id = R.string.comments),
                     isChecked = detailSettings.enableComments.value,

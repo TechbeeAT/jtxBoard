@@ -517,7 +517,8 @@ fun DetailScreenContent(
             ) {
                 TextButton(
                     onClick = {
-                        detailSettings.enableRecurrence.value = true
+                        if(icalObject.module != Module.NOTE.name)
+                            detailSettings.enableRecurrence.value = true
                         detailSettings.enableLocation.value = true
                         detailSettings.enableComments.value = true
                         detailSettings.enableAttachments.value = true
@@ -528,7 +529,8 @@ fun DetailScreenContent(
                         detailSettings.enableCategories.value = true
                         detailSettings.enableSubnotes.value = true
                         detailSettings.enableSubtasks.value = true
-                        detailSettings.enableAlarms.value = true
+                        if(icalObject.module == Module.TODO.name)
+                            detailSettings.enableAlarms.value = true
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
