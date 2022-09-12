@@ -1,6 +1,8 @@
 package at.techbee.jtx.ui.compose.appbars
 
 import android.content.ContentResolver
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloat
@@ -15,18 +17,21 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import at.techbee.jtx.DetailSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.DAVX5_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.ui.DetailViewModel
 import at.techbee.jtx.ui.compose.elements.LabelledCheckbox
 import at.techbee.jtx.util.SyncUtil
 
@@ -36,20 +41,7 @@ fun DetailBottomAppBar(
     collection: ICalCollection?,
     isEditMode: MutableState<Boolean>,
     contentsChanged: MutableState<Boolean?>,
-    enableCategories: MutableState<Boolean>,
-    enableAttendees: MutableState<Boolean>,
-    enableResources: MutableState<Boolean>,
-    enableContact: MutableState<Boolean>,
-    enableLocation: MutableState<Boolean>,
-    enableUrl: MutableState<Boolean>,
-    enableSubtasks: MutableState<Boolean>,
-    enableSubnotes: MutableState<Boolean>,
-    enableAttachments: MutableState<Boolean>,
-    enableRecurrence: MutableState<Boolean>,
-    enableAlarms: MutableState<Boolean>,
-    enableComments: MutableState<Boolean>,
-    //iCal4ListLive: LiveData<List<ICal4List>>,
-    //listSettings: ListSettings,
+    detailSettings: DetailSettings,
     onDeleteClicked: () -> Unit,
     onCopyRequested: (Module) -> Unit,
     //onListSettingsChanged: () -> Unit
@@ -188,12 +180,16 @@ fun DetailBottomAppBar(
                         if(changed == false)
                             Icon(
                                 Icons.Outlined.Save,
-                                contentDescription = stringResource(id = R.string.saving)
+                                contentDescription = stringResource(id = R.string.saving),
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.alpha(0.3f)
                             )
                         else if(changed == true)
                             Icon(
                                 Icons.Outlined.DriveFileRenameOutline,
-                                contentDescription = stringResource(id = R.string.saving)
+                                contentDescription = stringResource(id = R.string.saving),
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.alpha(0.3f)
                             )
                     }
                 }
@@ -203,93 +199,60 @@ fun DetailBottomAppBar(
             // overflow menu
             DropdownMenu(
                 expanded = settingsMenuExpanded,
-                onDismissRequest = { settingsMenuExpanded = false }
+                onDismissRequest = {
+                    detailSettings.save()
+                    settingsMenuExpanded = false
+                }
             ) {
 
                 LabelledCheckbox(
                     text = stringResource(id = R.string.categories),
-                    isChecked = enableCategories.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableCategories.value = !enableCategories.value
-                    })
+                    isChecked = detailSettings.enableCategories.value,
+                    onCheckedChanged = { detailSettings.enableCategories.value = !detailSettings.enableCategories.value })
                 LabelledCheckbox(
                     text = stringResource(id = R.string.attendees),
-                    isChecked = enableAttendees.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableAttendees.value = !enableAttendees.value
-                    })
+                    isChecked = detailSettings.enableAttendees.value,
+                    onCheckedChanged = { detailSettings.enableAttendees.value = !detailSettings.enableAttendees.value })
                 LabelledCheckbox(
                     text = stringResource(id = R.string.resources),
-                    isChecked = enableResources.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableResources.value = !enableResources.value
-                    })
+                    isChecked = detailSettings.enableResources.value,
+                    onCheckedChanged = { detailSettings.enableResources.value = !detailSettings.enableResources.value })
                 LabelledCheckbox(
                     text = stringResource(id = R.string.contact),
-                    isChecked = enableContact.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableContact.value = !enableContact.value
-                    })
+                    isChecked = detailSettings.enableContact.value,
+                    onCheckedChanged = {  detailSettings.enableContact.value = !detailSettings.enableContact.value })
                 LabelledCheckbox(
                     text = stringResource(id = R.string.location),
-                    isChecked = enableLocation.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableLocation.value = !enableLocation.value
-                    })
+                    isChecked = detailSettings.enableLocation.value,
+                    onCheckedChanged = { detailSettings.enableLocation.value = !detailSettings.enableLocation.value })
                 LabelledCheckbox(
                     text = stringResource(id = R.string.url),
-                    isChecked = enableUrl.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableUrl.value = !enableUrl.value
-                    })
+                    isChecked = detailSettings.enableUrl.value,
+                    onCheckedChanged = { detailSettings.enableUrl.value = !detailSettings.enableUrl.value })
                 LabelledCheckbox(
                     text = stringResource(id = R.string.subtasks),
-                    isChecked = enableSubtasks.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableSubtasks.value = !enableSubtasks.value
-                    })
+                    isChecked = detailSettings.enableSubtasks.value,
+                    onCheckedChanged = { detailSettings.enableSubtasks.value = !detailSettings.enableSubtasks.value })
                 LabelledCheckbox(
                     text = stringResource(id = R.string.view_feedback_linked_notes),
-                    isChecked = enableSubnotes.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableSubnotes.value = !enableSubnotes.value
-                    })
+                    isChecked = detailSettings.enableSubnotes.value,
+                    onCheckedChanged = { detailSettings.enableSubnotes.value = !detailSettings.enableSubnotes.value })
                 LabelledCheckbox(
                     text = stringResource(id = R.string.attachments),
-                    isChecked = enableAttachments.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableAttachments.value = !enableAttachments.value
-                    })
+                    isChecked = detailSettings.enableAttachments.value,
+                    onCheckedChanged = { detailSettings.enableAttachments.value = !detailSettings.enableAttachments.value })
                 LabelledCheckbox(
                     text = stringResource(id = R.string.recurrence),
-                    isChecked = enableRecurrence.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableRecurrence.value = !enableRecurrence.value
-                    })
+                    isChecked = detailSettings.enableRecurrence.value,
+                    onCheckedChanged = { detailSettings.enableRecurrence.value = !detailSettings.enableRecurrence.value })
                 LabelledCheckbox(
                     text = stringResource(id = R.string.alarms),
-                    isChecked = enableAlarms.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableAlarms.value = !enableAlarms.value
-                    })
+                    isChecked = detailSettings.enableAlarms.value,
+                    onCheckedChanged = { detailSettings.enableAlarms.value = !detailSettings.enableAlarms.value })
                 LabelledCheckbox(
                     text = stringResource(id = R.string.comments),
-                    isChecked = enableComments.value,
-                    onCheckedChanged = {
-                        /* TODO */
-                        enableComments.value = !enableComments.value
-                    })
+                    isChecked = detailSettings.enableComments.value,
+                    onCheckedChanged = { detailSettings.enableComments.value = !detailSettings.enableComments.value })
 
             }
         },
@@ -311,7 +274,6 @@ fun DetailBottomAppBar(
                             Icon(Icons.Filled.Edit, stringResource(id = R.string.edit))
                     }
                 }
-
             }
         }
     )
@@ -328,23 +290,15 @@ fun DetailBottomAppBar_Preview_View() {
             this.accountType = DAVX5_ACCOUNT_TYPE
         }
 
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(DetailViewModel.PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
+        val detailSettings = DetailSettings(prefs)
+
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             contentsChanged = remember { mutableStateOf(true) },
-            enableCategories = remember { mutableStateOf(true) },
-            enableAttendees = remember { mutableStateOf(false) },
-            enableResources = remember { mutableStateOf(false) },
-            enableContact = remember { mutableStateOf(false) },
-            enableLocation = remember { mutableStateOf(false) },
-            enableUrl = remember { mutableStateOf(false) },
-            enableSubtasks = remember { mutableStateOf(true) },
-            enableSubnotes = remember { mutableStateOf(true) },
-            enableAttachments = remember { mutableStateOf(true) },
-            enableRecurrence = remember { mutableStateOf(false) },
-            enableAlarms = remember { mutableStateOf(false) },
-            enableComments = remember { mutableStateOf(false) },
+            detailSettings = detailSettings,
             onDeleteClicked = { },
             onCopyRequested = { }
         )
@@ -363,24 +317,15 @@ fun DetailBottomAppBar_Preview_edit() {
             this.accountType = DAVX5_ACCOUNT_TYPE
         }
 
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(DetailViewModel.PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
+        val detailSettings = DetailSettings(prefs)
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
             contentsChanged = remember { mutableStateOf(false) },
-            enableCategories = remember { mutableStateOf(true) },
-            enableAttendees = remember { mutableStateOf(false) },
-            enableResources = remember { mutableStateOf(false) },
-            enableContact = remember { mutableStateOf(false) },
-            enableLocation = remember { mutableStateOf(false) },
-            enableUrl = remember { mutableStateOf(false) },
-            enableSubtasks = remember { mutableStateOf(true) },
-            enableSubnotes = remember { mutableStateOf(true) },
-            enableAttachments = remember { mutableStateOf(true) },
-            enableRecurrence = remember { mutableStateOf(false) },
-            enableAlarms = remember { mutableStateOf(false) },
-            enableComments = remember { mutableStateOf(false) },
+            detailSettings = detailSettings,
             onDeleteClicked = { },
             onCopyRequested = { }
         )
@@ -397,23 +342,15 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             this.accountType = DAVX5_ACCOUNT_TYPE
         }
 
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(DetailViewModel.PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
+        val detailSettings = DetailSettings(prefs)
+
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             contentsChanged = remember { mutableStateOf(null) },
-            enableCategories = remember { mutableStateOf(true) },
-            enableAttendees = remember { mutableStateOf(false) },
-            enableResources = remember { mutableStateOf(false) },
-            enableContact = remember { mutableStateOf(false) },
-            enableLocation = remember { mutableStateOf(false) },
-            enableUrl = remember { mutableStateOf(false) },
-            enableSubtasks = remember { mutableStateOf(true) },
-            enableSubnotes = remember { mutableStateOf(true) },
-            enableAttachments = remember { mutableStateOf(true) },
-            enableRecurrence = remember { mutableStateOf(false) },
-            enableAlarms = remember { mutableStateOf(false) },
-            enableComments = remember { mutableStateOf(false) },
+            detailSettings = detailSettings,
             onDeleteClicked = { },
             onCopyRequested = { }
         )
@@ -432,23 +369,15 @@ fun DetailBottomAppBar_Preview_View_local() {
             this.accountType = LOCAL_ACCOUNT_TYPE
         }
 
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(DetailViewModel.PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
+        val detailSettings = DetailSettings(prefs)
+
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             contentsChanged = remember { mutableStateOf(null) },
-            enableCategories = remember { mutableStateOf(true) },
-            enableAttendees = remember { mutableStateOf(false) },
-            enableResources = remember { mutableStateOf(false) },
-            enableContact = remember { mutableStateOf(false) },
-            enableLocation = remember { mutableStateOf(false) },
-            enableUrl = remember { mutableStateOf(false) },
-            enableSubtasks = remember { mutableStateOf(true) },
-            enableSubnotes = remember { mutableStateOf(true) },
-            enableAttachments = remember { mutableStateOf(true) },
-            enableRecurrence = remember { mutableStateOf(false) },
-            enableAlarms = remember { mutableStateOf(false) },
-            enableComments = remember { mutableStateOf(false) },
+            detailSettings = detailSettings,
             onDeleteClicked = { },
             onCopyRequested = { }
         )

@@ -40,19 +40,6 @@ fun DetailsScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
 
-    val enableCategories = rememberSaveable { mutableStateOf(true) }
-    val enableAttendees = rememberSaveable { mutableStateOf(false) }
-    val enableResources = rememberSaveable { mutableStateOf(false) }
-    val enableContact = rememberSaveable { mutableStateOf(false) }
-    val enableLocation = rememberSaveable { mutableStateOf(false) }
-    val enableUrl = rememberSaveable { mutableStateOf(false) }
-    val enableSubtasks = rememberSaveable { mutableStateOf(true) }
-    val enableSubnotes = rememberSaveable { mutableStateOf(true) }
-    val enableAttachments = rememberSaveable { mutableStateOf(true) }
-    val enableRecurrence = rememberSaveable { mutableStateOf(false) }
-    val enableAlarms = rememberSaveable { mutableStateOf(false) }
-    val enableComments = rememberSaveable { mutableStateOf(false) }
-
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     val contentsChanged = remember { mutableStateOf<Boolean?>(null) }
 
@@ -130,6 +117,7 @@ fun DetailsScreen(
                         allCollections = allCollections.value,
                         allCategories = allCategories.value,
                         allResources = allResources.value,
+                        detailSettings = detailViewModel.detailSettings,
                         saveIcalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                             detailViewModel.save(
                                 changedICalObject,
@@ -161,18 +149,7 @@ fun DetailsScreen(
                 collection = icalEntity.value?.ICalCollection,
                 isEditMode = isEditMode,
                 contentsChanged = contentsChanged,
-                enableCategories = enableCategories,
-                enableAttendees = enableAttendees,
-                enableResources = enableResources,
-                enableContact = enableContact,
-                enableLocation = enableLocation,
-                enableUrl = enableUrl,
-                enableSubtasks = enableSubtasks,
-                enableSubnotes = enableSubnotes,
-                enableAttachments = enableAttachments,
-                enableRecurrence = enableRecurrence,
-                enableAlarms = enableAlarms,
-                enableComments = enableComments,
+                detailSettings = detailViewModel.detailSettings,
                 onDeleteClicked = { showDeleteDialog.value = true },
                 onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) }
             )

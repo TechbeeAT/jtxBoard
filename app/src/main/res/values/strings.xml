@@ -242,6 +242,8 @@
     <string name="list_welcome_entry_todo_description">Additionally to journals and notes, tasks can have a planned start, a due and a completed date. They can be checked when they are done or a progress can be set. Edit this entry to check out all options :-)</string>
     <string name="list_welcome_category">#FirstSteps</string>
 
+    <string name="details_show_all_options">Show all options</string>
+
 
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">Go to original</string>

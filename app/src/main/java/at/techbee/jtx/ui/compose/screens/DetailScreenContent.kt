@@ -8,6 +8,8 @@
 
 package at.techbee.jtx.ui.compose.screens
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -26,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import at.techbee.jtx.DetailSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection
@@ -34,6 +37,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.DetailViewModel
 import at.techbee.jtx.ui.compose.cards.*
 import at.techbee.jtx.ui.compose.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.compose.dialogs.MoveItemToCollectionDialog
@@ -55,6 +59,7 @@ fun DetailScreenContent(
     allCollections: List<ICalCollection>,
     allCategories: List<String>,
     allResources: List<String>,
+    detailSettings: DetailSettings,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     saveIcalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
@@ -64,35 +69,61 @@ fun DetailScreenContent(
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit
 ) {
-    if(iCalEntity.value == null)
+    if (iCalEntity.value == null)
         return
 
     var color by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.color) }
     var summary by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
-    var description by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.description ?: "") }
+    var description by rememberSaveable {
+        mutableStateOf(
+            iCalEntity.value?.property?.description ?: ""
+        )
+    }
 
-    val icalObject by rememberSaveable { mutableStateOf(iCalEntity.value?.property ?: ICalObject()) }
-    val categories = rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
+    val icalObject by rememberSaveable {
+        mutableStateOf(
+            iCalEntity.value?.property ?: ICalObject()
+        )
+    }
+    val categories =
+        rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
     val resources = rememberSaveable { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
     val attendees = rememberSaveable { mutableStateOf(iCalEntity.value?.attendees ?: emptyList()) }
     val comments = rememberSaveable { mutableStateOf(iCalEntity.value?.comments ?: emptyList()) }
-    val attachments = rememberSaveable { mutableStateOf(iCalEntity.value?.attachments ?: emptyList()) }
+    val attachments =
+        rememberSaveable { mutableStateOf(iCalEntity.value?.attachments ?: emptyList()) }
     val alarms = rememberSaveable { mutableStateOf(iCalEntity.value?.alarms ?: emptyList()) }
 
     var showColorPicker by rememberSaveable { mutableStateOf(false) }
     var showMoveItemToCollectionDialog by rememberSaveable { mutableStateOf<ICalCollection?>(null) }
 
     val previousIsEditModeState = rememberSaveable { mutableStateOf(isEditMode.value) }
-    if(previousIsEditModeState.value && !isEditMode.value)  //changed from edit to view mode
-        saveIcalObject(icalObject, categories.value, comments.value, attendees.value, resources.value, attachments.value, alarms.value)
+    if (previousIsEditModeState.value && !isEditMode.value)  //changed from edit to view mode
+        saveIcalObject(
+            icalObject,
+            categories.value,
+            comments.value,
+            attendees.value,
+            resources.value,
+            attachments.value,
+            alarms.value
+        )
     previousIsEditModeState.value = isEditMode.value
 
     // save 10 seconds after changed, then reset value
     val autosave = true //TODO put in settings
-    if(contentsChanged.value == true && autosave) {
+    if (contentsChanged.value == true && autosave) {
         LaunchedEffect(contentsChanged) {
             delay(Duration.ofSeconds(10).toMillis())
-            saveIcalObject(icalObject, categories.value, comments.value, attendees.value, resources.value, attachments.value, alarms.value)
+            saveIcalObject(
+                icalObject,
+                categories.value,
+                comments.value,
+                attendees.value,
+                resources.value,
+                attachments.value,
+                alarms.value
+            )
             contentsChanged.value = false
             delay(Duration.ofSeconds(2).toMillis())  // reset after a second
             contentsChanged.value = null
@@ -103,7 +134,15 @@ fun DetailScreenContent(
         MoveItemToCollectionDialog(
             newCollection = it,
             onMoveConfirmed = {
-                saveIcalObject(icalObject, categories.value, comments.value, attendees.value, resources.value, attachments.value, alarms.value)
+                saveIcalObject(
+                    icalObject,
+                    categories.value,
+                    comments.value,
+                    attendees.value,
+                    resources.value,
+                    attachments.value,
+                    alarms.value
+                )
                 onMoveToNewCollection(icalObject, it)
             },
             onDismiss = { showMoveItemToCollectionDialog = null }
@@ -115,7 +154,7 @@ fun DetailScreenContent(
         .usePlugin(StrikethroughPlugin.create())
         .build()
      */
-    if(showColorPicker) {
+    if (showColorPicker) {
         ColorPickerDialog(
             initialColor = color,
             onColorChanged = { newColor ->
@@ -178,8 +217,8 @@ fun DetailScreenContent(
                             preselected = iCalEntity.value?.ICalCollection
                                 ?: allCollections.first(),   // TODO: Load last used collection for new entries
                             includeReadOnly = false,
-                            includeVJOURNAL = if(iCalEntity.value?.property?.component == Component.VJOURNAL.name) true else null,
-                            includeVTODO = if(iCalEntity.value?.property?.component == Component.VTODO.name) true else null,
+                            includeVJOURNAL = if (iCalEntity.value?.property?.component == Component.VJOURNAL.name) true else null,
+                            includeVTODO = if (iCalEntity.value?.property?.component == Component.VTODO.name) true else null,
                             onSelectionChanged = { newCollection ->
                                 if (icalObject.collectionId != newCollection.collectionId)
                                     showMoveItemToCollectionDialog = newCollection
@@ -269,7 +308,7 @@ fun DetailScreenContent(
                 }
             }
 
-            if(icalObject.module == Module.TODO.name) {
+            if (icalObject.module == Module.TODO.name) {
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                     ProgressElement(
                         iCalObjectId = icalObject.id,
@@ -306,7 +345,7 @@ fun DetailScreenContent(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true)) {
+            AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && detailSettings.enableSubtasks.value)) {
                 DetailsCardSubtasks(
                     subtasks = subtasks.value,
                     isEditMode = isEditMode,
@@ -314,24 +353,39 @@ fun DetailScreenContent(
                         onProgressChanged(itemId, newPercent, isLinkedRecurringInstance)
                     },
                     onSubtaskAdded = { subtask -> onSubEntryAdded(subtask, null) },
-                    onSubtaskUpdated = { icalObjectId, newText -> onSubEntryUpdated(icalObjectId, newText) },
+                    onSubtaskUpdated = { icalObjectId, newText ->
+                        onSubEntryUpdated(
+                            icalObjectId,
+                            newText
+                        )
+                    },
                     onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) }
                 )
             }
 
-            AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVJOURNAL == true)) {
+            AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVJOURNAL == true && detailSettings.enableSubnotes.value)) {
                 DetailsCardSubnotes(
                     subnotes = subnotes.value,
                     isEditMode = isEditMode,
-                    onSubnoteAdded = { subnote, attachment -> onSubEntryAdded(subnote, attachment) },
-                    onSubnoteUpdated = { icalObjectId, newText -> onSubEntryUpdated(icalObjectId, newText) },
+                    onSubnoteAdded = { subnote, attachment ->
+                        onSubEntryAdded(
+                            subnote,
+                            attachment
+                        )
+                    },
+                    onSubnoteUpdated = { icalObjectId, newText ->
+                        onSubEntryUpdated(
+                            icalObjectId,
+                            newText
+                        )
+                    },
                     onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
                     player = player
                 )
             }
 
 
-            AnimatedVisibility(categories.value.isNotEmpty() || isEditMode.value) {
+            AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && detailSettings.enableCategories.value)) {
                 DetailsCardCategories(
                     initialCategories = categories.value,
                     isEditMode = isEditMode.value,
@@ -343,7 +397,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(resources.value.isNotEmpty() || isEditMode.value) {
+            AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && detailSettings.enableResources.value)) {
                 DetailsCardResources(
                     initialResources = resources.value,
                     isEditMode = isEditMode.value,
@@ -356,7 +410,7 @@ fun DetailScreenContent(
             }
 
 
-            AnimatedVisibility(attendees.value.isNotEmpty() || isEditMode.value) {
+            AnimatedVisibility(attendees.value.isNotEmpty() || (isEditMode.value && detailSettings.enableAttendees.value)) {
                 DetailsCardAttendees(
                     initialAttendees = attendees.value,
                     isEditMode = isEditMode.value,
@@ -367,7 +421,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(icalObject.contact?.isNotBlank() == true || isEditMode.value) {
+            AnimatedVisibility(icalObject.contact?.isNotBlank() == true || (isEditMode.value && detailSettings.enableContact.value)) {
                 DetailsCardContact(
                     initialContact = icalObject.contact ?: "",
                     isEditMode = isEditMode.value,
@@ -379,9 +433,9 @@ fun DetailScreenContent(
             }
 
 
-            AnimatedVisibility(icalObject.url?.isNotEmpty() == true || isEditMode.value) {
+            AnimatedVisibility(icalObject.url?.isNotEmpty() == true || (isEditMode.value && detailSettings.enableUrl.value)) {
                 DetailsCardUrl(
-                    initialUrl = icalObject.url?:"",
+                    initialUrl = icalObject.url ?: "",
                     isEditMode = isEditMode.value,
                     onUrlUpdated = { newUrl ->
                         icalObject.url = newUrl.ifEmpty { null }
@@ -390,7 +444,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility((icalObject.location?.isNotEmpty() == true || (icalObject.geoLat != null && icalObject.geoLong != null)) || isEditMode.value) {
+            AnimatedVisibility((icalObject.location?.isNotEmpty() == true || (icalObject.geoLat != null && icalObject.geoLong != null)) || (isEditMode.value && detailSettings.enableLocation.value)) {
                 DetailsCardLocation(
                     initialLocation = icalObject.location,
                     initialGeoLat = icalObject.geoLat,
@@ -405,7 +459,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(comments.value.isNotEmpty() || isEditMode.value) {
+            AnimatedVisibility(comments.value.isNotEmpty() || (isEditMode.value && detailSettings.enableComments.value)) {
                 DetailsCardComments(
                     initialComments = comments.value,
                     isEditMode = isEditMode.value,
@@ -416,7 +470,7 @@ fun DetailScreenContent(
             }
 
 
-            AnimatedVisibility(attachments.value.isNotEmpty() || isEditMode.value) {
+            AnimatedVisibility(attachments.value.isNotEmpty() || (isEditMode.value && detailSettings.enableAttachments.value)) {
                 DetailsCardAttachments(
                     initialAttachments = attachments.value,
                     isEditMode = isEditMode.value,
@@ -426,7 +480,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(alarms.value.isNotEmpty() || isEditMode.value) {
+            AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && detailSettings.enableAlarms.value)) {
                 DetailsCardAlarms(
                     initialAlarms = alarms.value,
                     icalObject = icalObject,
@@ -436,13 +490,50 @@ fun DetailScreenContent(
                     })
             }
 
-            AnimatedVisibility(icalObject.rrule != null || isEditMode.value) {
+            AnimatedVisibility(icalObject.rrule != null || (isEditMode.value && detailSettings.enableRecurrence.value)) {   // only Todos have recur!
                 DetailsCardRecur(
                     icalObject = icalObject,
                     isEditMode = isEditMode.value,
                     onRecurUpdated = { updatedRRule ->
                         icalObject.rrule = updatedRRule?.toString()
                     })
+            }
+
+            AnimatedVisibility(
+                isEditMode.value
+                        && !(detailSettings.enableRecurrence.value
+                            && detailSettings.enableLocation.value
+                            && detailSettings.enableComments.value
+                            && detailSettings.enableAttachments.value
+                            && detailSettings.enableUrl.value
+                            && detailSettings.enableAttendees.value
+                            && detailSettings.enableContact.value
+                            && detailSettings.enableResources.value
+                            && detailSettings.enableCategories.value
+                            && detailSettings.enableSubnotes.value
+                            && detailSettings.enableSubtasks.value
+                            && detailSettings.enableAlarms.value
+                        )
+            ) {
+                TextButton(
+                    onClick = {
+                        detailSettings.enableRecurrence.value = true
+                        detailSettings.enableLocation.value = true
+                        detailSettings.enableComments.value = true
+                        detailSettings.enableAttachments.value = true
+                        detailSettings.enableUrl.value = true
+                        detailSettings.enableAttendees.value = true
+                        detailSettings.enableContact.value = true
+                        detailSettings.enableResources.value = true
+                        detailSettings.enableCategories.value = true
+                        detailSettings.enableSubnotes.value = true
+                        detailSettings.enableSubtasks.value = true
+                        detailSettings.enableAlarms.value = true
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.details_show_all_options))
+                }
             }
         }
     }
@@ -464,6 +555,12 @@ fun DetailScreenContent_JOURNAL() {
             Category(3, 1, "This is a very long category", null, null),
         )
 
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
+            DetailViewModel.PREFS_DETAIL_JOURNALS,
+            Context.MODE_PRIVATE
+        )
+        val detailSettings = DetailSettings(prefs)
+
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(false) },
@@ -474,7 +571,8 @@ fun DetailScreenContent_JOURNAL() {
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
-            saveIcalObject = { _, _, _, _, _, _, _ ->   },
+            detailSettings = detailSettings,
+            saveIcalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
@@ -495,6 +593,12 @@ fun DetailScreenContent_TODO_editInitially() {
         entity.property.description = "Hello World, this \nis my description."
         entity.property.contact = "John Doe, +1 555 5545"
 
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
+            DetailViewModel.PREFS_DETAIL_TODOS,
+            Context.MODE_PRIVATE
+        )
+        val detailSettings = DetailSettings(prefs)
+
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(true) },
@@ -505,10 +609,11 @@ fun DetailScreenContent_TODO_editInitially() {
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
-            saveIcalObject = { _, _, _, _, _, _, _ ->   },
+            detailSettings = detailSettings,
+            saveIcalObject = { _, _, _, _, _, _, _ -> },
             onProgressChanged = { _, _, _ -> },
             onMoveToNewCollection = { _, _ -> },
-            onSubEntryAdded = { _, _ ->  },
+            onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
         )

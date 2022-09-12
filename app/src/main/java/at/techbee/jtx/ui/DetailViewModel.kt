@@ -12,6 +12,7 @@ import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
@@ -20,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
+import at.techbee.jtx.DetailSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.*
@@ -36,6 +38,7 @@ import java.io.FileNotFoundException
 
 class DetailViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val _application = application
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
     lateinit var icalEntity: LiveData<ICalEntity?>
@@ -49,8 +52,15 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     var entryDeleted = mutableStateOf(false)
     var navigateToId = mutableStateOf<Long?>(null)
+    lateinit var detailSettings: DetailSettings
 
     val mediaPlayer = MediaPlayer()
+
+    companion object {
+        const val PREFS_DETAIL_JOURNALS = "prefsDetailJournals"
+        const val PREFS_DETAIL_NOTES = "prefsDetailNotes"
+        const val PREFS_DETAIL_TODOS = "prefsDetailTodos"
+    }
 
     init {
 
@@ -93,8 +103,16 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     database.getAllSubtasksOf(parentUid)
                 }
             }
-        }
 
+            val prefs: SharedPreferences = when (icalEntity.value?.property?.getModuleFromString()) {
+                Module.JOURNAL -> _application.getSharedPreferences(PREFS_DETAIL_JOURNALS, Context.MODE_PRIVATE)
+                Module.NOTE -> _application.getSharedPreferences(PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
+                Module.TODO -> _application.getSharedPreferences(PREFS_DETAIL_TODOS, Context.MODE_PRIVATE)
+                else -> _application.getSharedPreferences(PREFS_DETAIL_JOURNALS, Context.MODE_PRIVATE)
+            }
+            detailSettings = DetailSettings(prefs)
+
+        }
     }
 
 /*
