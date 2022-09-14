@@ -217,8 +217,8 @@ fun DetailScreenContent(
                             preselected = iCalEntity.value?.ICalCollection
                                 ?: allCollections.first(),   // TODO: Load last used collection for new entries
                             includeReadOnly = false,
-                            includeVJOURNAL = if (iCalEntity.value?.property?.component == Component.VJOURNAL.name) true else null,
-                            includeVTODO = if (iCalEntity.value?.property?.component == Component.VTODO.name) true else null,
+                            includeVJOURNAL = if (iCalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
+                            includeVTODO = if (iCalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
                             onSelectionChanged = { newCollection ->
                                 if (icalObject.collectionId != newCollection.collectionId)
                                     showMoveItemToCollectionDialog = newCollection

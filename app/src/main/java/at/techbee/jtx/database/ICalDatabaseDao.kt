@@ -120,26 +120,6 @@ SELECTs (global selects without parameter)
 
 
     /**
-     * Retrieve an list of all DISTINCT Collections ([ICalCollection])
-     * that support VTODO and are not Read only as a LiveData-List
-     *
-     * @return a list of VTODO-[Collection] as LiveData<List<String>>
-     */
-    @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVTODO = '1' AND $COLUMN_COLLECTION_READONLY = '0' ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getAllWriteableVTODOCollections(): LiveData<List<ICalCollection>>
-
-    /**
-     * Retrieve an list of all DISTINCT Collections ([ICalCollection])
-     * that support VJOURNAL and are not Read only as a LiveData-List
-     *
-     * @return a list of VJOURNAL-[Collection] as LiveData<List<String>>
-     */
-    @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVJOURNAL = '1'  AND $COLUMN_COLLECTION_READONLY = '0' ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getAllWriteableVJOURNALCollections(): LiveData<List<ICalCollection>>
-
-    /**
      * Retrieve an list of all remote collections ([ICalCollection])
      *
      * @return a list of [ICalCollection] as LiveData<List<ICalCollection>>

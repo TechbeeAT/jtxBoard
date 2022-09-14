@@ -61,8 +61,8 @@ fun CollectionsSpinner(
                         if (collection.readonly && !includeReadOnly)
                             return@forEach
 
-                        includeVJOURNAL?.let { if(!it) return@forEach }
-                        includeVTODO?.let { if(!it) return@forEach }
+                        includeVJOURNAL?.let { if(!it || (it && !collection.supportsVJOURNAL)) return@forEach }
+                        includeVTODO?.let { if(!it || (it && !collection.supportsVTODO)) return@forEach }
 
                         DropdownMenuItem(
                             onClick = {

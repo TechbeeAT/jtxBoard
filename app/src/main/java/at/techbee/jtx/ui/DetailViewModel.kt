@@ -73,13 +73,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             allCategories = database.getAllCategoriesAsText()
             allResources = database.getAllResourcesAsText()
-            allCollections = Transformations.switchMap(icalEntity) {
-                when (it?.property?.component) {
-                    Component.VTODO.name -> database.getAllWriteableVTODOCollections()
-                    Component.VJOURNAL.name -> database.getAllWriteableVJOURNALCollections()
-                    else -> database.getAllCollections() // should not happen!
-                }
-            }
+            allCollections = database.getAllCollections()
 
             relatedSubnotes = MutableLiveData(emptyList())
             relatedSubtasks = MutableLiveData(emptyList())

@@ -101,27 +101,6 @@ class IcalEditFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
 
-        binding.editFragmentTabGeneral.editCollectionSpinner.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-
-                override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
-                    icalEditViewModel.selectedCollectionId = icalEditViewModel.allCollections.value?.get(pos)?.collectionId ?: return
-                    icalEditViewModel.iCalObjectUpdated.value?.collectionId = icalEditViewModel.selectedCollectionId ?: icalEditViewModel.allCollections.value?.first()?.collectionId ?: return
-
-                    //Don't show the subtasks tab if the collection doesn't support VTODO
-                    val currentCollection = icalEditViewModel.allCollections.value?.find { col -> col.collectionId == icalEditViewModel.iCalObjectUpdated.value?.collectionId }
-                    if(currentCollection?.supportsVTODO != true)
-                        binding.icalEditTabs.getTabAt(TAB_SUBTASKS)?.view?.visibility = View.GONE
-                    else
-                        binding.icalEditTabs.getTabAt(TAB_SUBTASKS)?.view?.visibility = View.VISIBLE
-
-                    icalEditViewModel.allCollections.removeObservers(viewLifecycleOwner)     // make sure the selection doesn't change anymore by any sync happening that affects the oberser/collection-lsit
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {}
-            }
-
-
 
         //pre-set rules if rrule is present
         if(icalEditViewModel.iCalEntity.property.rrule!= null) {

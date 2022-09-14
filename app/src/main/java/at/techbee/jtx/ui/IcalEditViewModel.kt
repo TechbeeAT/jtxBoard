@@ -37,11 +37,7 @@ class IcalEditViewModel(
 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-    lateinit var allCategories: LiveData<List<String>>
-    lateinit var allResources: LiveData<List<String>>
-    lateinit var allCollections: LiveData<List<ICalCollection>>
     lateinit var isChild: LiveData<Boolean>
-    lateinit var relatedSubtasks: LiveData<List<ICalObject>>
 
     var recurrenceList = mutableListOf<Long>()
 
@@ -119,19 +115,7 @@ class IcalEditViewModel(
         updateVisibility()
 
         viewModelScope.launch {
-
-            relatedSubtasks = database.getAllSubtasksAsICalObjectOf(iCalEntity.property.uid)
-
-            allCategories = database.getAllCategoriesAsText()
-            allResources = database.getAllResourcesAsText()
-            allCollections = when (iCalEntity.property.component) {
-                Component.VTODO.name -> database.getAllWriteableVTODOCollections()
-                Component.VJOURNAL.name -> database.getAllWriteableVJOURNALCollections()
-                else -> database.getAllCollections() // should not happen!
-            }
-
             isChild = database.isChild(iCalEntity.property.id)
-
         }
     }
 
@@ -209,11 +193,7 @@ class IcalEditViewModel(
                 triggerTime?.let { newAlarm.scheduleNotification(getApplication(), it, false) }
             }
 
-            // if a collection was selected that doesn't support VTODO, we do not update/insert any subtasks
-            // deleting a subtask in the DB is not necessary before, as the insertion should never have been possible for VTODOs
-            val currentCollection = allCollections.value?.find { col -> col.collectionId == iCalObjectUpdated.value?.collectionId }
-            if(currentCollection?.supportsVTODO == false)
-                subtaskUpdated.clear()
+
 
             subtaskUpdated.forEach { subtask ->
                 subtask.setUpdatedProgress(subtask.percent?:0)
