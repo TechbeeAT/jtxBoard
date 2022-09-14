@@ -194,28 +194,6 @@ class IcalEditViewModel(
             }
 
 
-
-            subtaskUpdated.forEach { subtask ->
-                subtask.setUpdatedProgress(subtask.percent?:0)
-                subtask.collectionId = iCalObjectUpdated.value!!.collectionId
-                subtask.id = database.insertICalObject(subtask)
-                Log.println(Log.INFO, "Subtask", "${subtask.id} ${subtask.summary} added")
-
-                // upsert relation from the Child to the Parent
-                // check if the relation is there, if not we insert
-                val parentRelation = database.findRelatedTo(subtask.id, iCalObjectUpdated.value!!.uid, Reltype.PARENT.name)
-                if(parentRelation == null) {
-                    database.insertRelatedto(
-                        Relatedto(
-                            icalObjectId = subtask.id,
-                            reltype = Reltype.PARENT.name,
-                            text = iCalObjectUpdated.value!!.uid
-                        )
-                    )
-                }
-            }
-
-
             if (iCalObjectUpdated.value?.recurOriginalIcalObjectId != null && iCalObjectUpdated.value?.isRecurLinkedInstance == false) {
                 val newExceptionList = addLongToCSVString(
                     database.getRecurExceptions(iCalObjectUpdated.value?.recurOriginalIcalObjectId!!),
@@ -246,13 +224,6 @@ class IcalEditViewModel(
              */
 
             returnIcalObjectId.postValue(insertedOrUpdatedItemId)
-        }
-    }
-
-    fun delete() {
-        viewModelScope.launch(Dispatchers.IO) {
-            ICalObject.deleteItemWithChildren(iCalObjectUpdated.value!!.id, database)
-            entryDeleted.postValue(true)
         }
     }
 }

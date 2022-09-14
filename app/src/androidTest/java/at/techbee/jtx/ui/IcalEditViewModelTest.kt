@@ -90,6 +90,7 @@ class IcalEditViewModelTest {
     fun tearDown() = ICalDatabase.getInMemoryDB(context).close()
 
 
+/*
     @Test
     fun updateVisibility_TabGeneral() {
 
@@ -397,7 +398,6 @@ class IcalEditViewModelTest {
         assertTrue(database.get(child1x2Id!!).getOrAwaitValue()?.property?.deleted!!)
     }
 
-/*
     @Test
     fun updateCollection_from_Local_to_Remote() = runBlockingTest {
 

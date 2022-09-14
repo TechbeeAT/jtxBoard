@@ -19,10 +19,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.LinearLayout
-import androidx.annotation.VisibleForTesting
 import androidx.core.app.NotificationCompat
 import androidx.navigation.NavDeepLinkBuilder
 import androidx.room.ColumnInfo
@@ -35,8 +31,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
-import at.techbee.jtx.databinding.CardAlarmBinding
-import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.parcelize.Parcelize
 import java.time.Duration
 import java.time.Instant
@@ -334,30 +328,6 @@ data class Alarm (
             param1Value != null -> context.getString(R.string.alarms_duration_full_string, param1Value, param2Unit, param3BeforeAfterStartDue)
             else -> this.triggerRelativeDuration
         }
-    }
-
-    @Deprecated("Don't use binding anymore")
-    fun getAlarmCardBinding(inflater: LayoutInflater, container: LinearLayout, referenceDate: Long?, referenceTZ: String?): CardAlarmBinding? {
-
-        // we don't add alarm of which the DateTime is not set or cannot be determined
-        if(triggerTime == null && triggerRelativeDuration == null)
-            return null
-
-        val bindingAlarm = CardAlarmBinding.inflate(inflater, container, false)
-
-        if(triggerTime != null) {
-            bindingAlarm.cardAlarmDate.text =
-                DateTimeUtils.convertLongToFullDateTimeString(triggerTime, triggerTimezone)
-            bindingAlarm.cardAlarmDuration.visibility = View.GONE
-        }
-        else if(triggerRelativeDuration?.isNotEmpty() == true) {
-            if(referenceDate == null)
-                return null
-
-            bindingAlarm.cardAlarmDate.text = DateTimeUtils.convertLongToFullDateTimeString(getDatetimeFromTriggerDuration(referenceDate, referenceTZ), referenceTZ)
-            bindingAlarm.cardAlarmDuration.text = getTriggerDurationAsString(inflater.context)
-        }
-        return bindingAlarm
     }
 
     fun scheduleNotification(context: Context, triggerTime: Long, isReadOnly: Boolean) {

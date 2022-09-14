@@ -18,8 +18,7 @@
     <fragment
         android:id="@+id/icalListFragment"
         android:name="at.techbee.jtx.ui.IcalListFragment"
-        android:label="icalListFragment"
-        tools:layout="@layout/fragment_ical_list">
+        android:label="icalListFragment">
 
         <action
             android:id="@+id/action_icalListFragment_to_icalViewFragment"
