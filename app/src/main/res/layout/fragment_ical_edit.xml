@@ -27,67 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/edit_appbarlayout_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/edit_collapsing_toolbar_tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
-                app:contentInsetStart="0dp">
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/ical_edit_tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_date" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_tab_contact_attendees_resources" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_tab_location_comment_link" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_attachment" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_todo" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_alarm" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_recurring" />
-
-
-                </com.google.android.material.tabs.TabLayout>
-            </com.google.android.material.appbar.MaterialToolbar>
-        </com.google.android.material.appbar.AppBarLayout>
-
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

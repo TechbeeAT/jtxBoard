@@ -25,45 +25,6 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/edit_url_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:drawablePadding="8dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:text="@string/url"
-            app:drawableStartCompat="@drawable/ic_link"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_url_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_url_hint"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true"
-            app:helperText="@string/edit_url_helper"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_url_header">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textUri"
-                android:text="@={model.iCalObjectUpdated.url}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/edit_location_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,7 +36,7 @@
             android:textStyle="bold"
             app:drawableStartCompat="@drawable/ic_location"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_url_edit" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -102,62 +63,6 @@
                 android:text="@={model.iCalObjectUpdated.location}" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/edit_comments_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:drawablePadding="8dp"
-            android:text="@string/comments"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:drawableStartCompat="@drawable/ic_comments"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_location_edit" />
-
-
-        <LinearLayout
-            android:id="@+id/edit_comments_linearlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:divider="?android:dividerHorizontal"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_comments_header"/>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_comment_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/edit_comment_hint"
-            app:endIconContentDescription="Add category"
-            app:endIconDrawable="@drawable/ic_comment_add"
-            app:endIconMode="custom"
-            app:helperText="@string/edit_comment_helper"
-            app:helperTextEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_comments_linearlayout">
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_comment_add_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
-                android:inputType="textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

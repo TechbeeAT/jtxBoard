@@ -285,60 +285,6 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/view_progress_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/view_progress_label"
-                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
-
-                <com.google.android.material.slider.Slider
-                    android:id="@+id/view_progress_slider"
-                    style="@style/Widget.AppCompat.SeekBar.Discrete"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:enabled="true"
-                    android:stepSize="1.0"
-                    android:value="@{model.icalEntity.property.percent}"
-                    android:valueFrom="0.0"
-                    android:valueTo="100.0"
-                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                    app:labelBehavior="gone"
-                    app:layout_constraintEnd_toStartOf="@+id/view_progress_percent"
-                    app:layout_constraintStart_toEndOf="@+id/view_progress_label"
-                    app:layout_constraintTop_toBottomOf="@+id/view_card_view"
-                    />
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/view_progress_percent"
-                    android:layout_width="45dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:text="@{model.progressFormatted}"
-                    android:textAlignment="viewEnd"
-                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
-                    app:layout_constraintEnd_toStartOf="@+id/view_progress_checkbox"
-                    app:layout_constraintTop_toTopOf="@+id/view_progress_slider"
-                    tools:text="100 %" />
-
-
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/view_progress_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="@{model.icalEntity.property.percent == 100}"
-                    android:visibility="@{model.progressVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/view_progress_slider"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/view_progress_slider" />
-
 
 
                 <androidx.constraintlayout.widget.Barrier
@@ -346,7 +292,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="view_progress_slider"  />
+                    app:constraint_referenced_ids="view_card_view"  />
 
 
 

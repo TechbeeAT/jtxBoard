@@ -12,11 +12,12 @@ import android.app.Application
 import android.widget.Toast
 import androidx.lifecycle.*
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
@@ -31,15 +32,9 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
     lateinit var icalEntity: LiveData<ICalEntity?>
-    lateinit var relatedNotes: LiveData<List<ICal4List>>
-    lateinit var relatedSubtasks: LiveData<List<ICal4List>>
     lateinit var recurInstances: LiveData<List<ICalObject?>>
 
-    lateinit var dtstartFormatted: LiveData<String>
     lateinit var dtstartTimezone: LiveData<String>
-    lateinit var progressFormatted: LiveData<String>
-    lateinit var organizerFormatted: LiveData<String>
-
 
     lateinit var progressIndicatorVisible: LiveData<Boolean>
     val showSyncProgressIndicator = MutableLiveData(false)
@@ -47,33 +42,10 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     lateinit var dateVisible: LiveData<Boolean>
     lateinit var timeVisible: LiveData<Boolean>
     lateinit var timezoneVisible: LiveData<Boolean>
-    lateinit var urlVisible: LiveData<Boolean>
     lateinit var locationHeaderVisible: LiveData<Boolean>
     lateinit var locationVisible: LiveData<Boolean>
-    lateinit var attendeesVisible: LiveData<Boolean>
-    lateinit var resourcesVisible: LiveData<Boolean>
-    lateinit var organizerVisible: LiveData<Boolean>
-    lateinit var contactVisible: LiveData<Boolean>
-    lateinit var commentsVisible: LiveData<Boolean>
-    lateinit var alarmsVisible: LiveData<Boolean>
-    lateinit var attachmentsVisible: LiveData<Boolean>
     lateinit var relatedtoVisible: LiveData<Boolean>
-    lateinit var progressVisible: LiveData<Boolean>
-    lateinit var priorityVisible: LiveData<Boolean>
-    lateinit var classificationVisible: LiveData<Boolean>
-    lateinit var statusVisible: LiveData<Boolean>
-    lateinit var subtasksVisible: LiveData<Boolean>
-    lateinit var completedVisible: LiveData<Boolean>
-    lateinit var startedVisible: LiveData<Boolean>
-    lateinit var dueVisible: LiveData<Boolean>
-    lateinit var completedTimeVisible: LiveData<Boolean>
-    lateinit var startedTimeVisible: LiveData<Boolean>
-    lateinit var dueTimeVisible: LiveData<Boolean>
-    lateinit var completedTimezoneVisible: LiveData<Boolean>
-    lateinit var startedTimezoneVisible: LiveData<Boolean>
-    lateinit var dueTimezoneVisible: LiveData<Boolean>
     lateinit var uploadPendingVisible: LiveData<Boolean>
-
     lateinit var recurrenceVisible: LiveData<Boolean>
     lateinit var recurrenceItemsVisible: LiveData<Boolean>
     lateinit var recurrenceLinkedVisible: LiveData<Boolean>
@@ -104,13 +76,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
             else
                 database.get(icalItemId)
 
-            relatedNotes = Transformations.switchMap(icalEntity) {
-                it?.property?.uid?.let { parentUid -> database.getAllSubnotesOf(parentUid) }
-            }
-
-            relatedSubtasks = Transformations.switchMap(icalEntity) {
-                it?.property?.uid?.let { parentUid -> database.getAllSubtasksOf(parentUid) }
-            }
 
             recurInstances = Transformations.switchMap(icalEntity) {
                 it?.property?.id?.let { originalId -> database.getRecurInstances(originalId) }
@@ -135,155 +100,15 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
                 return@map item?.property?.dirty == true && item.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE
             }
 
-
-
-
-            dtstartFormatted = Transformations.map(icalEntity) { item ->
-                item?.property?.dtstart?.let {
-                        val formattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(Date(it))
-                        val formattedTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(it))
-                        return@map "$formattedDate $formattedTime"
-                }
-            }
-
-            dtstartTimezone = Transformations.map(icalEntity) { item ->
-                item?.property?.dtstartTimezone?.let {
-                    val tz = TimeZone.getTimeZone(it)
-                    if (tz != null)
-                        return@map tz.getDisplayName(true, TimeZone.SHORT)
-                }
-                return@map ""
-            }
-
-            progressFormatted = Transformations.map(icalEntity) { item ->
-                item?.property?.percent.let { progress ->
-                    String.format("%.0f%%", progress?.toFloat() ?: 0F)
-                }
-            }
-
-            organizerFormatted = Transformations.map(icalEntity) { item ->
-                item?.organizer?.caladdress?.removePrefix("mailto:")
-            }
-
             collectionText = Transformations.map(icalEntity) { item ->
                 if (item?.ICalCollection?.accountName?.isNotEmpty() == true)
                     item.ICalCollection?.displayName + " (" + item.ICalCollection?.accountName + ")"
                 else
                     item?.ICalCollection?.displayName ?: "-"
             }
-
-
-
-            urlVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.property?.url.isNullOrBlank()      // true if url is NOT null or empty
-            }
-            locationHeaderVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.property?.location.isNullOrBlank() || (item?.property?.geoLat != null && item.property.geoLong != null)
-            }
-            locationVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.property?.location.isNullOrBlank()
-            }
-            attendeesVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.attendees.isNullOrEmpty()      // true if attendees is NOT null or empty
-            }
-            resourcesVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.resources.isNullOrEmpty()      // true if attendees is NOT null or empty
-            }
-            organizerVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.organizer?.caladdress?.isNotEmpty()      // true if organizer caladdress is not empty
-            }
-            contactVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.property?.contact.isNullOrBlank()      // true if contact is NOT null or empty
-            }
-           relatedtoVisible = Transformations.map(icalEntity) {
-                //return@map !item?.relatedto.isNullOrEmpty()      // true if relatedto is NOT null or empty
-               return@map false    // currently not in use, therefore always false
-            }
-            subtasksVisible = Transformations.map(relatedSubtasks) { subtasks ->
-                return@map subtasks?.isNotEmpty()      // true if relatedto is NOT null or empty
-            }
-            commentsVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.comments.isNullOrEmpty()      // true if comment is NOT null or empty
-            }
-            alarmsVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.alarms.isNullOrEmpty()      // true if alarms is NOT null or empty
-            }
-            attachmentsVisible = Transformations.map(icalEntity) { item ->
-                return@map !item?.attachments.isNullOrEmpty()      // true if attachment is NOT null or empty
-            }
-            progressVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VTODO.name     // true if percent (progress) is NOT null
-            }
-            priorityVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.priority != null      // true if priority is NOT null
-            }
-            classificationVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.classification?.isNotEmpty() == true && item.property.classification != Classification.PUBLIC.name
-            }
-            statusVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.status?.isNotEmpty()
-            }
-            completedVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.completed != null
-            }
-            startedVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.dtstart != null && item.property.component == Component.VTODO.name)
-            }
-            dueVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.due != null && item.property.component == Component.VTODO.name)
-            }
-
-            startedTimeVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VTODO.name && item.property.dtstart != null && item.property.dtstartTimezone != ICalObject.TZ_ALLDAY
-            }
-            startedTimezoneVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VTODO.name && item.property.dtstart != null && !(item.property.dtstartTimezone == ICalObject.TZ_ALLDAY || item.property.dtstartTimezone.isNullOrEmpty())
-            }
-
-            dueTimeVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VTODO.name && item.property.due != null && item.property.dueTimezone != ICalObject.TZ_ALLDAY          // true if component == JOURNAL and it is not an All Day Event
-            }
-            dueTimezoneVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VTODO.name && item.property.due != null && !(item.property.dueTimezone == ICalObject.TZ_ALLDAY || item.property.dueTimezone.isNullOrEmpty())           // true if component == JOURNAL and it is not an All Day Event
-            }
-
-            completedTimeVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VTODO.name && item.property.completed != null && item.property.completedTimezone != ICalObject.TZ_ALLDAY          // true if component == JOURNAL and it is not an All Day Event
-            }
-            completedTimezoneVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VTODO.name && item.property.completed != null && !(item.property.completedTimezone == ICalObject.TZ_ALLDAY || item.property.completedTimezone.isNullOrEmpty())           // true if component == JOURNAL and it is not an All Day Event
-            }
-
-
-            recurrenceVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.rrule != null || item?.property?.recurOriginalIcalObjectId != null)
-            }
-            recurrenceItemsVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.rrule != null)
-            }
-            recurrenceLinkedVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.recurOriginalIcalObjectId != null
-                        && item.property.isRecurLinkedInstance
-                        && item.ICalCollection?.readonly == false)    // we don't show the text for read only items
-            }
-            recurrenceGoToOriginalVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.recurOriginalIcalObjectId != null)
-            }
-            recurrenceIsExceptionVisible = Transformations.map(icalEntity) { item ->
-                return@map (item?.property?.isRecurLinkedInstance == false && item.property.recurOriginalIcalObjectId != null)
-            }
-            recurrenceExceptionsVisible = Transformations.map(icalEntity) { item ->
-                return@map (recurrenceVisible.value == true && item?.property?.exdate?.isNotEmpty() == true)
-            }
-            recurrenceAdditionsVisible = Transformations.map(icalEntity) { item ->
-                return@map (recurrenceVisible.value == true && item?.property?.rdate?.isNotEmpty() == true)
-            }
         }
     }
 
-    fun editingClicked() {
-        entryToEdit.postValue(icalEntity.value)
-    }
 
     fun retrieveSubEntryToEdit(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -293,42 +118,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
         }
     }
 
-
-    fun insertRelated(newIcalObject: ICalObject, attachment: Attachment?) {
-
-        this.icalEntity.value?.property?.let {
-            makeRecurringExceptionIfNecessary(it)
-        }
-
-        viewModelScope.launch {
-            newIcalObject.collectionId = icalEntity.value?.ICalCollection?.collectionId ?: 1L
-            val newNoteId = database.insertICalObject(newIcalObject)
-
-            // We insert both directions in the database - deprecated, only one direction
-            //database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newIcalObject.uid))
-            database.insertRelatedto(Relatedto(icalObjectId = newNoteId, reltype = Reltype.PARENT.name, text = icalEntity.value!!.property.uid))
-
-            if(attachment != null) {
-                attachment.icalObjectId = newNoteId
-                database.insertAttachment(attachment)
-            }
-
-            database.updateSetDirty(icalItemId, System.currentTimeMillis())
-            SyncUtil.notifyContentObservers(getApplication())
-        }
-    }
-
-
-    fun updateProgress(id: Long, newPercent: Int) {
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val item = database.getICalObjectById(id) ?: return@launch
-            makeRecurringExceptionIfNecessary(item)
-            item.setUpdatedProgress(newPercent)
-            database.update(item)
-            SyncUtil.notifyContentObservers(getApplication())
-        }
-    }
 
     private fun makeRecurringExceptionIfNecessary(item: ICalObject) {
 

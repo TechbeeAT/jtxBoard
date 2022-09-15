@@ -146,7 +146,7 @@ class IcalViewFragmentTest {
         ICalDatabase.getInMemoryDB(context).close()
     }
 
-
+/*
     @Test
     fun journal_everything_is_displayed_part1()  {
 
@@ -387,4 +387,6 @@ class IcalViewFragmentTest {
         onView (withText(R.string.save)).perform(click())
         onView (withId(R.id.view_comment_playbutton)).check(matches(isDisplayed()))
     }
+
+ */
 }
