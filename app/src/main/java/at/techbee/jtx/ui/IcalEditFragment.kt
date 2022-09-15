@@ -150,8 +150,7 @@ class IcalEditFragment : Fragment() {
                 if (!isDataValid())
                     return@observe
 
-                icalEditViewModel.iCalObjectUpdated.value!!.percent =
-                    binding.editFragmentTabGeneral.editProgressSlider.value.toInt()
+                //icalEditViewModel.iCalObjectUpdated.value!!.percent = binding.editFragmentTabGeneral.editProgressSlider.value.toInt()
                 prefs.edit().putLong(
                     PREFS_LAST_COLLECTION,
                     icalEditViewModel.selectedCollectionId ?: icalEditViewModel.iCalObjectUpdated.value!!.collectionId
@@ -225,13 +224,6 @@ class IcalEditFragment : Fragment() {
 
         icalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {
 
-            binding.editFragmentTabGeneral.editProgressPercent.text = String.format("%.0f%%", it.percent?.toFloat() ?: 0F)
-
-
-            // show the reset dates menu item if it is a to-do
-            if(it.module == Module.TODO.name)
-                menu?.findItem(R.id.menu_edit_clear_dates)?.isVisible = true
-
             // if the item has an original Id, the user chose to unlink the recurring instance from the original, the recurring values need to be deleted
             if(it.isRecurLinkedInstance) {
                 it.rrule = null
@@ -250,7 +242,7 @@ class IcalEditFragment : Fragment() {
 
             // if the current item is a child, changing the collection is not allowed; also making it recurring is not allowed
             if (it) {
-                binding.editFragmentTabGeneral.editCollectionSpinner.isEnabled = false
+                //binding.editFragmentTabGeneral.editCollectionSpinner.isEnabled = false
                 //binding.editFragmentIcalEditRecur.editRecurSwitch.isEnabled = false
             }
         }
@@ -271,6 +263,7 @@ class IcalEditFragment : Fragment() {
             || (icalEditViewModel.iCalObjectUpdated.value?.dtstartTimezone.isNullOrEmpty() && icalEditViewModel.iCalObjectUpdated.value?.dueTimezone?.isNotEmpty() == true)))
                 validationError += resources.getString(R.string.edit_validation_errors_start_due_timezone_check) + "\n"
 
+        /*
         if(binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.text.isNotEmpty())
             validationError += resources.getString(R.string.edit_validation_errors_category_not_confirmed) + "\n"
         if(binding.editFragmentTabCar.editAttendeesAddAutocomplete.text.isNotEmpty())
@@ -279,6 +272,8 @@ class IcalEditFragment : Fragment() {
             validationError += resources.getString(R.string.edit_validation_errors_resource_not_confirmed) + "\n"
         if(binding.editFragmentTabUlc.editCommentAddEdittext.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_comment_not_confirmed) + "\n"
+
+         */
         /*
         if(binding.editFragmentTabSubtasks.editSubtasksAddEdittext.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_subtask_not_confirmed) + "\n"

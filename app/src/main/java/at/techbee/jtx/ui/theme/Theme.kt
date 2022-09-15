@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import at.techbee.jtx.flavored.BillingManager
 
 private val DarkColorScheme = darkColorScheme(
     primary = md_theme_light_primary,
@@ -66,12 +65,13 @@ fun JtxBoardTheme(
 
     val view = LocalView.current
     val activity  = view.context as Activity
-    BillingManager.getInstance()?.initialise(activity)
+    //BillingManager.getInstance()?.initialise(activity)
+    val context = LocalContext.current
+
 
     val colorScheme = when {
         // dynamic colors are only loaded in pro!
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && BillingManager.getInstance()?.isProPurchased?.value == true -> {
-            val context = LocalContext.current
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S /* && BillingManager.getInstance()?.isProPurchased?.value == true */ -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
         darkTheme -> DarkColorScheme

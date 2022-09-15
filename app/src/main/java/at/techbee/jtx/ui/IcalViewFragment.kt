@@ -138,14 +138,10 @@ class IcalViewFragment : Fragment() {
                 findNavController().navigate(NavigationDirections.actionGlobalIcalListFragment())
                 return@observe   // just make sure that nothing else happens
             }
-
-            if (it.ICalCollection?.readonly == true)
-                hideEditingOptions()
-
             if(it.ICalCollection?.readonly == false
                 && it.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE
                 && BillingManager.getInstance()?.isProPurchased?.value == false) {
-                hideEditingOptions()
+                //hideEditingOptions()
                 val snackbar = Snackbar.make(requireView(), R.string.buypro_snackbar_remote_entries_blocked, Snackbar.LENGTH_INDEFINITE)
                 //snackbar.setAction(R.string.more) {
                     //findNavController().navigate(R.id.action_global_buyProFragment)
@@ -185,24 +181,6 @@ class IcalViewFragment : Fragment() {
             binding.viewAdContainer.visibility = View.GONE
 
         return binding.root
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_ical_view, menu)
-        this.optionsMenu = menu
-        if(icalViewViewModel.icalEntity.value?.ICalCollection?.readonly == true)
-            hideEditingOptions()
-    }
-
-
-
-
-    private fun hideEditingOptions() {
-        optionsMenu?.findItem(R.id.menu_view_delete_item)?.isVisible = false
-        binding.viewReadyonly.visibility = View.VISIBLE
-        binding.viewProgressSlider.isEnabled = false
-        binding.viewProgressCheckbox.isEnabled = false
     }
 }
 
