@@ -159,13 +159,6 @@ class IcalViewFragment : Fragment() {
                 optionsMenu?.findItem(R.id.menu_view_syncnow)?.isVisible = false
 
 
-
-            // don't show the option to add notes if VJOURNAL is not supported (only relevant if the current entry is a VTODO)
-            if (it.ICalCollection?.supportsVJOURNAL != true) {
-                binding.viewAddNoteTextinputlayout.visibility = View.GONE
-                binding.viewAddAudioNote.visibility = View.GONE
-            }
-
             // setting the description with Markdown
             it.property.description?.let { desc ->
                 val descMarkwon = markwon.toMarkdown(desc)
@@ -208,18 +201,11 @@ class IcalViewFragment : Fragment() {
 
 
     private fun hideEditingOptions() {
-        binding.viewBottomBar.menu.findItem(R.id.menu_view_bottom_copy).isVisible = false
-        binding.viewBottomBar.menu.findItem(R.id.menu_view_bottom_delete).isVisible = false
-        binding.viewFabEdit.visibility = View.GONE
         optionsMenu?.findItem(R.id.menu_view_delete_item)?.isVisible = false
-        binding.viewAddNoteTextinputlayout.visibility = View.GONE
 
-        binding.viewAddAudioNote.visibility = View.GONE
         binding.viewReadyonly.visibility = View.VISIBLE
-        binding.viewBottomBar.visibility = View.GONE
 
         binding.viewSubtasksAdd.isEnabled = false
-        binding.viewAddNoteTextinputlayout.isEnabled = false
         binding.viewProgressSlider.isEnabled = false
         binding.viewProgressCheckbox.isEnabled = false
     }

@@ -74,6 +74,7 @@ class IcalViewViewModelTest {
     }
  */
 
+    /*
     @Test
     fun testInsertRelatedNote() = runBlockingTest {
 
@@ -195,4 +196,6 @@ class IcalViewViewModelTest {
         assertEquals(false, icalViewViewModel.startedVisible.getOrAwaitValue())
         assertEquals(false, icalViewViewModel.resourcesVisible.getOrAwaitValue())
     }
+
+     */
 }

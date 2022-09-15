@@ -95,7 +95,7 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(!isEditMode.value) {
+            AnimatedVisibility(!isEditMode.value && !collection.readonly) {
                 IconButton(onClick = { copyOptionsExpanded = true }) {
                     Icon(
                         Icons.Outlined.ContentCopy,
@@ -134,7 +134,7 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(!isEditMode.value) {
+            AnimatedVisibility(!isEditMode.value && !collection.readonly) {
                 IconButton(onClick = { onDeleteClicked() }) {
                     Icon(
                         Icons.Outlined.Delete,

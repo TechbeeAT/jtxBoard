@@ -37,8 +37,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
 
     lateinit var dtstartFormatted: LiveData<String>
     lateinit var dtstartTimezone: LiveData<String>
-    lateinit var createdFormatted: LiveData<String>
-    lateinit var lastModifiedFormatted: LiveData<String>
     lateinit var progressFormatted: LiveData<String>
     lateinit var organizerFormatted: LiveData<String>
 
@@ -155,18 +153,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
                         return@map tz.getDisplayName(true, TimeZone.SHORT)
                 }
                 return@map ""
-            }
-
-            createdFormatted = Transformations.map(icalEntity) { item ->
-                item?.property?.let {
-                    application.resources.getString(R.string.view_created_text, Date(it.created))
-                }
-            }
-
-            lastModifiedFormatted = Transformations.map(icalEntity) { item ->
-                item?.property?.let {
-                    application.resources.getString(R.string.view_last_modified_text, Date(it.lastModified))
-                }
             }
 
             progressFormatted = Transformations.map(icalEntity) { item ->
