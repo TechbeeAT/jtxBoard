@@ -21,10 +21,7 @@ import androidx.compose.material.icons.outlined.AddLink
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Upload
-import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -144,6 +141,13 @@ fun DetailsCardAttachments(
                         Icon(Icons.Outlined.AddLink, stringResource(id = R.string.edit_add_link_button_text))
                     }
                 }
+            }
+
+            AnimatedVisibility(isEditMode) {
+                Text(
+                    stringResource(id = R.string.edit_attachment_beta_info),
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
 
         }
