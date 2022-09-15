@@ -18,7 +18,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity
 import at.techbee.jtx.R
@@ -26,9 +25,7 @@ import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.databinding.FragmentIcalEditBinding
-import at.techbee.jtx.flavored.JtxReviewManager
 import at.techbee.jtx.flavored.MapManager
-import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
@@ -167,32 +164,6 @@ class IcalEditFragment : Fragment() {
             builder.show()
         }
 
-
-        icalEditViewModel.returnIcalObjectId.observe(viewLifecycleOwner) {
-
-            icalEditViewModel.savingClicked.value = false
-
-            if (it != 0L) {
-                // saving is done now
-                //hideKeyboard()
-                SyncUtil.notifyContentObservers(context)
-
-                // ask for a review (if applicable)
-                JtxReviewManager(requireActivity()).launch()
-
-                // return to list view
-                val direction =
-                    IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
-                direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
-                direction.item2focus = it
-
-                /*  // ALTERNATVE return to view fragment
-                val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalViewFragment()
-                direction.item2show = it
-                 */
-                this.findNavController().navigate(direction)
-            }
-        }
 
 
         icalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {

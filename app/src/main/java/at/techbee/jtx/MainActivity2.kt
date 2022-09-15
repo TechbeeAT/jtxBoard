@@ -24,6 +24,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.flavored.JtxReviewManager
 import at.techbee.jtx.settings.DropdownSettingOption
 import at.techbee.jtx.ui.AboutViewModel
 import at.techbee.jtx.ui.CollectionsViewModel
@@ -178,7 +179,8 @@ fun MainNavHost(
             DetailsScreen(
                 navController = navController,
                 detailViewModel = detailViewModel,
-                editImmediately = editImmediately
+                editImmediately = editImmediately,
+                onRequestReview = { JtxReviewManager(activity).launch() }
             )
         }
         composable(NavigationDrawerDestination.COLLECTIONS.name) {

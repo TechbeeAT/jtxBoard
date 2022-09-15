@@ -38,6 +38,7 @@ fun DetailsScreen(
     navController: NavHostController,
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
+    onRequestReview: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
@@ -62,6 +63,7 @@ fun DetailsScreen(
         navController.navigate(NavigationDrawerDestination.BOARD.name) {
             launchSingleTop = true
         }
+        onRequestReview()
         detailViewModel.entryDeleted.value = false
     }
 

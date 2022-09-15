@@ -37,8 +37,6 @@ class IcalEditViewModel(
 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-    var recurrenceList = mutableListOf<Long>()
-
     var returnIcalObjectId: MutableLiveData<Long> =
         MutableLiveData<Long>().apply { postValue(0L) }
     var savingClicked: MutableLiveData<Boolean> =
@@ -61,7 +59,6 @@ class IcalEditViewModel(
     var activeTab: MutableLiveData<Int> = MutableLiveData<Int>(TAB_GENERAL)
     var tabGeneralVisible = Transformations.map(activeTab) { it == TAB_GENERAL }
     var tabULCVisible = Transformations.map(activeTab) { it == TAB_LOC_COMMENTS }
-    var dateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
 
     fun update() {
