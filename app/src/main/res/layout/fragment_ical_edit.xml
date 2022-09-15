@@ -118,17 +118,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:model="@{model}" />
 
-                    <include
-                        android:id="@+id/edit_fragment_tab_car"
-                        layout="@layout/fragment_ical_edit_tab_car"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:visibility="@{model.tabCARVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/edit_fragment_tab_general"
-                        app:model="@{model}" />
 
                     <include
                         android:id="@+id/edit_fragment_tab_ulc"
@@ -139,38 +128,13 @@
                         android:visibility="@{model.tabULCVisible ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/edit_fragment_tab_car"
+                        app:layout_constraintTop_toBottomOf="@id/edit_fragment_tab_general"
                         app:model="@{model}" />
 
 
                 </LinearLayout>
-
-
             </androidx.core.widget.NestedScrollView>
-
         </RelativeLayout>
-
-
-        <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/edit_bottom_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:hideOnScroll="true"
-            app:menu="@menu/menu_ical_edit_bottombar" />
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/edit_fab_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/save"
-            android:onClick="@{() -> model.savingClicked()}"
-            app:layout_anchor="@id/edit_bottom_bar"
-            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-            app:srcCompat="@drawable/ic_save" />
-
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

@@ -51,8 +51,6 @@ class IcalViewFragment : Fragment() {
     private lateinit var settings: SharedPreferences
 
 
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
@@ -202,10 +200,7 @@ class IcalViewFragment : Fragment() {
 
     private fun hideEditingOptions() {
         optionsMenu?.findItem(R.id.menu_view_delete_item)?.isVisible = false
-
         binding.viewReadyonly.visibility = View.VISIBLE
-
-        binding.viewSubtasksAdd.isEnabled = false
         binding.viewProgressSlider.isEnabled = false
         binding.viewProgressCheckbox.isEnabled = false
     }

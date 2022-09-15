@@ -36,6 +36,7 @@ import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -265,6 +266,16 @@ fun DetailsCardAttendees(
                             onAttendeesUpdated(attendees)
                             newAttendee.value = ""
                         })
+                    )
+                }
+            }
+
+            Crossfade(isEditMode) {
+                if(it) {
+                    Text(
+                        text = stringResource(id = R.string.details_attendees_processing_info),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontStyle = FontStyle.Italic
                     )
                 }
             }

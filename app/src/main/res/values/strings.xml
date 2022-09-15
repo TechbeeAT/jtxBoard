@@ -243,6 +243,8 @@
     <string name="list_welcome_category">#FirstSteps</string>
 
     <string name="details_show_all_options">Show all options</string>
+    <string name="details_attendees_processing_info">Attention: Servers might automatically process attendees e.g. by sending iMIP messages.</string>
+
 
 
     <!-- fragment_ical_view -->
