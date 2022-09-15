@@ -143,57 +143,6 @@
                         app:model="@{model}" />
 
 
-                    <include
-                        android:id="@+id/edit_fragment_tab_attachments"
-                        layout="@layout/fragment_ical_edit_tab_attachments"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:visibility="@{model.tabAttachmentsVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/edit_fragment_tab_ulc"
-                        app:model="@{model}" />
-
-
-                    <include
-                        android:id="@+id/edit_fragment_tab_subtasks"
-                        layout="@layout/fragment_ical_edit_tab_subtasks"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:visibility="@{model.tabSubtasksVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/edit_fragment_tab_attachments"
-                        app:model="@{model}" />
-
-
-                    <include
-                        android:id="@+id/edit_fragment_ical_edit_alarm"
-                        layout="@layout/fragment_ical_edit_alarm"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:visibility="@{model.tabAlarmsVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/edit_fragment_tab_subtasks"
-                        app:model="@{model}" />
-
-
-                    <include
-                        android:id="@+id/edit_fragment_ical_edit_recur"
-                        layout="@layout/fragment_ical_edit_tab_recur"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:visibility="@{model.tabRecurVisible ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/edit_fragment_ical_edit_alarm"
-                        app:model="@{model}" />
-
                 </LinearLayout>
 
 

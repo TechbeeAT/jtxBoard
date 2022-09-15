@@ -105,13 +105,6 @@ class IcalEditFragment : Fragment() {
                 if(recur.experimentalValues.isNotEmpty() || recur.hourList.isNotEmpty() || recur.minuteList.isNotEmpty() || recur.monthList.isNotEmpty() || recur.secondList.isNotEmpty() || recur.setPosList.isNotEmpty() || recur.skip != null || recur.weekNoList.isNotEmpty() || recur.weekStartDay != null || recur.yearDayList.isNotEmpty())
                     throw Exception("Unsupported values detected")
 
-                binding.editFragmentIcalEditRecur.editRecurUntilXOccurencesPicker.value =
-                    icalEditViewModel.iCalEntity.property.retrieveCount()
-
-                binding.editFragmentIcalEditRecur.editRecurEveryXNumberPicker.value =
-                    if(recur.interval <1) 1 else recur.interval
-
-
                 //pre-select the day of the month according to the rrule
                 /*
                 if (icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_MONTH) {
@@ -132,7 +125,7 @@ class IcalEditFragment : Fragment() {
                         icalEditViewModel.iCalObjectUpdated.value?.rrule = null
                         icalEditViewModel.iCalObjectUpdated.value?.rdate = null
                         icalEditViewModel.iCalObjectUpdated.value?.exdate = null
-                        binding.editFragmentIcalEditRecur.editRecurSwitch.isChecked = false
+                        //binding.editFragmentIcalEditRecur.editRecurSwitch.isChecked = false
                     }
                     .show()
             }
@@ -258,7 +251,7 @@ class IcalEditFragment : Fragment() {
             // if the current item is a child, changing the collection is not allowed; also making it recurring is not allowed
             if (it) {
                 binding.editFragmentTabGeneral.editCollectionSpinner.isEnabled = false
-                binding.editFragmentIcalEditRecur.editRecurSwitch.isEnabled = false
+                //binding.editFragmentIcalEditRecur.editRecurSwitch.isEnabled = false
             }
         }
 
@@ -286,9 +279,12 @@ class IcalEditFragment : Fragment() {
             validationError += resources.getString(R.string.edit_validation_errors_resource_not_confirmed) + "\n"
         if(binding.editFragmentTabUlc.editCommentAddEdittext.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_comment_not_confirmed) + "\n"
+        /*
         if(binding.editFragmentTabSubtasks.editSubtasksAddEdittext.text?.isNotEmpty() == true)
             validationError += resources.getString(R.string.edit_validation_errors_subtask_not_confirmed) + "\n"
-/*
+
+         */
+        /*
         if(binding.editTaskDatesFragment.editDueDateEdittext.text?.isNotEmpty() == true && binding.editTaskDatesFragment.editDueTimeEdittext.text.isNullOrBlank() && binding.editTaskDatesFragment.editTaskAddStartedAndDueTimeSwitch.isActivated)
             validationError += resources.getString(R.string.edit_validation_errors_due_time_not_set) + "\n"
         if(binding.editTaskDatesFragment.editStartedDateEdittext.text?.isNotEmpty() == true && binding.editTaskDatesFragment.editStartedTimeEdittext.text.isNullOrBlank() && binding.editTaskDatesFragment.editTaskAddStartedAndDueTimeSwitch.isActivated)
