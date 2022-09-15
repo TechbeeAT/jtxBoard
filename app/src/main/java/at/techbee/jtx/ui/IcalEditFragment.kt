@@ -14,10 +14,8 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -27,7 +25,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.databinding.FragmentIcalEditBinding
 import at.techbee.jtx.flavored.JtxReviewManager
 import at.techbee.jtx.flavored.MapManager
@@ -49,14 +46,13 @@ class IcalEditFragment : Fragment() {
     lateinit var icalEditViewModel: IcalEditViewModel
     private lateinit var inflater: LayoutInflater
     private var container: ViewGroup? = null
-    private var menu: Menu? = null
 
 
     companion object {
 
         const val PREFS_EDIT_VIEW = "sharedPreferencesEditView"
         const val PREFS_LAST_COLLECTION = "lastUsedCollection"
-        const val PREFS_CONTACTS_PERMISSION_SHOWN = "contactsPermissionShown"
+        //const val PREFS_CONTACTS_PERMISSION_SHOWN = "contactsPermissionShown"
     }
 
 
@@ -76,10 +72,7 @@ class IcalEditFragment : Fragment() {
         val arguments = IcalEditFragmentArgs.fromBundle((requireArguments()))
         val prefs = activity?.getSharedPreferences(PREFS_EDIT_VIEW, Context.MODE_PRIVATE)!!
 
-        // add menu
-        setHasOptionsMenu(true)
-
-        // add markwon to description edittext
+          // add markwon to description edittext
         val markwon = Markwon.create(requireContext())
         val markwonEditor = MarkwonEditor.create(markwon)
         binding.editFragmentTabGeneral.editDescriptionEdittext.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(markwonEditor))
@@ -201,26 +194,6 @@ class IcalEditFragment : Fragment() {
             }
         }
 
-        icalEditViewModel.entryDeleted.observe(viewLifecycleOwner) {
-
-            if (it) {
-                // saving is done now
-                //hideKeyboard()
-                SyncUtil.notifyContentObservers(context)
-                icalEditViewModel.entryDeleted.value = false
-
-                val summary = icalEditViewModel.iCalObjectUpdated.value?.summary
-                Toast.makeText(context, getString(R.string.edit_toast_deleted_successfully, summary), Toast.LENGTH_LONG).show()
-
-                context?.let { context -> Attachment.scheduleCleanupJob(context) }
-
-                // return to list view
-                val direction = IcalEditFragmentDirections.actionIcalEditFragmentToIcalListFragment()
-                direction.module2show = icalEditViewModel.iCalObjectUpdated.value!!.module
-                this.findNavController().navigate(direction)
-            }
-        }
-
 
         icalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {
 
@@ -294,5 +267,4 @@ class IcalEditFragment : Fragment() {
         return isValid
 
     }
-
 }

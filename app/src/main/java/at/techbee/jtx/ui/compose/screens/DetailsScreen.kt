@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.compose.screens
 
+import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Share
@@ -21,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
+import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.ui.DetailViewModel
 import at.techbee.jtx.ui.compose.appbars.DetailBottomAppBar
 import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
@@ -54,10 +56,14 @@ fun DetailsScreen(
     val allCollections = detailViewModel.allCollections.observeAsState(emptyList())
 
 
-    if (detailViewModel.entryDeleted.value)
+    if (detailViewModel.entryDeleted.value) {
+        Toast.makeText(context, context.getString(R.string.details_toast_entry_deleted), Toast.LENGTH_SHORT).show()
+        Attachment.scheduleCleanupJob(context)
         navController.navigate(NavigationDrawerDestination.BOARD.name) {
             launchSingleTop = true
         }
+        detailViewModel.entryDeleted.value = false
+    }
 
     detailViewModel.navigateToId.value?.let {
         detailViewModel.navigateToId.value = null

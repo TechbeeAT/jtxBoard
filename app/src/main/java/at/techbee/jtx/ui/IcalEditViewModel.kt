@@ -31,7 +31,7 @@ class IcalEditViewModel(
         const val TAB_LOC_COMMENTS = 2
         const val TAB_ATTACHMENTS = 3
         const val TAB_SUBTASKS = 4
-        const val TAB_ALARMS = 5
+        //const val TAB_ALARMS = 5
         const val TAB_RECURRING = 6
     }
 
@@ -42,10 +42,6 @@ class IcalEditViewModel(
     var returnIcalObjectId: MutableLiveData<Long> =
         MutableLiveData<Long>().apply { postValue(0L) }
     var savingClicked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>(false)
-    var deleteClicked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>(false)
-    var entryDeleted: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(false)
     var collectionNotFoundError: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(false)
@@ -65,54 +61,8 @@ class IcalEditViewModel(
     var activeTab: MutableLiveData<Int> = MutableLiveData<Int>(TAB_GENERAL)
     var tabGeneralVisible = Transformations.map(activeTab) { it == TAB_GENERAL }
     var tabULCVisible = Transformations.map(activeTab) { it == TAB_LOC_COMMENTS }
-
-
-
     var dateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var timeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var addTimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var timezoneVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var progressVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var priorityVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var duedateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var duetimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var completeddateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var completedtimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var starteddateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var startedtimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var addStartedAndDueTimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var recurrenceExceptionsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var recurrenceAdditionsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
-    private var selectedTab = TAB_GENERAL
-
-
-    fun updateVisibility() {
-
-        dateVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL))
-        timeVisible.postValue((iCalObjectUpdated.value?.dtstart != null && iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY) || (iCalObjectUpdated.value?.due != null && iCalObjectUpdated.value?.dueTimezone != ICalObject.TZ_ALLDAY) || (iCalObjectUpdated.value?.completed != null && iCalObjectUpdated.value?.completedTimezone != ICalObject.TZ_ALLDAY) )
-        addTimeVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL))
-        timezoneVisible.postValue(iCalEntity.property.module == Module.JOURNAL.name && (selectedTab == TAB_GENERAL) && iCalObjectUpdated.value?.dtstartTimezone != ICalObject.TZ_ALLDAY ) // simplified IF: Show time only if.module == JOURNAL and Timezone is NOT ALLDAY
-        progressVisible.postValue(iCalEntity.property.module == Module.TODO.name && (selectedTab == TAB_GENERAL))
-        priorityVisible.postValue(iCalEntity.property.module == Module.TODO.name && (selectedTab == TAB_GENERAL))
-        duedateVisible.postValue(iCalEntity.property.module == Module.TODO.name)
-        duetimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dueTimezone != ICalObject.TZ_ALLDAY)
-        completeddateVisible.postValue(iCalEntity.property.module == Module.TODO.name)
-        completedtimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && iCalEntity.property.completedTimezone != ICalObject.TZ_ALLDAY)
-        starteddateVisible.postValue( iCalEntity.property.module == Module.TODO.name)
-        startedtimeVisible.postValue(iCalEntity.property.module == Module.TODO.name && iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY)
-        addStartedAndDueTimeVisible.postValue((selectedTab == TAB_GENERAL) && iCalEntity.property.module == Module.TODO.name)
-        recurrenceExceptionsVisible.postValue(iCalEntity.property.exdate?.isNotEmpty() == true)
-        recurrenceAdditionsVisible.postValue(iCalEntity.property.rdate?.isNotEmpty() == true)
-    }
-
-    fun savingClicked() {
-        savingClicked.value = true
-    }
-
-    fun deleteClicked() {
-        deleteClicked.value = true
-    }
 
     fun update() {
         var insertedOrUpdatedItemId: Long
