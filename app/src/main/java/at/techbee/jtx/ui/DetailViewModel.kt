@@ -45,6 +45,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var relatedSubnotes: LiveData<List<ICal4List>>
     lateinit var relatedSubtasks: LiveData<List<ICal4List>>
     lateinit var recurInstances: LiveData<List<ICalObject?>>
+    lateinit var isChild: LiveData<Boolean>
 
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allResources: LiveData<List<String>>
@@ -77,6 +78,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             relatedSubnotes = MutableLiveData(emptyList())
             relatedSubtasks = MutableLiveData(emptyList())
+            isChild = MutableLiveData(false)
 
             recurInstances = Transformations.switchMap(icalEntity) {
                 it?.property?.id?.let { originalId -> database.getRecurInstances(originalId) }
@@ -97,6 +99,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     database.getAllSubtasksOf(parentUid)
                 }
             }
+            isChild = database.isChild(icalObjectId)
+
 
             val prefs: SharedPreferences = when (icalEntity.value?.property?.getModuleFromString()) {
                 Module.JOURNAL -> _application.getSharedPreferences(PREFS_DETAIL_JOURNALS, Context.MODE_PRIVATE)
@@ -105,36 +109,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 else -> _application.getSharedPreferences(PREFS_DETAIL_JOURNALS, Context.MODE_PRIVATE)
             }
             detailSettings = DetailSettings(prefs)
-
         }
     }
 
-/*
-    fun insertRelated(newIcalObject: ICalObject, attachment: Attachment?) {
-
-        this.icalEntity.value?.property?.let {
-            makeRecurringExceptionIfNecessary(it)
-        }
-
-        viewModelScope.launch {
-            newIcalObject.collectionId = icalEntity.value?.ICalCollection?.collectionId ?: 1L
-            val newNoteId = database.insertICalObject(newIcalObject)
-
-            // We insert both directions in the database - deprecated, only one direction
-            //database.insertRelatedto(Relatedto(icalObjectId = icalEntity.value!!.property.id, linkedICalObjectId = newNoteId, reltype = Reltype.CHILD.name, text = newIcalObject.uid))
-            database.insertRelatedto(Relatedto(icalObjectId = newNoteId, reltype = Reltype.PARENT.name, text = icalEntity.value!!.property.uid))
-
-            if(attachment != null) {
-                attachment.icalObjectId = newNoteId
-                database.insertAttachment(attachment)
-            }
-
-            //database.updateSetDirty(icalItemId, System.currentTimeMillis())
-            SyncUtil.notifyContentObservers(getApplication())
-        }
-    }
-
- */
 
 
     fun updateProgress(id: Long, newPercent: Int) {

@@ -48,6 +48,7 @@ fun DetailsScreen(
     val icalEntity = detailViewModel.icalEntity.observeAsState()
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
     val subnotes = detailViewModel.relatedSubnotes.observeAsState(emptyList())
+    val isChild = detailViewModel.isChild.observeAsState(false)
     val allCategories = detailViewModel.allCategories.observeAsState(emptyList())
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
     val allCollections = detailViewModel.allCollections.observeAsState(emptyList())
@@ -114,6 +115,7 @@ fun DetailsScreen(
                         contentsChanged = contentsChanged,
                         subtasks = subtasks,
                         subnotes = subnotes,
+                        isChild = isChild.value,
                         allCollections = allCollections.value,
                         allCategories = allCategories.value,
                         allResources = allResources.value,

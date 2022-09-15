@@ -37,8 +37,6 @@ class IcalEditViewModel(
 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-    lateinit var isChild: LiveData<Boolean>
-
     var recurrenceList = mutableListOf<Long>()
 
     var returnIcalObjectId: MutableLiveData<Long> =
@@ -63,16 +61,11 @@ class IcalEditViewModel(
     var resourceUpdated: MutableList<Resource> = mutableListOf()
     var alarmUpdated: MutableList<Alarm> = mutableListOf()
     var subtaskUpdated: MutableList<ICalObject> = mutableListOf()
-    var subtaskDeleted: MutableList<ICalObject> = mutableListOf()
 
     var activeTab: MutableLiveData<Int> = MutableLiveData<Int>(TAB_GENERAL)
     var tabGeneralVisible = Transformations.map(activeTab) { it == TAB_GENERAL }
-    var tabCARVisible = Transformations.map(activeTab) { it == TAB_PEOPLE_RES }
     var tabULCVisible = Transformations.map(activeTab) { it == TAB_LOC_COMMENTS }
-    var tabAttachmentsVisible = Transformations.map(activeTab) { it == TAB_ATTACHMENTS }
-    var tabSubtasksVisible = Transformations.map(activeTab) { it == TAB_SUBTASKS }
-    var tabAlarmsVisible = Transformations.map(activeTab) { it == TAB_ALARMS }
-    var tabRecurVisible = Transformations.map(activeTab) { it == TAB_RECURRING }
+
 
 
     var dateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
@@ -88,36 +81,11 @@ class IcalEditViewModel(
     var starteddateVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var startedtimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var addStartedAndDueTimeVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var recurrenceGeneralVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var recurrenceWeekdaysVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var recurrenceDayOfMonthVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var recurrenceCountVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var recurrenceUntilVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceExceptionsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var recurrenceAdditionsVisible: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
-
-
-    var addTimeChecked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>(iCalEntity.property.dueTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.completedTimezone != ICalObject.TZ_ALLDAY)
-    var addTimezoneJournalChecked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>(iCalEntity.property.component == Component.VJOURNAL.name && ((iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.dtstartTimezone?.isNotEmpty() == true)))
-    var addTimezoneTodoChecked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>(iCalEntity.property.component == Component.VTODO.name && ((iCalEntity.property.dueTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.dueTimezone?.isNotEmpty() == true) || (iCalEntity.property.dtstartTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.dtstartTimezone?.isNotEmpty() == true) || (iCalEntity.property.completedTimezone != ICalObject.TZ_ALLDAY && iCalEntity.property.completedTimezone?.isNotEmpty() == true)))
-
-
-
     private var selectedTab = TAB_GENERAL
 
-
-    init {
-
-        updateVisibility()
-
-        viewModelScope.launch {
-            isChild = database.isChild(iCalEntity.property.id)
-        }
-    }
 
     fun updateVisibility() {
 

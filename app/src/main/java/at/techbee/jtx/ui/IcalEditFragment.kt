@@ -236,17 +236,6 @@ class IcalEditFragment : Fragment() {
 
         //TODO: Check if the Sequence was updated in the meantime and notify user!
 
-
-        // initialize allRelatedto
-        icalEditViewModel.isChild.observe(viewLifecycleOwner) {
-
-            // if the current item is a child, changing the collection is not allowed; also making it recurring is not allowed
-            if (it) {
-                //binding.editFragmentTabGeneral.editCollectionSpinner.isEnabled = false
-                //binding.editFragmentIcalEditRecur.editRecurSwitch.isEnabled = false
-            }
-        }
-
         return binding.root
     }
 

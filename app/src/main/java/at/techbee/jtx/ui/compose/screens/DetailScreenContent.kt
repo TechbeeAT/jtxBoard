@@ -58,6 +58,7 @@ fun DetailScreenContent(
     contentsChanged: MutableState<Boolean?>,
     subtasks: State<List<ICal4List>>,
     subnotes: State<List<ICal4List>>,
+    isChild: Boolean,
     allCollections: List<ICalCollection>,
     allCategories: List<String>,
     allResources: List<String>,
@@ -181,7 +182,7 @@ fun DetailScreenContent(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
 
-            AnimatedVisibility(!isEditMode.value) {
+            AnimatedVisibility(!isEditMode.value || isChild) {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -203,7 +204,7 @@ fun DetailScreenContent(
                 }
             }
 
-            AnimatedVisibility(isEditMode.value) {
+            AnimatedVisibility(isEditMode.value && !isChild) {
 
                 ElevatedCard(
                     modifier = Modifier.fillMaxWidth()
@@ -225,7 +226,7 @@ fun DetailScreenContent(
                                 if (icalObject.collectionId != newCollection.collectionId)
                                     showMoveItemToCollectionDialog = newCollection
                             },
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
                         )
                         IconButton(onClick = { showColorPicker = true }) {
                             Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
@@ -588,6 +589,7 @@ fun DetailScreenContent_JOURNAL() {
             contentsChanged = remember { mutableStateOf(false) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
+            isChild = false,
             player = null,
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
@@ -626,6 +628,48 @@ fun DetailScreenContent_TODO_editInitially() {
             contentsChanged = remember { mutableStateOf(false) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
+            isChild = false,
+            player = null,
+            allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
+            allCategories = emptyList(),
+            allResources = emptyList(),
+            detailSettings = detailSettings,
+            saveIcalObject = { _, _, _, _, _, _, _ -> },
+            onProgressChanged = { _, _, _ -> },
+            onMoveToNewCollection = { _, _ -> },
+            onSubEntryAdded = { _, _ -> },
+            onSubEntryDeleted = { },
+            onSubEntryUpdated = { _, _ -> },
+        )
+    }
+}
+
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun DetailScreenContent_TODO_editInitially_isChild() {
+    MaterialTheme {
+        val entity = ICalEntity().apply {
+            this.property = ICalObject.createTask("MySummary")
+        }
+        entity.property.description = "Hello World, this \nis my description."
+        entity.property.contact = "John Doe, +1 555 5545"
+
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
+            DetailViewModel.PREFS_DETAIL_TODOS,
+            Context.MODE_PRIVATE
+        )
+        val detailSettings = DetailSettings(prefs)
+
+        DetailScreenContent(
+            iCalEntity = remember { mutableStateOf(entity) },
+            isEditMode = remember { mutableStateOf(true) },
+            contentsChanged = remember { mutableStateOf(false) },
+            subtasks = remember { mutableStateOf(emptyList()) },
+            subnotes = remember { mutableStateOf(emptyList()) },
+            isChild = true,
             player = null,
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
