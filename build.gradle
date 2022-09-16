@@ -22,7 +22,7 @@ buildscript {
         version_core = "1.8.0"
         version_coroutine = "1.6.1"
         version_constraint_layout = "2.1.4"
-        version_gradle = '7.2.2'
+        version_gradle = '7.3.0'
         version_kotlin = "1.7.10"
         version_lifecycle_extensions = "2.2.0"
         version_lifecycle = "2.4.1"
@@ -57,7 +57,7 @@ buildscript {
         classpath "com.android.tools.build:gradle:$version_gradle"
         classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:${version_about_libraries}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
-        classpath 'androidx.navigation:navigation-safe-args-gradle-plugin:2.5.1'
+        classpath 'androidx.navigation:navigation-safe-args-gradle-plugin:2.5.2'
 
 
         // dokka documentation
