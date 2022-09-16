@@ -9,9 +9,10 @@
 package at.techbee.jtx.ui.compose.elements
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -39,28 +40,25 @@ fun TimezoneAutocompleteTextfield(
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
+    val listState = rememberLazyListState()
     var selectedTimezone by remember { mutableStateOf(timezone ?: TimeZone.getDefault().id) }
 
     var timezonesFiltered by remember { mutableStateOf(TimeZone.getAvailableIDs()) }
-    
-    val timezonesScrollState = rememberScrollState()
-    
-    /*
-    LaunchedEffect(timezonesScrollState) {
-        timezonesScrollState.animateScrollTo(timezonesFiltered.indexOf(selectedTimezone))   // scroll to selected timezone
+
+    LaunchedEffect(listState) {
+        listState.animateScrollToItem(timezonesFiltered.indexOf(selectedTimezone))   // scroll to selected timezone
     }
-     */
 
     Column(modifier = modifier) {
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(timezonesScrollState),
+        LazyRow(
+            state = listState,
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            timezonesFiltered.forEach { timezone ->
+
+            items(items = timezonesFiltered)  { timezone ->
                 FilterChip(
                     selected = selectedTimezone == timezone,
                     label = { Text(timezone) },
@@ -71,7 +69,6 @@ fun TimezoneAutocompleteTextfield(
                     }
                 )
             }
-
         }
 
         OutlinedTextField(
