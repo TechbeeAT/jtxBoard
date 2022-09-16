@@ -209,7 +209,7 @@ data class Attendee (
                 values.getAsString(COLUMN_ATTENDEE_MEMBER)?.let { member -> this.member = member }
                 values.getAsString(COLUMN_ATTENDEE_ROLE)?.let { role -> this.role = role }
                 values.getAsString(COLUMN_ATTENDEE_PARTSTAT)?.let { partstat -> this.partstat = partstat }
-                values.getAsBoolean(COLUMN_ATTENDEE_RSVP)?.let { rsvp -> this.rsvp = rsvp }
+                values.getAsString(COLUMN_ATTENDEE_RSVP)?.let { rsvp -> this.rsvp = rsvp == "1" }
                 values.getAsString(COLUMN_ATTENDEE_DELEGATEDTO)?.let { delegatedto -> this.delegatedto = delegatedto }
                 values.getAsString(COLUMN_ATTENDEE_DELEGATEDFROM)?.let { delegatedfrom -> this.delegatedfrom = delegatedfrom }
                 values.getAsString(COLUMN_ATTENDEE_SENTBY)?.let { sentby -> this.sentby = sentby }
