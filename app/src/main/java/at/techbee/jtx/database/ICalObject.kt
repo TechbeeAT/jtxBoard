@@ -825,8 +825,8 @@ data class ICalObject(
         //values.getAsString(COLUMN_OTHER)?.let { other -> this.other = other }
         values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)
             ?.let { collectionId -> this.collectionId = collectionId }
-        values.getAsBoolean(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty }
-        values.getAsBoolean(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted }
+        values.getAsString(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty == "1" }
+        values.getAsString(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted == "1" }
         values.getAsString(COLUMN_FILENAME)?.let { fileName -> this.fileName = fileName }
         values.getAsString(COLUMN_ETAG)?.let { eTag -> this.eTag = eTag }
         values.getAsString(COLUMN_SCHEDULETAG)
