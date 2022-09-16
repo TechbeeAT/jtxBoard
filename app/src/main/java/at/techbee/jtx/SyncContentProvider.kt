@@ -549,7 +549,7 @@ class SyncContentProvider : ContentProvider() {
         if(!attachment.uri.isNullOrEmpty())
             return
 
-        val fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(attachment.fmttype)
+        val fileExtension = attachment.filename?.let { MimeTypeMap.getFileExtensionFromUrl(it) } ?: MimeTypeMap.getSingleton().getExtensionFromMimeType(attachment.fmttype)
 
         try {
             val storageDir = Attachment.getAttachmentDirectory(context!!)
@@ -559,9 +559,11 @@ class SyncContentProvider : ContentProvider() {
             val attachmentUri = FileProvider.getUriForFile(context!!, AUTHORITY_FILEPROVIDER, file)
             attachment.binary = null
             attachment.uri = attachmentUri.toString()
-            attachment.extension = ".$fileExtension"
+            attachment.extension = fileExtension?.let { ".$it" }
             if(attachment.filename.isNullOrEmpty())
                 attachment.filename = file.name
+            if(attachment.fmttype.isNullOrEmpty())
+                attachment.fmttype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(attachment.uri))
             attachment.filesize = file.length()
             database.updateAttachment(attachment)
         } catch (e: IOException) {
