@@ -11,6 +11,8 @@ package at.techbee.jtx.ui
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager.PackageInfoFlags
+import android.os.Build
 import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
@@ -87,7 +89,11 @@ open class IcalListViewModel(application: Application, val module: Module) : And
         updateSearch()
 
         // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
-        val firstInstall = application.packageManager?.getPackageInfo(application.packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
+        val firstInstall = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            application.packageManager?.getPackageInfo(application.packageName, PackageInfoFlags.of(0))?.firstInstallTime ?: System.currentTimeMillis()
+        else
+            application.packageManager?.getPackageInfo(application.packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
+
         if(settings.getBoolean(PREFS_ISFIRSTRUN, true)) {
             if (firstInstall > 1641596400000L)
                 addWelcomeEntries(application)
@@ -429,7 +435,8 @@ open class IcalListViewModelTodos(application: Application) : IcalListViewModel(
 
 
 enum class OrderBy(val stringResource: Int, val queryAppendix: String) {
-    START(R.string.started, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
+    START_VTODO(R.string.started, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
+    START_VJOURNAL(R.string.date, "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART "),
     DUE(R.string.due, "$COLUMN_DUE IS NULL, $COLUMN_DUE "),
     COMPLETED(R.string.completed, "$COLUMN_COMPLETED IS NULL, $COLUMN_COMPLETED "),
     CREATED(R.string.filter_created, "$COLUMN_CREATED "),
@@ -439,10 +446,11 @@ enum class OrderBy(val stringResource: Int, val queryAppendix: String) {
 
     companion object {
         fun getValuesFor(module: Module): Array<OrderBy> =
-            if(module == Module.JOURNAL || module == Module.NOTE)
-                arrayOf(START, CREATED, LAST_MODIFIED, SUMMARY)
-            else
-                values()
+            when(module) {
+                Module.JOURNAL -> arrayOf(START_VJOURNAL, CREATED, LAST_MODIFIED, SUMMARY)
+                Module.NOTE -> arrayOf(CREATED, LAST_MODIFIED, SUMMARY)
+                Module.TODO -> arrayOf(START_VTODO, DUE, COMPLETED, CREATED, LAST_MODIFIED, SUMMARY, PRIORITY)
+            }
     }
 }
 
