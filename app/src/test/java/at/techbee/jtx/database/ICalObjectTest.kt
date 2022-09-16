@@ -10,7 +10,7 @@ package at.techbee.jtx.database
 
 import android.content.Context
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import net.fortuna.ical4j.model.Recur
 import org.junit.Assert.*
 import org.junit.Test

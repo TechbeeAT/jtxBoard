@@ -379,20 +379,6 @@ class ICalObjectAndroidTest {
     }
 
     @Test
-    fun applyColorOrHide_Test() {
-        val image = ImageView(context)
-        ICalObject.applyColorOrHide(image, 16777215)    // 16777215 = white
-        assertEquals(View.VISIBLE, image.visibility)
-    }
-
-    @Test
-    fun applyColorOrHide_ColorNull() {
-        val image = ImageView(context)
-        ICalObject.applyColorOrHide(image, null)
-        assertEquals(View.INVISIBLE, image.visibility)
-    }
-
-    @Test
     fun getRecurInfo_linkedToSeries() {
         val item = ICalObject.createJournal("Test")
         item.isRecurLinkedInstance = true

@@ -15,7 +15,7 @@ import androidx.room.Relation
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.Component
-import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.database.properties.Comment

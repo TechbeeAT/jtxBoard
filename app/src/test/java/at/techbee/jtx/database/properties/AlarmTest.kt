@@ -9,7 +9,7 @@
 package at.techbee.jtx.database.properties
 
 import android.content.Context
-import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith

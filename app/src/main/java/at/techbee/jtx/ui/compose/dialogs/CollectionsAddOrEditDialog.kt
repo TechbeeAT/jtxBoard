@@ -8,16 +8,21 @@
 
 package at.techbee.jtx.ui.compose.dialogs
 
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.FormatColorReset
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -27,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.ui.compose.elements.ColorSelectorRow
+import at.techbee.jtx.database.ICalObject
 import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 
@@ -83,17 +88,39 @@ fun CollectionsAddOrEditDialog(
                         isError = noCollectionNameError
                     )
                 }
-                ColorSelectorRow(
-                    initialColor = collectionColor,
-                    onColorChanged = { newColor -> collectionColor = newColor },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
-                        .padding(8.dp)
-                )
+
+
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    LazyRow {
+                        items(ICalObject.defaultColors) { color ->
+                            SmallFloatingActionButton(
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .border(
+                                        2.dp,
+                                        if (collectionColor == color) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                        RoundedCornerShape(16.dp)
+                                    )
+                                    .alpha(0.5f),
+                                containerColor = if (color == Color.Transparent) Color.White else color,
+                                onClick = {
+                                    collectionColor =
+                                        if (collectionColor == Color.Transparent) null else color
+                                },
+                                content = {
+                                    if (color == Color.Transparent)
+                                        Icon(Icons.Outlined.FormatColorReset, null)
+                                }
+                            )
+                        }
+                    }
+                }
 
                 HarmonyColorPicker(
-                    color = collectionColor ?: Color.White,
+                    color = if(collectionColor == null || collectionColor == Color.Transparent) Color.White else collectionColor!!,
                     harmonyMode = ColorHarmonyMode.NONE,
                     modifier = Modifier.size(300.dp),
                     onColorChanged = { hsvColor ->

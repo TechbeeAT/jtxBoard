@@ -11,7 +11,7 @@ package at.techbee.jtx.util
 import android.icu.text.MessageFormat
 import android.os.Build
 import android.util.Log
-import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import java.lang.NumberFormatException
 import java.time.*
 import java.time.format.DateTimeFormatter

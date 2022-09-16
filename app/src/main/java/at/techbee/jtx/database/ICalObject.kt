@@ -13,10 +13,9 @@ import android.content.Context
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
-import android.view.View
-import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
+import androidx.compose.ui.graphics.Color
 import androidx.core.util.PatternsCompat
 import androidx.preference.PreferenceManager
 import androidx.room.*
@@ -44,7 +43,6 @@ import java.time.ZonedDateTime
 import java.time.format.TextStyle
 import java.util.*
 import java.util.TimeZone
-import kotlin.IllegalArgumentException
 import kotlin.time.Duration
 
 
@@ -494,10 +492,20 @@ data class ICalObject(
 ) : Parcelable {
 
 
-    companion object Factory {
+    companion object {
 
         const val TZ_ALLDAY = "ALLDAY"
         const val DEFAULT_MAX_RECUR_INSTANCES = 100
+        val defaultColors = arrayListOf(
+            Color.Transparent,
+            Color.Red,
+            Color.Green,
+            Color.Blue,
+            Color.Yellow,
+            Color.Cyan,
+            Color.Magenta,
+            Color.LightGray
+        )
 
         fun createJournal() = createJournal(null)
 
@@ -749,25 +757,6 @@ data class ICalObject(
                 return tz
 
             return TimeZone.getTimeZone(tz).id
-        }
-
-        /**
-         * Tries to apply the given color on an image view or hides the image view if applying fails
-         * @param [image] where the color should be applied to
-         * @param [color] as Int?
-         */
-        fun applyColorOrHide(image: ImageView, color: Int?) {
-
-            if (color != null) {
-                try {
-                    image.setColorFilter(color)
-                    image.visibility = View.VISIBLE
-                } catch (e: java.lang.IllegalArgumentException) {
-                    Log.i("Invalid color","Invalid Color cannot be parsed: $color")
-                    image.visibility = View.INVISIBLE
-                }
-            } else
-                image.visibility = View.INVISIBLE
         }
     }
 
@@ -1344,16 +1333,6 @@ enum class StatusTodo(val stringResource: Int) : Parcelable {
             }
             return set.toSet()
         }
-
-        fun getNext(current: StatusTodo?): StatusTodo {
-            return when(current) {
-                null -> `IN-PROCESS`
-                `NEEDS-ACTION` -> `IN-PROCESS`
-                `IN-PROCESS` -> COMPLETED
-                COMPLETED -> CANCELLED
-                CANCELLED -> `NEEDS-ACTION`
-            }
-        }
     }
 }
 
@@ -1395,15 +1374,6 @@ enum class Classification(val stringResource: Int) : Parcelable {
                 set.add(it.name)
             }
             return set.toSet()
-        }
-
-        fun getNext(current: Classification?): Classification {
-            return when(current) {
-                null -> PRIVATE
-                PRIVATE -> CONFIDENTIAL
-                CONFIDENTIAL -> PUBLIC
-                PUBLIC -> PRIVATE
-            }
         }
     }
 
