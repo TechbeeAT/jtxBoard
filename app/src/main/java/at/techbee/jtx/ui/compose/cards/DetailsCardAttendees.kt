@@ -13,11 +13,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -32,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
@@ -75,7 +74,7 @@ fun DetailsCardAttendees(
     var searchAttendees = emptyList<Attendee>()
 
     val headline = stringResource(id = R.string.attendees)
-    val newAttendee = remember { mutableStateOf("") }
+    var newAttendee by remember { mutableStateOf("") }
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -90,13 +89,11 @@ fun DetailsCardAttendees(
             HeadlineWithIcon(icon = Icons.Outlined.Groups, iconDesc = headline, text = headline)
 
             AnimatedVisibility(attendees.isNotEmpty()) {
-                Row(
+                LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    attendees.asReversed().forEach { attendee ->
+                    items(items = attendees.asReversed()) { attendee ->
 
                         val overflowMenuExpanded = remember { mutableStateOf(false) }
 
@@ -155,53 +152,25 @@ fun DetailsCardAttendees(
                 }
             }
 
-            AnimatedVisibility(isEditMode && newAttendee.value.isNotEmpty()) {
-
-
-                Row(
+            AnimatedVisibility(isEditMode && newAttendee.isNotEmpty()) {
+                LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
+                    modifier = Modifier.fillMaxWidth()
                 ) {
 
-                        if(attendees.none { existing -> existing.getDisplayString() == newAttendee.value }) {
-                            InputChip(
-                                onClick = {
-                                    val newAttendeeObject = if(UiUtil.isValidEmail(newAttendee.value))
-                                        Attendee(caladdress = "mailto:" + newAttendee)
-                                    else
-                                        Attendee(cn = newAttendee.value)
-                                    attendees = attendees.plus(newAttendeeObject)
-                                    onAttendeesUpdated(attendees)
-                                },
-                                label = { Text(newAttendee.value) },
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Default.PersonAdd,
-                                        stringResource(id = R.string.add)
-                                    )
-                                },
-                                selected = false,
-                                modifier = Modifier.onPlaced {
-                                    coroutineScope.launch {
-                                        bringIntoViewRequester.bringIntoView()
-                                    }
-                                }
-                            )
-                        }
-
-                    searchAttendees.filter { all ->
+                    val possibleAttendeesToSelect = searchAttendees.filter { all ->
                         all.getDisplayString().lowercase()
-                            .contains(newAttendee.value.lowercase()) && attendees.none { existing ->
+                            .contains(newAttendee.lowercase()) && attendees.none { existing ->
                             existing.getDisplayString().lowercase() == all.getDisplayString()
                                 .lowercase()
                         }
-                    }.forEach { attendee ->
+                    }
+                    items(possibleAttendeesToSelect) { attendee ->
                         InputChip(
                             onClick = {
                                 attendees = attendees.plus(attendee)
                                 onAttendeesUpdated(attendees)
+                                newAttendee = ""
                             },
                             label = { Text(attendee.getDisplayString()) },
                             leadingIcon = {
@@ -221,14 +190,22 @@ fun DetailsCardAttendees(
                 if (it) {
 
                     OutlinedTextField(
-                        value = newAttendee.value,
+                        value = newAttendee,
                         leadingIcon = { Icon(Icons.Outlined.Group, headline) },
                         trailingIcon = {
-                            if (newAttendee.value.isNotEmpty()) {
-                                IconButton(onClick = { newAttendee.value = "" }) {
+                            if (newAttendee.isNotEmpty()) {
+                                IconButton(onClick = {
+                                    val newAttendeeObject = if(UiUtil.isValidEmail(newAttendee))
+                                        Attendee(caladdress = "mailto:" + newAttendee)
+                                    else
+                                        Attendee(cn = newAttendee)
+                                    attendees = attendees.plus(newAttendeeObject)
+                                    onAttendeesUpdated(attendees)
+                                    newAttendee = ""
+                                }) {
                                     Icon(
-                                        Icons.Outlined.Close,
-                                        stringResource(id = R.string.delete)
+                                        Icons.Default.PersonAdd,
+                                        stringResource(id = R.string.add)
                                     )
                                 }
                             }
@@ -236,13 +213,14 @@ fun DetailsCardAttendees(
                         singleLine = true,
                         label = { Text(headline) },
                         onValueChange = { newValue ->
-                            newAttendee.value = newValue
+                            newAttendee = newValue
 
                             coroutineScope.launch {
                                 if(newValue.length >= 3 && contactsPermissionState?.status?.isGranted == true)
                                     searchAttendees = UiUtil.getLocalContacts(context, newValue)
                                 else
                                     emptyList<Attendee>()
+                                bringIntoViewRequester.bringIntoView()
                             }
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
@@ -258,13 +236,13 @@ fun DetailsCardAttendees(
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
                             //if(newAttendee.value.isNotEmpty() && attendees.value.none { existing -> existing.getDisplayString() == newAttendee.value } )
-                            val newAttendeeObject = if(UiUtil.isValidEmail(newAttendee.value))
+                            val newAttendeeObject = if(UiUtil.isValidEmail(newAttendee))
                                 Attendee(caladdress = "mailto:" + newAttendee)
                             else
-                                Attendee(cn = newAttendee.value)
+                                Attendee(cn = newAttendee)
                             attendees = attendees.plus(newAttendeeObject)
                             onAttendeesUpdated(attendees)
-                            newAttendee.value = ""
+                            newAttendee = ""
                         })
                     )
                 }

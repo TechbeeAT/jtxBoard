@@ -10,12 +10,9 @@ package at.techbee.jtx.ui.compose.cards
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -26,7 +23,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -36,10 +32,9 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
-import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsCardCategories(
     initialCategories: List<Category>,
@@ -53,9 +48,6 @@ fun DetailsCardCategories(
     var newCategory by remember { mutableStateOf("") }
     var categories by remember { mutableStateOf(initialCategories) }
 
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    val coroutineScope = rememberCoroutineScope()
-
 
     ElevatedCard(modifier = modifier) {
         Column(
@@ -67,11 +59,11 @@ fun DetailsCardCategories(
             HeadlineWithIcon(icon = Icons.Outlined.Label, iconDesc = headline, text = headline)
 
             AnimatedVisibility(categories.isNotEmpty()) {
-                Row(
+                LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    categories.asReversed().forEach { category ->
+                    items(categories.asReversed()) { category ->
                         InputChip(
                             onClick = { },
                             label = { Text(category.text) },
@@ -81,8 +73,13 @@ fun DetailsCardCategories(
                                         onClick = {
                                             categories = categories.filter { it != category }
                                             onCategoriesUpdated(categories)
-                                                  },
-                                        content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
+                                        },
+                                        content = {
+                                            Icon(
+                                                Icons.Outlined.Close,
+                                                stringResource(id = R.string.delete)
+                                            )
+                                        },
                                         modifier = Modifier.size(24.dp)
                                     )
                             },
@@ -92,53 +89,33 @@ fun DetailsCardCategories(
                 }
             }
 
-            AnimatedVisibility(newCategory.isNotEmpty()) {
-                Row(
+            val categoriesToSelect = allCategories.filter { all ->
+                all.lowercase()
+                    .contains(newCategory.lowercase()) && categories.none { existing -> existing.text.lowercase() == all.lowercase() }
+            }
+            AnimatedVisibility(categoriesToSelect.isNotEmpty() && isEditMode) {
+                LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
+                    modifier = Modifier.fillMaxWidth()
                 ) {
 
-                    if(categories.none { existing -> existing.text == newCategory }) {
+                    items(categoriesToSelect) { category ->
                         InputChip(
                             onClick = {
-                                categories = categories.plus(Category(text = newCategory))
+                                categories = categories.plus(Category(text = category))
                                 onCategoriesUpdated(categories)
-                                //newCategory.value = ""
+                                newCategory = ""
                             },
-                            label = { Text(newCategory) },
+                            label = { Text(category) },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.NewLabel,
                                     stringResource(id = R.string.add)
                                 )
                             },
-                            selected = false,
-                            modifier = Modifier.onPlaced {
-                                coroutineScope.launch {
-                                    bringIntoViewRequester.bringIntoView()
-                                }
-                            }
+                            selected = false
                         )
                     }
-
-                    allCategories.filter { all -> all.lowercase().contains(newCategory.lowercase()) && categories.none { existing -> existing.text.lowercase() == all.lowercase() }}
-                        .forEach { category ->
-                            InputChip(
-                                onClick = {
-                                    categories = categories.plus(Category(text = category))
-                                    onCategoriesUpdated(categories)
-                                    //newCategory.value = ""
-                                },
-                                label = { Text(category) },
-                                leadingIcon = {
-                                        Icon(
-                                            Icons.Outlined.NewLabel,
-                                            stringResource(id = R.string.add)
-                                        )
-                                },
-                                selected = false
-                            )
-                        }
                 }
             }
 
@@ -150,10 +127,14 @@ fun DetailsCardCategories(
                         leadingIcon = { Icon(Icons.Outlined.Label, headline) },
                         trailingIcon = {
                             if (newCategory.isNotEmpty()) {
-                                IconButton(onClick = { newCategory = "" }) {
+                                IconButton(onClick = {
+                                    categories = categories.plus(Category(text = newCategory))
+                                    onCategoriesUpdated(categories)
+                                    newCategory = ""
+                                }) {
                                     Icon(
-                                        Icons.Outlined.Close,
-                                        stringResource(id = R.string.delete)
+                                        Icons.Outlined.NewLabel,
+                                        stringResource(id = R.string.add)
                                     )
                                 }
                             }
@@ -165,10 +146,14 @@ fun DetailsCardCategories(
                             onCategoriesUpdated(categories)
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
-                        modifier = Modifier.fillMaxWidth().bringIntoViewRequester(bringIntoViewRequester),
-                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Sentences,
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
+                        ),
                         keyboardActions = KeyboardActions(onDone = {
-                            if(newCategory.isNotEmpty() && categories.none { existing -> existing.text == newCategory } )
+                            if (newCategory.isNotEmpty() && categories.none { existing -> existing.text == newCategory })
                                 categories = categories.plus(Category(text = newCategory))
                             newCategory = ""
                             onCategoriesUpdated(categories)
@@ -188,7 +173,7 @@ fun DetailsCardCategories_Preview() {
             initialCategories = listOf(Category(text = "asdf")),
             isEditMode = false,
             allCategories = listOf("category1", "category2", "Whatever"),
-            onCategoriesUpdated = {  }
+            onCategoriesUpdated = { }
         )
     }
 }
@@ -202,7 +187,7 @@ fun DetailsCardCategories_Preview_edit() {
             initialCategories = listOf(Category(text = "asdf")),
             isEditMode = true,
             allCategories = listOf("category1", "category2", "Whatever"),
-            onCategoriesUpdated = {  }
+            onCategoriesUpdated = { }
         )
     }
 }

@@ -10,12 +10,9 @@ package at.techbee.jtx.ui.compose.cards
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -26,7 +23,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -36,10 +32,9 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
-import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsCardResources(
     initialResources: List<Resource>,
@@ -53,9 +48,6 @@ fun DetailsCardResources(
     var resources by remember { mutableStateOf(initialResources) }
     var newResource by remember { mutableStateOf("") }
 
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    val coroutineScope = rememberCoroutineScope()
-
 
     ElevatedCard(modifier = modifier) {
         Column(
@@ -67,13 +59,12 @@ fun DetailsCardResources(
             HeadlineWithIcon(icon = Icons.Outlined.WorkOutline, iconDesc = headline, text = headline)
 
             AnimatedVisibility(resources.isNotEmpty()) {
-                Row(
+                LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    resources.asReversed().forEach { resource ->
+
+                    items(resources.asReversed()) { resource ->
                         InputChip(
                             onClick = { },
                             label = { Text(resource.text?:"") },
@@ -94,57 +85,33 @@ fun DetailsCardResources(
                 }
             }
 
-            AnimatedVisibility(newResource.isNotEmpty()) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
-                ) {
+            val resourcesToSelect = allResources.filter { all -> all.lowercase().contains(newResource.lowercase()) && resources.none { existing -> existing.text?.lowercase() == all.lowercase() }}
 
-                    if(resources.none { existing -> existing.text == newResource }) {
+            AnimatedVisibility(resourcesToSelect.isNotEmpty() && isEditMode) {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    items(resourcesToSelect) { resource ->
                         InputChip(
                             onClick = {
-                                resources = resources.plus(Resource(text = newResource))
+                                resources = resources.plus(Resource(text = resource))
                                 onResourcesUpdated(resources)
-                                //newResource.value = ""
+                                newResource = ""
                             },
-                            label = { Text(newResource) },
+                            label = { Text(resource) },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.NewLabel,
                                     stringResource(id = R.string.add)
                                 )
                             },
-                            selected = false,
-                            modifier = Modifier.onPlaced {
-                                coroutineScope.launch {
-                                    bringIntoViewRequester.bringIntoView()
-                                }
-                            }
+                            selected = false
                         )
                     }
-
-                    allResources.filter { all -> all.lowercase().contains(newResource.lowercase()) && resources.none { existing -> existing.text?.lowercase() == all.lowercase() }}
-                        .forEach { resource ->
-                            InputChip(
-                                onClick = {
-                                    resources = resources.plus(Resource(text = resource))
-                                    onResourcesUpdated(resources)
-                                    //newResource.value = ""
-                                },
-                                label = { Text(resource) },
-                                leadingIcon = {
-                                        Icon(
-                                            Icons.Outlined.NewLabel,
-                                            stringResource(id = R.string.add)
-                                        )
-                                },
-                                selected = false
-                            )
-                        }
                 }
             }
+
 
             Crossfade(isEditMode) {
                 if (it) {
@@ -154,10 +121,14 @@ fun DetailsCardResources(
                         leadingIcon = { Icon(Icons.Outlined.WorkOutline, headline) },
                         trailingIcon = {
                             if (newResource.isNotEmpty()) {
-                                IconButton(onClick = { newResource = "" }) {
+                                IconButton(onClick = {
+                                    resources = resources.plus(Resource(text = newResource))
+                                    onResourcesUpdated(resources)
+                                    newResource = ""
+                                }) {
                                     Icon(
-                                        Icons.Outlined.Close,
-                                        stringResource(id = R.string.delete)
+                                        Icons.Outlined.NewLabel,
+                                        stringResource(id = R.string.add)
                                     )
                                 }
                             }
@@ -168,9 +139,7 @@ fun DetailsCardResources(
                             newResource = newResourceName
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .bringIntoViewRequester(bringIntoViewRequester),
+                        modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
                             if(newResource.isNotEmpty() && resources.none { existing -> existing.text == newResource } ) {
