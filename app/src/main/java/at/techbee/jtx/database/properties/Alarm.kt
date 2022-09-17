@@ -15,22 +15,21 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.navigation.NavDeepLinkBuilder
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import at.techbee.jtx.MainActivity
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import kotlinx.parcelize.Parcelize
 import java.time.Duration
 import java.time.Instant
@@ -330,25 +329,19 @@ data class Alarm (
         }
     }
 
-    fun scheduleNotification(context: Context, triggerTime: Long, isReadOnly: Boolean) {
+    fun scheduleNotification(context: Context, triggerTime: Long, isReadOnly: Boolean, notificationSummary: String?, notificationDescription: String?) {
 
         if(triggerTime < System.currentTimeMillis())
             return
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            // prepare the args to open the icalViewFragment
-            val args: Bundle = Bundle().apply {
-                putLong("item2show", icalObjectId)
+            val intent = Intent(context, MainActivity2::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                this.action = "openICalObject"
+                this.putExtra("item2show", icalObjectId)
             }
-            // prepare the intent that is passed to the notification in setContentIntent(...)
-            // this will be the intent that is executed when the user clicks on the notification
-            val contentIntent = NavDeepLinkBuilder(context)
-                .setComponentName(MainActivity::class.java)
-                .setGraph(R.navigation.navigation)
-                .setDestination(R.id.icalViewFragment)
-                .setArguments(args)
-                .createPendingIntent()
+            val contentIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
 
             // SNOOZE OPTIONS - Alarm after one day
@@ -379,10 +372,8 @@ data class Alarm (
             // this is the notification itself that will be put as an Extra into the notificationIntent
             val notification = NotificationCompat.Builder(context, MainActivity.CHANNEL_REMINDER_DUE).apply {
                 setSmallIcon(R.drawable.ic_notification)
-                if(summary?.isNotEmpty() == true)
-                    setContentTitle(summary)
-                if(description != summary)
-                    setContentText(description)
+                notificationSummary?.let { setContentTitle(it) }
+                notificationDescription?.let { setContentText(it) }
                 setContentIntent(contentIntent)
                 priority = NotificationCompat.PRIORITY_HIGH
                 setCategory(NotificationCompat.CATEGORY_ALARM)     //  CATEGORY_REMINDER might also be an alternative

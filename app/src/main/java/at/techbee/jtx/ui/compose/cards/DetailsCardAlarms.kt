@@ -8,6 +8,8 @@
 
 package at.techbee.jtx.ui.compose.cards
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -20,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,11 +33,17 @@ import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.ui.compose.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.compose.dialogs.DurationPickerDialog
+import at.techbee.jtx.ui.compose.dialogs.RequestNotificationsPermissionDialog
 import at.techbee.jtx.ui.compose.elements.HeadlineWithIcon
 import at.techbee.jtx.util.DateTimeUtils
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import java.time.Duration
 
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun DetailsCardAlarms(
     initialAlarms: List<Alarm>,
@@ -50,6 +59,12 @@ fun DetailsCardAlarms(
     var showDateTimePicker by rememberSaveable { mutableStateOf(false) }
     var showDurationPicker by rememberSaveable { mutableStateOf(false) }
 
+    val notificationsPermissionState = if (!LocalInspectionMode.current && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS) else null
+    var showNotificationsPermissionDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (notificationsPermissionState?.status?.shouldShowRationale == false && !notificationsPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
+        showNotificationsPermissionDialog = true
+    }
 
     if(showDateTimePicker) {
         val initialDateTime = if(icalObject.module == Module.JOURNAL.name) icalObject.dtstart ?: System.currentTimeMillis() else icalObject.due ?: System.currentTimeMillis()
@@ -165,6 +180,12 @@ fun DetailsCardAlarms(
             }
 
         }
+    }
+
+    if(showNotificationsPermissionDialog) {
+        RequestNotificationsPermissionDialog(
+            onConfirm = { notificationsPermissionState?.launchPermissionRequest() },
+            onDismiss = { showNotificationsPermissionDialog = false })
     }
 }
 

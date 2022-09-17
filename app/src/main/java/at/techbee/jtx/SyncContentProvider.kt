@@ -242,7 +242,7 @@ class SyncContentProvider : ContentProvider() {
                 alarm.triggerRelativeDuration != null -> alarm.getDatetimeFromTriggerDuration(icalobject.dtstart, icalobject.dtstartTimezone)
                 else -> null
             }
-            triggerTime?.let { trigger -> alarm.scheduleNotification(context!!, trigger, collection.readonly) }
+            triggerTime?.let { trigger -> alarm.scheduleNotification(context!!, trigger, collection.readonly, icalobject.summary, icalobject.description) }
         }
 
         return ContentUris.withAppendedId(uri, id)

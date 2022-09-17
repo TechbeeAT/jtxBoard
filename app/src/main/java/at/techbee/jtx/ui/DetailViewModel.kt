@@ -211,8 +211,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 database.deleteAlarms(iCalObject.id)
                 alarms.forEach { changedAlarm ->
                     changedAlarm.icalObjectId = iCalObject.id
-                    database.insertAlarm(changedAlarm)
-                    //changedAlarm.scheduleNotification()   // TODO!
+                    changedAlarm.alarmId = database.insertAlarm(changedAlarm)
+                    val triggerTime = when {
+                        changedAlarm.triggerTime != null -> changedAlarm.triggerTime
+                        changedAlarm.triggerRelativeDuration != null && changedAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> changedAlarm.getDatetimeFromTriggerDuration(
+                            iCalObject.due, iCalObject.dueTimezone)
+                        changedAlarm.triggerRelativeDuration != null -> changedAlarm.getDatetimeFromTriggerDuration(iCalObject.dtstart, iCalObject.dtstartTimezone)
+                        else -> null
+                    }
+                    triggerTime?.let {
+                        changedAlarm.scheduleNotification(_application, triggerTime = it, isReadOnly = icalEntity.value?.ICalCollection?.readonly?: true, icalEntity.value?.property?.summary, icalEntity.value?.property?.description)
+                    }
                 }
             }
 

@@ -8,35 +8,9 @@
 
 package at.techbee.jtx
 
-import android.app.AlertDialog
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.ParcelFileDescriptor
-import android.os.Parcelable
-import android.util.Log
-import android.webkit.MimeTypeMap
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
-import androidx.navigation.findNavController
-import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.ui.IcalListFragmentDirections
-import java.io.File
-import java.io.IOException
 
-
-// this is necessary for the app permission, 100  and 200 ist just a freely chosen value
-const val CONTACT_READ_PERMISSION_CODE = 100
-const val RECORD_AUDIO_PERMISSION_CODE = 200
 
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
@@ -59,15 +33,8 @@ class MainActivity : AppCompatActivity()  {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
-
-
-        // Register Notification Channel for Reminders
-        createNotificationChannel()
-
 
 /*
         billingManager?.isProPurchasedLoaded?.observe(this) {
@@ -79,49 +46,6 @@ class MainActivity : AppCompatActivity()  {
  */
     }
 
-
-
-
-
-    // this is called when the user accepts a permission
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-
-        if (requestCode == CONTACT_READ_PERMISSION_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(this, R.string.permission_read_contacts_granted, Toast.LENGTH_SHORT).show()
-            else
-                Toast.makeText(this, R.string.permission_read_contacts_denied, Toast.LENGTH_SHORT).show()
-        } else if (requestCode == RECORD_AUDIO_PERMISSION_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(this, R.string.permission_record_audio_granted, Toast.LENGTH_SHORT).show()
-            else
-                Toast.makeText(this, R.string.permission_record_audio_denied, Toast.LENGTH_SHORT).show()
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-    }
-
-    private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.notification_channel_reminder_name)
-            val descriptionText = getString(R.string.notification_channel_reminder_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_REMINDER_DUE, name, importance).apply {
-                description = descriptionText
-            }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
 
 
     private fun showProInfoDialog(isPurchased: Boolean) {

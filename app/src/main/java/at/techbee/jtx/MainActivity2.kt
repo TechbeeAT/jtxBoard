@@ -1,8 +1,12 @@
 package at.techbee.jtx
 
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.compose.setContent
@@ -55,6 +59,10 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
 
         TimeZoneRegistryFactory.getInstance().createRegistry() // necessary for ical4j
         checkThemeSetting()
+
+        // Register Notification Channel for Reminders
+        createNotificationChannel()
+
         BillingManager.getInstance()?.initialise(this)
         /* TODO
         billingManager?.isProPurchased?.observe(this) { isPurchased ->
@@ -99,6 +107,11 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
                     globalStateHolder.icalFromIntentModule.value = Module.TODO
                     globalStateHolder.icalFromIntentString.value = ""
                 }
+                "openICalObject" -> {
+                    val id = intent.getLongExtra("item2show", 0L)
+                    if(id > 0L)
+                        globalStateHolder.icalObject2Open.value = id
+                }
 
                 // Take data also from other sharing intents
                 Intent.ACTION_SEND -> {
@@ -117,7 +130,9 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
                 Intent.ACTION_VIEW -> {
                     if (intent.type == "text/calendar") {
                         val ics = intent.data ?: return
-                        globalStateHolder.icalString2Import.value = this.contentResolver.openInputStream(ics)?.readBytes()?.decodeToString()
+                        this.contentResolver.openInputStream(ics)?.use { stream ->
+                            globalStateHolder.icalString2Import.value = stream.readBytes().decodeToString()
+                        }
                     }
                 }
             }
@@ -143,6 +158,24 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
     }
+
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.notification_channel_reminder_name)
+            val descriptionText = getString(R.string.notification_channel_reminder_description)
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(MainActivity.CHANNEL_REMINDER_DUE, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 }
 
 @Composable
@@ -151,9 +184,7 @@ fun MainNavHost(
     globalStateHolder: GlobalStateHolder,
     settingsStateHolder: SettingsStateHolder
 ) {
-
     val navController = rememberNavController()
-
 
     NavHost(
         navController = navController,
@@ -241,16 +272,22 @@ fun MainNavHost(
                 stepForProgress = settingsStateHolder.settingStepForProgress
             )
         }
+    }
 
-        if(globalStateHolder.icalString2Import.value != null)
-            navController.navigate(NavigationDrawerDestination.COLLECTIONS.name)
+    globalStateHolder.icalString2Import.value?.let {
+        navController.navigate(NavigationDrawerDestination.COLLECTIONS.name)
+    }
+
+    globalStateHolder.icalObject2Open.value?.let { id ->
+        globalStateHolder.icalObject2Open.value = null
+        navController.navigate("details/$id?isEditMode=false")
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    JtxBoardTheme {
+    MaterialTheme {
         val context = LocalContext.current
         MainNavHost(context as Activity, GlobalStateHolder(context), SettingsStateHolder(context))
     }

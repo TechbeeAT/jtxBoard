@@ -13,6 +13,8 @@ class GlobalStateHolder(context: Context) {
     var isSyncInProgress = mutableStateOf(false)
     var icalString2Import: MutableState<String?> = mutableStateOf(null)
 
+    var icalObject2Open: MutableState<Long?> = mutableStateOf(null)
+
     var icalFromIntentString: MutableState<String?> = mutableStateOf(null)
     var icalFromIntentAttachment: MutableState<Attachment?> = mutableStateOf(null)
     var icalFromIntentModule: MutableState<Module?> = mutableStateOf(Module.JOURNAL)

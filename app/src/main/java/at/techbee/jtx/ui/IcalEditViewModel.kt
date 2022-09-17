@@ -13,7 +13,6 @@ import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import androidx.lifecycle.*
 import at.techbee.jtx.database.*
-import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import kotlinx.coroutines.Dispatchers
@@ -24,16 +23,6 @@ class IcalEditViewModel(
     application: Application,
     val iCalEntity: ICalEntity
 ) : AndroidViewModel(application) {
-
-    companion object {
-        const val TAB_GENERAL = 0
-        const val TAB_PEOPLE_RES = 1
-        const val TAB_LOC_COMMENTS = 2
-        const val TAB_ATTACHMENTS = 3
-        const val TAB_SUBTASKS = 4
-        //const val TAB_ALARMS = 5
-        const val TAB_RECURRING = 6
-    }
 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
 
@@ -47,18 +36,6 @@ class IcalEditViewModel(
     var iCalObjectUpdated: MutableLiveData<ICalObject> =
         MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property) }
     var selectedCollectionId: Long? = null
-
-    var categoryUpdated: MutableList<Category> = mutableListOf()
-    var commentUpdated: MutableList<Comment> = mutableListOf()
-    var attachmentUpdated: MutableList<Attachment> = mutableListOf()
-    var attendeeUpdated: MutableList<Attendee> = mutableListOf()
-    var resourceUpdated: MutableList<Resource> = mutableListOf()
-    var alarmUpdated: MutableList<Alarm> = mutableListOf()
-    var subtaskUpdated: MutableList<ICalObject> = mutableListOf()
-
-    var activeTab: MutableLiveData<Int> = MutableLiveData<Int>(TAB_GENERAL)
-    var tabGeneralVisible = Transformations.map(activeTab) { it == TAB_GENERAL }
-    var tabULCVisible = Transformations.map(activeTab) { it == TAB_LOC_COMMENTS }
 
 
     fun update() {
@@ -83,29 +60,6 @@ class IcalEditViewModel(
                 savingClicked.postValue(false)
                 collectionNotFoundError.postValue(false)
                 return@launch
-            }
-
-            alarmUpdated.forEach { newAlarm ->
-                newAlarm.icalObjectId = insertedOrUpdatedItemId
-                if(newAlarm.action.isNullOrEmpty())
-                    newAlarm.action = AlarmAction.DISPLAY.name
-
-                // VALARM with action DISPLAY must have a description!
-                iCalObjectUpdated.value?.summary?.let { newAlarm.summary = it  }
-                iCalObjectUpdated.value?.description?.let { newAlarm.description = it }
-                if(newAlarm.description.isNullOrEmpty())
-                    newAlarm.description = newAlarm.summary ?: ""          // If no description was set, we try to set it to the summary, if also the summary is null, an empty string is set
-                newAlarm.alarmId = database.insertAlarm(newAlarm)
-
-                // take care of notifications
-                val triggerTime = when {
-                    newAlarm.triggerTime != null -> newAlarm.triggerTime
-                    newAlarm.triggerRelativeDuration != null && newAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> newAlarm.getDatetimeFromTriggerDuration(
-                        iCalObjectUpdated.value?.due, iCalObjectUpdated.value?.dueTimezone)
-                    newAlarm.triggerRelativeDuration != null -> newAlarm.getDatetimeFromTriggerDuration(iCalObjectUpdated.value?.dtstart, iCalObjectUpdated.value?.dtstartTimezone)
-                    else -> null
-                }
-                triggerTime?.let { newAlarm.scheduleNotification(getApplication(), it, false) }
             }
 
 

@@ -229,10 +229,10 @@ dependencies {
 
 
     // jetpack compose
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation 'androidx.compose.material3:material3:1.0.0-beta01'
-    implementation "androidx.compose.material3:material3-window-size-class:1.0.0-beta01"
+    implementation 'androidx.compose.material3:material3:1.0.0-beta02'
+    implementation "androidx.compose.material3:material3-window-size-class:1.0.0-beta02"
 
     implementation "androidx.compose.material:material:$version_compose"    // material 2 support as bottom sheet is missing in m3
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
@@ -241,7 +241,7 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:$version_compose"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
-    implementation "androidx.navigation:navigation-compose:2.5.1"
+    implementation "androidx.navigation:navigation-compose:2.5.2"
 
     // Google Maps
     gplayImplementation  "com.google.maps.android:maps-compose:2.2.0"

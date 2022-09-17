@@ -13,6 +13,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +27,10 @@ class NotificationPublisher : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notification = intent.getParcelableExtra<Notification>(NOTIFICATION)
+        val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            intent.getParcelableExtra(NOTIFICATION, Notification::class.java)
+        else
+            intent.getParcelableExtra(NOTIFICATION)
         val id = intent.getLongExtra(NOTIFICATION_ID, 0L)
 
         if(id == 0L)
@@ -49,7 +53,8 @@ class NotificationPublisher : BroadcastReceiver() {
                 alarm.alarmId = ICalDatabase.getInstance(context).iCalDatabaseDao.insertAlarm(alarm)
                 ICalDatabase.getInstance(context).iCalDatabaseDao.updateSetDirty(alarm.icalObjectId, System.currentTimeMillis())
                 SyncUtil.notifyContentObservers(context)
-                alarm.scheduleNotification(context, nextAlarm, false)  // if we ended here, the entry cannot be read only
+                val icalobject = ICalDatabase.getInstance(context).iCalDatabaseDao.getICalObjectByIdSync(alarm.icalObjectId) ?: return@launch
+                alarm.scheduleNotification(context, nextAlarm, false, icalobject.summary, icalobject.description)  // if we ended here, the entry cannot be read only
             }
         } else if (intent.action == ACTION_DONE) {
             notificationManager.cancel(id.toInt())

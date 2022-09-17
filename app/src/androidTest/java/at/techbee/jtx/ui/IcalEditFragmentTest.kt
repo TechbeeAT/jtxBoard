@@ -175,7 +175,7 @@ class IcalEditFragmentTest {
         ICalDatabase.getInMemoryDB(context).close()
     }
 
-
+/*
     @Test
     fun journal_everything_is_prefilled_tab_general()  {
 
@@ -800,7 +800,8 @@ class IcalEditFragmentTest {
         onView(withId(R.id.edit_recur_all_occurences_items)).check(matches(not(isDisplayed())))
     }
 
-
+ */
 
     // TODO continue with more checks on recurrence
 }
+

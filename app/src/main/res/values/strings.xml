@@ -360,6 +360,7 @@
     <string name="edit_validation_errors_subtask_not_confirmed">A subtask was entered but not confirmed. Please confirm or delete.</string>
     <string name="edit_fragment_app_permission">App permission</string>
     <string name="edit_fragment_app_permission_message">jtx Board can suggest Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature.</string>
+    <string name="edit_fragment_app_notification_permission_message">jtx Board shows notifications when alarms are due. Please grant the notifications permission in order to use this feature.</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_title">Unsupported recurrence rule detected!</string>
     <string name="edit_fragment_recur_unknown_rrule_dialog_message">An unknown or unsupported recurrence rule was detected. If you save this entry, the existing recurrence rule will be deleted/overwritten.</string>
     <string name="edit_fragment_recur_unsupported_duration_dialog_title">Unsupported value (Duration) detected!</string>

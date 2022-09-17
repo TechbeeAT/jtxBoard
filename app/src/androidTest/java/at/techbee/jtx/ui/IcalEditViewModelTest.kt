@@ -15,18 +15,16 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import at.techbee.jtx.AUTHORITY_FILEPROVIDER
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.getOrAwaitValue
-import at.techbee.jtx.ui.IcalEditViewModel.Companion.TAB_GENERAL
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 import org.junit.runner.RunWith
 
 
