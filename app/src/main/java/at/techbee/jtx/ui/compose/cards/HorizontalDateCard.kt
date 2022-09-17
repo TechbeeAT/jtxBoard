@@ -8,31 +8,30 @@
 
 package at.techbee.jtx.ui.compose.cards
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.runtime.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.compose.dialogs.DatePickerDialog
-import at.techbee.jtx.ui.compose.elements.VerticalDateBlock
+import at.techbee.jtx.util.DateTimeUtils
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Deprecated("Not used anymore")
-fun VerticalDateCard(
+fun HorizontalDateCard(
     datetime: Long?,
     timezone: String?,
     isEditMode: Boolean,
@@ -42,31 +41,42 @@ fun VerticalDateCard(
     pickerMinDate: Long? = null,
     pickerMaxDate: Long? = null,
     onDateTimeChanged: (Long?, String?) -> Unit = { _, _ -> }
-    ) {
+) {
 
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
-    var newDateTime by rememberSaveable { mutableStateOf(datetime)}
+    var newDateTime by rememberSaveable { mutableStateOf(datetime) }
     var newTimezone by rememberSaveable { mutableStateOf(timezone) }
 
-    if(isEditMode) {
+    if (isEditMode) {
         OutlinedCard(
             onClick = { showDatePickerDialog = true },
             modifier = modifier
         ) {
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                VerticalDateBlock(
-                    datetime = newDateTime,
-                    timezone = newTimezone,
-                    modifier = Modifier.padding(4.dp),
-                    labelTop = labelTop,
-                )
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)) {
+
+                labelTop?.let { label ->
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+
+                if (newDateTime != null) {
+                    Text(
+                        DateTimeUtils.convertLongToFullDateTimeString(
+                            newDateTime,
+                            newTimezone
+                        )
+                    )
+                } else {
+                    Text(
+                        text = stringResource(id = R.string.not_set2),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
             }
         }
     } else {
@@ -74,24 +84,38 @@ fun VerticalDateCard(
             modifier = modifier
         ) {
 
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(8.dp)
             ) {
-                VerticalDateBlock(
-                    datetime = newDateTime,
-                    timezone = newTimezone,
-                    modifier = Modifier.padding(4.dp),
-                    labelTop = labelTop
-                )
+                labelTop?.let { label ->
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+
+                if (newDateTime != null) {
+                    Text(
+                        DateTimeUtils.convertLongToFullDateTimeString(
+                            newDateTime,
+                            newTimezone
+                        ),
+                        fontStyle = FontStyle.Italic,
+                        fontWeight = FontWeight.Bold
+                    )
+                } else {
+                    Text(
+                        text = stringResource(id = R.string.not_set2)
+                    )
+                }
             }
         }
     }
 
-    if(showDatePickerDialog) {
+    if (showDatePickerDialog) {
         DatePickerDialog(
             datetime = newDateTime,
             timezone = newTimezone,
@@ -102,7 +126,7 @@ fun VerticalDateCard(
                 newDateTime = time
                 newTimezone = tz
                 onDateTimeChanged(newDateTime, newTimezone)
-                        },
+            },
             onDismiss = { showDatePickerDialog = false }
         )
     }
@@ -110,9 +134,9 @@ fun VerticalDateCard(
 
 @Preview(showBackground = true)
 @Composable
-fun VerticalDateCard_Preview_Allday() {
+fun HorizontalDateCard_Preview_Allday() {
     MaterialTheme {
-        VerticalDateCard(
+        HorizontalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = ICalObject.TZ_ALLDAY,
             allowNull = true,
@@ -124,9 +148,9 @@ fun VerticalDateCard_Preview_Allday() {
 
 @Preview(showBackground = true)
 @Composable
-fun VerticalDateCard_Preview_Allday_edit() {
+fun HorizontalDateCard_Preview_Allday_edit() {
     MaterialTheme {
-        VerticalDateCard(
+        HorizontalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = ICalObject.TZ_ALLDAY,
             allowNull = true,
@@ -138,9 +162,9 @@ fun VerticalDateCard_Preview_Allday_edit() {
 
 @Preview(showBackground = true)
 @Composable
-fun VerticalDateCard_Preview_WithTime() {
+fun HorizontalDateCard_Preview_WithTime() {
     MaterialTheme {
-        VerticalDateCard(
+        HorizontalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = null,
             isEditMode = false,
@@ -154,9 +178,9 @@ fun VerticalDateCard_Preview_WithTime() {
 
 @Preview(showBackground = true)
 @Composable
-fun VerticalDateCard_Preview_WithTimezone() {
+fun HorizontalDateCard_Preview_WithTimezone() {
     MaterialTheme {
-        VerticalDateCard(
+        HorizontalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = "Europe/Vienna",
             isEditMode = false,
@@ -168,9 +192,9 @@ fun VerticalDateCard_Preview_WithTimezone() {
 
 @Preview(showBackground = true)
 @Composable
-fun VerticalDateCard_Preview_WithTimezone2() {
+fun HorizontalDateCard_Preview_WithTimezone2() {
     MaterialTheme {
-        VerticalDateCard(
+        HorizontalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = "Africa/Addis_Ababa",
             isEditMode = false,
@@ -182,12 +206,28 @@ fun VerticalDateCard_Preview_WithTimezone2() {
 
 @Preview(showBackground = true)
 @Composable
-fun VerticalDateCard_Preview_NotSet() {
+fun HorizontalDateCard_Preview_NotSet() {
     MaterialTheme {
-        VerticalDateCard(
+        HorizontalDateCard(
             datetime = null,
             timezone = null,
             isEditMode = false,
+            allowNull = true,
+            onDateTimeChanged = { _, _ -> },
+            labelTop = stringResource(id = R.string.due)
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun HorizontalDateCard_Preview_edit_NotSet() {
+    MaterialTheme {
+        HorizontalDateCard(
+            datetime = null,
+            timezone = null,
+            isEditMode = true,
             allowNull = true,
             onDateTimeChanged = { _, _ -> },
             labelTop = stringResource(id = R.string.due)

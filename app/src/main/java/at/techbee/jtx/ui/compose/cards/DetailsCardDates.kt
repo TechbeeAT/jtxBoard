@@ -9,7 +9,7 @@
 package at.techbee.jtx.ui.compose.cards
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ElevatedCard
@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,16 +47,17 @@ fun DetailsCardDates(
     var completed by rememberSaveable { mutableStateOf(icalObject.completed) }
     var completedTimezone by rememberSaveable { mutableStateOf(icalObject.completedTimezone) }
 
+    if(icalObject.module == Module.NOTE.name)
+        return
 
     ElevatedCard(modifier = modifier) {
-        Row(
+        Column(
             modifier = Modifier.fillMaxWidth().padding(if(isEditMode) 4.dp else 0.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.Top
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             if((icalObject.module == Module.JOURNAL.name || icalObject.module == Module.TODO.name)
                 && (dtstart != null || isEditMode)) {
-                VerticalDateCard(
+                HorizontalDateCard(
                     datetime = dtstart,
                     timezone = dtstartTimezone,
                     isEditMode = isEditMode,
@@ -69,7 +69,6 @@ fun DetailsCardDates(
                         onDtstartChanged(datetime, timezone)
                     },
                     pickerMaxDate = DateTimeUtils.getDateWithoutTime(due, dueTimezone),
-                    modifier = Modifier.weight(0.33f),
                     labelTop = if(icalObject.module == Module.TODO.name)
                         stringResource(id = R.string.started)
                     else
@@ -80,7 +79,7 @@ fun DetailsCardDates(
 
             if(icalObject.module == Module.TODO.name
                 && (due != null || isEditMode)) {
-                VerticalDateCard(
+                HorizontalDateCard(
                     datetime = due,
                     timezone = dueTimezone,
                     isEditMode = isEditMode,
@@ -92,14 +91,13 @@ fun DetailsCardDates(
                         //icalObject.dueTimezone = dueTimezone
                     },
                     pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone),
-                    modifier = Modifier.weight(0.33f),
                     labelTop = stringResource(id = R.string.due),
                     allowNull = icalObject.module == Module.TODO.name
                 )
             }
             if(icalObject.module == Module.TODO.name
                 && (completed != null || isEditMode)) {
-                VerticalDateCard(
+                HorizontalDateCard(
                     datetime = completed,
                     timezone = completedTimezone,
                     isEditMode = isEditMode,
@@ -111,7 +109,6 @@ fun DetailsCardDates(
                         //icalObject.completedTimezone = completedTimezone
                     },
                     pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone),
-                    modifier = Modifier.weight(0.33f),
                     labelTop = stringResource(id = R.string.completed),
                     allowNull = icalObject.module == Module.TODO.name
                 )
@@ -134,19 +131,7 @@ fun DetailsCardDates_Journal_Preview() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DetailsCardDates_Note_Preview() {
-    MaterialTheme {
-        DetailsCardDates(
-            icalObject = ICalObject.createNote(),
-            isEditMode = false,
-            onDtstartChanged = { _, _ -> },
-            onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> }
-        )
-    }
-}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -183,6 +168,25 @@ fun DetailsCardDates_Journal_edit_Preview() {
     }
 }
 
+
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardDates_Todo_edit_Preview() {
+    MaterialTheme {
+        DetailsCardDates(
+            icalObject = ICalObject.createTodo().apply {
+                this.due = System.currentTimeMillis()
+                this.dueTimezone = TZ_ALLDAY
+            },
+            isEditMode = true,
+            onDtstartChanged = { _, _ -> },
+            onDueChanged = { _, _ -> },
+            onCompletedChanged = { _, _ -> }
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun DetailsCardDates_Note_edit_Preview() {
@@ -199,14 +203,11 @@ fun DetailsCardDates_Note_edit_Preview() {
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardDates_Todo_edit_Preview() {
+fun DetailsCardDates_Note_Preview() {
     MaterialTheme {
         DetailsCardDates(
-            icalObject = ICalObject.createTodo().apply {
-                this.due = System.currentTimeMillis()
-                this.dueTimezone = TZ_ALLDAY
-            },
-            isEditMode = true,
+            icalObject = ICalObject.createNote(),
+            isEditMode = false,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
             onCompletedChanged = { _, _ -> }
