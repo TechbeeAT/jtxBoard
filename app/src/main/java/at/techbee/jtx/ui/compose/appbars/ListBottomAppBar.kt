@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Parcel
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -291,7 +290,12 @@ fun ListBottomAppBar(
                           /* TODO */
                           },
             ) {
-                Icon(Icons.Filled.Add, "New Entry")   // TODO: move to strings
+                when (module) {
+                    Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))
+                    Module.NOTE -> Icon(Icons.Outlined.NoteAdd, stringResource(R.string.toolbar_text_add_note))
+                    Module.TODO -> Icon(Icons.Outlined.AddTask, stringResource(R.string.toolbar_text_add_task))
+
+                }
             }
         }
     )
@@ -311,6 +315,32 @@ fun ListBottomAppBar_Preview_Journal() {
 
         ListBottomAppBar(
             module = Module.JOURNAL,
+            iCal4ListLive = MutableLiveData(emptyList()),
+            listSettings = listSettings,
+            onAddNewEntry = { },
+            onAddNewQuickEntry = { },
+            onListSettingsChanged = { },
+            onFilterIconClicked = { },
+            onGoToDateSelected = { },
+            onSearchTextClicked = { },
+            onClearFilterClicked = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ListBottomAppBar_Preview_Note() {
+    MaterialTheme {
+
+        val application = LocalContext.current.applicationContext
+        val prefs = application.getSharedPreferences(IcalListViewModel.PREFS_LIST_NOTES, Context.MODE_PRIVATE)
+
+        val listSettings = ListSettings(prefs)
+        listSettings.searchText.value = "whatever"
+
+        ListBottomAppBar(
+            module = Module.NOTE,
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             onAddNewEntry = { },

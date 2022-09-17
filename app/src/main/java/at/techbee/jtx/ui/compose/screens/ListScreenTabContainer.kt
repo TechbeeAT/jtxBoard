@@ -1,6 +1,7 @@
 package at.techbee.jtx.ui.compose.screens
 
 
+import android.app.Application
 import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
@@ -131,18 +132,21 @@ fun ListScreenTabContainer(
                         expanded = topBarMenuExpanded,
                         onDismissRequest = { topBarMenuExpanded = false }
                     ) {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    stringResource(id = R.string.sync_now)
-                                )
-                            },
-                            leadingIcon = { Icon(Icons.Outlined.Sync, null) },
-                            onClick = {
-                                SyncUtil.syncAllAccounts(context)
-                                topBarMenuExpanded = false
-                            }
-                        )
+
+                        if(SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        stringResource(id = R.string.sync_now)
+                                    )
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.Sync, null) },
+                                onClick = {
+                                    SyncUtil.syncAllAccounts(context)
+                                    topBarMenuExpanded = false
+                                }
+                            )
+                        }
                         DropdownMenuItem(
                             text = {
                                 Text(

@@ -84,7 +84,10 @@ fun ListScreen(
                         val newICalObject = when(icalListViewModel.module) {
                             Module.JOURNAL -> ICalObject.createJournal()
                             Module.NOTE -> ICalObject.createNote()
-                            Module.TODO -> ICalObject.createTodo()
+                            Module.TODO -> ICalObject.createTodo().apply {
+                                this.setDefaultDueDateFromSettings(context)
+                                this.setDefaultStartDateFromSettings(context)
+                            }
                         }
                         newICalObject.dirty = false
                         val newIcalObjectId = db.insertICalObject(newICalObject)

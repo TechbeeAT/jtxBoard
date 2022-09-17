@@ -9,27 +9,15 @@
 package at.techbee.jtx.ui
 
 
-import android.app.Application
-import android.content.ContentResolver
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.*
-import androidx.appcompat.widget.SearchView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.preference.PreferenceManager
-import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.util.SyncUtil
 
 
 class IcalListFragment : Fragment() {
-
-    private lateinit var arguments: IcalListFragmentArgs
 
     companion object {
         const val PREFS_LAST_USED_COLLECTION = "lastUsedCollection"
@@ -40,68 +28,7 @@ class IcalListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-
-        // add menu
-        setHasOptionsMenu(true)
-
-        arguments = IcalListFragmentArgs.fromBundle((requireArguments()))
-
-
-
-/*
-        if(arguments.item2focus != 0L)
-            icalListViewModel.scrollOnceId.postValue(arguments.item2focus)
-         */
-
-
         return ComposeView(requireContext()).apply {
         }
     }
-
-
-    override fun onResume() {
-
-        updateMenuVisibilities()
-
-        super.onResume()
-    }
-
-
-    /**
-     * This function hides/shows the relevant menu entries for the active module.
-     */
-    private fun updateMenuVisibilities() {
-/*
-        when (icalListViewModel.searchModule) {
-            Module.JOURNAL.name -> {
-                binding.fab.setImageResource(R.drawable.ic_add)
-                binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createJournal())) }
-            }
-            Module.NOTE.name -> {
-                binding.fab.setImageResource(R.drawable.ic_add_note)
-                binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createNote())) }
-            }
-            Module.TODO.name -> {
-                binding.fab.setImageResource(R.drawable.ic_todo_add)
-                binding.fab.setOnClickListener { goToEdit(ICalEntity(ICalObject.createTodo().apply {
-                    this.setDefaultDueDateFromSettings(requireContext())
-                    this.setDefaultStartDateFromSettings(requireContext())
-                })) }
-            }
-        }
-
-
-        if(!SyncUtil.isDAVx5CompatibleWithJTX(application))
-            optionsMenu?.findItem(R.id.menu_list_syncnow)?.isVisible = false
-
- */
-
-    }
-
-
-    private fun goToEdit(iCalObject: ICalEntity) {
-        this.findNavController().navigate(IcalListFragmentDirections.actionIcalListFragmentToIcalEditFragment(iCalObject))
-    }
-
-
 }

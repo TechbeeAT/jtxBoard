@@ -49,7 +49,6 @@
             app:defaultNavHost="true"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             app:layout_scrollFlags="scroll"
-            app:navGraph="@navigation/navigation"
             android:background="@drawable/bg_background" />
 
         <com.google.android.material.navigation.NavigationView
