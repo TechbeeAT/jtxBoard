@@ -11,7 +11,10 @@ package at.techbee.jtx.ui
 import android.app.Application
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -23,7 +26,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
-import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.databinding.FragmentIcalViewBinding
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
@@ -116,19 +118,6 @@ class IcalViewFragment : Fragment() {
             }
         }
 
-        icalViewViewModel.entryDeleted.observe(viewLifecycleOwner) {
-            if(it) {
-                Attachment.scheduleCleanupJob(requireContext())
-                SyncUtil.notifyContentObservers(context)
-
-                Toast.makeText(context, getString(R.string.view_toast_deleted_successfully, summary2delete), Toast.LENGTH_LONG).show()
-
-                val direction = IcalViewFragmentDirections.actionIcalViewFragmentToIcalListFragment()
-                direction.module2show = icalViewViewModel.icalEntity.value?.property?.module
-                this.findNavController().navigate(direction)
-                icalViewViewModel.entryDeleted.value = false
-            }
-        }
 
         icalViewViewModel.icalEntity.observe(viewLifecycleOwner) {
 
@@ -171,8 +160,6 @@ class IcalViewFragment : Fragment() {
                 }
             }
       }
-
-
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only)
         if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)

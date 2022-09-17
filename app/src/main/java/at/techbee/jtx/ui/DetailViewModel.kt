@@ -438,10 +438,5 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Toast.makeText(context, R.string.error_no_app_found_to_open_entry, Toast.LENGTH_SHORT).show()
             }
         }
-
-
-
-
-
     }
 }

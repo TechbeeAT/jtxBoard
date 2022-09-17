@@ -39,9 +39,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     lateinit var progressIndicatorVisible: LiveData<Boolean>
     val showSyncProgressIndicator = MutableLiveData(false)
 
-    lateinit var dateVisible: LiveData<Boolean>
-    lateinit var timeVisible: LiveData<Boolean>
-    lateinit var timezoneVisible: LiveData<Boolean>
     lateinit var locationHeaderVisible: LiveData<Boolean>
     lateinit var locationVisible: LiveData<Boolean>
     lateinit var relatedtoVisible: LiveData<Boolean>
@@ -53,9 +50,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     lateinit var recurrenceIsExceptionVisible: LiveData<Boolean>
     lateinit var recurrenceExceptionsVisible: LiveData<Boolean>
     lateinit var recurrenceAdditionsVisible: LiveData<Boolean>
-
-    var icsFormat: MutableLiveData<String?> = MutableLiveData(null)
-    var icsFileWritten: MutableLiveData<Boolean?> = MutableLiveData(null)
 
     var entryDeleted: MutableLiveData<Boolean> = MutableLiveData(false)
 
@@ -83,17 +77,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
 
             progressIndicatorVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property == null     // show progress indicator as long as item.property is null
-            }
-            dateVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null           // true if component == JOURNAL
-            }
-
-            timeVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null && item.property.dtstartTimezone != ICalObject.TZ_ALLDAY          // true if component == JOURNAL and it is not an All Day Event
-            }
-
-            timezoneVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.component == Component.VJOURNAL.name && item.property.dtstart != null && !(item.property.dtstartTimezone == ICalObject.TZ_ALLDAY || item.property.dtstartTimezone.isNullOrEmpty())           // true if component == JOURNAL and it is not an All Day Event
             }
 
             uploadPendingVisible = Transformations.map(icalEntity) { item ->
@@ -128,35 +111,5 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
             }
             Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
         }
-    }
-
-    fun delete(item: ICalObject) {
-
-        viewModelScope.launch(Dispatchers.IO) {
-            ICalObject.deleteItemWithChildren(item.id, database)
-            entryDeleted.postValue(true)
-        }
-    }
-
-    fun retrieveICSFormat() {
-
-        viewModelScope.launch(Dispatchers.IO)  {
-            val account = icalEntity.value?.ICalCollection?.getAccount() ?: return@launch
-            val collectionId = icalEntity.value?.property?.collectionId ?: return@launch
-            val iCalObjectId = icalEntity.value?.property?.id ?: return@launch
-            val ics = Ical4androidUtil.getICSFormatFromProvider(account, getApplication(), collectionId, iCalObjectId) ?: return@launch
-            icsFormat.postValue(ics)
-        }
-    }
-
-    fun writeICSFile(os: ByteArrayOutputStream) {
-
-        viewModelScope.launch(Dispatchers.IO)  {
-            val account = icalEntity.value?.ICalCollection?.getAccount() ?: return@launch
-            val collectionId = icalEntity.value?.property?.collectionId ?: return@launch
-            val iCalObjectId = icalEntity.value?.property?.id ?: return@launch
-            icsFileWritten.postValue(Ical4androidUtil.writeICSFormatFromProviderToOS(account, getApplication(), collectionId, iCalObjectId, os))
-        }
-
     }
 }

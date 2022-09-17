@@ -130,7 +130,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:visibility="@{model.dateVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_collection"
                     app:layout_constraintBottom_toTopOf="@id/view_barrier_above_summary"
@@ -185,7 +184,6 @@
                             android:textAlignment="center"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:visibility="@{model.timeVisible ? View.VISIBLE : View.GONE}"
                             tools:text="13:30" />
 
                         <com.google.android.material.textview.MaterialTextView
@@ -196,7 +194,6 @@
                             android:textAlignment="center"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
                             tools:text="GMT+1" />
 
                         <com.google.android.material.textview.MaterialTextView
@@ -206,7 +203,6 @@
                             android:text="@{model.icalEntity.property.dtstartTimezone}"
                             android:textAlignment="center"
                             android:textSize="12sp"
-                            android:visibility="@{model.timezoneVisible ? View.VISIBLE : View.GONE}"
                             tools:text="Europe/Vienna" />
                     </LinearLayout>
 
