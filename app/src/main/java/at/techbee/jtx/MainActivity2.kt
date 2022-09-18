@@ -29,7 +29,7 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.JtxReviewManager
-import at.techbee.jtx.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.about.AboutViewModel
 import at.techbee.jtx.ui.collections.CollectionsViewModel
 import at.techbee.jtx.ui.detail.DetailViewModel
@@ -39,6 +39,8 @@ import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
 import at.techbee.jtx.ui.reusable.screens.*
 import at.techbee.jtx.ui.GlobalStateHolder
+import at.techbee.jtx.ui.list.ListScreenTabContainer
+import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
@@ -203,7 +205,17 @@ fun MainNavHost(
         composable(NavigationDrawerDestination.BOARD.name) {
             ListScreenTabContainer(
                 navController = navController,
-                globalStateHolder = globalStateHolder
+                globalStateHolder = globalStateHolder,
+                lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value,
+                saveAndEdit = settingsStateHolder.saveAndEdit.value,
+                onLastUsedCollectionIdChanged = { collectionId ->
+                    settingsStateHolder.lastUsedCollection.value = collectionId
+                    settingsStateHolder.lastUsedCollection = settingsStateHolder.lastUsedCollection
+                },
+                onSaveAndEditChanged = { saveAndEdit ->
+                    settingsStateHolder.saveAndEdit.value = saveAndEdit
+                    settingsStateHolder.saveAndEdit = settingsStateHolder.saveAndEdit
+                }
             )
         }
         composable(
@@ -221,7 +233,11 @@ fun MainNavHost(
                 navController = navController,
                 detailViewModel = detailViewModel,
                 editImmediately = editImmediately,
-                onRequestReview = { JtxReviewManager(activity).launch() }
+                onRequestReview = { JtxReviewManager(activity).launch() },
+                onLastUsedCollectionChanged = { collectionId ->
+                    settingsStateHolder.lastUsedCollection.value = collectionId
+                    settingsStateHolder.lastUsedCollection = settingsStateHolder.lastUsedCollection
+                }
             )
         }
         composable(NavigationDrawerDestination.COLLECTIONS.name) {

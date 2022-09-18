@@ -40,13 +40,6 @@ class IcalEditFragment : Fragment() {
     private var container: ViewGroup? = null
 
 
-    companion object {
-
-        const val PREFS_EDIT_VIEW = "sharedPreferencesEditView"
-        const val PREFS_LAST_COLLECTION = "lastUsedCollection"
-        //const val PREFS_CONTACTS_PERMISSION_SHOWN = "contactsPermissionShown"
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -112,25 +105,6 @@ class IcalEditFragment : Fragment() {
             binding.editFragmentTabUlc.editLocationEdit.isEndIconVisible = false
         }
 
-        icalEditViewModel.savingClicked.observe(viewLifecycleOwner) {
-            if (it == true) {
-
-                // do some validation first
-                if (!isDataValid())
-                    return@observe
-
-                //icalEditViewModel.iCalObjectUpdated.value!!.percent = binding.editFragmentTabGeneral.editProgressSlider.value.toInt()
-                /*
-                prefs.edit().putLong(
-                    PREFS_LAST_COLLECTION,
-                    icalEditViewModel.selectedCollectionId ?: icalEditViewModel.iCalObjectUpdated.value!!.collectionId
-                ).apply()
-
-                 */
-
-                icalEditViewModel.update()
-            }
-        }
 
         icalEditViewModel.collectionNotFoundError.observe(viewLifecycleOwner) { error ->
 

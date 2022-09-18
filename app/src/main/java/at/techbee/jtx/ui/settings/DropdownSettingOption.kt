@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.settings
+package at.techbee.jtx.ui.settings
 
 import android.util.Log
 import at.techbee.jtx.R

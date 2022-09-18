@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import at.techbee.jtx.R
-import at.techbee.jtx.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.reusable.dialogs.RequestAudioPermissionDialog
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils

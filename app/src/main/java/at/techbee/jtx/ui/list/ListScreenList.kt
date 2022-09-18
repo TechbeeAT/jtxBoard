@@ -33,7 +33,7 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.ListViewModel
 import at.techbee.jtx.ui.reusable.cards.ICalObjectListCard
 
@@ -120,7 +120,7 @@ fun ListScreenList(
                     .combinedClickable(
                         onClick = { goToView(iCalObject.id) },
                         onLongClick = {
-                            if (!iCalObject.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
+                            if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                 goToEdit(iCalObject.id)
                         }
                     )

@@ -24,7 +24,7 @@ import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
-import at.techbee.jtx.settings.DropdownSetting
+import at.techbee.jtx.ui.settings.DropdownSetting
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
@@ -1214,7 +1214,8 @@ data class ICalObject(
     }
 
     fun setDefaultStartDateFromSettings(context: Context) {
-        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(DropdownSetting.SETTING_DEFAULT_START_DATE.key, null) ?: return
+        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(
+            DropdownSetting.SETTING_DEFAULT_START_DATE.key, null) ?: return
         if(default == "null")
             return
         try {

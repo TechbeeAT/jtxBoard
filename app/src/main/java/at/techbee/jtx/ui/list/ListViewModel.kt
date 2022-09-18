@@ -22,10 +22,9 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.properties.*
-import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
-import at.techbee.jtx.settings.SwitchSetting
+import at.techbee.jtx.ui.settings.SwitchSetting
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
@@ -36,8 +35,6 @@ import java.util.concurrent.TimeUnit
 open class ListViewModel(application: Application, val module: Module) : AndroidViewModel(application) {
 
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
-
-
     private val settings = PreferenceManager.getDefaultSharedPreferences(application)
 
     private val prefs: SharedPreferences = when (module) {
@@ -72,8 +69,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val allCategories = database.getAllCategoriesAsText()   // filter FragmentDialog
     val allCollections = database.getAllCollections()
 
-    val quickInsertedEntity = MutableLiveData<ICalEntity?>(null)
     val scrollOnceId = MutableLiveData<Long?>(null)
+    var goToEdit = MutableLiveData<Long?>(null)
 
 
     private val searchSettingShowAllSubtasksInTasklist: Boolean
@@ -350,7 +347,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
      * @param icalObject to be inserted
      * @param categories the list of categories that should be linked to the icalObject
      */
-    fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachment: Attachment?) {
+    fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) {
 
         viewModelScope.launch(Dispatchers.IO) {
             val newId = database.insertICalObject(icalObject)
@@ -366,7 +363,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
             }
 
             scrollOnceId.postValue(newId)
-            quickInsertedEntity.postValue(database.getSync(newId))
+            if(editAfterSaving)
+                goToEdit.postValue(newId)
         }
     }
 

@@ -34,7 +34,6 @@ import at.techbee.jtx.ui.reusable.appbars.ListBottomAppBar
 import at.techbee.jtx.ui.reusable.bottomsheets.ListFilterBottomSheet
 import at.techbee.jtx.ui.reusable.bottomsheets.ListSearchTextBottomSheet
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
-import at.techbee.jtx.ui.reusable.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import kotlinx.coroutines.launch
 
@@ -46,7 +45,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun ListScreen(
     listViewModel: ListViewModel,
-    navController: NavController
+    navController: NavController,
+    lastUsedCollectionId: Long,
+    onShowQuickAddDialog: () -> Unit
 ) {
 
     val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -59,26 +60,7 @@ fun ListScreen(
         keyboardController?.hide()
     val focusRequesterSearchText = remember { FocusRequester() }
 
-
-    var showQuickAddDialog by remember { mutableStateOf(false) }
     val allCollections = listViewModel.allCollections.observeAsState(emptyList())
-    if (showQuickAddDialog) {
-        QuickAddDialog(
-            presetModule = listViewModel.module,
-            allCollections = allCollections.value,
-            onEntrySaved = { newICalObject, categories, attachment, editAfterSaving ->
-                listViewModel.insertQuickItem(newICalObject, categories, attachment)
-                /*  //TODO
-            if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)
-                AdManager.getInstance()?.showInterstitialAd(requireActivity())     // don't forget to show an ad if applicable ;-)
-             */
-                if (editAfterSaving)
-                    TODO("Not implemented")
-            },
-            onDismiss = { showQuickAddDialog = false }
-        )
-    }
-
 
 
     Scaffold(
@@ -88,13 +70,18 @@ fun ListScreen(
                 iCal4ListLive = listViewModel.iCal4List,
                 onAddNewEntry = {
                     coroutineScope.launch {
+                        val proposedCollectionId = if(allCollections.value.any {collection -> collection.collectionId == lastUsedCollectionId })
+                            lastUsedCollectionId
+                        else
+                            allCollections.value.firstOrNull()?.collectionId ?: return@launch
                         val db = ICalDatabase.getInstance(context).iCalDatabaseDao
                         val newICalObject = when(listViewModel.module) {
-                            Module.JOURNAL -> ICalObject.createJournal()
-                            Module.NOTE -> ICalObject.createNote()
+                            Module.JOURNAL -> ICalObject.createJournal().apply { collectionId = proposedCollectionId }
+                            Module.NOTE -> ICalObject.createNote().apply { collectionId = proposedCollectionId }
                             Module.TODO -> ICalObject.createTodo().apply {
                                 this.setDefaultDueDateFromSettings(context)
                                 this.setDefaultStartDateFromSettings(context)
+                                collectionId = proposedCollectionId
                             }
                         }
                         newICalObject.dirty = false
@@ -102,7 +89,7 @@ fun ListScreen(
                         navController.navigate("details/$newIcalObjectId?isEditMode=true")
                     }
                 },
-                onAddNewQuickEntry = { showQuickAddDialog = true },
+                onAddNewQuickEntry = { onShowQuickAddDialog() },
                 listSettings = listViewModel.listSettings,
                 onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) },
                 onFilterIconClicked = {

@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import at.techbee.jtx.settings.DropdownSetting
-import at.techbee.jtx.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.DropdownSetting
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 
 
 @Composable

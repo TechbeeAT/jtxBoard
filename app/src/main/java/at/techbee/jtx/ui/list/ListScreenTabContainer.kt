@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.screens
+package at.techbee.jtx.ui.list
 
 
 import android.app.Application
@@ -40,11 +40,11 @@ import at.techbee.jtx.ui.ListViewModelTodos
 import at.techbee.jtx.ui.ViewMode
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
-import at.techbee.jtx.ui.list.ListTabDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.GlobalStateHolder
+import at.techbee.jtx.ui.reusable.screens.ListScreen
 import at.techbee.jtx.util.SyncUtil
 
 
@@ -52,7 +52,11 @@ import at.techbee.jtx.util.SyncUtil
 @Composable
 fun ListScreenTabContainer(
     navController: NavHostController,
-    globalStateHolder: GlobalStateHolder
+    globalStateHolder: GlobalStateHolder,
+    lastUsedCollectionId: Long,
+    onLastUsedCollectionIdChanged: (Long) -> Unit,
+    saveAndEdit: Boolean,
+    onSaveAndEditChanged: (Boolean) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -71,6 +75,8 @@ fun ListScreenTabContainer(
     }
     var topBarMenuExpanded by remember { mutableStateOf(false) }
     var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
+    var showQuickAddDialog by remember { mutableStateOf(false) }
+
 
 
     val icalListViewModelJournals: ListViewModelJournals = viewModel()
@@ -84,6 +90,12 @@ fun ListScreenTabContainer(
             Module.TODO -> icalListViewModelTodos
         }
 
+    val goToEdit = getActiveViewModel().goToEdit.observeAsState()
+    goToEdit.value?.let { icalObjectId ->
+        getActiveViewModel().goToEdit.value = null
+        navController.navigate("details/$icalObjectId?isEditMode=true")
+    }
+
     val drawerState = rememberDrawerState(DrawerValue.Closed)
 
     if (showDeleteAllVisibleDialog) {
@@ -94,26 +106,41 @@ fun ListScreenTabContainer(
         )
     }
 
+    // Insert quick item based on values coming from intent
     if (globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
         val allCollections = getActiveViewModel().allCollections.observeAsState(emptyList())
         QuickAddDialog(
             presetModule = globalStateHolder.icalFromIntentModule.value,
             presetText = globalStateHolder.icalFromIntentString.value ?: "",
             presetAttachment = globalStateHolder.icalFromIntentAttachment.value,
+            presetSaveAndEdit = saveAndEdit,
             allCollections = allCollections.value,
+            presetCollectionId = lastUsedCollectionId,
             onEntrySaved = { newICalObject, categories, attachment, editAfterSaving ->
-                getActiveViewModel().insertQuickItem(newICalObject, categories, attachment)
-                /*  //TODO
-            if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)
-                AdManager.getInstance()?.showInterstitialAd(requireActivity())     // don't forget to show an ad if applicable ;-)
-             */
-                if (editAfterSaving)
-                    TODO("Not implemented")
+                onLastUsedCollectionIdChanged(newICalObject.collectionId)
+                getActiveViewModel().insertQuickItem(newICalObject, categories, attachment, editAfterSaving)
             },
             onDismiss = {
                 globalStateHolder.icalFromIntentString.value = null
                 globalStateHolder.icalFromIntentAttachment.value = null
-            }
+            },
+            onSaveAndEditChanged = onSaveAndEditChanged
+        )
+    }
+
+    if (showQuickAddDialog) {
+        val allCollections = getActiveViewModel().allCollections.observeAsState(emptyList())
+        QuickAddDialog(
+            presetModule = getActiveViewModel().module,
+            allCollections = allCollections.value,
+            presetCollectionId = lastUsedCollectionId,
+            presetSaveAndEdit = saveAndEdit,
+            onEntrySaved = { newICalObject, categories, attachment, editAfterSaving ->
+                onLastUsedCollectionIdChanged(newICalObject.collectionId)
+                getActiveViewModel().insertQuickItem(newICalObject, categories, attachment, editAfterSaving)
+            },
+            onDismiss = { showQuickAddDialog = false },
+            onSaveAndEditChanged = onSaveAndEditChanged
         )
     }
 
@@ -208,19 +235,25 @@ fun ListScreenTabContainer(
                                         ListTabDestination.Journals -> {
                                             ListScreen(
                                                 listViewModel = icalListViewModelJournals,
-                                                navController = navController
+                                                navController = navController,
+                                                lastUsedCollectionId = lastUsedCollectionId,
+                                                onShowQuickAddDialog = { showQuickAddDialog = true }
                                             )
                                         }
                                         ListTabDestination.Notes -> {
                                             ListScreen(
                                                 listViewModel = icalListViewModelNotes,
-                                                navController = navController
+                                                navController = navController,
+                                                lastUsedCollectionId = lastUsedCollectionId,
+                                                onShowQuickAddDialog = { showQuickAddDialog = true }
                                             )
                                         }
                                         ListTabDestination.Tasks -> {
                                             ListScreen(
                                                 listViewModel = icalListViewModelTodos,
-                                                navController = navController
+                                                navController = navController,
+                                                lastUsedCollectionId = lastUsedCollectionId,
+                                                onShowQuickAddDialog = { showQuickAddDialog = true }
                                             )
                                         }
                                     }

@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.settings
+package at.techbee.jtx.ui.settings
 
 import android.content.Context
 import androidx.compose.material.icons.Icons
@@ -29,14 +29,22 @@ enum class DropdownSetting(
         key = "settings_theme",
         icon = Icons.Outlined.FormatPaint,
         title = R.string.settings_select_theme,
-        options = listOf(DropdownSettingOption.THEME_SYSTEM, DropdownSettingOption.THEME_LIGHT, DropdownSettingOption.THEME_DARK),
+        options = listOf(
+            DropdownSettingOption.THEME_SYSTEM,
+            DropdownSettingOption.THEME_LIGHT,
+            DropdownSettingOption.THEME_DARK
+        ),
         default = DropdownSettingOption.THEME_SYSTEM
     ),
     SETTING_AUDIO_FORMAT(
         key = "setting_audio_format",
         icon = Icons.Outlined.MusicNote,
         title = R.string.settings_select_mimetype_for_audio,
-        options = listOf(DropdownSettingOption.AUDIO_FORMAT_3GPP, DropdownSettingOption.AUDIO_FORMAT_AAC, DropdownSettingOption.AUDIO_FORMAT_OGG),
+        options = listOf(
+            DropdownSettingOption.AUDIO_FORMAT_3GPP,
+            DropdownSettingOption.AUDIO_FORMAT_AAC,
+            DropdownSettingOption.AUDIO_FORMAT_OGG
+        ),
         default = DropdownSettingOption.AUDIO_FORMAT_3GPP
     ),
 

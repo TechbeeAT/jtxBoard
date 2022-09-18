@@ -22,6 +22,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Mic
@@ -35,6 +36,9 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -44,6 +48,7 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.AttachmentCard
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import java.util.*
@@ -57,6 +62,9 @@ fun QuickAddDialog(
     presetText: String = "",
     presetAttachment: Attachment? = null,
     allCollections: List<ICalCollection>,
+    presetCollectionId: Long,
+    presetSaveAndEdit: Boolean,
+    onSaveAndEditChanged: (Boolean) -> Unit,
     onEntrySaved: (newEntry: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -67,14 +75,17 @@ fun QuickAddDialog(
     val context = LocalContext.current
     val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {  }
     var showAudioPermissionDialog by rememberSaveable { mutableStateOf(false) }
-    var currentCollection by rememberSaveable { mutableStateOf(allCollections.first()) }
+    var currentCollection by rememberSaveable { mutableStateOf(
+            allCollections.find { collection -> collection.collectionId == presetCollectionId }
+                ?: allCollections.first())
+            }
     // TODO: Load last used collection!
 
     var currentModule by rememberSaveable { mutableStateOf(presetModule ?: Module.JOURNAL) }
     var currentText by rememberSaveable { mutableStateOf(presetText) }
-    var currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
+    val currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
     var noTextError by rememberSaveable { mutableStateOf(false) }
-    var editAfterSaving by rememberSaveable { mutableStateOf(false) }
+    var editAfterSaving by rememberSaveable { mutableStateOf(presetSaveAndEdit) }
     // TODO save in settings
 
 
@@ -108,7 +119,13 @@ fun QuickAddDialog(
                         includeReadOnly = false,
                         includeVJOURNAL = if(currentModule == Module.JOURNAL || currentModule == Module.NOTE) true else null,
                         includeVTODO = if(currentModule == Module.TODO) true else null,
-                        onSelectionChanged = { selected -> currentCollection = selected }
+                        onSelectionChanged = { selected ->
+                            currentCollection = selected
+                            if((currentModule == Module.JOURNAL || currentModule == Module.NOTE) && !currentCollection.supportsVJOURNAL)
+                                currentModule = Module.TODO
+                            else if(currentModule == Module.TODO && !currentCollection.supportsVTODO)
+                                currentModule = Module.NOTE
+                        }
                     )
 
                     Row(
@@ -121,17 +138,20 @@ fun QuickAddDialog(
                        FilterChip(
                            selected = currentModule == Module.JOURNAL,
                            onClick = { currentModule = Module.JOURNAL },
-                           label = { Text(stringResource(id = R.string.journal))}
+                           label = { Text(stringResource(id = R.string.journal))},
+                           enabled = currentCollection.supportsVJOURNAL
                        )
                         FilterChip(
                             selected = currentModule == Module.NOTE,
                             onClick = { currentModule = Module.NOTE },
-                            label = { Text(stringResource(id = R.string.note))}
+                            label = { Text(stringResource(id = R.string.note))},
+                            enabled = currentCollection.supportsVJOURNAL
                         )
                         FilterChip(
                             selected = currentModule == Module.TODO,
                             onClick = { currentModule = Module.TODO },
-                            label = { Text(stringResource(id = R.string.task))}
+                            label = { Text(stringResource(id = R.string.task))},
+                            enabled = currentCollection.supportsVTODO
                         )
                     }
 
@@ -194,7 +214,8 @@ fun QuickAddDialog(
                         modifier = Modifier
                             .fillMaxWidth(),
                         isError = noTextError,
-                    )
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done)
+                        )
 
                     Text(stringResource(id = R.string.list_quickadd_dialog_summary_description_helper), style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 8.dp))
 
@@ -218,7 +239,14 @@ fun QuickAddDialog(
                         Text(text = stringResource(id = R.string.save_and_edit), modifier = Modifier.padding(8.dp))
                         Switch(
                             checked = editAfterSaving,
-                            onCheckedChange = { editAfterSaving = it },
+                            enabled = if(!LocalInspectionMode.current)
+                                BillingManager.getInstance().isProPurchased.value == true
+                            else
+                                true,
+                            onCheckedChange = {
+                                editAfterSaving = it
+                                onSaveAndEditChanged(it)
+                                              },
                             thumbContent = { Icons.Outlined.Edit }
                         )
                     }
@@ -307,7 +335,10 @@ fun QuickAddDialog_Preview() {
             onDismiss = { },
             onEntrySaved = { _, _, _, _ -> },
             presetText = "This is my preset text",
-            presetAttachment = Attachment(filename = "My File.PDF")
+            presetAttachment = Attachment(filename = "My File.PDF"),
+            presetCollectionId = 0L,
+            presetSaveAndEdit = false,
+            onSaveAndEditChanged = { }
         )
     }
 }

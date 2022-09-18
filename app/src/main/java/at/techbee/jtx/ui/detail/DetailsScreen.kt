@@ -38,6 +38,7 @@ fun DetailsScreen(
     navController: NavHostController,
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
+    onLastUsedCollectionChanged: (Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -138,6 +139,7 @@ fun DetailsScreen(
                                 changedAttachments,
                                 changedAlarms
                             )
+                            onLastUsedCollectionChanged(changedICalObject.collectionId)
                         },
                         onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                             detailViewModel.updateProgress(itemId, newPercent)

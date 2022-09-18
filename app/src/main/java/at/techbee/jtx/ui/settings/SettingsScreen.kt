@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.screens
+package at.techbee.jtx.ui.settings
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
@@ -25,13 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
-import at.techbee.jtx.settings.DropdownSettingOption
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.elements.DropdownSetting
 import at.techbee.jtx.ui.reusable.elements.SwitchSetting
-import at.techbee.jtx.settings.SwitchSetting.*
-import at.techbee.jtx.settings.DropdownSetting.*
+import at.techbee.jtx.ui.settings.SwitchSetting.*
+import at.techbee.jtx.ui.settings.DropdownSetting.*
 
 
 @OptIn(ExperimentalMaterial3Api::class)
