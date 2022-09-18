@@ -40,7 +40,7 @@ import at.techbee.jtx.ui.ListViewModelTodos
 import at.techbee.jtx.ui.ViewMode
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
-import at.techbee.jtx.ui.reusable.destinations.ListTabDestination
+import at.techbee.jtx.ui.list.ListTabDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText

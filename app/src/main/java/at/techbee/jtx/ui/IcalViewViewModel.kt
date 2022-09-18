@@ -12,19 +12,14 @@ import android.app.Application
 import android.widget.Toast
 import androidx.lifecycle.*
 import at.techbee.jtx.R
-import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.relations.ICalEntity
-import at.techbee.jtx.util.Ical4androidUtil
 import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
-import java.text.DateFormat
-import java.util.*
 
 
 class IcalViewViewModel(application: Application, private val icalItemId: Long) : AndroidViewModel(application) {
@@ -50,8 +45,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     lateinit var recurrenceIsExceptionVisible: LiveData<Boolean>
     lateinit var recurrenceExceptionsVisible: LiveData<Boolean>
     lateinit var recurrenceAdditionsVisible: LiveData<Boolean>
-
-    var entryDeleted: MutableLiveData<Boolean> = MutableLiveData(false)
 
     lateinit var collectionText: LiveData<String?>
 

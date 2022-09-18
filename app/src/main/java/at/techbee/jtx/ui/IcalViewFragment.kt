@@ -37,8 +37,6 @@ class IcalViewFragment : Fragment() {
     val binding get() = _binding!!
 
     lateinit var application: Application
-    private lateinit var inflater: LayoutInflater
-    private lateinit var dataSource: ICalDatabaseDao
     lateinit var icalViewViewModel: IcalViewViewModel
     private var optionsMenu: Menu? = null
 
@@ -50,12 +48,6 @@ class IcalViewFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        // Get a reference to the binding object and inflate the fragment views.
-        this.inflater = inflater
-        this._binding = FragmentIcalViewBinding.inflate(inflater, container, false)
-        this.application = requireNotNull(this.activity).application
-
-        this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
         settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
@@ -99,7 +91,7 @@ class IcalViewFragment : Fragment() {
             }
             if(it.ICalCollection?.readonly == false
                 && it.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE
-                && BillingManager.getInstance().isProPurchased?.value == false) {
+                && BillingManager.getInstance().isProPurchased.value == false) {
                 //hideEditingOptions()
                 val snackbar = Snackbar.make(requireView(), R.string.buypro_snackbar_remote_entries_blocked, Snackbar.LENGTH_INDEFINITE)
                 //snackbar.setAction(R.string.more) {
