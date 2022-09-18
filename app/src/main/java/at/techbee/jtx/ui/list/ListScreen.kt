@@ -31,8 +31,8 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.ListViewModel
 import at.techbee.jtx.ui.ViewMode
 import at.techbee.jtx.ui.reusable.appbars.ListBottomAppBar
-import at.techbee.jtx.ui.reusable.bottomsheets.FilterBottomSheet
-import at.techbee.jtx.ui.reusable.bottomsheets.SearchTextBottomSheet
+import at.techbee.jtx.ui.reusable.bottomsheets.ListFilterBottomSheet
+import at.techbee.jtx.ui.reusable.bottomsheets.ListSearchTextBottomSheet
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -222,7 +222,7 @@ fun ListScreen(
     ModalBottomSheetLayout(
         sheetState = filterBottomSheetState,
         sheetContent = {
-            FilterBottomSheet(
+            ListFilterBottomSheet(
                 module = listViewModel.module,
                 listSettings = listViewModel.listSettings,
                 allCollectionsLive = listViewModel.allCollections,
@@ -235,7 +235,7 @@ fun ListScreen(
     ModalBottomSheetLayout(
         sheetState = searchTextBottomSheetState,
         sheetContent = {
-            SearchTextBottomSheet(
+            ListSearchTextBottomSheet(
                 initialSeachText = listViewModel.listSettings.searchText.value,
                 onSearchTextChanged = { newSearchText ->
                     listViewModel.listSettings.searchText.value = newSearchText

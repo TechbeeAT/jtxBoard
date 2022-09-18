@@ -40,7 +40,7 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterBottomSheet(
+fun ListFilterBottomSheet(
     module: Module,
     listSettings: ListSettings,
     allCollectionsLive: LiveData<List<ICalCollection>>,
@@ -397,7 +397,7 @@ fun FilterBottomSheet(
 
 @Preview(showBackground = true)
 @Composable
-fun FilterBottomSheet_Preview_TODO() {
+fun ListFilterBottomSheet_Preview_TODO() {
     MaterialTheme {
 
         val application = LocalContext.current.applicationContext
@@ -408,7 +408,7 @@ fun FilterBottomSheet_Preview_TODO() {
 
         val listSettings = ListSettings(prefs)
 
-        FilterBottomSheet(
+        ListFilterBottomSheet(
             module = Module.TODO,
             listSettings = listSettings,
             allCollectionsLive = MutableLiveData(
@@ -434,7 +434,7 @@ fun FilterBottomSheet_Preview_TODO() {
 
 @Preview(showBackground = true)
 @Composable
-fun FilterBottomSheet_Preview_JOURNAL() {
+fun ListFilterBottomSheet_Preview_JOURNAL() {
     MaterialTheme {
 
         val application = LocalContext.current.applicationContext
@@ -445,7 +445,7 @@ fun FilterBottomSheet_Preview_JOURNAL() {
 
         val listSettings = ListSettings(prefs)
 
-        FilterBottomSheet(
+        ListFilterBottomSheet(
             module = Module.JOURNAL,
             listSettings = listSettings,
             allCollectionsLive = MutableLiveData(

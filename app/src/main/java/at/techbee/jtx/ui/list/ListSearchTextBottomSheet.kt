@@ -28,7 +28,7 @@ import at.techbee.jtx.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchTextBottomSheet(
+fun ListSearchTextBottomSheet(
     initialSeachText: String?,
     onSearchTextChanged: (String) -> Unit,
     focusRequester: FocusRequester,
@@ -72,9 +72,9 @@ fun SearchTextBottomSheet(
 
 @Preview(showBackground = true)
 @Composable
-fun SearchTextBottomSheet_Preview() {
+fun ListSearchTextBottomSheet_Preview() {
     MaterialTheme {
-        SearchTextBottomSheet(
+        ListSearchTextBottomSheet(
             initialSeachText = "",
             onSearchTextChanged = { },
             focusRequester = FocusRequester()
