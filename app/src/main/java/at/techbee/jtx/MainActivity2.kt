@@ -30,16 +30,16 @@ import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.JtxReviewManager
 import at.techbee.jtx.settings.DropdownSettingOption
-import at.techbee.jtx.ui.AboutViewModel
-import at.techbee.jtx.ui.CollectionsViewModel
-import at.techbee.jtx.ui.DetailViewModel
-import at.techbee.jtx.ui.SyncViewModel
-import at.techbee.jtx.ui.compose.destinations.DetailDestination
-import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
-import at.techbee.jtx.ui.compose.dialogs.ProInfoDialog
-import at.techbee.jtx.ui.compose.screens.*
-import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
-import at.techbee.jtx.ui.compose.stateholder.SettingsStateHolder
+import at.techbee.jtx.ui.about.AboutViewModel
+import at.techbee.jtx.ui.collections.CollectionsViewModel
+import at.techbee.jtx.ui.detail.DetailViewModel
+import at.techbee.jtx.ui.sync.SyncViewModel
+import at.techbee.jtx.ui.reusable.destinations.DetailDestination
+import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
+import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
+import at.techbee.jtx.ui.reusable.screens.*
+import at.techbee.jtx.ui.GlobalStateHolder
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 
