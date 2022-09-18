@@ -44,7 +44,6 @@ import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.GlobalStateHolder
-import at.techbee.jtx.ui.reusable.screens.ListScreen
 import at.techbee.jtx.util.SyncUtil
 
 

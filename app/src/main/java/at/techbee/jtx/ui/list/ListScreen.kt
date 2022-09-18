@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.screens
+package at.techbee.jtx.ui.list
 
 
 import androidx.compose.foundation.layout.Column
@@ -34,6 +34,10 @@ import at.techbee.jtx.ui.reusable.appbars.ListBottomAppBar
 import at.techbee.jtx.ui.reusable.bottomsheets.ListFilterBottomSheet
 import at.techbee.jtx.ui.reusable.bottomsheets.ListSearchTextBottomSheet
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
+import at.techbee.jtx.ui.reusable.screens.ListScreenCompact
+import at.techbee.jtx.ui.reusable.screens.ListScreenGrid
+import at.techbee.jtx.ui.reusable.screens.ListScreenKanban
+import at.techbee.jtx.ui.reusable.screens.ListScreenList
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import kotlinx.coroutines.launch
 
