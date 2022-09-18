@@ -101,7 +101,7 @@ class IcalListFragmentTest {
         ICalDatabase.getInMemoryDB(context).close()
     }
 
-
+/*
     @Test
     fun journal_is_displayed()  {
 
@@ -138,4 +138,6 @@ class IcalListFragmentTest {
         onView(withText(sampleTodo.summary)).check(matches(isDisplayed()))
         onView(withText(sampleTodo.description)).check(matches(isDisplayed()))
     }
+
+ */
 }
