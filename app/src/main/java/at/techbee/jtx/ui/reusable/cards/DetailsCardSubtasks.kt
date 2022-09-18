@@ -9,7 +9,9 @@
 package at.techbee.jtx.ui.reusable.cards
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,11 +36,12 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import net.fortuna.ical4j.model.Component
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun DetailsCardSubtasks(
     subtasks: List<ICal4List>,
@@ -47,6 +50,8 @@ fun DetailsCardSubtasks(
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubtaskDeleted: (subtaskId: Long) -> Unit,
+    goToView: (itemId: Long) -> Unit,
+    goToEdit: (itemId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -77,7 +82,14 @@ fun DetailsCardSubtasks(
                             sliderIncrement = 1, /* TODO */
                             onProgressChanged = onProgressChanged,
                             onDeleteClicked = { icalObjectId ->  onSubtaskDeleted(icalObjectId) },
-                            onSubtaskUpdated = { newText -> onSubtaskUpdated(subtask.id, newText) }
+                            onSubtaskUpdated = { newText -> onSubtaskUpdated(subtask.id, newText) },
+                            modifier = Modifier.combinedClickable(
+                                onClick = { if(!isEditMode.value) goToView(subtask.id) },
+                                onLongClick = {
+                                    if (!isEditMode.value &&!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                        goToEdit(subtask.id)
+                                }
+                            )
                         )
                     }
                 }
@@ -135,7 +147,9 @@ fun DetailsCardSubtasks_Preview() {
             onSubtaskAdded = { },
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
-            onSubtaskDeleted = { }
+            onSubtaskDeleted = { },
+            goToView = { },
+            goToEdit = { }
         )
     }
 }
@@ -157,7 +171,9 @@ fun DetailsCardSubtasks_Preview_edit() {
             onSubtaskAdded = { },
             onProgressChanged = { _, _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
-            onSubtaskDeleted = { }
+            onSubtaskDeleted = { },
+            goToView = { },
+            goToEdit = { }
         )
     }
 }

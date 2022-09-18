@@ -10,7 +10,9 @@ package at.techbee.jtx.ui.reusable.cards
 
 import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,12 +40,13 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioNoteDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import net.fortuna.ical4j.model.Component
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
@@ -52,6 +55,8 @@ fun DetailsCardSubnotes(
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
     player: MediaPlayer?,
+    goToView: (itemId: Long) -> Unit,
+    goToEdit: (itemId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -89,7 +94,14 @@ fun DetailsCardSubnotes(
                             isEditMode = isEditMode.value,
                             onDeleteClicked = { icalObjectId ->  onSubnoteDeleted(icalObjectId) },
                             onSubnoteUpdated = { newText -> onSubnoteUpdated(subnote.id, newText) },
-                            player = player
+                            player = player,
+                            modifier = Modifier.combinedClickable(
+                                onClick = { if(!isEditMode.value) goToView(subnote.id) },
+                                onLongClick = {
+                                    if (!isEditMode.value &&!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                        goToEdit(subnote.id)
+                                }
+                            )
                         )
                     }
                 }
@@ -160,7 +172,9 @@ fun DetailsCardSubnotes_Preview() {
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
-            player = null
+            player = null,
+            goToView = { },
+            goToEdit = { }
         )
     }
 }
@@ -182,7 +196,9 @@ fun DetailsCardSubnotes_Preview_edit() {
             onSubnoteAdded = { _, _ -> },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
-            player = null
+            player = null,
+            goToView = { },
+            goToEdit = { }
         )
     }
 }

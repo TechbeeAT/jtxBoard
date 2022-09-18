@@ -75,7 +75,9 @@ fun DetailScreenContent(
     onMoveToNewCollection: (icalObject: ICalObject, newCollection: ICalCollection) -> Unit,
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
-    onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit
+    onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
+    goToView: (itemId: Long) -> Unit,
+    goToEdit: (itemId: Long) -> Unit,
 ) {
     if (iCalEntity.value == null)
         return
@@ -367,7 +369,9 @@ fun DetailScreenContent(
                             newText
                         )
                     },
-                    onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) }
+                    onSubtaskDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
+                    goToView = goToView,
+                    goToEdit = goToEdit
                 )
             }
 
@@ -388,7 +392,9 @@ fun DetailScreenContent(
                         )
                     },
                     onSubnoteDeleted = { icalObjectId -> onSubEntryDeleted(icalObjectId) },
-                    player = player
+                    player = player,
+                    goToView = goToView,
+                    goToEdit = goToEdit
                 )
             }
 
@@ -608,6 +614,8 @@ fun DetailScreenContent_JOURNAL() {
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
+            goToView = { },
+            goToEdit = { }
         )
     }
 }
@@ -647,6 +655,8 @@ fun DetailScreenContent_TODO_editInitially() {
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
+            goToView = { },
+            goToEdit = { }
         )
     }
 }
@@ -688,6 +698,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onSubEntryAdded = { _, _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
+            goToView = { },
+            goToEdit = { }
         )
     }
 }

@@ -150,6 +150,8 @@ fun DetailsScreen(
                         onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                         onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                         player = detailViewModel.mediaPlayer,
+                        goToView = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=false") },
+                        goToEdit = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=true") }
                     )
                 },
                 navController = navController,
