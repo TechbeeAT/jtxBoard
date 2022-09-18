@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -35,14 +33,13 @@ import at.techbee.jtx.ui.compose.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.compose.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.compose.cards.BuyProCard
 import at.techbee.jtx.ui.compose.cards.BuyProCardPurchased
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BuyProScreen(
-    isPurchasedLive: LiveData<Boolean>,
+    isPurchased: State<Boolean?>,
     priceLive: LiveData<String>,
     purchaseDateLive: LiveData<String>,
     orderIdLive: LiveData<String>,
@@ -51,7 +48,6 @@ fun BuyProScreen(
     modifier: Modifier = Modifier
 ) {
 
-    val isPurchased by isPurchasedLive.observeAsState(false)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     Scaffold(
@@ -91,17 +87,17 @@ fun BuyProScreen(
                             textAlign = TextAlign.Center
                         )
 
-                        Crossfade(targetState = isPurchased) {
+                        Crossfade(targetState = isPurchased.value) {
 
                             Column(modifier = Modifier.padding(top = 16.dp)) {
-                                if (!it) {
+                                if (it == false) {
                                     BuyProCard(
                                         priceLive = priceLive,
                                         Modifier.clickable {
                                             launchBillingFlow()
                                         }
                                     )
-                                } else {
+                                } else if(it == true) {
                                     BuyProCardPurchased(
                                         purchaseDateLive = purchaseDateLive,
                                         orderIdLive = orderIdLive
@@ -140,9 +136,9 @@ fun BuyProScreen(
 @Preview(showBackground = true)
 @Composable
 fun BuyProScreen_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         BuyProScreen(
-            isPurchasedLive = MutableLiveData(false),
+            isPurchased = remember { mutableStateOf(false) },
             priceLive = MutableLiveData("€ 3,29"),
             orderIdLive = MutableLiveData("93287z4"),
             purchaseDateLive = MutableLiveData("Thursday, 1. Jannuary 2021"),
@@ -155,9 +151,24 @@ fun BuyProScreen_Preview() {
 @Preview(showBackground = true)
 @Composable
 fun BuyProScreen_Preview_purchased() {
-    JtxBoardTheme {
+    MaterialTheme {
         BuyProScreen(
-            isPurchasedLive = MutableLiveData(true),
+            isPurchased = remember { mutableStateOf(true) },
+            priceLive = MutableLiveData("€ 3,29"),
+            orderIdLive = MutableLiveData("93287z4"),
+            purchaseDateLive = MutableLiveData("Thursday, 1. Jannuary 2021"),
+            launchBillingFlow = { },
+            navController = rememberNavController()
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BuyProScreen_Preview_null() {
+    MaterialTheme {
+        BuyProScreen(
+            isPurchased = remember { mutableStateOf(null) },
             priceLive = MutableLiveData("€ 3,29"),
             orderIdLive = MutableLiveData("93287z4"),
             purchaseDateLive = MutableLiveData("Thursday, 1. Jannuary 2021"),

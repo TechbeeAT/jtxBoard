@@ -29,20 +29,20 @@ class BillingManager :
     companion object {
 
         @Volatile
-        private var INSTANCE: BillingManager? = null
+        private lateinit var INSTANCE: BillingManager
 
         private const val IN_APP_PRODUCT_PRO = "adfree"
 
         private const val PREFS_BILLING = "sharedPreferencesBilling"
         private const val PREFS_BILLING_PURCHASE_STATE = "prefsBillingPurchaseState"
 
-        fun getInstance(): BillingManager? {
+        fun getInstance(): BillingManager {
             synchronized(this) {
                 // Copy the current value of INSTANCE to a local variable so Kotlin can smart cast.
                 // Smart cast is only available to local variables.
-                val instance = INSTANCE
+                //val instance = INSTANCE
                 // If instance is `null` assign a new instance.
-                if (instance == null) {
+                if(!this::INSTANCE.isInitialized) {
                     INSTANCE = BillingManager()
                 }
                 return INSTANCE

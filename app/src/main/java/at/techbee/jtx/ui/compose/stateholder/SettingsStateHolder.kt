@@ -10,6 +10,10 @@ import at.techbee.jtx.settings.SwitchSetting
 
 class SettingsStateHolder(val context: Context) {
 
+    companion object {
+        private const val SETTINGS_PRO_INFO_SHOWN = "settingsProInfoShown"
+    }
+
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     var settingTheme = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
         DropdownSetting.SETTING_THEME.key, DropdownSetting.SETTING_THEME.default.key) } ?: DropdownSetting.SETTING_THEME.default )
@@ -28,6 +32,12 @@ class SettingsStateHolder(val context: Context) {
     var settingDefaultDueDate = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(DropdownSetting.SETTING_DEFAULT_DUE_DATE.key, DropdownSetting.SETTING_DEFAULT_DUE_DATE.default.key) } ?: DropdownSetting.SETTING_DEFAULT_DUE_DATE.default )
     var settingStepForProgress = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(DropdownSetting.SETTING_PROGRESS_STEP.key, DropdownSetting.SETTING_PROGRESS_STEP.default.key) } ?: DropdownSetting.SETTING_PROGRESS_STEP.default )
 
+    //invisible settings
+    var proInfoShown = mutableStateOf(prefs.getBoolean(SETTINGS_PRO_INFO_SHOWN, false))
+        set(newValue) {
+            prefs.edit().putBoolean(SETTINGS_PRO_INFO_SHOWN, newValue.value).apply()
+            field = newValue
+        }
 }
 
 

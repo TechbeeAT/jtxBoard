@@ -15,11 +15,11 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,12 +36,15 @@ import at.techbee.jtx.ui.DetailViewModel
 import at.techbee.jtx.ui.SyncViewModel
 import at.techbee.jtx.ui.compose.destinations.DetailDestination
 import at.techbee.jtx.ui.compose.destinations.NavigationDrawerDestination
+import at.techbee.jtx.ui.compose.dialogs.ProInfoDialog
 import at.techbee.jtx.ui.compose.screens.*
 import at.techbee.jtx.ui.compose.stateholder.GlobalStateHolder
 import at.techbee.jtx.ui.compose.stateholder.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 
+
+const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
 class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
 //class MainActivity2 : ComponentActivity() {
@@ -59,11 +62,9 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
 
         TimeZoneRegistryFactory.getInstance().createRegistry() // necessary for ical4j
         checkThemeSetting()
+        createNotificationChannel()   // Register Notification Channel for Reminders
 
-        // Register Notification Channel for Reminders
-        createNotificationChannel()
-
-        BillingManager.getInstance()?.initialise(this)
+        BillingManager.getInstance().initialise(this)
         /* TODO
         billingManager?.isProPurchased?.observe(this) { isPurchased ->
             if(!isPurchased)
@@ -185,6 +186,7 @@ fun MainNavHost(
     settingsStateHolder: SettingsStateHolder
 ) {
     val navController = rememberNavController()
+    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
 
     NavHost(
         navController = navController,
@@ -242,14 +244,12 @@ fun MainNavHost(
         }
         composable(NavigationDrawerDestination.BUYPRO.name) {
             BuyProScreen(
-                isPurchasedLive = BillingManager.getInstance()?.isProPurchased
-                    ?: MutableLiveData(true),
-                priceLive = BillingManager.getInstance()?.proPrice ?: MutableLiveData(""),
-                purchaseDateLive = BillingManager.getInstance()?.proPurchaseDate
-                    ?: MutableLiveData("-"),
-                orderIdLive = BillingManager.getInstance()?.proOrderId ?: MutableLiveData("-"),
+                isPurchased = isProPurchased,
+                priceLive = BillingManager.getInstance().proPrice,
+                purchaseDateLive = BillingManager.getInstance().proPurchaseDate,
+                orderIdLive = BillingManager.getInstance().proOrderId,
                 launchBillingFlow = {
-                    BillingManager.getInstance()?.launchBillingFlow(activity)
+                    BillingManager.getInstance().launchBillingFlow(activity)
                 },
                 navController = navController
             )
@@ -281,6 +281,15 @@ fun MainNavHost(
     globalStateHolder.icalObject2Open.value?.let { id ->
         globalStateHolder.icalObject2Open.value = null
         navController.navigate("details/$id?isEditMode=false")
+    }
+
+    if(!settingsStateHolder.proInfoShown.value && isProPurchased.value == false) {
+        ProInfoDialog(
+            onOK = {
+                settingsStateHolder.proInfoShown.value = true
+                settingsStateHolder.proInfoShown = settingsStateHolder.proInfoShown   // triggers saving
+                        }
+        )
     }
 }
 
