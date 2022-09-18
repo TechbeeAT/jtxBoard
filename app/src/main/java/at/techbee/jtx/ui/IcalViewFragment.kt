@@ -51,36 +51,6 @@ class IcalViewFragment : Fragment() {
 
         settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
-        // set up observers
-        icalViewViewModel.entryToEdit.observe(viewLifecycleOwner) {
-            if (it != null) {
-                icalViewViewModel.entryToEdit.value = null
-
-                // if the item is an instance of a recurring entry, make sure that the user is aware of this
-                val originalId =
-                    icalViewViewModel.icalEntity.value?.property?.recurOriginalIcalObjectId
-                if (originalId != null && icalViewViewModel.icalEntity.value?.property?.isRecurLinkedInstance == true) {
-
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(getString(R.string.view_recurrence_note_to_original_dialog_header))
-                        .setMessage(getString(R.string.view_recurrence_note_to_original))
-                        .setPositiveButton("Continue") { _, _ ->
-                            icalViewViewModel.icalEntity.value?.let { entity ->
-                                //this.findNavController().navigate(IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(entity))
-
-                            }
-                        }
-                        .setNegativeButton("Go to Original") { _, _ ->
-                            //this.findNavController().navigate(IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(originalId))
-                        }
-                        .show()
-                } else {
-                    //this.findNavController().navigate(IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(it))
-                }
-            }
-        }
-
-
         icalViewViewModel.icalEntity.observe(viewLifecycleOwner) {
 
             if (it == null) {
@@ -106,12 +76,6 @@ class IcalViewFragment : Fragment() {
             if(it.property.geoLat != null && it.property.geoLong != null)
                 MapManager(requireContext()).addMap(binding.viewLocationMap, it.property.geoLat!!, it.property.geoLong!!, it.property.location)
 
-
-            it.property.recurOriginalIcalObjectId?.let { origId ->
-                binding.viewRecurrenceGotooriginalButton.setOnClickListener { view ->
-                    //view.findNavController().navigate(IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(origId))
-                }
-            }
       }
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only)

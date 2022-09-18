@@ -28,14 +28,11 @@ class IcalEditViewModel(
 
     var returnIcalObjectId: MutableLiveData<Long> =
         MutableLiveData<Long>().apply { postValue(0L) }
-    var savingClicked: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>(false)
     var collectionNotFoundError: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(false)
 
     var iCalObjectUpdated: MutableLiveData<ICalObject> =
         MutableLiveData<ICalObject>().apply { postValue(iCalEntity.property) }
-    var selectedCollectionId: Long? = null
 
 
     fun update() {
@@ -57,7 +54,7 @@ class IcalEditViewModel(
                 Log.d("SQLConstraint", e.toString())
                 Log.d("SQLConstraint", iCalObjectUpdated.value.toString())
                 collectionNotFoundError.postValue(true)
-                savingClicked.postValue(false)
+                //savingClicked.postValue(false)
                 collectionNotFoundError.postValue(false)
                 return@launch
             }

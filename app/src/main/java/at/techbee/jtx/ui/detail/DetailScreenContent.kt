@@ -43,6 +43,7 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.detail.DetailViewModel
+import at.techbee.jtx.ui.detail.DetailsCardRecur
 import at.techbee.jtx.ui.reusable.cards.*
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.MoveItemToCollectionDialog
@@ -504,13 +505,19 @@ fun DetailScreenContent(
                     })
             }
 
-            AnimatedVisibility(icalObject.rrule != null || (isEditMode.value && detailSettings.enableRecurrence.value)) {   // only Todos have recur!
+            AnimatedVisibility(icalObject.rrule != null
+                    || icalObject.isRecurLinkedInstance
+                    || icalObject.recurOriginalIcalObjectId != null
+                    || (isEditMode.value && detailSettings.enableRecurrence.value)
+            ) {   // only Todos have recur!
                 DetailsCardRecur(
                     icalObject = icalObject,
                     isEditMode = isEditMode.value,
                     onRecurUpdated = { updatedRRule ->
                         icalObject.rrule = updatedRRule?.toString()
-                    })
+                    },
+                    goToView = goToView
+                )
             }
 
             AnimatedVisibility(

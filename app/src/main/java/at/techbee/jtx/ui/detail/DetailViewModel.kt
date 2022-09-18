@@ -150,7 +150,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
 
-    fun save(iCalObject: ICalObject,
+    fun save(icalObject: ICalObject,
              categories: List<Category>,
              comments: List<Comment>,
              attendees: List<Attendee>,
@@ -161,62 +161,62 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch(Dispatchers.IO) {
 
             if(icalEntity.value?.categories != categories) {
-                iCalObject.makeDirty()
-                database.deleteCategories(iCalObject.id)
+                icalObject.makeDirty()
+                database.deleteCategories(icalObject.id)
                 categories.forEach { changedCategory ->
-                    changedCategory.icalObjectId = iCalObject.id
+                    changedCategory.icalObjectId = icalObject.id
                     database.insertCategory(changedCategory)
                 }
             }
 
             if(icalEntity.value?.comments != comments) {
-                iCalObject.makeDirty()
-                database.deleteComments(iCalObject.id)
+                icalObject.makeDirty()
+                database.deleteComments(icalObject.id)
                 comments.forEach { changedComment ->
-                    changedComment.icalObjectId = iCalObject.id
+                    changedComment.icalObjectId = icalObject.id
                     database.insertComment(changedComment)
                 }
             }
 
             if(icalEntity.value?.attendees != attendees) {
-                iCalObject.makeDirty()
-                database.deleteAttendees(iCalObject.id)
+                icalObject.makeDirty()
+                database.deleteAttendees(icalObject.id)
                 attendees.forEach { changedAttendee ->
-                    changedAttendee.icalObjectId = iCalObject.id
+                    changedAttendee.icalObjectId = icalObject.id
                     database.insertAttendee(changedAttendee)
                 }
             }
 
             if(icalEntity.value?.resources != resources) {
-                iCalObject.makeDirty()
-                database.deleteResources(iCalObject.id)
+                icalObject.makeDirty()
+                database.deleteResources(icalObject.id)
                 resources.forEach { changedResource ->
-                    changedResource.icalObjectId = iCalObject.id
+                    changedResource.icalObjectId = icalObject.id
                     database.insertResource(changedResource)
                 }
             }
 
             if(icalEntity.value?.attachments != attachments) {
-                iCalObject.makeDirty()
-                database.deleteAttachments(iCalObject.id)
+                icalObject.makeDirty()
+                database.deleteAttachments(icalObject.id)
                 attachments.forEach { changedAttachment ->
-                    changedAttachment.icalObjectId = iCalObject.id
+                    changedAttachment.icalObjectId = icalObject.id
                     database.insertAttachment(changedAttachment)
                 }
                 Attachment.scheduleCleanupJob(getApplication())
             }
 
             if(icalEntity.value?.alarms != alarms) {
-                iCalObject.makeDirty()
-                database.deleteAlarms(iCalObject.id)
+                icalObject.makeDirty()
+                database.deleteAlarms(icalObject.id)
                 alarms.forEach { changedAlarm ->
-                    changedAlarm.icalObjectId = iCalObject.id
+                    changedAlarm.icalObjectId = icalObject.id
                     changedAlarm.alarmId = database.insertAlarm(changedAlarm)
                     val triggerTime = when {
                         changedAlarm.triggerTime != null -> changedAlarm.triggerTime
                         changedAlarm.triggerRelativeDuration != null && changedAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> changedAlarm.getDatetimeFromTriggerDuration(
-                            iCalObject.due, iCalObject.dueTimezone)
-                        changedAlarm.triggerRelativeDuration != null -> changedAlarm.getDatetimeFromTriggerDuration(iCalObject.dtstart, iCalObject.dtstartTimezone)
+                            icalObject.due, icalObject.dueTimezone)
+                        changedAlarm.triggerRelativeDuration != null -> changedAlarm.getDatetimeFromTriggerDuration(icalObject.dtstart, icalObject.dtstartTimezone)
                         else -> null
                     }
                     triggerTime?.let {
@@ -225,9 +225,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
 
-            if(icalEntity.value?.property != iCalObject) {
-                iCalObject.makeDirty()
-                database.update(iCalObject)
+            if(icalEntity.value?.property != icalObject) {
+                icalObject.makeDirty()
+                database.update(icalObject)
+
+                if (icalObject.rrule != null)
+                    icalObject.recreateRecurring(database, getApplication())
 
                 if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
                     ICalObject.makeRecurringException(icalEntity.value?.property!!, database)

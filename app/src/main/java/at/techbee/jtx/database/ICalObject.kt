@@ -1026,8 +1026,10 @@ data class ICalObject(
 
         getInstancesFromRrule().forEach { recurrenceDate ->
 
+            /*
             if(original.property.dtstart == recurrenceDate)
                 return@forEach    // skip entry as it is the original event
+             */
 
             val instance = original.copy()
             instance.property.id = 0L

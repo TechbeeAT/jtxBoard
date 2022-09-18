@@ -48,52 +48,14 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
 
     lateinit var collectionText: LiveData<String?>
 
-    var entryToEdit = MutableLiveData<ICalEntity?>().apply { postValue(null) }
-
 
     init {
 
         viewModelScope.launch {
 
-            // insert a new value to initialize the item or load the existing one from the DB
-            icalEntity = if (icalItemId == 0L)
-                MutableLiveData<ICalEntity?>().apply {
-                    postValue(ICalEntity(ICalObject(), null, null, null, null, null))
-                }
-            else
-                database.get(icalItemId)
-
-
-            recurInstances = Transformations.switchMap(icalEntity) {
-                it?.property?.id?.let { originalId -> database.getRecurInstances(originalId) }
-            }
-
             progressIndicatorVisible = Transformations.map(icalEntity) { item ->
                 return@map item?.property == null     // show progress indicator as long as item.property is null
             }
-
-            uploadPendingVisible = Transformations.map(icalEntity) { item ->
-                return@map item?.property?.dirty == true && item.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE
-            }
-
-            collectionText = Transformations.map(icalEntity) { item ->
-                if (item?.ICalCollection?.accountName?.isNotEmpty() == true)
-                    item.ICalCollection?.displayName + " (" + item.ICalCollection?.accountName + ")"
-                else
-                    item?.ICalCollection?.displayName ?: "-"
-            }
-        }
-    }
-
-
-    private fun makeRecurringExceptionIfNecessary(item: ICalObject) {
-
-        if(item.isRecurLinkedInstance) {
-            viewModelScope.launch(Dispatchers.IO) {
-                ICalObject.makeRecurringException(item, database)
-                SyncUtil.notifyContentObservers(getApplication())
-            }
-            Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
         }
     }
 }

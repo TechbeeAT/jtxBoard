@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.cards
+package at.techbee.jtx.ui.detail
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
@@ -43,6 +43,7 @@ fun DetailsCardRecur(
     icalObject: ICalObject,
     isEditMode: Boolean,
     onRecurUpdated: (Recur?) -> Unit,
+    goToView: (itemId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -100,7 +101,7 @@ fun DetailsCardRecur(
                     text = headline
                 )
 
-                AnimatedVisibility(isEditMode) {
+                AnimatedVisibility(isEditMode && icalObject.recurOriginalIcalObjectId == null) {
                     Switch(
                         checked = updatedRRule != null,
                         enabled = icalObject.dtstart != null,
@@ -519,6 +520,26 @@ fun DetailsCardRecur(
                 }
             }
 
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                if(icalObject.recurOriginalIcalObjectId != null) {
+                    Button(
+                        onClick = { icalObject.recurOriginalIcalObjectId?.let { goToView(it) } }
+                    ) {
+                        Text(stringResource(id = R.string.view_recurrence_go_to_original_button))
+                    }
+                    if(icalObject.isRecurLinkedInstance) {
+                        Text(stringResource(id = R.string.view_recurrence_note_to_original))
+                    } else {
+                        Text(stringResource(id = R.string.view_reccurrence_note_is_exception))
+                    }
+                }
+
+            }
+
             icalObject.rrule = updatedRRule?.toString()
             icalObject.getInstancesFromRrule().forEach { instanceDate ->
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
@@ -535,7 +556,9 @@ fun DetailsCardRecur(
                     text = stringResource(id = R.string.recurrence_exceptions),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 4.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 4.dp)
                 )
             exceptions.forEach { exception ->
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
@@ -552,7 +575,9 @@ fun DetailsCardRecur(
                     text = stringResource(id = R.string.recurrence_additions),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 4.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 4.dp)
                 )
             additions.forEach { addition ->
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
@@ -590,7 +615,8 @@ fun DetailsCardRecur_Preview() {
                 rdate = "1661890454701,1661990454701"
             },
             isEditMode = false,
-            onRecurUpdated = { }
+            onRecurUpdated = { },
+            goToView = { }
         )
     }
 }
@@ -616,7 +642,50 @@ fun DetailsCardRecur_Preview_edit() {
                 rrule = recur.toString()
             },
             isEditMode = true,
-            onRecurUpdated = { }
+            onRecurUpdated = { },
+            goToView = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardRecur_Preview_linked_instance() {
+    MaterialTheme {
+
+        DetailsCardRecur(
+            icalObject = ICalObject.createTodo().apply {
+                dtstart = System.currentTimeMillis()
+                dtstartTimezone = null
+                due = System.currentTimeMillis()
+                dueTimezone = null
+                isRecurLinkedInstance = true
+                recurOriginalIcalObjectId = 1L
+            },
+            isEditMode = false,
+            onRecurUpdated = { },
+            goToView = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardRecur_Preview_linked_exception() {
+    MaterialTheme {
+
+        DetailsCardRecur(
+            icalObject = ICalObject.createTodo().apply {
+                dtstart = System.currentTimeMillis()
+                dtstartTimezone = null
+                due = System.currentTimeMillis()
+                dueTimezone = null
+                isRecurLinkedInstance = false
+                recurOriginalIcalObjectId = 1L
+            },
+            isEditMode = false,
+            onRecurUpdated = { },
+            goToView = { }
         )
     }
 }
@@ -636,7 +705,8 @@ fun DetailsCardRecur_Preview_off() {
                 dueTimezone = null
             },
             isEditMode = false,
-            onRecurUpdated = { }
+            onRecurUpdated = { },
+            goToView = { }
         )
     }
 }
@@ -654,7 +724,8 @@ fun DetailsCardRecur_Preview_edit_off() {
                 dueTimezone = null
             },
             isEditMode = true,
-            onRecurUpdated = { }
+            onRecurUpdated = { },
+            goToView = { }
         )
     }
 }
@@ -672,7 +743,8 @@ fun DetailsCardRecur_Preview_edit_no_dtstart() {
                 dueTimezone = null
             },
             isEditMode = true,
-            onRecurUpdated = { }
+            onRecurUpdated = { },
+            goToView = { }
         )
     }
 }
@@ -690,7 +762,8 @@ fun DetailsCardRecur_Preview_view_no_dtstart() {
                 dueTimezone = null
             },
             isEditMode = false,
-            onRecurUpdated = { }
+            onRecurUpdated = { },
+            goToView = { }
         )
     }
 }
