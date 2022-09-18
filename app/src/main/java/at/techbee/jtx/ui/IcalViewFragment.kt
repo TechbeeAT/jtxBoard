@@ -18,10 +18,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import at.techbee.jtx.NavigationDirections
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalDatabase
@@ -63,21 +60,13 @@ class IcalViewFragment : Fragment() {
 
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-        val arguments = IcalViewFragmentArgs.fromBundle((requireArguments()))
+        //val arguments = IcalViewFragmentArgs.fromBundle((requireArguments()))
 
         val markwon = Markwon.builder(requireContext())
             .usePlugin(StrikethroughPlugin.create())
             .build()
 
         settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
-
-
-        // set up view model
-        val model: IcalViewViewModel by viewModels { IcalViewViewModelFactory(application, arguments.item2show) }
-        icalViewViewModel = model
-        binding.model = icalViewViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
-
 
 
         // set up observers
@@ -95,25 +84,16 @@ class IcalViewFragment : Fragment() {
                         .setMessage(getString(R.string.view_recurrence_note_to_original))
                         .setPositiveButton("Continue") { _, _ ->
                             icalViewViewModel.icalEntity.value?.let { entity ->
-                                this.findNavController().navigate(
-                                    IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(
-                                        entity
-                                    )
-                                )
+                                //this.findNavController().navigate(IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(entity))
 
                             }
                         }
                         .setNegativeButton("Go to Original") { _, _ ->
-                            this.findNavController().navigate(
-                                IcalViewFragmentDirections.actionIcalViewFragmentSelf()
-                                    .setItem2show(originalId)
-                            )
+                            //this.findNavController().navigate(IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(originalId))
                         }
                         .show()
                 } else {
-                    this.findNavController().navigate(
-                        IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(it)
-                    )
+                    //this.findNavController().navigate(IcalViewFragmentDirections.actionIcalViewFragmentToIcalEditFragment(it))
                 }
             }
         }
@@ -124,7 +104,7 @@ class IcalViewFragment : Fragment() {
             if (it == null) {
                 if(summary2delete.isEmpty())
                     Toast.makeText(context, R.string.view_toast_entry_does_not_exist_anymore, Toast.LENGTH_LONG).show()
-                findNavController().navigate(NavigationDirections.actionGlobalIcalListFragment())
+                //findNavController().navigate(NavigationDirections.actionGlobalIcalListFragment())
                 return@observe   // just make sure that nothing else happens
             }
             if(it.ICalCollection?.readonly == false
@@ -154,9 +134,7 @@ class IcalViewFragment : Fragment() {
 
             it.property.recurOriginalIcalObjectId?.let { origId ->
                 binding.viewRecurrenceGotooriginalButton.setOnClickListener { view ->
-                    view.findNavController().navigate(
-                        IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(origId)
-                    )
+                    //view.findNavController().navigate(IcalViewFragmentDirections.actionIcalViewFragmentSelf().setItem2show(origId))
                 }
             }
       }

@@ -10,14 +10,12 @@ package at.techbee.jtx.ui
 
 import android.app.AlertDialog
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
@@ -66,19 +64,10 @@ class IcalEditFragment : Fragment() {
         this.application = requireNotNull(this.activity).application
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-        val arguments = IcalEditFragmentArgs.fromBundle((requireArguments()))
-        val prefs = activity?.getSharedPreferences(PREFS_EDIT_VIEW, Context.MODE_PRIVATE)!!
-
           // add markwon to description edittext
         val markwon = Markwon.create(requireContext())
         val markwonEditor = MarkwonEditor.create(markwon)
         binding.editFragmentTabGeneral.editDescriptionEdittext.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(markwonEditor))
-
-
-        val model: IcalEditViewModel by viewModels { IcalEditViewModelFactory(application, arguments.icalentity) }
-        icalEditViewModel = model
-        binding.model = icalEditViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
 
 
 
@@ -141,10 +130,13 @@ class IcalEditFragment : Fragment() {
                     return@observe
 
                 //icalEditViewModel.iCalObjectUpdated.value!!.percent = binding.editFragmentTabGeneral.editProgressSlider.value.toInt()
+                /*
                 prefs.edit().putLong(
                     PREFS_LAST_COLLECTION,
                     icalEditViewModel.selectedCollectionId ?: icalEditViewModel.iCalObjectUpdated.value!!.collectionId
                 ).apply()
+
+                 */
 
                 icalEditViewModel.update()
             }
