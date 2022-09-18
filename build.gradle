@@ -29,12 +29,11 @@ buildscript {
         version_navigation = '2.5.1'
         version_room = '2.4.3'
         version_material = '1.7.0-alpha03'
-        version_appcompat = "1.4.2"
+        version_appcompat = "1.6.0-rc01"
         version_work = "2.7.1"
         version_fragment = "1.4.0-alpha09"
         version_billing = "5.0.0"
         version_review = "2.0.0"
-        version_markwon = "4.6.2"
         version_compose = "1.2.1"
         version_about_libraries = "10.3.0"
     }
@@ -48,9 +47,6 @@ buildscript {
 
         // AboutLibraries
         maven { url "https://plugins.gradle.org/m2/" }
-
-        // Markwon for markdown support
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
 
     dependencies {

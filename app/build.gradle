@@ -210,10 +210,8 @@ dependencies {
     implementation "com.mikepenz:aboutlibraries-compose:${version_about_libraries}"
 
 
-    // Markwon for markdown support
-    implementation  "io.noties.markwon:core:$version_markwon"
-    implementation  "io.noties.markwon:ext-strikethrough:$version_markwon"
-    implementation  "io.noties.markwon:editor:$version_markwon"
+    // Markdown support
+    implementation "com.github.jeziellago:compose-markdown:0.3.0"
 
     // Color Picker
     implementation 'com.larswerkman:HoloColorPicker:1.5'

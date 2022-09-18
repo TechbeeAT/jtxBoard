@@ -25,9 +25,6 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.databinding.FragmentIcalEditBinding
 import at.techbee.jtx.flavored.MapManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import io.noties.markwon.Markwon
-import io.noties.markwon.editor.MarkwonEditor
-import io.noties.markwon.editor.MarkwonEditorTextWatcher
 import net.fortuna.ical4j.model.Recur
 
 
@@ -63,13 +60,6 @@ class IcalEditFragment : Fragment() {
         this.container = container
         this.application = requireNotNull(this.activity).application
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
-
-          // add markwon to description edittext
-        val markwon = Markwon.create(requireContext())
-        val markwonEditor = MarkwonEditor.create(markwon)
-        binding.editFragmentTabGeneral.editDescriptionEdittext.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(markwonEditor))
-
-
 
         //pre-set rules if rrule is present
         if(icalEditViewModel.iCalEntity.property.rrule!= null) {

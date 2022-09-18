@@ -63,13 +63,6 @@ fun ICalObjectListCard(
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit
 ) {
 
-
-    /*
-    var markwon = Markwon.builder(LocalContext.current)
-        .usePlugin(StrikethroughPlugin.create())
-        .build()
-     */
-
     var isSubtasksExpanded by remember {
         mutableStateOf(
             iCalObject.isSubtasksExpanded ?: isSubtasksExpandedDefault

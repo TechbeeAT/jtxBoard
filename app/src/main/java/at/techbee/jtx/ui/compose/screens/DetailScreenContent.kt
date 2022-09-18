@@ -49,6 +49,7 @@ import at.techbee.jtx.ui.compose.dialogs.MoveItemToCollectionDialog
 import at.techbee.jtx.ui.compose.elements.CollectionsSpinner
 import at.techbee.jtx.ui.compose.elements.ColoredEdge
 import at.techbee.jtx.ui.compose.elements.ProgressElement
+import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
 import java.time.Duration
 import java.util.*
@@ -156,11 +157,6 @@ fun DetailScreenContent(
         )
     }
 
-    /*
-    var markwon = Markwon.builder(LocalContext.current)
-        .usePlugin(StrikethroughPlugin.create())
-        .build()
-     */
     if (showColorPicker) {
         ColorPickerDialog(
             initialColor = color,
@@ -230,7 +226,9 @@ fun DetailScreenContent(
                                 if (icalObject.collectionId != newCollection.collectionId)
                                     showMoveItemToCollectionDialog = newCollection
                             },
-                            modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 4.dp)
                         )
                         IconButton(onClick = { showColorPicker = true }) {
                             Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
@@ -272,11 +270,12 @@ fun DetailScreenContent(
                                 style = MaterialTheme.typography.titleMedium,
                                 //fontWeight = FontWeight.Bold
                             )
-                        if (description.isNotBlank())
-                            Text(
-                                description,
+                        if (description.isNotBlank()) {
+                            MarkdownText(
+                                markdown = description,
                                 modifier = Modifier.padding(8.dp)
                             )
+                        }
                     }
                 }
             }
@@ -550,7 +549,9 @@ fun DetailScreenContent(
             AnimatedVisibility(!isEditMode.value) {
                 Column(
                     horizontalAlignment = Alignment.End,
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)) {
                     Text(
                         stringResource(id = R.string.view_created_text, Date(icalObject.created)),
                         style = MaterialTheme.typography.bodySmall,

@@ -17,7 +17,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -30,8 +29,6 @@ import at.techbee.jtx.flavored.MapManager
 import at.techbee.jtx.util.SyncUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import io.noties.markwon.Markwon
-import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 
 
 class IcalViewFragment : Fragment() {
@@ -60,14 +57,7 @@ class IcalViewFragment : Fragment() {
 
         this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
 
-        //val arguments = IcalViewFragmentArgs.fromBundle((requireArguments()))
-
-        val markwon = Markwon.builder(requireContext())
-            .usePlugin(StrikethroughPlugin.create())
-            .build()
-
         settings = PreferenceManager.getDefaultSharedPreferences(requireContext())
-
 
         // set up observers
         icalViewViewModel.entryToEdit.observe(viewLifecycleOwner) {
@@ -109,7 +99,7 @@ class IcalViewFragment : Fragment() {
             }
             if(it.ICalCollection?.readonly == false
                 && it.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE
-                && BillingManager.getInstance()?.isProPurchased?.value == false) {
+                && BillingManager.getInstance().isProPurchased?.value == false) {
                 //hideEditingOptions()
                 val snackbar = Snackbar.make(requireView(), R.string.buypro_snackbar_remote_entries_blocked, Snackbar.LENGTH_INDEFINITE)
                 //snackbar.setAction(R.string.more) {
@@ -120,13 +110,6 @@ class IcalViewFragment : Fragment() {
 
             if (!SyncUtil.isDAVx5CompatibleWithJTX(application) || it.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE)
                 optionsMenu?.findItem(R.id.menu_view_syncnow)?.isVisible = false
-
-
-            // setting the description with Markdown
-            it.property.description?.let { desc ->
-                val descMarkwon = markwon.toMarkdown(desc)
-                binding.viewDescription.text = descMarkwon
-            }
 
             if(it.property.geoLat != null && it.property.geoLong != null)
                 MapManager(requireContext()).addMap(binding.viewLocationMap, it.property.geoLat!!, it.property.geoLong!!, it.property.location)
@@ -140,7 +123,7 @@ class IcalViewFragment : Fragment() {
       }
 
         // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only)
-        if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance()?.isProPurchased?.value == false)
+        if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance().isProPurchased.value == false)
             AdManager.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), AdManager.getInstance()?.unitIdBannerView)
         else
             binding.viewAdContainer.visibility = View.GONE
