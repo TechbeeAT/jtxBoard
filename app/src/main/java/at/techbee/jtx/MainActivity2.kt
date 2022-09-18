@@ -54,6 +54,14 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
     private lateinit var globalStateHolder: GlobalStateHolder
     private lateinit var settingsStateHolder: SettingsStateHolder
 
+    companion object {
+        const val CHANNEL_REMINDER_DUE = "REMINDER_DUE"
+
+        const val BUILD_FLAVOR_OSE = "ose"
+        const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
+        const val BUILD_FLAVOR_HUAWEI = "huawei"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -168,7 +176,7 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
             val name = getString(R.string.notification_channel_reminder_name)
             val descriptionText = getString(R.string.notification_channel_reminder_description)
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(MainActivity.CHANNEL_REMINDER_DUE, name, importance).apply {
+            val channel = NotificationChannel(CHANNEL_REMINDER_DUE, name, importance).apply {
                 description = descriptionText
             }
             // Register the channel with the system

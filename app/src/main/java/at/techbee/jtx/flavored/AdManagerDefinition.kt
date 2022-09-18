@@ -11,7 +11,7 @@ package at.techbee.jtx.flavored
 import android.app.Activity
 import android.content.Context
 import android.widget.LinearLayout
-import at.techbee.jtx.MainActivity
+import at.techbee.jtx.MainActivity2
 
 
 interface AdManagerDefinition {
@@ -39,13 +39,13 @@ interface AdManagerDefinition {
     /**
      * Resets the user consent information and shows the consent form again
      */
-    fun resetUserConsent(activity: MainActivity, context: Context)
+    fun resetUserConsent(activity: MainActivity2, context: Context)
 
     /**
      * This function initializes the AdManager and loads the adPrefs.
      * It loads the user consent to check if a user consent is needed
      */
-    fun checkOrRequestConsentAndLoadAds(activity: MainActivity, context: Context)
+    fun checkOrRequestConsentAndLoadAds(activity: MainActivity2, context: Context)
 
     /**
      * Shows the ad if the ad was loaded and ready

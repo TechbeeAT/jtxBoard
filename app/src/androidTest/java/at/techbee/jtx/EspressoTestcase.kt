@@ -72,8 +72,8 @@ class EspressoTestcase {
          * and close it after each test. This is a replacement for
          * "androidx.test.rule.ActivityTestRule".
          */
-        @get:Rule var activityScenarioRule = activityScenarioRule<MainActivity>()
-
+        @get:Rule var activityScenarioRule = activityScenarioRule<MainActivity2>()
+/*
         @Test
         fun goToDate_only_visible_for_Journals() {
 
@@ -149,5 +149,7 @@ class EspressoTestcase {
         //onView(withText(R.string.settings_enforce_dark_theme))
 
     }
+
+ */
 
 }

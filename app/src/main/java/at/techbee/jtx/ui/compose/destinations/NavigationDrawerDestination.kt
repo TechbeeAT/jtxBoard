@@ -7,7 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
-import at.techbee.jtx.MainActivity
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 
 enum class NavigationDrawerDestination (
@@ -118,9 +118,9 @@ enum class NavigationDrawerDestination (
 
         fun valuesFor(flavor: String): List<NavigationDrawerDestination> {
             return when(flavor) {
-                MainActivity.BUILD_FLAVOR_GOOGLEPLAY -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
-                MainActivity.BUILD_FLAVOR_HUAWEI -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, ADINFO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
-                MainActivity.BUILD_FLAVOR_OSE -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, DONATE, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_GOOGLEPLAY -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_HUAWEI -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, ADINFO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
+                MainActivity2.BUILD_FLAVOR_OSE -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, DONATE, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
                 else -> listOf(BOARD, COLLECTIONS, SYNC, ABOUT, BUYPRO, SETTINGS, TWITTER, WEBSITE, NEWS, SUPPORT, PRIVACY)
             }
         }

@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.BuildConfig
-import at.techbee.jtx.MainActivity
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.compose.cards.TranslatorCard
 import at.techbee.jtx.ui.theme.JtxBoardTheme
@@ -69,7 +69,7 @@ fun AboutTranslations(
             )
         }
         item {
-            if (BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_OSE)
+            if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_OSE)
                 Text(
                     stringResource(id = R.string.about_translations_contribution_info),
                     textAlign = TextAlign.Center,
@@ -77,7 +77,7 @@ fun AboutTranslations(
                 )
         }
         item {
-            if (BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_OSE)
+            if (BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_OSE)
                 Button(
                     modifier = Modifier.padding(bottom = 8.dp),
                     onClick = {

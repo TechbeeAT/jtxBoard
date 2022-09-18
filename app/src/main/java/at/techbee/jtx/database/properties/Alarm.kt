@@ -23,7 +23,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import at.techbee.jtx.MainActivity
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
@@ -370,7 +369,7 @@ data class Alarm (
 
 
             // this is the notification itself that will be put as an Extra into the notificationIntent
-            val notification = NotificationCompat.Builder(context, MainActivity.CHANNEL_REMINDER_DUE).apply {
+            val notification = NotificationCompat.Builder(context, MainActivity2.CHANNEL_REMINDER_DUE).apply {
                 setSmallIcon(R.drawable.ic_notification)
                 notificationSummary?.let { setContentTitle(it) }
                 notificationDescription?.let { setContentText(it) }

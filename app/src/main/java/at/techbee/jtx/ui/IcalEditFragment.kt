@@ -19,7 +19,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import at.techbee.jtx.BuildConfig
-import at.techbee.jtx.MainActivity
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
@@ -122,7 +122,7 @@ class IcalEditFragment : Fragment() {
         }
 
 
-        if(BuildConfig.FLAVOR == MainActivity.BUILD_FLAVOR_GOOGLEPLAY) {
+        if(BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY) {
             binding.editFragmentTabUlc.editLocationEdit.setEndIconOnClickListener {
                 MapManager(requireContext()).showLocationPickerDialog(
                     inflater,

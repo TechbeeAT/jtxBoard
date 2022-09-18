@@ -58,7 +58,7 @@ class IcalEditFragmentTest {
     private val testScope = TestCoroutineScope(testDispatcher)
 
     @get: Rule
-    var testRule = activityScenarioRule<MainActivity>()
+    var testRule = activityScenarioRule<MainActivity2>()
 
     @get:Rule
     val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(

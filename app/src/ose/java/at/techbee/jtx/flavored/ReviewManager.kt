@@ -9,7 +9,6 @@
 package at.techbee.jtx.flavored
 
 import android.app.Activity
-import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
@@ -45,6 +44,7 @@ class JtxReviewManager(val activity: Activity) : ReviewManagerDefinition {
             .setPositiveButton(R.string.ok) { _, _ ->   }
             .setNeutralButton(R.string.more) { _, _ ->
                 //activity.findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_donateFragment)
+                // TODO!!!
             }
             .show()
 
