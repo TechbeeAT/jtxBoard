@@ -86,15 +86,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
     }
 
 
-    fun retrieveSubEntryToEdit(id: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            database.getSync(id)?.let {
-                entryToEdit.postValue(it)
-            }
-        }
-    }
-
-
     private fun makeRecurringExceptionIfNecessary(item: ICalObject) {
 
         if(item.isRecurLinkedInstance) {
