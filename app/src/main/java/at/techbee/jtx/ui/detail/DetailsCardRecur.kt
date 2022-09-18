@@ -27,6 +27,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
+import at.techbee.jtx.ui.reusable.dialogs.UnsupportedRRuleDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.DateTimeUtils
 import net.fortuna.ical4j.model.Date
@@ -78,6 +79,24 @@ fun DetailsCardRecur(
                 onRecurUpdated(updatedRRule)
             },
             onDismiss = { showDatepicker = false }
+        )
+    }
+
+    if(isEditMode && (updatedRRule?.experimentalValues?.isNotEmpty() == true
+        || updatedRRule?.hourList?.isNotEmpty() == true
+        || updatedRRule?.minuteList?.isNotEmpty() == true
+        || updatedRRule?.monthList?.isNotEmpty() == true
+        || updatedRRule?.secondList?.isNotEmpty() == true
+        || updatedRRule?.setPosList?.isNotEmpty() == true
+        || updatedRRule?.skip != null
+        || updatedRRule?.weekNoList?.isNotEmpty() == true
+        || updatedRRule?.weekStartDay != null
+        || updatedRRule?.yearDayList?.isNotEmpty() == true
+        || (updatedRRule?.monthDayList?.size?:0) > 1)
+    ) {
+        UnsupportedRRuleDialog(
+            onConfirm = { updatedRRule = null },
+            onDismiss = { goToView(icalObject.id) }
         )
     }
 

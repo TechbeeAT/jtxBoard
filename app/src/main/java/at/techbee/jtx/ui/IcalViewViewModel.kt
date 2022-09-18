@@ -24,8 +24,6 @@ import kotlinx.coroutines.launch
 
 class IcalViewViewModel(application: Application, private val icalItemId: Long) : AndroidViewModel(application) {
 
-    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
-
     lateinit var icalEntity: LiveData<ICalEntity?>
     lateinit var recurInstances: LiveData<List<ICalObject?>>
 
@@ -36,15 +34,6 @@ class IcalViewViewModel(application: Application, private val icalItemId: Long) 
 
     lateinit var locationHeaderVisible: LiveData<Boolean>
     lateinit var locationVisible: LiveData<Boolean>
-    lateinit var relatedtoVisible: LiveData<Boolean>
-    lateinit var uploadPendingVisible: LiveData<Boolean>
-    lateinit var recurrenceVisible: LiveData<Boolean>
-    lateinit var recurrenceItemsVisible: LiveData<Boolean>
-    lateinit var recurrenceLinkedVisible: LiveData<Boolean>
-    lateinit var recurrenceGoToOriginalVisible: LiveData<Boolean>
-    lateinit var recurrenceIsExceptionVisible: LiveData<Boolean>
-    lateinit var recurrenceExceptionsVisible: LiveData<Boolean>
-    lateinit var recurrenceAdditionsVisible: LiveData<Boolean>
 
     lateinit var collectionText: LiveData<String?>
 

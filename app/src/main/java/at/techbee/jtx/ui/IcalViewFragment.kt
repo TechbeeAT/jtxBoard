@@ -20,14 +20,11 @@ import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.databinding.FragmentIcalViewBinding
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.MapManager
 import at.techbee.jtx.util.SyncUtil
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
 

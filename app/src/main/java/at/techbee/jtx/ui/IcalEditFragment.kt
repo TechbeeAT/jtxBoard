@@ -8,90 +8,16 @@
 
 package at.techbee.jtx.ui
 
-import android.app.AlertDialog
-import android.app.Application
-import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import at.techbee.jtx.BuildConfig
-import at.techbee.jtx.MainActivity2
-import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.ICalDatabaseDao
-import at.techbee.jtx.database.Module
-import at.techbee.jtx.databinding.FragmentIcalEditBinding
-import at.techbee.jtx.flavored.MapManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import net.fortuna.ical4j.model.Recur
 
+class IcalEditFragment {
 
-class IcalEditFragment : Fragment() {
-
-    private var _binding: FragmentIcalEditBinding? = null
-    val binding get() = _binding!!
-
-    private lateinit var application: Application
-    private lateinit var dataSource: ICalDatabaseDao
-    lateinit var icalEditViewModel: IcalEditViewModel
-    private lateinit var inflater: LayoutInflater
-    private var container: ViewGroup? = null
-
-
-
+/*
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        // Get a reference to the binding object and inflate the fragment views.
 
-        this.inflater = inflater
-        this._binding = FragmentIcalEditBinding.inflate(inflater, container, false)
-        this.container = container
-        this.application = requireNotNull(this.activity).application
-        this.dataSource = ICalDatabase.getInstance(application).iCalDatabaseDao
-
-        //pre-set rules if rrule is present
-        if(icalEditViewModel.iCalEntity.property.rrule!= null) {
-
-            try {
-
-                val recur = Recur(icalEditViewModel.iCalEntity.property.rrule)
-
-                //if(icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_UNSUPPORTED)
-                //    throw Exception("Unsupported recurrence mode detected")
-
-                if(recur.experimentalValues.isNotEmpty() || recur.hourList.isNotEmpty() || recur.minuteList.isNotEmpty() || recur.monthList.isNotEmpty() || recur.secondList.isNotEmpty() || recur.setPosList.isNotEmpty() || recur.skip != null || recur.weekNoList.isNotEmpty() || recur.weekStartDay != null || recur.yearDayList.isNotEmpty())
-                    throw Exception("Unsupported values detected")
-
-                //pre-select the day of the month according to the rrule
-                /*
-                if (icalEditViewModel.recurrenceMode.value == RECURRENCE_MODE_MONTH) {
-                    if(recur.monthDayList.size != 1)
-                        throw Exception("Recurrence mode Monthly but no day or multiple days were set")
-                    val selectedMonth = Recur(icalEditViewModel.iCalEntity.property.rrule).monthDayList[0]
-                    binding.editFragmentIcalEditRecur.editRecurOnTheXDayOfMonthNumberPicker.value = selectedMonth
-                }
-
-                 */
-            } catch (e: Exception) {
-                Log.w("LoadRRule", "Failed to preset UI according to provided RRule\n$e")
-
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(getString(R.string.edit_fragment_recur_unknown_rrule_dialog_title))
-                    .setMessage(getString(R.string.edit_fragment_recur_unknown_rrule_dialog_message))
-                    .setPositiveButton(R.string.ok) { _, _ ->
-                        icalEditViewModel.iCalObjectUpdated.value?.rrule = null
-                        icalEditViewModel.iCalObjectUpdated.value?.rdate = null
-                        icalEditViewModel.iCalObjectUpdated.value?.exdate = null
-                        //binding.editFragmentIcalEditRecur.editRecurSwitch.isChecked = false
-                    }
-                    .show()
-            }
-        }
 
 
         if(BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY) {
@@ -101,8 +27,6 @@ class IcalEditFragment : Fragment() {
                     icalEditViewModel.iCalObjectUpdated
                 )
             }
-        } else {
-            binding.editFragmentTabUlc.editLocationEdit.isEndIconVisible = false
         }
 
 
@@ -120,18 +44,6 @@ class IcalEditFragment : Fragment() {
             builder.show()
         }
 
-
-
-        icalEditViewModel.iCalObjectUpdated.observe(viewLifecycleOwner) {
-
-            // if the item has an original Id, the user chose to unlink the recurring instance from the original, the recurring values need to be deleted
-            if(it.isRecurLinkedInstance) {
-                it.rrule = null
-                it.exdate = null
-                it.rdate = null
-                it.isRecurLinkedInstance = false    // remove the link
-            }
-        }
 
 
         //TODO: Check if the Sequence was updated in the meantime and notify user!
@@ -193,5 +105,7 @@ class IcalEditFragment : Fragment() {
 
         return isValid
 
-    }
+        }
+ */
+
 }
