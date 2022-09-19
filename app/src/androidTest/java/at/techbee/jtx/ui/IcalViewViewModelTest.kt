@@ -38,7 +38,7 @@ class IcalViewViewModelTest {
     private lateinit var database: ICalDatabaseDao
     private lateinit var context: Context
     private lateinit var application: Application
-    private lateinit var icalViewViewModel: IcalViewViewModel
+    //private lateinit var icalViewViewModel: IcalViewViewModel
 
 
 

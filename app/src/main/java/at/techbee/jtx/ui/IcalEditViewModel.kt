@@ -61,5 +61,14 @@ class IcalEditViewModel(
             returnIcalObjectId.postValue(insertedOrUpdatedItemId)
         }
     }
+/*
+    viewModelScope.launch {
+
+        progressIndicatorVisible = Transformations.map(icalEntity) { item ->
+            return@map item?.property == null     // show progress indicator as long as item.property is null
+        }
+    }
+
+ */
 }
 

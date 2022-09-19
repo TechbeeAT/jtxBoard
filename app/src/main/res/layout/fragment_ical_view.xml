@@ -13,17 +13,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <data>
-
-        <import type="android.view.View" />
-        <import type="at.techbee.jtx.util.DateTimeUtils" />
-
-        <variable
-            name="model"
-            type="at.techbee.jtx.ui.IcalViewViewModel" />
-    </data>
-
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -38,39 +27,6 @@
                 android:layout_height="wrap_content"
                 tools:context=".ui.IcalViewFragment">
 
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    android:id="@+id/view_progress_indicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    android:visibility="@{model.progressIndicatorVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    android:id="@+id/view_sync_progress_indicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    android:visibility="@{model.showSyncProgressIndicator ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <LinearLayout
-                    android:id="@+id/view_adContainer"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_location_header"
@@ -82,10 +38,9 @@
                     android:text="@string/location"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:visibility="@{model.locationHeaderVisible ? View.VISIBLE : View.GONE}"
                     app:drawableStartCompat="@drawable/ic_location"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_adContainer" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/view_location"
@@ -94,8 +49,6 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
                     android:autoLink="all"
-                    android:text="@{model.icalEntity.property.location}"
-                    android:visibility="@{model.locationVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/view_location_header"
                     app:layout_constraintTop_toBottomOf="@+id/view_location_header"

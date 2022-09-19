@@ -30,18 +30,12 @@ import com.google.android.material.snackbar.Snackbar
 
 class IcalViewFragment : Fragment() {
 
-    private var _binding: FragmentIcalViewBinding? = null
-    val binding get() = _binding!!
-
-    lateinit var application: Application
-    lateinit var icalViewViewModel: IcalViewViewModel
-    private var optionsMenu: Menu? = null
 
     private var summary2delete: String = ""
 
     private lateinit var settings: SharedPreferences
 
-
+/*
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
@@ -67,21 +61,14 @@ class IcalViewFragment : Fragment() {
                 snackbar.show()
             }
 
-            if (!SyncUtil.isDAVx5CompatibleWithJTX(application) || it.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE)
-                optionsMenu?.findItem(R.id.menu_view_syncnow)?.isVisible = false
-
             if(it.property.geoLat != null && it.property.geoLong != null)
                 MapManager(requireContext()).addMap(binding.viewLocationMap, it.property.geoLat!!, it.property.geoLong!!, it.property.location)
 
       }
 
-        // show ads only for AdFlavors and if the subscription was not purchased (gplay flavor only)
-        if(AdManager.getInstance()?.isAdFlavor() == true && BillingManager.getInstance().isProPurchased.value == false)
-            AdManager.getInstance()?.addAdViewToContainerViewFragment(binding.viewAdContainer, requireContext(), AdManager.getInstance()?.unitIdBannerView)
-        else
-            binding.viewAdContainer.visibility = View.GONE
-
         return binding.root
     }
+
+ */
 }
 
