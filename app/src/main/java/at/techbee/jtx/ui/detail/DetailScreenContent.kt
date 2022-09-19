@@ -42,9 +42,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.ui.detail.DetailViewModel
-import at.techbee.jtx.ui.detail.DetailsCardRecur
-import at.techbee.jtx.ui.reusable.cards.*
+import at.techbee.jtx.ui.detail.*
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.MoveItemToCollectionDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner

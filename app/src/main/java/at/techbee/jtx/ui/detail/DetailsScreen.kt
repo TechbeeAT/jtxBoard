@@ -24,7 +24,7 @@ import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.ui.detail.DetailViewModel
-import at.techbee.jtx.ui.reusable.appbars.DetailBottomAppBar
+import at.techbee.jtx.ui.detail.DetailBottomAppBar
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu

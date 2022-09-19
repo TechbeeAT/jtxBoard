@@ -44,8 +44,6 @@ class IcalEditFragment {
             builder.show()
         }
 
-
-
         //TODO: Check if the Sequence was updated in the meantime and notify user!
 
         return binding.root

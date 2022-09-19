@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.cards
+package at.techbee.jtx.ui.detail
 
 import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
@@ -41,6 +41,7 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioNoteDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import net.fortuna.ical4j.model.Component

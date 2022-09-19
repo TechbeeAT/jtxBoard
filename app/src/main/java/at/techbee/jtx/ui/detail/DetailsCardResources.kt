@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.cards
+package at.techbee.jtx.ui.detail
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade

@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.appbars
+package at.techbee.jtx.ui.detail
 
 import android.content.ContentResolver
 import android.content.Context
@@ -39,7 +39,6 @@ import at.techbee.jtx.database.ICalCollection.Factory.DAVX5_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.ui.detail.DetailViewModel
 import at.techbee.jtx.ui.reusable.elements.LabelledCheckbox
 import at.techbee.jtx.util.SyncUtil
 

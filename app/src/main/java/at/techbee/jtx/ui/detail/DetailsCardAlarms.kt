@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.cards
+package at.techbee.jtx.ui.detail
 
 import android.Manifest
 import android.os.Build
@@ -31,6 +31,7 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
+import at.techbee.jtx.ui.reusable.cards.AlarmCard
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.DurationPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.RequestNotificationsPermissionDialog
