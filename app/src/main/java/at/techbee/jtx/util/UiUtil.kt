@@ -55,7 +55,7 @@ object UiUtil {
      */
     fun getLocalContacts(context: Context, searchString: String): List<Attendee> {
 
-        val allContacts = mutableListOf<Attendee>()
+        val allContacts = mutableSetOf<Attendee>()
 
         val cr = context.contentResolver
         val projection = arrayOf(
@@ -67,26 +67,27 @@ object UiUtil {
         val filter = ContactsContract.CommonDataKinds.Email.DATA + " LIKE '%$searchString%' " +
                 "OR " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%$searchString%'"
         cr.query(
-            ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+            ContactsContract.CommonDataKinds.Contactables.CONTENT_URI,
             projection,
             filter,
             null,
             order
         )?.use { cur ->
             while (cur.count > 0 && cur.moveToNext()) {
-
-                val name = cur.getString(1)    // according to projection 0 = DISPLAY_NAME, 1 = Email.DATA
-                val email = cur.getString(2)
-                if(email.isNotBlank()) {
-                    val attendee = Attendee(cn = name, caladdress = "mailto:$email")
-                    allContacts.add(attendee)
-                }
+                allContacts.add(Attendee(
+                    cn = cur.getString(1).ifEmpty { null },  // according to projection 1 = DISPLAY_NAME, 2 = Email.DATA
+                    caladdress = if(isValidEmail(cur.getString(2))) "mailto:" + cur.getString(2) else ""
+                ))
             }
             cur.close()
         }
-        return allContacts
+        return allContacts.toList()
     }
 
+    /**
+     * @param [filesize] in Bytes that should be transformed in the shortest possible Bytes, KB or MB units
+     * @return A String with the Bytes converted to Bytes, KB or MB
+     */
     fun getAttachmentSizeString(filesize: Long): String {
         return when {
             filesize < 1024 -> "$filesize Bytes"
