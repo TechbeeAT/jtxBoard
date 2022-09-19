@@ -9,8 +9,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.Window
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -48,8 +49,8 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
-class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
-//class MainActivity2 : ComponentActivity() {
+//class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
+class MainActivity2 : ComponentActivity() {
     // or maybe FragmentActivity() was also proposed...
 
     private var lastProcessedIntentHash: Int? = null
@@ -66,6 +67,10 @@ class MainActivity2 : AppCompatActivity() {       // fragment activity instead o
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // hides the ugly action bar that was before hidden through the Theme XML
+        window.requestFeature(Window.FEATURE_ACTION_BAR)
+        actionBar?.hide()
 
         globalStateHolder = GlobalStateHolder(this)
         settingsStateHolder = SettingsStateHolder(this)

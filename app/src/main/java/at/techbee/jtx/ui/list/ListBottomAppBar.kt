@@ -6,10 +6,9 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.appbars
+package at.techbee.jtx.ui.list
 
 import android.content.Context
-import android.os.Parcel
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -25,18 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.ListSettings
-import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.ListViewModel
+import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.reusable.elements.LabelledCheckbox
 import at.techbee.jtx.util.DateTimeUtils
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.MaterialDatePicker
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.util.*
 
 @Composable
 fun ListBottomAppBar(
@@ -53,8 +48,8 @@ fun ListBottomAppBar(
 ) {
 
     var menuExpanded by remember { mutableStateOf(false) }
+    var showGoToDatePicker by remember { mutableStateOf(false) }
     val iCal4List by iCal4ListLive.observeAsState()
-    val context = LocalContext.current
 
     val isFilterActive = listSettings.searchCategories.value.isNotEmpty()
                 //|| searchOrganizers.value.isNotEmpty()
@@ -64,6 +59,35 @@ fun ListBottomAppBar(
                 || listSettings.searchClassification.value.isNotEmpty() || listSettings.searchCollection.value.isNotEmpty()
                 || listSettings.searchAccount.value.isNotEmpty()
 
+    if(showGoToDatePicker) {
+        var dates = iCal4List?.map { it.dtstart ?: System.currentTimeMillis() }?.toList()
+        if (dates.isNullOrEmpty())
+            dates = listOf(System.currentTimeMillis())
+
+        // finds the closes number in a list of long
+        fun List<Long>.findClosest(input: Long) = fold(null) { acc: Long?, num ->
+            val closest = if (num <= input && (acc == null || num > acc)) num else acc
+            if (closest == input) return@findClosest closest else return@fold closest
+        }
+
+        DatePickerDialog(
+            datetime = DateTimeUtils.getTodayAsLong(),
+            timezone = TimeZone.getDefault().id,
+            allowNull = false,
+            onConfirm = { selectedDate, _ ->
+                selectedDate?.let { selected ->
+                    val closestDate = dates.findClosest(selected)
+                    iCal4List?.find { it.dtstart == closestDate }?.let { foundEntry ->
+                        onGoToDateSelected(foundEntry.id)
+                    }
+                }
+            },
+            onDismiss = { showGoToDatePicker = false },
+            dateOnly = true,
+            minDate = dates.minOf { it },
+            maxDate =  dates.maxOf { it }
+        )
+    }
 
     BottomAppBar(
         actions = {
@@ -103,72 +127,7 @@ fun ListBottomAppBar(
             }
 
             if (module == Module.JOURNAL) {
-                IconButton(onClick = {
-                    // Create a custom date validator to only enable dates that are in the list
-                    val customDateValidator = object : CalendarConstraints.DateValidator {
-                        override fun describeContents(): Int { return 0 }
-                        override fun writeToParcel(p0: Parcel, p1: Int) { }
-                        override fun isValid(date: Long): Boolean {
-                            iCal4List?.forEach {
-                                val zonedDtstart = ZonedDateTime.ofInstant(
-                                    Instant.ofEpochMilli(it.dtstart ?: 0L),
-                                    DateTimeUtils.requireTzId(it.dtstartTimezone)
-                                )
-                                val zonedSelection = ZonedDateTime.ofInstant(
-                                    Instant.ofEpochMilli(date),
-                                    ZoneId.systemDefault()
-                                )
-
-                                if (zonedDtstart.dayOfMonth == zonedSelection.dayOfMonth && zonedDtstart.monthValue == zonedSelection.monthValue && zonedDtstart.year == zonedSelection.year)
-                                    return true
-                            }
-                            return false
-                        }
-                    }
-
-                    // Build constraints.
-                    val constraintsBuilder =
-                        CalendarConstraints.Builder().apply {
-                            var dates = iCal4List?.map { it.dtstart ?: System.currentTimeMillis() }
-                                ?.toList()
-                            if (dates.isNullOrEmpty())
-                                dates = listOf(System.currentTimeMillis())
-                            setStart(dates.minOf { it })
-                            setEnd(dates.maxOf { it })
-                            setValidator(customDateValidator)
-                        }
-
-                    val datePicker =
-                        MaterialDatePicker.Builder.datePicker()
-                            .setTitleText(R.string.edit_datepicker_dialog_select_date)
-                            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                            .setCalendarConstraints(constraintsBuilder.build())
-                            .build()
-
-                    datePicker.addOnPositiveButtonClickListener {
-                        // Respond to positive button click.
-                        val zonedSelection = ZonedDateTime.ofInstant(
-                            Instant.ofEpochMilli(it),
-                            ZoneId.systemDefault()
-                        )
-
-                        // find the item with the same date
-                        val matchedItem = iCal4List?.find { item ->
-                            val zonedMatch = ZonedDateTime.ofInstant(
-                                Instant.ofEpochMilli(item.dtstart ?: 0L),
-                                DateTimeUtils.requireTzId(item.dtstartTimezone)
-                            )
-                            zonedSelection.dayOfMonth == zonedMatch.dayOfMonth && zonedSelection.monthValue == zonedMatch.monthValue && zonedSelection.year == zonedMatch.year
-                        }
-                        if (matchedItem != null)
-                            onGoToDateSelected(matchedItem.id)
-                    }
-
-                    datePicker.show(
-                        (context as MainActivity2).supportFragmentManager,
-                        "menu_list_gotodate"
-                    )
-                }) {
+                IconButton(onClick = { showGoToDatePicker = true }) {
                     Icon(
                         Icons.Outlined.DateRange,
                         contentDescription = stringResource(id = R.string.menu_list_gotodate)

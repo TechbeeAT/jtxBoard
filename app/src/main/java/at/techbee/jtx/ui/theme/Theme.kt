@@ -78,16 +78,28 @@ fun JtxBoardTheme(
         else -> LightColorScheme
     }
 
-    if (!view.isInEditMode) {
-        SideEffect {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                activity.window.navigationBarColor = colorScheme.primary.copy(alpha = 0.08f).compositeOver(colorScheme.surface.copy()).toArgb()
-                activity.window.statusBarColor = colorScheme.background.toArgb()
-                WindowCompat.getInsetsController(activity.window, view).isAppearanceLightStatusBars = !darkTheme
-                WindowCompat.getInsetsController(activity.window, view).isAppearanceLightNavigationBars = !darkTheme
-            }
+
+    SideEffect {
+        if (!view.isInEditMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            activity.window.navigationBarColor = colorScheme.primary.copy(alpha = 0.08f).compositeOver(colorScheme.surface.copy()).toArgb()
+            activity.window.statusBarColor = colorScheme.background.toArgb()
+            WindowCompat.getInsetsController(activity.window, view).isAppearanceLightStatusBars = !darkTheme
+            WindowCompat.getInsetsController(activity.window, view).isAppearanceLightNavigationBars = !darkTheme
         }
     }
+
+
+
+    /* DEFAULT
+    if (!view.isInEditMode) {
+        SideEffect {
+            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
+            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
+        }
+    }
+     */
+
+
 
     MaterialTheme(
         colorScheme = colorScheme,
