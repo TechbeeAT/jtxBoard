@@ -19,17 +19,6 @@ class IcalEditFragment {
 
 
 
-
-        if(BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY) {
-            binding.editFragmentTabUlc.editLocationEdit.setEndIconOnClickListener {
-                MapManager(requireContext()).showLocationPickerDialog(
-                    inflater,
-                    icalEditViewModel.iCalObjectUpdated
-                )
-            }
-        }
-
-
         icalEditViewModel.collectionNotFoundError.observe(viewLifecycleOwner) { error ->
 
             if (!error)
