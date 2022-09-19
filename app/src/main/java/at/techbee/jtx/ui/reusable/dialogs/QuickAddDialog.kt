@@ -292,9 +292,10 @@ fun QuickAddDialog(
     )
 
     if(showAudioPermissionDialog) {
-        RequestAudioPermissionDialog(
-            onConfirm = { permissionLauncher.launch(Manifest.permission.RECORD_AUDIO) },
-            onDismiss = { showAudioPermissionDialog = false })
+        RequestPermissionDialog(
+            text = stringResource(id = R.string.view_fragment_audio_permission_message),
+            onConfirm = { permissionLauncher.launch(Manifest.permission.RECORD_AUDIO) }
+        )
     }
 }
 

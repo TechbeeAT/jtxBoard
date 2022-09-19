@@ -8,24 +8,8 @@
 
 package at.techbee.jtx.ui
 
-import android.app.Application
 import android.content.SharedPreferences
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.preference.PreferenceManager
-import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.databinding.FragmentIcalViewBinding
-import at.techbee.jtx.flavored.AdManager
-import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.flavored.MapManager
-import at.techbee.jtx.util.SyncUtil
-import com.google.android.material.snackbar.Snackbar
 
 
 class IcalViewFragment : Fragment() {

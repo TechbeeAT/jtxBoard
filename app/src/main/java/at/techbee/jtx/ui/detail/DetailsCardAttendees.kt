@@ -27,10 +27,8 @@ import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -44,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.database.properties.Role
-import at.techbee.jtx.ui.reusable.dialogs.RequestContactsPermissionDialog
+import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.UiUtil
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -68,7 +66,6 @@ fun DetailsCardAttendees(
     val context = LocalContext.current
     // preview would break if rememberPermissionState is used for preview, so we set it to null only for preview!
     val contactsPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.READ_CONTACTS) else null
-    var showContactsPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
     var attendees by remember { mutableStateOf(initialAttendees) }
     var searchAttendees = emptyList<Attendee>()
@@ -227,11 +224,6 @@ fun DetailsCardAttendees(
                         modifier = Modifier
                             .fillMaxWidth()
                             .border(0.dp, Color.Transparent)
-                            .onFocusChanged { focusState ->
-                                if (focusState.hasFocus && contactsPermissionState?.status?.shouldShowRationale == false && !contactsPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
-                                    showContactsPermissionDialog = true
-                                }
-                            }
                             .bringIntoViewRequester(bringIntoViewRequester),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
@@ -260,10 +252,11 @@ fun DetailsCardAttendees(
         }
     }
 
-    if(showContactsPermissionDialog) {
-        RequestContactsPermissionDialog(
-            onConfirm = { contactsPermissionState?.launchPermissionRequest() },
-            onDismiss = { showContactsPermissionDialog = false })
+    if(contactsPermissionState?.status?.shouldShowRationale == false && !contactsPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
+        RequestPermissionDialog(
+            text = stringResource(id = R.string.edit_fragment_app_permission_message),
+            onConfirm = { contactsPermissionState.launchPermissionRequest() }
+        )
     }
 }
 

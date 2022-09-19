@@ -34,7 +34,7 @@ import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.ui.reusable.cards.AlarmCard
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.DurationPickerDialog
-import at.techbee.jtx.ui.reusable.dialogs.RequestNotificationsPermissionDialog
+import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.DateTimeUtils
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -61,11 +61,6 @@ fun DetailsCardAlarms(
     var showDurationPicker by rememberSaveable { mutableStateOf(false) }
 
     val notificationsPermissionState = if (!LocalInspectionMode.current && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS) else null
-    var showNotificationsPermissionDialog by rememberSaveable { mutableStateOf(false) }
-
-    if (notificationsPermissionState?.status?.shouldShowRationale == false && !notificationsPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
-        showNotificationsPermissionDialog = true
-    }
 
     if(showDateTimePicker) {
         val initialDateTime = if(icalObject.module == Module.JOURNAL.name) icalObject.dtstart ?: System.currentTimeMillis() else icalObject.due ?: System.currentTimeMillis()
@@ -183,10 +178,11 @@ fun DetailsCardAlarms(
         }
     }
 
-    if(showNotificationsPermissionDialog) {
-        RequestNotificationsPermissionDialog(
-            onConfirm = { notificationsPermissionState?.launchPermissionRequest() },
-            onDismiss = { showNotificationsPermissionDialog = false })
+    if(notificationsPermissionState?.status?.shouldShowRationale == false && !notificationsPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
+        RequestPermissionDialog(
+            text = stringResource(id = R.string.edit_fragment_app_notification_permission_message),
+            onConfirm = { notificationsPermissionState.launchPermissionRequest() }
+        )
     }
 }
 

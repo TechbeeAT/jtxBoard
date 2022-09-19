@@ -132,8 +132,8 @@ dependencies {
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$version_room"
     implementation "androidx.appcompat:appcompat:$version_appcompat"
-    implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    //implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
+    //implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     kapt "androidx.room:room-compiler:$version_room"
     implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
@@ -154,7 +154,7 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.2.0"
 
     // Volley for simple network requests
-    implementation("com.android.volley:volley:1.2.1")
+    implementation "com.android.volley:volley:1.2.1"
 
     // Google billing
     gplayImplementation "com.android.billingclient:billing-ktx:$version_billing"
@@ -214,7 +214,7 @@ dependencies {
     implementation "com.github.jeziellago:compose-markdown:0.3.0"
 
     // Color Picker
-    implementation 'com.larswerkman:HoloColorPicker:1.5'
+    //implementation 'com.larswerkman:HoloColorPicker:1.5'
 
     // Compose Color Picker
     //implementation 'com.godaddy.android.colorpicker:compose-color-picker:0.4.2'
@@ -239,6 +239,8 @@ dependencies {
     // Google Maps
     gplayImplementation  "com.google.maps.android:maps-compose:2.2.0"
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
+    gplayImplementation "com.google.android.gms:play-services-location:20.0.0"
+
 
     //implementation "androidx.compose.ui:ui-viewbinding:$version_compose"     // to inflate XML view containers
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"

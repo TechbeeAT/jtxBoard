@@ -8,28 +8,39 @@
 
 package at.techbee.jtx.ui.detail
 
+import android.Manifest
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.outlined.EditLocation
+import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import at.techbee.jtx.BuildConfig
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
+import at.techbee.jtx.flavored.MapComposable
+import at.techbee.jtx.ui.reusable.dialogs.LocationPickerDialog
+import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.*
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun DetailsCardLocation(
     initialLocation: String?,
@@ -41,12 +52,38 @@ fun DetailsCardLocation(
 ) {
 
     val headline = stringResource(id = R.string.location)
-    var showMap by rememberSaveable { mutableStateOf(false) }
+    var showLocationPickerDialog by rememberSaveable { mutableStateOf(false) }
 
     var location by remember { mutableStateOf(initialLocation ?: "")}
     var geoLat by remember { mutableStateOf(initialGeoLat)}
     var geoLong by remember { mutableStateOf(initialGeoLong)}
 
+    val coarseLocationPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.ACCESS_COARSE_LOCATION) else null
+
+    if(showLocationPickerDialog) {
+        if(coarseLocationPermissionState?.status?.shouldShowRationale == false && !coarseLocationPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
+            RequestPermissionDialog(
+                text = stringResource(id = R.string.edit_fragment_app_coarse_location_permission_message),
+                onConfirm = { coarseLocationPermissionState.launchPermissionRequest() }
+            )
+        } else {
+            LocationPickerDialog(
+                initialLocation = location,
+                initialGeoLat = geoLat,
+                initialGeoLong = geoLong,
+                enableCurrentLocation = coarseLocationPermissionState?.status?.isGranted == true,
+                onConfirm = { newLocation, newLat, newLong ->
+                    location = newLocation ?: ""
+                    geoLat = newLat
+                    geoLong = newLong
+                    onLocationUpdated(location, geoLat, geoLong)
+                },
+                onDismiss = {
+                    showLocationPickerDialog = false
+                }
+            )
+        }
+    }
 
 
     ElevatedCard(modifier = modifier) {
@@ -57,14 +94,15 @@ fun DetailsCardLocation(
 
             Crossfade(isEditMode) {
                 if(!it) {
-
                     Column {
                         HeadlineWithIcon(icon = Icons.Outlined.Place, iconDesc = headline, text = headline)
                         Text(location)
                     }
                 } else {
-
-                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         OutlinedTextField(
                             value = location,
                             leadingIcon = { Icon(Icons.Outlined.EditLocation, headline) },
@@ -88,74 +126,29 @@ fun DetailsCardLocation(
                             colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                             modifier = Modifier.weight(1f)
                         )
-                        
-                        IconButton(onClick = {
-                            showMap = !showMap
-                            if(!showMap) {
-                                geoLat = null
-                                geoLong = null
+
+                        if(BuildConfig.FLAVOR == MainActivity2.BUILD_FLAVOR_GOOGLEPLAY) {
+                            IconButton(onClick = { showLocationPickerDialog = true }) {
+                                Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
                             }
-                        }) {
-                            Icon(Icons.Outlined.Map, stringResource(id = R.string.location))
                         }
                     }
                 }
             }
 
-            AnimatedVisibility((geoLat != null && geoLong != null) || (isEditMode && showMap)) {
-
-                val uiSettings by remember {
-                    mutableStateOf(
-                        MapUiSettings(
-                            compassEnabled = true,
-                            //myLocationButtonEnabled = true,
-                            scrollGesturesEnabled = true,
-                            zoomControlsEnabled = true,
-                            zoomGesturesEnabled = true
-                        )
-                    )
-                }
-                val properties by remember {
-                    mutableStateOf(
-                        MapProperties(
-                            mapType = MapType.NORMAL,
-                            //isMyLocationEnabled = true
-                        )
-                    )
-                }
-
-                val marker = if(geoLat != null && geoLong != null)
-                    LatLng(geoLat!!, geoLong!!)
-                else
-                    null
-                val cameraPositionState = rememberCameraPositionState {
-                    position = if(marker != null)
-                        CameraPosition.fromLatLngZoom(marker, 10f)
-                    else
-                        CameraPosition.fromLatLngZoom(LatLng(0.0,0.0), 0f)
-                }
-                GoogleMap(
+            AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode) {
+                MapComposable(
+                    initialLocation = location,
+                    initialGeoLat = geoLat,
+                    initialGeoLong = geoLong,
+                    isEditMode = false,
+                    enableCurrentLocation = false,
+                    onLocationUpdated = { _, _, _ -> /* only view, no update here */ },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
-                        .padding(top = 8.dp),
-                    cameraPositionState = cameraPositionState,
-                    onPOIClick = { poi ->
-                        location = poi.name
-                        geoLat = poi.latLng.latitude
-                        geoLong = poi.latLng.longitude
-                    },
-                    properties = properties,
-                    uiSettings = uiSettings
-                ) {
-                    if(marker != null) {
-                        Marker(
-                            state = MarkerState(position = marker),
-                            title = location,
-                            //snippet = "Marker in Singapore"
-                        )
-                    }
-                }
+                        .padding(top = 8.dp)
+                )
             }
         }
     }

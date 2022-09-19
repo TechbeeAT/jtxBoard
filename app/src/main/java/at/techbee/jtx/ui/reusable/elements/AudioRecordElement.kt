@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.settings.DropdownSettingOption
-import at.techbee.jtx.ui.reusable.dialogs.RequestAudioPermissionDialog
+import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.coroutines.delay
@@ -176,9 +176,10 @@ fun AudioRecordElement(
     }
 
     if(showAudioPermissionDialog) {
-        RequestAudioPermissionDialog(
+        RequestPermissionDialog(
+            text = stringResource(id = R.string.view_fragment_audio_permission_message),
             onConfirm = { permissionLauncher.launch(Manifest.permission.RECORD_AUDIO) },
-            onDismiss = { showAudioPermissionDialog = false })
+        )
     }
 }
 

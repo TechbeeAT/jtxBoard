@@ -25,7 +25,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
@@ -35,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attendee
-import at.techbee.jtx.ui.reusable.dialogs.RequestContactsPermissionDialog
+import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.UiUtil
 import com.google.accompanist.permissions.*
@@ -59,7 +58,6 @@ fun DetailsCardContact(
 
     var contact by rememberSaveable { mutableStateOf(initialContact) }
     val headline = stringResource(id = R.string.contact)
-    var showContactsPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -145,11 +143,6 @@ fun DetailsCardContact(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .border(0.dp, Color.Transparent)
-                                .onFocusChanged { focusState ->
-                                    if (focusState.hasFocus && contactsPermissionState?.status?.shouldShowRationale == false && !contactsPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
-                                        showContactsPermissionDialog = true
-                                    }
-                                }
                                 .bringIntoViewRequester(bringIntoViewRequester)
                         )
                     }
@@ -158,10 +151,11 @@ fun DetailsCardContact(
         }
     }
 
-    if(showContactsPermissionDialog) {
-        RequestContactsPermissionDialog(
-            onConfirm = { contactsPermissionState?.launchPermissionRequest() },
-            onDismiss = { showContactsPermissionDialog = false })
+    if(contactsPermissionState?.status?.shouldShowRationale == false && !contactsPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
+        RequestPermissionDialog(
+            text = stringResource(id = R.string.edit_fragment_app_permission_message),
+            onConfirm = { contactsPermissionState.launchPermissionRequest() }
+        )
     }
 }
 
