@@ -49,8 +49,8 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
-//class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
 class MainActivity2 : ComponentActivity() {
+    //class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
     // or maybe FragmentActivity() was also proposed...
 
     private var lastProcessedIntentHash: Int? = null

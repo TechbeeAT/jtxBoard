@@ -11,6 +11,7 @@ package at.techbee.jtx.ui.detail
 import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloat
@@ -20,10 +21,11 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
-import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.Preview
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
@@ -39,6 +41,7 @@ import at.techbee.jtx.database.ICalCollection.Factory.DAVX5_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.elements.LabelledCheckbox
 import at.techbee.jtx.util.SyncUtil
 
@@ -60,6 +63,7 @@ fun DetailBottomAppBar(
     val context = LocalContext.current
     var settingsMenuExpanded by remember { mutableStateOf(false) }
     var copyOptionsExpanded by remember { mutableStateOf(false) }
+    val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
 
     val syncIconAnimation = rememberInfiniteTransition()
     val angle by syncIconAnimation.animateFloat(
@@ -276,13 +280,18 @@ fun DetailBottomAppBar(
             // TODO(b/228588827): Replace with Secondary FAB when available.
             FloatingActionButton(
                 onClick = {
-                    if(!collection.readonly)
+                    if(!collection.readonly && collection.accountType != LOCAL_ACCOUNT_TYPE && isProPurchased.value == false)
+                        Toast.makeText(context, context.getText(R.string.buypro_snackbar_please_purchase_pro), Toast.LENGTH_LONG).show()
+                    else if(!collection.readonly)
                         isEditMode.value = !isEditMode.value
                           },
+                containerColor = if(collection.readonly) MaterialTheme.colorScheme.surface
+                                    else if(collection.accountType != LOCAL_ACCOUNT_TYPE && isProPurchased.value == false) MaterialTheme.colorScheme.surface
+                                    else MaterialTheme.colorScheme.primaryContainer
             ) {
                 Crossfade(targetState = isEditMode.value) { isEditMode ->
                     if(isEditMode) {
-                        Icon(Icons.Filled.Visibility, stringResource(id = R.string.save))
+                        Icon(Icons.Filled.Preview, stringResource(id = R.string.save))
                     } else {
                         if(collection.readonly)
                             Icon(Icons.Filled.EditOff, stringResource(id = R.string.readyonly))
@@ -387,6 +396,8 @@ fun DetailBottomAppBar_Preview_View_local() {
 
         val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(DetailViewModel.PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
         val detailSettings = DetailSettings(prefs)
+
+        BillingManager.getInstance().initialise(LocalContext.current.applicationContext)
 
         DetailBottomAppBar(
             icalObject = ICalObject.createNote().apply { dirty = true },

@@ -88,10 +88,10 @@ class BillingManager :
      * and makes the variable billingClient available for further use.
      * The initialisiation also calls querySkuDetails().
      */
-    override fun initialise(activity: Activity) {
+    override fun initialise(context: Context) {
 
         if (billingPrefs == null)
-            billingPrefs = activity.getSharedPreferences(PREFS_BILLING, Context.MODE_PRIVATE)
+            billingPrefs = context.getSharedPreferences(PREFS_BILLING, Context.MODE_PRIVATE)
 
         // initialisation is done already, just return and do nothing
         //if(billingClient != null && adfreeOneTimeSkuDetails.value != null && adfreeSubscriptionSkuDetails.value != null) {
@@ -114,7 +114,7 @@ class BillingManager :
                     || billingPrefs?.getString(PREFS_BILLING_PURCHASE_STATE, null) == Purchase.PurchaseState.PURCHASED.toString()
             }
 
-        billingClient = BillingClient.newBuilder(activity)
+        billingClient = BillingClient.newBuilder(context)
             .setListener(purchasesUpdatedListener)
             .enablePendingPurchases()
             .build()

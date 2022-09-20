@@ -9,6 +9,7 @@
 package at.techbee.jtx.flavored
 
 import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -42,6 +43,6 @@ class BillingManager :
     override val proPurchaseDate = MutableLiveData("-")
     override val proOrderId = MutableLiveData("-")
 
-    override fun initialise(activity: Activity) { /* nothing to do for this flavor */ }
+    override fun initialise(context: Context) { /* nothing to do for this flavor */ }
     override fun launchBillingFlow(activity: Activity) { /* nothing to do for this flavor */ }
 }
