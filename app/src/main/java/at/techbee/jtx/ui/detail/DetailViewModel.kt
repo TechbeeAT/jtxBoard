@@ -281,7 +281,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
-            saving.value = true
             if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
                 ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
                 //Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
@@ -291,7 +290,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 SyncUtil.notifyContentObservers(getApplication())
                 entryDeleted.value = true
             }
-            saving.value = false
         }
     }
 
@@ -301,12 +299,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun deleteById(icalObjectId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            saving.value = true
             icalEntity.value?.property?.id?.let { id ->
                 ICalObject.deleteItemWithChildren(icalObjectId, database)
                 SyncUtil.notifyContentObservers(getApplication())
             }
-            saving.value = false
         }
     }
 

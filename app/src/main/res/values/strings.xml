@@ -247,7 +247,7 @@
 
     <string name="details_show_all_options">Show all options</string>
     <string name="details_attendees_processing_info">Attention: Servers might automatically process attendees e.g. by sending iMIP messages.</string>
-    <string name="details_toast_entry_deleted">Entry deleted</string>
+    <string name="details_toast_entry_deleted">Entry discarded/deleted</string>
     <string name="details_recur_unknown_rrule_dialog_title">Unsupported recurrence rule detected!</string>
     <string name="details_recur_unknown_rrule_dialog_message">An unknown or unsupported recurrence rule was detected. If you continue, the existing recurrence rule will be deleted/overwritten.</string>
 

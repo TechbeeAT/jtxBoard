@@ -24,7 +24,6 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.ui.reusable.appbars.DetailsTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
-import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 
 
@@ -43,8 +42,9 @@ fun DetailsScreen(
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     val contentsChanged = remember { mutableStateOf<Boolean?>(null) }
+    var goBackRequestedByTopBar by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var goBack by remember { mutableStateOf(false) }
+    var navigateUp by remember { mutableStateOf(false) }
 
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
@@ -55,18 +55,16 @@ fun DetailsScreen(
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
     val allCollections = detailViewModel.allCollections.observeAsState(emptyList())
 
-    if(goBack && !detailViewModel.saving.value) {
+    if(navigateUp && !detailViewModel.saving.value) {
         navController.navigateUp()
     }
 
     if (detailViewModel.entryDeleted.value) {
         Toast.makeText(context, context.getString(R.string.details_toast_entry_deleted), Toast.LENGTH_SHORT).show()
         Attachment.scheduleCleanupJob(context)
-        navController.navigate(NavigationDrawerDestination.BOARD.name) {
-            launchSingleTop = true
-        }
         onRequestReview()
         detailViewModel.entryDeleted.value = false
+        navigateUp = true
     }
 
     detailViewModel.navigateToId.value?.let {
@@ -88,7 +86,7 @@ fun DetailsScreen(
             DetailsTopAppBar(
                 title = stringResource(id = R.string.details),
                 subtitle = detailViewModel.icalEntity.value?.property?.summary,
-                goBack = { goBack = true },
+                goBack = { goBackRequestedByTopBar = true },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
                 actions = {
 
                     if(!isEditMode.value) {
@@ -132,7 +130,8 @@ fun DetailsScreen(
                         allResources = allResources.value,
                         detailSettings = detailViewModel.detailSettings,
                         autosave = autosave,
-                        saveIcalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
+                        goBackRequested = goBackRequestedByTopBar,
+                        saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                             detailViewModel.save(
                                 changedICalObject,
                                 changedCategories,
@@ -144,6 +143,7 @@ fun DetailsScreen(
                             )
                             onLastUsedCollectionChanged(changedICalObject.collectionId)
                         },
+                        deleteICalObject = { showDeleteDialog = true },
                         onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
                             detailViewModel.updateProgress(itemId, newPercent)
                         },
@@ -157,7 +157,7 @@ fun DetailsScreen(
                         player = detailViewModel.mediaPlayer,
                         goToView = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=false") },
                         goToEdit = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=true") },
-                        goBack = { goBack = true }
+                        goBack = { navigateUp = true }
                     )
                 },
                 navController = navController,

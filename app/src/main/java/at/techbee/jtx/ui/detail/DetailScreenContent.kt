@@ -71,7 +71,9 @@ fun DetailScreenContent(
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     autosave: Boolean,
-    saveIcalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
+    goBackRequested: Boolean,    // Workaround to also go Back from Top menu
+    saveICalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
+    deleteICalObject: () -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onMoveToNewCollection: (icalObject: ICalObject, newCollection: ICalCollection) -> Unit,
     onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
@@ -112,8 +114,8 @@ fun DetailScreenContent(
 
 
     val previousIsEditModeState = rememberSaveable { mutableStateOf(isEditMode.value) }
-    if (previousIsEditModeState.value && !isEditMode.value)  //changed from edit to view mode
-        saveIcalObject(
+    if (previousIsEditModeState.value && !isEditMode.value) {  //changed from edit to view mode
+        saveICalObject(
             icalObject,
             categories.value,
             comments.value,
@@ -122,13 +124,16 @@ fun DetailScreenContent(
             attachments.value,
             alarms.value
         )
+        contentsChanged.value = null
+    }
     previousIsEditModeState.value = isEditMode.value
+
 
     // save 10 seconds after changed, then reset value
     if (contentsChanged.value == true && autosave) {
         LaunchedEffect(contentsChanged) {
             delay(Duration.ofSeconds(10).toMillis())
-            saveIcalObject(
+            saveICalObject(
                 icalObject,
                 categories.value,
                 comments.value,
@@ -138,23 +143,32 @@ fun DetailScreenContent(
                 alarms.value
             )
             contentsChanged.value = false
-            delay(Duration.ofSeconds(2).toMillis())  // reset after a second
+            delay(Duration.ofSeconds(1).toMillis())  // reset after a second
             contentsChanged.value = null
         }
     }
 
-    BackHandler {
+    fun processGoBack() {
         if(contentsChanged.value == true)
             showUnsavedChangesDialog = true
+        else if(contentsChanged.value != true && icalObject.sequence == 0L && icalObject.summary.isNullOrEmpty() && icalObject.description.isNullOrEmpty())
+            deleteICalObject()
         else
             goBack()
+    }
+
+    if(goBackRequested)
+        processGoBack()
+
+    BackHandler {
+        processGoBack()
     }
 
     if(showUnsavedChangesDialog) {
         UnsavedChangesDialog(
             onSave = {
                 showUnsavedChangesDialog = false
-                saveIcalObject(
+                saveICalObject(
                     icalObject,
                     categories.value,
                     comments.value,
@@ -176,7 +190,7 @@ fun DetailScreenContent(
         MoveItemToCollectionDialog(
             newCollection = it,
             onMoveConfirmed = {
-                saveIcalObject(
+                saveICalObject(
                     icalObject,
                     categories.value,
                     comments.value,
@@ -642,11 +656,13 @@ fun DetailScreenContent_JOURNAL() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = false,
             player = null,
+            goBackRequested = false,
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
-            saveIcalObject = { _, _, _, _, _, _, _ -> },
+            saveICalObject = { _, _, _, _, _, _, _ -> },
+            deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
@@ -685,11 +701,13 @@ fun DetailScreenContent_TODO_editInitially() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = false,
             player = null,
+            goBackRequested = false,
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
-            saveIcalObject = { _, _, _, _, _, _, _ -> },
+            saveICalObject = { _, _, _, _, _, _, _ -> },
+            deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
@@ -730,11 +748,13 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = true,
             player = null,
+            goBackRequested = false,
             allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
             allCategories = emptyList(),
             allResources = emptyList(),
             detailSettings = detailSettings,
-            saveIcalObject = { _, _, _, _, _, _, _ -> },
+            saveICalObject = { _, _, _, _, _, _, _ -> },
+            deleteICalObject = { },
             onProgressChanged = { _, _, _ -> },
             onMoveToNewCollection = { _, _ -> },
             onSubEntryAdded = { _, _ -> },
