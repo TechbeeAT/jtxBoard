@@ -69,6 +69,16 @@ class IcalEditViewModel(
         }
     }
 
+     icalViewViewModel.icalEntity.observe(viewLifecycleOwner) {
+
+            if (it == null) {
+                if(summary2delete.isEmpty())
+                    Toast.makeText(context, R.string.view_toast_entry_does_not_exist_anymore, Toast.LENGTH_LONG).show()
+                //findNavController().navigate(NavigationDirections.actionGlobalIcalListFragment())
+                return@observe   // just make sure that nothing else happens
+            }
+      }
+
  */
 }
 

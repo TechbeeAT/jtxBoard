@@ -281,7 +281,7 @@ fun DetailBottomAppBar(
             FloatingActionButton(
                 onClick = {
                     if(!collection.readonly && collection.accountType != LOCAL_ACCOUNT_TYPE && isProPurchased.value == false)
-                        Toast.makeText(context, context.getText(R.string.buypro_snackbar_please_purchase_pro), Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, context.getText(R.string.buypro_snackbar_remote_entries_blocked), Toast.LENGTH_LONG).show()
                     else if(!collection.readonly)
                         isEditMode.value = !isEditMode.value
                           },
