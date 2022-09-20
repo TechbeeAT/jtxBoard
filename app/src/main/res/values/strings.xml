@@ -51,6 +51,7 @@
     <string name="reset">Reset</string>
     <string name="apply">Apply</string>
     <string name="more">More</string>
+    <string name="back">Back</string>
     <string name="details">Details</string>
     <string name="date">Date</string>
     <string name="timezone">Timezone</string>
@@ -449,6 +450,9 @@
 
     <string name="dialog_move_item_to_collection_title">Move this entry to \"%1$s\"?</string>
     <string name="dialog_move_item_to_collection_text">Please note that all changes are saved immediately.</string>
+    <string name="dialog_unsaved_changes_title">Save changes?</string>
+    <string name="dialog_unsaved_changes_text">Unsaved changes detected. Would you like to save or discard your changes?</string>
+
 
     <!-- menus -->
     <string name="menu_edit_clear_dates">Clear dates</string>
@@ -516,6 +520,9 @@
     <string name="settings_default_expand_subtasks">Expand subtasks in list by default</string>
     <string name="settings_default_expand_subnotes">Expand subnotes in list by default</string>
     <string name="settings_default_expand_attachments">Expand attachments in list by default</string>
+    <string name="settings_details">Settings for the item details</string>
+    <string name="settings_details_autosave_while_editing">Autosave while editing</string>
+
 
     <string name="settings_show_subtasks_in_list">Show subtasks in list</string>
     <string name="settings_show_attachments_in_list">Show attachments in list</string>

@@ -47,6 +47,7 @@ fun SettingsScreen(
     showSubtasksInTasklist: MutableState<Boolean>,
     showSubnotesInNoteslist: MutableState<Boolean>,
     showSubjournalsInJournallist: MutableState<Boolean>,
+    autosave: MutableState<Boolean>,
     defaultStartDate: MutableState<DropdownSettingOption>,
     defaultDueDate: MutableState<DropdownSettingOption>,
     stepForProgress: MutableState<DropdownSettingOption>,
@@ -152,16 +153,6 @@ fun SettingsScreen(
                             SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.save(it, context)
                         })
 
-                    Divider(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .alpha(0.5f)
-                    )
-                    Text(
-                        text = stringResource(id = R.string.settings_group_settings_for_subentries),
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
-                    )
 
                     AnimatedVisibility(subSectionExpanded.value.not()) {
                         TextButton(onClick = { subSectionExpanded.value = true }) {
@@ -202,6 +193,27 @@ fun SettingsScreen(
                         }
 
                     }
+
+
+
+                    Divider(
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .alpha(0.5f)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.settings_details),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
+                    )
+
+                    SwitchSetting(
+                        setting = SETTING_DETAILS_AUTOSAVE,
+                        initiallyChecked = autosave.value,
+                        onCheckedChanged = {
+                            autosave.value = it
+                            SETTING_DETAILS_AUTOSAVE.save(it, context)
+                        })
 
                     Divider(
                         modifier = Modifier
@@ -263,6 +275,7 @@ fun SettingsScreen_Preview() {
             showSubtasksInTasklist = remember { mutableStateOf(false) },
             showSubnotesInNoteslist = remember { mutableStateOf(false) },
             showSubjournalsInJournallist = remember { mutableStateOf(false) },
+            autosave = remember { mutableStateOf(true) },
             defaultStartDate = remember { mutableStateOf(SETTING_DEFAULT_START_DATE.options.first()) },
             defaultDueDate = remember { mutableStateOf(SETTING_DEFAULT_DUE_DATE.options.first()) },
             stepForProgress = remember { mutableStateOf(SETTING_PROGRESS_STEP.options.first()) }

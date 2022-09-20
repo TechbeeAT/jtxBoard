@@ -53,6 +53,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     var entryDeleted = mutableStateOf(false)
     var navigateToId = mutableStateOf<Long?>(null)
+    var saving = mutableStateOf(false)
     lateinit var detailSettings: DetailSettings
 
     val mediaPlayer = MediaPlayer()
@@ -116,6 +117,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     fun updateProgress(id: Long, newPercent: Int) {
         viewModelScope.launch(Dispatchers.IO) {
+            saving.value = true
             val item = database.getICalObjectById(id) ?: return@launch
             if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
                 ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
@@ -124,27 +126,32 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             item.setUpdatedProgress(newPercent)
             database.update(item)
             SyncUtil.notifyContentObservers(getApplication())
+            saving.value = false
         }
     }
 
     fun updateSummary(icalObjectId: Long, newSummary: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            saving.value = true
             val icalObject = database.getICalObjectById(icalObjectId) ?: return@launch
             icalObject.summary = newSummary
             icalObject.makeDirty()
             database.update(icalObject)
             SyncUtil.notifyContentObservers(getApplication())
+            saving.value = false
         }
     }
 
     fun moveToNewCollection(icalObject: ICalObject, newCollectionId: Long) {
 
         viewModelScope.launch(Dispatchers.IO) {
+            saving.value = true
             val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, getApplication())
             // once the newId is there, the local entries can be deleted (or marked as deleted)
             ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
             if (icalObject.rrule != null)
                 icalObject.recreateRecurring(database, getApplication())
+            saving.value = false
             navigateToId.value = newId
         }
     }
@@ -159,6 +166,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
              alarms: List<Alarm>
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+            saving.value = true
 
             if(icalEntity.value?.categories != categories) {
                 icalObject.makeDirty()
@@ -238,12 +246,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
             SyncUtil.notifyContentObservers(getApplication())
+            saving.value = false
         }
     }
 
 
     fun addSubEntry(subEntry: ICalObject, attachment: Attachment?) {
         viewModelScope.launch(Dispatchers.IO) {
+            saving.value = true
             subEntry.collectionId = icalEntity.value?.property?.collectionId!!
             val subEntryId = database.insertICalObject(subEntry)
 
@@ -264,12 +274,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
             }
             SyncUtil.notifyContentObservers(getApplication())
+            saving.value = false
         }
     }
 
 
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
+            saving.value = true
             if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
                 ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
                 //Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
@@ -279,6 +291,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 SyncUtil.notifyContentObservers(getApplication())
                 entryDeleted.value = true
             }
+            saving.value = false
         }
     }
 
@@ -288,16 +301,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun deleteById(icalObjectId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            /* TODO
-            if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
-            }
-             */
+            saving.value = true
             icalEntity.value?.property?.id?.let { id ->
                 ICalObject.deleteItemWithChildren(icalObjectId, database)
                 SyncUtil.notifyContentObservers(getApplication())
             }
+            saving.value = false
         }
     }
 
@@ -309,6 +318,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
 
         viewModelScope.launch(Dispatchers.IO) {
+            saving.value = true
             val newId = database.insertICalObject(newEntity.property)
             newEntity.alarms?.forEach { alarm ->
                 database.insertAlarm(alarm.copy(alarmId = 0L, icalObjectId = newId ))   // TODO: Schedule Alarm!
@@ -346,6 +356,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 database.getSync(child)?.let { createCopy(icalEntityToCopy = it, newModule = it.property.getModuleFromString(), newParentUID = newEntity.property.uid) }
             }
 
+            saving.value = false
             if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
                 navigateToId.value = newId
         }

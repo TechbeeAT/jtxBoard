@@ -36,6 +36,8 @@ class SettingsStateHolder(val context: Context) {
     var settingShowSubnotesInNoteslist = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_SUBNOTES_IN_NOTESLIST.key, SwitchSetting.SETTING_SHOW_SUBNOTES_IN_NOTESLIST.default))
     var settingShowSubjournalsInJournallist = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.key, SwitchSetting.SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.default))
 
+    var settingAutosave = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_DETAILS_AUTOSAVE.key, SwitchSetting.SETTING_DETAILS_AUTOSAVE.default))
+
     var settingDefaultStartDate = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
         DropdownSetting.SETTING_DEFAULT_START_DATE.key, DropdownSetting.SETTING_DEFAULT_START_DATE.default.key) } ?: DropdownSetting.SETTING_DEFAULT_START_DATE.default )
     var settingDefaultDueDate = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(

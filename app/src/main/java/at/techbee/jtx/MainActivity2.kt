@@ -40,6 +40,7 @@ import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
 import at.techbee.jtx.ui.reusable.screens.*
 import at.techbee.jtx.ui.GlobalStateHolder
+import at.techbee.jtx.ui.detail.DetailsScreen
 import at.techbee.jtx.ui.list.ListScreenTabContainer
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -238,6 +239,7 @@ fun MainNavHost(
                 navController = navController,
                 detailViewModel = detailViewModel,
                 editImmediately = editImmediately,
+                autosave = settingsStateHolder.settingAutosave.value,
                 onRequestReview = { JtxReviewManager(activity).launch() },
                 onLastUsedCollectionChanged = { collectionId ->
                     settingsStateHolder.lastUsedCollection.value = collectionId
@@ -296,6 +298,7 @@ fun MainNavHost(
                 showSubtasksInTasklist = settingsStateHolder.settingShowSubtasksInTasklist,
                 showSubnotesInNoteslist = settingsStateHolder.settingShowSubnotesInNoteslist,
                 showSubjournalsInJournallist = settingsStateHolder.settingShowSubjournalsInJournallist,
+                autosave = settingsStateHolder.settingAutosave,
                 defaultStartDate = settingsStateHolder.settingDefaultStartDate,
                 defaultDueDate = settingsStateHolder.settingDefaultDueDate,
                 stepForProgress = settingsStateHolder.settingStepForProgress

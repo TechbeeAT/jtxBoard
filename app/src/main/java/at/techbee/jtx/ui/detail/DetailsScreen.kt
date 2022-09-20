@@ -6,27 +6,23 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.screens
+package at.techbee.jtx.ui.detail
 
 import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.ui.detail.DetailViewModel
-import at.techbee.jtx.ui.detail.DetailBottomAppBar
+import at.techbee.jtx.ui.reusable.appbars.DetailsTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
-import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
@@ -38,6 +34,7 @@ fun DetailsScreen(
     navController: NavHostController,
     detailViewModel: DetailViewModel,
     editImmediately: Boolean = false,
+    autosave: Boolean,
     onLastUsedCollectionChanged: (Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
@@ -46,8 +43,9 @@ fun DetailsScreen(
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
     val contentsChanged = remember { mutableStateOf<Boolean?>(null) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var goBack by remember { mutableStateOf(false) }
 
-    val showDeleteDialog = rememberSaveable { mutableStateOf(false) }
 
     val icalEntity = detailViewModel.icalEntity.observeAsState()
     val subtasks = detailViewModel.relatedSubtasks.observeAsState(emptyList())
@@ -57,6 +55,9 @@ fun DetailsScreen(
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
     val allCollections = detailViewModel.allCollections.observeAsState(emptyList())
 
+    if(goBack && !detailViewModel.saving.value) {
+        navController.navigateUp()
+    }
 
     if (detailViewModel.entryDeleted.value) {
         Toast.makeText(context, context.getString(R.string.details_toast_entry_deleted), Toast.LENGTH_SHORT).show()
@@ -73,42 +74,43 @@ fun DetailsScreen(
         navController.navigate("details/$it?isEditMode=true")
     }
 
-    if(showDeleteDialog.value) {
+    if(showDeleteDialog) {
         DeleteEntryDialog(
             icalObject = detailViewModel.icalEntity.value?.property!!,
             onConfirm = { detailViewModel.delete() },
-            onDismiss = { showDeleteDialog.value = false }
+            onDismiss = { showDeleteDialog = false }
         )
     }
 
 
     Scaffold(
         topBar = {
-            JtxTopAppBar(
-                drawerState = drawerState,
+            DetailsTopAppBar(
                 title = stringResource(id = R.string.details),
                 subtitle = detailViewModel.icalEntity.value?.property?.summary,
+                goBack = { goBack = true },
                 actions = {
 
-                    val menuExpanded = remember { mutableStateOf(false) }
-
-                    OverflowMenu(menuExpanded = menuExpanded) {
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(id = R.string.menu_view_share_text)) },
-                            onClick = {
-                                detailViewModel.shareAsText(context)
-                                menuExpanded.value = false
-                                      },
-                            leadingIcon = { Icon(Icons.Outlined.Share, null) }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
-                            onClick = {
-                                detailViewModel.shareAsICS(context)
-                                menuExpanded.value = false
-                                      },
-                            leadingIcon = { Icon(Icons.Outlined.Description, null) }
-                        )
+                    if(!isEditMode.value) {
+                        val menuExpanded = remember { mutableStateOf(false) }
+                        OverflowMenu(menuExpanded = menuExpanded) {
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.menu_view_share_text)) },
+                                onClick = {
+                                    detailViewModel.shareAsText(context)
+                                    menuExpanded.value = false
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.Share, null) }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
+                                onClick = {
+                                    detailViewModel.shareAsICS(context)
+                                    menuExpanded.value = false
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.Description, null) }
+                            )
+                        }
                     }
                 }
             )
@@ -129,6 +131,7 @@ fun DetailsScreen(
                         allCategories = allCategories.value,
                         allResources = allResources.value,
                         detailSettings = detailViewModel.detailSettings,
+                        autosave = autosave,
                         saveIcalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
                             detailViewModel.save(
                                 changedICalObject,
@@ -153,7 +156,8 @@ fun DetailsScreen(
                         onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                         player = detailViewModel.mediaPlayer,
                         goToView = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=false") },
-                        goToEdit = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=true") }
+                        goToEdit = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=true") },
+                        goBack = { goBack = true }
                     )
                 },
                 navController = navController,
@@ -167,7 +171,7 @@ fun DetailsScreen(
                 isEditMode = isEditMode,
                 contentsChanged = contentsChanged,
                 detailSettings = detailViewModel.detailSettings,
-                onDeleteClicked = { showDeleteDialog.value = true },
+                onDeleteClicked = { showDeleteDialog = true },
                 onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) }
             )
         }

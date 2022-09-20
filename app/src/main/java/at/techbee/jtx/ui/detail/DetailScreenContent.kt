@@ -6,11 +6,12 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.screens
+package at.techbee.jtx.ui.detail
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -42,9 +43,9 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.ui.detail.*
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.MoveItemToCollectionDialog
+import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import at.techbee.jtx.ui.reusable.elements.ColoredEdge
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
@@ -69,6 +70,7 @@ fun DetailScreenContent(
     detailSettings: DetailSettings,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
+    autosave: Boolean,
     saveIcalObject: (changedICalObject: ICalObject, changedCategories: List<Category>, changedComments: List<Comment>, changedAttendees: List<Attendee>, changedResources: List<Resource>, changedAttachments: List<Attachment>, changedAlarms: List<Alarm>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int, isLinkedRecurringInstance: Boolean) -> Unit,
     onMoveToNewCollection: (icalObject: ICalObject, newCollection: ICalCollection) -> Unit,
@@ -77,6 +79,7 @@ fun DetailScreenContent(
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
     goToView: (itemId: Long) -> Unit,
     goToEdit: (itemId: Long) -> Unit,
+    goBack: () -> Unit
 ) {
     if (iCalEntity.value == null)
         return
@@ -104,7 +107,9 @@ fun DetailScreenContent(
     val alarms = rememberSaveable { mutableStateOf(iCalEntity.value?.alarms ?: emptyList()) }
 
     var showColorPicker by rememberSaveable { mutableStateOf(false) }
+    var showUnsavedChangesDialog by rememberSaveable { mutableStateOf(false) }
     var showMoveItemToCollectionDialog by rememberSaveable { mutableStateOf<ICalCollection?>(null) }
+
 
     val previousIsEditModeState = rememberSaveable { mutableStateOf(isEditMode.value) }
     if (previousIsEditModeState.value && !isEditMode.value)  //changed from edit to view mode
@@ -120,7 +125,6 @@ fun DetailScreenContent(
     previousIsEditModeState.value = isEditMode.value
 
     // save 10 seconds after changed, then reset value
-    val autosave = true //TODO put in settings
     if (contentsChanged.value == true && autosave) {
         LaunchedEffect(contentsChanged) {
             delay(Duration.ofSeconds(10).toMillis())
@@ -137,6 +141,35 @@ fun DetailScreenContent(
             delay(Duration.ofSeconds(2).toMillis())  // reset after a second
             contentsChanged.value = null
         }
+    }
+
+    BackHandler {
+        if(contentsChanged.value == true)
+            showUnsavedChangesDialog = true
+        else
+            goBack()
+    }
+
+    if(showUnsavedChangesDialog) {
+        UnsavedChangesDialog(
+            onSave = {
+                showUnsavedChangesDialog = false
+                saveIcalObject(
+                    icalObject,
+                    categories.value,
+                    comments.value,
+                    attendees.value,
+                    resources.value,
+                    attachments.value,
+                    alarms.value
+                )
+                goBack()
+            },
+            onDiscard = {
+                showUnsavedChangesDialog = false
+                goBack()
+            }
+        )
     }
 
     showMoveItemToCollectionDialog?.let {
@@ -620,7 +653,9 @@ fun DetailScreenContent_JOURNAL() {
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToView = { },
-            goToEdit = { }
+            goToEdit = { },
+            goBack = { },
+            autosave = true
         )
     }
 }
@@ -661,7 +696,9 @@ fun DetailScreenContent_TODO_editInitially() {
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToView = { },
-            goToEdit = { }
+            goToEdit = { },
+            goBack = { },
+            autosave = true
         )
     }
 }
@@ -704,7 +741,9 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToView = { },
-            goToEdit = { }
+            goToEdit = { },
+            goBack = { },
+            autosave = true
         )
     }
 }

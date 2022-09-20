@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.Note
+import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -86,6 +87,12 @@ enum class SwitchSetting(
         icon = { androidx.compose.foundation.layout.Box(modifier = Modifier.size(24.dp).padding(16.dp))  },
         title = R.string.settings_show_subjournals_of_notes_and_tasks_in_journallist,
         default = false
+    ),
+    SETTING_DETAILS_AUTOSAVE(
+        key = "settings_details_autosave",
+        icon = { Icon(Icons.Outlined.Save, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+        title = R.string.settings_details_autosave_while_editing,
+        default = true
     )
     ;
     fun save(newSwitchValue: Boolean, context: Context) {
