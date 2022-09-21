@@ -23,7 +23,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.Backup
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.FileDownload
+import androidx.compose.material.icons.outlined.LocalLibrary
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -44,18 +47,16 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.views.CollectionsView
+import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.collections.CollectionsViewModel
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.cards.CollectionCard
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsAddOrEditDialog
-import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -72,7 +73,6 @@ fun CollectionsScreen(
         SyncUtil.isDAVx5CompatibleWithJTX(context.applicationContext as Application)
 
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     /* EXPORT FUNCTIONALITIES */
     val resultExportFilepath = remember { mutableStateOf<Uri?>(null) }
@@ -140,14 +140,15 @@ fun CollectionsScreen(
         importCollection.value = null
         globalStateHolder.icalString2Import.value = null
     }
-    if (importCollection.value == null && globalStateHolder.icalString2Import.value != null) {
-        val snackbarMessage =
-            stringResource(id = R.string.collections_snackbar_select_collection_for_ics_import)
-        scope.launch {
-            snackbarHostState.showSnackbar(snackbarMessage, duration = SnackbarDuration.Indefinite)
+
+    val snackbarMessage = stringResource(id = R.string.collections_snackbar_select_collection_for_ics_import)
+    LaunchedEffect(key1 = importCollection, key2 = globalStateHolder.icalString2Import) {
+        if (importCollection.value == null && globalStateHolder.icalString2Import.value != null) {
+            snackbarHostState.showSnackbar(
+                snackbarMessage,
+                duration = SnackbarDuration.Indefinite
+            )
         }
-    } else {
-        snackbarHostState.currentSnackbarData?.dismiss()
     }
 
     // show result
@@ -159,6 +160,7 @@ fun CollectionsScreen(
             Toast.LENGTH_LONG
         ).show()
         collectionsViewModel.resultInsertedFromICS.value = null
+        snackbarHostState.currentSnackbarData?.dismiss()
     }
 
 
