@@ -221,6 +221,7 @@ fun DetailsCardAttendees(
                             }
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
+                        isError = newAttendee.isNotEmpty(),
                         modifier = Modifier
                             .fillMaxWidth()
                             .border(0.dp, Color.Transparent)

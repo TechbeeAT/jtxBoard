@@ -42,10 +42,7 @@ fun DetailsCardUrl(
 
     val headline = stringResource(id = R.string.url)
     var url by rememberSaveable { mutableStateOf(initialUrl) }
-    var urlError by remember { mutableStateOf(false) }
-
     val uriHandler = LocalUriHandler.current
-
 
     ElevatedCard(modifier = modifier, onClick = {
         try {
@@ -82,10 +79,9 @@ fun DetailsCardUrl(
                             }
                         },
                         singleLine = true,
-                        isError = urlError,
+                        isError = url.isNotEmpty() && !UiUtil.isValidURL(url),
                         label = { Text(headline) },
                         onValueChange = { newUrl ->
-                            urlError = url.isNotEmpty() && !UiUtil.isValidURL(newUrl)
                             url = newUrl
                             onUrlUpdated(url)
                         },

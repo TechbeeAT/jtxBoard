@@ -34,22 +34,6 @@ class IcalEditFragment {
                 validationError += resources.getString(R.string.edit_validation_errors_start_due_timezone_check) + "\n"
 
         /*
-        if(binding.editFragmentTabGeneral.editCategoriesAddAutocomplete.text.isNotEmpty())
-            validationError += resources.getString(R.string.edit_validation_errors_category_not_confirmed) + "\n"
-        if(binding.editFragmentTabCar.editAttendeesAddAutocomplete.text.isNotEmpty())
-            validationError += resources.getString(R.string.edit_validation_errors_attendee_not_confirmed) + "\n"
-        if(binding.editFragmentTabCar.editResourcesAddAutocomplete.text?.isNotEmpty() == true)
-            validationError += resources.getString(R.string.edit_validation_errors_resource_not_confirmed) + "\n"
-        if(binding.editFragmentTabUlc.editCommentAddEdittext.text?.isNotEmpty() == true)
-            validationError += resources.getString(R.string.edit_validation_errors_comment_not_confirmed) + "\n"
-
-         */
-        /*
-        if(binding.editFragmentTabSubtasks.editSubtasksAddEdittext.text?.isNotEmpty() == true)
-            validationError += resources.getString(R.string.edit_validation_errors_subtask_not_confirmed) + "\n"
-
-         */
-        /*
         if(binding.editTaskDatesFragment.editDueDateEdittext.text?.isNotEmpty() == true && binding.editTaskDatesFragment.editDueTimeEdittext.text.isNullOrBlank() && binding.editTaskDatesFragment.editTaskAddStartedAndDueTimeSwitch.isActivated)
             validationError += resources.getString(R.string.edit_validation_errors_due_time_not_set) + "\n"
         if(binding.editTaskDatesFragment.editStartedDateEdittext.text?.isNotEmpty() == true && binding.editTaskDatesFragment.editStartedTimeEdittext.text.isNullOrBlank() && binding.editTaskDatesFragment.editTaskAddStartedAndDueTimeSwitch.isActivated)

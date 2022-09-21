@@ -103,6 +103,7 @@ fun DetailsCardComments(
                     label = { Text(stringResource(id = R.string.edit_comment_helper)) },
                     onValueChange = { newValue -> newComment = newValue },
                     //colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
+                    isError = newComment.isNotEmpty(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .border(0.dp, Color.Transparent),

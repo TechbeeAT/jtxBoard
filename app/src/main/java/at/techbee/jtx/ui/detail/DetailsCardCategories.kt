@@ -147,6 +147,7 @@ fun DetailsCardCategories(
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
                         modifier = Modifier.fillMaxWidth(),
+                        isError = newCategory.isNotEmpty(),
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences,
                             keyboardType = KeyboardType.Text,

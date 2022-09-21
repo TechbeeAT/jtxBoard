@@ -127,6 +127,7 @@ fun DetailsCardSubnotes(
                     },
                     label = { Text(stringResource(id = R.string.edit_subnote_add_helper)) },
                     onValueChange = { newValue -> newSubnoteText = newValue },
+                    isError = newSubnoteText.isNotEmpty(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .border(0.dp, Color.Transparent),

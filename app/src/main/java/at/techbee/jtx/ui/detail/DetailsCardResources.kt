@@ -139,6 +139,7 @@ fun DetailsCardResources(
                             newResource = newResourceName
                         },
                         colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
+                        isError = newResource.isNotEmpty(),
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
