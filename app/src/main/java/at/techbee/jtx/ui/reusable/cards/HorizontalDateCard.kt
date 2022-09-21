@@ -36,6 +36,7 @@ fun HorizontalDateCard(
     timezone: String?,
     isEditMode: Boolean,
     allowNull: Boolean,
+    dateOnly: Boolean,
     modifier: Modifier = Modifier,
     labelTop: String? = null,
     pickerMinDate: Long? = null,
@@ -44,8 +45,6 @@ fun HorizontalDateCard(
 ) {
 
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
-    var newDateTime by rememberSaveable { mutableStateOf(datetime) }
-    var newTimezone by rememberSaveable { mutableStateOf(timezone) }
 
     if (isEditMode) {
         OutlinedCard(
@@ -64,11 +63,11 @@ fun HorizontalDateCard(
                     )
                 }
 
-                if (newDateTime != null) {
+                if (datetime != null) {
                     Text(
                         DateTimeUtils.convertLongToFullDateTimeString(
-                            newDateTime,
-                            newTimezone
+                            datetime,
+                            timezone
                         )
                     )
                 } else {
@@ -97,11 +96,11 @@ fun HorizontalDateCard(
                     )
                 }
 
-                if (newDateTime != null) {
+                if (datetime != null) {
                     Text(
                         DateTimeUtils.convertLongToFullDateTimeString(
-                            newDateTime,
-                            newTimezone
+                            datetime,
+                            timezone
                         ),
                         fontStyle = FontStyle.Italic,
                         fontWeight = FontWeight.Bold
@@ -117,15 +116,14 @@ fun HorizontalDateCard(
 
     if (showDatePickerDialog) {
         DatePickerDialog(
-            datetime = newDateTime,
-            timezone = newTimezone,
+            datetime = datetime,
+            timezone = timezone,
             allowNull = allowNull,
             minDate = pickerMinDate,
             maxDate = pickerMaxDate,
+            dateOnly = dateOnly,
             onConfirm = { time, tz ->
-                newDateTime = time
-                newTimezone = tz
-                onDateTimeChanged(newDateTime, newTimezone)
+                onDateTimeChanged(time, tz)
             },
             onDismiss = { showDatePickerDialog = false }
         )
@@ -141,6 +139,7 @@ fun HorizontalDateCard_Preview_Allday() {
             timezone = ICalObject.TZ_ALLDAY,
             allowNull = true,
             isEditMode = false,
+            dateOnly = false,
             onDateTimeChanged = { _, _ -> }
         )
     }
@@ -155,6 +154,7 @@ fun HorizontalDateCard_Preview_Allday_edit() {
             timezone = ICalObject.TZ_ALLDAY,
             allowNull = true,
             isEditMode = true,
+            dateOnly = false,
             onDateTimeChanged = { _, _ -> }
         )
     }
@@ -169,6 +169,7 @@ fun HorizontalDateCard_Preview_WithTime() {
             timezone = null,
             isEditMode = false,
             allowNull = true,
+            dateOnly = false,
             onDateTimeChanged = { _, _ -> },
             labelTop = stringResource(id = R.string.completed)
 
@@ -185,6 +186,7 @@ fun HorizontalDateCard_Preview_WithTimezone() {
             timezone = "Europe/Vienna",
             isEditMode = false,
             allowNull = true,
+            dateOnly = false,
             onDateTimeChanged = { _, _ -> }
         )
     }
@@ -199,6 +201,7 @@ fun HorizontalDateCard_Preview_WithTimezone2() {
             timezone = "Africa/Addis_Ababa",
             isEditMode = false,
             allowNull = true,
+            dateOnly = false,
             onDateTimeChanged = { _, _ -> }
         )
     }
@@ -213,6 +216,7 @@ fun HorizontalDateCard_Preview_NotSet() {
             timezone = null,
             isEditMode = false,
             allowNull = true,
+            dateOnly = false,
             onDateTimeChanged = { _, _ -> },
             labelTop = stringResource(id = R.string.due)
         )
@@ -229,6 +233,7 @@ fun HorizontalDateCard_Preview_edit_NotSet() {
             timezone = null,
             isEditMode = true,
             allowNull = true,
+            dateOnly = false,
             onDateTimeChanged = { _, _ -> },
             labelTop = stringResource(id = R.string.due)
         )

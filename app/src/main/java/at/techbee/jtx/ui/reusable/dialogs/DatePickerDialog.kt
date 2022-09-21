@@ -81,7 +81,7 @@ fun DatePickerDialog(
 
             Column {
 
-                if (!dateOnly) {    // show the tabs if not date only
+                if (!dateOnly || allowNull) {    // show the tabs if not date only
 
                     TabRow(selectedTabIndex = selectedTab) {
                         Tab(selected = selectedTab == tabIndexDate,
@@ -95,7 +95,6 @@ fun DatePickerDialog(
                                     if (allowNull) {
                                         Checkbox(
                                             checked = newDateTime != null,
-                                            enabled = allowNull,
                                             onCheckedChange = {
                                                 newDateTime = if (it) defaultDateTime else null
                                                 newTimezone = if (it) TZ_ALLDAY else null
@@ -123,7 +122,7 @@ fun DatePickerDialog(
                                 ) {
                                     Checkbox(
                                         checked = newDateTime != null && newTimezone != TZ_ALLDAY,
-                                        enabled = newDateTime != null,
+                                        enabled = newDateTime != null && !dateOnly,
                                         onCheckedChange = {
                                             newTimezone = if (it) null else TZ_ALLDAY
                                             selectedTab = if (it) tabIndexTime else tabIndexDate
@@ -149,7 +148,7 @@ fun DatePickerDialog(
                                 ) {
                                     Checkbox(
                                         checked = newTimezone != TZ_ALLDAY && newTimezone != null,
-                                        enabled = newTimezone != TZ_ALLDAY,
+                                        enabled = newTimezone != TZ_ALLDAY && !dateOnly,
                                         onCheckedChange = {
                                             newTimezone = if (it) defaultTimezone else null
                                             selectedTab = if (it) tabIndexTimezone else tabIndexTime
