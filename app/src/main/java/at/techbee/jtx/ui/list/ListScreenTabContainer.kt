@@ -57,7 +57,7 @@ fun ListScreenTabContainer(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val screens = listOf(ListTabDestination.Journals, ListTabDestination.Notes, ListTabDestination.Tasks)
-    val pagerState = rememberPagerState(pageCount = 3, infiniteLoop = true)
+    val pagerState = rememberPagerState(initialPage = ListTabDestination.Journals.tabIndex)
 
     var topBarMenuExpanded by remember { mutableStateOf(false) }
     var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
@@ -218,7 +218,7 @@ fun ListScreenTabContainer(
                             }
 
                             Box {
-                                HorizontalPager(state = pagerState) { page ->
+                                HorizontalPager(state = pagerState, count = 3) { page ->
                                     when (page) {
                                         ListTabDestination.Journals.tabIndex -> {
                                             ListScreen(
