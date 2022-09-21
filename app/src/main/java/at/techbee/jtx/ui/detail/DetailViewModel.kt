@@ -13,6 +13,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.database.sqlite.SQLiteConstraintException
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
@@ -52,6 +53,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var allCollections: LiveData<List<ICalCollection>>
 
     var entryDeleted = mutableStateOf(false)
+    var sqlConstraintException = mutableStateOf(false)
     var navigateToId = mutableStateOf<Long?>(null)
     var saving = mutableStateOf(false)
     lateinit var detailSettings: DetailSettings
@@ -119,14 +121,21 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch(Dispatchers.IO) {
             saving.value = true
             val item = database.getICalObjectById(id) ?: return@launch
-            if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+            try {
+                if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
+                    Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+                }
+                item.setUpdatedProgress(newPercent)
+                database.update(item)
+                SyncUtil.notifyContentObservers(getApplication())
+            } catch (e: SQLiteConstraintException) {
+                Log.d("SQLConstraint", "Corrupted ID: $id")
+                Log.d("SQLConstraint", e.stackTraceToString())
+                sqlConstraintException.value = true
+            } finally {
+                saving.value = false
             }
-            item.setUpdatedProgress(newPercent)
-            database.update(item)
-            SyncUtil.notifyContentObservers(getApplication())
-            saving.value = false
         }
     }
 
@@ -136,9 +145,16 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             val icalObject = database.getICalObjectById(icalObjectId) ?: return@launch
             icalObject.summary = newSummary
             icalObject.makeDirty()
-            database.update(icalObject)
-            SyncUtil.notifyContentObservers(getApplication())
-            saving.value = false
+            try {
+                database.update(icalObject)
+                SyncUtil.notifyContentObservers(getApplication())
+            } catch (e: SQLiteConstraintException) {
+                Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
+                Log.d("SQLConstraint", e.stackTraceToString())
+                sqlConstraintException.value = true
+            } finally {
+                saving.value = false
+            }
         }
     }
 
@@ -146,13 +162,21 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
         viewModelScope.launch(Dispatchers.IO) {
             saving.value = true
-            val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, getApplication())
-            // once the newId is there, the local entries can be deleted (or marked as deleted)
-            ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
-            if (icalObject.rrule != null)
-                icalObject.recreateRecurring(database, getApplication())
-            saving.value = false
-            navigateToId.value = newId
+            try {
+                val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, getApplication())
+                // once the newId is there, the local entries can be deleted (or marked as deleted)
+                ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
+                if (icalObject.rrule != null)
+                    icalObject.recreateRecurring(database, getApplication())
+                saving.value = false
+                navigateToId.value = newId
+            } catch (e: SQLiteConstraintException) {
+                Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
+                Log.d("SQLConstraint", e.stackTraceToString())
+                sqlConstraintException.value = true
+            } finally {
+                saving.value = false
+            }
         }
     }
 
@@ -168,85 +192,106 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch(Dispatchers.IO) {
             saving.value = true
 
-            if(icalEntity.value?.categories != categories) {
-                icalObject.makeDirty()
-                database.deleteCategories(icalObject.id)
-                categories.forEach { changedCategory ->
-                    changedCategory.icalObjectId = icalObject.id
-                    database.insertCategory(changedCategory)
-                }
-            }
-
-            if(icalEntity.value?.comments != comments) {
-                icalObject.makeDirty()
-                database.deleteComments(icalObject.id)
-                comments.forEach { changedComment ->
-                    changedComment.icalObjectId = icalObject.id
-                    database.insertComment(changedComment)
-                }
-            }
-
-            if(icalEntity.value?.attendees != attendees) {
-                icalObject.makeDirty()
-                database.deleteAttendees(icalObject.id)
-                attendees.forEach { changedAttendee ->
-                    changedAttendee.icalObjectId = icalObject.id
-                    database.insertAttendee(changedAttendee)
-                }
-            }
-
-            if(icalEntity.value?.resources != resources) {
-                icalObject.makeDirty()
-                database.deleteResources(icalObject.id)
-                resources.forEach { changedResource ->
-                    changedResource.icalObjectId = icalObject.id
-                    database.insertResource(changedResource)
-                }
-            }
-
-            if(icalEntity.value?.attachments != attachments) {
-                icalObject.makeDirty()
-                database.deleteAttachments(icalObject.id)
-                attachments.forEach { changedAttachment ->
-                    changedAttachment.icalObjectId = icalObject.id
-                    database.insertAttachment(changedAttachment)
-                }
-                Attachment.scheduleCleanupJob(getApplication())
-            }
-
-            if(icalEntity.value?.alarms != alarms) {
-                icalObject.makeDirty()
-                database.deleteAlarms(icalObject.id)
-                alarms.forEach { changedAlarm ->
-                    changedAlarm.icalObjectId = icalObject.id
-                    changedAlarm.alarmId = database.insertAlarm(changedAlarm)
-                    val triggerTime = when {
-                        changedAlarm.triggerTime != null -> changedAlarm.triggerTime
-                        changedAlarm.triggerRelativeDuration != null && changedAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> changedAlarm.getDatetimeFromTriggerDuration(
-                            icalObject.due, icalObject.dueTimezone)
-                        changedAlarm.triggerRelativeDuration != null -> changedAlarm.getDatetimeFromTriggerDuration(icalObject.dtstart, icalObject.dtstartTimezone)
-                        else -> null
-                    }
-                    triggerTime?.let {
-                        changedAlarm.scheduleNotification(_application, triggerTime = it, isReadOnly = icalEntity.value?.ICalCollection?.readonly?: true, icalEntity.value?.property?.summary, icalEntity.value?.property?.description)
+            try {
+                if (icalEntity.value?.categories != categories) {
+                    icalObject.makeDirty()
+                    database.deleteCategories(icalObject.id)
+                    categories.forEach { changedCategory ->
+                        changedCategory.icalObjectId = icalObject.id
+                        database.insertCategory(changedCategory)
                     }
                 }
-            }
 
-            if(icalEntity.value?.property != icalObject) {
-                icalObject.makeDirty()
-                database.update(icalObject)
-
-                if (icalObject.rrule != null)
-                    icalObject.recreateRecurring(database, getApplication())
-
-                if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+                if (icalEntity.value?.comments != comments) {
+                    icalObject.makeDirty()
+                    database.deleteComments(icalObject.id)
+                    comments.forEach { changedComment ->
+                        changedComment.icalObjectId = icalObject.id
+                        database.insertComment(changedComment)
+                    }
                 }
+
+                if (icalEntity.value?.attendees != attendees) {
+                    icalObject.makeDirty()
+                    database.deleteAttendees(icalObject.id)
+                    attendees.forEach { changedAttendee ->
+                        changedAttendee.icalObjectId = icalObject.id
+                        database.insertAttendee(changedAttendee)
+                    }
+                }
+
+                if (icalEntity.value?.resources != resources) {
+                    icalObject.makeDirty()
+                    database.deleteResources(icalObject.id)
+                    resources.forEach { changedResource ->
+                        changedResource.icalObjectId = icalObject.id
+                        database.insertResource(changedResource)
+                    }
+                }
+
+                if (icalEntity.value?.attachments != attachments) {
+                    icalObject.makeDirty()
+                    database.deleteAttachments(icalObject.id)
+                    attachments.forEach { changedAttachment ->
+                        changedAttachment.icalObjectId = icalObject.id
+                        database.insertAttachment(changedAttachment)
+                    }
+                    Attachment.scheduleCleanupJob(getApplication())
+                }
+
+                if (icalEntity.value?.alarms != alarms) {
+                    icalObject.makeDirty()
+                    database.deleteAlarms(icalObject.id)
+                    alarms.forEach { changedAlarm ->
+                        changedAlarm.icalObjectId = icalObject.id
+                        changedAlarm.alarmId = database.insertAlarm(changedAlarm)
+                        val triggerTime = when {
+                            changedAlarm.triggerTime != null -> changedAlarm.triggerTime
+                            changedAlarm.triggerRelativeDuration != null && changedAlarm.triggerRelativeTo == AlarmRelativeTo.END.name -> changedAlarm.getDatetimeFromTriggerDuration(
+                                icalObject.due, icalObject.dueTimezone
+                            )
+                            changedAlarm.triggerRelativeDuration != null -> changedAlarm.getDatetimeFromTriggerDuration(
+                                icalObject.dtstart,
+                                icalObject.dtstartTimezone
+                            )
+                            else -> null
+                        }
+                        triggerTime?.let {
+                            changedAlarm.scheduleNotification(
+                                _application,
+                                triggerTime = it,
+                                isReadOnly = icalEntity.value?.ICalCollection?.readonly ?: true,
+                                icalEntity.value?.property?.summary,
+                                icalEntity.value?.property?.description
+                            )
+                        }
+                    }
+                }
+
+                if (icalEntity.value?.property != icalObject) {
+                    icalObject.makeDirty()
+                    database.update(icalObject)
+
+                    if (icalObject.rrule != null)
+                        icalObject.recreateRecurring(database, getApplication())
+
+                    if (icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                        ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
+                        Toast.makeText(
+                            getApplication(),
+                            R.string.toast_item_is_now_recu_exception,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                SyncUtil.notifyContentObservers(getApplication())
+            } catch (e: SQLiteConstraintException) {
+                Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
+                Log.d("SQLConstraint", e.stackTraceToString())
+                sqlConstraintException.value = true
+            } finally {
+                saving.value = false
             }
-            SyncUtil.notifyContentObservers(getApplication())
-            saving.value = false
         }
     }
 
@@ -255,40 +300,51 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch(Dispatchers.IO) {
             saving.value = true
             subEntry.collectionId = icalEntity.value?.property?.collectionId!!
-            val subEntryId = database.insertICalObject(subEntry)
 
-            attachment?.let {
-                it.icalObjectId = subEntryId
-                database.insertAttachment(it)
-            }
-
-            database.insertRelatedto(
-                Relatedto(
-                    icalObjectId = subEntryId,
-                    reltype = Reltype.PARENT.name,
-                    text = icalEntity.value?.property?.uid!!
+            try {
+                val subEntryId = database.insertICalObject(subEntry)
+                attachment?.let {
+                    it.icalObjectId = subEntryId
+                    database.insertAttachment(it)
+                }
+                database.insertRelatedto(
+                    Relatedto(
+                        icalObjectId = subEntryId,
+                        reltype = Reltype.PARENT.name,
+                        text = icalEntity.value?.property?.uid!!
+                    )
                 )
-            )
-            if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+                if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
+                    Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+                }
+                SyncUtil.notifyContentObservers(getApplication())
+            } catch (e: SQLiteConstraintException) {
+                Log.d("SQLConstraint", e.stackTraceToString())
+                sqlConstraintException.value = true
+            } finally {
+                saving.value = false
             }
-            SyncUtil.notifyContentObservers(getApplication())
-            saving.value = false
         }
     }
 
 
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
-            if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                //Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
-            }
-            icalEntity.value?.property?.id?.let { id ->
-                ICalObject.deleteItemWithChildren(id, database)
-                SyncUtil.notifyContentObservers(getApplication())
-                entryDeleted.value = true
+            try {
+                if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                    ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
+                    //Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+                }
+                icalEntity.value?.property?.id?.let { id ->
+                    ICalObject.deleteItemWithChildren(id, database)
+                    SyncUtil.notifyContentObservers(getApplication())
+                    entryDeleted.value = true
+                }
+            } catch (e: SQLiteConstraintException) {
+                Log.d("SQLConstraint", "Corrupted ID: ${icalEntity.value?.property?.id}")
+                Log.d("SQLConstraint", e.stackTraceToString())
+                sqlConstraintException.value = true
             }
         }
     }
@@ -299,9 +355,15 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun deleteById(icalObjectId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            icalEntity.value?.property?.id?.let { id ->
-                ICalObject.deleteItemWithChildren(icalObjectId, database)
-                SyncUtil.notifyContentObservers(getApplication())
+            try {
+                icalEntity.value?.property?.id?.let { id ->
+                    ICalObject.deleteItemWithChildren(icalObjectId, database)
+                    SyncUtil.notifyContentObservers(getApplication())
+                }
+            } catch (e: SQLiteConstraintException) {
+                Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
+                Log.d("SQLConstraint", e.stackTraceToString())
+                sqlConstraintException.value = true
             }
         }
     }
@@ -315,46 +377,75 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
         viewModelScope.launch(Dispatchers.IO) {
             saving.value = true
-            val newId = database.insertICalObject(newEntity.property)
-            newEntity.alarms?.forEach { alarm ->
-                database.insertAlarm(alarm.copy(alarmId = 0L, icalObjectId = newId ))   // TODO: Schedule Alarm!
-            }
-            newEntity.attachments?.forEach { attachment ->
-                database.insertAttachment(attachment.copy(icalObjectId = newId, attachmentId = 0L))
-            }
-            newEntity.attendees?.forEach { attendee ->
-                database.insertAttendee(attendee.copy(icalObjectId = newId, attendeeId = 0L))
-            }
-            newEntity.categories?.forEach { category ->
-                database.insertCategory(category.copy(icalObjectId = newId, categoryId = 0L))
-            }
-            newEntity.comments?.forEach { comment ->
-                database.insertComment(comment.copy(icalObjectId = newId, commentId = 0L))
-            }
-            newEntity.resources?.forEach { resource ->
-                database.insertResource(resource.copy(icalObjectId = newId,  resourceId = 0L))
-            }
-            newEntity.unknown?.forEach { unknown ->
-                database.insertUnknownSync(unknown.copy(icalObjectId = newId, unknownId = 0L))
-            }
-            newEntity.organizer?.let { organizer ->
-                database.insertOrganizer(organizer.copy(icalObjectId = newId, organizerId = 0L))
-            }
-
-            newEntity.relatedto?.forEach { relatedto ->
-                if (relatedto.reltype == Reltype.PARENT.name && newParentUID != null) {
-                    database.insertRelatedto(relatedto.copy(relatedtoId = 0L, icalObjectId = newId, text = newParentUID))
+            try {
+                val newId = database.insertICalObject(newEntity.property)
+                newEntity.alarms?.forEach { alarm ->
+                    database.insertAlarm(
+                        alarm.copy(
+                            alarmId = 0L,
+                            icalObjectId = newId
+                        )
+                    )   // TODO: Schedule Alarm!
                 }
-            }
+                newEntity.attachments?.forEach { attachment ->
+                    database.insertAttachment(
+                        attachment.copy(
+                            icalObjectId = newId,
+                            attachmentId = 0L
+                        )
+                    )
+                }
+                newEntity.attendees?.forEach { attendee ->
+                    database.insertAttendee(attendee.copy(icalObjectId = newId, attendeeId = 0L))
+                }
+                newEntity.categories?.forEach { category ->
+                    database.insertCategory(category.copy(icalObjectId = newId, categoryId = 0L))
+                }
+                newEntity.comments?.forEach { comment ->
+                    database.insertComment(comment.copy(icalObjectId = newId, commentId = 0L))
+                }
+                newEntity.resources?.forEach { resource ->
+                    database.insertResource(resource.copy(icalObjectId = newId, resourceId = 0L))
+                }
+                newEntity.unknown?.forEach { unknown ->
+                    database.insertUnknownSync(unknown.copy(icalObjectId = newId, unknownId = 0L))
+                }
+                newEntity.organizer?.let { organizer ->
+                    database.insertOrganizer(organizer.copy(icalObjectId = newId, organizerId = 0L))
+                }
 
-            val children = database.getRelatedChildren(icalEntityToCopy.property.id)
-            children.forEach { child ->
-                database.getSync(child)?.let { createCopy(icalEntityToCopy = it, newModule = it.property.getModuleFromString(), newParentUID = newEntity.property.uid) }
-            }
+                newEntity.relatedto?.forEach { relatedto ->
+                    if (relatedto.reltype == Reltype.PARENT.name && newParentUID != null) {
+                        database.insertRelatedto(
+                            relatedto.copy(
+                                relatedtoId = 0L,
+                                icalObjectId = newId,
+                                text = newParentUID
+                            )
+                        )
+                    }
+                }
 
-            saving.value = false
-            if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
-                navigateToId.value = newId
+                val children = database.getRelatedChildren(icalEntityToCopy.property.id)
+                children.forEach { child ->
+                    database.getSync(child)?.let {
+                        createCopy(
+                            icalEntityToCopy = it,
+                            newModule = it.property.getModuleFromString(),
+                            newParentUID = newEntity.property.uid
+                        )
+                    }
+                }
+
+                if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
+                    navigateToId.value = newId
+
+            } catch (e: SQLiteConstraintException) {
+                Log.d("SQLConstraint", e.stackTraceToString())
+                sqlConstraintException.value = true
+            } finally {
+                saving.value = false
+            }
         }
     }
 

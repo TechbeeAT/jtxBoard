@@ -6,14 +6,17 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui
+package at.techbee.jtx.ui.list
 
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager.PackageInfoFlags
+import android.database.sqlite.SQLiteConstraintException
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -69,6 +72,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     val allCategories = database.getAllCategoriesAsText()   // filter FragmentDialog
     val allCollections = database.getAllCollections()
 
+    var sqlConstraintException = mutableStateOf(false)
     val scrollOnceId = MutableLiveData<Long?>(null)
     var goToEdit = MutableLiveData<Long?>(null)
 
@@ -350,21 +354,27 @@ open class ListViewModel(application: Application, val module: Module) : Android
     fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            val newId = database.insertICalObject(icalObject)
+            try {
+                val newId = database.insertICalObject(icalObject)
 
-            categories.forEach {
-                it.icalObjectId = newId
-                database.insertCategory(it)
+                categories.forEach {
+                    it.icalObjectId = newId
+                    database.insertCategory(it)
+                }
+
+                attachment?.let {
+                    it.icalObjectId = newId
+                    database.insertAttachment(it)
+                }
+
+                scrollOnceId.postValue(newId)
+                if (editAfterSaving)
+                    goToEdit.postValue(newId)
+            } catch (e: SQLiteConstraintException) {
+                Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
+                Log.d("SQLConstraint", e.stackTraceToString())
+                sqlConstraintException.value = true
             }
-
-            attachment?.let {
-                it.icalObjectId = newId
-                database.insertAttachment(it)
-            }
-
-            scrollOnceId.postValue(newId)
-            if(editAfterSaving)
-                goToEdit.postValue(newId)
         }
     }
 
@@ -382,7 +392,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
      * This function adds some welcome entries, this should only be used on the first install.
      * @param [context] to resolve localized string resources
      */
-    fun addWelcomeEntries(context: Context) {
+    private fun addWelcomeEntries(context: Context) {
 
         val welcomeJournal = ICalObject.createJournal().apply {
             this.dtstart = DateTimeUtils.getTodayAsLong()

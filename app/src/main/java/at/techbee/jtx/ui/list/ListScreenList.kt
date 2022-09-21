@@ -34,7 +34,7 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.settings.DropdownSettingOption
-import at.techbee.jtx.ui.ListViewModel
+import at.techbee.jtx.ui.list.ListViewModel
 import at.techbee.jtx.ui.reusable.cards.ICalObjectListCard
 
 

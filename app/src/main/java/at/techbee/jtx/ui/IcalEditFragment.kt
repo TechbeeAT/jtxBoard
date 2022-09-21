@@ -12,30 +12,12 @@ package at.techbee.jtx.ui
 class IcalEditFragment {
 
 /*
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
 
+    viewModelScope.launch {
 
-
-        icalEditViewModel.collectionNotFoundError.observe(viewLifecycleOwner) { error ->
-
-            if (!error)
-                return@observe
-
-            // show a dialog to inform the user
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle(getString(R.string.edit_dialog_collection_not_found_error_title))
-            builder.setMessage(getString(R.string.edit_dialog_collection_not_found_error_message))
-            builder.setIcon(R.drawable.ic_error)
-            builder.setPositiveButton(R.string.ok) { _, _ -> }
-            builder.show()
+        progressIndicatorVisible = Transformations.map(icalEntity) { item ->
+            return@map item?.property == null     // show progress indicator as long as item.property is null
         }
-
-        //TODO: Check if the Sequence was updated in the meantime and notify user!
-
-        return binding.root
     }
 
 

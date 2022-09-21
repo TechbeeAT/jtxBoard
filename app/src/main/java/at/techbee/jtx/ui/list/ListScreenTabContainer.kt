@@ -34,6 +34,7 @@ import at.techbee.jtx.ui.*
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
+import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.util.SyncUtil
@@ -127,6 +128,10 @@ fun ListScreenTabContainer(
             onDismiss = { showQuickAddDialog = false },
             onSaveAndEditChanged = onSaveAndEditChanged
         )
+    }
+
+    if(getActiveViewModel().sqlConstraintException.value) {
+        ErrorOnUpdateDialog(onConfirm = { getActiveViewModel().sqlConstraintException.value = false })
     }
 
 

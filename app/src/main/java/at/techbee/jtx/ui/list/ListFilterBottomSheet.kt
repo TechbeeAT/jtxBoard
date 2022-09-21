@@ -31,9 +31,9 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.*
-import at.techbee.jtx.ui.ListViewModel
-import at.techbee.jtx.ui.OrderBy
-import at.techbee.jtx.ui.SortOrder
+import at.techbee.jtx.ui.list.ListViewModel
+import at.techbee.jtx.ui.list.OrderBy
+import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.ui.reusable.elements.FilterSection
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 

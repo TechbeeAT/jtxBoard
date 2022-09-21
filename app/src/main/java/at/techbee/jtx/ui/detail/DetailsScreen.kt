@@ -25,6 +25,7 @@ import at.techbee.jtx.ui.reusable.appbars.DetailsTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
+import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,6 +79,10 @@ fun DetailsScreen(
             onConfirm = { detailViewModel.delete() },
             onDismiss = { showDeleteDialog = false }
         )
+    }
+
+    if(detailViewModel.sqlConstraintException.value) {
+        ErrorOnUpdateDialog(onConfirm = { navigateUp = true })
     }
 
 

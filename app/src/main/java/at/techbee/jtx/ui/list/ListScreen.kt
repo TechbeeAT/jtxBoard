@@ -28,8 +28,6 @@ import androidx.navigation.NavController
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.ui.ListViewModel
-import at.techbee.jtx.ui.ViewMode
 import at.techbee.jtx.ui.reusable.bottomsheets.ListFilterBottomSheet
 import at.techbee.jtx.ui.reusable.bottomsheets.ListSearchTextBottomSheet
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination

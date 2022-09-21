@@ -40,7 +40,7 @@ class IcalEditViewModelTest {
     private lateinit var database: ICalDatabaseDao
     private lateinit var context: Context
     private lateinit var application: Application
-    private lateinit var icalEditViewModel: IcalEditViewModel
+    //private lateinit var icalEditViewModel: IcalEditViewModel
 
     private var collection1id: Long? = null    //ATTENTION! The first inserted Collection is considered as LOCAL!
     private var collection2id: Long? = null
@@ -80,7 +80,7 @@ class IcalEditViewModelTest {
         collection2id = database.insertCollectionSync(ICalCollection(displayName = "testcollection_remote", accountName = "remote", accountType = "remote"))
         collection3id = database.insertCollectionSync(ICalCollection(displayName = "testcollection_remote2", accountName = "remote2", accountType = "remote2"))
         application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
-        icalEditViewModel = IcalEditViewModel(application, ICalEntity())
+        //icalEditViewModel = IcalEditViewModel(application, ICalEntity())
 
     }
 

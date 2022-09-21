@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.DetailSettings
@@ -83,8 +84,24 @@ fun DetailScreenContent(
     goToEdit: (itemId: Long) -> Unit,
     goBack: () -> Unit
 ) {
-    if (iCalEntity.value == null)
+
+    // item was not loaded yet or was deleted in the background
+    if (iCalEntity.value == null) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+        ) {
+            Text(stringResource(id = R.string.sorry), style = MaterialTheme.typography.displayMedium)
+            Text(stringResource(id = R.string.details_entry_could_not_be_loaded), textAlign = TextAlign.Center)
+            Button(onClick = { goBack() }) {
+                Text(stringResource(id = R.string.back))
+            }
+        }
         return
+    }
 
     var color by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.color) }
     var summary by rememberSaveable { mutableStateOf(iCalEntity.value?.property?.summary ?: "") }
@@ -743,6 +760,45 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
 
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
+            isEditMode = remember { mutableStateOf(true) },
+            contentsChanged = remember { mutableStateOf(false) },
+            subtasks = remember { mutableStateOf(emptyList()) },
+            subnotes = remember { mutableStateOf(emptyList()) },
+            isChild = true,
+            player = null,
+            goBackRequested = false,
+            allCollections = listOf(ICalCollection.createLocalCollection(LocalContext.current)),
+            allCategories = emptyList(),
+            allResources = emptyList(),
+            detailSettings = detailSettings,
+            saveICalObject = { _, _, _, _, _, _, _ -> },
+            deleteICalObject = { },
+            onProgressChanged = { _, _, _ -> },
+            onMoveToNewCollection = { _, _ -> },
+            onSubEntryAdded = { _, _ -> },
+            onSubEntryDeleted = { },
+            onSubEntryUpdated = { _, _ -> },
+            goToView = { },
+            goToEdit = { },
+            goBack = { },
+            autosave = true
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailScreenContent_failedLoading() {
+    MaterialTheme {
+
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
+            DetailViewModel.PREFS_DETAIL_TODOS,
+            Context.MODE_PRIVATE
+        )
+        val detailSettings = DetailSettings(prefs)
+
+        DetailScreenContent(
+            iCalEntity = remember { mutableStateOf(null) },
             isEditMode = remember { mutableStateOf(true) },
             contentsChanged = remember { mutableStateOf(false) },
             subtasks = remember { mutableStateOf(emptyList()) },

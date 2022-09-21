@@ -45,6 +45,7 @@
     <string name="delete">Delete</string>
     <string name="discard">Discard</string>
     <string name="gotit">Got it</string>
+    <string name="sorry">Sorry</string>
     <string name="cont">Continue</string>
     <string name="add">Add</string>
     <string name="edit">Edit</string>
@@ -250,7 +251,7 @@
     <string name="details_toast_entry_deleted">Entry discarded/deleted</string>
     <string name="details_recur_unknown_rrule_dialog_title">Unsupported recurrence rule detected!</string>
     <string name="details_recur_unknown_rrule_dialog_message">An unknown or unsupported recurrence rule was detected. If you continue, the existing recurrence rule will be deleted/overwritten.</string>
-
+    <string name="details_entry_could_not_be_loaded">This entry was either deleted in the background or could not be loaded.</string>
 
 
     <!-- fragment_ical_view -->
@@ -452,7 +453,7 @@
     <string name="dialog_move_item_to_collection_text">Please note that all changes are saved immediately.</string>
     <string name="dialog_unsaved_changes_title">Save changes?</string>
     <string name="dialog_unsaved_changes_text">Unsaved changes detected. Would you like to save or discard your changes?</string>
-
+    <string name="dialog_error_on_update_message">An error occurred while inserting/updating this entry. The entry or collection might not exist anymore.</string>
 
     <!-- menus -->
     <string name="menu_edit_clear_dates">Clear dates</string>

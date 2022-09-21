@@ -6,9 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.StatusJournal
 import at.techbee.jtx.database.StatusTodo
-import at.techbee.jtx.ui.OrderBy
-import at.techbee.jtx.ui.SortOrder
-import at.techbee.jtx.ui.ViewMode
+import at.techbee.jtx.ui.list.OrderBy
+import at.techbee.jtx.ui.list.SortOrder
+import at.techbee.jtx.ui.list.ViewMode
 
 
 data class ListSettings(
