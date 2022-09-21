@@ -11,7 +11,6 @@ package at.techbee.jtx.ui.list
 
 import android.app.Application
 import android.widget.Toast
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,8 +21,6 @@ import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -32,22 +29,21 @@ import androidx.navigation.NavHostController
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.R
-import at.techbee.jtx.database.Module
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.ListViewModelJournals
-import at.techbee.jtx.ui.ListViewModelNotes
-import at.techbee.jtx.ui.ListViewModelTodos
-import at.techbee.jtx.ui.ViewMode
+import at.techbee.jtx.ui.*
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
-import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.util.SyncUtil
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @Composable
 fun ListScreenTabContainer(
     navController: NavHostController,
@@ -59,34 +55,24 @@ fun ListScreenTabContainer(
 ) {
 
     val context = LocalContext.current
-    val screens =
-        listOf(ListTabDestination.Journals, ListTabDestination.Notes, ListTabDestination.Tasks)
-    val destinationSaver = Saver<ListTabDestination, Int>(
-        save = { it.tabIndex },
-        restore = { tabIndex ->
-            screens.find { it.tabIndex == tabIndex } ?: ListTabDestination.Journals
-        }
-    )
-    var selectedTab by rememberSaveable(stateSaver = destinationSaver) {
-        mutableStateOf(
-            ListTabDestination.Journals
-        )
-    }
+    val scope = rememberCoroutineScope()
+    val screens = listOf(ListTabDestination.Journals, ListTabDestination.Notes, ListTabDestination.Tasks)
+    val pagerState = rememberPagerState(pageCount = 3, infiniteLoop = true)
+
     var topBarMenuExpanded by remember { mutableStateOf(false) }
     var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
     var showQuickAddDialog by remember { mutableStateOf(false) }
-
-
 
     val icalListViewModelJournals: ListViewModelJournals = viewModel()
     val icalListViewModelNotes: ListViewModelNotes = viewModel()
     val icalListViewModelTodos: ListViewModelTodos = viewModel()
 
     fun getActiveViewModel() =
-        when (selectedTab.module) {
-            Module.JOURNAL -> icalListViewModelJournals
-            Module.NOTE -> icalListViewModelNotes
-            Module.TODO -> icalListViewModelTodos
+        when (pagerState.currentPage) {
+            ListTabDestination.Journals.tabIndex -> icalListViewModelJournals
+            ListTabDestination.Notes.tabIndex -> icalListViewModelNotes
+            ListTabDestination.Tasks.tabIndex  -> icalListViewModelTodos
+            else -> icalListViewModelJournals
         }
 
     val goToEdit = getActiveViewModel().goToEdit.observeAsState()
@@ -149,10 +135,11 @@ fun ListScreenTabContainer(
             JtxTopAppBar(
                 drawerState = drawerState,
                 title = stringResource(id = R.string.navigation_drawer_board),
-                subtitle = when(selectedTab.module) {
-                    Module.JOURNAL -> stringResource(id = R.string.toolbar_text_jtx_board_journals_overview)
-                    Module.NOTE -> stringResource(id = R.string.toolbar_text_jtx_board_notes_overview)
-                    Module.TODO -> stringResource(id = R.string.toolbar_text_jtx_board_tasks_overview)
+                subtitle = when(pagerState.currentPage) {
+                    ListTabDestination.Journals.tabIndex -> stringResource(id = R.string.toolbar_text_jtx_board_journals_overview)
+                    ListTabDestination.Notes.tabIndex -> stringResource(id = R.string.toolbar_text_jtx_board_notes_overview)
+                    ListTabDestination.Tasks.tabIndex -> stringResource(id = R.string.toolbar_text_jtx_board_tasks_overview)
+                    else -> stringResource(id = R.string.toolbar_text_jtx_board_journals_overview)
                 },
                 actions = {
                     IconButton(onClick = { topBarMenuExpanded = true }) {
@@ -207,8 +194,6 @@ fun ListScreenTabContainer(
                                     }
                                 })
                         }
-
-                        // TODO TBC
                     }
                 }
             )
@@ -218,20 +203,24 @@ fun ListScreenTabContainer(
                     drawerState,
                     mainContent = {
                         Column {
-                            TabRow(selectedTabIndex = selectedTab.tabIndex) {
+                            TabRow(
+                                selectedTabIndex = pagerState.currentPage    // adding the indicator might make a smooth movement of the tabIndicator, but Accompanist does not support all components (TODO: Check again in future) https://www.geeksforgeeks.org/tab-layout-in-android-using-jetpack-compose/
+                            ) {
                                 screens.forEach { screen ->
-                                    Tab(selected = selectedTab == screen,
+                                    Tab(selected = pagerState.currentPage == screen.tabIndex,
                                         onClick = {
-                                            selectedTab = screen
+                                            scope.launch {
+                                                pagerState.scrollToPage(screen.tabIndex)
+                                            }
                                         },
                                         text = { Text(stringResource(id = screen.titleResource)) })
                                 }
                             }
 
                             Box {
-                                Crossfade(targetState = selectedTab) { tab ->
-                                    when (tab) {
-                                        ListTabDestination.Journals -> {
+                                HorizontalPager(state = pagerState) { page ->
+                                    when (page) {
+                                        ListTabDestination.Journals.tabIndex -> {
                                             ListScreen(
                                                 listViewModel = icalListViewModelJournals,
                                                 navController = navController,
@@ -239,7 +228,7 @@ fun ListScreenTabContainer(
                                                 onShowQuickAddDialog = { showQuickAddDialog = true }
                                             )
                                         }
-                                        ListTabDestination.Notes -> {
+                                        ListTabDestination.Notes.tabIndex -> {
                                             ListScreen(
                                                 listViewModel = icalListViewModelNotes,
                                                 navController = navController,
@@ -247,7 +236,7 @@ fun ListScreenTabContainer(
                                                 onShowQuickAddDialog = { showQuickAddDialog = true }
                                             )
                                         }
-                                        ListTabDestination.Tasks -> {
+                                        ListTabDestination.Tasks.tabIndex -> {
                                             ListScreen(
                                                 listViewModel = icalListViewModelTodos,
                                                 navController = navController,
