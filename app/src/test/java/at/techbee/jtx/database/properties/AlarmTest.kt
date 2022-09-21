@@ -8,22 +8,14 @@
 
 package at.techbee.jtx.database.properties
 
-import android.content.Context
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import java.time.Duration
 import java.util.*
 
-@RunWith(MockitoJUnitRunner::class)
 class AlarmTest {
-
-    @Mock
-    private lateinit var mockContext: Context
-
 
     @Test
     fun createDisplayAlarm_empty() {

@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.screens
+package at.techbee.jtx.ui.list
 
 import android.content.Context.VIBRATOR_MANAGER_SERVICE
 import android.content.Context.VIBRATOR_SERVICE
@@ -121,7 +121,7 @@ fun ListScreenKanban(
                             .combinedClickable(
                                 onClick = { goToView(iCalObject.id) },
                                 onLongClick = {
-                                    if (!iCalObject.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
+                                    if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                         goToEdit(iCalObject.id)
                                 }
                             )

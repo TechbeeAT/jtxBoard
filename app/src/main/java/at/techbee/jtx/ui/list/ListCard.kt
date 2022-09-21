@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.cards
+package at.techbee.jtx.ui.list
 
 import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
@@ -35,6 +35,9 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.reusable.cards.AttachmentCard
+import at.techbee.jtx.ui.reusable.cards.SubnoteCard
+import at.techbee.jtx.ui.reusable.cards.SubtaskCard
 import at.techbee.jtx.ui.reusable.elements.ColoredEdge
 import at.techbee.jtx.ui.reusable.elements.ListStatusBar
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
@@ -399,7 +402,7 @@ fun ICalObjectListCard(
                                     .combinedClickable(
                                         onClick = { goToView(subtask.id)  },
                                         onLongClick = {
-                                            if (!subtask.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
+                                            if (!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                                 goToEdit(subtask.id)
                                         }
                                     )
@@ -420,7 +423,7 @@ fun ICalObjectListCard(
                                     .combinedClickable(
                                         onClick = { goToView(subnote.id) },
                                         onLongClick = {
-                                            if (!subnote.isReadOnly && BillingManager.getInstance()?.isProPurchased?.value == true)
+                                            if (!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
                                                 goToEdit(subnote.id)
                                         },
                                     ),

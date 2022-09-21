@@ -10,32 +10,20 @@ package at.techbee.jtx.ui
 
 import android.app.Application
 import android.content.Context
-import android.os.Bundle
-import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.lifecycle.Lifecycle
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
-import at.techbee.jtx.*
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.database.properties.Comment
-import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
-import at.techbee.jtx.util.DateTimeUtils.convertLongToMonthString
-import at.techbee.jtx.util.DateTimeUtils.convertLongToTimeString
-import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.TestCoroutineExceptionHandler
+import kotlinx.coroutines.test.createTestCoroutineScope
 import org.junit.After
 import org.junit.Before
-import org.junit.Test
 import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
@@ -49,7 +37,8 @@ class IcalListFragmentTest {
     private lateinit var application: Application
 
     private val testDispatcher = TestCoroutineDispatcher()
-    private val testScope = TestCoroutineScope(testDispatcher)
+    private val testScope =
+        createTestCoroutineScope(TestCoroutineDispatcher() + TestCoroutineExceptionHandler() + testDispatcher)
 
     private val sampleDate = 1632636027826L     //  Sun Sep 26 2021 06:00:27
     private val sampleCollection = ICalCollection(collectionId = 1L, displayName = "testcollection automated tests")

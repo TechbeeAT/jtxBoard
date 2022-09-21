@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.screens
+package at.techbee.jtx.ui.list
 
 import android.content.Context
 import android.media.MediaPlayer
@@ -34,8 +34,6 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.settings.DropdownSettingOption
-import at.techbee.jtx.ui.list.ListViewModel
-import at.techbee.jtx.ui.reusable.cards.ICalObjectListCard
 
 
 @OptIn(ExperimentalFoundationApi::class)

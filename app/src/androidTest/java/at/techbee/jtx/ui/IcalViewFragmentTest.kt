@@ -11,39 +11,26 @@ package at.techbee.jtx.ui
 import android.Manifest
 import android.app.Application
 import android.content.Context
-import android.os.Bundle
-import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.fragment.app.testing.withFragment
-import androidx.lifecycle.Lifecycle
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
-import at.techbee.jtx.*
-import at.techbee.jtx.database.*
+import at.techbee.jtx.MainActivity2
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.properties.*
-import at.techbee.jtx.util.DateTimeUtils.convertLongToDayString
-import at.techbee.jtx.util.DateTimeUtils.convertLongToMonthString
-import at.techbee.jtx.util.DateTimeUtils.convertLongToTimeString
-import at.techbee.jtx.util.DateTimeUtils.convertLongToYearString
-import com.google.android.material.slider.Slider
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.CoreMatchers.not
+import kotlinx.coroutines.test.TestCoroutineExceptionHandler
+import kotlinx.coroutines.test.createTestCoroutineScope
 import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -56,7 +43,8 @@ class IcalViewFragmentTest {
     private lateinit var application: Application
 
     private val testDispatcher = TestCoroutineDispatcher()
-    private val testScope = TestCoroutineScope(testDispatcher)
+    private val testScope =
+        createTestCoroutineScope(TestCoroutineDispatcher() + TestCoroutineExceptionHandler() + testDispatcher)
 
     @get: Rule
     var testRule = activityScenarioRule<MainActivity2>()

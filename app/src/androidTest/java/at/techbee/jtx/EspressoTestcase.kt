@@ -26,7 +26,9 @@ import at.techbee.jtx.database.ICalDatabaseDao
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineExceptionHandler
 import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.createTestCoroutineScope
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,7 +48,8 @@ class EspressoTestcase {
     private val testDispatcher = TestCoroutineDispatcher()
 
     @ExperimentalCoroutinesApi
-    private val testScope = TestCoroutineScope(testDispatcher)
+    private val testScope =
+        createTestCoroutineScope(TestCoroutineDispatcher() + TestCoroutineExceptionHandler() + testDispatcher)
 
     private val sampleCollection = ICalCollection(collectionId = 1L, displayName = "testcollection automated tests")
 

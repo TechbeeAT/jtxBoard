@@ -53,11 +53,6 @@ buildscript {
         classpath "com.android.tools.build:gradle:$version_gradle"
         classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:${version_about_libraries}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
-        classpath 'androidx.navigation:navigation-safe-args-gradle-plugin:2.5.2'
-
-
-        // dokka documentation
-        //classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.5.0"
     }
 }
 

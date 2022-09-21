@@ -284,14 +284,10 @@ class ICalObjectTest {
 
     @Test
     fun getRecurId_datetime_withTimezone() {
-
         val sampleDate = 1632474660000L   // 2021-09-24 11:11:00
         val recurId = ICalObject.getRecurId(sampleDate, "Africa/Banjul")
-        assertEquals("20210924T091100;TZID=Africa/Abidjan", recurId)
+        assertEquals("20210924T091100;TZID=Africa/Banjul", recurId)
     }
-
-
-
 
     @Test
     fun statusJournal_getStringResource_cancelled() {

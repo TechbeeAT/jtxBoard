@@ -17,11 +17,10 @@ import org.junit.Test
 
 class UiUtilTest {
 
-    @Test
-    fun isValidURL0() = assertTrue(isValidURL("https://www.orf.at/97/kjh/lll"))
-    fun isValidURL1() = assertTrue(isValidURL("https://www.orf.at"))
-    fun isValidURL2() = assertTrue(isValidURL("www.orf.at"))
-    fun isValidURL3() = assertFalse(isValidURL("orf.at"))
+    @Test fun isValidURL0() = assertTrue(isValidURL("https://www.orf.at/97/kjh/lll"))
+    @Test fun isValidURL1() = assertTrue(isValidURL("https://www.orf.at"))
+    @Test fun isValidURL2() = assertTrue(isValidURL("www.orf.at"))
+    @Test fun isValidURL3() = assertTrue(isValidURL("orf.at"))
 
 
     @Test
