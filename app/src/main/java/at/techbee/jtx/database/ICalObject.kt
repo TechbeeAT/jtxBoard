@@ -622,14 +622,14 @@ data class ICalObject(
          *
          * @return The new id of the item in the new collection
          */
-        suspend fun updateCollectionWithChildren(id: Long, parentId: Long?, newCollectionId: Long, context: Context): Long {
+        suspend fun updateCollectionWithChildren(id: Long, parentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long {
 
-            val newParentId = moveItemToNewCollection(id, parentId, newCollectionId, context)
+            val newParentId = moveItemToNewCollection(id, parentId, newCollectionId, database, context)
 
             // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
-            val children = ICalDatabase.getInstance(context).iCalDatabaseDao.getRelatedChildren(id)
+            val children = database.getRelatedChildren(id)
             children.forEach { childId ->
-                updateCollectionWithChildren(childId, newParentId, newCollectionId, context)
+                updateCollectionWithChildren(childId, newParentId, newCollectionId, database, context)
             }
             return newParentId
         }
@@ -645,10 +645,8 @@ data class ICalObject(
          * @return the new id of the item that was inserted (that becomes the newParentId)
          *
          */
-        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, context: Context): Long =
+        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long =
             withContext(Dispatchers.IO) {
-
-                val database = ICalDatabase.getInstance(context).iCalDatabaseDao
 
                 val item = database.getSync(id)
                 if (item != null) {
@@ -814,8 +812,8 @@ data class ICalObject(
         //values.getAsString(COLUMN_OTHER)?.let { other -> this.other = other }
         values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)
             ?.let { collectionId -> this.collectionId = collectionId }
-        values.getAsString(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty == "1" }
-        values.getAsString(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted == "1" }
+        values.getAsString(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty == "1" || dirty == "true" }
+        values.getAsString(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted == "1" || deleted == "true" }
         values.getAsString(COLUMN_FILENAME)?.let { fileName -> this.fileName = fileName }
         values.getAsString(COLUMN_ETAG)?.let { eTag -> this.eTag = eTag }
         values.getAsString(COLUMN_SCHEDULETAG)

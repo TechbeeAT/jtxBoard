@@ -163,7 +163,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch(Dispatchers.IO) {
             saving.value = true
             try {
-                val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, getApplication())
+                val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, database, getApplication())
                 // once the newId is there, the local entries can be deleted (or marked as deleted)
                 ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
                 if (icalObject.rrule != null)

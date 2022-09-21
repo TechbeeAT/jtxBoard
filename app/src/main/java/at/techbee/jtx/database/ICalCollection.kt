@@ -177,14 +177,13 @@ data class ICalCollection(
                 values.getAsString(COLUMN_COLLECTION_DESCRIPTION)?.let { description -> this.description = description }
                 values.getAsString(COLUMN_COLLECTION_OWNER)?.let { owner -> this.owner = owner }
                 values.getAsInteger(COLUMN_COLLECTION_COLOR)?.let { color -> this.color = color }
-                values.getAsString(COLUMN_COLLECTION_SUPPORTSVEVENT)?.let { supportsVEVENT -> this.supportsVEVENT = supportsVEVENT == "1" }
-                values.getAsString(COLUMN_COLLECTION_SUPPORTSVTODO)?.let { supportsVTODO -> this.supportsVTODO = supportsVTODO == "1" }
-                values.getAsString(COLUMN_COLLECTION_SUPPORTSVJOURNAL)?.let { supportsVJOURNAL -> this.supportsVJOURNAL = supportsVJOURNAL == "1" }
+                values.getAsString(COLUMN_COLLECTION_SUPPORTSVEVENT)?.let { supportsVEVENT -> this.supportsVEVENT = supportsVEVENT == "1" || supportsVEVENT == "true"}
+                values.getAsString(COLUMN_COLLECTION_SUPPORTSVTODO)?.let { supportsVTODO -> this.supportsVTODO = supportsVTODO == "1"  || supportsVTODO == "true"}
+                values.getAsString(COLUMN_COLLECTION_SUPPORTSVJOURNAL)?.let { supportsVJOURNAL -> this.supportsVJOURNAL = supportsVJOURNAL == "1"  || supportsVJOURNAL == "true"}
                 values.getAsString(COLUMN_COLLECTION_ACCOUNT_NAME)?.let { accountName -> this.accountName = accountName }
                 values.getAsString(COLUMN_COLLECTION_ACCOUNT_TYPE)?.let { accountType -> this.accountType = accountType }
                 values.getAsString(COLUMN_COLLECTION_SYNC_VERSION)?.let { syncversion -> this.syncversion = syncversion }
-                values.getAsString(COLUMN_COLLECTION_READONLY)?.let { readonly -> this.readonly = readonly == "1" }
-
+                values.getAsString(COLUMN_COLLECTION_READONLY)?.let { readonly -> this.readonly = readonly == "1"  || readonly == "true"}
                 return this
         }
 

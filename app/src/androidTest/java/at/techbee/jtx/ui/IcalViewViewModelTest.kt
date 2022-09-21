@@ -26,7 +26,7 @@ import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.RunWith
 
-
+/*
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -57,7 +57,7 @@ class IcalViewViewModelTest {
         ICalDatabase.getInMemoryDB(context).close()
     }
 
-/*
+
     @Test
     fun testEditingClicked() = runBlockingTest {
 
@@ -161,41 +161,8 @@ class IcalViewViewModelTest {
         assertEquals(88, icalViewViewModel.icalEntity.value!!.property.percent)
     }
 
-    @Test
-    fun testVisibilitySettingsForTask() = runBlockingTest {
-
-        val preparedEntry = ICalObject.createTask("myTestTask")
-        preparedEntry.id = database.insertICalObject(preparedEntry)
 
 
-        icalViewViewModel = IcalViewViewModel(application, preparedEntry.id)
-        Thread.sleep(100)
-        icalViewViewModel.icalEntity.getOrAwaitValue()
-
-        assertNotNull(icalViewViewModel.icalEntity.getOrAwaitValue())
-        assertNull(icalViewViewModel.dtstartFormatted.getOrAwaitValue())
-        assertNotNull(icalViewViewModel.createdFormatted.getOrAwaitValue())
-        assertNotNull(icalViewViewModel.lastModifiedFormatted.getOrAwaitValue())
-        //assertNull(icalViewViewModel.completedFormatted.getOrAwaitValue())
-        //assertNull(icalViewViewModel.startedFormatted.getOrAwaitValue())
-
-        assertEquals(false, icalViewViewModel.dateVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.timeVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.urlVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.attendeesVisible.getOrAwaitValue())
-        //assertEquals(false, icalViewViewModel.organizerVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.contactVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.commentsVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.attachmentsVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.alarmsVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.relatedtoVisible.getOrAwaitValue())
-        assertEquals(true, icalViewViewModel.progressVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.priorityVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.subtasksVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.completedVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.startedVisible.getOrAwaitValue())
-        assertEquals(false, icalViewViewModel.resourcesVisible.getOrAwaitValue())
-    }
+}
 
      */
-}

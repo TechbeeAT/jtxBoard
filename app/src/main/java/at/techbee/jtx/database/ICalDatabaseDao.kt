@@ -9,6 +9,7 @@
 package at.techbee.jtx.database
 
 import android.database.Cursor
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
@@ -467,6 +468,12 @@ DELETEs by Object
     @Delete
     fun deleteResource(resource: Resource)
 
+    /**
+     * Deletes all ICalObjects. ONLY FOR TESTING!
+     */
+    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT")
+    @VisibleForTesting
+    fun deleteAllICalObjects()
 
 
     /**
