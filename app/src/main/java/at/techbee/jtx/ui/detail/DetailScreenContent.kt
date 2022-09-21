@@ -99,6 +99,7 @@ fun DetailScreenContent(
             iCalEntity.value?.property ?: ICalObject()
         )
     }
+    iCalEntity.value?.property?.eTag?.let { icalObject.eTag = it }    // make sure the eTag gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
     val categories =
         rememberSaveable { mutableStateOf(iCalEntity.value?.categories ?: emptyList()) }
     val resources = rememberSaveable { mutableStateOf(iCalEntity.value?.resources ?: emptyList()) }
