@@ -25,6 +25,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
+import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_OSE
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.AdManager
@@ -43,10 +45,12 @@ import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.collections.CollectionsScreen
 import at.techbee.jtx.ui.detail.DetailsScreen
 import at.techbee.jtx.ui.list.ListScreenTabContainer
+import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import java.time.ZonedDateTime
 
 
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
@@ -204,6 +208,7 @@ fun MainNavHost(
 ) {
     val navController = rememberNavController()
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
+    var showOSEDonationDialog by remember { mutableStateOf(false) }
 
     NavHost(
         navController = navController,
@@ -241,7 +246,12 @@ fun MainNavHost(
                 detailViewModel = detailViewModel,
                 editImmediately = editImmediately,
                 autosave = settingsStateHolder.settingAutosave.value,
-                onRequestReview = { JtxReviewManager(activity).launch() },
+                onRequestReview = {
+                    if(BuildConfig.FLAVOR == BUILD_FLAVOR_GOOGLEPLAY)
+                        JtxReviewManager(activity).showIfApplicable()
+                    else if (BuildConfig.FLAVOR == BUILD_FLAVOR_OSE)
+                        showOSEDonationDialog = JtxReviewManager(activity).showIfApplicable() || BuildConfig.DEBUG
+                },
                 onLastUsedCollectionChanged = { collectionId ->
                     settingsStateHolder.lastUsedCollection.value = collectionId
                     settingsStateHolder.lastUsedCollection = settingsStateHolder.lastUsedCollection
@@ -322,6 +332,19 @@ fun MainNavHost(
                 settingsStateHolder.proInfoShown.value = true
                 settingsStateHolder.proInfoShown = settingsStateHolder.proInfoShown   // triggers saving
                         }
+        )
+    }
+
+    if(showOSEDonationDialog) {
+        OSERequestDonationDialog(
+            onOK = {
+                // next dialog in 90 days
+                JtxReviewManager(activity).nextRequestOn = ZonedDateTime.now().plusDays(90L).toInstant().toEpochMilli()
+                showOSEDonationDialog = false
+                   },
+            onMore = {
+                navController.navigate(NavigationDrawerDestination.DONATE.name)
+            }
         )
     }
 }

@@ -57,6 +57,7 @@ fun DetailsScreen(
     val allCollections = detailViewModel.allCollections.observeAsState(emptyList())
 
     if(navigateUp && !detailViewModel.saving.value) {
+        onRequestReview()
         navController.navigateUp()
     }
 

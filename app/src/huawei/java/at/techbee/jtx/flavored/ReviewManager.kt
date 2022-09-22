@@ -14,5 +14,5 @@ import android.app.Activity
 class JtxReviewManager(val activity: Activity) : ReviewManagerDefinition {
 
     override var nextRequestOn: Long = 0L
-    override fun launch() {  return  }    // no review manager yet for huawei
+    override fun showIfApplicable() = false    // no review manager yet for huawei
 }

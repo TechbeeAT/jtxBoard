@@ -8,9 +8,6 @@
 
 package at.techbee.jtx.flavored
 
-import android.app.Activity
-import android.content.Context
-
 interface ReviewManagerDefinition {
 
     companion object {
@@ -22,5 +19,5 @@ interface ReviewManagerDefinition {
     /**
      * This function launches the in-app review or requests a donation by the user depending on flavor
      */
-    fun launch()
+    fun showIfApplicable(): Boolean
 }
