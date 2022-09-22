@@ -15,7 +15,6 @@ import android.content.pm.PackageManager.PackageInfoFlags
 import android.database.sqlite.SQLiteConstraintException
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
@@ -37,6 +36,7 @@ import java.util.concurrent.TimeUnit
 
 open class ListViewModel(application: Application, val module: Module) : AndroidViewModel(application) {
 
+    private val _application = application
     private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao
     private val settings = PreferenceManager.getDefaultSharedPreferences(application)
 
@@ -75,6 +75,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     var sqlConstraintException = mutableStateOf(false)
     val scrollOnceId = MutableLiveData<Long?>(null)
     var goToEdit = MutableLiveData<Long?>(null)
+    var toastMessage = mutableStateOf<String?>(null)
 
 
     private val searchSettingShowAllSubtasksInTasklist: Boolean
@@ -311,7 +312,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 scrollOnceId.postValue(itemId)
         }
         if(isLinkedRecurringInstance)
-            Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_LONG).show()
+            toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
     }
 
     fun updateStatusJournal(itemId: Long, newStatusJournal: StatusJournal, isLinkedRecurringInstance: Boolean, scrollOnce: Boolean = false) {
@@ -327,7 +328,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 scrollOnceId.postValue(itemId)
         }
         if(isLinkedRecurringInstance)
-            Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_LONG).show()
+            toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
 
     }
 

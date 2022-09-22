@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.list
 
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
@@ -59,6 +60,11 @@ fun ListScreen(
     val focusRequesterSearchText = remember { FocusRequester() }
 
     val allCollections = listViewModel.allCollections.observeAsState(emptyList())
+
+    listViewModel.toastMessage.value?.let {
+        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        listViewModel.toastMessage.value = null
+    }
 
 
     Scaffold(

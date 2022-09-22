@@ -56,7 +56,7 @@ fun DurationPickerDialog(
         }
     )}
 
-    var durationNumber by rememberSaveable { mutableStateOf(
+    var durationNumber by rememberSaveable { mutableStateOf<Long?>(
         when {
             triggerAsDuration.toMillis()%(1000*60*60*24) == 0L -> triggerAsDuration.toDays().absoluteValue
             triggerAsDuration.toMillis()%(1000*60*60) == 0L -> triggerAsDuration.toHours().absoluteValue
@@ -82,9 +82,11 @@ fun DurationPickerDialog(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
-                    value = durationNumber.toString(),
+                    value = durationNumber?.toString() ?:"",
                     onValueChange = {
-                        durationNumber = if(durationBefore)
+                        durationNumber = if(it.isEmpty())
+                            null
+                        else if(durationBefore)
                             (it.toLongOrNull() ?: 0L) * -1L
                         else
                             it.toLongOrNull() ?: 0L
@@ -164,7 +166,7 @@ fun DurationPickerDialog(
             TextButton(
                 onClick = {
                     alarm.triggerRelativeTo = durationStartEnd.name
-                    alarm.triggerRelativeDuration = durationNumber.toDuration(durationUnit).toIsoString()
+                    alarm.triggerRelativeDuration = (durationNumber?:0).toDuration(durationUnit).toIsoString()
                     onConfirm(alarm)
                     onDismiss()
                 }

@@ -17,7 +17,6 @@ import android.database.sqlite.SQLiteConstraintException
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
@@ -56,6 +55,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var sqlConstraintException = mutableStateOf(false)
     var navigateToId = mutableStateOf<Long?>(null)
     var saving = mutableStateOf(false)
+    var toastMessage = mutableStateOf<String?>(null)
     lateinit var detailSettings: DetailSettings
 
     val mediaPlayer = MediaPlayer()
@@ -124,7 +124,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             try {
                 if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
                     ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
                 }
                 item.setUpdatedProgress(newPercent)
                 database.update(item)
@@ -272,17 +272,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     icalObject.makeDirty()
                     database.update(icalObject)
 
+                    if (icalEntity.value?.property?.isRecurLinkedInstance == true) {
+                        ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
+                        toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
+                    }
+
                     if (icalObject.rrule != null)
                         icalObject.recreateRecurring(database, getApplication())
 
-                    if (icalEntity.value?.property?.isRecurLinkedInstance == true) {
-                        ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                        Toast.makeText(
-                            getApplication(),
-                            R.string.toast_item_is_now_recu_exception,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
                 }
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
@@ -316,7 +313,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 )
                 if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
                     ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
                 }
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
@@ -334,7 +331,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             try {
                 if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
                     ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
-                    //Toast.makeText(getApplication(), R.string.toast_item_is_now_recu_exception, Toast.LENGTH_SHORT).show()
+                    toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
                 }
                 icalEntity.value?.property?.id?.let { id ->
                     ICalObject.deleteItemWithChildren(id, database)
@@ -356,10 +353,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun deleteById(icalObjectId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                icalEntity.value?.property?.id?.let { id ->
-                    ICalObject.deleteItemWithChildren(icalObjectId, database)
-                    SyncUtil.notifyContentObservers(getApplication())
-                }
+                ICalObject.deleteItemWithChildren(icalObjectId, database)
+                SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
                 Log.d("SQLConstraint", e.stackTraceToString())
@@ -474,10 +469,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 context.startActivity(Intent(icsShareIntent))
             } catch (e: ActivityNotFoundException) {
                 Log.i("ActivityNotFound", "No activity found to open file.")
-                Toast.makeText(context, "No app found to open this file.", Toast.LENGTH_SHORT).show()
+                toastMessage.value = "No app found to open this file."
             } catch (e: Exception) {
                 Log.i("fileprovider", "Failed to attach ICS File")
-                Toast.makeText(context, "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
+                toastMessage.value = "Failed to attach ICS File."
             }
         }
     }
@@ -526,7 +521,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 files.add(uri)
             } catch (e: Exception) {
                 Log.i("fileprovider", "Failed to attach ICS File")
-                Toast.makeText(context, "Failed to attach ICS File.", Toast.LENGTH_SHORT).show()
+                toastMessage.value = "Failed to attach ICS File."
             }
 
             shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files)
@@ -536,7 +531,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 context.startActivity(Intent(shareIntent))
             } catch (e: ActivityNotFoundException) {
                 Log.i("ActivityNotFound", "No activity found to send this entry.")
-                Toast.makeText(context, R.string.error_no_app_found_to_open_entry, Toast.LENGTH_SHORT).show()
+                toastMessage.value = _application.getString(R.string.error_no_app_found_to_open_entry)
             }
         }
     }

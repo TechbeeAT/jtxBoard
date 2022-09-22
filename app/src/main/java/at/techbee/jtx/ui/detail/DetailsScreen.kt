@@ -69,6 +69,11 @@ fun DetailsScreen(
         navigateUp = true
     }
 
+    detailViewModel.toastMessage.value?.let {
+        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        detailViewModel.toastMessage.value = null
+    }
+
     detailViewModel.navigateToId.value?.let {
         detailViewModel.navigateToId.value = null
         navController.navigate("details/$it?isEditMode=true")
@@ -138,6 +143,9 @@ fun DetailsScreen(
                         autosave = autosave,
                         goBackRequested = goBackRequestedByTopBar,
                         saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
+                            if (changedICalObject.isRecurLinkedInstance)
+                                changedICalObject.isRecurLinkedInstance = false
+
                             detailViewModel.save(
                                 changedICalObject,
                                 changedCategories,
@@ -150,7 +158,7 @@ fun DetailsScreen(
                             onLastUsedCollectionChanged(changedICalObject.collectionId)
                         },
                         deleteICalObject = { showDeleteDialog = true },
-                        onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
+                        onProgressChanged = { itemId, newPercent, _ ->
                             detailViewModel.updateProgress(itemId, newPercent)
                         },
                         onMoveToNewCollection = { icalObject, newCollection ->
