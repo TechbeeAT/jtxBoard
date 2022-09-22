@@ -31,12 +31,10 @@ import at.techbee.jtx.ui.reusable.dialogs.CollectionsAddOrEditDialog
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsDeleteCollectionDialog
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsMoveCollectionDialog
 import at.techbee.jtx.ui.reusable.elements.ColoredEdge
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.SyncUtil
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionCard(
     collection: CollectionsView,
@@ -233,7 +231,7 @@ fun CollectionCard(
 @Preview(showBackground = true)
 @Composable
 fun CollectionCardPreview() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val collection = CollectionsView().apply {
             this.displayName = "My collection name"
@@ -261,7 +259,7 @@ fun CollectionCardPreview() {
 @Preview(showBackground = true)
 @Composable
 fun CollectionCardPreview2() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val collection = CollectionsView().apply {
             this.displayName = "My collection name"
@@ -290,7 +288,7 @@ fun CollectionCardPreview2() {
 @Preview(showBackground = true)
 @Composable
 fun CollectionCardPreview3() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val collection = CollectionsView().apply {
             this.displayName = "My collection name"

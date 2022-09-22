@@ -40,6 +40,7 @@ import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
 import at.techbee.jtx.ui.reusable.screens.*
 import at.techbee.jtx.ui.GlobalStateHolder
+import at.techbee.jtx.ui.collections.CollectionsScreen
 import at.techbee.jtx.ui.detail.DetailsScreen
 import at.techbee.jtx.ui.list.ListScreenTabContainer
 import at.techbee.jtx.ui.settings.SettingsScreen

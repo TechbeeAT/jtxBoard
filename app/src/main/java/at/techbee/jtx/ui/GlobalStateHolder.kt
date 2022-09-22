@@ -2,6 +2,7 @@ package at.techbee.jtx.ui
 
 import android.content.ContentResolver
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import at.techbee.jtx.database.Module
@@ -20,8 +21,12 @@ class GlobalStateHolder(context: Context) {
     var icalFromIntentModule: MutableState<Module?> = mutableStateOf(Module.JOURNAL)
 
     init {
-        ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-            isSyncInProgress.value = SyncUtil.isJtxSyncRunning(context)
+        try {
+            ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
+                isSyncInProgress.value = SyncUtil.isJtxSyncRunning(context)
+            }
+        } catch(e: NullPointerException) {      // especially necessary as ContentResolver is not available in preview (would cause exception)
+            Log.d("GlobalStateHolder", e.stackTraceToString())
         }
     }
 }
