@@ -33,7 +33,6 @@ import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.DateTimeUtils
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListCardGrid(
     iCalObject: ICal4List,

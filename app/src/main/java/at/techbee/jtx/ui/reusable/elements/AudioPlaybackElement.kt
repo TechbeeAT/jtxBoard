@@ -76,7 +76,7 @@ fun AudioPlaybackElement(
                         playing = false
                     } else {
                         player?.reset()
-                        player?.setDataSource(context, uri)   // TODO
+                        player?.setDataSource(context, uri)
                         player?.prepare()
                         duration = player?.duration ?: 0
                         player?.start()

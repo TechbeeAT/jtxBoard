@@ -285,7 +285,6 @@ data class ICal4List(
      * @return the audioAttachment as Uri or null
      */
     fun getAudioAttachmentAsUri(): Uri? {
-        // TODO add a test
         return try {
             Uri.parse(audioAttachment)
         } catch (e: Exception) {

@@ -251,10 +251,7 @@ fun ListBottomAppBar(
         floatingActionButton = {
             // TODO(b/228588827): Replace with Secondary FAB when available.
             FloatingActionButton(
-                onClick = {
-                          onAddNewEntry()
-                          /* TODO */
-                          },
+                onClick = { onAddNewEntry() },
             ) {
                 when (module) {
                     Module.JOURNAL -> Icon(Icons.Outlined.EventNote, stringResource(R.string.toolbar_text_add_journal))

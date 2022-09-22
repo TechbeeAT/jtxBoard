@@ -554,9 +554,6 @@ data class ICalObject(
          */
         fun fromContentValues(values: ContentValues?): ICalObject? {
 
-            // TODO initialize specific component based on values!
-            // TODO validate some inputs, especially Int Inputs!
-
             if (values == null)
                 return null
 

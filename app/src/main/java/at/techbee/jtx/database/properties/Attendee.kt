@@ -11,7 +11,6 @@ package at.techbee.jtx.database.properties
 import android.content.ContentValues
 import android.os.Parcelable
 import android.provider.BaseColumns
-import androidx.annotation.Nullable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CoPresent
 import androidx.compose.material.icons.filled.Info
@@ -143,7 +142,7 @@ const val COLUMN_ATTENDEE_OTHER = "other"
 )
 data class Attendee (
 
-        @PrimaryKey(autoGenerate = true)         // TODO Doublecheck ALL types here, crosscheck with RFC 5545
+        @PrimaryKey(autoGenerate = true)
         @ColumnInfo(index = true, name = COLUMN_ATTENDEE_ID)    var attendeeId: Long = 0L,
 
         @ColumnInfo(index = true, name = COLUMN_ATTENDEE_ICALOBJECT_ID)       var icalObjectId: Long = 0L,
@@ -170,7 +169,7 @@ data class Attendee (
                  * @param values A [Attendee] that at least contain [COLUMN_ATTENDEE_CALADDRESS] and [COLUMN_ATTENDEE_ICALOBJECT_ID]
                  * @return A newly created [Attendee] instance.
                  */
-                fun fromContentValues(@Nullable values: ContentValues?): Attendee? {
+                fun fromContentValues(values: ContentValues?): Attendee? {
 
                         if (values == null)
                                 return null
