@@ -210,9 +210,10 @@ fun QuickAddDialog(
                                 }
                             }
                         },
-                        maxLines = 3,
+                        //maxLines = 3,
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .requiredHeight(120.dp),
                         isError = noTextError,
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done)
                         )
