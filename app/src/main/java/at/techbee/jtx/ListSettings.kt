@@ -32,7 +32,7 @@ data class ListSettings(
     var isFilterDueTomorrow: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueFuture: MutableState<Boolean> = mutableStateOf(false)
     var isFilterNoDatesSet: MutableState<Boolean> = mutableStateOf(false)
-    var searchText: MutableState<String> = mutableStateOf("")        // search text is not saved!
+    var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
     var viewMode: MutableState<ViewMode> = mutableStateOf(ViewMode.LIST)
 
     init {

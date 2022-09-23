@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.list
 
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
@@ -22,7 +23,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation.NavController
@@ -30,7 +30,6 @@ import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.reusable.bottomsheets.ListFilterBottomSheet
-import at.techbee.jtx.ui.reusable.bottomsheets.ListSearchTextBottomSheet
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.screens.ListScreenCompact
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -50,14 +49,12 @@ fun ListScreen(
 ) {
 
     val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-    val searchTextBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val settingsStateHolder = SettingsStateHolder(context)
     val keyboardController = LocalSoftwareKeyboardController.current
-    if (!searchTextBottomSheetState.isVisible)         // hide keyboard when bottom sheet is closed (ensure proper back pressed handling)
-        keyboardController?.hide()
-    val focusRequesterSearchText = remember { FocusRequester() }
+    var showSearch by remember { mutableStateOf(false) }
+    //val focusRequesterSearchText = remember { FocusRequester() }
 
     val allCollections = listViewModel.allCollections.observeAsState(emptyList())
 
@@ -107,13 +104,33 @@ fun ListScreen(
                 onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) },
                 onSearchTextClicked = {
                     coroutineScope.launch {
-                        searchTextBottomSheetState.show()
-                        focusRequesterSearchText.requestFocus()
+                        if(!showSearch) {
+                            showSearch = true
+                            listViewModel.listSettings.searchText.value = ""
+                            keyboardController?.show()
+                            //focusRequesterSearchText.requestFocus()
+                        } else {
+                            showSearch = false
+                            keyboardController?.hide()
+                            listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
+                            listViewModel.updateSearch(saveListSettings = false)
+                        }
                     }
                 }
             )
         }, content = {  paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {
+
+                AnimatedVisibility(showSearch) {
+                    ListSearchTextField(
+                        initialSeachText = listViewModel.listSettings.searchText.value,
+                        onSearchTextChanged = { newSearchText ->
+                            listViewModel.listSettings.searchText.value = newSearchText
+                            listViewModel.updateSearch(saveListSettings = false)
+                        },
+                    )
+                }
+
                 when (listViewModel.listSettings.viewMode.value) {
                     ViewMode.LIST -> {
                         ListScreenList(
@@ -222,21 +239,6 @@ fun ListScreen(
             )
         }
     ) {}
-
-    ModalBottomSheetLayout(
-        sheetState = searchTextBottomSheetState,
-        sheetContent = {
-            ListSearchTextBottomSheet(
-                initialSeachText = listViewModel.listSettings.searchText.value,
-                onSearchTextChanged = { newSearchText ->
-                    listViewModel.listSettings.searchText.value = newSearchText
-                    listViewModel.updateSearch(saveListSettings = false)
-                },
-                focusRequester = focusRequesterSearchText
-            )
-        }
-    ) {}
-
 }
 
 

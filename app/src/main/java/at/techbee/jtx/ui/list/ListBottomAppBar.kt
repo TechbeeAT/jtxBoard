@@ -121,7 +121,7 @@ fun ListBottomAppBar(
                 Icon(
                     Icons.Outlined.Search,
                     contentDescription = stringResource(id = R.string.search),
-                    tint = if (listSettings.searchText.value.isNotBlank()) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                    tint = if (listSettings.searchText.value != null) MaterialTheme.colorScheme.primary else LocalContentColor.current
                 )
             }
 

@@ -6,15 +6,16 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.bottomsheets
+package at.techbee.jtx.ui.list
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.SearchOff
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,22 +29,25 @@ import at.techbee.jtx.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListSearchTextBottomSheet(
+fun ListSearchTextField(
     initialSeachText: String?,
     onSearchTextChanged: (String) -> Unit,
-    focusRequester: FocusRequester,
     modifier: Modifier = Modifier
 ) {
 
     var searchText by remember { mutableStateOf(initialSeachText) }
+    val focusRequester = remember { FocusRequester() }
 
-    Column(
+    LaunchedEffect(focusRequester) {
+        focusRequester.requestFocus()
+    }
+
+    Row(
         modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
             .padding(8.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
 
         OutlinedTextField(
@@ -52,19 +56,10 @@ fun ListSearchTextBottomSheet(
                 searchText = it
                 onSearchTextChanged(it)
                             },
-            trailingIcon = {
-                AnimatedVisibility(searchText?.isNotEmpty() == true) {
-                    IconButton(onClick = {
-                        searchText = ""
-                        onSearchTextChanged("")
-                    }
-                    ) {
-                        Icon(Icons.Outlined.SearchOff, null)
-                    }
-                }
-            },
             label = { Text(stringResource(id = R.string.search)) },
-            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
+            modifier = Modifier
+                .weight(1f)
+                .focusRequester(focusRequester)
         )
 
     }
@@ -72,12 +67,11 @@ fun ListSearchTextBottomSheet(
 
 @Preview(showBackground = true)
 @Composable
-fun ListSearchTextBottomSheet_Preview() {
+fun ListSearchTextField_Preview() {
     MaterialTheme {
-        ListSearchTextBottomSheet(
+        ListSearchTextField(
             initialSeachText = "",
-            onSearchTextChanged = { },
-            focusRequester = FocusRequester()
+            onSearchTextChanged = { }
         )
     }
 }

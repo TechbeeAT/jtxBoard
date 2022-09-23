@@ -133,10 +133,12 @@ open class ListViewModel(application: Application, val module: Module) : Android
         args.add(module.name)
 
         // Query for the given text search from the action bar
-        if (listSettings.searchText.value.isNotEmpty() && listSettings.searchText.value.length >= 2) {
-            queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) "
-            args.add("%" + listSettings.searchText.value + "%")
-            args.add("%" + listSettings.searchText.value + "%")
+        listSettings.searchText.value?.let { text ->
+            if (text.length >= 2) {
+                queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ?) "
+                args.add("%" + text + "%")
+                args.add("%" + text + "%")
+            }
         }
 
         // Query for the passed filter criteria from VJournalFilterFragment
