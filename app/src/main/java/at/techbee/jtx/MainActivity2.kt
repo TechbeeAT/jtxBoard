@@ -12,7 +12,6 @@ import android.os.Parcelable
 import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -83,7 +82,6 @@ class MainActivity2 : ComponentActivity() {
         settingsStateHolder = SettingsStateHolder(this)
 
         TimeZoneRegistryFactory.getInstance().createRegistry() // necessary for ical4j
-        checkThemeSetting()
         createNotificationChannel()   // Register Notification Channel for Reminders
 
         BillingManager.getInstance().initialise(this)
@@ -176,19 +174,6 @@ class MainActivity2 : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         AdManager.getInstance()?.pauseAds()
-    }
-
-    /**
-     * Checks in the settings if night mode is enforced and switches to it if applicable
-     */
-    private fun checkThemeSetting() {
-        // user interface settings
-        when(settingsStateHolder.settingTheme.value) {
-            DropdownSettingOption.THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        }
     }
 
 
