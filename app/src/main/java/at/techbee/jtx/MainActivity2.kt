@@ -13,6 +13,7 @@ import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -86,6 +87,7 @@ class MainActivity2 : ComponentActivity() {
         createNotificationChannel()   // Register Notification Channel for Reminders
 
         BillingManager.getInstance().initialise(this)
+
         /* TODO
         billingManager?.isProPurchased?.observe(this) { isPurchased ->
             if(!isPurchased)
@@ -94,11 +96,19 @@ class MainActivity2 : ComponentActivity() {
          */
 
         setContent {
-            JtxBoardTheme {
+            val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
+            JtxBoardTheme(
+                darkTheme = when(settingsStateHolder.settingTheme.value) {
+                    DropdownSettingOption.THEME_LIGHT -> false
+                    DropdownSettingOption.THEME_DARK -> true
+                    else -> isSystemInDarkTheme()
+                },
+                dynamicColor = isProPurchased.value ?: false
+            ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     MainNavHost(this, globalStateHolder, settingsStateHolder)
                 }
