@@ -21,7 +21,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
-import androidx.compose.material.icons.filled.Preview
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -32,6 +31,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.DetailSettings
@@ -190,7 +190,7 @@ fun DetailBottomAppBar(
                     Crossfade(contentsChanged.value) { changed ->
                         if (changed == false)
                             Icon(
-                                Icons.Outlined.Save,
+                                painterResource(id = R.drawable.ic_save_check_outline),
                                 contentDescription = stringResource(id = R.string.saving),
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.alpha(0.3f)
@@ -373,7 +373,7 @@ fun DetailBottomAppBar(
             ) {
                 Crossfade(targetState = isEditMode.value) { isEditMode ->
                     if (isEditMode) {
-                        Icon(Icons.Filled.Preview, stringResource(id = R.string.save))
+                        Icon(painterResource(id = R.drawable.ic_save_move_outline), stringResource(id = R.string.save))
                     } else {
                         if (collection.readonly)
                             Icon(Icons.Filled.EditOff, stringResource(id = R.string.readyonly))
