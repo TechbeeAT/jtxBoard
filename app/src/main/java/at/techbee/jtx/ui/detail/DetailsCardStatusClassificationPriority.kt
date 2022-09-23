@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
@@ -58,9 +59,9 @@ fun DetailsCardStatusClassificationPriority(
             AssistChip(
                 label = {
                     if (icalObject.component == Component.VJOURNAL.name)
-                        Text(StatusJournal.getStringResource(context, status) ?: status ?: "-")
+                        Text(StatusJournal.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
                     else
-                        Text(StatusTodo.getStringResource(context, status) ?: status ?: "-")
+                        Text(StatusTodo.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
 
                     DropdownMenu(
                         expanded = statusMenuExpanded,
@@ -109,10 +110,7 @@ fun DetailsCardStatusClassificationPriority(
 
             AssistChip(
                 label = {
-                    Text(
-                        Classification.getStringResource(context, classification)
-                            ?: classification ?: "-"
-                    )
+                    Text( Classification.getStringResource(context, classification) ?: classification ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
 
                     DropdownMenu(
                         expanded = classificationMenuExpanded,
@@ -153,7 +151,9 @@ fun DetailsCardStatusClassificationPriority(
                             if (priority in priorityStrings.indices)
                                 stringArrayResource(id = R.array.priority)[priority]
                             else
-                                stringArrayResource(id = R.array.priority)[0]
+                                stringArrayResource(id = R.array.priority)[0],
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
 
                         DropdownMenu(
