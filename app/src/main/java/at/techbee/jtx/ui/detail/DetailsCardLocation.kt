@@ -12,6 +12,7 @@ import android.Manifest
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.EditLocation
@@ -22,9 +23,11 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.BuildConfig
@@ -123,7 +126,8 @@ fun DetailsCardLocation(
                                 location = newLocation
                                 onLocationUpdated(newLocation, geoLat, geoLong)
                             },
-                            colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
+                            //colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
+                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                             modifier = Modifier.weight(1f)
                         )
 
