@@ -108,7 +108,7 @@ fun ICalObjectListCard(
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(end = 16.dp)
+                            modifier = Modifier.padding(end = 16.dp).weight(0.2f)
                         )
 
                         iCalObject.categories?.let {
@@ -118,7 +118,7 @@ fun ICalObjectListCard(
                                 fontStyle = FontStyle.Italic,
                                 modifier = Modifier
                                     .padding(end = 16.dp)
-                                    .weight(1f),
+                                    .weight(0.2f),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
@@ -132,8 +132,9 @@ fun ICalObjectListCard(
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
-                                    modifier = Modifier.padding(end = 16.dp),
+                                    modifier = Modifier.padding(end = 16.dp).weight(0.2f),
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1
                                 )
                             }
                             iCalObject.due?.let {
@@ -143,7 +144,8 @@ fun ICalObjectListCard(
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(end = 16.dp)
+                                    modifier = Modifier.padding(end = 16.dp).weight(0.2f),
+                                    maxLines = 1
                                 )
                             }
                         }
