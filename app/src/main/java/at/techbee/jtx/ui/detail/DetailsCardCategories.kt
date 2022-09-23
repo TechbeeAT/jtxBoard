@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.NewLabel
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -113,7 +114,8 @@ fun DetailsCardCategories(
                                     stringResource(id = R.string.add)
                                 )
                             },
-                            selected = false
+                            selected = false,
+                            modifier = Modifier.alpha(0.4f)
                         )
                     }
                 }
