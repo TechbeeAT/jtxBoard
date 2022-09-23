@@ -389,7 +389,7 @@ fun DetailScreenContent(
                     ProgressElement(
                         iCalObjectId = icalObject.id,
                         progress = icalObject.percent,
-                        isReadOnly = !isEditMode.value,
+                        isReadOnly = iCalEntity.value?.ICalCollection?.readonly == true,
                         isLinkedRecurringInstance = icalObject.isRecurLinkedInstance,
                         sliderIncrement = 1,   // TODO
                         onProgressChanged = { itemId, newPercent, isLinked ->
