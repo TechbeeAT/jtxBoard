@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.detail
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Share
@@ -16,6 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -38,7 +40,7 @@ fun DetailsScreen(
     onLastUsedCollectionChanged: (Long) -> Unit,
     onRequestReview: () -> Unit,
 ) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
@@ -56,13 +58,17 @@ fun DetailsScreen(
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
     val allCollections = detailViewModel.allCollections.observeAsState(emptyList())
 
-    if(navigateUp && !detailViewModel.saving.value) {
+    if (navigateUp && !detailViewModel.saving.value) {
         onRequestReview()
         navController.navigateUp()
     }
 
     if (detailViewModel.entryDeleted.value) {
-        Toast.makeText(context, context.getString(R.string.details_toast_entry_deleted), Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            context.getString(R.string.details_toast_entry_deleted),
+            Toast.LENGTH_SHORT
+        ).show()
         Attachment.scheduleCleanupJob(context)
         onRequestReview()
         detailViewModel.entryDeleted.value = false
@@ -79,7 +85,7 @@ fun DetailsScreen(
         navController.navigate("details/$it?isEditMode=true")
     }
 
-    if(showDeleteDialog) {
+    if (showDeleteDialog) {
         DeleteEntryDialog(
             icalObject = detailViewModel.icalEntity.value?.property!!,
             onConfirm = { detailViewModel.delete() },
@@ -87,7 +93,7 @@ fun DetailsScreen(
         )
     }
 
-    if(detailViewModel.sqlConstraintException.value) {
+    if (detailViewModel.sqlConstraintException.value) {
         ErrorOnUpdateDialog(onConfirm = { navigateUp = true })
     }
 
@@ -97,10 +103,12 @@ fun DetailsScreen(
             DetailsTopAppBar(
                 title = stringResource(id = R.string.details),
                 subtitle = detailViewModel.icalEntity.value?.property?.summary,
-                goBack = { goBackRequestedByTopBar = true },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
+                goBack = {
+                    goBackRequestedByTopBar = true
+                },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
                 actions = {
 
-                    if(!isEditMode.value) {
+                    if (!isEditMode.value) {
                         val menuExpanded = remember { mutableStateOf(false) }
                         OverflowMenu(menuExpanded = menuExpanded) {
                             DropdownMenuItem(
@@ -125,58 +133,63 @@ fun DetailsScreen(
             )
         },
         content = { paddingValues ->
-            JtxNavigationDrawer(
-                drawerState = drawerState,
-                mainContent = {
 
-                    DetailScreenContent(
-                        iCalEntity = icalEntity,
-                        isEditMode = isEditMode,
-                        contentsChanged = contentsChanged,
-                        subtasks = subtasks,
-                        subnotes = subnotes,
-                        isChild = isChild.value,
-                        allCollections = allCollections.value,
-                        allCategories = allCategories.value,
-                        allResources = allResources.value,
-                        detailSettings = detailViewModel.detailSettings,
-                        autosave = autosave,
-                        goBackRequested = goBackRequestedByTopBar,
-                        saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
-                            if (changedICalObject.isRecurLinkedInstance)
-                                changedICalObject.isRecurLinkedInstance = false
+            DetailScreenContent(
+                iCalEntity = icalEntity,
+                isEditMode = isEditMode,
+                contentsChanged = contentsChanged,
+                subtasks = subtasks,
+                subnotes = subnotes,
+                isChild = isChild.value,
+                allCollections = allCollections.value,
+                allCategories = allCategories.value,
+                allResources = allResources.value,
+                detailSettings = detailViewModel.detailSettings,
+                autosave = autosave,
+                goBackRequested = goBackRequestedByTopBar,
+                saveICalObject = { changedICalObject, changedCategories, changedComments, changedAttendees, changedResources, changedAttachments, changedAlarms ->
+                    if (changedICalObject.isRecurLinkedInstance)
+                        changedICalObject.isRecurLinkedInstance = false
 
-                            detailViewModel.save(
-                                changedICalObject,
-                                changedCategories,
-                                changedComments,
-                                changedAttendees,
-                                changedResources,
-                                changedAttachments,
-                                changedAlarms
-                            )
-                            onLastUsedCollectionChanged(changedICalObject.collectionId)
-                        },
-                        deleteICalObject = { showDeleteDialog = true },
-                        onProgressChanged = { itemId, newPercent, _ ->
-                            detailViewModel.updateProgress(itemId, newPercent)
-                        },
-                        onMoveToNewCollection = { icalObject, newCollection ->
-                            navController.popBackStack()
-                            detailViewModel.moveToNewCollection(icalObject, newCollection.collectionId)
-                                                },
-                        onSubEntryAdded = { icalObject, attachment -> detailViewModel.addSubEntry(icalObject, attachment) },
-                        onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
-                        onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
-                        player = detailViewModel.mediaPlayer,
-                        goToView = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=false") },
-                        goToEdit = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=true") },
-                        goBack = { navigateUp = true }
+                    detailViewModel.save(
+                        changedICalObject,
+                        changedCategories,
+                        changedComments,
+                        changedAttendees,
+                        changedResources,
+                        changedAttachments,
+                        changedAlarms
+                    )
+                    onLastUsedCollectionChanged(changedICalObject.collectionId)
+                },
+                deleteICalObject = { showDeleteDialog = true },
+                onProgressChanged = { itemId, newPercent, _ ->
+                    detailViewModel.updateProgress(itemId, newPercent)
+                },
+                onMoveToNewCollection = { icalObject, newCollection ->
+                    navController.popBackStack()
+                    detailViewModel.moveToNewCollection(icalObject, newCollection.collectionId)
+                },
+                onSubEntryAdded = { icalObject, attachment ->
+                    detailViewModel.addSubEntry(
+                        icalObject,
+                        attachment
                     )
                 },
-                navController = navController,
-                paddingValues = paddingValues
+                onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
+                onSubEntryUpdated = { icalObjectId, newText ->
+                    detailViewModel.updateSummary(
+                        icalObjectId,
+                        newText
+                    )
+                },
+                player = detailViewModel.mediaPlayer,
+                goToView = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=false") },
+                goToEdit = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=true") },
+                goBack = { navigateUp = true },
+                modifier = Modifier.padding(paddingValues)
             )
+
         },
         bottomBar = {
             DetailBottomAppBar(
