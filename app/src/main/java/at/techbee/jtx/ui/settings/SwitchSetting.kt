@@ -59,7 +59,7 @@ enum class SwitchSetting(
             16.dp
         ))  },
         title = R.string.settings_show_progress_for_maintasks_in_list,
-        default = true
+        default = false
     ),
     SETTING_SHOW_PROGRESS_FOR_SUBTASKS(
         key = "settings_show_progress_for_subtasks_in_list",
@@ -68,7 +68,7 @@ enum class SwitchSetting(
             16.dp
         ))  },
         title = R.string.settings_show_progress_for_subtasks_in_list,
-        default = true
+        default = false
     ),
     SETTING_SHOW_SUBTASKS_IN_TASKLIST(
         key = "settings_show_subtasks_of_journals_and_todos_in_tasklist",
