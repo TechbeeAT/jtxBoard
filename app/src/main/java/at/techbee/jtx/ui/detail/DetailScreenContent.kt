@@ -338,6 +338,8 @@ fun DetailScreenContent(
                             )
                         if (description.isNotBlank()) {
                             MarkdownText(
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface),
                                 markdown = description,
                                 modifier = Modifier.padding(8.dp)
                             )
