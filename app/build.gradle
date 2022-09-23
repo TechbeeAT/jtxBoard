@@ -74,8 +74,6 @@ android {
         }
     }
 
-    //necessary for ical4j
-
     flavorDimensions 'version'
     productFlavors {
         gplay {

@@ -30,11 +30,13 @@ import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsupportedRRuleDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.DateTimeUtils
+import at.techbee.jtx.util.DateTimeUtils.requireTzId
+import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
-import net.fortuna.ical4j.model.NumberList
-import net.fortuna.ical4j.model.Recur
-import net.fortuna.ical4j.model.WeekDay
+import net.fortuna.ical4j.model.Recur.Frequency
 import java.time.DayOfWeek
+import java.time.Instant
+import java.time.ZonedDateTime
 import java.util.*
 
 
@@ -49,56 +51,98 @@ fun DetailsCardRecur(
 ) {
 
     val headline = stringResource(id = R.string.recurrence)
-    var updatedRRule by rememberSaveable { mutableStateOf(icalObject.getRecur()) }
+    val dtstartWeekday = when (ZonedDateTime.ofInstant(Instant.ofEpochMilli(icalObject.dtstart?:0L), requireTzId(icalObject.dtstartTimezone)).dayOfWeek) {
+        DayOfWeek.MONDAY -> WeekDay.MO
+        DayOfWeek.TUESDAY -> WeekDay.TU
+        DayOfWeek.WEDNESDAY -> WeekDay.WE
+        DayOfWeek.THURSDAY -> WeekDay.TH
+        DayOfWeek.FRIDAY -> WeekDay.FR
+        DayOfWeek.SATURDAY -> WeekDay.SA
+        DayOfWeek.SUNDAY -> WeekDay.SU
+        else -> null
+    }
+    //var updatedRRule by rememberSaveable { mutableStateOf(icalObject.getRecur()) }
+
+    var isRecurActivated by rememberSaveable { mutableStateOf(icalObject.getRecur() != null) }
+    var frequency by rememberSaveable { mutableStateOf(icalObject.getRecur()?.frequency) }
+    var interval by rememberSaveable { mutableStateOf(icalObject.getRecur()?.interval) }
+    var count by rememberSaveable { mutableStateOf(icalObject.getRecur()?.count) }
+    var until by rememberSaveable { mutableStateOf(icalObject.getRecur()?.until) }
+    val dayList = remember { icalObject.getRecur()?.dayList?.toMutableStateList() ?: mutableStateListOf(dtstartWeekday) }
+    val monthDayList = remember { mutableStateListOf(icalObject.getRecur()?.monthDayList?.firstOrNull() ?: 1) }
 
     var frequencyExpanded by rememberSaveable { mutableStateOf(false) }
     var intervalExpanded by rememberSaveable { mutableStateOf(false) }
     var monthDayListExpanded by rememberSaveable { mutableStateOf(false) }
     var endAfterExpaneded by rememberSaveable { mutableStateOf(false) }
     var endsExpanded by rememberSaveable { mutableStateOf(false) }
-
     var showDatepicker by rememberSaveable { mutableStateOf(false) }
+
+
+
+    fun buildRRule(): Recur? {
+        if(!isRecurActivated)
+            return null
+        else {
+            val updatedRRule = Recur.Builder().apply {
+                interval(interval ?: 1)
+                if (until != null)
+                    until(until)
+                else
+                    count(count ?: -1)
+                frequency(frequency ?: Frequency.DAILY)
+
+                if(frequency == Frequency.WEEKLY) {
+                    val newDayList = WeekDayList().apply {
+                        dayList.forEach { weekDay -> this.add(weekDay) }
+                    }
+                    dayList(newDayList)
+                }
+                if(frequency == Frequency.MONTHLY) {
+                    val newMonthList = NumberList().apply {
+                        monthDayList.forEach { monthDay -> this.add(monthDay) }
+                    }
+                    monthDayList(newMonthList)
+                }
+            }.build()
+            return updatedRRule
+        }
+    }
 
     if (showDatepicker) {
         DatePickerDialog(
-            datetime = updatedRRule?.until?.time ?: icalObject.dtstart ?: System.currentTimeMillis(),
+            datetime = until?.time ?: icalObject.dtstart ?: System.currentTimeMillis(),
             timezone = TZ_ALLDAY,
             dateOnly = true,
             allowNull = false,
             onConfirm = { datetime, _ ->
-                updatedRRule = Recur.Builder().apply {
-                    interval(updatedRRule?.interval ?: 1)
-                    //if((updatedRRule?.count ?: -1) > 0)
-                    //    count(updatedRRule?.count)
-                    if(updatedRRule?.frequency != null)
-                        frequency(updatedRRule?.frequency ?: Recur.Frequency.DAILY)
-                    until(Date(datetime!!))
-                    updatedRRule?.dayList?.let { dayList(it) }
-                    updatedRRule?.monthDayList?.let { monthDayList(it) }
-                }.build()
-                onRecurUpdated(updatedRRule)
+                datetime?.let { until = Date(it) }
+                onRecurUpdated(buildRRule())
             },
             onDismiss = { showDatepicker = false }
         )
     }
 
-    if(isEditMode && (updatedRRule?.experimentalValues?.isNotEmpty() == true
-        || updatedRRule?.hourList?.isNotEmpty() == true
-        || updatedRRule?.minuteList?.isNotEmpty() == true
-        || updatedRRule?.monthList?.isNotEmpty() == true
-        || updatedRRule?.secondList?.isNotEmpty() == true
-        || updatedRRule?.setPosList?.isNotEmpty() == true
-        || updatedRRule?.skip != null
-        || updatedRRule?.weekNoList?.isNotEmpty() == true
-        || updatedRRule?.weekStartDay != null
-        || updatedRRule?.yearDayList?.isNotEmpty() == true
-        || (updatedRRule?.monthDayList?.size?:0) > 1)
-    ) {
-        UnsupportedRRuleDialog(
-            onConfirm = { updatedRRule = null },
-            onDismiss = { goToView(icalObject.id) }
-        )
+    icalObject.getRecur()?.let { recur ->
+        if(isEditMode && (recur.experimentalValues?.isNotEmpty() == true
+                    || recur.hourList?.isNotEmpty() == true
+                    || recur.minuteList?.isNotEmpty() == true
+                    || recur.monthList?.isNotEmpty() == true
+                    || recur.secondList?.isNotEmpty() == true
+                    || recur.setPosList?.isNotEmpty() == true
+                    || recur.skip != null
+                    || recur.weekNoList?.isNotEmpty() == true
+                    || recur.weekStartDay != null
+                    || recur.yearDayList?.isNotEmpty() == true
+                    || (recur.monthDayList?.size?:0) > 1)
+        ) {
+            UnsupportedRRuleDialog(
+                onConfirm = {  },
+                onDismiss = { goToView(icalObject.id) }
+            )
+        }
     }
+
 
 
     ElevatedCard(modifier = modifier) {
@@ -122,14 +166,19 @@ fun DetailsCardRecur(
 
                 AnimatedVisibility(isEditMode && icalObject.recurOriginalIcalObjectId == null) {
                     Switch(
-                        checked = updatedRRule != null,
+                        checked = isRecurActivated,
                         enabled = icalObject.dtstart != null,
                         onCheckedChange = {
-                            updatedRRule = if (it)
-                                Recur("FREQ=DAILY;COUNT=1;INTERVAL=1")
-                            else
-                                null
-                            onRecurUpdated(updatedRRule)
+                            isRecurActivated = it
+                            if (it) {
+                                frequency = Frequency.DAILY
+                                count = 1
+                                interval = 1
+                                until = null
+                                //dayList = null
+                                //monthDayList = null
+                            }
+                            onRecurUpdated(buildRRule())
                         }
                     )
                 }
@@ -139,7 +188,7 @@ fun DetailsCardRecur(
                 Text(stringResource(id = R.string.edit_recur_toast_requires_start_date))
             }
 
-            AnimatedVisibility(isEditMode && updatedRRule != null) {
+            AnimatedVisibility(isEditMode && isRecurActivated) {
 
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -164,10 +213,10 @@ fun DetailsCardRecur(
                             onClick = { intervalExpanded = true },
                             label = {
                                 Text(
-                                    if((updatedRRule?.interval ?: -1) < 1)
+                                    if((interval ?: -1) < 1)
                                         "1"
                                     else
-                                        updatedRRule?.interval?.toString() ?: "1"
+                                        interval?.toString() ?: "1"
                                 )
 
                                 DropdownMenu(
@@ -177,18 +226,9 @@ fun DetailsCardRecur(
                                     for (number in 1..100) {
                                         DropdownMenuItem(
                                             onClick = {
-                                                updatedRRule = Recur.Builder().apply {
-                                                    interval(number)
-                                                    if((updatedRRule?.count ?: -1) > 0)
-                                                        count(updatedRRule?.count)
-                                                    if(updatedRRule?.frequency != null)
-                                                        frequency(updatedRRule?.frequency ?: Recur.Frequency.DAILY)
-                                                    updatedRRule?.until?.let { until(updatedRRule?.until!!) }
-                                                    updatedRRule?.dayList?.let { dayList(it) }
-                                                    updatedRRule?.monthDayList?.let { monthDayList(it) }
-                                                }.build()
+                                                interval = number
                                                 intervalExpanded = false
-                                                onRecurUpdated(updatedRRule)
+                                                onRecurUpdated(buildRRule())
                                             },
                                             text = {
                                                 Text(DateTimeUtils.getLocalizedOrdinalFor(number))
@@ -203,11 +243,11 @@ fun DetailsCardRecur(
                             onClick = { frequencyExpanded = true },
                             label = {
                                 Text(
-                                    when (updatedRRule?.frequency) {
-                                        Recur.Frequency.YEARLY -> stringResource(id = R.string.edit_recur_year)
-                                        Recur.Frequency.MONTHLY -> stringResource(id = R.string.edit_recur_month)
-                                        Recur.Frequency.WEEKLY -> stringResource(id = R.string.edit_recur_week)
-                                        Recur.Frequency.DAILY -> stringResource(id = R.string.edit_recur_day)
+                                    when (frequency) {
+                                        Frequency.YEARLY -> stringResource(id = R.string.edit_recur_year)
+                                        Frequency.MONTHLY -> stringResource(id = R.string.edit_recur_month)
+                                        Frequency.WEEKLY -> stringResource(id = R.string.edit_recur_week)
+                                        Frequency.DAILY -> stringResource(id = R.string.edit_recur_day)
                                         else -> "not supported"
                                     }
                                 )
@@ -217,31 +257,24 @@ fun DetailsCardRecur(
                                     onDismissRequest = { frequencyExpanded = false }
                                 ) {
 
-                                    Recur.Frequency.values().reversed().forEach { frequency ->
+                                    Frequency.values().reversed().forEach { frequency2select ->
+                                        if(!listOf(Frequency.YEARLY, Frequency.MONTHLY, Frequency.WEEKLY, Frequency.DAILY).contains(frequency2select))
+                                            return@forEach  // show dropdown menu items only for supported frequencies
+
                                         DropdownMenuItem(
                                             onClick = {
-                                                updatedRRule = Recur.Builder().apply {
-                                                    interval(updatedRRule?.interval ?: 1)
-                                                    if((updatedRRule?.count ?: -1) > 0)
-                                                        count(updatedRRule?.count)
-                                                    frequency(frequency)
-                                                    updatedRRule?.until?.let { until(Date(it)) }
-                                                    if(frequency == Recur.Frequency.WEEKLY)
-                                                        updatedRRule?.dayList?.let { dayList(it) }
-                                                    if(frequency == Recur.Frequency.MONTHLY)
-                                                        updatedRRule?.monthDayList?.let { monthDayList(it) }
-                                                }.build()
-                                                onRecurUpdated(updatedRRule)
+                                                frequency = frequency2select
+                                                onRecurUpdated(buildRRule())
                                                 frequencyExpanded = false
                                             },
                                             text = {
                                                 Text(
-                                                    when (frequency) {
-                                                        Recur.Frequency.YEARLY -> stringResource(id = R.string.edit_recur_year)
-                                                        Recur.Frequency.MONTHLY -> stringResource(id = R.string.edit_recur_month)
-                                                        Recur.Frequency.WEEKLY -> stringResource(id = R.string.edit_recur_week)
-                                                        Recur.Frequency.DAILY -> stringResource(id = R.string.edit_recur_day)
-                                                        else -> frequency.name
+                                                    when (frequency2select) {
+                                                        Frequency.YEARLY -> stringResource(id = R.string.edit_recur_year)
+                                                        Frequency.MONTHLY -> stringResource(id = R.string.edit_recur_month)
+                                                        Frequency.WEEKLY -> stringResource(id = R.string.edit_recur_week)
+                                                        Frequency.DAILY -> stringResource(id = R.string.edit_recur_day)
+                                                        else -> frequency2select.name
                                                     }
                                                 )
                                             }
@@ -253,7 +286,7 @@ fun DetailsCardRecur(
                     }
 
 
-                    AnimatedVisibility(updatedRRule?.frequency == Recur.Frequency.WEEKLY) {
+                    AnimatedVisibility(frequency == Frequency.WEEKLY) {
 
                         val weekdays = if (DateTimeUtils.isLocalizedWeekstartMonday())
                             listOf(
@@ -287,30 +320,16 @@ fun DetailsCardRecur(
                             Text(stringResource(id = R.string.edit_recur_on_weekday))
 
                             weekdays.forEach { weekday ->
-                                // WORKAROUND - otherwise recomposition does not trigger properly
-                                var selected by remember { mutableStateOf(updatedRRule?.dayList?.contains(weekday) == true) }
                                 FilterChip(
-                                    selected = selected,
+                                    selected = dayList.contains(weekday),
                                     onClick = {
-                                        if (updatedRRule?.dayList?.contains(weekday) == true)
-                                            updatedRRule?.dayList?.remove(weekday)
+                                        if (dayList.contains(weekday))
+                                            dayList.remove(weekday)
                                         else
-                                            updatedRRule?.dayList?.add(weekday)
-
-                                        selected = !selected
-
-                                        updatedRRule = Recur.Builder().apply {
-                                            interval(updatedRRule?.interval ?: 1)
-                                            if((updatedRRule?.count ?: -1) > 0)
-                                                count(updatedRRule?.count)
-                                            frequency(updatedRRule?.frequency?: Recur.Frequency.DAILY)
-                                            updatedRRule?.until?.let { until(Date(it)) }
-                                            if(updatedRRule?.dayList?.isNotEmpty() == true)
-                                                dayList(updatedRRule?.dayList)
-                                            //updatedRRule?.monthDayList?.let { monthDayList(it) }
-                                        }.build()
-                                        onRecurUpdated(updatedRRule)
+                                            (dayList).add(weekday)
+                                        onRecurUpdated(buildRRule())
                                     },
+                                    enabled = dtstartWeekday != weekday,
                                     label = {
                                         Text(
                                             when (weekday) {
@@ -353,7 +372,7 @@ fun DetailsCardRecur(
                         }
                     }
 
-                    AnimatedVisibility(updatedRRule?.frequency == Recur.Frequency.MONTHLY) {
+                    AnimatedVisibility(frequency == Frequency.MONTHLY) {
 
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(
@@ -370,7 +389,7 @@ fun DetailsCardRecur(
                                 label = {
                                     Text(
                                         DateTimeUtils.getLocalizedOrdinalFor(
-                                            updatedRRule?.monthDayList?.firstOrNull() ?: 1
+                                            monthDayList.firstOrNull() ?: 1
                                         )
                                     )
 
@@ -381,17 +400,10 @@ fun DetailsCardRecur(
                                         for (number in 1..31) {
                                             DropdownMenuItem(
                                                 onClick = {
-                                                    updatedRRule = Recur.Builder().apply {
-                                                        interval(updatedRRule?.interval ?: 1)
-                                                        if((updatedRRule?.count ?: -1) > 0)
-                                                            count(updatedRRule?.count)
-                                                        frequency(updatedRRule?.frequency?: Recur.Frequency.DAILY)
-                                                        updatedRRule?.until?.let { until(Date(it)) }
-                                                        //updatedRRule?.dayList?.let { dayList(it) }
-                                                        monthDayList(NumberList(number.toString()))
-                                                    }.build()
+                                                    monthDayList.clear()
+                                                    monthDayList.add(number)
                                                     monthDayListExpanded = false
-                                                    onRecurUpdated(updatedRRule)
+                                                    onRecurUpdated(buildRRule())
                                                 },
                                                 text = {
                                                     Text(DateTimeUtils.getLocalizedOrdinalFor(number))
@@ -423,8 +435,8 @@ fun DetailsCardRecur(
 
                                 Text(
                                     when {
-                                        (updatedRRule?.count ?: -1) > 0 -> stringResource(id = R.string.edit_recur_ends_after)
-                                        updatedRRule?.until != null -> stringResource(id = R.string.edit_recur_ends_on)
+                                        (count ?: -1) > 0 -> stringResource(id = R.string.edit_recur_ends_after)
+                                        until != null -> stringResource(id = R.string.edit_recur_ends_on)
                                         else -> stringResource(id = R.string.edit_recur_ends_never)
                                     }
                                 )
@@ -435,48 +447,28 @@ fun DetailsCardRecur(
                                 ) {
                                     DropdownMenuItem(
                                         onClick = {
-                                            updatedRRule = Recur.Builder().apply {
-                                                interval(updatedRRule?.interval ?: 1)
-                                                count(1)
-                                                frequency(updatedRRule?.frequency?: Recur.Frequency.DAILY)
-                                                //until(Date(icalObject.dtstart ?: System.currentTimeMillis()))
-                                                updatedRRule?.dayList?.let { dayList(it) }
-                                                updatedRRule?.monthDayList?.let { monthDayList(it) }
-                                            }.build()
+                                            count = 1
+                                            until = null
                                             endsExpanded = false
-                                            onRecurUpdated(updatedRRule)
+                                            onRecurUpdated(buildRRule())
                                         },
                                         text = { Text(stringResource(id = R.string.edit_recur_ends_after)) }
                                     )
                                     DropdownMenuItem(
                                         onClick = {
-                                            updatedRRule = Recur.Builder().apply {
-                                                interval(updatedRRule?.interval ?: 1)
-                                                //if((updatedRRule?.count ?: -1) > 0)
-                                                //    count(updatedRRule?.count)
-                                                frequency(updatedRRule?.frequency?: Recur.Frequency.DAILY)
-                                                until(Date(icalObject.dtstart ?: System.currentTimeMillis()))
-                                                updatedRRule?.dayList?.let { dayList(it) }
-                                                updatedRRule?.monthDayList?.let { monthDayList(it) }
-                                            }.build()
+                                            count = null
+                                            until = Date(icalObject.dtstart ?: System.currentTimeMillis())
                                             endsExpanded = false
-                                            onRecurUpdated(updatedRRule)
+                                            onRecurUpdated(buildRRule())
                                         },
                                         text = { Text(stringResource(id = R.string.edit_recur_ends_on)) }
                                     )
                                     DropdownMenuItem(
                                         onClick = {
-                                            updatedRRule = Recur.Builder().apply {
-                                                interval(updatedRRule?.interval ?: 1)
-                                                //if((updatedRRule?.count ?: -1) > 0)
-                                                //    count(updatedRRule?.count)
-                                                frequency(updatedRRule?.frequency?: Recur.Frequency.DAILY)
-                                                //until(Date(icalObject.dtstart ?: System.currentTimeMillis()))
-                                                updatedRRule?.dayList?.let { dayList(it) }
-                                                updatedRRule?.monthDayList?.let { monthDayList(it) }
-                                            }.build()
+                                            count = null
+                                            until = null
                                             endsExpanded = false
-                                            onRecurUpdated(updatedRRule)
+                                            onRecurUpdated(buildRRule())
                                         },
                                         text = { Text(stringResource(id = R.string.edit_recur_ends_never)) }
                                     )
@@ -484,11 +476,11 @@ fun DetailsCardRecur(
                             }
                         )
 
-                        AnimatedVisibility((updatedRRule?.count ?: -1) > 0) {
+                        AnimatedVisibility((count ?: -1) > 0) {
                             AssistChip(
                                 onClick = { endAfterExpaneded = true },
                                 label = {
-                                    Text((updatedRRule?.count?:1).toString())
+                                    Text((count?:1).toString())
 
                                     DropdownMenu(
                                         expanded = endAfterExpaneded,
@@ -497,16 +489,9 @@ fun DetailsCardRecur(
                                         for (number in 1..ICalObject.DEFAULT_MAX_RECUR_INSTANCES) {
                                             DropdownMenuItem(
                                                 onClick = {
-                                                    updatedRRule = Recur.Builder().apply {
-                                                        interval(updatedRRule?.interval ?: 1)
-                                                        count(number)
-                                                        frequency(updatedRRule?.frequency?: Recur.Frequency.DAILY)
-                                                        //until(Date(icalObject.dtstart ?: System.currentTimeMillis()))
-                                                        updatedRRule?.dayList?.let { dayList(it) }
-                                                        updatedRRule?.monthDayList?.let { monthDayList(it) }
-                                                    }.build()
+                                                    count = number
                                                     endAfterExpaneded = false
-                                                    onRecurUpdated(updatedRRule)
+                                                    onRecurUpdated(buildRRule())
                                                 },
                                                 text = {
                                                     Text(number.toString())
@@ -518,17 +503,17 @@ fun DetailsCardRecur(
                             )
                         }
 
-                        AnimatedVisibility((updatedRRule?.count ?: -1) > 0) {
+                        AnimatedVisibility((count ?: -1) > 0) {
                             Text(stringResource(R.string.edit_recur_x_times))
                         }
 
-                        AnimatedVisibility(updatedRRule?.until != null) {
+                        AnimatedVisibility(until != null) {
                             AssistChip(
                                 onClick = { showDatepicker = true },
                                 label = {
                                     Text(
                                         DateTimeUtils.convertLongToFullDateString(
-                                            updatedRRule?.until?.time,
+                                            until?.time,
                                             TZ_ALLDAY
                                         )
                                     )
@@ -556,10 +541,9 @@ fun DetailsCardRecur(
                         Text(stringResource(id = R.string.view_reccurrence_note_is_exception))
                     }
                 }
-
             }
 
-            icalObject.rrule = updatedRRule?.toString()
+            icalObject.rrule = buildRRule().toString()
             icalObject.getInstancesFromRrule().forEach { instanceDate ->
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                     Text(
@@ -619,7 +603,7 @@ fun DetailsCardRecur_Preview() {
         val recur = Recur
             .Builder()
             .count(5)
-            .frequency(Recur.Frequency.WEEKLY)
+            .frequency(Frequency.WEEKLY)
             .interval(2)
             .build()
 
@@ -648,7 +632,7 @@ fun DetailsCardRecur_Preview_edit() {
         val recur = Recur
             .Builder()
             .count(5)
-            .frequency(Recur.Frequency.WEEKLY)
+            .frequency(Frequency.WEEKLY)
             .interval(2)
             .build()
 
