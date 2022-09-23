@@ -57,7 +57,7 @@ fun DetailBottomAppBar(
     //onListSettingsChanged: () -> Unit
 ) {
 
-    if(icalObject == null || collection == null)
+    if (icalObject == null || collection == null)
         return
 
     val context = LocalContext.current
@@ -81,7 +81,7 @@ fun DetailBottomAppBar(
     var isSyncInProgress by remember { mutableStateOf(false) }
     DisposableEffect(lifecycleOwner) {
 
-        val listener = if(isPreview)
+        val listener = if (isPreview)
             null
         else {
             ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
@@ -89,7 +89,7 @@ fun DetailBottomAppBar(
             }
         }
         onDispose {
-            if(!isPreview)
+            if (!isPreview)
                 ContentResolver.removeStatusChangeListener(listener)
         }
     }
@@ -116,7 +116,7 @@ fun DetailBottomAppBar(
                         expanded = copyOptionsExpanded,
                         onDismissRequest = { copyOptionsExpanded = false }
                     ) {
-                        if(collection.supportsVJOURNAL) {
+                        if (collection.supportsVJOURNAL) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.menu_view_copy_as_journal)) },
                                 onClick = {
@@ -132,7 +132,7 @@ fun DetailBottomAppBar(
                                 }
                             )
                         }
-                        if(collection.supportsVTODO) {
+                        if (collection.supportsVTODO) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.menu_view_copy_as_todo)) },
                                 onClick = {
@@ -188,14 +188,14 @@ fun DetailBottomAppBar(
                     enabled = false
                 ) {
                     Crossfade(contentsChanged.value) { changed ->
-                        if(changed == false)
+                        if (changed == false)
                             Icon(
                                 Icons.Outlined.Save,
                                 contentDescription = stringResource(id = R.string.saving),
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.alpha(0.3f)
                             )
-                        else if(changed == true)
+                        else if (changed == true)
                             Icon(
                                 Icons.Outlined.DriveFileRenameOutline,
                                 contentDescription = stringResource(id = R.string.saving),
@@ -215,85 +215,167 @@ fun DetailBottomAppBar(
                     settingsMenuExpanded = false
                 }
             ) {
-
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.categories),
-                    isChecked = detailSettings.enableCategories.value,
-                    onCheckedChanged = { detailSettings.enableCategories.value = !detailSettings.enableCategories.value })
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.attendees),
-                    isChecked = detailSettings.enableAttendees.value,
-                    onCheckedChanged = { detailSettings.enableAttendees.value = !detailSettings.enableAttendees.value })
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.resources),
-                    isChecked = detailSettings.enableResources.value,
-                    onCheckedChanged = { detailSettings.enableResources.value = !detailSettings.enableResources.value })
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.contact),
-                    isChecked = detailSettings.enableContact.value,
-                    onCheckedChanged = {  detailSettings.enableContact.value = !detailSettings.enableContact.value })
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.location),
-                    isChecked = detailSettings.enableLocation.value,
-                    onCheckedChanged = { detailSettings.enableLocation.value = !detailSettings.enableLocation.value })
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.url),
-                    isChecked = detailSettings.enableUrl.value,
-                    onCheckedChanged = { detailSettings.enableUrl.value = !detailSettings.enableUrl.value })
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.subtasks),
-                    isChecked = detailSettings.enableSubtasks.value,
-                    onCheckedChanged = { detailSettings.enableSubtasks.value = !detailSettings.enableSubtasks.value })
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.view_feedback_linked_notes),
-                    isChecked = detailSettings.enableSubnotes.value,
-                    onCheckedChanged = { detailSettings.enableSubnotes.value = !detailSettings.enableSubnotes.value })
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.attachments),
-                    isChecked = detailSettings.enableAttachments.value,
-                    onCheckedChanged = { detailSettings.enableAttachments.value = !detailSettings.enableAttachments.value })
-                if(icalObject.module != Module.NOTE.name) {   //Never show the recurring tab for Notes
-
-                    LabelledCheckbox(
-                        text = stringResource(id = R.string.recurrence),
-                        isChecked = detailSettings.enableRecurrence.value,
-                        onCheckedChanged = {
-                            detailSettings.enableRecurrence.value = !detailSettings.enableRecurrence.value
-                        })
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.categories),
+                            isChecked = detailSettings.enableCategories.value,
+                            onCheckedChanged = { detailSettings.enableCategories.value = !detailSettings.enableCategories.value }
+                        )
+                    },
+                    onClick = { detailSettings.enableCategories.value = !detailSettings.enableCategories.value }
+                )
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.attendees),
+                            isChecked = detailSettings.enableAttendees.value,
+                            onCheckedChanged = {
+                                detailSettings.enableAttendees.value =
+                                    !detailSettings.enableAttendees.value
+                            })
+                    },
+                    onClick = {
+                        detailSettings.enableAttendees.value = !detailSettings.enableAttendees.value
+                    }
+                )
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.resources),
+                            isChecked = detailSettings.enableResources.value,
+                            onCheckedChanged = { detailSettings.enableResources.value = !detailSettings.enableResources.value }
+                        )
+                    },
+                    onClick = { detailSettings.enableResources.value = !detailSettings.enableResources.value }
+                )
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.contact),
+                            isChecked = detailSettings.enableContact.value,
+                            onCheckedChanged = { detailSettings.enableContact.value = !detailSettings.enableContact.value }
+                        )
+                    },
+                    onClick = { detailSettings.enableContact.value = !detailSettings.enableContact.value }
+                )
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.location),
+                            isChecked = detailSettings.enableLocation.value,
+                            onCheckedChanged = { detailSettings.enableLocation.value = !detailSettings.enableLocation.value }
+                        )
+                    },
+                    onClick = { detailSettings.enableLocation.value = !detailSettings.enableLocation.value }
+                )
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.url),
+                            isChecked = detailSettings.enableUrl.value,
+                            onCheckedChanged = {
+                                detailSettings.enableUrl.value = !detailSettings.enableUrl.value
+                            }
+                        )
+                    },
+                    onClick = {
+                        detailSettings.enableUrl.value = !detailSettings.enableUrl.value
+                    }
+                )
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.subtasks),
+                            isChecked = detailSettings.enableSubtasks.value,
+                            onCheckedChanged = { detailSettings.enableSubtasks.value = !detailSettings.enableSubtasks.value }
+                        )
+                    },
+                    onClick = { detailSettings.enableSubtasks.value = !detailSettings.enableSubtasks.value }
+                )
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.view_feedback_linked_notes),
+                            isChecked = detailSettings.enableSubnotes.value,
+                            onCheckedChanged = { detailSettings.enableSubnotes.value = !detailSettings.enableSubnotes.value }
+                        )
+                    },
+                    onClick = { detailSettings.enableSubnotes.value = !detailSettings.enableSubnotes.value }
+                )
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.attachments),
+                            isChecked = detailSettings.enableAttachments.value,
+                            onCheckedChanged = { detailSettings.enableAttachments.value = !detailSettings.enableAttachments.value }
+                        )
+                    },
+                    onClick = { detailSettings.enableAttachments.value = !detailSettings.enableAttachments.value }
+                )
+                if (icalObject.module != Module.NOTE.name) {   //Never show the recurring tab for Notes
+                    DropdownMenuItem(
+                        text = {
+                            LabelledCheckbox(
+                                text = stringResource(id = R.string.recurrence),
+                                isChecked = detailSettings.enableRecurrence.value,
+                                onCheckedChanged = { detailSettings.enableRecurrence.value = !detailSettings.enableRecurrence.value }
+                            )
+                        },
+                        onClick = {
+                            detailSettings.enableRecurrence.value =
+                                !detailSettings.enableRecurrence.value
+                        }
+                    )
                 }
-                if(icalObject.module == Module.TODO.name) {    //Never show the recurring tab for Journals and Notes, only for Todos
-                    LabelledCheckbox(
-                        text = stringResource(id = R.string.alarms),
-                        isChecked = detailSettings.enableAlarms.value,
-                        onCheckedChanged = {
-                            detailSettings.enableAlarms.value = !detailSettings.enableAlarms.value
-                        })
+                if (icalObject.module == Module.TODO.name) {    //Never show the recurring tab for Journals and Notes, only for Todos
+                    DropdownMenuItem(
+                        text = {
+                            LabelledCheckbox(
+                                text = stringResource(id = R.string.alarms),
+                                isChecked = detailSettings.enableAlarms.value,
+                                onCheckedChanged = { detailSettings.enableAlarms.value = !detailSettings.enableAlarms.value }
+                            )
+                        },
+                        onClick = { detailSettings.enableAlarms.value = !detailSettings.enableAlarms.value }
+                    )
                 }
-                LabelledCheckbox(
-                    text = stringResource(id = R.string.comments),
-                    isChecked = detailSettings.enableComments.value,
-                    onCheckedChanged = { detailSettings.enableComments.value = !detailSettings.enableComments.value })
-
+                DropdownMenuItem(
+                    text = {
+                        LabelledCheckbox(
+                            text = stringResource(id = R.string.comments),
+                            isChecked = detailSettings.enableComments.value,
+                            onCheckedChanged = { detailSettings.enableComments.value = !detailSettings.enableComments.value }
+                        )
+                    },
+                    onClick = { detailSettings.enableComments.value = !detailSettings.enableComments.value }
+                )
             }
+
+
         },
         floatingActionButton = {
             // TODO(b/228588827): Replace with Secondary FAB when available.
             FloatingActionButton(
                 onClick = {
-                    if(!collection.readonly && collection.accountType != LOCAL_ACCOUNT_TYPE && isProPurchased.value == false)
-                        Toast.makeText(context, context.getText(R.string.buypro_snackbar_remote_entries_blocked), Toast.LENGTH_LONG).show()
-                    else if(!collection.readonly)
+                    if (!collection.readonly && collection.accountType != LOCAL_ACCOUNT_TYPE && isProPurchased.value == false)
+                        Toast.makeText(
+                            context,
+                            context.getText(R.string.buypro_snackbar_remote_entries_blocked),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    else if (!collection.readonly)
                         isEditMode.value = !isEditMode.value
-                          },
-                containerColor = if(collection.readonly) MaterialTheme.colorScheme.surface
-                                    else if(collection.accountType != LOCAL_ACCOUNT_TYPE && isProPurchased.value == false) MaterialTheme.colorScheme.surface
-                                    else MaterialTheme.colorScheme.primaryContainer
+                },
+                containerColor = if (collection.readonly) MaterialTheme.colorScheme.surface
+                else if (collection.accountType != LOCAL_ACCOUNT_TYPE && isProPurchased.value == false) MaterialTheme.colorScheme.surface
+                else MaterialTheme.colorScheme.primaryContainer
             ) {
                 Crossfade(targetState = isEditMode.value) { isEditMode ->
-                    if(isEditMode) {
+                    if (isEditMode) {
                         Icon(Icons.Filled.Preview, stringResource(id = R.string.save))
                     } else {
-                        if(collection.readonly)
+                        if (collection.readonly)
                             Icon(Icons.Filled.EditOff, stringResource(id = R.string.readyonly))
                         else
                             Icon(Icons.Filled.Edit, stringResource(id = R.string.edit))
@@ -315,7 +397,10 @@ fun DetailBottomAppBar_Preview_View() {
             this.accountType = DAVX5_ACCOUNT_TYPE
         }
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(DetailViewModel.PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
+            DetailViewModel.PREFS_DETAIL_NOTES,
+            Context.MODE_PRIVATE
+        )
         val detailSettings = DetailSettings(prefs)
 
         DetailBottomAppBar(
@@ -342,7 +427,10 @@ fun DetailBottomAppBar_Preview_edit() {
             this.accountType = DAVX5_ACCOUNT_TYPE
         }
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(DetailViewModel.PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
+            DetailViewModel.PREFS_DETAIL_NOTES,
+            Context.MODE_PRIVATE
+        )
         val detailSettings = DetailSettings(prefs)
 
         DetailBottomAppBar(
@@ -367,7 +455,10 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             this.accountType = DAVX5_ACCOUNT_TYPE
         }
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(DetailViewModel.PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
+            DetailViewModel.PREFS_DETAIL_NOTES,
+            Context.MODE_PRIVATE
+        )
         val detailSettings = DetailSettings(prefs)
 
         DetailBottomAppBar(
@@ -383,7 +474,6 @@ fun DetailBottomAppBar_Preview_View_readonly() {
 }
 
 
-
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View_local() {
@@ -394,7 +484,10 @@ fun DetailBottomAppBar_Preview_View_local() {
             this.accountType = LOCAL_ACCOUNT_TYPE
         }
 
-        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(DetailViewModel.PREFS_DETAIL_NOTES, Context.MODE_PRIVATE)
+        val prefs: SharedPreferences = LocalContext.current.getSharedPreferences(
+            DetailViewModel.PREFS_DETAIL_NOTES,
+            Context.MODE_PRIVATE
+        )
         val detailSettings = DetailSettings(prefs)
 
         BillingManager.getInstance().initialise(LocalContext.current.applicationContext)
