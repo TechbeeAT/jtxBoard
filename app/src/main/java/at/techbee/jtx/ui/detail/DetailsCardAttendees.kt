@@ -119,8 +119,7 @@ fun DetailsCardAttendees(
                                         modifier = Modifier.size(24.dp)
                                     )
                             },
-                            selected = false,
-                            modifier = Modifier.alpha(0.4f)
+                            selected = false
                         )
 
 
@@ -178,7 +177,8 @@ fun DetailsCardAttendees(
                                     stringResource(id = R.string.add)
                                 )
                             },
-                            selected = false
+                            selected = false,
+                            modifier = Modifier.alpha(0.4f)
                         )
                     }
                 }
