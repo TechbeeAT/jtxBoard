@@ -8,15 +8,16 @@
 
 package at.techbee.jtx.ui.reusable.cards
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -38,7 +39,7 @@ fun AttachmentCard(
 ) {
 
     val context = LocalContext.current
-    val preview = attachment.getPreview(context)
+    //val preview = attachment.getPreview(context)
     val filesize = attachment.getFilesize(context)
 
     if (isEditMode) {
@@ -50,10 +51,12 @@ fun AttachmentCard(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                /*
                 if (preview == null)
                     Icon(Icons.Outlined.FileOpen, attachment.fmttype, modifier = Modifier.width(24.dp))
                 else
                     Image(bitmap = preview.asImageBitmap(), contentDescription = null, modifier = Modifier.width(24.dp))
+                 */
                 Text(
                     attachment.getFilenameOrLink() ?: "",
                     modifier = Modifier
@@ -80,10 +83,12 @@ fun AttachmentCard(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                /*
                 if (preview == null)
                     Icon(Icons.Outlined.FileOpen, attachment.fmttype, modifier = Modifier.width(24.dp))
                 else
                     Image(bitmap = preview.asImageBitmap(), contentDescription = null, modifier = Modifier.width(24.dp))
+                 */
 
                 Text(
                     attachment.getFilenameOrLink() ?: "",
