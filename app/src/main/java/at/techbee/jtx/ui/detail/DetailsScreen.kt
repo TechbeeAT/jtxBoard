@@ -25,6 +25,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.ui.reusable.appbars.DetailsTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
+import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
@@ -82,7 +83,7 @@ fun DetailsScreen(
 
     detailViewModel.navigateToId.value?.let {
         detailViewModel.navigateToId.value = null
-        navController.navigate("details/$it?isEditMode=true")
+        navController.navigate(DetailDestination.Detail.getRoute(it, true))
     }
 
     if (showDeleteDialog) {
@@ -191,12 +192,11 @@ fun DetailsScreen(
                     )
                 },
                 player = detailViewModel.mediaPlayer,
-                goToView = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=false") },
-                goToEdit = { icalObjectId -> navController.navigate("details/$icalObjectId?isEditMode=true") },
+                goToView = { icalObjectId -> navController.navigate(DetailDestination.Detail.getRoute(icalObjectId, false)) },
+                goToEdit = { icalObjectId -> navController.navigate(DetailDestination.Detail.getRoute(icalObjectId, true)) },
                 goBack = { navigateUp = true },
                 modifier = Modifier.padding(paddingValues)
             )
-
         },
         bottomBar = {
             DetailBottomAppBar(

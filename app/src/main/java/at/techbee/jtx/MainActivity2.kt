@@ -233,6 +233,11 @@ fun MainNavHost(
             val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId) ?: return@composable
             val editImmediately = backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) ?: false
 
+            /*
+            backStackEntry.savedStateHandle[DetailDestination.argICalObjectId] = icalObjectId
+            backStackEntry.savedStateHandle[DetailDestination.argIsEditMode] = editImmediately
+             */
+
             val detailViewModel: DetailViewModel = viewModel()
             detailViewModel.load(icalObjectId)
 
@@ -294,20 +299,7 @@ fun MainNavHost(
         composable(NavigationDrawerDestination.SETTINGS.name) {
             SettingsScreen(
                 navController = navController,
-                currentTheme = settingsStateHolder.settingTheme,
-                audioFormat = settingsStateHolder.settingAudioFormat,
-                autoExpandSubtasks = settingsStateHolder.settingAutoExpandSubtasks,
-                autoExpandSubnotes = settingsStateHolder.settingAutoExpandSubnotes,
-                autoExpandAttachments = settingsStateHolder.settingAutoExpandAttachments,
-                showProgressForMainTasks = settingsStateHolder.settingShowProgressForMainTasks,
-                showProgressForSubTasks = settingsStateHolder.settingShowProgressForSubTasks,
-                showSubtasksInTasklist = settingsStateHolder.settingShowSubtasksInTasklist,
-                showSubnotesInNoteslist = settingsStateHolder.settingShowSubnotesInNoteslist,
-                showSubjournalsInJournallist = settingsStateHolder.settingShowSubjournalsInJournallist,
-                autosave = settingsStateHolder.settingAutosave,
-                defaultStartDate = settingsStateHolder.settingDefaultStartDate,
-                defaultDueDate = settingsStateHolder.settingDefaultDueDate,
-                stepForProgress = settingsStateHolder.settingStepForProgress
+                settingsStateHolder = settingsStateHolder
             )
         }
     }
