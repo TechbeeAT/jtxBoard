@@ -139,18 +139,19 @@ fun DetailsCardSubnotes(
                     })
                 )
             }
-
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Button(
-                    onClick = { showAddAudioNoteDialog = true },
-                    modifier = Modifier.padding(top = 4.dp)
+            AnimatedVisibility(isEditMode.value) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(Icons.Outlined.Mic, null, modifier = Modifier.padding(end = 4.dp))
-                    Text(stringResource(id = R.string.view_add_audio_note))
+                    Button(
+                        onClick = { showAddAudioNoteDialog = true },
+                        modifier = Modifier.padding(top = 4.dp)
+                    ) {
+                        Icon(Icons.Outlined.Mic, null, modifier = Modifier.padding(end = 4.dp))
+                        Text(stringResource(id = R.string.view_add_audio_note))
+                    }
                 }
             }
         }
