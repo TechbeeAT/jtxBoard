@@ -50,10 +50,10 @@ import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import at.techbee.jtx.ui.reusable.elements.ColoredEdge
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
+import at.techbee.jtx.util.DateTimeUtils
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
 import java.time.Duration
-import java.util.*
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -627,12 +627,12 @@ fun DetailScreenContent(
                         .fillMaxWidth()
                         .padding(top = 16.dp)) {
                     Text(
-                        stringResource(id = R.string.view_created_text, Date(icalObject.created)),
+                        stringResource(id = R.string.view_created_text, DateTimeUtils.convertLongToFullDateTimeString(icalObject.created, null)),
                         style = MaterialTheme.typography.bodySmall,
                         fontStyle = FontStyle.Italic
                     )
                     Text(
-                        stringResource(id = R.string.view_last_modified_text, Date(icalObject.lastModified)),
+                        stringResource(id = R.string.view_last_modified_text, DateTimeUtils.convertLongToFullDateTimeString(icalObject.lastModified, null)),
                         style = MaterialTheme.typography.bodySmall,
                         fontStyle = FontStyle.Italic
                     )
