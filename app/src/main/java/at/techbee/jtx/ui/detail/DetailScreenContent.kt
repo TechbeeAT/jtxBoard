@@ -61,7 +61,7 @@ import java.util.*
 fun DetailScreenContent(
     iCalEntity: State<ICalEntity?>,
     isEditMode: MutableState<Boolean>,
-    contentsChanged: MutableState<Boolean?>,
+    changeState: MutableState<DetailViewModel.DetailChangeState>,
     subtasks: State<List<ICal4List>>,
     subnotes: State<List<ICal4List>>,
     isChild: Boolean,
@@ -142,14 +142,13 @@ fun DetailScreenContent(
             attachments.value,
             alarms.value
         )
-        contentsChanged.value = null
     }
     previousIsEditModeState.value = isEditMode.value
 
 
     // save 10 seconds after changed, then reset value
-    if (contentsChanged.value == true && autosave) {
-        LaunchedEffect(contentsChanged) {
+    if (changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED && autosave) {
+        LaunchedEffect(changeState) {
             delay(Duration.ofSeconds(10).toMillis())
             saveICalObject(
                 icalObject,
@@ -160,16 +159,13 @@ fun DetailScreenContent(
                 attachments.value,
                 alarms.value
             )
-            contentsChanged.value = false
-            delay(Duration.ofSeconds(1).toMillis())  // reset after a second
-            contentsChanged.value = null
         }
     }
 
     fun processGoBack() {
-        if(contentsChanged.value == true)
+        if(changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED)
             showUnsavedChangesDialog = true
-        else if(contentsChanged.value != true && icalObject.sequence == 0L && icalObject.summary.isNullOrEmpty() && icalObject.description.isNullOrEmpty())
+        else if(changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED && icalObject.sequence == 0L && icalObject.eTag == null && icalObject.summary.isNullOrEmpty() && icalObject.description.isNullOrEmpty())
             deleteICalObject()
         else
             goBack()
@@ -229,7 +225,7 @@ fun DetailScreenContent(
             onColorChanged = { newColor ->
                 color = newColor
                 icalObject.color = newColor
-                contentsChanged.value = true
+                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
             },
             onDismiss = {
                 showColorPicker = false
@@ -309,17 +305,17 @@ fun DetailScreenContent(
                 onDtstartChanged = { datetime, timezone ->
                     icalObject.dtstart = datetime
                     icalObject.dtstartTimezone = timezone
-                    contentsChanged.value = true
+                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onDueChanged = { datetime, timezone ->
                     icalObject.due = datetime
                     icalObject.dueTimezone = timezone
-                    contentsChanged.value = true
+                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onCompletedChanged = { datetime, timezone ->
                     icalObject.completed = datetime
                     icalObject.completedTimezone = timezone
-                    contentsChanged.value = true
+                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
             )
 
@@ -359,7 +355,7 @@ fun DetailScreenContent(
                         onValueChange = {
                             summary = it
                             icalObject.summary = it.ifEmpty { null }
-                            contentsChanged.value = true
+                            changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         label = { Text(stringResource(id = R.string.summary)) },
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
@@ -373,7 +369,7 @@ fun DetailScreenContent(
                         onValueChange = {
                             description = it
                             icalObject.description = it.ifEmpty { null }
-                            contentsChanged.value = true
+                            changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         label = { Text(stringResource(id = R.string.description)) },
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
@@ -394,7 +390,7 @@ fun DetailScreenContent(
                         sliderIncrement = 1,   // TODO
                         onProgressChanged = { itemId, newPercent, isLinked ->
                             onProgressChanged(itemId, newPercent, isLinked)
-                            contentsChanged.value = true
+                            changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         showProgressLabel = true,
                         showSlider = true
@@ -408,15 +404,15 @@ fun DetailScreenContent(
                 isEditMode = isEditMode.value,
                 onStatusChanged = { newStatus ->
                     icalObject.status = newStatus
-                    contentsChanged.value = true
+                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onClassificationChanged = { newClassification ->
                     icalObject.classification = newClassification
-                    contentsChanged.value = true
+                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 onPriorityChanged = { newPriority ->
                     icalObject.priority = newPriority
-                    contentsChanged.value = true
+                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -471,7 +467,7 @@ fun DetailScreenContent(
                     isEditMode = isEditMode.value,
                     onCategoriesUpdated = { newCategories ->
                         categories.value = newCategories
-                        contentsChanged.value = true
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     },
                     allCategories = allCategories,
                 )
@@ -483,7 +479,7 @@ fun DetailScreenContent(
                     isEditMode = isEditMode.value,
                     onResourcesUpdated = { newResources ->
                         resources.value = newResources
-                        contentsChanged.value = true
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     },
                     allResources = allResources,
                 )
@@ -496,7 +492,7 @@ fun DetailScreenContent(
                     isEditMode = isEditMode.value,
                     onAttendeesUpdated = { newAttendees ->
                         attendees.value = newAttendees
-                        contentsChanged.value = true
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     }
                 )
             }
@@ -507,7 +503,7 @@ fun DetailScreenContent(
                     isEditMode = isEditMode.value,
                     onContactUpdated = { newContact ->
                         icalObject.contact = newContact.ifEmpty { null }
-                        contentsChanged.value = true
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     },
                 )
             }
@@ -519,7 +515,7 @@ fun DetailScreenContent(
                     isEditMode = isEditMode.value,
                     onUrlUpdated = { newUrl ->
                         icalObject.url = newUrl.ifEmpty { null }
-                        contentsChanged.value = true
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     },
                 )
             }
@@ -534,7 +530,7 @@ fun DetailScreenContent(
                         icalObject.geoLat = newGeoLat
                         icalObject.geoLong = newGeoLong
                         icalObject.location = newLocation.ifEmpty { null }
-                        contentsChanged.value = true
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     },
                 )
             }
@@ -671,7 +667,7 @@ fun DetailScreenContent_JOURNAL() {
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(false) },
-            contentsChanged = remember { mutableStateOf(false) },
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = false,
@@ -716,7 +712,7 @@ fun DetailScreenContent_TODO_editInitially() {
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(true) },
-            contentsChanged = remember { mutableStateOf(false) },
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = false,
@@ -763,7 +759,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(entity) },
             isEditMode = remember { mutableStateOf(true) },
-            contentsChanged = remember { mutableStateOf(false) },
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = true,
@@ -802,7 +798,7 @@ fun DetailScreenContent_failedLoading() {
         DetailScreenContent(
             iCalEntity = remember { mutableStateOf(null) },
             isEditMode = remember { mutableStateOf(true) },
-            contentsChanged = remember { mutableStateOf(false) },
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             subtasks = remember { mutableStateOf(emptyList()) },
             subnotes = remember { mutableStateOf(emptyList()) },
             isChild = true,

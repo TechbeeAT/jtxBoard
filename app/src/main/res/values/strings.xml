@@ -60,6 +60,7 @@
     <string name="invert_selection">Invert selection</string>
     <string name="not_available_abbreviation">n/a</string>
     <string name="preferences">Preferences</string>
+    <string name="revert">Revert</string>
     <string name="audio_play">Play</string>
     <string name="audio_record">Record</string>
     <string name="audio_stop">Stop</string>
@@ -454,6 +455,10 @@
     <string name="dialog_unsaved_changes_title">Save changes?</string>
     <string name="dialog_unsaved_changes_text">Unsaved changes detected. Would you like to save or discard your changes?</string>
     <string name="dialog_error_on_update_message">An error occurred while inserting/updating this entry. The entry or collection might not exist anymore.</string>
+    <string name="dialog_revert_changes_title">Revert changes?</string>
+    <string name="dialog_revert_changes_message">Are you sure you want to discard your changes and revert contents to the state before you started editing?</string>
+    <string name="dialog_revert_changes_message2">Attention: Subtasks and subnotes are separate entries and cannot be reverted.</string>
+
 
     <!-- menus -->
     <string name="menu_edit_clear_dates">Clear dates</string>

@@ -44,8 +44,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var icalEntity: LiveData<ICalEntity?>
     lateinit var relatedSubnotes: LiveData<List<ICal4List>>
     lateinit var relatedSubtasks: LiveData<List<ICal4List>>
-    lateinit var recurInstances: LiveData<List<ICalObject?>>
+    //lateinit var recurInstances: LiveData<List<ICalObject?>>
     lateinit var isChild: LiveData<Boolean>
+    private var originalEntry: ICalEntity? = null
 
     lateinit var allCategories: LiveData<List<String>>
     lateinit var allResources: LiveData<List<String>>
@@ -54,7 +55,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var entryDeleted = mutableStateOf(false)
     var sqlConstraintException = mutableStateOf(false)
     var navigateToId = mutableStateOf<Long?>(null)
-    var saving = mutableStateOf(false)
+    var changeState = mutableStateOf<DetailChangeState>(DetailChangeState.UNCHANGED)
     var toastMessage = mutableStateOf<String?>(null)
     lateinit var detailSettings: DetailSettings
 
@@ -83,9 +84,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             relatedSubtasks = MutableLiveData(emptyList())
             isChild = MutableLiveData(false)
 
+            /*
             recurInstances = Transformations.switchMap(icalEntity) {
                 it?.property?.id?.let { originalId -> database.getRecurInstances(originalId) }
             }
+             */
         }
     }
 
@@ -113,13 +116,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             }
             detailSettings = DetailSettings(prefs)
         }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            originalEntry = database.getSync(icalObjectId)  // store original entry for revert option
+        }
     }
 
 
 
     fun updateProgress(id: Long, newPercent: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            saving.value = true
+            changeState.value = DetailChangeState.CHANGESAVING
             val item = database.getICalObjectById(id) ?: return@launch
             try {
                 if(icalEntity.value?.property?.isRecurLinkedInstance == true) {
@@ -134,14 +141,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 sqlConstraintException.value = true
             } finally {
-                saving.value = false
+                changeState.value = DetailChangeState.CHANGESAVED
             }
         }
     }
 
     fun updateSummary(icalObjectId: Long, newSummary: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            saving.value = true
+            changeState.value = DetailChangeState.CHANGESAVING
             val icalObject = database.getICalObjectById(icalObjectId) ?: return@launch
             icalObject.summary = newSummary
             icalObject.makeDirty()
@@ -153,7 +160,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 sqlConstraintException.value = true
             } finally {
-                saving.value = false
+                changeState.value = DetailChangeState.CHANGESAVED
             }
         }
     }
@@ -161,21 +168,21 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun moveToNewCollection(icalObject: ICalObject, newCollectionId: Long) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            saving.value = true
+            changeState.value = DetailChangeState.CHANGESAVING
             try {
                 val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, database, getApplication())
                 // once the newId is there, the local entries can be deleted (or marked as deleted)
                 ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
                 if (icalObject.rrule != null)
                     icalObject.recreateRecurring(database, getApplication())
-                saving.value = false
+                changeState.value = DetailChangeState.CHANGESAVED
                 navigateToId.value = newId
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
                 Log.d("SQLConstraint", e.stackTraceToString())
                 sqlConstraintException.value = true
             } finally {
-                saving.value = false
+                changeState.value = DetailChangeState.CHANGESAVED
             }
         }
     }
@@ -190,7 +197,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
              alarms: List<Alarm>
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            saving.value = true
+            changeState.value = DetailChangeState.CHANGESAVING
 
             try {
                 if (icalEntity.value?.categories != categories) {
@@ -287,15 +294,34 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 sqlConstraintException.value = true
             } finally {
-                saving.value = false
+                changeState.value = DetailChangeState.CHANGESAVED
             }
         }
+    }
+
+    fun revert() {
+
+        val originalICalObject = originalEntry?.property?: return
+        save(
+            icalObject = originalICalObject.apply {
+                eTag = icalEntity.value?.property?.eTag
+                sequence = (icalEntity.value?.property?.sequence?:0)+1
+            },
+            categories = originalEntry?.categories ?: emptyList(),
+            comments = originalEntry?.comments ?: emptyList(),
+
+            attendees = originalEntry?.attendees ?: emptyList(),
+            resources = originalEntry?.resources ?: emptyList(),
+            attachments = originalEntry?.attachments ?: emptyList(),
+            alarms = originalEntry?.alarms ?: emptyList()
+        )
+        navigateToId.value = icalEntity.value?.property?.id
     }
 
 
     fun addSubEntry(subEntry: ICalObject, attachment: Attachment?) {
         viewModelScope.launch(Dispatchers.IO) {
-            saving.value = true
+            changeState.value = DetailChangeState.CHANGESAVING
             subEntry.collectionId = icalEntity.value?.property?.collectionId!!
 
             try {
@@ -320,7 +346,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 sqlConstraintException.value = true
             } finally {
-                saving.value = false
+                changeState.value = DetailChangeState.CHANGESAVED
             }
         }
     }
@@ -371,7 +397,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
 
         viewModelScope.launch(Dispatchers.IO) {
-            saving.value = true
+            changeState.value = DetailChangeState.CHANGESAVING
             try {
                 val newId = database.insertICalObject(newEntity.property)
                 newEntity.alarms?.forEach { alarm ->
@@ -439,7 +465,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.d("SQLConstraint", e.stackTraceToString())
                 sqlConstraintException.value = true
             } finally {
-                saving.value = false
+                changeState.value = DetailChangeState.CHANGESAVED
             }
         }
     }
@@ -535,4 +561,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             }
         }
     }
+    
+    enum class DetailChangeState { UNCHANGED, CHANGEUNSAVED, CHANGESAVING, CHANGESAVED }
 }

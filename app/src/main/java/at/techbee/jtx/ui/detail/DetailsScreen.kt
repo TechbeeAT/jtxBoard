@@ -24,10 +24,10 @@ import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.ui.reusable.appbars.DetailsTopAppBar
-import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
+import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,9 +44,9 @@ fun DetailsScreen(
     val context = LocalContext.current
 
     val isEditMode = rememberSaveable { mutableStateOf(editImmediately) }
-    val contentsChanged = remember { mutableStateOf<Boolean?>(null) }
     var goBackRequestedByTopBar by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showRevertDialog by remember { mutableStateOf(false) }
     var navigateUp by remember { mutableStateOf(false) }
 
 
@@ -58,7 +58,7 @@ fun DetailsScreen(
     val allResources = detailViewModel.allResources.observeAsState(emptyList())
     val allCollections = detailViewModel.allCollections.observeAsState(emptyList())
 
-    if (navigateUp && !detailViewModel.saving.value) {
+    if (navigateUp && detailViewModel.changeState.value != DetailViewModel.DetailChangeState.CHANGESAVING) {
         onRequestReview()
         navController.navigateUp()
     }
@@ -90,6 +90,13 @@ fun DetailsScreen(
             icalObject = detailViewModel.icalEntity.value?.property!!,
             onConfirm = { detailViewModel.delete() },
             onDismiss = { showDeleteDialog = false }
+        )
+    }
+
+    if (showRevertDialog) {
+        RevertChangesDialog(
+            onConfirm = { detailViewModel.revert() },
+            onDismiss = { showRevertDialog = false }
         )
     }
 
@@ -137,7 +144,7 @@ fun DetailsScreen(
             DetailScreenContent(
                 iCalEntity = icalEntity,
                 isEditMode = isEditMode,
-                contentsChanged = contentsChanged,
+                changeState = detailViewModel.changeState,
                 subtasks = subtasks,
                 subnotes = subnotes,
                 isChild = isChild.value,
@@ -196,10 +203,11 @@ fun DetailsScreen(
                 icalObject = icalEntity.value?.property,
                 collection = icalEntity.value?.ICalCollection,
                 isEditMode = isEditMode,
-                contentsChanged = contentsChanged,
+                changeState = detailViewModel.changeState,
                 detailSettings = detailViewModel.detailSettings,
                 onDeleteClicked = { showDeleteDialog = true },
-                onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) }
+                onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) },
+                onRevertClicked = { showRevertDialog = true }
             )
         }
     )

@@ -50,10 +50,11 @@ fun DetailBottomAppBar(
     icalObject: ICalObject?,
     collection: ICalCollection?,
     isEditMode: MutableState<Boolean>,
-    contentsChanged: MutableState<Boolean?>,
+    changeState: MutableState<DetailViewModel.DetailChangeState>,
     detailSettings: DetailSettings,
     onDeleteClicked: () -> Unit,
     onCopyRequested: (Module) -> Unit,
+    onRevertClicked: () -> Unit,
     //onListSettingsChanged: () -> Unit
 ) {
 
@@ -106,6 +107,24 @@ fun DetailBottomAppBar(
                 }
             }
 
+            AnimatedVisibility(isEditMode.value) {
+                IconButton(onClick = { onDeleteClicked() }) {
+                    Icon(
+                        Icons.Outlined.Delete,
+                        contentDescription = stringResource(id = R.string.delete),
+                    )
+                }
+            }
+
+            AnimatedVisibility(isEditMode.value && changeState.value != DetailViewModel.DetailChangeState.UNCHANGED) {
+                IconButton(onClick = { onRevertClicked() }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_revert),
+                        contentDescription = stringResource(id = R.string.revert)
+                    )
+                }
+            }
+
             AnimatedVisibility(!isEditMode.value && !collection.readonly) {
                 IconButton(onClick = { copyOptionsExpanded = true }) {
                     Icon(
@@ -145,15 +164,6 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(!isEditMode.value && !collection.readonly) {
-                IconButton(onClick = { onDeleteClicked() }) {
-                    Icon(
-                        Icons.Outlined.Delete,
-                        contentDescription = stringResource(id = R.string.delete),
-                    )
-                }
-            }
-
             AnimatedVisibility(collection.accountType != LOCAL_ACCOUNT_TYPE && (isSyncInProgress || icalObject.dirty)) {
                 IconButton(
                     onClick = {
@@ -171,7 +181,9 @@ fun DetailBottomAppBar(
                                     .graphicsLayer {
                                         rotationZ = angle
                                     }
-                            )
+                                    .alpha(0.3f),
+                                tint = MaterialTheme.colorScheme.primary,
+                                )
                         } else {
                             Icon(
                                 Icons.Outlined.CloudSync,
@@ -182,26 +194,41 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(contentsChanged.value != null) {
+            AnimatedVisibility(changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                    || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING
+                    || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVED) {
                 IconButton(
                     onClick = { },
                     enabled = false
                 ) {
-                    Crossfade(contentsChanged.value) { changed ->
-                        if (changed == false)
-                            Icon(
-                                painterResource(id = R.drawable.ic_save_check_outline),
-                                contentDescription = stringResource(id = R.string.saving),
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.alpha(0.3f)
-                            )
-                        else if (changed == true)
-                            Icon(
-                                Icons.Outlined.DriveFileRenameOutline,
-                                contentDescription = stringResource(id = R.string.saving),
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.alpha(0.3f)
-                            )
+                    Crossfade(changeState.value) { state ->
+                        when(state) {
+                            DetailViewModel.DetailChangeState.CHANGEUNSAVED -> {
+                                Icon(
+                                    Icons.Outlined.DriveFileRenameOutline,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.alpha(0.3f)
+                                )
+                            }
+                            DetailViewModel.DetailChangeState.CHANGESAVING -> {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_saving),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.alpha(0.3f)
+                                )
+                            }
+                            DetailViewModel.DetailChangeState.CHANGESAVED -> {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_save_check_outline),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.alpha(0.3f)
+                                )
+                            }
+                            else -> {}
+                        }
                     }
                 }
             }
@@ -407,10 +434,11 @@ fun DetailBottomAppBar_Preview_View() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
-            contentsChanged = remember { mutableStateOf(true) },
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
-            onCopyRequested = { }
+            onCopyRequested = { },
+            onRevertClicked = { }
         )
     }
 }
@@ -437,10 +465,11 @@ fun DetailBottomAppBar_Preview_edit() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
-            contentsChanged = remember { mutableStateOf(false) },
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
-            onCopyRequested = { }
+            onCopyRequested = { },
+            onRevertClicked = { }
         )
     }
 }
@@ -465,10 +494,11 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             icalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
-            contentsChanged = remember { mutableStateOf(null) },
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
-            onCopyRequested = { }
+            onCopyRequested = { },
+            onRevertClicked = { }
         )
     }
 }
@@ -496,10 +526,11 @@ fun DetailBottomAppBar_Preview_View_local() {
             icalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
-            contentsChanged = remember { mutableStateOf(null) },
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
             detailSettings = detailSettings,
             onDeleteClicked = { },
-            onCopyRequested = { }
+            onCopyRequested = { },
+            onRevertClicked = { }
         )
     }
 }

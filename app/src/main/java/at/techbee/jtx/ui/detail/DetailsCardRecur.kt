@@ -543,7 +543,7 @@ fun DetailsCardRecur(
                 }
             }
 
-            icalObject.rrule = buildRRule().toString()
+            icalObject.rrule = buildRRule()?.toString()
             icalObject.getInstancesFromRrule().forEach { instanceDate ->
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                     Text(
