@@ -369,6 +369,7 @@ fun ICalObjectListCard(
                             AttachmentCard(
                                 attachment = attachment,
                                 isEditMode = false,
+                                isRemoteCollection = false,   // ATTENTION: We pass false here, because the warning for large file sizes is only relevant for edit mode
                                 onAttachmentDeleted = { /* nothing to do, no edit here */ },
                                 modifier = Modifier.padding(horizontal = 8.dp)
                             )

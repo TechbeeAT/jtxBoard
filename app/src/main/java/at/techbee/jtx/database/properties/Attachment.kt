@@ -13,8 +13,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.ParcelFileDescriptor
@@ -22,10 +20,8 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import android.provider.OpenableColumns
 import android.util.Log
-import android.util.Size
 import android.webkit.MimeTypeMap
 import android.widget.Toast
-import androidx.annotation.Nullable
 import androidx.core.content.FileProvider
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -39,7 +35,6 @@ import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
 import kotlinx.parcelize.Parcelize
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.IOException
 
 
@@ -135,20 +130,13 @@ data class Attachment (
 {
     companion object Factory {
 
-        const val FMTTYPE_AUDIO_3GPP = "audio/3gpp"
-        const val FMTTYPE_AUDIO_MP4_AAC = "audio/aac"
-        const val FMTTYPE_AUDIO_OGG = "audio/ogg"
-
-        //const val ATTACHMENT_DIR = "attachments"
-
-
         /**
          * Create a new [Attachment] from the specified [ContentValues].
          *
          * @param values that at least contain [COLUMN_ATTACHMENT_ICALOBJECT_ID]
          * @return A newly created [Attachment] instance.
          */
-        fun fromContentValues(@Nullable values: ContentValues?): Attachment? {
+        fun fromContentValues(values: ContentValues?): Attachment? {
 
             if (values == null)
                 return null
@@ -354,10 +342,13 @@ data class Attachment (
     }
 
     fun getFilesize(context: Context): Long? {
-        return try {
-            context.contentResolver.openFileDescriptor(Uri.parse(this.uri), "r")?.statSize
+        try {
+            val fileDescriptor = context.contentResolver.openFileDescriptor(Uri.parse(this.uri), "r")
+            val filesize = fileDescriptor?.statSize
+            fileDescriptor?.close()
+            return filesize
         } catch (e: Exception) {
-            null
+            return null
         }
     }
 
@@ -371,7 +362,7 @@ data class Attachment (
         }
     }
 
-
+/*
     fun getPreview(context: Context): Bitmap? {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && uri != null) {
@@ -393,6 +384,7 @@ data class Attachment (
         }
         return null
     }
+ */
 }
 
 

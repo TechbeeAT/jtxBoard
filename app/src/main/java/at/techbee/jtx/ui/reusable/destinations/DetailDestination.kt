@@ -26,5 +26,4 @@ sealed class DetailDestination (
     ) {
         fun getRoute(iCalObjectId: Long, isEditMode: Boolean = false) = "details/$iCalObjectId?$argIsEditMode=$isEditMode"
     }
-
 }

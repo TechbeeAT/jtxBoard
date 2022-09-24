@@ -26,6 +26,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,7 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 fun DetailsCardAttachments(
     initialAttachments: List<Attachment>,
     isEditMode: Boolean,
+    isRemoteCollection: Boolean,
     onAttachmentsUpdated: (List<Attachment>) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -101,6 +103,7 @@ fun DetailsCardAttachments(
                         AttachmentCard(
                             attachment = attachment,
                             isEditMode = isEditMode,
+                            isRemoteCollection = isRemoteCollection,
                             onAttachmentDeleted = {
                                 attachments = attachments.minus(attachment)
                                 onAttachmentsUpdated(attachments)
@@ -144,9 +147,9 @@ fun DetailsCardAttachments(
                 }
             }
 
-            AnimatedVisibility(isEditMode) {
+            AnimatedVisibility((isEditMode && attachments.any { (it.getFilesize(context)?:0) > 100000 } && isRemoteCollection) || LocalInspectionMode.current) {
                 Text(
-                    stringResource(id = R.string.edit_attachment_beta_info),
+                    stringResource(id = R.string.details_attachment_beta_info),
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -163,6 +166,7 @@ fun DetailsCardAttachments_Preview() {
         DetailsCardAttachments(
             initialAttachments = listOf(Attachment(filename = "test.pdf")),
             isEditMode = false,
+            isRemoteCollection = true,
             onAttachmentsUpdated = { }
         )
     }
@@ -176,6 +180,7 @@ fun DetailsCardAttachments_Preview_edit() {
         DetailsCardAttachments(
             initialAttachments = listOf(Attachment(filename = "test.pdf")),
             isEditMode = true,
+            isRemoteCollection = true,
             onAttachmentsUpdated = { }
         )
     }

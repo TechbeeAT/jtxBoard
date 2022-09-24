@@ -14,11 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -34,6 +36,7 @@ import at.techbee.jtx.util.UiUtil
 fun AttachmentCard(
     attachment: Attachment,
     isEditMode: Boolean,
+    isRemoteCollection: Boolean,
     modifier: Modifier = Modifier,
     onAttachmentDeleted: () -> Unit
 ) {
@@ -66,6 +69,11 @@ fun AttachmentCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+
+                if(LocalInspectionMode.current || ((filesize?:0) > 100000 && isRemoteCollection)) {
+                    Icon(Icons.Outlined.Warning, null, tint = MaterialTheme.colorScheme.error)
+                }
+
                 IconButton(onClick = { onAttachmentDeleted() }) {
                     Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
                 }
@@ -119,6 +127,7 @@ fun AttachmentCardPreview_view() {
         AttachmentCard(
             attachment = Attachment.getSample(),
             isEditMode = false,
+            isRemoteCollection = true,
             onAttachmentDeleted = { }
         )
     }
@@ -131,6 +140,7 @@ fun AttachmentCardPreview_edit() {
         AttachmentCard(
             attachment = Attachment.getSample(),
             isEditMode = true,
+            isRemoteCollection = true,
             onAttachmentDeleted = { }
         )
     }

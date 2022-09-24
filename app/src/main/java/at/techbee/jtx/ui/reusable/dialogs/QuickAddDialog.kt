@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
@@ -231,6 +232,7 @@ fun QuickAddDialog(
                         AttachmentCard(
                             attachment = currentAttachment!!,
                             isEditMode = false,
+                            isRemoteCollection = currentCollection.accountType != LOCAL_ACCOUNT_TYPE,
                             onAttachmentDeleted = { /* no editing here */ },
                             modifier = Modifier.padding(vertical = 8.dp)
                         )

@@ -253,7 +253,7 @@
     <string name="details_recur_unknown_rrule_dialog_title">Unsupported recurrence rule detected!</string>
     <string name="details_recur_unknown_rrule_dialog_message">An unknown or unsupported recurrence rule was detected. If you continue, the existing recurrence rule will be deleted/overwritten.</string>
     <string name="details_entry_could_not_be_loaded">This entry was either deleted in the background or could not be loaded.</string>
-
+    <string name="details_attachment_beta_info">* Synchronizing attachments is an experimental feature. We strongly encourage to use only small attachments (up to 100 KB) as larger ones could lead to long synchronization times and unexpected behaviour.</string>
 
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">Go to original</string>

@@ -39,6 +39,7 @@ import at.techbee.jtx.DetailSettings
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.*
@@ -551,6 +552,7 @@ fun DetailScreenContent(
                 DetailsCardAttachments(
                     initialAttachments = attachments.value,
                     isEditMode = isEditMode.value,
+                    isRemoteCollection = iCalEntity.value?.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE,
                     onAttachmentsUpdated = { newAttachments ->
                         attachments.value = newAttachments
                     }
