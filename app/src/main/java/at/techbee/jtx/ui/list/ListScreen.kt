@@ -18,7 +18,9 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -54,7 +56,6 @@ fun ListScreen(
     val settingsStateHolder = SettingsStateHolder(context)
     val keyboardController = LocalSoftwareKeyboardController.current
     var showSearch by remember { mutableStateOf(false) }
-    //val focusRequesterSearchText = remember { FocusRequester() }
 
     val allCollections = listViewModel.allCollections.observeAsState(emptyList())
 
@@ -237,8 +238,8 @@ fun ListScreen(
                 allCategoriesLive = listViewModel.allCategories,
                 onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) }
             )
-        }
-    ) {}
+        },
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+        sheetContentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surface)
+    ) { }
 }
-
-
