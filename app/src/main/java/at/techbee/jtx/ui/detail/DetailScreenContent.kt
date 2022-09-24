@@ -393,7 +393,8 @@ fun DetailScreenContent(
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         showProgressLabel = true,
-                        showSlider = true
+                        showSlider = true,
+                        modifier = Modifier.align(Alignment.End)
                     )
                 }
             }
