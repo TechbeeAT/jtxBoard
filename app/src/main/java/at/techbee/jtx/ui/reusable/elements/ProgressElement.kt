@@ -62,12 +62,13 @@ fun ProgressElement(
                         isLinkedRecurringInstance
                     )
                 },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.width(120.dp),
                 enabled = !isReadOnly
             )
             Text(
-                String.format("%.0f%%", sliderPosition),
-                modifier = Modifier.padding(horizontal = 8.dp)
+                text = String.format("%.0f%%", sliderPosition),
+                maxLines = 1,
+                modifier = Modifier.padding(horizontal = 8.dp).width(50.dp)
             )
         }
         Checkbox(
@@ -115,7 +116,7 @@ fun ProgressElementPreview_increment25() {
     MaterialTheme {
         ProgressElement(
             iCalObjectId = 1L,
-            progress = 57,
+            progress = 100,
             isReadOnly = false,
             isLinkedRecurringInstance = false,
             onProgressChanged = { _, _, _ -> },
@@ -131,7 +132,7 @@ fun ProgressElementPreview_without_label() {
     MaterialTheme {
         ProgressElement(
             iCalObjectId = 1L,
-            progress = 57,
+            progress = 8,
             isReadOnly = false,
             isLinkedRecurringInstance = false,
             onProgressChanged = { _, _, _ -> },
@@ -148,7 +149,7 @@ fun ProgressElementPreview_without_label_and_slider() {
     MaterialTheme {
         ProgressElement(
             iCalObjectId = 1L,
-            progress = 57,
+            progress = 100,
             isReadOnly = false,
             isLinkedRecurringInstance = false,
             onProgressChanged = { _, _, _ -> },
