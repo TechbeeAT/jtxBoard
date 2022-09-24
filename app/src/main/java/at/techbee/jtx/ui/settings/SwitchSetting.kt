@@ -12,10 +12,8 @@ import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Attachment
-import androidx.compose.material.icons.outlined.Note
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -93,6 +91,12 @@ enum class SwitchSetting(
         icon = { Icon(Icons.Outlined.Save, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_details_autosave_while_editing,
         default = true
+    ),
+    SETTING_DISABLE_ALARMS_FOR_READONLY(
+    key = "settings_disable_alarms_for_readonly",
+    icon = { Icon(Icons.Outlined.AlarmOff, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+    title = R.string.settings_disable_alarms_for_readonly,
+    default = false
     )
     ;
     fun save(newSwitchValue: Boolean, context: Context) {

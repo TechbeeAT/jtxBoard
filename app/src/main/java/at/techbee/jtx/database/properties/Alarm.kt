@@ -29,6 +29,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import kotlinx.parcelize.Parcelize
 import java.time.Duration
 import java.time.Instant
@@ -331,6 +332,9 @@ data class Alarm (
     fun scheduleNotification(context: Context, triggerTime: Long, isReadOnly: Boolean, notificationSummary: String?, notificationDescription: String?) {
 
         if(triggerTime < System.currentTimeMillis())
+            return
+
+        if(isReadOnly && SettingsStateHolder(context).settingDisableAlarmsReadonly.value)   // don't schedule alarm for read only if option was deactivated!
             return
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

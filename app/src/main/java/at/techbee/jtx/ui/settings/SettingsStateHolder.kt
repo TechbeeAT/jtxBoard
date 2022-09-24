@@ -44,6 +44,8 @@ class SettingsStateHolder(val context: Context) {
         DropdownSetting.SETTING_DEFAULT_DUE_DATE.key, DropdownSetting.SETTING_DEFAULT_DUE_DATE.default.key) } ?: DropdownSetting.SETTING_DEFAULT_DUE_DATE.default )
     var settingStepForProgress = mutableStateOf(DropdownSettingOption.values().find { setting -> setting.key == prefs.getString(
         DropdownSetting.SETTING_PROGRESS_STEP.key, DropdownSetting.SETTING_PROGRESS_STEP.default.key) } ?: DropdownSetting.SETTING_PROGRESS_STEP.default )
+    var settingDisableAlarmsReadonly = mutableStateOf(prefs.getBoolean(SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.key, SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY.default))
+
 
     //invisible settings
     var proInfoShown = mutableStateOf(prefs.getBoolean(SETTINGS_PRO_INFO_SHOWN, false))

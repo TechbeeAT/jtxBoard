@@ -37,20 +37,7 @@ import at.techbee.jtx.ui.settings.DropdownSetting.*
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    currentTheme: MutableState<DropdownSettingOption>,
-    audioFormat: MutableState<DropdownSettingOption>,
-    autoExpandSubtasks: MutableState<Boolean>,
-    autoExpandSubnotes: MutableState<Boolean>,
-    autoExpandAttachments: MutableState<Boolean>,
-    showProgressForMainTasks: MutableState<Boolean>,
-    showProgressForSubTasks: MutableState<Boolean>,
-    showSubtasksInTasklist: MutableState<Boolean>,
-    showSubnotesInNoteslist: MutableState<Boolean>,
-    showSubjournalsInJournallist: MutableState<Boolean>,
-    autosave: MutableState<Boolean>,
-    defaultStartDate: MutableState<DropdownSettingOption>,
-    defaultDueDate: MutableState<DropdownSettingOption>,
-    stepForProgress: MutableState<DropdownSettingOption>,
+    settingsStateHolder: SettingsStateHolder,
     modifier: Modifier = Modifier
 ) {
 
@@ -88,9 +75,9 @@ fun SettingsScreen(
 
                     DropdownSetting(
                         setting = SETTING_THEME,
-                        preselected = currentTheme.value,
+                        preselected = settingsStateHolder.settingTheme.value,
                         onSelectionChanged = { selection ->
-                            currentTheme.value = selection
+                            settingsStateHolder.settingTheme.value = selection
                             SETTING_THEME.save(selection, context = context)
                             when (selection) {
                                 DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(
@@ -106,9 +93,9 @@ fun SettingsScreen(
 
                     DropdownSetting(
                         setting = SETTING_AUDIO_FORMAT,
-                        preselected = audioFormat.value,
+                        preselected = settingsStateHolder.settingAudioFormat.value,
                         onSelectionChanged = { selection ->
-                            audioFormat.value = selection
+                            settingsStateHolder.settingAudioFormat.value = selection
                             SETTING_AUDIO_FORMAT.save(selection, context = context)
                         }
                     )
@@ -126,30 +113,30 @@ fun SettingsScreen(
 
                     SwitchSetting(
                         setting = SETTING_AUTO_EXPAND_SUBTASKS,
-                        initiallyChecked = autoExpandSubtasks.value,
+                        initiallyChecked = settingsStateHolder.settingAutoExpandSubtasks.value,
                         onCheckedChanged = {
-                            autoExpandSubtasks.value = it
+                            settingsStateHolder.settingAutoExpandSubtasks.value = it
                             SETTING_AUTO_EXPAND_SUBTASKS.save(it, context)
                         })
                     SwitchSetting(
                         setting = SETTING_AUTO_EXPAND_SUBNOTES,
-                        initiallyChecked = autoExpandSubnotes.value,
+                        initiallyChecked = settingsStateHolder.settingAutoExpandSubnotes.value,
                         onCheckedChanged = {
-                            autoExpandSubnotes.value = it
+                            settingsStateHolder.settingAutoExpandSubnotes.value = it
                             SETTING_AUTO_EXPAND_SUBNOTES.save(it, context)
                         })
                     SwitchSetting(
                         setting = SETTING_AUTO_EXPAND_ATTACHMENTS,
-                        initiallyChecked = autoExpandAttachments.value,
+                        initiallyChecked = settingsStateHolder.settingAutoExpandAttachments.value,
                         onCheckedChanged = {
-                            autoExpandAttachments.value = it
+                            settingsStateHolder.settingAutoExpandAttachments.value = it
                             SETTING_AUTO_EXPAND_ATTACHMENTS.save(it, context)
                         })
                     SwitchSetting(
                         setting = SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST,
-                        initiallyChecked = showProgressForMainTasks.value,
+                        initiallyChecked = settingsStateHolder.settingShowProgressForMainTasks.value,
                         onCheckedChanged = {
-                            showProgressForMainTasks.value = it
+                            settingsStateHolder.settingShowProgressForMainTasks.value = it
                             SETTING_SHOW_PROGRESS_FOR_MAINTASKS_IN_LIST.save(it, context)
                         })
 
@@ -164,30 +151,30 @@ fun SettingsScreen(
                         Column {
                             SwitchSetting(
                                 setting = SETTING_SHOW_PROGRESS_FOR_SUBTASKS,
-                                initiallyChecked = showProgressForSubTasks.value,
+                                initiallyChecked = settingsStateHolder.settingShowProgressForSubTasks.value,
                                 onCheckedChanged = {
-                                    showProgressForSubTasks.value = it
+                                    settingsStateHolder.settingShowProgressForSubTasks.value = it
                                     SETTING_SHOW_PROGRESS_FOR_SUBTASKS.save(it, context)
                                 })
                             SwitchSetting(
                                 setting = SETTING_SHOW_SUBTASKS_IN_TASKLIST,
-                                initiallyChecked = showSubtasksInTasklist.value,
+                                initiallyChecked = settingsStateHolder.settingShowSubtasksInTasklist.value,
                                 onCheckedChanged = {
-                                    showSubtasksInTasklist.value = it
+                                    settingsStateHolder.settingShowSubtasksInTasklist.value = it
                                     SETTING_SHOW_SUBTASKS_IN_TASKLIST.save(it, context)
                                 })
                             SwitchSetting(
                                 setting = SETTING_SHOW_SUBNOTES_IN_NOTESLIST,
-                                initiallyChecked = showSubnotesInNoteslist.value,
+                                initiallyChecked = settingsStateHolder.settingShowSubnotesInNoteslist.value,
                                 onCheckedChanged = {
-                                    showSubnotesInNoteslist.value = it
+                                    settingsStateHolder.settingShowSubnotesInNoteslist.value = it
                                     SETTING_SHOW_SUBNOTES_IN_NOTESLIST.save(it, context)
                                 })
                             SwitchSetting(
                                 setting = SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST,
-                                initiallyChecked = showSubjournalsInJournallist.value,
+                                initiallyChecked = settingsStateHolder.settingShowSubjournalsInJournallist.value,
                                 onCheckedChanged = {
-                                    showSubjournalsInJournallist.value = it
+                                    settingsStateHolder.settingShowSubjournalsInJournallist.value = it
                                     SETTING_SHOW_SUBJOURNALS_IN_JOURNALLIST.save(it, context)
                                 })
                         }
@@ -209,9 +196,9 @@ fun SettingsScreen(
 
                     SwitchSetting(
                         setting = SETTING_DETAILS_AUTOSAVE,
-                        initiallyChecked = autosave.value,
+                        initiallyChecked = settingsStateHolder.settingAutosave.value,
                         onCheckedChanged = {
-                            autosave.value = it
+                            settingsStateHolder.settingAutosave.value = it
                             SETTING_DETAILS_AUTOSAVE.save(it, context)
                         })
 
@@ -228,26 +215,34 @@ fun SettingsScreen(
 
                     DropdownSetting(
                         setting = SETTING_DEFAULT_START_DATE,
-                        preselected = defaultStartDate.value,
+                        preselected = settingsStateHolder.settingDefaultStartDate.value,
                         onSelectionChanged = { selection ->
-                            audioFormat.value = selection
+                            settingsStateHolder.settingDefaultStartDate.value = selection
                             SETTING_DEFAULT_START_DATE.save(selection, context = context)
                         }
                     )
                     DropdownSetting(
                         setting = SETTING_DEFAULT_DUE_DATE,
-                        preselected = defaultDueDate.value,
+                        preselected = settingsStateHolder.settingDefaultDueDate.value,
                         onSelectionChanged = { selection ->
-                            audioFormat.value = selection
+                            settingsStateHolder.settingDefaultDueDate.value = selection
                             SETTING_DEFAULT_DUE_DATE.save(selection, context = context)
                         }
                     )
                     DropdownSetting(
                         setting = SETTING_PROGRESS_STEP,
-                        preselected = stepForProgress.value,
+                        preselected = settingsStateHolder.settingStepForProgress.value,
                         onSelectionChanged = { selection ->
-                            stepForProgress.value = selection
+                            settingsStateHolder.settingStepForProgress.value = selection
                             SETTING_PROGRESS_STEP.save(selection, context = context)
+                        }
+                    )
+                    SwitchSetting(
+                        setting = SETTING_DISABLE_ALARMS_FOR_READONLY,
+                        initiallyChecked = settingsStateHolder.settingDisableAlarmsReadonly.value,
+                        onCheckedChanged = {
+                            settingsStateHolder.settingDisableAlarmsReadonly.value = it
+                            SETTING_DISABLE_ALARMS_FOR_READONLY.save(it, context)
                         }
                     )
                 }
@@ -265,20 +260,7 @@ fun SettingsScreen_Preview() {
 
         SettingsScreen(
             rememberNavController(),
-            currentTheme = remember { mutableStateOf(SETTING_THEME.options.last()) },
-            audioFormat = remember { mutableStateOf(SETTING_AUDIO_FORMAT.options.first()) },
-            autoExpandSubtasks = remember { mutableStateOf(false) },
-            autoExpandSubnotes = remember { mutableStateOf(false) },
-            autoExpandAttachments = remember { mutableStateOf(false) },
-            showProgressForMainTasks = remember { mutableStateOf(true) },
-            showProgressForSubTasks = remember { mutableStateOf(true) },
-            showSubtasksInTasklist = remember { mutableStateOf(false) },
-            showSubnotesInNoteslist = remember { mutableStateOf(false) },
-            showSubjournalsInJournallist = remember { mutableStateOf(false) },
-            autosave = remember { mutableStateOf(true) },
-            defaultStartDate = remember { mutableStateOf(SETTING_DEFAULT_START_DATE.options.first()) },
-            defaultDueDate = remember { mutableStateOf(SETTING_DEFAULT_DUE_DATE.options.first()) },
-            stepForProgress = remember { mutableStateOf(SETTING_PROGRESS_STEP.options.first()) }
+            settingsStateHolder = SettingsStateHolder(LocalContext.current)
         )
     }
 }
