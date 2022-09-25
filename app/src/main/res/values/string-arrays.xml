@@ -33,26 +33,4 @@
         <item>@string/priority_9_lowest</item>
     </string-array>
 
-    <string-array name="app_settings_theme_names">
-        <item>@string/settings_select_theme_system</item>
-        <item>@string/settings_select_theme_light</item>
-        <item>@string/settings_select_theme_dark</item>
-    </string-array>
-    <string-array name="app_settings_theme_values" translatable="false">
-        <item>system</item>
-        <item>light</item>
-        <item>dark</item>
-    </string-array>
-
-    <!-- Possible default date for start and due -->
-    <string-array name="settings_default_date_entries">
-        <item>@string/settings_default_date_none</item>
-        <item>@string/settings_default_date_same_day</item>
-        <item>@string/settings_default_date_next_day</item>  <!-- one day -->
-        <item>@string/settings_default_date_two_days</item>  <!-- two days -->
-        <item>@string/settings_default_date_three_days</item>  <!-- three days -->
-        <item>@string/settings_default_date_one_week</item>  <!-- 7 days -->
-        <item>@string/settings_default_date_two_weeks</item>  <!-- 14 days -->
-        <item>@string/settings_default_date_four_weeks</item>  <!-- 28 days -->
-    </string-array>
 </resources>

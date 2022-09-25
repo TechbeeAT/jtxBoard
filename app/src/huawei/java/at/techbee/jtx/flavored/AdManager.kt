@@ -13,7 +13,7 @@ import android.content.Context
 import android.view.View
 import android.widget.LinearLayout
 import at.techbee.jtx.BuildConfig
-import at.techbee.jtx.MainActivity
+import at.techbee.jtx.MainActivity2
 import com.huawei.hms.ads.AdParam
 import com.huawei.hms.ads.BannerAdSize
 import com.huawei.hms.ads.HwAds
@@ -62,12 +62,12 @@ class AdManager : AdManagerDefinition {
     override fun isAdFlavor() = true
     override fun isConsentRequired() = false  // consent is not required for huawei as personalized ads get deactivated if required
 
-    override fun checkOrRequestConsentAndLoadAds(activity: MainActivity, context: Context) {
+    override fun checkOrRequestConsentAndLoadAds(activity: MainActivity2, context: Context) {
         HwAds.init(activity)
         checkConsentStatus(activity)
     }
 
-    override fun resetUserConsent(activity: MainActivity, context: Context) { /* nothing to do for huawei */ }
+    override fun resetUserConsent(activity: MainActivity2, context: Context) { /* nothing to do for huawei */ }
     override fun showInterstitialAd(activity: Activity) { /* nothing to do for huawei */ }
 
     /**
@@ -107,7 +107,7 @@ class AdManager : AdManagerDefinition {
         }
     }
 
-    private fun checkConsentStatus(activity: MainActivity) {
+    private fun checkConsentStatus(activity: MainActivity2) {
 
         allowPersonalizedAds(false)    //default false until we checked
 

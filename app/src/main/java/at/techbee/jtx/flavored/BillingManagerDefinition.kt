@@ -9,6 +9,7 @@
 package at.techbee.jtx.flavored
 
 import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
@@ -26,12 +27,12 @@ interface BillingManagerDefinition {
      * and makes the variable billingClient available for further use.
      * The initialisiation also calls querySkuDetails().
      */
-    fun initialise(activity: Activity)
+    fun initialise(context: Context)
 
     /**
      * This function launches the billing flow from Google Play.
      * It shows a bar on the bototm of the page where the user can buy the item.
-     * The passed skuDetails are currently [BillingManager.proProductDetails].
+     * The passed skuDetails are currently BillingManager.proProductDetails.
      */
     fun launchBillingFlow(activity: Activity)
 }

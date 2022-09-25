@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.INTERNET" /> <!-- START remove permissions would be merged by the ical4android manifest and that are not needed -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <!-- read/write Android calendars -->
     <uses-permission
         android:name="android.permission.READ_CALENDAR"
@@ -80,11 +83,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:supportsRtl="true">
+
 
         <provider
-            android:name="at.techbee.jtx.SyncContentProvider"
+            android:name=".SyncContentProvider"
             android:authorities="at.techbee.jtx.provider"
             android:enabled="true"
             android:exported="true"
@@ -98,31 +101,27 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity
-            android:name="at.techbee.jtx.MainActivity"
-            android:exported="true">
+            android:name=".MainActivity2"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="text/plain" />
                 <data android:mimeType="image/*" />
                 <data android:mimeType="application/pdf" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:scheme="file" />
                 <data android:scheme="content" />
                 <data android:mimeType="text/calendar" />
@@ -133,16 +132,14 @@
                 android:resource="@xml/shortcuts" />
         </activity>
 
-        <receiver android:name="at.techbee.jtx.NotificationPublisher" />
+        <receiver android:name=".NotificationPublisher" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCaISlh2wJCX-tksqU7I3YOuf3wcmCAyfI" />
-
     </application>
 
 </manifest>

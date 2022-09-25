@@ -9,6 +9,7 @@
 package at.techbee.jtx.database
 
 import android.database.Cursor
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
@@ -34,7 +35,7 @@ SELECTs (global selects without parameter)
      */
     @Transaction
     @Query("SELECT DISTINCT text FROM $TABLE_NAME_CATEGORY ORDER BY text ASC")
-    fun getAllCategories(): LiveData<List<String>>
+    fun getAllCategoriesAsText(): LiveData<List<String>>
 
     /**
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
@@ -43,7 +44,7 @@ SELECTs (global selects without parameter)
      */
     @Transaction
     @Query("SELECT DISTINCT text FROM $TABLE_NAME_RESOURCE ORDER BY text ASC")
-    fun getAllResources(): LiveData<List<String>>
+    fun getAllResourcesAsText(): LiveData<List<String>>
 
 
     /**
@@ -120,26 +121,6 @@ SELECTs (global selects without parameter)
 
 
     /**
-     * Retrieve an list of all DISTINCT Collections ([ICalCollection])
-     * that support VTODO and are not Read only as a LiveData-List
-     *
-     * @return a list of VTODO-[Collection] as LiveData<List<String>>
-     */
-    @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVTODO = '1' AND $COLUMN_COLLECTION_READONLY = '0' ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getAllWriteableVTODOCollections(): LiveData<List<ICalCollection>>
-
-    /**
-     * Retrieve an list of all DISTINCT Collections ([ICalCollection])
-     * that support VJOURNAL and are not Read only as a LiveData-List
-     *
-     * @return a list of VJOURNAL-[Collection] as LiveData<List<String>>
-     */
-    @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVJOURNAL = '1'  AND $COLUMN_COLLECTION_READONLY = '0' ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getAllWriteableVJOURNALCollections(): LiveData<List<ICalCollection>>
-
-    /**
      * Retrieve an list of all remote collections ([ICalCollection])
      *
      * @return a list of [ICalCollection] as LiveData<List<ICalCollection>>
@@ -180,6 +161,16 @@ SELECTs (global selects without parameter)
     @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST INNER JOIN $TABLE_NAME_RELATEDTO ON $VIEW_NAME_ICAL4LIST.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID WHERE $VIEW_NAME_ICAL4LIST.$COLUMN_COMPONENT = 'VJOURNAL' AND $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' ORDER BY $COLUMN_SORT_INDEX")
     fun getAllSubnotes(): LiveData<List<ICal4List>>
 
+    /**
+     * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
+     * by checking if the [ICalObject.id] is listed as a [Relatedto.linkedICalObjectId].
+     *
+     * @return a list of [ICalObject] as LiveData<List<[ICalObject]>>
+     */
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT")
+    fun getAllAttachments(): LiveData<List<Attachment>>
+
 
     /**
      * Retrieve an list of [ICalObject] that are child-elements of another [ICalObject]
@@ -212,13 +203,6 @@ SELECTs (global selects without parameter)
     @Query("SELECT DISTINCT $VIEW_NAME_ICAL4LIST.* from $VIEW_NAME_ICAL4LIST WHERE $VIEW_NAME_ICAL4LIST.vjournalUidOfParent = :uid ORDER BY $COLUMN_SORT_INDEX")
     fun getAllSubnotesOf(uid: String): LiveData<List<ICal4List>>
     
-    /**
-     * Retrieve an list of all  [Attachment]
-     * @return a list of [Attachment] as LiveData<List<[Attachment]>>
-     */
-    @Transaction
-    @Query("SELECT * FROM $TABLE_NAME_ATTACHMENT")
-    fun getAllAttachments(): LiveData<List<Attachment>>
 
     /**
      * Retrieve an list of all  [Attachment]
@@ -303,9 +287,6 @@ INSERTs (Asyncronously / Suspend)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun upsertCollection(ICalCollection: ICalCollection): Long
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSubtask(subtask: ICalObject): Long
 
 
 /*
@@ -487,6 +468,12 @@ DELETEs by Object
     @Delete
     fun deleteResource(resource: Resource)
 
+    /**
+     * Deletes all ICalObjects. ONLY FOR TESTING!
+     */
+    @Query("DELETE FROM $TABLE_NAME_ICALOBJECT")
+    @VisibleForTesting
+    fun deleteAllICalObjects()
 
 
     /**

@@ -10,7 +10,8 @@ package at.techbee.jtx.database
 
 import android.content.Context
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
+import net.fortuna.ical4j.model.Recur
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -283,14 +284,10 @@ class ICalObjectTest {
 
     @Test
     fun getRecurId_datetime_withTimezone() {
-
         val sampleDate = 1632474660000L   // 2021-09-24 11:11:00
         val recurId = ICalObject.getRecurId(sampleDate, "Africa/Banjul")
-        assertEquals("20210924T091100;TZID=Africa/Abidjan", recurId)
+        assertEquals("20210924T091100;TZID=Africa/Banjul", recurId)
     }
-
-
-
 
     @Test
     fun statusJournal_getStringResource_cancelled() {
@@ -305,6 +302,38 @@ class ICalObjectTest {
     @Test
     fun classification_getStringResource_confidential() {
         assertEquals(mockContext.getString(R.string.classification_confidential), Classification.getStringResource(mockContext, Classification.CONFIDENTIAL.name))
+    }
+
+    @Test
+    fun getRecur1() {
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622494800000L
+            this.rrule = "FREQ=YEARLY;COUNT=3;INTERVAL=2"
+        }
+        val recur = item.getRecur()
+        assertEquals(Recur.Frequency.YEARLY, recur?.frequency)
+        assertEquals(3, recur?.count)
+        assertEquals(2, recur?.interval)
+    }
+
+    @Test
+    fun getRecur_empty() {
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622494800000L
+            this.rrule = null
+        }
+        val recur = item.getRecur()
+        assertNull(recur)
+    }
+
+    @Test
+    fun getRecur_null() {
+        val item = ICalObject.createJournal().apply {
+            this.dtstart = 1622494800000L
+            this.rrule = "asdf"
+        }
+        val recur = item.getRecur()
+        assertNull(recur)
     }
 
     @Test
@@ -678,6 +707,45 @@ class ICalObjectTest {
 
         assertEquals(textSummary, journal.summary)
         assertEquals(textDescription, journal.description)
+    }
+
+    @Test
+    fun parseURLTest() {
+        val text = "This should be in the #summary." +
+                " This should be in the description\n" +
+                "This is my link https://www.orf.at/ " +
+                " Adding further #lines\nand #categories here\n"
+
+        val journal = ICalObject.createJournal()
+        journal.parseURL(text)
+
+        assertEquals("https://www.orf.at", journal.url)
+    }
+
+    @Test
+    fun parseURLTest2() {
+        val text = "This should be in the #summary." +
+                " This should be in the description\n" +
+                "This is my link www.orf.at" +
+                " Adding further #lines\nand #categories here\n"
+
+        val journal = ICalObject.createJournal()
+        journal.parseURL(text)
+
+        assertEquals("www.orf.at", journal.url)
+    }
+
+    @Test
+    fun parseURLTest3() {
+        val text = "This should be in the #summary." +
+                " This should be in the description\n" +
+                "This is my link https://orf.at" +
+                " Adding further #lines\nand #categories here\n"
+
+        val journal = ICalObject.createJournal()
+        journal.parseURL(text)
+
+        assertEquals("https://orf.at", journal.url)
     }
 
     @Test

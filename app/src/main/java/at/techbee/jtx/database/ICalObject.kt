@@ -13,10 +13,10 @@ import android.content.Context
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
-import android.view.View
-import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
+import androidx.compose.ui.graphics.Color
+import androidx.core.util.PatternsCompat
 import androidx.preference.PreferenceManager
 import androidx.room.*
 import at.techbee.jtx.R
@@ -24,7 +24,7 @@ import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Reltype
-import at.techbee.jtx.ui.SettingsFragment
+import at.techbee.jtx.ui.settings.DropdownSetting
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
@@ -36,13 +36,13 @@ import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.property.DtStart
+import java.text.ParseException
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.TextStyle
 import java.util.*
 import java.util.TimeZone
-import kotlin.IllegalArgumentException
 import kotlin.time.Duration
 
 
@@ -492,10 +492,20 @@ data class ICalObject(
 ) : Parcelable {
 
 
-    companion object Factory {
+    companion object {
 
         const val TZ_ALLDAY = "ALLDAY"
         const val DEFAULT_MAX_RECUR_INSTANCES = 100
+        val defaultColors = arrayListOf(
+            Color.Transparent,
+            Color.Red,
+            Color.Green,
+            Color.Blue,
+            Color.Yellow,
+            Color.Cyan,
+            Color.Magenta,
+            Color.LightGray
+        )
 
         fun createJournal() = createJournal(null)
 
@@ -543,9 +553,6 @@ data class ICalObject(
          * @return A newly created [ICalObject] instance.
          */
         fun fromContentValues(values: ContentValues?): ICalObject? {
-
-            // TODO initialize specific component based on values!
-            // TODO validate some inputs, especially Int Inputs!
 
             if (values == null)
                 return null
@@ -612,14 +619,14 @@ data class ICalObject(
          *
          * @return The new id of the item in the new collection
          */
-        suspend fun updateCollectionWithChildren(id: Long, parentId: Long?, newCollectionId: Long, context: Context): Long {
+        suspend fun updateCollectionWithChildren(id: Long, parentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long {
 
-            val newParentId = moveItemToNewCollection(id, parentId, newCollectionId, context)
+            val newParentId = moveItemToNewCollection(id, parentId, newCollectionId, database, context)
 
             // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
-            val children = ICalDatabase.getInstance(context).iCalDatabaseDao.getRelatedChildren(id)
+            val children = database.getRelatedChildren(id)
             children.forEach { childId ->
-                updateCollectionWithChildren(childId, newParentId, newCollectionId, context)
+                updateCollectionWithChildren(childId, newParentId, newCollectionId, database, context)
             }
             return newParentId
         }
@@ -635,10 +642,8 @@ data class ICalObject(
          * @return the new id of the item that was inserted (that becomes the newParentId)
          *
          */
-        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, context: Context): Long =
+        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long =
             withContext(Dispatchers.IO) {
-
-                val database = ICalDatabase.getInstance(context).iCalDatabaseDao
 
                 val item = database.getSync(id)
                 if (item != null) {
@@ -699,7 +704,7 @@ data class ICalObject(
                             it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(item.property.dtstart, item.property.dtstartTimezone)
                             else -> null
                         }
-                        triggerTime?.let { trigger ->  it.scheduleNotification(context, trigger) }
+                        triggerTime?.let { trigger ->  it.scheduleNotification(context, trigger, item.ICalCollection?.readonly?: true, item.property.summary, item.property.description) }
                     }
 
                     // relations need to be rebuilt from the new child to the parent
@@ -721,8 +726,7 @@ data class ICalObject(
             if(item.isRecurLinkedInstance) {
 
                 item.recurOriginalIcalObjectId?.let { originalId ->
-                    val newExceptionList =
-                        addLongToCSVString(database.getRecurExceptions(originalId), item.dtstart)
+                    val newExceptionList = addLongToCSVString(database.getRecurExceptions(originalId), item.dtstart)
                     database.setRecurExceptions(
                         originalId,
                         newExceptionList,
@@ -748,25 +752,6 @@ data class ICalObject(
                 return tz
 
             return TimeZone.getTimeZone(tz).id
-        }
-
-        /**
-         * Tries to apply the given color on an image view or hides the image view if applying fails
-         * @param [image] where the color should be applied to
-         * @param [color] as Int?
-         */
-        fun applyColorOrHide(image: ImageView, color: Int?) {
-
-            if (color != null) {
-                try {
-                    image.setColorFilter(color)
-                    image.visibility = View.VISIBLE
-                } catch (e: java.lang.IllegalArgumentException) {
-                    Log.i("Invalid color","Invalid Color cannot be parsed: $color")
-                    image.visibility = View.INVISIBLE
-                }
-            } else
-                image.visibility = View.INVISIBLE
         }
     }
 
@@ -824,8 +809,8 @@ data class ICalObject(
         //values.getAsString(COLUMN_OTHER)?.let { other -> this.other = other }
         values.getAsLong(COLUMN_ICALOBJECT_COLLECTIONID)
             ?.let { collectionId -> this.collectionId = collectionId }
-        values.getAsString(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty == "1" }
-        values.getAsString(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted == "1" }
+        values.getAsString(COLUMN_DIRTY)?.let { dirty -> this.dirty = dirty == "1" || dirty == "true" }
+        values.getAsString(COLUMN_DELETED)?.let { deleted -> this.deleted = deleted == "1" || deleted == "true" }
         values.getAsString(COLUMN_FILENAME)?.let { fileName -> this.fileName = fileName }
         values.getAsString(COLUMN_ETAG)?.let { eTag -> this.eTag = eTag }
         values.getAsString(COLUMN_SCHEDULETAG)
@@ -856,7 +841,6 @@ data class ICalObject(
                 0 -> StatusTodo.`NEEDS-ACTION`.name
                 else -> StatusTodo.`NEEDS-ACTION`.name      // should never happen!
             }
-        lastModified = System.currentTimeMillis()
 
         if (completed == null && percent == 100) {
             completedTimezone = dueTimezone?:dtstartTimezone
@@ -869,17 +853,40 @@ data class ICalObject(
             completedTimezone = null
         }
 
-        sequence++
-        dirty = true
-        isRecurLinkedInstance = false     // in any case on update of the progress, the item becomes an exception
+        makeDirty()
 
         return
     }
 
+    /**
+     * Sets the dirty flag, updates sequence and lastModified value, makes recurring entry an exception
+     */
+    fun makeDirty() {
+        lastModified = System.currentTimeMillis()
+        sequence += 1
+        dirty = true
+        isRecurLinkedInstance = false     // in any case on update of the progress, the item becomes an exception
+    }
 
+    /**
+     * @return a Recur Object based on the given rrule or null
+     */
+    fun getRecur(): Recur? {
+        if(this.rrule.isNullOrEmpty())
+            return null
+
+        return try {
+            Recur(this.rrule)
+        } catch (e: ParseException) {
+            Log.w("getRrule", "Illegal representation of UNTIL\n$e")
+            null
+        } catch (e: IllegalArgumentException) {
+            Log.w("getRrule", "Unrecognized rrule\n$e")
+            null
+        }
+    }
 
     fun getInstancesFromRrule(): List<Long> {
-
         val recurList = mutableListOf<Long>()
 
         // don't continue if this function is called with an empty dtstart
@@ -999,7 +1006,6 @@ data class ICalObject(
     }
 
 
-
     fun recreateRecurring(database: ICalDatabaseDao, context: Context) {
 
         val original = database.getSync(id) ?: return
@@ -1015,8 +1021,10 @@ data class ICalObject(
 
         getInstancesFromRrule().forEach { recurrenceDate ->
 
+            /*
             if(original.property.dtstart == recurrenceDate)
                 return@forEach    // skip entry as it is the original event
+             */
 
             val instance = original.copy()
             instance.property.id = 0L
@@ -1101,7 +1109,7 @@ data class ICalObject(
                         it.triggerRelativeDuration != null -> it.getDatetimeFromTriggerDuration(instance.property.dtstart, instance.property.dtstartTimezone)
                         else -> null
                     }
-                    triggerTime?.let { trigger -> it.scheduleNotification(context, trigger) }
+                    triggerTime?.let { trigger -> it.scheduleNotification(context, trigger, instance.ICalCollection?.readonly ?: true, instance.property.summary, instance.property.description) }
                 }
             }
 
@@ -1126,6 +1134,21 @@ data class ICalObject(
                 this.summary = it[0]
             if (it.size >= 2)
                 this.description = it[1]
+        }
+    }
+
+    /**
+     * Takes a string, extracts the first link matching the regex from the string and puts it into the URL field of the ICalObject
+     * @param [text] that should be parsed
+     */
+    fun parseURL(text: String?) {
+        if (text == null)
+            return
+
+        val matcher = PatternsCompat.WEB_URL.matcher(text)
+        while (matcher.find()) {
+            this.url = matcher.group()
+            return
         }
     }
 
@@ -1188,7 +1211,8 @@ data class ICalObject(
     }
 
     fun setDefaultStartDateFromSettings(context: Context) {
-        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(SettingsFragment.DEFAULT_START_DATE, null) ?: return
+        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(
+            DropdownSetting.SETTING_DEFAULT_START_DATE.key, null) ?: return
         if(default == "null")
             return
         try {
@@ -1200,7 +1224,8 @@ data class ICalObject(
     }
 
     fun setDefaultDueDateFromSettings(context: Context) {
-        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(SettingsFragment.DEFAULT_DUE_DATE, null) ?: return
+        val default = PreferenceManager.getDefaultSharedPreferences(context).getString(
+            DropdownSetting.SETTING_DEFAULT_DUE_DATE.key, null) ?: return
         if(default == "null")
             return
         try {
@@ -1208,6 +1233,15 @@ data class ICalObject(
             this.dueTimezone = TZ_ALLDAY
         } catch (e: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
+        }
+    }
+
+    fun getModuleFromString(): Module {
+        return when (this.module) {
+            Module.JOURNAL.name -> Module.JOURNAL
+            Module.NOTE.name -> Module.NOTE
+            Module.TODO.name -> Module.TODO
+            else -> Module.NOTE
         }
     }
 }
@@ -1296,16 +1330,6 @@ enum class StatusTodo(val stringResource: Int) : Parcelable {
                 set.add(it.name)
             }
             return set.toSet()
-        }
-
-        fun getFromString(string: String?): StatusTodo? {
-            return when (string) {
-                `NEEDS-ACTION`.name -> `NEEDS-ACTION`
-                COMPLETED.name -> COMPLETED
-                `IN-PROCESS`.name -> `IN-PROCESS`
-                CANCELLED.name -> CANCELLED
-                else -> null
-            }
         }
     }
 }

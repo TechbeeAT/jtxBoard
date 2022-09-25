@@ -11,20 +11,19 @@ apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'androidx.navigation.safeargs'
 
 
 android {
     namespace 'at.techbee.jtx'
-    compileSdkVersion 32
+    compileSdkVersion 33
     defaultConfig {
         applicationId "at.techbee.jtx"
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
-        targetSdkVersion 32
-        versionCode 102040008
-        versionName "1.02.04-rc08"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
-        buildConfigField "String", "versionCodename", "\"Putin's war must end!\""
+        targetSdkVersion 33
+        versionCode 200000004
+        versionName "2.00.00-beta04"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        buildConfigField "String", "versionCodename", "\"No Putin-Bomb can destroy Humanity\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -65,7 +64,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion version_compose
+        kotlinCompilerExtensionVersion "1.3.0"
     }
 
     packagingOptions {
@@ -74,8 +73,6 @@ android {
             pickFirsts += ['META-INF/AL2.0', 'META-INF/LGPL2.1']
         }
     }
-
-    //necessary for ical4j
 
     flavorDimensions 'version'
     productFlavors {
@@ -124,126 +121,101 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    // Support libraries
-    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
-
     // Android KTX
     implementation "androidx.core:core-ktx:$version_core"
 
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$version_room"
-    implementation "androidx.appcompat:appcompat:$version_appcompat"
-    implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-
+    implementation "androidx.room:room-ktx:$version_room"   // Kotlin Extensions and Coroutines support for Room
     kapt "androidx.room:room-compiler:$version_room"
-    implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
+
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
 
-    // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
-    implementation "androidx.navigation:navigation-ui-ktx:$version_navigation"
-
-    // ViewModel and LiveData
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
-
-    // Kotlin Extensions and Coroutines support for Room
-    implementation "androidx.room:room-ktx:$version_room"
-
-    // Material.io
-    implementation "com.google.android.material:material:$version_material"
 
     implementation "androidx.preference:preference-ktx:1.2.0"
 
     // Volley for simple network requests
-    implementation("com.android.volley:volley:1.2.1")
+    implementation "com.android.volley:volley:1.2.1"
 
     // Google billing
     gplayImplementation "com.android.billingclient:billing-ktx:$version_billing"
-
     // Google request for review
     gplayImplementation "com.google.android.play:review:$version_review"
     gplayImplementation "com.google.android.play:review-ktx:$version_review"
 
+    // Google Maps
+    gplayImplementation "com.google.maps.android:maps-compose:2.2.0"
+    gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
+    gplayImplementation "com.google.android.gms:play-services-location:20.0.0"
 
     // Huawei Ads Lite (works only on Huawei phones)
     huaweiImplementation "com.huawei.hms:ads:3.4.49.301"    // should be replaced by ads-lite when it can be tested with a huawei phone
     //implementation "com.huawei.hms:ads-lite:13.4.49.301"
     huaweiImplementation "com.huawei.hms:ads-consent:3.4.49.301"
 
-    gplayImplementation "com.google.android.gms:play-services-maps:18.0.2"
-
     // Workmanager support
-    implementation("androidx.work:work-runtime-ktx:$version_work")
+    implementation "androidx.work:work-runtime-ktx:$version_work"
+    androidTestImplementation "androidx.work:work-testing:$version_work"
 
     //support for java.time for older Android versions (<O)
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
-    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0-alpha07'
+    androidTestImplementation "androidx.test.ext:junit-ktx:1.1.3"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0-alpha07"
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version_coroutine"
     androidTestImplementation "androidx.test:runner:1.4.0"
-    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation "androidx.test:rules:1.4.0"
 
     // Testing-only dependencies
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
-    androidTestImplementation 'androidx.test:core-ktx:1.4.1-alpha07'
+    androidTestImplementation 'androidx.test:core-ktx:1.5.0-alpha02'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.room:room-testing:$version_room"
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
-    testImplementation 'androidx.test:core-ktx:1.4.1-alpha07'
+    testImplementation 'androidx.test:core-ktx:1.5.0-alpha02'
     // Required -- JUnit 4 framework
-    testImplementation 'androidx.test.ext:junit-ktx:1.1.3'
-    testImplementation("org.mockito:mockito-core:3.9.0")
-
-
-    //Fragment Testing
-    debugImplementation('androidx.fragment:fragment-testing:1.4.1') {
-        // exclude androidx.test:core while fragment_testing depends on 1.1.0
-        exclude group: 'androidx.test', module: 'core'
-    }
-
-    // Testing for Workmanager
-    androidTestImplementation("androidx.work:work-testing:$version_work")
+    testImplementation "androidx.test.ext:junit-ktx:1.1.3"
+    testImplementation "org.mockito:mockito-core:3.9.0"
 
     //About Libraries
     implementation "com.mikepenz:aboutlibraries-core:${version_about_libraries}"
     implementation "com.mikepenz:aboutlibraries-compose:${version_about_libraries}"
 
-
-    // Markwon for markdown support
-    implementation  "io.noties.markwon:core:$version_markwon"
-    implementation  "io.noties.markwon:ext-strikethrough:$version_markwon"
-    implementation  "io.noties.markwon:editor:$version_markwon"
-
-    // Color Picker
-    implementation 'com.larswerkman:HoloColorPicker:1.5'
+    // Markdown support
+    implementation "com.github.jeziellago:compose-markdown:0.3.0"
 
     // Compose Color Picker
-    //implementation 'com.godaddy.android.colorpicker:compose-color-picker:0.4.2'
-    implementation 'com.godaddy.android.colorpicker:compose-color-picker-android:0.4.2'
-
+    implementation "com.godaddy.android.colorpicker:compose-color-picker-android:0.4.2"
 
     // jetpack compose
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation "androidx.compose.ui:ui:$version_compose"
-    implementation 'androidx.compose.material3:material3:1.0.0-alpha13'
+    implementation "androidx.compose.material3:material3:1.0.0-beta02"
+    implementation "androidx.compose.material3:material3-window-size-class:1.0.0-beta02"
+
+    implementation "androidx.compose.material:material:$version_compose"    // material 2 support as bottom sheet is missing in m3
     implementation "androidx.compose.ui:ui-tooling-preview:$version_compose"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
-    implementation 'androidx.activity:activity-compose:1.4.0'
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
+    implementation "androidx.activity:activity-compose:1.5.1"
     implementation "androidx.compose.material:material-icons-extended:$version_compose"
     implementation "androidx.compose.runtime:runtime-livedata:$version_compose"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0-rc02"
-    implementation "androidx.navigation:navigation-compose:2.5.0-rc02"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
+    implementation "androidx.navigation:navigation-compose:2.5.2"
+
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$version_compose"
     debugImplementation "androidx.compose.ui:ui-tooling:$version_compose"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$version_compose"
 
+    // permissions from accompanist
+    implementation "com.google.accompanist:accompanist-permissions:0.25.0"
+    // Paging Compose
+    implementation "com.google.accompanist:accompanist-pager:0.22.0-rc"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.22.0-rc"
 }
 
