@@ -130,6 +130,7 @@ fun DetailScreenContent(
     var showColorPicker by rememberSaveable { mutableStateOf(false) }
     var showUnsavedChangesDialog by rememberSaveable { mutableStateOf(false) }
     var showMoveItemToCollectionDialog by rememberSaveable { mutableStateOf<ICalCollection?>(null) }
+    var showAllOptions by rememberSaveable { mutableStateOf(false) }
 
 
     val previousIsEditModeState = rememberSaveable { mutableStateOf(isEditMode.value) }
@@ -419,7 +420,7 @@ fun DetailScreenContent(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && detailSettings.enableSubtasks.value)) {
+            AnimatedVisibility(subtasks.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.enableSubtasks.value || showAllOptions))) {
                 DetailsCardSubtasks(
                     subtasks = subtasks.value,
                     isEditMode = isEditMode,
@@ -439,7 +440,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVJOURNAL == true && detailSettings.enableSubnotes.value)) {
+            AnimatedVisibility(subnotes.value.isNotEmpty() || (isEditMode.value && iCalEntity.value?.ICalCollection?.supportsVJOURNAL == true && (detailSettings.enableSubnotes.value || showAllOptions))) {
                 DetailsCardSubnotes(
                     subnotes = subnotes.value,
                     isEditMode = isEditMode,
@@ -463,7 +464,7 @@ fun DetailScreenContent(
             }
 
 
-            AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && detailSettings.enableCategories.value)) {
+            AnimatedVisibility(categories.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableCategories.value || showAllOptions))) {
                 DetailsCardCategories(
                     initialCategories = categories.value,
                     isEditMode = isEditMode.value,
@@ -475,7 +476,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && detailSettings.enableResources.value)) {
+            AnimatedVisibility(resources.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableResources.value || showAllOptions))) {
                 DetailsCardResources(
                     initialResources = resources.value,
                     isEditMode = isEditMode.value,
@@ -488,7 +489,7 @@ fun DetailScreenContent(
             }
 
 
-            AnimatedVisibility(attendees.value.isNotEmpty() || (isEditMode.value && detailSettings.enableAttendees.value)) {
+            AnimatedVisibility(attendees.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableAttendees.value || showAllOptions))) {
                 DetailsCardAttendees(
                     initialAttendees = attendees.value,
                     isEditMode = isEditMode.value,
@@ -499,7 +500,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(icalObject.contact?.isNotBlank() == true || (isEditMode.value && detailSettings.enableContact.value)) {
+            AnimatedVisibility(icalObject.contact?.isNotBlank() == true || (isEditMode.value && (detailSettings.enableContact.value || showAllOptions))) {
                 DetailsCardContact(
                     initialContact = icalObject.contact ?: "",
                     isEditMode = isEditMode.value,
@@ -511,7 +512,7 @@ fun DetailScreenContent(
             }
 
 
-            AnimatedVisibility(icalObject.url?.isNotEmpty() == true || (isEditMode.value && detailSettings.enableUrl.value)) {
+            AnimatedVisibility(icalObject.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.enableUrl.value || showAllOptions))) {
                 DetailsCardUrl(
                     initialUrl = icalObject.url ?: "",
                     isEditMode = isEditMode.value,
@@ -522,7 +523,7 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility((icalObject.location?.isNotEmpty() == true || (icalObject.geoLat != null && icalObject.geoLong != null)) || (isEditMode.value && detailSettings.enableLocation.value)) {
+            AnimatedVisibility((icalObject.location?.isNotEmpty() == true || (icalObject.geoLat != null && icalObject.geoLong != null)) || (isEditMode.value && (detailSettings.enableLocation.value || showAllOptions))) {
                 DetailsCardLocation(
                     initialLocation = icalObject.location,
                     initialGeoLat = icalObject.geoLat,
@@ -537,86 +538,60 @@ fun DetailScreenContent(
                 )
             }
 
-            AnimatedVisibility(comments.value.isNotEmpty() || (isEditMode.value && detailSettings.enableComments.value)) {
+            AnimatedVisibility(comments.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableComments.value || showAllOptions))) {
                 DetailsCardComments(
                     initialComments = comments.value,
                     isEditMode = isEditMode.value,
                     onCommentsUpdated = { newComments ->
                         comments.value = newComments
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     }
                 )
             }
 
 
-            AnimatedVisibility(attachments.value.isNotEmpty() || (isEditMode.value && detailSettings.enableAttachments.value)) {
+            AnimatedVisibility(attachments.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableAttachments.value || showAllOptions))) {
                 DetailsCardAttachments(
                     initialAttachments = attachments.value,
                     isEditMode = isEditMode.value,
                     isRemoteCollection = iCalEntity.value?.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE,
                     onAttachmentsUpdated = { newAttachments ->
                         attachments.value = newAttachments
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     }
                 )
             }
 
-            AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && detailSettings.enableAlarms.value)) {
+            AnimatedVisibility(alarms.value.isNotEmpty() || (isEditMode.value && (detailSettings.enableAlarms.value || showAllOptions))) {
                 DetailsCardAlarms(
                     initialAlarms = alarms.value,
                     icalObject = icalObject,
                     isEditMode = isEditMode.value,
                     onAlarmsUpdated = { newAlarms ->
                         alarms.value = newAlarms
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     })
             }
 
             AnimatedVisibility(icalObject.rrule != null
                     || icalObject.isRecurLinkedInstance
                     || icalObject.recurOriginalIcalObjectId != null
-                    || (isEditMode.value && detailSettings.enableRecurrence.value)
+                    || (isEditMode.value && (detailSettings.enableRecurrence.value || showAllOptions))
             ) {   // only Todos have recur!
                 DetailsCardRecur(
                     icalObject = icalObject,
                     isEditMode = isEditMode.value,
                     onRecurUpdated = { updatedRRule ->
                         icalObject.rrule = updatedRRule?.toString()
+                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     },
                     goToView = goToView
                 )
             }
 
-            AnimatedVisibility(
-                isEditMode.value
-                        && !(detailSettings.enableRecurrence.value
-                            && detailSettings.enableLocation.value
-                            && detailSettings.enableComments.value
-                            && detailSettings.enableAttachments.value
-                            && detailSettings.enableUrl.value
-                            && detailSettings.enableAttendees.value
-                            && detailSettings.enableContact.value
-                            && detailSettings.enableResources.value
-                            && detailSettings.enableCategories.value
-                            && detailSettings.enableSubnotes.value
-                            && detailSettings.enableSubtasks.value
-                            && detailSettings.enableAlarms.value
-                        )
-            ) {
+            AnimatedVisibility(isEditMode.value && !showAllOptions) {
                 TextButton(
-                    onClick = {
-                        if(icalObject.module != Module.NOTE.name)
-                            detailSettings.enableRecurrence.value = true
-                        detailSettings.enableLocation.value = true
-                        detailSettings.enableComments.value = true
-                        detailSettings.enableAttachments.value = true
-                        detailSettings.enableUrl.value = true
-                        detailSettings.enableAttendees.value = true
-                        detailSettings.enableContact.value = true
-                        detailSettings.enableResources.value = true
-                        detailSettings.enableCategories.value = true
-                        detailSettings.enableSubnotes.value = true
-                        detailSettings.enableSubtasks.value = true
-                        if(icalObject.module == Module.TODO.name)
-                            detailSettings.enableAlarms.value = true
-                    },
+                    onClick = { showAllOptions = true },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(stringResource(R.string.details_show_all_options))
