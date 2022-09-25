@@ -29,14 +29,14 @@ class JtxReviewManager(val activity: Activity) : ReviewManagerDefinition {
         }
 
 
-    override fun launch() {
+    override fun showIfApplicable(): Boolean {
 
         if(nextRequestOn == 0L) // first request for donation 30 days after install
             nextRequestOn = ZonedDateTime.now().plusDays(daysToFirstDialog).toInstant().toEpochMilli()
 
         // We request another review at the earliest 30 days after the previous review
         if(Instant.ofEpochMilli(nextRequestOn).atZone(ZoneId.systemDefault()) > ZonedDateTime.now())
-            return
+            return false
 
         val manager = ReviewManagerFactory.create(activity)
         val request = manager.requestReviewFlow()
@@ -47,5 +47,6 @@ class JtxReviewManager(val activity: Activity) : ReviewManagerDefinition {
                 nextRequestOn = ZonedDateTime.now().plusDays(daysToNextDialog).toInstant().toEpochMilli()
             }
         }
+        return true
     }
 }

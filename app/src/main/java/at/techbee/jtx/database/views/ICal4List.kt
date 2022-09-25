@@ -9,6 +9,7 @@
 package at.techbee.jtx.database.views
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.room.ColumnInfo
@@ -83,7 +84,7 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "(SELECT count(*) FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numRelatedTodos, " +
             "(SELECT count(*) FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numResources, " +
             "(SELECT count(*) FROM $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAlarms, " +
-            "(SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND $COLUMN_ATTACHMENT_FMTTYPE LIKE 'audio/%' LIMIT 1 ) as audioAttachment, " +
+            "(SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID AND ($COLUMN_ATTACHMENT_FMTTYPE LIKE 'audio/%' OR $COLUMN_ATTACHMENT_FMTTYPE LIKE 'video/%') LIMIT 1 ) as audioAttachment, " +
             "collection.$COLUMN_COLLECTION_READONLY as isReadOnly, " +
             "main_icalobject.$COLUMN_SUBTASKS_EXPANDED, " +
             "main_icalobject.$COLUMN_SUBNOTES_EXPANDED, " +
@@ -92,8 +93,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "FROM $TABLE_NAME_ICALOBJECT main_icalobject " +
             //"LEFT JOIN $TABLE_NAME_CATEGORY ON main_icalobject.$COLUMN_ID = $TABLE_NAME_CATEGORY.$COLUMN_CATEGORY_ICALOBJECT_ID " +
             "INNER JOIN $TABLE_NAME_COLLECTION collection ON main_icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID " +
-            "WHERE main_icalobject.$COLUMN_DELETED = 0"
-)           // locally deleted entries are already excluded in the view!
+            "WHERE main_icalobject.$COLUMN_DELETED = 0 AND main_icalobject.$COLUMN_RRULE IS NULL"
+)           // locally deleted entries are already excluded in the view, original recur entries are also excluded
 data class ICal4List(
 
     @ColumnInfo(index = true, name = COLUMN_ID) var id: Long,
@@ -225,7 +226,7 @@ data class ICal4List(
                 numRelatedTodos = 7,
                 numResources = 8,
                 numAlarms = 2,
-                null,
+                audioAttachment = null,
                 isReadOnly = true
             )
     }
@@ -249,13 +250,12 @@ data class ICal4List(
 
         return when {
             millisLeft < 0L -> context.getString(R.string.list_start_past)
-            millisLeft >= 0L && daysLeft == 0L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(
-                R.string.list_start_today)
-            millisLeft >= 0L && daysLeft == 1L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(
+            daysLeft == 0L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_start_today)
+            daysLeft == 1L && dtstartTimezone == ICalObject.TZ_ALLDAY -> context.getString(
                 R.string.list_start_tomorrow)
-            millisLeft >= 0L && daysLeft <= 1L && dtstartTimezone != ICalObject.TZ_ALLDAY -> context.getString(
+            daysLeft <= 1L && dtstartTimezone != ICalObject.TZ_ALLDAY -> context.getString(
                 R.string.list_start_inXhours, hoursLeft)
-            millisLeft >= 0L && daysLeft >= 2L -> context.getString(R.string.list_start_inXdays, daysLeft)
+            daysLeft >= 2L -> context.getString(R.string.list_start_inXdays, daysLeft)
             else -> null      //should not be possible
         }
     }
@@ -273,11 +273,22 @@ data class ICal4List(
 
         return when {
             millisLeft < 0L -> context.getString(R.string.list_due_overdue)
-            millisLeft >= 0L && daysLeft == 0L && dueTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_today)
-            millisLeft >= 0L && daysLeft == 1L && dueTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_tomorrow)
-            millisLeft >= 0L && daysLeft <= 1L && dueTimezone != ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_inXhours, hoursLeft)
-            millisLeft >= 0L && daysLeft >= 2L -> context.getString(R.string.list_due_inXdays, daysLeft)
+            daysLeft == 0L && dueTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_today)
+            daysLeft == 1L && dueTimezone == ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_tomorrow)
+            daysLeft <= 1L && dueTimezone != ICalObject.TZ_ALLDAY -> context.getString(R.string.list_due_inXhours, hoursLeft)
+            daysLeft >= 2L -> context.getString(R.string.list_due_inXdays, daysLeft)
             else -> null      //should not be possible
+        }
+    }
+
+    /**
+     * @return the audioAttachment as Uri or null
+     */
+    fun getAudioAttachmentAsUri(): Uri? {
+        return try {
+            Uri.parse(audioAttachment)
+        } catch (e: Exception) {
+            null
         }
     }
 }

@@ -233,6 +233,7 @@ class SyncContentProvider : ContentProvider() {
         if(sUriMatcher.match(uri) == CODE_ALARM_DIR) {
             val alarm = database.getAlarmSync(id) ?: return null
             val icalobject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return null
+            val collection = database.getCollectionByIdSync(icalobject.collectionId) ?: return null
             // take care of notifications
             val triggerTime = when {
                 alarm.triggerTime != null -> alarm.triggerTime
@@ -241,7 +242,7 @@ class SyncContentProvider : ContentProvider() {
                 alarm.triggerRelativeDuration != null -> alarm.getDatetimeFromTriggerDuration(icalobject.dtstart, icalobject.dtstartTimezone)
                 else -> null
             }
-            triggerTime?.let { trigger -> alarm.scheduleNotification(context!!, trigger) }
+            triggerTime?.let { trigger -> alarm.scheduleNotification(context!!, trigger, collection.readonly, icalobject.summary, icalobject.description) }
         }
 
         return ContentUris.withAppendedId(uri, id)

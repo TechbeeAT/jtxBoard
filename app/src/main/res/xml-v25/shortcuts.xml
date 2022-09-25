@@ -19,7 +19,7 @@
         <intent
             android:action="addTodo"
             android:targetPackage="at.techbee.jtx"
-            android:targetClass="at.techbee.jtx.MainActivity" />
+            android:targetClass="at.techbee.jtx.MainActivity2" />
     </shortcut>
     
     <shortcut
@@ -31,7 +31,7 @@
         <intent
             android:action="addNote"
             android:targetPackage="at.techbee.jtx"
-            android:targetClass="at.techbee.jtx.MainActivity" />
+            android:targetClass="at.techbee.jtx.MainActivity2" />
     </shortcut>
 
     <shortcut
@@ -43,7 +43,7 @@
         <intent
             android:action="addJournal"
             android:targetPackage="at.techbee.jtx"
-            android:targetClass="at.techbee.jtx.MainActivity" />
+            android:targetClass="at.techbee.jtx.MainActivity2" />
     </shortcut>
 
 </shortcuts>

@@ -11,7 +11,7 @@ package at.techbee.jtx.flavored
 import android.app.Activity
 import android.content.Context
 import android.widget.LinearLayout
-import at.techbee.jtx.MainActivity
+import at.techbee.jtx.MainActivity2
 
 
 class AdManager: AdManagerDefinition {
@@ -47,8 +47,8 @@ class AdManager: AdManagerDefinition {
 
     override fun isAdFlavor() = false
     override fun isConsentRequired() = false
-    override fun checkOrRequestConsentAndLoadAds(activity: MainActivity, context: Context) { /* nothing to do for ose */  }
-    override fun resetUserConsent(activity: MainActivity, context: Context) { /* nothing to do for ose */  }
+    override fun checkOrRequestConsentAndLoadAds(activity: MainActivity2, context: Context) { /* nothing to do for ose */  }
+    override fun resetUserConsent(activity: MainActivity2, context: Context) { /* nothing to do for ose */  }
     override fun showInterstitialAd(activity: Activity) { /* nothing to do for ose */  }
     override fun addAdViewToContainerViewFragment(linearLayout: LinearLayout, context: Context, unitId: String?) { /* nothing to do for ose */  }
     override fun pauseAds() { /* nothing to do for ose */  }

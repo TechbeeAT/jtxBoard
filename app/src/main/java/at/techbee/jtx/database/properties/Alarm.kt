@@ -15,28 +15,21 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import android.os.Parcelable
 import android.provider.BaseColumns
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.LinearLayout
-import androidx.annotation.VisibleForTesting
 import androidx.core.app.NotificationCompat
-import androidx.navigation.NavDeepLinkBuilder
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import at.techbee.jtx.MainActivity
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
-import at.techbee.jtx.databinding.CardAlarmBinding
-import at.techbee.jtx.util.DateTimeUtils
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import kotlinx.parcelize.Parcelize
 import java.time.Duration
 import java.time.Instant
@@ -289,7 +282,6 @@ data class Alarm (
     /**
      * @return The parsed triggerRelativeDuration of this alarm as Duration or null if the value cannot be parsed
      */
-    @VisibleForTesting
     fun getTriggerAsDuration() = try {
         Duration.parse(this.triggerRelativeDuration)
     } catch (e: DateTimeParseException) {
@@ -303,7 +295,6 @@ data class Alarm (
     /**
      * @return the duration as a human readible string, e.g. "7 days before start" or null (if the triggerDuration could not be parsed)
      */
-    @VisibleForTesting
     fun getTriggerDurationAsString(context: Context): String? {
 
         val dur = getTriggerAsDuration() ?: return null
@@ -338,48 +329,22 @@ data class Alarm (
         }
     }
 
-    fun getAlarmCardBinding(inflater: LayoutInflater, container: LinearLayout, referenceDate: Long?, referenceTZ: String?): CardAlarmBinding? {
-
-        // we don't add alarm of which the DateTime is not set or cannot be determined
-        if(triggerTime == null && triggerRelativeDuration == null)
-            return null
-
-        val bindingAlarm = CardAlarmBinding.inflate(inflater, container, false)
-
-        if(triggerTime != null) {
-            bindingAlarm.cardAlarmDate.text =
-                DateTimeUtils.convertLongToFullDateTimeString(triggerTime, triggerTimezone)
-            bindingAlarm.cardAlarmDuration.visibility = View.GONE
-        }
-        else if(triggerRelativeDuration?.isNotEmpty() == true) {
-            if(referenceDate == null)
-                return null
-
-            bindingAlarm.cardAlarmDate.text = DateTimeUtils.convertLongToFullDateTimeString(getDatetimeFromTriggerDuration(referenceDate, referenceTZ), referenceTZ)
-            bindingAlarm.cardAlarmDuration.text = getTriggerDurationAsString(inflater.context)
-        }
-        return bindingAlarm
-    }
-
-    fun scheduleNotification(context: Context, triggerTime: Long) {
+    fun scheduleNotification(context: Context, triggerTime: Long, isReadOnly: Boolean, notificationSummary: String?, notificationDescription: String?) {
 
         if(triggerTime < System.currentTimeMillis())
             return
 
+        if(isReadOnly && SettingsStateHolder(context).settingDisableAlarmsReadonly.value)   // don't schedule alarm for read only if option was deactivated!
+            return
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            // prepare the args to open the icalViewFragment
-            val args: Bundle = Bundle().apply {
-                putLong("item2show", icalObjectId)
+            val intent = Intent(context, MainActivity2::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                this.action = "openICalObject"
+                this.putExtra("item2show", icalObjectId)
             }
-            // prepare the intent that is passed to the notification in setContentIntent(...)
-            // this will be the intent that is executed when the user clicks on the notification
-            val contentIntent = NavDeepLinkBuilder(context)
-                .setComponentName(MainActivity::class.java)
-                .setGraph(R.navigation.navigation)
-                .setDestination(R.id.icalViewFragment)
-                .setArguments(args)
-                .createPendingIntent()
+            val contentIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
 
             // SNOOZE OPTIONS - Alarm after one day
@@ -408,19 +373,31 @@ data class Alarm (
 
 
             // this is the notification itself that will be put as an Extra into the notificationIntent
-            val notification = NotificationCompat.Builder(context, MainActivity.CHANNEL_REMINDER_DUE).apply {
+            val notification = NotificationCompat.Builder(context, MainActivity2.CHANNEL_REMINDER_DUE).apply {
                 setSmallIcon(R.drawable.ic_notification)
-                if(summary?.isNotEmpty() == true)
-                    setContentTitle(summary)
-                if(description != summary)
-                    setContentText(description)
+                notificationSummary?.let { setContentTitle(it) }
+                notificationDescription?.let { setContentText(it) }
                 setContentIntent(contentIntent)
                 priority = NotificationCompat.PRIORITY_HIGH
                 setCategory(NotificationCompat.CATEGORY_ALARM)     //  CATEGORY_REMINDER might also be an alternative
                 //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
-                addAction(R.drawable.ic_snooze, context.getString(R.string.notification_add_1h), snooze1hPendingIntent)
-                addAction(R.drawable.ic_snooze, context.getString(R.string.notification_add_1d), snooze1dPendingIntent)
-                addAction(R.drawable.ic_todo, context.getString(R.string.notification_done), donePendingIntent)
+                if(!isReadOnly) {
+                    addAction(
+                        R.drawable.ic_snooze,
+                        context.getString(R.string.notification_add_1h),
+                        snooze1hPendingIntent
+                    )
+                    addAction(
+                        R.drawable.ic_snooze,
+                        context.getString(R.string.notification_add_1d),
+                        snooze1dPendingIntent
+                    )
+                    addAction(
+                        R.drawable.ic_todo,
+                        context.getString(R.string.notification_done),
+                        donePendingIntent
+                    )
+                }
             }
                 .build()
             notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL

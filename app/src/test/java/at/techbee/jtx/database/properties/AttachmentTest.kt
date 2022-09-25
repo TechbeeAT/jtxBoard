@@ -40,7 +40,7 @@ class AttachmentTest {
         val attachment = Attachment()
         attachment.filename = null
         attachment.fmttype = "application/pdf"
-        attachment.uri = "content://at.techbee.jtx.fileprovider/attachments/1642417199207.PDF"
+        attachment.uri = null
         assertEquals(attachment.fmttype, attachment.getFilenameOrLink())
     }
 

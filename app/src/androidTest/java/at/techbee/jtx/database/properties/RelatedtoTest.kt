@@ -22,7 +22,7 @@ class RelatedtoTest {
 
         val sampleRelatedto = Relatedto(
             icalObjectId = 1L,
-            linkedICalObjectId = 1L,
+            linkedICalObjectId = 0L,
             text = "Random UID",
             reltype = Reltype.PARENT.name,
             other = "nothing"

@@ -11,8 +11,7 @@ package at.techbee.jtx.util
 import android.icu.text.MessageFormat
 import android.os.Build
 import android.util.Log
-import androidx.core.util.PatternsCompat
-import at.techbee.jtx.database.ICalObject.Factory.TZ_ALLDAY
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import java.lang.NumberFormatException
 import java.time.*
 import java.time.format.DateTimeFormatter
@@ -116,24 +115,6 @@ object DateTimeUtils {
         return zonedDateTime.toLocalDateTime().format(formatter)
     }
 
-
-    fun isValidEmail(emailString: String?): Boolean {
-        return emailString?.isNotEmpty() == true && PatternsCompat.EMAIL_ADDRESS.matcher(emailString).matches()
-    }
-
-    fun isValidURL(urlString: String?): Boolean {
-        return PatternsCompat.WEB_URL.matcher(urlString.toString()).matches()
-    }
-
-    fun getAttachmentSizeString(filesize: Long): String {
-        return when {
-            filesize < 1024 -> "$filesize Bytes"
-            filesize / 1024 < 1024 -> "${filesize / 1024} KB"
-            else -> "${filesize / 1024 / 1024} MB"
-        }
-    }
-
-
     fun getLocalizedOrdinal(from: Int, to: Int, includeEmpty: Boolean): Array<String> {
 
         val ordinalValues: MutableList<String> = mutableListOf()
@@ -154,9 +135,16 @@ object DateTimeUtils {
 
             }
         }
-
         return ordinalValues.toTypedArray()
+    }
 
+    fun getLocalizedOrdinalFor(number: Int): String {
+         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val formatter = MessageFormat("{0,ordinal}", Locale.getDefault())
+                formatter.format(arrayOf(number))
+            } else {
+                number.toString()
+            }
     }
 
     fun getLocalizedWeekdays(): Array<String> {
@@ -255,11 +243,34 @@ object DateTimeUtils {
     /**
      * @param [date] of which the time should be removed
      * @param [timezone] of the date (can be null, then local timezone is taken as default)
-     * @return the given date as UTC timestamp with the hour, minute, second and millis set to 0
+     * @return the given date as UTC timestamp with the hour, minute, second and millis set to 0 or null if date was null
      */
-    fun getDateWithoutTime(date: Long, timezone: String?): Long {
-        val zonedDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
-        return ZonedDateTime.of(zonedDate.year, zonedDate.monthValue, zonedDate.dayOfMonth, 0, 0, 0, 0, zonedDate.zone)
-            .toInstant().toEpochMilli()
+    fun getDateWithoutTime(date: Long?, timezone: String?): Long? {
+        if(date == null)
+            return null
+
+        return ZonedDateTime
+            .ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+            .withHour(0)
+            .withMinute(0)
+            .withSecond(0)
+            .withNano(0).toInstant()
+            .toEpochMilli()
+    }
+
+    /**
+     * @param [seconds] that should be brought into a format like 00:00
+     * @return the minutes and seconds as string like '00:00'
+     */
+    fun getMinutesSecondsFormatted(seconds: Int): String {
+        // TODO: Create a test!
+        var secondsMinutesText = ""
+        if(seconds/60 < 10)
+            secondsMinutesText += "0"
+        secondsMinutesText += (seconds / 60).toString() + ":"
+        if(seconds%60 < 10)
+            secondsMinutesText += "0"
+        secondsMinutesText += (seconds % 60).toString()
+        return secondsMinutesText
     }
 }
