@@ -65,6 +65,13 @@ class SettingsStateHolder(val context: Context) {
             prefs.edit().putBoolean(PREFS_SAVE_AND_EDIT, newValue.value).apply()
             field = newValue
         }
+
+
+    var showJtx20betainfo = mutableStateOf(prefs.getBoolean("jtx_2.0_beta_info_shown", true))
+        set(newValue) {
+            prefs.edit().putBoolean("jtx_2.0_beta_info_shown", newValue.value).apply()
+            field = newValue
+        }
 }
 
 

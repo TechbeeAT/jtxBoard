@@ -45,6 +45,7 @@ import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.collections.CollectionsScreen
 import at.techbee.jtx.ui.detail.DetailsScreen
 import at.techbee.jtx.ui.list.ListScreenTabContainer
+import at.techbee.jtx.ui.reusable.dialogs.Jtx20BetaInfoDialog
 import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -331,6 +332,16 @@ fun MainNavHost(
                    },
             onMore = {
                 navController.navigate(NavigationDrawerDestination.DONATE.name)
+            }
+        )
+    }
+
+    // TODO: Delete for Production
+    if(settingsStateHolder.showJtx20betainfo.value) {
+        Jtx20BetaInfoDialog(
+            onOK = {
+                settingsStateHolder.showJtx20betainfo.value = false
+                settingsStateHolder.showJtx20betainfo = settingsStateHolder.showJtx20betainfo
             }
         )
     }
