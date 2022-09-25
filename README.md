@@ -1,7 +1,7 @@
 # jtx Board
 
 ## Get the most out of journals, notes & tasks
-Elevate the power of the iCalendar standard to the next level, use the potential of the combination of journals (VJournal), notes (VJournal) and tasks (VTodo) out of one app and use DAVx5 to synchronize your entries with the CalDAV-server of your choice (coming soon)!
+Elevate the power of the iCalendar standard to the next level, use the potential of the combination of journals (VJournal), notes (VJournal) and tasks (VTodo) out of one app and use DAVx5 to synchronize your entries with the CalDAV-server of your choice!
 
 ### iCal standard compliant
 Using the iCal standard ensures compatibility and interoparability with other apps and services independent of a dedicated provider or infrastructure. Journals and Notes are compliant to the definition of the VJOURNAL component, Tasks are compliant to the VTODO component. Future features will also include import and export functionalities to and from .ics files :-)
@@ -37,7 +37,7 @@ Contributions are always welcome! Whether financial support, translations, code 
 
 ### Communication
 
-For communication with the team and other people, please use the forums to get in touch: [Forums](https://forums.bitfire.at/category/30/jtx-board)
+For communication with the team and other people, please use the forums to get in touch either directly on Gitlab or through the support form on [https://jtx.techbee.at](https://jtx.techbee.at)
 
 <img src="https://jtx.techbee.at/wp-content/uploads/2021/12/header-image.png" alt="jtx Board Banner with Screenshot" width="70%">
 
@@ -45,20 +45,21 @@ For communication with the team and other people, please use the forums to get i
 ### Flavors
 
 jtx Board provides different flavors: 
-- **gplay** is the flavor for the Google Play store that contains ads from Admob and the billing manager for monetization (subscription to remove ads). 
-- **huawei** is the flavor for the Huawei App Gallery that also contains ads, but from the Huawei Ads provider. 
-- **global** is another flavor that contains ads from Admob but no billing manager.
-- **ose** is the open source edition. **If you would like to create build the app from source, this is the recommended flavor.** This flavor contains only open source libraries and no ads. Instead of ads this flavor has an additional page for donations visible.
-
-Currently there is also no difference in functionalities between the flavors. 
+- **gplay** is the flavor for the Google Play store that comes in a standard and pro version. The pro version is paid and enables editing options for remote entries.
+- **huawei** is the flavor for the Huawei App Gallery currently comes with Ads from the Huawei Ads provider. 
+- **ose** is the open source edition. **If you would like to create build the app from source, this is the recommended flavor.** This flavor contains only open source libraries. Instead of an in app-purchase this flavor has an additional page for donations visible. As Google Maps is not open source, the ose flavor does not include Map functionalities.
 
 
 ### Permissions
 jtx Board uses/requests the following permissions:
 - GET_ACCOUNTS is used to determine if there are accounts set up in DAVx5 and show them in the UI
-- RECORD_AUDIO can be used to access the microphone for adding audio notes
+- RECORD_AUDIO can be used to access the microphone for adding audio notes and to use the speech-to-text engine
+- READ_CONTACTS can be used to get suggestions when selecting attendees or a contact for an entry
 - READ_SYNC_STATS is used to show a progress bar when a synchronization through DAVx5 is currently in progress
 - INTERNET is used to retrieve the list of contributors for translations from POEditor.com
+- VIBRATE gives you haptic feedback when moving an entry on the Kanban-Board
+- POST_NOTIFICATIONS let's you receive the notifications when an alarm is due
+- ACCESS_COARSE_LOCATION can move the map to your current location (gplay flavor only)
 
 
 ### Troubleshooting
