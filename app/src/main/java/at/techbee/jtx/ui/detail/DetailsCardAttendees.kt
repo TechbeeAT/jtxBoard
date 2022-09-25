@@ -87,11 +87,8 @@ fun DetailsCardAttendees(
             HeadlineWithIcon(icon = Icons.Outlined.Groups, iconDesc = headline, text = headline)
 
             AnimatedVisibility(attendees.isNotEmpty()) {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    items(items = attendees.asReversed()) { attendee ->
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    attendees.asReversed().forEach { attendee ->
 
                         val overflowMenuExpanded = remember { mutableStateOf(false) }
 
@@ -169,6 +166,7 @@ fun DetailsCardAttendees(
                                 attendees = attendees.plus(attendee)
                                 onAttendeesUpdated(attendees)
                                 newAttendee = ""
+                                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
                             },
                             label = { Text(attendee.getDisplayString()) },
                             leadingIcon = {
@@ -238,6 +236,7 @@ fun DetailsCardAttendees(
                             attendees = attendees.plus(newAttendeeObject)
                             onAttendeesUpdated(attendees)
                             newAttendee = ""
+                            coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
                         })
                     )
                 }
@@ -269,7 +268,7 @@ fun DetailsCardAttendees_Preview() {
     MaterialTheme {
 
         DetailsCardAttendees(
-            initialAttendees = listOf(Attendee(caladdress = "mailto:patrick@techbee.at", cn = "Patrick")),
+            initialAttendees = listOf(Attendee(caladdress = "mailto:patrick@techbee.at", cn = "Patrick"), Attendee(caladdress = "mailto:info@techbee.at", cn = "Info")),
             isEditMode = false,
             onAttendeesUpdated = { }
         )
