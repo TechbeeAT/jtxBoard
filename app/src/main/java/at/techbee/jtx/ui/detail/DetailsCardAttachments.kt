@@ -150,7 +150,8 @@ fun DetailsCardAttachments(
             AnimatedVisibility((isEditMode && attachments.any { (it.getFilesize(context)?:0) > 100000 } && isRemoteCollection) || LocalInspectionMode.current) {
                 Text(
                     stringResource(id = R.string.details_attachment_beta_info),
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
                 )
             }
 
