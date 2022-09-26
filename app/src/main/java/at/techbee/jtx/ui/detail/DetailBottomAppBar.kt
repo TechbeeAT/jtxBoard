@@ -107,24 +107,6 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(isEditMode.value) {
-                IconButton(onClick = { onDeleteClicked() }) {
-                    Icon(
-                        Icons.Outlined.Delete,
-                        contentDescription = stringResource(id = R.string.delete),
-                    )
-                }
-            }
-
-            AnimatedVisibility(isEditMode.value && changeState.value != DetailViewModel.DetailChangeState.UNCHANGED) {
-                IconButton(onClick = { onRevertClicked() }) {
-                    Icon(
-                        painterResource(id = R.drawable.ic_revert),
-                        contentDescription = stringResource(id = R.string.revert)
-                    )
-                }
-            }
-
             AnimatedVisibility(!isEditMode.value && !collection.readonly) {
                 IconButton(onClick = { copyOptionsExpanded = true }) {
                     Icon(
@@ -163,6 +145,25 @@ fun DetailBottomAppBar(
                     }
                 }
             }
+
+            if(!collection.readonly) {
+                IconButton(onClick = { onDeleteClicked() }) {
+                    Icon(
+                        Icons.Outlined.Delete,
+                        contentDescription = stringResource(id = R.string.delete),
+                    )
+                }
+            }
+
+            AnimatedVisibility(isEditMode.value && changeState.value != DetailViewModel.DetailChangeState.UNCHANGED) {
+                IconButton(onClick = { onRevertClicked() }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_revert),
+                        contentDescription = stringResource(id = R.string.revert)
+                    )
+                }
+            }
+
 
             AnimatedVisibility(collection.accountType != LOCAL_ACCOUNT_TYPE && (isSyncInProgress || icalObject.dirty)) {
                 IconButton(
