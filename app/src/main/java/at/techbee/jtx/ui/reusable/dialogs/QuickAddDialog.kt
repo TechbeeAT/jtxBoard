@@ -66,7 +66,7 @@ fun QuickAddDialog(
     presetCollectionId: Long,
     presetSaveAndEdit: Boolean,
     onSaveAndEditChanged: (Boolean) -> Unit,
-    onEntrySaved: (newEntry: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) -> Unit,
+    onSaveEntry: (newEntry: ICalObject, categories: List<Category>, attachment: Attachment?, editAfterSaving: Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
 
@@ -273,7 +273,7 @@ fun QuickAddDialog(
                         newICalObject.parseSummaryAndDescription(currentText)
                         newICalObject.parseURL(currentText)
                         val categories = Category.extractHashtagsFromText(currentText)
-                        onEntrySaved(newICalObject, categories, currentAttachment, editAfterSaving)
+                        onSaveEntry(newICalObject, categories, currentAttachment, editAfterSaving)
                         onDismiss()
                     } else {
                         noTextError = true
@@ -305,9 +305,7 @@ fun QuickAddDialog(
 @Preview(showBackground = true)
 @Composable
 fun QuickAddDialog_Preview() {
-
     MaterialTheme {
-
         val collection1 = ICalCollection(
             collectionId = 1L,
             color = Color.Cyan.toArgb(),
@@ -337,7 +335,7 @@ fun QuickAddDialog_Preview() {
             presetModule = Module.JOURNAL,
             allCollections = listOf(collection1, collection2, collection3),
             onDismiss = { },
-            onEntrySaved = { _, _, _, _ -> },
+            onSaveEntry = { _, _, _, _ -> },
             presetText = "This is my preset text",
             presetAttachment = Attachment(filename = "My File.PDF"),
             presetCollectionId = 0L,

@@ -214,12 +214,8 @@ fun MainNavHost(
             ListScreenTabContainer(
                 navController = navController,
                 globalStateHolder = globalStateHolder,
-                lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value,
+                settingsStateHolder = settingsStateHolder,
                 saveAndEdit = settingsStateHolder.saveAndEdit.value,
-                onLastUsedCollectionIdChanged = { collectionId ->
-                    settingsStateHolder.lastUsedCollection.value = collectionId
-                    settingsStateHolder.lastUsedCollection = settingsStateHolder.lastUsedCollection
-                },
                 onSaveAndEditChanged = { saveAndEdit ->
                     settingsStateHolder.saveAndEdit.value = saveAndEdit
                     settingsStateHolder.saveAndEdit = settingsStateHolder.saveAndEdit

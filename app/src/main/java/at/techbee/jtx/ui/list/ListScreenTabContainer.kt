@@ -29,6 +29,7 @@ import androidx.navigation.NavHostController
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Module
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.*
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
@@ -37,6 +38,7 @@ import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -49,8 +51,7 @@ import kotlinx.coroutines.launch
 fun ListScreenTabContainer(
     navController: NavHostController,
     globalStateHolder: GlobalStateHolder,
-    lastUsedCollectionId: Long,
-    onLastUsedCollectionIdChanged: (Long) -> Unit,
+    settingsStateHolder: SettingsStateHolder,
     saveAndEdit: Boolean,
     onSaveAndEditChanged: (Boolean) -> Unit
 ) {
@@ -58,7 +59,13 @@ fun ListScreenTabContainer(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val screens = listOf(ListTabDestination.Journals, ListTabDestination.Notes, ListTabDestination.Tasks)
-    val pagerState = rememberPagerState(initialPage = ListTabDestination.Journals.tabIndex)
+    val pagerState = rememberPagerState(
+        initialPage = when(settingsStateHolder.lastUsedModule.value) {
+            Module.JOURNAL -> ListTabDestination.Journals.tabIndex
+            Module.NOTE -> ListTabDestination.Notes.tabIndex
+            Module.TODO -> ListTabDestination.Tasks.tabIndex
+        }
+    )
 
     var topBarMenuExpanded by remember { mutableStateOf(false) }
     var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
@@ -92,40 +99,40 @@ fun ListScreenTabContainer(
         )
     }
 
-    // Insert quick item based on values coming from intent
-    if (globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
+    // origin can be button click or an import through the intent
+    if (showQuickAddDialog || globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
         val allCollections = getActiveViewModel().allCollections.observeAsState(emptyList())
         QuickAddDialog(
-            presetModule = globalStateHolder.icalFromIntentModule.value,
-            presetText = globalStateHolder.icalFromIntentString.value ?: "",
-            presetAttachment = globalStateHolder.icalFromIntentAttachment.value,
-            presetSaveAndEdit = saveAndEdit,
+            presetModule = if(showQuickAddDialog)
+                getActiveViewModel().module    // coming from button
+            else
+                globalStateHolder.icalFromIntentModule.value,   // coming from intent
+            presetText = globalStateHolder.icalFromIntentString.value ?: "",    // only relevant when coming from intent
+            presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
             allCollections = allCollections.value,
-            presetCollectionId = lastUsedCollectionId,
-            onEntrySaved = { newICalObject, categories, attachment, editAfterSaving ->
-                onLastUsedCollectionIdChanged(newICalObject.collectionId)
-                getActiveViewModel().insertQuickItem(newICalObject, categories, attachment, editAfterSaving)
+            presetCollectionId = settingsStateHolder.lastUsedCollection.value,
+            presetSaveAndEdit = saveAndEdit,
+            onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
+                settingsStateHolder.lastUsedCollection.value = newICalObject.collectionId
+                settingsStateHolder.lastUsedCollection = settingsStateHolder.lastUsedCollection
+                settingsStateHolder.lastUsedModule.value = newICalObject.getModuleFromString()
+                settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
+                scope.launch {
+                    pagerState.scrollToPage(
+                        when(newICalObject.getModuleFromString()) {
+                            Module.JOURNAL -> ListTabDestination.Journals.tabIndex
+                            Module.NOTE -> ListTabDestination.Notes.tabIndex
+                            Module.TODO -> ListTabDestination.Tasks.tabIndex
+                        }
+                    )
+                    getActiveViewModel().insertQuickItem(newICalObject, categories, attachment, editAfterSaving)
+                }
             },
             onDismiss = {
-                globalStateHolder.icalFromIntentString.value = null
-                globalStateHolder.icalFromIntentAttachment.value = null
-            },
-            onSaveAndEditChanged = onSaveAndEditChanged
-        )
-    }
-
-    if (showQuickAddDialog) {
-        val allCollections = getActiveViewModel().allCollections.observeAsState(emptyList())
-        QuickAddDialog(
-            presetModule = getActiveViewModel().module,
-            allCollections = allCollections.value,
-            presetCollectionId = lastUsedCollectionId,
-            presetSaveAndEdit = saveAndEdit,
-            onEntrySaved = { newICalObject, categories, attachment, editAfterSaving ->
-                onLastUsedCollectionIdChanged(newICalObject.collectionId)
-                getActiveViewModel().insertQuickItem(newICalObject, categories, attachment, editAfterSaving)
-            },
-            onDismiss = { showQuickAddDialog = false },
+                showQuickAddDialog = false  // origin was button
+                globalStateHolder.icalFromIntentString.value = null  // origin was state from import
+                globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
+                        },
             onSaveAndEditChanged = onSaveAndEditChanged
         )
     }
@@ -217,6 +224,12 @@ fun ListScreenTabContainer(
                                             scope.launch {
                                                 pagerState.scrollToPage(screen.tabIndex)
                                             }
+                                            settingsStateHolder.lastUsedModule.value = when(screen) {
+                                                ListTabDestination.Journals -> Module.JOURNAL
+                                                ListTabDestination.Notes -> Module.NOTE
+                                                ListTabDestination.Tasks -> Module.TODO
+                                            }
+                                            settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule  // in order to save
                                         },
                                         text = { Text(stringResource(id = screen.titleResource)) })
                                 }
@@ -229,7 +242,7 @@ fun ListScreenTabContainer(
                                             ListScreen(
                                                 listViewModel = icalListViewModelJournals,
                                                 navController = navController,
-                                                lastUsedCollectionId = lastUsedCollectionId,
+                                                lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value,
                                                 onShowQuickAddDialog = { showQuickAddDialog = true }
                                             )
                                         }
@@ -237,7 +250,7 @@ fun ListScreenTabContainer(
                                             ListScreen(
                                                 listViewModel = icalListViewModelNotes,
                                                 navController = navController,
-                                                lastUsedCollectionId = lastUsedCollectionId,
+                                                lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value,
                                                 onShowQuickAddDialog = { showQuickAddDialog = true }
                                             )
                                         }
@@ -245,7 +258,7 @@ fun ListScreenTabContainer(
                                             ListScreen(
                                                 listViewModel = icalListViewModelTodos,
                                                 navController = navController,
-                                                lastUsedCollectionId = lastUsedCollectionId,
+                                                lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value,
                                                 onShowQuickAddDialog = { showQuickAddDialog = true }
                                             )
                                         }

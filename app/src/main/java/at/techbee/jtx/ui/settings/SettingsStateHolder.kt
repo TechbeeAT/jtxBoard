@@ -12,12 +12,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.mutableStateOf
 import androidx.preference.PreferenceManager
+import at.techbee.jtx.database.Module
 
 class SettingsStateHolder(val context: Context) {
 
     companion object {
         private const val SETTINGS_PRO_INFO_SHOWN = "settingsProInfoShown"
         private const val PREFS_LAST_COLLECTION = "lastUsedCollection"
+        private const val PREFS_LAST_MODULE = "lastUsedModule"
         private const val PREFS_SAVE_AND_EDIT = "saveAndEdit"
     }
 
@@ -57,6 +59,14 @@ class SettingsStateHolder(val context: Context) {
     var lastUsedCollection = mutableStateOf(prefs.getLong(PREFS_LAST_COLLECTION, 0L))
         set(newValue) {
             prefs.edit().putLong(PREFS_LAST_COLLECTION, newValue.value).apply()
+            field = newValue
+        }
+
+    var lastUsedModule = mutableStateOf(
+        try { Module.valueOf(prefs.getString(PREFS_LAST_MODULE, null)?: Module.JOURNAL.name) } catch (e: java.lang.IllegalArgumentException) { Module.JOURNAL }
+    )
+        set(newValue) {
+            prefs.edit().putString(PREFS_LAST_MODULE, newValue.value.name).apply()
             field = newValue
         }
 
