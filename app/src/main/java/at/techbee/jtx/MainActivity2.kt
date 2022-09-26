@@ -119,7 +119,7 @@ class MainActivity2 : ComponentActivity() {
         super.onResume()
         AdManager.getInstance()?.resumeAds()
 
-        //hanlde intents, but only if it wasn't already handled
+        //handle intents, but only if it wasn't already handled
         if(intent.hashCode() != lastProcessedIntentHash) {
 
             intent?.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
