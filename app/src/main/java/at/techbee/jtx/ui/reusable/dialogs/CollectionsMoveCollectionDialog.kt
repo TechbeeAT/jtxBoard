@@ -45,9 +45,9 @@ fun CollectionsMoveCollectionDialog(
                     CollectionsSpinner(
                         collections = allCollections,
                         preselected = current.toICalCollection(),
-                        includeReadOnly = current.readonly,
-                        includeVJOURNAL = current.supportsVJOURNAL,
-                        includeVTODO = current.supportsVTODO,
+                        includeReadOnly = false,
+                        includeVJOURNAL = if((current.numJournals?:0) + (current.numNotes?: 0) > 0) true else null,
+                        includeVTODO = if((current.numTodos?:0) > 0) true else null,
                         onSelectionChanged = { selected -> newCollection = selected }
                     )
 
@@ -82,42 +82,65 @@ fun CollectionsMoveCollectionDialog(
 @Composable
 fun CollectionsMoveCollectionDialog_Preview() {
     MaterialTheme {
+
         val collectionCurrent = CollectionsView(
             collectionId = 2L,
             color = Color.Cyan.toArgb(),
             displayName = "Hmmmm",
             description = "Here comes the desc",
             accountName = "My account",
-            accountType = "LOCAL"
+            accountType = "LOCAL",
+            supportsVTODO = true,
+            supportsVJOURNAL = true,
+            numJournals = 0,
+            numNotes = 0,
+            numTodos = 34
         )
+
         val collection1 = ICalCollection(
             collectionId = 1L,
             color = Color.Cyan.toArgb(),
-            displayName = "Collection Display Name",
+            displayName = "Only VJournal",
             description = "Here comes the desc",
             accountName = "My account",
-            accountType = "LOCAL"
+            accountType = "LOCAL",
+            supportsVJOURNAL = true,
+            supportsVTODO = false
         )
         val collection2 = ICalCollection(
             collectionId = 2L,
             color = Color.Cyan.toArgb(),
-            displayName = "Hmmmm",
+            displayName = "Only VTodo",
             description = "Here comes the desc",
             accountName = "My account",
-            accountType = "LOCAL"
+            accountType = "LOCAL",
+            supportsVJOURNAL = false,
+            supportsVTODO = true
         )
         val collection3 = ICalCollection(
             collectionId = 3L,
             color = Color.Cyan.toArgb(),
-            displayName = null,
+            displayName = "both",
             description = "Here comes the desc",
             accountName = "My account",
-            accountType = "LOCAL"
+            accountType = "LOCAL",
+            supportsVJOURNAL = true,
+            supportsVTODO = true
+        )
+        val collection4 = ICalCollection(
+            collectionId = 4L,
+            color = Color.Cyan.toArgb(),
+            displayName = "none",
+            description = "Here comes the desc",
+            accountName = "My account",
+            accountType = "LOCAL",
+            supportsVJOURNAL = false,
+            supportsVTODO = false
         )
 
         CollectionsMoveCollectionDialog(
             collectionCurrent,
-            allCollections = listOf(collection1, collection2, collection3),
+            allCollections = listOf(collection1, collection2, collection3, collection4),
             onDismiss = { },
             onEntriesMoved = { _, _ -> }
         )
