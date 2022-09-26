@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.screens
+package at.techbee.jtx.ui.about
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
@@ -44,7 +43,8 @@ fun AboutLibraries() {
             contentColor = MaterialTheme.colorScheme.onSurface,
             badgeBackgroundColor = MaterialTheme.colorScheme.primaryContainer,
             badgeContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        )
+        ),
+        onLibraryClick = { }  // Workaround to avoid crash, TODO: reactivate when problem solved, see https://gitlab.com/techbeeat1/jtx/-/issues/370
     )
 }
 
@@ -53,7 +53,7 @@ fun AboutLibraries() {
 @Preview(showBackground = true)
 @Composable
 fun AboutLibraries_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         AboutLibraries()
     }
 }
