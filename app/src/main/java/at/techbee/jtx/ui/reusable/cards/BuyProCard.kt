@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.reusable.cards
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,11 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BuyProCard(
     priceLive: LiveData<String>,
@@ -93,15 +92,12 @@ fun BuyProCard(
 @Preview(showBackground = true)
 @Composable
 fun BuyProCard_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         BuyProCard(MutableLiveData("€ 3,29"))
     }
 }
 
 
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BuyProCardPurchased(
     purchaseDateLive: LiveData<String>,
@@ -133,30 +129,30 @@ fun BuyProCardPurchased(
                     .padding(end = 16.dp)
             )
 
-            Column {
+            SelectionContainer {
+                Column {
+                    Text(
+                        stringResource(id = R.string.buypro_success_header),
+                        style = Typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        stringResource(id = R.string.buypro_success_description),
+                        style = Typography.bodyLarge,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
 
-                Text(
-                    stringResource(id = R.string.buypro_success_header),
-                    style = Typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    stringResource(id = R.string.buypro_success_description),
-                    style = Typography.bodyLarge,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-
-                Text(
-                    stringResource(id = R.string.buypro_order_id, orderId),
-                    style = Typography.bodySmall,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-                Text(
-                    stringResource(id = R.string.buypro_purchase_date, purchaseDate),
-                    style = Typography.bodySmall,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-
+                    Text(
+                        stringResource(id = R.string.buypro_order_id, orderId),
+                        style = Typography.bodySmall,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                    Text(
+                        stringResource(id = R.string.buypro_purchase_date, purchaseDate),
+                        style = Typography.bodySmall,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
             }
         }
     }
@@ -165,7 +161,7 @@ fun BuyProCardPurchased(
 @Preview(showBackground = true)
 @Composable
 fun BuyProCardPurchased_Preview() {
-    JtxBoardTheme {
+    MaterialTheme {
         BuyProCardPurchased(
             orderIdLive = MutableLiveData("93287z4"),
             purchaseDateLive = MutableLiveData("Thursday, 1. Jannuary 2021")
