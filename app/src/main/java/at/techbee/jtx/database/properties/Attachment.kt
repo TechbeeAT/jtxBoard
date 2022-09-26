@@ -342,13 +342,13 @@ data class Attachment (
     }
 
     fun getFilesize(context: Context): Long? {
-        try {
+        return try {
             val fileDescriptor = context.contentResolver.openFileDescriptor(Uri.parse(this.uri), "r")
             val filesize = fileDescriptor?.statSize
             fileDescriptor?.close()
-            return filesize
+            filesize
         } catch (e: Exception) {
-            return null
+            null
         }
     }
 
