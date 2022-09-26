@@ -65,11 +65,17 @@ fun DetailsCardCategories(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     items(categories.asReversed()) { category ->
-                        InputChip(
-                            onClick = { },
-                            label = { Text(category.text) },
-                            trailingIcon = {
-                                if (isEditMode)
+
+                        if(!isEditMode) {
+                            ElevatedAssistChip(
+                                onClick = { },
+                                label = { Text(category.text) }
+                            )
+                        } else {
+                            InputChip(
+                                onClick = { },
+                                label = { Text(category.text) },
+                                trailingIcon = {
                                     IconButton(
                                         onClick = {
                                             categories = categories.filter { it != category }
@@ -83,9 +89,10 @@ fun DetailsCardCategories(
                                         },
                                         modifier = Modifier.size(24.dp)
                                     )
-                            },
-                            selected = false
-                        )
+                                },
+                                selected = false
+                            )
+                        }
                     }
                 }
             }

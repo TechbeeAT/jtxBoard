@@ -56,118 +56,109 @@ fun DetailsCardStatusClassificationPriority(
             var classificationMenuExpanded by remember { mutableStateOf(false) }
             var priorityMenuExpanded by remember { mutableStateOf(false) }
 
-            AssistChip(
-                label = {
-                    if (icalObject.component == Component.VJOURNAL.name)
-                        Text(StatusJournal.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    else
-                        Text(StatusTodo.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if(!isEditMode) {
+                ElevatedAssistChip(
+                    label = {
+                        if (icalObject.component == Component.VJOURNAL.name)
+                            Text(StatusJournal.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        else
+                            Text(StatusTodo.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Outlined.PublishedWithChanges,
+                            stringResource(id = R.string.status)
+                        )
+                    },
+                    onClick = { },
+                    modifier = Modifier.weight(0.33f)
+                )
+            } else {
+                AssistChip(
+                    label = {
+                        if (icalObject.component == Component.VJOURNAL.name)
+                            Text(StatusJournal.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        else
+                            Text(StatusTodo.getStringResource(context, status) ?: status ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
 
-                    DropdownMenu(
-                        expanded = statusMenuExpanded,
-                        onDismissRequest = { statusMenuExpanded = false }
-                    ) {
-                        if (icalObject.component == Component.VJOURNAL.name) {
-                            StatusJournal.values().forEach { statusJournal ->
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(id = statusJournal.stringResource)) },
-                                    onClick = {
-                                        status = statusJournal.name
-                                        statusMenuExpanded = false
-                                        onStatusChanged(statusJournal.name)
-                                        //icalObject.status = status
-                                    }
-                                )
-                            }
-                        } else {
-                            StatusTodo.values().forEach { statusTodo ->
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(id = statusTodo.stringResource)) },
-                                    onClick = {
-                                        status = statusTodo.name
-                                        statusMenuExpanded = false
-                                        onStatusChanged(statusTodo.name)
-                                        //icalObject.status = status
-                                    }
-                                )
-                            }
-                        }
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        Icons.Outlined.PublishedWithChanges,
-                        stringResource(id = R.string.status)
-                    )
-                },
-                onClick = {
-                    if(isEditMode)
-                        statusMenuExpanded = true
-                          },
-                modifier = Modifier.weight(0.33f)
-            )
-
-
-            AssistChip(
-                label = {
-                    Text( Classification.getStringResource(context, classification) ?: classification ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
-
-                    DropdownMenu(
-                        expanded = classificationMenuExpanded,
-                        onDismissRequest = { classificationMenuExpanded = false }
-                    ) {
-                        Classification.values().forEach { clazzification ->
-                            DropdownMenuItem(
-                                text = { Text(stringResource(id = clazzification.stringResource)) },
-                                onClick = {
-                                    classification = clazzification.name
-                                    classificationMenuExpanded = false
-                                    onClassificationChanged(clazzification.name)
-                                    //icalObject.classification = classification
+                        DropdownMenu(
+                            expanded = statusMenuExpanded,
+                            onDismissRequest = { statusMenuExpanded = false }
+                        ) {
+                            if (icalObject.component == Component.VJOURNAL.name) {
+                                StatusJournal.values().forEach { statusJournal ->
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(id = statusJournal.stringResource)) },
+                                        onClick = {
+                                            status = statusJournal.name
+                                            statusMenuExpanded = false
+                                            onStatusChanged(statusJournal.name)
+                                            //icalObject.status = status
+                                        }
+                                    )
                                 }
-                            )
+                            } else {
+                                StatusTodo.values().forEach { statusTodo ->
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(id = statusTodo.stringResource)) },
+                                        onClick = {
+                                            status = statusTodo.name
+                                            statusMenuExpanded = false
+                                            onStatusChanged(statusTodo.name)
+                                            //icalObject.status = status
+                                        }
+                                    )
+                                }
+                            }
                         }
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        Icons.Outlined.GppMaybe,
-                        stringResource(id = R.string.classification)
-                    )
-                },
-                onClick = {
-                    if(isEditMode)
-                        classificationMenuExpanded = true
-                          },
-                modifier = Modifier.weight(0.33f)
-            )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Outlined.PublishedWithChanges,
+                            stringResource(id = R.string.status)
+                        )
+                    },
+                    onClick = {  statusMenuExpanded = true },
+                    modifier = Modifier.weight(0.33f)
+                )
+            }
 
-            val priorityStrings = stringArrayResource(id = R.array.priority)
-            if (icalObject.component == Component.VTODO.name) {
 
+            if(!isEditMode) {
+                ElevatedAssistChip(
+                    label = {
+                        Text( Classification.getStringResource(context, classification) ?: classification ?: "-", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Outlined.GppMaybe,
+                            stringResource(id = R.string.classification)
+                        )
+                    },
+                    onClick = { },
+                    modifier = Modifier.weight(0.33f)
+                )
+            } else {
                 AssistChip(
                     label = {
                         Text(
-                            if (priority in priorityStrings.indices)
-                                stringArrayResource(id = R.array.priority)[priority]
-                            else
-                                stringArrayResource(id = R.array.priority)[0],
+                            Classification.getStringResource(context, classification) ?: classification ?: "-",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
 
                         DropdownMenu(
-                            expanded = priorityMenuExpanded,
-                            onDismissRequest = { priorityMenuExpanded = false }
+                            expanded = classificationMenuExpanded,
+                            onDismissRequest = { classificationMenuExpanded = false }
                         ) {
-                            stringArrayResource(id = R.array.priority).forEachIndexed { index, prio ->
+                            Classification.values().forEach { clazzification ->
                                 DropdownMenuItem(
-                                    text = { Text(prio) },
+                                    text = { Text(stringResource(id = clazzification.stringResource)) },
                                     onClick = {
-                                        priority = index
-                                        priorityMenuExpanded = false
-                                        onPriorityChanged(priority)
-                                        //icalObject.priority = priority
+                                        classification = clazzification.name
+                                        classificationMenuExpanded = false
+                                        onClassificationChanged(clazzification.name)
+                                        //icalObject.classification = classification
                                     }
                                 )
                             }
@@ -175,16 +166,78 @@ fun DetailsCardStatusClassificationPriority(
                     },
                     leadingIcon = {
                         Icon(
-                            Icons.Outlined.AssignmentLate,
-                            stringResource(id = R.string.priority)
+                            Icons.Outlined.GppMaybe,
+                            stringResource(id = R.string.classification)
                         )
                     },
-                    onClick = {
-                        if(isEditMode)
-                            priorityMenuExpanded = true
-                              },
+                    onClick = { classificationMenuExpanded = true },
                     modifier = Modifier.weight(0.33f)
                 )
+            }
+
+            val priorityStrings = stringArrayResource(id = R.array.priority)
+            if (icalObject.component == Component.VTODO.name) {
+
+                if(!isEditMode) {
+                    ElevatedAssistChip(
+                        label = {
+                            Text(
+                                if (priority in priorityStrings.indices)
+                                    stringArrayResource(id = R.array.priority)[priority]
+                                else
+                                    stringArrayResource(id = R.array.priority)[0],
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.AssignmentLate,
+                                stringResource(id = R.string.priority)
+                            )
+                        },
+                        onClick = { },
+                        modifier = Modifier.weight(0.33f)
+                    )
+                } else {
+                    AssistChip(
+                        label = {
+                            Text(
+                                if (priority in priorityStrings.indices)
+                                    stringArrayResource(id = R.array.priority)[priority]
+                                else
+                                    stringArrayResource(id = R.array.priority)[0],
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+
+                            DropdownMenu(
+                                expanded = priorityMenuExpanded,
+                                onDismissRequest = { priorityMenuExpanded = false }
+                            ) {
+                                stringArrayResource(id = R.array.priority).forEachIndexed { index, prio ->
+                                    DropdownMenuItem(
+                                        text = { Text(prio) },
+                                        onClick = {
+                                            priority = index
+                                            priorityMenuExpanded = false
+                                            onPriorityChanged(priority)
+                                            //icalObject.priority = priority
+                                        }
+                                    )
+                                }
+                            }
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.AssignmentLate,
+                                stringResource(id = R.string.priority)
+                            )
+                        },
+                        onClick = { priorityMenuExpanded = true },
+                        modifier = Modifier.weight(0.33f)
+                    )
+                }
             }
         }
     }

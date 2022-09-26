@@ -66,22 +66,28 @@ fun DetailsCardResources(
                 ) {
 
                     items(resources.asReversed()) { resource ->
-                        InputChip(
-                            onClick = { },
-                            label = { Text(resource.text?:"") },
-                            trailingIcon = {
-                                if (isEditMode)
+                        if(!isEditMode) {
+                            ElevatedAssistChip(
+                                onClick = { },
+                                label = { Text(resource.text ?: "") }
+                            )
+                        } else {
+                            InputChip(
+                                onClick = { },
+                                label = { Text(resource.text ?: "") },
+                                trailingIcon = {
                                     IconButton(
                                         onClick = {
                                             resources = resources.filter { it != resource }
                                             onResourcesUpdated(resources)
-                                                  },
+                                        },
                                         content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
                                         modifier = Modifier.size(24.dp)
                                     )
-                            },
-                            selected = false
-                        )
+                                },
+                                selected = false
+                            )
+                        }
                     }
                 }
             }

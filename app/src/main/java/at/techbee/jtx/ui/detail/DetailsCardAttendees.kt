@@ -92,32 +92,42 @@ fun DetailsCardAttendees(
 
                         val overflowMenuExpanded = remember { mutableStateOf(false) }
 
-                        InputChip(
-                            onClick = {
-                                if(isEditMode)
-                                    overflowMenuExpanded.value = true
-                                      },
-                            label = { Text(attendee.getDisplayString()) },
-                            leadingIcon = {
-                                if (Role.values().any { role -> role.name == attendee.role })
-                                    Role.valueOf(attendee.role ?: Role.`REQ-PARTICIPANT`.name)
-                                        .Icon()
-                                else
-                                    Role.`REQ-PARTICIPANT`.Icon()
-                            },
-                            trailingIcon = {
-                                if (isEditMode)
+                        if(!isEditMode) {
+                            ElevatedAssistChip(
+                                onClick = { },
+                                label = { Text(attendee.getDisplayString()) },
+                                leadingIcon = {
+                                    if (Role.values().any { role -> role.name == attendee.role })
+                                        Role.valueOf(attendee.role ?: Role.`REQ-PARTICIPANT`.name)
+                                            .Icon()
+                                    else
+                                        Role.`REQ-PARTICIPANT`.Icon()
+                                }
+                            )
+                        } else {
+                            InputChip(
+                                onClick = { overflowMenuExpanded.value = true },
+                                label = { Text(attendee.getDisplayString()) },
+                                leadingIcon = {
+                                    if (Role.values().any { role -> role.name == attendee.role })
+                                        Role.valueOf(attendee.role ?: Role.`REQ-PARTICIPANT`.name)
+                                            .Icon()
+                                    else
+                                        Role.`REQ-PARTICIPANT`.Icon()
+                                },
+                                trailingIcon = {
                                     IconButton(
                                         onClick = {
                                             attendees = attendees.filter { it != attendee }
                                             onAttendeesUpdated(attendees)
-                                                  },
+                                        },
                                         content = { Icon(Icons.Outlined.Close, stringResource(id = R.string.delete)) },
                                         modifier = Modifier.size(24.dp)
                                     )
-                            },
-                            selected = false
-                        )
+                                },
+                                selected = false
+                            )
+                        }
 
 
                         DropdownMenu(
