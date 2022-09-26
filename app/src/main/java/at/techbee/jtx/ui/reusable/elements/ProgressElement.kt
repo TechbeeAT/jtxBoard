@@ -37,7 +37,7 @@ fun ProgressElement(
     ) }
 
     Row(
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
@@ -63,7 +63,7 @@ fun ProgressElement(
                         isLinkedRecurringInstance
                     )
                 },
-                modifier = Modifier.width(120.dp),
+                modifier = Modifier.width(100.dp),
                 enabled = !isReadOnly
             )
             Text(
