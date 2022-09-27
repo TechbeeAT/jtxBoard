@@ -61,6 +61,9 @@ fun CollectionsSpinner(
                         if (collection.readonly && !includeReadOnly)
                             return@forEach
 
+                        if (selected.collectionId == collection.collectionId)
+                            return@forEach
+
                         includeVJOURNAL?.let { if(!it || (it && !collection.supportsVJOURNAL)) return@forEach }
                         includeVTODO?.let { if(!it || (it && !collection.supportsVTODO)) return@forEach }
 
