@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.detail
 
 import android.Manifest
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -94,7 +95,15 @@ fun DetailsCardAttendees(
 
                         if(!isEditMode) {
                             ElevatedAssistChip(
-                                onClick = { },
+                                onClick = {
+                                          if(attendee.caladdress.startsWith("mailto:")) {
+                                              val mail: String = attendee.caladdress.replaceFirst("mailto:", "")
+                                              val intent = Intent(Intent.ACTION_SEND)
+                                              intent.type = "message/rfc822"
+                                              intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(mail))
+                                              context.startActivity(intent)
+                                          }
+                                },
                                 label = { Text(attendee.getDisplayString()) },
                                 leadingIcon = {
                                     if (Role.values().any { role -> role.name == attendee.role })
