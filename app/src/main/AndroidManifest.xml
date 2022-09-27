@@ -83,8 +83,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true">
-
+        android:supportsRtl="true"
+        android:localeConfig="@xml/locales_config">
 
         <provider
             android:name=".SyncContentProvider"
@@ -140,6 +140,16 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCaISlh2wJCX-tksqU7I3YOuf3wcmCAyfI" />
+
+        <!-- Support language selection on Android 12 and lower -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
     </application>
 
 </manifest>
