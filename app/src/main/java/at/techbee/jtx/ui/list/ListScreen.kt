@@ -15,113 +15,42 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.contentColorFor
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation.NavController
-import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.reusable.bottomsheets.ListFilterBottomSheet
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.screens.ListScreenCompact
 import at.techbee.jtx.ui.settings.SettingsStateHolder
-import kotlinx.coroutines.launch
 
 
 @OptIn(
     ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class,
-    ExperimentalComposeUiApi::class
 )
 @Composable
 fun ListScreen(
     listViewModel: ListViewModel,
     navController: NavController,
-    lastUsedCollectionId: Long,
-    onShowQuickAddDialog: () -> Unit
+    showSearch: Boolean,
+    filterBottomSheetState: ModalBottomSheetState,
 ) {
-
-    val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val settingsStateHolder = SettingsStateHolder(context)
-    val keyboardController = LocalSoftwareKeyboardController.current
-    var showSearch by remember { mutableStateOf(false) }
-
-    val allCollections = listViewModel.allCollections.observeAsState(emptyList())
 
     listViewModel.toastMessage.value?.let {
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         listViewModel.toastMessage.value = null
     }
 
-
     Scaffold(
-        bottomBar = {
-            ListBottomAppBar(
-                module = listViewModel.module,
-                iCal4ListLive = listViewModel.iCal4List,
-                onAddNewEntry = {
-                    coroutineScope.launch {
-                        val proposedCollectionId = if(allCollections.value.any {collection -> collection.collectionId == lastUsedCollectionId })
-                            lastUsedCollectionId
-                        else
-                            allCollections.value.firstOrNull()?.collectionId ?: return@launch
-                        val db = ICalDatabase.getInstance(context).iCalDatabaseDao
-                        val newICalObject = when(listViewModel.module) {
-                            Module.JOURNAL -> ICalObject.createJournal().apply { collectionId = proposedCollectionId }
-                            Module.NOTE -> ICalObject.createNote().apply { collectionId = proposedCollectionId }
-                            Module.TODO -> ICalObject.createTodo().apply {
-                                this.setDefaultDueDateFromSettings(context)
-                                this.setDefaultStartDateFromSettings(context)
-                                collectionId = proposedCollectionId
-                            }
-                        }
-                        newICalObject.dirty = false
-                        val newIcalObjectId = db.insertICalObject(newICalObject)
-                        navController.navigate("details/$newIcalObjectId?isEditMode=true")
-                    }
-                },
-                onAddNewQuickEntry = { onShowQuickAddDialog() },
-                listSettings = listViewModel.listSettings,
-                onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) },
-                onFilterIconClicked = {
-                    coroutineScope.launch {
-                        filterBottomSheetState.show()
-                    }
-                },
-                onClearFilterClicked = {
-                    listViewModel.clearFilter()
-                },
-                onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) },
-                onSearchTextClicked = {
-                    coroutineScope.launch {
-                        if(!showSearch) {
-                            showSearch = true
-                            listViewModel.listSettings.searchText.value = ""
-                            keyboardController?.show()
-                            //focusRequesterSearchText.requestFocus()
-                        } else {
-                            showSearch = false
-                            keyboardController?.hide()
-                            listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
-                            listViewModel.updateSearch(saveListSettings = false)
-                        }
-                    }
-                }
-            )
-        }, content = {  paddingValues ->
+        content = {  paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {
-
                 AnimatedVisibility(showSearch) {
                     ListSearchTextField(
                         initialSeachText = listViewModel.listSettings.searchText.value,
