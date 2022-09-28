@@ -42,7 +42,7 @@ android {
             }
         }
 
-        def locales = ["en", "de", "el", "es", "fr", "it", "ru", "zh"]
+        def locales = getLocales()
         buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
         resConfigs locales
     }
@@ -115,6 +115,36 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+}
+
+import static groovy.io.FileType.DIRECTORIES
+
+/**
+ * Obtains a list of all the available locales
+ * @since 20220928
+ * @return A list with the language codes of the locales available.
+ */
+static def getLocales() {
+    // Initialize the list English, since it's available by default
+    def list = ["en"]
+    // Get all directories inside resources
+    def dir = new File("./app/src/main/res")
+    dir.traverse(type: DIRECTORIES, maxDepth: 0) { file ->
+        // Get only values directories
+        def fileName = file.name
+        if (!fileName.startsWith("values-")) return
+
+        // Take only the values directories that contain strings
+        def stringsFile = new File(file, "strings.xml")
+        if (!stringsFile.exists()) return
+
+        // Add to the list the locale of the strings file
+        list.add(fileName.substring(fileName.indexOf('-') + 1))
+    }
+    // Log the available locales
+    println "Supported locales: " + list.join(", ")
+    // Return the built list
+    return list
 }
 
 
