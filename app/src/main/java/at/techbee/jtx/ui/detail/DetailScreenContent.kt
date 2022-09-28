@@ -46,7 +46,6 @@ import at.techbee.jtx.database.properties.*
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
-import at.techbee.jtx.ui.reusable.dialogs.MoveItemToCollectionDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 import at.techbee.jtx.ui.reusable.elements.ColoredEdge
@@ -129,7 +128,6 @@ fun DetailScreenContent(
 
     var showColorPicker by rememberSaveable { mutableStateOf(false) }
     var showUnsavedChangesDialog by rememberSaveable { mutableStateOf(false) }
-    var showMoveItemToCollectionDialog by rememberSaveable { mutableStateOf<ICalCollection?>(null) }
     var showAllOptions by rememberSaveable { mutableStateOf(false) }
 
 
@@ -202,25 +200,6 @@ fun DetailScreenContent(
         )
     }
 
-    showMoveItemToCollectionDialog?.let {
-        MoveItemToCollectionDialog(
-            newCollection = it,
-            onMoveConfirmed = {
-                saveICalObject(
-                    icalObject,
-                    categories.value,
-                    comments.value,
-                    attendees.value,
-                    resources.value,
-                    attachments.value,
-                    alarms.value
-                )
-                onMoveToNewCollection(icalObject, it)
-            },
-            onDismiss = { showMoveItemToCollectionDialog = null }
-        )
-    }
-
     if (showColorPicker) {
         ColorPickerDialog(
             initialColor = color,
@@ -287,8 +266,18 @@ fun DetailScreenContent(
                             includeVJOURNAL = if (iCalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
                             includeVTODO = if (iCalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
                             onSelectionChanged = { newCollection ->
-                                if (icalObject.collectionId != newCollection.collectionId)
-                                    showMoveItemToCollectionDialog = newCollection
+                                if (icalObject.collectionId != newCollection.collectionId) {
+                                    saveICalObject(
+                                        icalObject,
+                                        categories.value,
+                                        comments.value,
+                                        attendees.value,
+                                        resources.value,
+                                        attachments.value,
+                                        alarms.value
+                                    )
+                                    onMoveToNewCollection(icalObject, newCollection)
+                                }
                             },
                             modifier = Modifier
                                 .weight(1f)
