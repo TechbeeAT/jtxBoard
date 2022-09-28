@@ -52,8 +52,6 @@ fun CollectionsAddOrEditDialog(
 
 
     AlertDialog(
-        //modifier = Modifier.fillMaxWidth(),
-        //properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
         onDismissRequest = { onDismiss() },
         title = {
             if (current.collectionId == 0L)
