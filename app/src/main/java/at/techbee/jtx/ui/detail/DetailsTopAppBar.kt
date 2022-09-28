@@ -1,4 +1,4 @@
-package at.techbee.jtx.ui.reusable.appbars
+package at.techbee.jtx.ui.detail
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column

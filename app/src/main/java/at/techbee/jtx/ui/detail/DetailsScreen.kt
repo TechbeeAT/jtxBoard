@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.ui.reusable.appbars.DetailsTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
