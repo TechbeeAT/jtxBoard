@@ -12,6 +12,7 @@ import android.os.Parcelable
 import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -73,6 +74,7 @@ class MainActivity2 : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppCompatDelegate.create(this, null).onCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
 
         // hides the ugly action bar that was before hidden through the Theme XML
