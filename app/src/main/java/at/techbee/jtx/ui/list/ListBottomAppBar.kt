@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.list
 
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -125,14 +126,13 @@ fun ListBottomAppBar(
                 )
             }
 
-            if (module == Module.JOURNAL) {
+            AnimatedVisibility(visible = module == Module.JOURNAL) {
                 IconButton(onClick = { showGoToDatePicker = true }) {
                     Icon(
                         Icons.Outlined.DateRange,
                         contentDescription = stringResource(id = R.string.menu_list_gotodate)
                     )
                 }
-
             }
 
 
@@ -238,7 +238,7 @@ fun ListBottomAppBar(
                         }
                     )
                 }
-                if(isFilterActive) {
+                AnimatedVisibility(visible = isFilterActive) {
                     Divider()
                     DropdownMenuItem(
                         text = { Text(stringResource(id = R.string.menu_list_clearfilter))  },
