@@ -8,11 +8,16 @@
 
 package at.techbee.jtx.ui.detail
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context.CLIPBOARD_SERVICE
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ContentPaste
 import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -115,17 +120,16 @@ fun DetailsScreen(
                     goBackRequestedByTopBar = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
                 actions = {
-
                     if (!isEditMode.value) {
                         val menuExpanded = remember { mutableStateOf(false) }
                         OverflowMenu(menuExpanded = menuExpanded) {
                             DropdownMenuItem(
-                                text = { Text(text = stringResource(id = R.string.menu_view_share_text)) },
+                                text = { Text(text = stringResource(id = R.string.menu_view_share_mail)) },
                                 onClick = {
                                     detailViewModel.shareAsText(context)
                                     menuExpanded.value = false
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.Share, null) }
+                                leadingIcon = { Icon(Icons.Outlined.Mail, null) }
                             )
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
@@ -134,6 +138,18 @@ fun DetailsScreen(
                                     menuExpanded.value = false
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.Description, null) }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
+                                onClick = {
+                                    val text = icalEntity.value?.getShareText(context) ?: ""
+                                    val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                                    clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
+                                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
+                                        Toast.makeText(context, context.getText(R.string.menu_view_copy_to_clipboard_copied), Toast.LENGTH_SHORT).show()
+                                    menuExpanded.value = false
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.ContentPaste, null) }
                             )
                         }
                     }

@@ -485,7 +485,10 @@
 
 
     <string name="menu_view_share_text">Share</string>
+    <string name="menu_view_share_mail">Share as E-Mail</string>
     <string name="menu_view_share_ics">Share as .ics</string>
+    <string name="menu_view_copy_to_clipboard">Copy to clipboard</string>
+    <string name="menu_view_copy_to_clipboard_copied">Copied</string>
     <string name="menu_view_copy_as_journal">Copy as Journal</string>
     <string name="menu_view_copy_as_todo">Copy as Todo</string>
     <string name="menu_view_copy_as_note">Copy as Note</string>

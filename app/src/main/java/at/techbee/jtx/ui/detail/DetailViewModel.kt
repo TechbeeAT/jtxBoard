@@ -514,7 +514,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             val shareIntent = Intent().apply {
                 action = Intent.ACTION_SEND_MULTIPLE
-                type = "text/plain"
+                type = "message/rfc822"
                 icalEntity.value?.property?.summary?.let { putExtra(Intent.EXTRA_SUBJECT, it) }
                 putExtra(Intent.EXTRA_TEXT, shareText)
                 putExtra(Intent.EXTRA_EMAIL, attendees.toTypedArray())
