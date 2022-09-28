@@ -10,9 +10,13 @@ package at.techbee.jtx.ui.settings
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,15 +26,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.elements.DropdownSetting
 import at.techbee.jtx.ui.reusable.elements.SwitchSetting
-import at.techbee.jtx.ui.settings.SwitchSetting.*
 import at.techbee.jtx.ui.settings.DropdownSetting.*
+import at.techbee.jtx.ui.settings.SwitchSetting.*
+import java.util.*
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,6 +51,12 @@ fun SettingsScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
     val subSectionExpanded = remember { mutableStateOf(false) }
+
+    val languageOptions = mutableListOf<Locale?>(null)
+    for (language in BuildConfig.TRANSLATION_ARRAY) {
+        languageOptions.add(Locale.forLanguageTag(language))
+    }
+
 
     Scaffold(
         topBar = {
@@ -90,6 +103,79 @@ fun SettingsScreen(
                             }
                         }
                     )
+
+
+                    /* Special Handling for Language Selector */
+
+                    val appCompatLocales = AppCompatDelegate.getApplicationLocales()
+                    var defaultLocale: Locale? = null
+                    if(!appCompatLocales.isEmpty) {
+                        for (i in 0 until appCompatLocales.size()) {
+                            val locale = appCompatLocales[i] ?: continue
+                            if (languageOptions.contains(appCompatLocales[i]!!)) {
+                                defaultLocale = locale
+                                break
+                            }
+                        }
+                    }
+                    var selectedLanguage by remember { mutableStateOf(defaultLocale) }
+                    var languagesExpanded by remember { mutableStateOf(false) } // initial value
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = modifier.clickable { languagesExpanded = true }
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Outlined.Language,
+                            contentDescription = null,
+                            modifier = Modifier.padding(16.dp))
+
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(vertical = 8.dp)
+                        ) {
+
+                            Text(
+                                text = stringResource(id = R.string.settings_select_language),
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                text = selectedLanguage?.displayLanguage ?: stringResource(id = R.string.settings_select_language_system),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowDropDown,
+                            contentDescription = null,
+                            modifier = Modifier.padding(8.dp))
+
+                        DropdownMenu(
+                            expanded = languagesExpanded,
+                            onDismissRequest = { languagesExpanded = false },
+                        ) {
+                            languageOptions.forEach { locale ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        languagesExpanded = false
+                                        selectedLanguage = locale
+                                        AppCompatDelegate.setApplicationLocales(
+                                            locale?.let { LocaleListCompat.create(it) } ?:  LocaleListCompat.getEmptyLocaleList()
+                                        )
+                                    },
+                                    text = {
+                                        Text(
+                                            text = locale?.displayLanguage ?: stringResource(id = R.string.settings_select_language_system),
+                                            modifier = Modifier
+                                                .align(Alignment.Start)
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                    }
 
                     DropdownSetting(
                         setting = SETTING_AUDIO_FORMAT,

@@ -41,7 +41,10 @@ android {
                 arg("room.schemaLocation", "$projectDir/schemas")
             }
         }
-        resConfigs "en", "de", "el", "es", "fr", "it", "ru", "zh"
+
+        def locales = ["en", "de", "el", "es", "fr", "it", "ru", "zh"]
+        buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
+        resConfigs locales
     }
     buildTypes {
         release {
