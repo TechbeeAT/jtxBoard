@@ -14,24 +14,48 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Sync
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.flavored.BillingManager
-import at.techbee.jtx.ui.*
+import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
@@ -46,7 +70,12 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalPagerApi::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalMaterialApi::class,
+)
 @Composable
 fun ListScreenTabContainer(
     navController: NavHostController,
@@ -90,6 +119,9 @@ fun ListScreenTabContainer(
     }
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+
+    var showSearch by remember { mutableStateOf(false) }
 
     if (showDeleteAllVisibleDialog) {
         DeleteVisibleDialog(
@@ -210,6 +242,71 @@ fun ListScreenTabContainer(
                 }
             )
         },
+        bottomBar = {
+            val coroutineScope = rememberCoroutineScope()
+            val listViewModel = when(pagerState.currentPage) {
+                ListTabDestination.Journals.tabIndex -> icalListViewModelJournals
+                ListTabDestination.Notes.tabIndex -> icalListViewModelNotes
+                ListTabDestination.Tasks.tabIndex -> icalListViewModelTodos
+                else -> return@Scaffold
+            }
+            val keyboardController = LocalSoftwareKeyboardController.current
+            val allCollections = listViewModel.allCollections.observeAsState(emptyList())
+
+            ListBottomAppBar(
+                module = listViewModel.module,
+                iCal4ListLive = listViewModel.iCal4List,
+                onAddNewEntry = {
+                    coroutineScope.launch {
+                        val lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value
+                        val proposedCollectionId = if(allCollections.value.any {collection -> collection.collectionId == lastUsedCollectionId })
+                            lastUsedCollectionId
+                        else
+                            allCollections.value.firstOrNull()?.collectionId ?: return@launch
+                        val db = ICalDatabase.getInstance(context).iCalDatabaseDao
+                        val newICalObject = when(listViewModel.module) {
+                            Module.JOURNAL -> ICalObject.createJournal().apply { collectionId = proposedCollectionId }
+                            Module.NOTE -> ICalObject.createNote().apply { collectionId = proposedCollectionId }
+                            Module.TODO -> ICalObject.createTodo().apply {
+                                this.setDefaultDueDateFromSettings(context)
+                                this.setDefaultStartDateFromSettings(context)
+                                collectionId = proposedCollectionId
+                            }
+                        }
+                        newICalObject.dirty = false
+                        val newIcalObjectId = db.insertICalObject(newICalObject)
+                        navController.navigate("details/$newIcalObjectId?isEditMode=true")
+                    }
+                },
+                onAddNewQuickEntry = { showQuickAddDialog = true },
+                listSettings = listViewModel.listSettings,
+                onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) },
+                onFilterIconClicked = {
+                    coroutineScope.launch {
+                        filterBottomSheetState.show()
+                    }
+                },
+                onClearFilterClicked = {
+                    listViewModel.clearFilter()
+                },
+                onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) },
+                onSearchTextClicked = {
+                    coroutineScope.launch {
+                        if(!showSearch) {
+                            showSearch = true
+                            listViewModel.listSettings.searchText.value = ""
+                            keyboardController?.show()
+                            //focusRequesterSearchText.requestFocus()
+                        } else {
+                            showSearch = false
+                            keyboardController?.hide()
+                            listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
+                            listViewModel.updateSearch(saveListSettings = false)
+                        }
+                    }
+                }
+            )
+        },
         content = { paddingValues ->
                 JtxNavigationDrawer(
                     drawerState,
@@ -242,24 +339,24 @@ fun ListScreenTabContainer(
                                             ListScreen(
                                                 listViewModel = icalListViewModelJournals,
                                                 navController = navController,
-                                                lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value,
-                                                onShowQuickAddDialog = { showQuickAddDialog = true }
+                                                showSearch = showSearch,
+                                                filterBottomSheetState = filterBottomSheetState,
                                             )
                                         }
                                         ListTabDestination.Notes.tabIndex -> {
                                             ListScreen(
                                                 listViewModel = icalListViewModelNotes,
                                                 navController = navController,
-                                                lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value,
-                                                onShowQuickAddDialog = { showQuickAddDialog = true }
+                                                showSearch = showSearch,
+                                                filterBottomSheetState = filterBottomSheetState,
                                             )
                                         }
                                         ListTabDestination.Tasks.tabIndex -> {
                                             ListScreen(
                                                 listViewModel = icalListViewModelTodos,
                                                 navController = navController,
-                                                lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value,
-                                                onShowQuickAddDialog = { showQuickAddDialog = true }
+                                                showSearch = showSearch,
+                                                filterBottomSheetState = filterBottomSheetState,
                                             )
                                         }
                                     }
