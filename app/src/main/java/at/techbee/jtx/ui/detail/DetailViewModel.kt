@@ -283,10 +283,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         ICalObject.makeRecurringException(icalEntity.value?.property!!, database)
                         toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
                     }
-
-                    if (icalObject.rrule != null)
-                        icalObject.recreateRecurring(database, getApplication())
-
+                    icalObject.recreateRecurring(database, getApplication())
                 }
                 SyncUtil.notifyContentObservers(getApplication())
             } catch (e: SQLiteConstraintException) {

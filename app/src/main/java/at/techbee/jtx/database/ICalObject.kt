@@ -1008,24 +1008,17 @@ data class ICalObject(
 
     fun recreateRecurring(database: ICalDatabaseDao, context: Context) {
 
-        val original = database.getSync(id) ?: return
         database.deleteRecurringInstances(id)
-
-        if(original.property.dtstart == null)
+        if(dtstart == null || rrule.isNullOrEmpty())
             return
 
+        val original = database.getSync(id) ?: return
         val timeToDue = if(original.property.component == Component.VTODO.name && original.property.due != null)
             original.property.due!! - original.property.dtstart!!
         else
             0L
 
         getInstancesFromRrule().forEach { recurrenceDate ->
-
-            /*
-            if(original.property.dtstart == recurrenceDate)
-                return@forEach    // skip entry as it is the original event
-             */
-
             val instance = original.copy()
             instance.property.id = 0L
             instance.property.recurOriginalIcalObjectId = id
