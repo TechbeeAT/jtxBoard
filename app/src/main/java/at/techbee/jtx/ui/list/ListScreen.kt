@@ -12,16 +12,12 @@ package at.techbee.jtx.ui.list
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import at.techbee.jtx.ui.reusable.bottomsheets.ListFilterBottomSheet
@@ -30,9 +26,7 @@ import at.techbee.jtx.ui.reusable.screens.ListScreenCompact
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 
 
-@OptIn(
-    ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class,
-)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListScreen(
     listViewModel: ListViewModel,
@@ -48,114 +42,111 @@ fun ListScreen(
         listViewModel.toastMessage.value = null
     }
 
-    Scaffold(
-        content = {  paddingValues ->
-            Column(modifier = Modifier.padding(paddingValues)) {
-                AnimatedVisibility(showSearch) {
-                    ListSearchTextField(
-                        initialSeachText = listViewModel.listSettings.searchText.value,
-                        onSearchTextChanged = { newSearchText ->
-                            listViewModel.listSettings.searchText.value = newSearchText
-                            listViewModel.updateSearch(saveListSettings = false)
-                        },
-                    )
-                }
 
-                when (listViewModel.listSettings.viewMode.value) {
-                    ViewMode.LIST -> {
-                        ListScreenList(
-                            listLive = listViewModel.iCal4List,
-                            subtasksLive = listViewModel.allSubtasksMap,
-                            subnotesLive = listViewModel.allSubnotesMap,
-                            attachmentsLive = listViewModel.allAttachmentsMap,
-                            scrollOnceId = listViewModel.scrollOnceId,
-                            listSettings = listViewModel.listSettings,
-                            isSubtasksExpandedDefault = settingsStateHolder.settingAutoExpandSubtasks,
-                            isSubnotesExpandedDefault = settingsStateHolder.settingAutoExpandSubnotes,
-                            isAttachmentsExpandedDefault = settingsStateHolder.settingAutoExpandAttachments,
-                            settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks,
-                            settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
-                            settingProgressIncrement = settingsStateHolder.settingStepForProgress,
-                            goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
-                            goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
-                            onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
-                                listViewModel.updateProgress(
-                                    itemId,
-                                    newPercent,
-                                    isLinkedRecurringInstance
-                                )
-                            },
-                            onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean ->
-                                listViewModel.updateExpanded(
-                                    itemId,
-                                    isSubtasksExpanded,
-                                    isSubnotesExpanded,
-                                    isAttachmentsExpanded
-                                )
-                            },
+    Column {
+        AnimatedVisibility(showSearch) {
+            ListSearchTextField(
+                initialSeachText = listViewModel.listSettings.searchText.value,
+                onSearchTextChanged = { newSearchText ->
+                    listViewModel.listSettings.searchText.value = newSearchText
+                    listViewModel.updateSearch(saveListSettings = false)
+                },
+            )
+        }
+
+        when (listViewModel.listSettings.viewMode.value) {
+            ViewMode.LIST -> {
+                ListScreenList(
+                    listLive = listViewModel.iCal4List,
+                    subtasksLive = listViewModel.allSubtasksMap,
+                    subnotesLive = listViewModel.allSubnotesMap,
+                    attachmentsLive = listViewModel.allAttachmentsMap,
+                    scrollOnceId = listViewModel.scrollOnceId,
+                    listSettings = listViewModel.listSettings,
+                    isSubtasksExpandedDefault = settingsStateHolder.settingAutoExpandSubtasks,
+                    isSubnotesExpandedDefault = settingsStateHolder.settingAutoExpandSubnotes,
+                    isAttachmentsExpandedDefault = settingsStateHolder.settingAutoExpandAttachments,
+                    settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks,
+                    settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks,
+                    settingProgressIncrement = settingsStateHolder.settingStepForProgress,
+                    goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
+                    goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
+                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
+                        listViewModel.updateProgress(
+                            itemId,
+                            newPercent,
+                            isLinkedRecurringInstance
                         )
-                    }
-                    ViewMode.GRID -> {
-                        ListScreenGrid(
-                            listLive = listViewModel.iCal4List,
-                            scrollOnceId = listViewModel.scrollOnceId,
-                            onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
-                                listViewModel.updateProgress(
-                                    itemId,
-                                    newPercent,
-                                    isLinkedRecurringInstance
-                                )
-                            },
-                            goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
-                            goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
+                    },
+                    onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isAttachmentsExpanded: Boolean ->
+                        listViewModel.updateExpanded(
+                            itemId,
+                            isSubtasksExpanded,
+                            isSubnotesExpanded,
+                            isAttachmentsExpanded
                         )
-                    }
-                    ViewMode.COMPACT -> {
-                        ListScreenCompact(
-                            listLive = listViewModel.iCal4List,
-                            subtasksLive = listViewModel.allSubtasksMap,
-                            scrollOnceId = listViewModel.scrollOnceId,
-                            listSettings = listViewModel.listSettings,
-                            onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
-                                listViewModel.updateProgress(
-                                    itemId,
-                                    newPercent,
-                                    isLinkedRecurringInstance
-                                )
-                            },
-                            goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
-                            goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
+                    },
+                )
+            }
+            ViewMode.GRID -> {
+                ListScreenGrid(
+                    listLive = listViewModel.iCal4List,
+                    scrollOnceId = listViewModel.scrollOnceId,
+                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
+                        listViewModel.updateProgress(
+                            itemId,
+                            newPercent,
+                            isLinkedRecurringInstance
                         )
-                    }
-                    ViewMode.KANBAN -> {
-                        ListScreenKanban(
-                            module = listViewModel.module,
-                            listLive = listViewModel.iCal4List,
-                            scrollOnceId = listViewModel.scrollOnceId,
-                            onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance, scrollOnce ->
-                                listViewModel.updateProgress(
-                                    itemId,
-                                    newPercent,
-                                    isLinkedRecurringInstance,
-                                    scrollOnce
-                                )
-                            },
-                            onStatusChanged = { itemId, newStatus, isLinkedRecurringInstance, scrollOnce ->
-                                listViewModel.updateStatusJournal(
-                                    itemId,
-                                    newStatus,
-                                    isLinkedRecurringInstance,
-                                    scrollOnce
-                                )
-                            },
-                            goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
-                            goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
+                    },
+                    goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
+                    goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
+                )
+            }
+            ViewMode.COMPACT -> {
+                ListScreenCompact(
+                    listLive = listViewModel.iCal4List,
+                    subtasksLive = listViewModel.allSubtasksMap,
+                    scrollOnceId = listViewModel.scrollOnceId,
+                    listSettings = listViewModel.listSettings,
+                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance ->
+                        listViewModel.updateProgress(
+                            itemId,
+                            newPercent,
+                            isLinkedRecurringInstance
                         )
-                    }
-                }
+                    },
+                    goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
+                    goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
+                )
+            }
+            ViewMode.KANBAN -> {
+                ListScreenKanban(
+                    module = listViewModel.module,
+                    listLive = listViewModel.iCal4List,
+                    scrollOnceId = listViewModel.scrollOnceId,
+                    onProgressChanged = { itemId, newPercent, isLinkedRecurringInstance, scrollOnce ->
+                        listViewModel.updateProgress(
+                            itemId,
+                            newPercent,
+                            isLinkedRecurringInstance,
+                            scrollOnce
+                        )
+                    },
+                    onStatusChanged = { itemId, newStatus, isLinkedRecurringInstance, scrollOnce ->
+                        listViewModel.updateStatusJournal(
+                            itemId,
+                            newStatus,
+                            isLinkedRecurringInstance,
+                            scrollOnce
+                        )
+                    },
+                    goToView = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, false)) },
+                    goToEdit = { itemId -> navController.navigate(DetailDestination.Detail.getRoute(itemId, true)) },
+                )
             }
         }
-    )
+    }
 
     ModalBottomSheetLayout(
         sheetState = filterBottomSheetState,

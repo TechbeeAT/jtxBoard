@@ -216,12 +216,7 @@ fun MainNavHost(
             ListScreenTabContainer(
                 navController = navController,
                 globalStateHolder = globalStateHolder,
-                settingsStateHolder = settingsStateHolder,
-                saveAndEdit = settingsStateHolder.saveAndEdit.value,
-                onSaveAndEditChanged = { saveAndEdit ->
-                    settingsStateHolder.saveAndEdit.value = saveAndEdit
-                    settingsStateHolder.saveAndEdit = settingsStateHolder.saveAndEdit
-                }
+                settingsStateHolder = settingsStateHolder
             )
         }
         composable(

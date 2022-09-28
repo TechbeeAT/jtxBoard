@@ -80,9 +80,7 @@ import kotlinx.coroutines.launch
 fun ListScreenTabContainer(
     navController: NavHostController,
     globalStateHolder: GlobalStateHolder,
-    settingsStateHolder: SettingsStateHolder,
-    saveAndEdit: Boolean,
-    onSaveAndEditChanged: (Boolean) -> Unit
+    settingsStateHolder: SettingsStateHolder
 ) {
 
     val context = LocalContext.current
@@ -143,7 +141,7 @@ fun ListScreenTabContainer(
             presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
             allCollections = allCollections.value,
             presetCollectionId = settingsStateHolder.lastUsedCollection.value,
-            presetSaveAndEdit = saveAndEdit,
+            presetSaveAndEdit = settingsStateHolder.saveAndEdit.value,
             onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
                 settingsStateHolder.lastUsedCollection.value = newICalObject.collectionId
                 settingsStateHolder.lastUsedCollection = settingsStateHolder.lastUsedCollection
@@ -165,7 +163,10 @@ fun ListScreenTabContainer(
                 globalStateHolder.icalFromIntentString.value = null  // origin was state from import
                 globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
                         },
-            onSaveAndEditChanged = onSaveAndEditChanged
+            onSaveAndEditChanged = {
+                settingsStateHolder.saveAndEdit.value = it
+                settingsStateHolder.saveAndEdit = settingsStateHolder.saveAndEdit
+            }
         )
     }
 
