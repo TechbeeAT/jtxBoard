@@ -10,9 +10,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.Window
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -33,23 +32,23 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.JtxReviewManager
-import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.about.AboutViewModel
+import at.techbee.jtx.ui.collections.CollectionsScreen
 import at.techbee.jtx.ui.collections.CollectionsViewModel
 import at.techbee.jtx.ui.detail.DetailViewModel
-import at.techbee.jtx.ui.sync.SyncViewModel
-import at.techbee.jtx.ui.reusable.destinations.DetailDestination
-import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
-import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
-import at.techbee.jtx.ui.reusable.screens.*
-import at.techbee.jtx.ui.GlobalStateHolder
-import at.techbee.jtx.ui.collections.CollectionsScreen
 import at.techbee.jtx.ui.detail.DetailsScreen
 import at.techbee.jtx.ui.list.ListScreenTabContainer
+import at.techbee.jtx.ui.reusable.destinations.DetailDestination
+import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
 import at.techbee.jtx.ui.reusable.dialogs.Jtx20BetaInfoDialog
 import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
+import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
+import at.techbee.jtx.ui.reusable.screens.*
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
+import at.techbee.jtx.ui.sync.SyncViewModel
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.time.ZonedDateTime
@@ -57,8 +56,8 @@ import java.time.ZonedDateTime
 
 const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
-class MainActivity2 : ComponentActivity() {
-    //class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
+//class MainActivity2 : ComponentActivity() {
+    class MainActivity2 : AppCompatActivity() {       // fragment activity instead of ComponentActivity to inflate Fragment-XMLs
     // or maybe FragmentActivity() was also proposed...
 
     private var lastProcessedIntentHash: Int? = null
@@ -74,7 +73,7 @@ class MainActivity2 : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppCompatDelegate.create(this, null).onCreate(savedInstanceState)
+        //AppCompatDelegate.create(this, null).onCreate(savedInstanceState)
         super.onCreate(savedInstanceState)
 
         // hides the ugly action bar that was before hidden through the Theme XML
