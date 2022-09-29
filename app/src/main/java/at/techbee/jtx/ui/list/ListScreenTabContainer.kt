@@ -11,9 +11,11 @@ package at.techbee.jtx.ui.list
 
 import android.app.Application
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
@@ -43,9 +45,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import at.techbee.jtx.BuildConfig
@@ -60,7 +64,6 @@ import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.dialogs.DeleteVisibleDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
-import at.techbee.jtx.ui.reusable.dialogs.QuickAddDialog
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
@@ -96,7 +99,6 @@ fun ListScreenTabContainer(
 
     var topBarMenuExpanded by remember { mutableStateOf(false) }
     var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
-    var showQuickAddDialog by remember { mutableStateOf(false) }
 
     val icalListViewModelJournals: ListViewModelJournals = viewModel()
     val icalListViewModelNotes: ListViewModelNotes = viewModel()
@@ -120,6 +122,7 @@ fun ListScreenTabContainer(
     val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     var showSearch by remember { mutableStateOf(false) }
+    var showQuickAdd by remember { mutableStateOf(false) }
 
     if (showDeleteAllVisibleDialog) {
         DeleteVisibleDialog(
@@ -129,51 +132,9 @@ fun ListScreenTabContainer(
         )
     }
 
-    // origin can be button click or an import through the intent
-    if (showQuickAddDialog || globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
-        val allCollections = getActiveViewModel().allCollections.observeAsState(emptyList())
-        QuickAddDialog(
-            presetModule = if(showQuickAddDialog)
-                getActiveViewModel().module    // coming from button
-            else
-                globalStateHolder.icalFromIntentModule.value,   // coming from intent
-            presetText = globalStateHolder.icalFromIntentString.value ?: "",    // only relevant when coming from intent
-            presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
-            allCollections = allCollections.value,
-            presetCollectionId = settingsStateHolder.lastUsedCollection.value,
-            presetSaveAndEdit = settingsStateHolder.saveAndEdit.value,
-            onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
-                settingsStateHolder.lastUsedCollection.value = newICalObject.collectionId
-                settingsStateHolder.lastUsedCollection = settingsStateHolder.lastUsedCollection
-                settingsStateHolder.lastUsedModule.value = newICalObject.getModuleFromString()
-                settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
-                scope.launch {
-                    pagerState.scrollToPage(
-                        when(newICalObject.getModuleFromString()) {
-                            Module.JOURNAL -> ListTabDestination.Journals.tabIndex
-                            Module.NOTE -> ListTabDestination.Notes.tabIndex
-                            Module.TODO -> ListTabDestination.Tasks.tabIndex
-                        }
-                    )
-                    getActiveViewModel().insertQuickItem(newICalObject, categories, attachment, editAfterSaving)
-                }
-            },
-            onDismiss = {
-                showQuickAddDialog = false  // origin was button
-                globalStateHolder.icalFromIntentString.value = null  // origin was state from import
-                globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
-                        },
-            onSaveAndEditChanged = {
-                settingsStateHolder.saveAndEdit.value = it
-                settingsStateHolder.saveAndEdit = settingsStateHolder.saveAndEdit
-            }
-        )
-    }
-
     if(getActiveViewModel().sqlConstraintException.value) {
         ErrorOnUpdateDialog(onConfirm = { getActiveViewModel().sqlConstraintException.value = false })
     }
-
 
     Scaffold(
         topBar = {
@@ -279,7 +240,7 @@ fun ListScreenTabContainer(
                         navController.navigate("details/$newIcalObjectId?isEditMode=true")
                     }
                 },
-                onAddNewQuickEntry = { showQuickAddDialog = true },
+                showQuickEntry = { showQuickAdd = it },
                 listSettings = listViewModel.listSettings,
                 onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) },
                 onFilterIconClicked = {
@@ -322,15 +283,89 @@ fun ListScreenTabContainer(
                                             scope.launch {
                                                 pagerState.scrollToPage(screen.tabIndex)
                                             }
-                                            settingsStateHolder.lastUsedModule.value = when(screen) {
-                                                ListTabDestination.Journals -> Module.JOURNAL
-                                                ListTabDestination.Notes -> Module.NOTE
-                                                ListTabDestination.Tasks -> Module.TODO
-                                            }
-                                            settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule  // in order to save
+                                            settingsStateHolder.lastUsedModule.value =
+                                                when (screen) {
+                                                    ListTabDestination.Journals -> Module.JOURNAL
+                                                    ListTabDestination.Notes -> Module.NOTE
+                                                    ListTabDestination.Tasks -> Module.TODO
+                                                }
+                                            settingsStateHolder.lastUsedModule =
+                                                settingsStateHolder.lastUsedModule  // in order to save
                                         },
                                         text = { Text(stringResource(id = screen.titleResource)) })
                                 }
+                            }
+
+
+                            AnimatedVisibility(showSearch) {
+                                ListSearchTextField(
+                                    initialSeachText = getActiveViewModel().listSettings.searchText.value,
+                                    onSearchTextChanged = { newSearchText ->
+                                        getActiveViewModel().listSettings.searchText.value =
+                                            newSearchText
+                                        getActiveViewModel().updateSearch(saveListSettings = false)
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .shadow(1.dp)
+                                        .padding(8.dp)
+                                )
+                            }
+
+                            AnimatedVisibility(showQuickAdd || globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
+                                // origin can be button click or an import through the intent
+                                val allCollections =
+                                    getActiveViewModel().allCollections.observeAsState(emptyList())
+                                ListQuickAddElement(
+                                    presetModule = if (showQuickAdd)
+                                        getActiveViewModel().module    // coming from button
+                                    else
+                                        globalStateHolder.icalFromIntentModule.value,   // coming from intent
+                                    presetText = globalStateHolder.icalFromIntentString.value
+                                        ?: "",    // only relevant when coming from intent
+                                    presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
+                                    allCollections = allCollections.value,
+                                    presetCollectionId = settingsStateHolder.lastUsedCollection.value,
+                                    onSaveEntry = { newICalObject, categories, attachment, editAfterSaving ->
+                                        settingsStateHolder.lastUsedCollection.value =
+                                            newICalObject.collectionId
+                                        settingsStateHolder.lastUsedCollection =
+                                            settingsStateHolder.lastUsedCollection
+                                        settingsStateHolder.lastUsedModule.value =
+                                            newICalObject.getModuleFromString()
+                                        settingsStateHolder.lastUsedModule =
+                                            settingsStateHolder.lastUsedModule
+
+                                        globalStateHolder.icalFromIntentString.value =
+                                            null  // origin was state from import
+                                        globalStateHolder.icalFromIntentAttachment.value =
+                                            null  // origin was state from import
+
+                                        scope.launch {
+                                            pagerState.scrollToPage(
+                                                when (newICalObject.getModuleFromString()) {
+                                                    Module.JOURNAL -> ListTabDestination.Journals.tabIndex
+                                                    Module.NOTE -> ListTabDestination.Notes.tabIndex
+                                                    Module.TODO -> ListTabDestination.Tasks.tabIndex
+                                                }
+                                            )
+                                            getActiveViewModel().insertQuickItem(
+                                                newICalObject,
+                                                categories,
+                                                attachment,
+                                                editAfterSaving
+                                            )
+                                        }
+                                    },
+                                    onDismiss = {
+                                        showQuickAdd = false  // origin was button
+                                        globalStateHolder.icalFromIntentString.value =
+                                            null  // origin was state from import
+                                        globalStateHolder.icalFromIntentAttachment.value =
+                                            null  // origin was state from import
+                                    },
+                                    modifier = Modifier.shadow(1.dp).padding(8.dp)
+                                )
                             }
 
                             Box {
@@ -340,7 +375,6 @@ fun ListScreenTabContainer(
                                             ListScreen(
                                                 listViewModel = icalListViewModelJournals,
                                                 navController = navController,
-                                                showSearch = showSearch,
                                                 filterBottomSheetState = filterBottomSheetState,
                                             )
                                         }
@@ -348,7 +382,6 @@ fun ListScreenTabContainer(
                                             ListScreen(
                                                 listViewModel = icalListViewModelNotes,
                                                 navController = navController,
-                                                showSearch = showSearch,
                                                 filterBottomSheetState = filterBottomSheetState,
                                             )
                                         }
@@ -356,7 +389,6 @@ fun ListScreenTabContainer(
                                             ListScreen(
                                                 listViewModel = icalListViewModelTodos,
                                                 navController = navController,
-                                                showSearch = showSearch,
                                                 filterBottomSheetState = filterBottomSheetState,
                                             )
                                         }

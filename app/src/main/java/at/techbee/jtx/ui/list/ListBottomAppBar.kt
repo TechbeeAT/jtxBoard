@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -39,7 +40,7 @@ fun ListBottomAppBar(
     module: Module,
     iCal4ListLive: LiveData<List<ICal4List>>,
     listSettings: ListSettings,
-    onAddNewQuickEntry: () -> Unit,
+    showQuickEntry: (Boolean) -> Unit,
     onAddNewEntry: () -> Unit,
     onListSettingsChanged: () -> Unit,
     onFilterIconClicked: () -> Unit,
@@ -59,6 +60,8 @@ fun ListBottomAppBar(
                 || (module == Module.TODO && listSettings.searchStatusTodo.value.isNotEmpty())
                 || listSettings.searchClassification.value.isNotEmpty() || listSettings.searchCollection.value.isNotEmpty()
                 || listSettings.searchAccount.value.isNotEmpty()
+
+    var isShowQuickEntryActive by rememberSaveable { mutableStateOf(false) }
 
     if(showGoToDatePicker) {
         var dates = iCal4List?.map { it.dtstart ?: System.currentTimeMillis() }?.toList()
@@ -105,7 +108,10 @@ fun ListBottomAppBar(
                     tint = if (isFilterActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
                 )
             }
-            IconButton(onClick = { onAddNewQuickEntry() }) {
+            IconButton(onClick = {
+                isShowQuickEntryActive = !isShowQuickEntryActive
+                showQuickEntry(isShowQuickEntryActive)
+            }) {
                 Icon(
                     painterResource(
                         id = R.drawable.ic_add_quick
@@ -116,7 +122,8 @@ fun ListBottomAppBar(
                             Module.NOTE -> R.string.menu_list_quick_note
                             Module.TODO -> R.string.menu_list_quick_todo
                         }
-                    )
+                    ),
+                    tint = if (isShowQuickEntryActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
                 )
             }
             IconButton(onClick = { onSearchTextClicked() }) {
@@ -284,7 +291,7 @@ fun ListBottomAppBar_Preview_Journal() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             onAddNewEntry = { },
-            onAddNewQuickEntry = { },
+            showQuickEntry = { },
             onListSettingsChanged = { },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
@@ -310,7 +317,7 @@ fun ListBottomAppBar_Preview_Note() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             onAddNewEntry = { },
-            onAddNewQuickEntry = { },
+            showQuickEntry = { },
             onListSettingsChanged = { },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
@@ -336,7 +343,7 @@ fun ListBottomAppBar_Preview_Todo() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             onAddNewEntry = { },
-            onAddNewQuickEntry = { },
+            showQuickEntry = { },
             onListSettingsChanged = { },
             onFilterIconClicked = { },
             onGoToDateSelected = { },
@@ -363,7 +370,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             iCal4ListLive = MutableLiveData(emptyList()),
             listSettings = listSettings,
             onAddNewEntry = { },
-            onAddNewQuickEntry = { },
+            showQuickEntry = { },
             onListSettingsChanged = { },
             onFilterIconClicked = { },
             onGoToDateSelected = { },

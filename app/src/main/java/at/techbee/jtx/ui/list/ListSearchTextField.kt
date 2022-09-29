@@ -43,9 +43,7 @@ fun ListSearchTextField(
     }
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -71,7 +69,10 @@ fun ListSearchTextField_Preview() {
     MaterialTheme {
         ListSearchTextField(
             initialSeachText = "",
-            onSearchTextChanged = { }
+            onSearchTextChanged = { },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
     }
 }

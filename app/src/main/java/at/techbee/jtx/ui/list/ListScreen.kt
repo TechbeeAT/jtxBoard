@@ -10,7 +10,6 @@ package at.techbee.jtx.ui.list
 
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
@@ -31,7 +30,6 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 fun ListScreen(
     listViewModel: ListViewModel,
     navController: NavController,
-    showSearch: Boolean,
     filterBottomSheetState: ModalBottomSheetState,
 ) {
     val context = LocalContext.current
@@ -42,18 +40,7 @@ fun ListScreen(
         listViewModel.toastMessage.value = null
     }
 
-
     Column {
-        AnimatedVisibility(showSearch) {
-            ListSearchTextField(
-                initialSeachText = listViewModel.listSettings.searchText.value,
-                onSearchTextChanged = { newSearchText ->
-                    listViewModel.listSettings.searchText.value = newSearchText
-                    listViewModel.updateSearch(saveListSettings = false)
-                },
-            )
-        }
-
         when (listViewModel.listSettings.viewMode.value) {
             ViewMode.LIST -> {
                 ListScreenList(
