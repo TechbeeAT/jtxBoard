@@ -375,7 +375,11 @@ fun ListScreenTabContainer(
                             }
 
                             Box {
-                                HorizontalPager(state = pagerState, count = 3) { page ->
+                                HorizontalPager(
+                                    state = pagerState,
+                                    count = 3,
+                                    userScrollEnabled = !filterBottomSheetState.isVisible,
+                                ) { page ->
                                     when (page) {
                                         ListTabDestination.Journals.tabIndex -> {
                                             ListScreen(

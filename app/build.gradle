@@ -247,9 +247,9 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-test-manifest:$version_compose"
 
     // permissions from accompanist
-    implementation "com.google.accompanist:accompanist-permissions:0.25.0"
+    implementation "com.google.accompanist:accompanist-permissions:$version_accompanist"
     // Paging Compose
-    implementation "com.google.accompanist:accompanist-pager:0.22.0-rc"
-    implementation "com.google.accompanist:accompanist-pager-indicators:0.22.0-rc"
+    implementation "com.google.accompanist:accompanist-pager:$version_accompanist"
+    implementation "com.google.accompanist:accompanist-pager-indicators:$version_accompanist"
 }
 
