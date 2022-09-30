@@ -8,7 +8,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.Window
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -16,8 +15,12 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,6 +53,7 @@ import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.sync.SyncViewModel
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.util.getParcelableExtraCompat
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.time.ZonedDateTime
 
@@ -150,7 +154,7 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
                     when {
                         intent.type == "text/plain" -> globalStateHolder.icalFromIntentString.value = intent.getStringExtra(Intent.EXTRA_TEXT)
                         intent.type?.startsWith("image/") == true || intent.type == "application/pdf" -> {
-                            (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { uri ->
+                            intent.getParcelableExtraCompat(Intent.EXTRA_STREAM, Uri::class)?.let { uri ->
                                 Attachment.getNewAttachmentFromUri(uri, this)?.let { newAttachment ->
                                     globalStateHolder.icalFromIntentAttachment.value = newAttachment
                                 }

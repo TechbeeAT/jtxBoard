@@ -85,10 +85,11 @@ class SyncUtil {
          */
         fun isDAVx5CompatibleWithJTX(application: Application): Boolean {
             try {
-                val davx5Info = application.packageManager?.getPackageInfo(DAVX5_PACKAGE_NAME, 0) ?: return false
+                val davx5Info = application.packageManager?.getPackageInfoCompat(DAVX5_PACKAGE_NAME, 0) ?: return false
                 return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     davx5Info.longVersionCode >= 402000000L
                 } else {
+                    @Suppress("DEPRECATION")
                     davx5Info.versionCode >= 402000000
                 }
             } catch (e: PackageManager.NameNotFoundException) {
@@ -132,6 +133,7 @@ class SyncUtil {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 context?.contentResolver?.notifyChange(JtxContract.JtxICalObject.CONTENT_URI, null, ContentResolver.NOTIFY_SYNC_TO_NETWORK)
             } else {
+                @Suppress("DEPRECATION")
                 context?.contentResolver?.notifyChange(JtxContract.JtxICalObject.CONTENT_URI, null, true)
             }
         }

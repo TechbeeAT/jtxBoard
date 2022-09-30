@@ -11,24 +11,53 @@ package at.techbee.jtx.ui.list
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.PackageManager.PackageInfoFlags
 import android.database.sqlite.SQLiteConstraintException
-import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.ListSettings
 import at.techbee.jtx.R
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.COLUMN_CLASSIFICATION
+import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_NAME
+import at.techbee.jtx.database.COLUMN_COLLECTION_DISPLAYNAME
+import at.techbee.jtx.database.COLUMN_COLLECTION_ID
+import at.techbee.jtx.database.COLUMN_COMPLETED
+import at.techbee.jtx.database.COLUMN_CREATED
+import at.techbee.jtx.database.COLUMN_DESCRIPTION
+import at.techbee.jtx.database.COLUMN_DTSTART
+import at.techbee.jtx.database.COLUMN_DUE
+import at.techbee.jtx.database.COLUMN_ICALOBJECT_COLLECTIONID
+import at.techbee.jtx.database.COLUMN_ID
+import at.techbee.jtx.database.COLUMN_LAST_MODIFIED
+import at.techbee.jtx.database.COLUMN_MODULE
+import at.techbee.jtx.database.COLUMN_PERCENT
+import at.techbee.jtx.database.COLUMN_PRIORITY
+import at.techbee.jtx.database.COLUMN_STATUS
+import at.techbee.jtx.database.COLUMN_SUMMARY
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.StatusJournal
+import at.techbee.jtx.database.TABLE_NAME_COLLECTION
+import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.COLUMN_CATEGORY_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_CATEGORY_TEXT
+import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.TABLE_NAME_CATEGORY
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.ui.settings.SwitchSetting
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
+import at.techbee.jtx.util.getPackageInfoCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -91,10 +120,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
         updateSearch()
 
         // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
-        val firstInstall = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            application.packageManager?.getPackageInfo(application.packageName, PackageInfoFlags.of(0))?.firstInstallTime ?: System.currentTimeMillis()
-        else
-            application.packageManager?.getPackageInfo(application.packageName, 0)?.firstInstallTime ?: System.currentTimeMillis()
+        val firstInstall = application.packageManager
+            ?.getPackageInfoCompat(application.packageName, 0)
+            ?.firstInstallTime ?: System.currentTimeMillis()
 
         if(settings.getBoolean(PREFS_ISFIRSTRUN, true)) {
             if (firstInstall > 1641596400000L)
