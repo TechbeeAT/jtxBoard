@@ -12,14 +12,30 @@ import android.os.Build
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreTime
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material.icons.outlined.TravelExplore
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -38,7 +54,8 @@ import at.techbee.jtx.util.DateTimeUtils
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.TimeZone
+import kotlin.collections.contains
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -210,6 +227,7 @@ fun DatePickerDialog(
                                     factory = { context ->
                                         // Creates custom view
                                         val timepicker = TimePicker(context)
+                                        @Suppress("DEPRECATION")
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                             timepicker.hour = dateTime.hour
                                             timepicker.minute = dateTime.minute
