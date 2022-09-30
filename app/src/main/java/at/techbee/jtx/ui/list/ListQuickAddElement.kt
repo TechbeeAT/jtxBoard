@@ -30,6 +30,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -86,6 +88,11 @@ fun ListQuickAddElement(
     val currentAttachment by rememberSaveable { mutableStateOf(presetAttachment) }
     var noTextError by rememberSaveable { mutableStateOf(false) }
 
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(focusRequester) {
+        focusRequester.requestFocus()
+    }
 
     val sr: SpeechRecognizer? = when {
         LocalInspectionMode.current -> null   // enables preview
@@ -240,7 +247,8 @@ fun ListQuickAddElement(
             },
             maxLines = 3,
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .focusRequester(focusRequester),
             isError = noTextError,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
@@ -300,8 +308,6 @@ fun ListQuickAddElement(
             ) {
                 Text(stringResource(id = R.string.add))
             }
-
-
         }
     }
 

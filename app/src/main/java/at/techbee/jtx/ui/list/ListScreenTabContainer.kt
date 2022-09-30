@@ -240,7 +240,13 @@ fun ListScreenTabContainer(
                         navController.navigate("details/$newIcalObjectId?isEditMode=true")
                     }
                 },
-                showQuickEntry = { showQuickAdd = it },
+                showQuickEntry = {
+                    showQuickAdd = it
+                    if(it)
+                        keyboardController?.show()
+                    else
+                        keyboardController?.hide()
+                },
                 listSettings = listViewModel.listSettings,
                 onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) },
                 onFilterIconClicked = {
