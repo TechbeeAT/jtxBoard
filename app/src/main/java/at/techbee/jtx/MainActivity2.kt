@@ -51,6 +51,7 @@ import at.techbee.jtx.ui.reusable.screens.*
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
+import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.sync.SyncViewModel
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.getParcelableExtraCompat
