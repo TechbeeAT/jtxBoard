@@ -11,7 +11,7 @@ package at.techbee.jtx.ui.reusable.dialogs
 import android.os.Build
 import android.widget.DatePicker
 import android.widget.TimePicker
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -183,81 +183,83 @@ fun DatePickerDialog(
                 }
 
 
-                Crossfade(selectedTab) { tabIndex ->
-                    when (tabIndex) {
-                        tabIndexDate -> {
+                AnimatedVisibility(selectedTab == tabIndexDate && newDateTime != null) {
+                    AndroidView(
+                        //modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
+                        factory = { context ->
+                            // Creates custom view
+                            val datepicker = DatePicker(context)
                             newDateTime?.let { dateTime ->
-                                AndroidView(
-                                    //modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
-                                    factory = { context ->
-                                        // Creates custom view
-                                        val datepicker = DatePicker(context)
-                                        datepicker.init(
-                                            dateTime.year,
-                                            dateTime.monthValue - 1,
-                                            dateTime.dayOfMonth
-                                        ) { _, year, monthOfYear, dayOfMonth ->
-                                            newDateTime = dateTime.withYear(year).withMonth(monthOfYear + 1).withDayOfMonth(dayOfMonth)
-                                        }
-                                        datepicker.updateDate(
-                                            dateTime.year,
-                                            dateTime.monthValue - 1,
-                                            dateTime.dayOfMonth
-                                        )
-                                        minDate?.let { datepicker.minDate = it }
-                                        maxDate?.let { datepicker.maxDate = it }
-                                        datepicker.rootView
-                                    }
+                                datepicker.init(
+                                    dateTime.year,
+                                    dateTime.monthValue - 1,
+                                    dateTime.dayOfMonth
+                                ) { _, year, monthOfYear, dayOfMonth ->
+                                    newDateTime =
+                                        dateTime.withYear(year).withMonth(monthOfYear + 1)
+                                            .withDayOfMonth(dayOfMonth)
+                                }
+                                datepicker.updateDate(
+                                    dateTime.year,
+                                    dateTime.monthValue - 1,
+                                    dateTime.dayOfMonth
                                 )
+                                minDate?.let { datepicker.minDate = it }
+                                maxDate?.let { datepicker.maxDate = it }
                             }
+                            datepicker.rootView
+                        }
+                    )
+                }
+                AnimatedVisibility(selectedTab == tabIndexDate && newDateTime == null) {
+                    Text(
+                        stringResource(id = R.string.not_set2),
+                        fontStyle = FontStyle.Italic,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp)
+                    )
+                }
 
-                            if(newDateTime == null) {
-                                Text(
-                                    stringResource(id = R.string.not_set2),
-                                    fontStyle = FontStyle.Italic,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp)
-                                )
-                            }
-                        }
-                        tabIndexTime -> {
-                            newDateTime?.let { dateTime ->
-                                AndroidView(
-                                    //modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
-                                    factory = { context ->
-                                        // Creates custom view
-                                        val timepicker = TimePicker(context)
-                                        @Suppress("DEPRECATION")
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                            timepicker.hour = dateTime.hour
-                                            timepicker.minute = dateTime.minute
-                                        } else {
-                                            timepicker.currentHour = dateTime.hour
-                                            timepicker.currentMinute = dateTime.minute
-                                        }
+                AnimatedVisibility(selectedTab == tabIndexTime) {
+                    newDateTime?.let { dateTime ->
+                        AndroidView(
+                            //modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
+                            factory = { context ->
+                                // Creates custom view
+                                val timepicker = TimePicker(context)
+                                @Suppress("DEPRECATION")
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    timepicker.hour = dateTime.hour
+                                    timepicker.minute = dateTime.minute
+                                } else {
+                                    timepicker.currentHour = dateTime.hour
+                                    timepicker.currentMinute = dateTime.minute
+                                }
 
-                                        timepicker.setOnTimeChangedListener { _, hour, minute ->
-                                            newDateTime = dateTime.withHour(hour).withMinute(minute)
-                                        }
-                                        timepicker.rootView
-                                    }
-                                )
+                                timepicker.setOnTimeChangedListener { _, hour, minute ->
+                                    newDateTime = dateTime.withHour(hour).withMinute(minute)
+                                }
+                                timepicker.rootView
                             }
-                        }
-                        tabIndexTimezone -> {
-                            TimezoneAutocompleteTextfield(
-                                timezone = newTimezone,
-                                onTimezoneChanged = { tz -> newTimezone = tz }
-                            )
-                        }
+                        )
                     }
+                }
+                AnimatedVisibility(selectedTab == tabIndexTimezone) {
+                    TimezoneAutocompleteTextfield(
+                        timezone = newTimezone,
+                        onTimezoneChanged = { tz -> newTimezone = tz }
+                    )
                 }
             }
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    if (newTimezone != null && newTimezone != TZ_ALLDAY && !TimeZone.getAvailableIDs().contains(newTimezone)) {
+                    if (newTimezone != null && newTimezone != TZ_ALLDAY && !TimeZone.getAvailableIDs()
+                            .contains(newTimezone)
+                    ) {
                         selectedTab = tabIndexTimezone
                         return@TextButton
                     }
@@ -270,7 +272,8 @@ fun DatePickerDialog(
                                 .withSecond(0)
                                 .withNano(0)
                                 .withZoneSameLocal(ZoneId.of("UTC"))
-                            in TimeZone.getAvailableIDs() -> newDateTime = dateTime.withZoneSameLocal(ZoneId.of(newTimezone))
+                            in TimeZone.getAvailableIDs() -> newDateTime =
+                                dateTime.withZoneSameLocal(ZoneId.of(newTimezone))
                             null -> newDateTime = dateTime.withZoneSameLocal(ZoneId.systemDefault())
                         }
                     }
