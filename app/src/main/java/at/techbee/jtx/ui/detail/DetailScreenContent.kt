@@ -349,7 +349,7 @@ fun DetailScreenContent(
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         label = { Text(stringResource(id = R.string.summary)) },
-                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Default),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
@@ -363,7 +363,7 @@ fun DetailScreenContent(
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         label = { Text(stringResource(id = R.string.description)) },
-                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Default),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
