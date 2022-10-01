@@ -11,7 +11,6 @@ package at.techbee.jtx.ui.detail
 import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteConstraintException
 import android.media.MediaPlayer
@@ -33,7 +32,6 @@ import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 
 
@@ -56,7 +54,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var entryDeleted = mutableStateOf(false)
     var sqlConstraintException = mutableStateOf(false)
     var navigateToId = mutableStateOf<Long?>(null)
-    var changeState = mutableStateOf<DetailChangeState>(DetailChangeState.UNCHANGED)
+    var changeState = mutableStateOf(DetailChangeState.UNCHANGED)
     var toastMessage = mutableStateOf<String?>(null)
     lateinit var detailSettings: DetailSettings
 
@@ -297,6 +295,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * reverts the current entry back to the original values that were stored in originalEntry
+     */
     fun revert() {
 
         val originalICalObject = originalEntry?.property?: return
@@ -350,6 +351,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
 
+    /**
+     * Deletes the current entry with its children
+     */
     fun delete() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -468,6 +472,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * Creates a share intent to share the current entry as .ics file
+     */
     fun shareAsICS(context: Context) {
 
         viewModelScope.launch(Dispatchers.IO)  {
@@ -486,6 +493,11 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * Creates a share intent to share the current entry as email.
+     * The intent sets the subject (summary), attendees (receipients),
+     * text (the contents as a text representation) and attachments
+     */
     fun shareAsText(context: Context) {
 
         viewModelScope.launch(Dispatchers.IO)  {
@@ -545,6 +557,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * @param [iCalEntity] for which the content should be put in a file that is returned as Uri
+     * @return the uri for the file with the [iCalEntity] content in as .ics format or null
+     */
     private fun createContentUri(iCalEntity: ICalEntity): Uri? {
         val icsFile = writeIcsFile(iCalEntity) ?: return null
 
@@ -552,6 +568,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         return FileProvider.getUriForFile(context, AUTHORITY_FILEPROVIDER, icsFile)
     }
 
+    /**
+     * @param [iCalEntity] for which the content should be put in a file
+     * @return a file with the [iCalEntity] content in as .ics format or null
+     */
     private fun writeIcsFile(iCalEntity: ICalEntity): File? {
         val context = getApplication<Application>()
         val account = iCalEntity.ICalCollection?.getAccount() ?: return null
