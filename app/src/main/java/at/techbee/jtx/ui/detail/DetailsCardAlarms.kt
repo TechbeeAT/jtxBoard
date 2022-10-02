@@ -81,13 +81,20 @@ fun DetailsCardAlarms(
     if(showDurationPicker) {
         DurationPickerDialog(
             alarm = Alarm.createDisplayAlarm(
-                dur = Duration.ofMinutes(15),
+                dur = Duration.ofMinutes(-15),
                 alarmRelativeTo = if(icalObject.due != null) AlarmRelativeTo.END else AlarmRelativeTo.START
             ),
             icalObject = icalObject,
             onConfirm = { newAlarm ->
-                alarms = alarms.plus(newAlarm)
-                onAlarmsUpdated(alarms)
+                if(alarms.none { alarm ->
+                        alarm.triggerRelativeDuration == newAlarm.triggerRelativeDuration
+                                && alarm.triggerRelativeTo == newAlarm.triggerRelativeTo
+                                && alarm.triggerTime == newAlarm.triggerTime
+                                && alarm.triggerTimezone == newAlarm.triggerTimezone
+                }) {
+                    alarms = alarms.plus(newAlarm)
+                    onAlarmsUpdated(alarms)
+                }
             },
             onDismiss = { showDurationPicker = false })
     }

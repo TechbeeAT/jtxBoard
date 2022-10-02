@@ -58,9 +58,9 @@ fun DurationPickerDialog(
 
     var durationNumber by rememberSaveable { mutableStateOf<Long?>(
         when {
-            triggerAsDuration.toMillis()%(1000*60*60*24) == 0L -> triggerAsDuration.toDays().absoluteValue
-            triggerAsDuration.toMillis()%(1000*60*60) == 0L -> triggerAsDuration.toHours().absoluteValue
-            triggerAsDuration.toMillis()%(1000*60) == 0L -> triggerAsDuration.toMinutes().absoluteValue
+            triggerAsDuration.toMillis()%(1000*60*60*24) == 0L -> triggerAsDuration.toDays()
+            triggerAsDuration.toMillis()%(1000*60*60) == 0L -> triggerAsDuration.toHours()
+            triggerAsDuration.toMillis()%(1000*60) == 0L -> triggerAsDuration.toMinutes()
             else -> 0
         }
     )}
@@ -82,15 +82,8 @@ fun DurationPickerDialog(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
-                    value = durationNumber?.toString() ?:"",
-                    onValueChange = {
-                        durationNumber = if(it.isEmpty())
-                            null
-                        else if(durationBefore)
-                            (it.toLongOrNull() ?: 0L) * -1L
-                        else
-                            it.toLongOrNull() ?: 0L
-                        },
+                    value = durationNumber?.absoluteValue?.toString() ?:"",
+                    onValueChange = { durationNumber = it.toLongOrNull()  },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier
@@ -166,6 +159,8 @@ fun DurationPickerDialog(
             TextButton(
                 onClick = {
                     alarm.triggerRelativeTo = durationStartEnd.name
+                    if(durationBefore && durationNumber != null)
+                        durationNumber = durationNumber!! * (-1)
                     alarm.triggerRelativeDuration = (durationNumber?:0).toDuration(durationUnit).toIsoString()
                     onConfirm(alarm)
                     onDismiss()
