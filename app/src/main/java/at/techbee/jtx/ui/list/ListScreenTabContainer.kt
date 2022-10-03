@@ -251,7 +251,10 @@ fun ListScreenTabContainer(
                 onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) },
                 onFilterIconClicked = {
                     coroutineScope.launch {
-                        filterBottomSheetState.show()
+                        if(filterBottomSheetState.isVisible)
+                            filterBottomSheetState.hide()
+                        else
+                            filterBottomSheetState.show()
                     }
                 },
                 onClearFilterClicked = {
