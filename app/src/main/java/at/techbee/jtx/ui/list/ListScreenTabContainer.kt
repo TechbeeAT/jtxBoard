@@ -131,7 +131,7 @@ fun ListScreenTabContainer(
     val filterBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     var showSearch by remember { mutableStateOf(false) }
-    var showQuickAdd by remember { mutableStateOf(false) }
+    val showQuickAdd = remember { mutableStateOf(false) }
 
     if (showDeleteAllVisibleDialog) {
         DeleteVisibleDialog(
@@ -146,13 +146,13 @@ fun ListScreenTabContainer(
     }
 
     // reset search when tab changes
-    var lastUsedPage by remember { mutableStateOf<Int?>(null) }
-    if(lastUsedPage != pagerState.currentPage) {
+    val lastUsedPage = remember { mutableStateOf<Int?>(null) }
+    if(lastUsedPage.value != pagerState.currentPage) {
         showSearch = false
         keyboardController?.hide()
         listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
         listViewModel.updateSearch(saveListSettings = false)
-        lastUsedPage = pagerState.currentPage
+        lastUsedPage.value = pagerState.currentPage
     }
 
 
@@ -250,13 +250,7 @@ fun ListScreenTabContainer(
                         navController.navigate("details/$newIcalObjectId?isEditMode=true")
                     }
                 },
-                showQuickEntry = {
-                    showQuickAdd = it
-                    if(it)
-                        keyboardController?.show()
-                    else
-                        keyboardController?.hide()
-                },
+                showQuickEntry = showQuickAdd,
                 listSettings = listViewModel.listSettings,
                 onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) },
                 onFilterIconClicked = {
@@ -331,10 +325,10 @@ fun ListScreenTabContainer(
                                 )
                             }
 
-                            AnimatedVisibility(showQuickAdd || globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
+                            AnimatedVisibility(showQuickAdd.value || globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
                                 // origin can be button click or an import through the intent
                                 ListQuickAddElement(
-                                    presetModule = if (showQuickAdd)
+                                    presetModule = if (showQuickAdd.value)
                                         getActiveViewModel().module    // coming from button
                                     else
                                         globalStateHolder.icalFromIntentModule.value,   // coming from intent
@@ -375,7 +369,7 @@ fun ListScreenTabContainer(
                                         }
                                     },
                                     onDismiss = {
-                                        showQuickAdd = false  // origin was button
+                                        showQuickAdd.value = false  // origin was button
                                         globalStateHolder.icalFromIntentString.value =
                                             null  // origin was state from import
                                         globalStateHolder.icalFromIntentAttachment.value =
