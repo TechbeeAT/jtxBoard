@@ -87,6 +87,7 @@ fun ListScreenTabContainer(
 ) {
 
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     val screens = listOf(ListTabDestination.Journals, ListTabDestination.Notes, ListTabDestination.Tasks)
     val pagerState = rememberPagerState(
@@ -97,12 +98,21 @@ fun ListScreenTabContainer(
         }
     )
 
-    var topBarMenuExpanded by remember { mutableStateOf(false) }
-    var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
-
     val icalListViewModelJournals: ListViewModelJournals = viewModel()
     val icalListViewModelNotes: ListViewModelNotes = viewModel()
     val icalListViewModelTodos: ListViewModelTodos = viewModel()
+
+    val listViewModel = when(pagerState.currentPage) {
+        ListTabDestination.Journals.tabIndex -> icalListViewModelJournals
+        ListTabDestination.Notes.tabIndex -> icalListViewModelNotes
+        ListTabDestination.Tasks.tabIndex -> icalListViewModelTodos
+        else -> icalListViewModelJournals  // fallback, should not happen
+    }
+    val allCollections = listViewModel.allCollections.observeAsState(emptyList())
+
+    var topBarMenuExpanded by remember { mutableStateOf(false) }
+    var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
+
 
     fun getActiveViewModel() =
         when (pagerState.currentPage) {
@@ -205,21 +215,11 @@ fun ListScreenTabContainer(
             )
         },
         bottomBar = {
-            val coroutineScope = rememberCoroutineScope()
-            val listViewModel = when(pagerState.currentPage) {
-                ListTabDestination.Journals.tabIndex -> icalListViewModelJournals
-                ListTabDestination.Notes.tabIndex -> icalListViewModelNotes
-                ListTabDestination.Tasks.tabIndex -> icalListViewModelTodos
-                else -> return@Scaffold
-            }
-            val keyboardController = LocalSoftwareKeyboardController.current
-            val allCollections = listViewModel.allCollections.observeAsState(emptyList())
-
             ListBottomAppBar(
                 module = listViewModel.module,
                 iCal4ListLive = listViewModel.iCal4List,
                 onAddNewEntry = {
-                    coroutineScope.launch {
+                    scope.launch {
                         val lastUsedCollectionId = settingsStateHolder.lastUsedCollection.value
                         val proposedCollectionId = if(allCollections.value.any {collection -> collection.collectionId == lastUsedCollectionId })
                             lastUsedCollectionId
@@ -250,7 +250,7 @@ fun ListScreenTabContainer(
                 listSettings = listViewModel.listSettings,
                 onListSettingsChanged = { listViewModel.updateSearch(saveListSettings = true) },
                 onFilterIconClicked = {
-                    coroutineScope.launch {
+                    scope.launch {
                         if(filterBottomSheetState.isVisible)
                             filterBottomSheetState.hide()
                         else
@@ -262,7 +262,7 @@ fun ListScreenTabContainer(
                 },
                 onGoToDateSelected = { id -> listViewModel.scrollOnceId.postValue(id) },
                 onSearchTextClicked = {
-                    coroutineScope.launch {
+                    scope.launch {
                         if(!showSearch) {
                             showSearch = true
                             listViewModel.listSettings.searchText.value = ""
@@ -289,6 +289,13 @@ fun ListScreenTabContainer(
                                 screens.forEach { screen ->
                                     Tab(selected = pagerState.currentPage == screen.tabIndex,
                                         onClick = {
+
+                                            // reset search
+                                            showSearch = false
+                                            keyboardController?.hide()
+                                            listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
+                                            listViewModel.updateSearch(saveListSettings = false)
+
                                             scope.launch {
                                                 pagerState.scrollToPage(screen.tabIndex)
                                             }
@@ -323,8 +330,6 @@ fun ListScreenTabContainer(
 
                             AnimatedVisibility(showQuickAdd || globalStateHolder.icalFromIntentString.value != null || globalStateHolder.icalFromIntentAttachment.value != null) {
                                 // origin can be button click or an import through the intent
-                                val allCollections =
-                                    getActiveViewModel().allCollections.observeAsState(emptyList())
                                 ListQuickAddElement(
                                     presetModule = if (showQuickAdd)
                                         getActiveViewModel().module    // coming from button
