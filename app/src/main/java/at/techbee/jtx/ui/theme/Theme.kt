@@ -57,27 +57,22 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun JtxBoardTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
+    darkTheme: Boolean = isSystemInDarkTheme(), // Dynamic color is available on Android 12+ and only if purchased
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-
     val view = LocalView.current
     val activity  = view.context as Activity
-    //BillingManager.getInstance()?.initialise(activity)
     val context = LocalContext.current
-
 
     val colorScheme = when {
         // dynamic colors are only loaded in pro!
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S /* && BillingManager.getInstance()?.isProPurchased?.value == true */ -> {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-
 
     SideEffect {
         if (!view.isInEditMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -88,8 +83,6 @@ fun JtxBoardTheme(
         }
     }
 
-
-
     /* DEFAULT
     if (!view.isInEditMode) {
         SideEffect {
@@ -98,8 +91,6 @@ fun JtxBoardTheme(
         }
     }
      */
-
-
 
     MaterialTheme(
         colorScheme = colorScheme,

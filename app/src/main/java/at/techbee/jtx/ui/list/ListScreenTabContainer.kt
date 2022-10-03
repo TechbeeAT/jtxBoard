@@ -113,7 +113,6 @@ fun ListScreenTabContainer(
     var topBarMenuExpanded by remember { mutableStateOf(false) }
     var showDeleteAllVisibleDialog by remember { mutableStateOf(false) }
 
-
     fun getActiveViewModel() =
         when (pagerState.currentPage) {
             ListTabDestination.Journals.tabIndex -> icalListViewModelJournals
@@ -145,6 +144,17 @@ fun ListScreenTabContainer(
     if(getActiveViewModel().sqlConstraintException.value) {
         ErrorOnUpdateDialog(onConfirm = { getActiveViewModel().sqlConstraintException.value = false })
     }
+
+    // reset search when tab changes
+    var lastUsedPage by remember { mutableStateOf<Int?>(null) }
+    if(lastUsedPage != pagerState.currentPage) {
+        showSearch = false
+        keyboardController?.hide()
+        listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
+        listViewModel.updateSearch(saveListSettings = false)
+        lastUsedPage = pagerState.currentPage
+    }
+
 
     Scaffold(
         topBar = {
@@ -289,13 +299,6 @@ fun ListScreenTabContainer(
                                 screens.forEach { screen ->
                                     Tab(selected = pagerState.currentPage == screen.tabIndex,
                                         onClick = {
-
-                                            // reset search
-                                            showSearch = false
-                                            keyboardController?.hide()
-                                            listViewModel.listSettings.searchText.value = null  // null removes color indicator for active search
-                                            listViewModel.updateSearch(saveListSettings = false)
-
                                             scope.launch {
                                                 pagerState.scrollToPage(screen.tabIndex)
                                             }
