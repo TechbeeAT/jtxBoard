@@ -20,7 +20,6 @@ class SettingsStateHolder(val context: Context) {
         private const val SETTINGS_PRO_INFO_SHOWN = "settingsProInfoShown"
         private const val PREFS_LAST_COLLECTION = "lastUsedCollection"
         private const val PREFS_LAST_MODULE = "lastUsedModule"
-        private const val PREFS_SAVE_AND_EDIT = "saveAndEdit"
     }
 
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -67,19 +66,6 @@ class SettingsStateHolder(val context: Context) {
     )
         set(newValue) {
             prefs.edit().putString(PREFS_LAST_MODULE, newValue.value.name).apply()
-            field = newValue
-        }
-
-    var saveAndEdit = mutableStateOf(prefs.getBoolean(PREFS_SAVE_AND_EDIT, false))
-        set(newValue) {
-            prefs.edit().putBoolean(PREFS_SAVE_AND_EDIT, newValue.value).apply()
-            field = newValue
-        }
-
-
-    var showJtx20betainfo = mutableStateOf(prefs.getBoolean("jtx_2.0_beta_info_shown", true))
-        set(newValue) {
-            prefs.edit().putBoolean("jtx_2.0_beta_info_shown", newValue.value).apply()
             field = newValue
         }
 }
