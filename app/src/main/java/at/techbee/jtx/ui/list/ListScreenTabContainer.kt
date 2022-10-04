@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -299,7 +300,14 @@ fun ListScreenTabContainer(
                                             settingsStateHolder.lastUsedModule =
                                                 settingsStateHolder.lastUsedModule  // in order to save
                                         },
-                                        text = { Text(stringResource(id = screen.titleResource)) })
+                                        text = {
+                                            Text(
+                                                text = stringResource(id = screen.titleResource),
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
+                                    )
                                 }
                             }
 
