@@ -27,11 +27,13 @@ stages:
 - test
 
 lintDebug:
+  interruptible: true
   stage: build
   script:
   - ./gradlew -Pci --console=plain :app:lintGplayDebug -PbuildDir=lint
 
 assembleDebug:
+  interruptible: true
   stage: build
   script:
   - ./gradlew assembleDebug
@@ -41,6 +43,7 @@ assembleDebug:
     
 
 debugTests:
+  interruptible: true
   stage: test
   script:
-  - ./gradlew -Pci --console=plain :app:lintGplayDebug
+  - ./gradlew -Pci --console=plain :app:testGplayDebug
