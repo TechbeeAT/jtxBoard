@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.cards
+package at.techbee.jtx.ui.list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -28,7 +28,6 @@ import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.ColoredEdge
 import at.techbee.jtx.ui.reusable.elements.ListStatusBar
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.DateTimeUtils
 
@@ -107,7 +106,7 @@ fun ListCardKanban(
                                         style = Typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         fontStyle = FontStyle.Italic,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        color = if(iCalObject.isOverdue() == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -180,7 +179,7 @@ fun ListCardKanban(
 @Preview(showBackground = true)
 @Composable
 fun ListCardKanban_JOURNAL() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             dtstart = System.currentTimeMillis()
@@ -197,7 +196,7 @@ fun ListCardKanban_JOURNAL() {
 @Preview(showBackground = true)
 @Composable
 fun ListCardKanban_NOTE() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             component = Component.VJOURNAL.name
@@ -216,7 +215,7 @@ fun ListCardKanban_NOTE() {
 @Preview(showBackground = true)
 @Composable
 fun ListCardKanban_TODO() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             component = Component.VTODO.name

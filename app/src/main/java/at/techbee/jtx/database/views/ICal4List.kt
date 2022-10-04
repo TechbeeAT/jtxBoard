@@ -262,6 +262,8 @@ data class ICal4List(
 
     fun getDueTextInfo(context: Context): String? {
 
+        if(percent == 100)
+            return context.getString(R.string.completed)
         if(due == null)
             return null
 
@@ -279,6 +281,23 @@ data class ICal4List(
             daysLeft >= 2L -> context.getString(R.string.list_due_inXdays, daysLeft)
             else -> null      //should not be possible
         }
+    }
+
+    /**
+     * @return true if the current entry is overdue and not completed,
+     * null if no due date is set and not completed, false otherwise
+     */
+    fun isOverdue(): Boolean? {
+
+        if(percent == 100)
+            return false
+        if(due == null)
+            return null
+
+        val zonedDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due!!), DateTimeUtils.requireTzId(dueTimezone)).toInstant().toEpochMilli()
+        val millisLeft = if(dueTimezone == ICalObject.TZ_ALLDAY) zonedDue - DateTimeUtils.getTodayAsLong() else zonedDue - System.currentTimeMillis()
+
+        return millisLeft < 0L
     }
 
     /**

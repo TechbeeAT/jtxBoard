@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-package at.techbee.jtx.ui.reusable.cards
+package at.techbee.jtx.ui.list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -34,13 +34,13 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.*
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.reusable.cards.SubtaskCardCompact
 import at.techbee.jtx.ui.reusable.elements.ListStatusBar
-import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.DateTimeUtils
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListCardCompact(
     iCalObject: ICal4List,
@@ -138,7 +138,7 @@ fun ListCardCompact(
                                     style = Typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Italic,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = if(iCalObject.isOverdue() == true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
@@ -264,7 +264,7 @@ fun ListCardCompact(
 @Preview(showBackground = true)
 @Composable
 fun ListCardCompact_JOURNAL() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             dtstart = System.currentTimeMillis()
@@ -284,7 +284,7 @@ fun ListCardCompact_JOURNAL() {
 @Preview(showBackground = true)
 @Composable
 fun ListCardCompact_JOURNAL2() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             dtstart = System.currentTimeMillis()
@@ -305,7 +305,7 @@ fun ListCardCompact_JOURNAL2() {
 @Preview(showBackground = true)
 @Composable
 fun ListCardCompact_NOTE() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             component = Component.VJOURNAL.name
@@ -327,7 +327,7 @@ fun ListCardCompact_NOTE() {
 @Preview(showBackground = true)
 @Composable
 fun ListCardCompact_TODO() {
-    JtxBoardTheme {
+    MaterialTheme {
 
         val icalobject = ICal4List.getSample().apply {
             component = Component.VTODO.name
@@ -336,7 +336,7 @@ fun ListCardCompact_TODO() {
             status = StatusTodo.`IN-PROCESS`.name
             classification = Classification.CONFIDENTIAL.name
             dtstart = System.currentTimeMillis()
-            due = System.currentTimeMillis()
+            due = System.currentTimeMillis()-1
             summary =
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         }
