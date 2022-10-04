@@ -114,7 +114,6 @@ fun DetailsScreen(
         topBar = {
             DetailsTopAppBar(
                 title = stringResource(id = R.string.details),
-                subtitle = detailViewModel.icalEntity.value?.property?.summary,
                 goBack = {
                     goBackRequestedByTopBar = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
