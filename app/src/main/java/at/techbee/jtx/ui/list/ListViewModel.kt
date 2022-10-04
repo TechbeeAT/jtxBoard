@@ -217,20 +217,19 @@ open class ListViewModel(application: Application, val module: Module) : Android
         if (listSettings.isExcludeDone.value)
             queryString += "AND $COLUMN_PERCENT IS NOT 100 "
 
-        val dueQuery = mutableListOf<String>()
+        val dateQuery = mutableListOf<String>()
         if (listSettings.isFilterOverdue.value)
-            dueQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
+            dateQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
         if (listSettings.isFilterDueToday.value)
-            dueQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)-1}")
+            dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)-1}")
         if (listSettings.isFilterDueTomorrow.value)
-            dueQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)} AND ${DateTimeUtils.getTodayAsLong() + TimeUnit.DAYS.toMillis(2)-1}")
+            dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()+ TimeUnit.DAYS.toMillis(1)} AND ${DateTimeUtils.getTodayAsLong() + TimeUnit.DAYS.toMillis(2)-1}")
         if (listSettings.isFilterDueFuture.value)
-            dueQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
-        if(dueQuery.isNotEmpty())
-            queryString += " AND (${dueQuery.joinToString(separator = " OR ")}) "
-
+            dateQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
         if(listSettings.isFilterNoDatesSet.value)
-            queryString += "AND $COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL "
+            dateQuery.add("$COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL ")
+        if(dateQuery.isNotEmpty())
+            queryString += " AND (${dateQuery.joinToString(separator = " OR ")}) "
 
         // Query for the passed filter criteria from FilterFragment
         if (listSettings.searchClassification.value.isNotEmpty()) {

@@ -160,6 +160,9 @@ fun ListBottomAppBar(
                 )
 
                 if (module == Module.TODO) {
+
+                    Divider(modifier = Modifier)
+
                     DropdownMenuItem(
                         text = {
                             LabelledCheckbox(
