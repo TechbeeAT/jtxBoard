@@ -55,7 +55,7 @@ Global Strings -->
     <string name="navigation_drawer_board">"Board"</string>
     <string name="navigation_drawer_sync">"Sync mit DAVx⁵"</string>
     <string name="navigation_drawer_about">"Über / Lizenz"</string>
-    <string name="navigation_drawer_subtitle">"Journale, Notizen &amp; Aufgaben für Android"</string>
+    <string name="navigation_drawer_subtitle">"Journale, Notizen &amp; Aufgaben"</string>
     <string name="navigation_drawer_beta_feedback">"Beta Rückmeldung"</string>
     <string name="navigation_drawer_settings">"Einstellungen"</string>
     <string name="navigation_drawer_news_updates">"Neuigkeiten &amp; Updates"</string>
