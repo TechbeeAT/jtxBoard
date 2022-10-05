@@ -469,7 +469,7 @@
 
 
     <string name="menu_list_gotodate">Go to date</string>
-    <string name="menu_list_clearfilter">Clear filter</string>>
+    <string name="menu_list_clearfilter">Clear filter</string>
 
     <string name="menu_list_quick_journal">Quick Journal</string>
     <string name="menu_list_quick_note">Quick Note</string>
