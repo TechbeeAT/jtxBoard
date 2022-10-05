@@ -9,7 +9,6 @@ Global Strings -->
     <string name="cancel">"Отмена"</string>
     <string name="ok">"ОК"</string>
     <string name="delete">"Удаление"</string>
-    <string name="discard"></string>
     <string name="gotit">"Понятно"</string>
     <string name="cont">"Продолжить"</string>
     <string name="toolbar_text_jtx_board_journals_overview">"Обзор дневников"</string>
@@ -44,7 +43,6 @@ Global Strings -->
     <string name="classification_public">"Публичный"</string>
     <string name="classification_private">"Приватный"</string>
     <string name="classification_confidential">"Конфиденциальный"</string>
-    <string name="attendee_role_chair"></string>
     <string name="attendee_role_required_participant">"Требуемый участник"</string>
     <string name="attendee_role_optional_participant">"Необязательный участник"</string>
     <string name="attendee_role_non_participant">"Не учавствующий / сведения"</string>
@@ -52,7 +50,6 @@ Global Strings -->
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Открыть панель навигации"</string>
     <string name="navigation_drawer_close">"Закрыть панель навигации"</string>
-    <string name="navigation_drawer_board"></string>
     <string name="navigation_drawer_sync">"Синхронизация с DAVx⁵"</string>
     <string name="navigation_drawer_about">"О приложении / Лицензия"</string>
     <string name="navigation_drawer_subtitle">"дневники, заметки и задачи"</string>
@@ -94,11 +91,9 @@ Global Strings -->
     <string name="list_quickadd_dialog_summary_description_hint">"Сводка/Описание"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Первая строка интерпретируется как сводка, остальные — как описание. Хэштеги интерпретируются как категории (например, #категория)."</string>
     <string name="list_item_upload_pending">"Ожидающие загрузки"</string>
-    <string name="list_item_recurring"></string>
 
     <!-- fragment_ical_view -->
     <string name="view_recurrence_go_to_original_button">"Перейти к оригиналу"</string>
-    <string name="view_recurrence_note_to_original_dialog_header"></string>
     <string name="view_recurrence_note_to_original">"Эта запись — часть серии. Редактирование этой записи отсоединит ее от серии, она будет продолжаться как отдельное событие, и изменения в исходном событии больше не повлияют на эту запись."</string>
     <string name="view_fragment_audio_permission">"Разрешение приложения"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board требуется разрешение для записи звука или использования функций преобразования речи в текст. Предоставьте разрешение на использование этой функции."</string>
@@ -121,18 +116,14 @@ Global Strings -->
     <string name="view_toast_entry_does_not_exist_anymore">"Запрошенная запись больше не существует."</string>
     <string name="view_created_text">"Создано: %1$s"</string>
     <string name="view_last_modified_text">"Последнее изменение: %1$s"</string>
-    <string name="view_due"></string>
     <string name="view_completed">"Завершено"</string>
     <string name="view_started">"Начало(сь)"</string>
 
     <!-- fragment_ical_edit -->
     <string name="edit_add_category_hint">"#моякатегория"</string>
     <string name="edit_add_category_helper">"Добавить категорию"</string>
-    <string name="edit_attendees_hint"></string>
     <string name="edit_attendees_helper">"Добавить участника (адрес электронной почты)"</string>
-    <string name="edit_resources_hint"></string>
     <string name="edit_resources_helper">"Добавить ресурс"</string>
-    <string name="edit_contact_hint"></string>
     <string name="edit_contact_helper">"Контактная информация ответственного лица или владельца данной записи"</string>
     <string name="edit_comment_hint">"Ваш комментарий…"</string>
     <string name="edit_comment_helper">"Добавить комментарий"</string>
@@ -150,13 +141,7 @@ Global Strings -->
     <string name="edit_subtasks_add_helper">"Добавить подзадачу"</string>
     <string name="edit_attachment_delete_attachment">"Удалить вложение"</string>
     <string name="edit_attachment_add_link_dialog">"Добавить ссылку на вложение"</string>
-    <string name="edit_recur_last_occurrence"></string>
-    <string name="edit_recur_all_occurrences"></string>
     <string name="edit_recur_repeat_every_x">"Повторять каждые"</string>
-    <string name="edit_recur_on_weekday"></string>
-    <string name="edit_recur_on_the_x_day_of_month"></string>
-    <string name="edit_recur_x_day_of_the_month"></string>
-    <string name="edit_recur_x_times"></string>
     <string name="edit_recur_toast_requires_start_date">"Повторение требует установки даты начала!"</string>
     <string name="edit_datepicker_dialog_select_date">"Выбрать дату"</string>
     <string name="edit_datepicker_dialog_select_time">"Выбрать время"</string>
@@ -251,7 +236,6 @@ Global Strings -->
     <string name="sync_check_out_davx5">"Попробуйте DAVx⁵!"</string>
     <string name="sync_davx5_not_found">"Мы не обнаружили DAVx⁵ на вашем телефоне.
 Дополнительные сведения о синхронизации см."</string>
-    <string name="sync_davx5_get_davx5_on"></string>
     <string name="sync_furhter_info_davx5">"Дополнительные сведения о DAVx⁵ см."</string>
     <string name="sync_button_add_account_in_davx5">"Добавить аккаунт в DAVx⁵"</string>
     <string name="sync_toast_intent_open_davx5_failed">"Не удалось открыть DAVx⁵. Откройте приложение вручную."</string>
@@ -278,7 +262,6 @@ Global Strings -->
     <string name="adinfo_button_manage_subscriptions">"Управление подпиской"</string>
     <string name="attachment_error_on_retrieving_file">"Сбой получения файла"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Не найдено ни одного приложения для открытия этого файла/URL."</string>
-    <string name="toast_item_is_now_recu_exception"></string>
     <string name="toast_adfree_for_a_week">"Видеорекламы больше не будет уже неделю :-)"</string>
 
     <!-- sync content provider -->
@@ -318,14 +301,6 @@ Global Strings -->
     <string name="edit_dialog_set_attendee_role">"Установить роль участника"</string>
 
     <!-- alarms -->
-    <string name="alarms_onstart"></string>
-    <string name="alarms_ondue"></string>
-    <string name="alarms_custom"></string>
-    <string name="alarms_before_start"></string>
-    <string name="alarms_after_start"></string>
-    <string name="alarms_before_due"></string>
-    <string name="alarms_after_due"></string>
-    <string name="alarms_minutes"></string>
     <string name="alarms_hours">"Час(ы)"</string>
     <string name="alarms_days">"День/дни"</string>
 
@@ -349,23 +324,6 @@ Global Strings -->
     <string name="view_dialog_addnote_toast_no_summary_description">"Заметка без текста не может быть создана."</string>
     <string name="color">"Цвет"</string>
     <string name="edit_attendees_error">"Пожалуйста, введите действительный адрес электронной почты"</string>
-    <string name="priority_0_no_priority"></string>
-    <string name="priority_1_highest"></string>
-    <string name="priority_2_higher"></string>
-    <string name="priority_3_high"></string>
-    <string name="priority_4_medium_high"></string>
-    <string name="priority_5_medium"></string>
-    <string name="priority_6_medium_low"></string>
-    <string name="edit_recur_day"></string>
-    <string name="edit_recur_week"></string>
-    <string name="edit_recur_month"></string>
-    <string name="edit_recur_year"></string>
-    <string name="edit_validation_errors_start_due_timezone_check"></string>
-    <string name="collections_toast_export_ics_success"></string>
-    <string name="collections_toast_export_ics_error"></string>
-    <string name="menu_collections_add_remote"></string>
-    <string name="menu_collection_popup_show_in_davx5"></string>
-    <string name="menu_collection_popup_export_as_ics"></string>
     <string name="journal">"Дневник"</string>
     <string name="note">"Заметка"</string>
     <string name="task">"Задача"</string>
@@ -376,7 +334,6 @@ Global Strings -->
     <string name="priority">"Приоритет"</string>
     <string name="readyonly">"Только для чтения"</string>
     <string name="upload_pending">"Ожидающие загрузки"</string>
-    <string name="url"></string>
     <string name="location">"Местоположение"</string>
     <string name="attendees">"Участники"</string>
     <string name="resources">"Ресурсы"</string>
@@ -394,7 +351,6 @@ Global Strings -->
     <string name="search">"Поиск"</string>
     <string name="filter">"Фильтр"</string>
     <string name="sync_now">"Синхронизировать сейчас"</string>
-    <string name="due"></string>
     <string name="completed">"Завершено"</string>
     <string name="started">"Начало(сь)"</string>
     <string name="add_time_switch">"Добавить время"</string>
@@ -402,152 +358,9 @@ Global Strings -->
     <string name="progress">"Прогресс"</string>
     <string name="categories">"Категория"</string>
     <string name="subtasks">"Подзадачи"</string>
-    <string name="priority_7_low"></string>
-    <string name="priority_8_lower"></string>
-    <string name="priority_9_lowest"></string>
-    <string name="list_due_future"></string>
-    <string name="view_share_part_of_series"></string>
-    <string name="view_share_exception_of_series"></string>
-    <string name="view_share_repeats"></string>
-    <string name="collections_dialog_move_title"></string>
-    <string name="collection_dialog_move_info"></string>
-    <string name="menu_collections_popup_move_entries"></string>
     <string name="adinfo_adfree_success_header">"Спасибо за покупку подписки jtx Board без рекламы"</string>
     <string name="adinfo_adfree_success_description">"Теперь реклама удалена из приложения. Спасибо за ваш вклад в поддержание этого проекта!"</string>
     <string name="adinfo_adfree_success_thankyou">"Спасибо !"</string>
     <string name="adinfo_adfree_purchase_date">"Приобретено на %1$s"</string>
     <string name="adinfo_adfree_order_id">"ID заказа: %1$s"</string>
-    <string name="list_no_dates_set"></string>
-    <string name="filter_order_by"></string>
-    <string name="filter_asc"></string>
-    <string name="filter_desc"></string>
-    <string name="filter_created"></string>
-    <string name="filter_last_modified"></string>
-    <string name="collections_snackbar_select_collection_for_ics_import"></string>
-    <string name="collections_snackbar_x_items_added"></string>
-    <string name="menu_collection_popup_import_from_ics"></string>
-    <string name="notification_done"></string>
-    <string name="notification_add_1h"></string>
-    <string name="notification_add_1d"></string>
-    <string name="edit_recur_ends_never"></string>
-    <string name="edit_recur_ends_on"></string>
-    <string name="edit_recur_ends_after"></string>
-    <string name="collections_toast_export_all_ics_success"></string>
-    <string name="collections_toast_export_all_ics_error"></string>
-    <string name="menu_collections_export_all"></string>
-    <string name="more"></string>
-    <string name="toolbar_text_buypro"></string>
-    <string name="navigation_drawer_buypro"></string>
-    <string name="settings_select_theme"></string>
-    <string name="settings_select_theme_dark"></string>
-    <string name="settings_select_theme_light"></string>
-    <string name="settings_select_theme_system"></string>
-    <string name="donate_dialog_title"></string>
-    <string name="donate_dialog_message"></string>
-
-    <!-- Buy Pro fragment -->
-    <string name="buypro_text"></string>
-    <string name="buypro_purchase_header"></string>
-    <string name="buypro_purchase_description"></string>
-    <string name="buypro_purchase_header_thankyou"></string>
-    <string name="buypro_purchase_description_thankyou"></string>
-    <string name="buypro_purchase_date"></string>
-    <string name="buypro_order_id"></string>
-    <string name="buypro_success_header"></string>
-    <string name="buypro_success_description"></string>
-    <string name="buypro_success_thankyou"></string>
-    <string name="buypro_snackbar_remote_entries_blocked"></string>
-    <string name="buypro_snackbar_quick_entries_blocked"></string>
-    <string name="buypro_initial_dialog_message"></string>
-    <string name="view_comment_pausebutton_content_desc"></string>
-    <string name="menu_list_viewmode_list"></string>
-    <string name="menu_list_viewmode_grid"></string>
-    <string name="settings_default_expand_subtasks"></string>
-    <string name="settings_default_expand_subnotes"></string>
-    <string name="settings_default_expand_attachments"></string>
-    <string name="title_activity_list_screen"></string>
-    <string name="permission_coarse_location_granted"></string>
-    <string name="permission_coarse_location_denied"></string>
-    <string name="sorry"></string>
-    <string name="back"></string>
-    <string name="details"></string>
-    <string name="date"></string>
-    <string name="timezone"></string>
-    <string name="not_set2"></string>
-    <string name="invert_selection"></string>
-    <string name="preferences"></string>
-    <string name="revert"></string>
-    <string name="audio_play"></string>
-    <string name="audio_record"></string>
-    <string name="audio_stop"></string>
-    <string name="audio_pause"></string>
-    <string name="audio_error_toast"></string>
-    <string name="sync_in_progress"></string>
-    <string name="saving"></string>
-    <string name="saving_pending"></string>
-    <string name="invalid_timezone_message"></string>
-    <string name="invalid_url_message"></string>
-    <string name="list_quickadd_dialog_sr_start"></string>
-    <string name="list_quickadd_dialog_sr_listening"></string>
-    <string name="details_show_all_options"></string>
-    <string name="details_attendees_processing_info"></string>
-    <string name="details_toast_entry_deleted"></string>
-    <string name="details_recur_unknown_rrule_dialog_title"></string>
-    <string name="details_recur_unknown_rrule_dialog_message"></string>
-    <string name="details_entry_could_not_be_loaded"></string>
-    <string name="details_attachment_beta_info"></string>
-    <string name="edit_comment"></string>
-    <string name="edit_subnote_add_helper"></string>
-    <string name="edit_subtask"></string>
-    <string name="edit_subnote"></string>
-    <string name="edit_fragment_app_notification_permission_message"></string>
-    <string name="edit_fragment_app_coarse_location_permission_message"></string>
-
-    <!-- alarms -->
-    <string name="alarms_alarm"></string>
-    <string name="alarms_before"></string>
-    <string name="alarms_after"></string>
-    <string name="alarms_start"></string>
-    <string name="alarms_due"></string>
-    <string name="about_tabitem_releasenotes"></string>
-    <string name="collections_account_not_found_info"></string>
-    <string name="collections_account_delete_dialog_title"></string>
-    <string name="collections_account_delete_dialog_message"></string>
-    <string name="dialog_move_item_to_collection_title"></string>
-    <string name="dialog_move_item_to_collection_text"></string>
-    <string name="dialog_unsaved_changes_title"></string>
-    <string name="dialog_unsaved_changes_text"></string>
-    <string name="dialog_error_on_update_message"></string>
-    <string name="dialog_revert_changes_title"></string>
-    <string name="dialog_revert_changes_message"></string>
-    <string name="dialog_revert_changes_message2"></string>
-    <string name="menu_list_viewmode_compact"></string>
-    <string name="menu_list_viewmode_kanban"></string>
-    <string name="settings_details"></string>
-    <string name="settings_details_autosave_while_editing"></string>
-    <string name="settings_tasks"></string>
-    <string name="settings_default_start_date"></string>
-    <string name="settings_default_due_date"></string>
-    <string name="settings_default_date_none"></string>
-    <string name="settings_default_date_same_day"></string>
-    <string name="settings_default_date_next_day"></string>
-    <string name="settings_default_date_two_days"></string>
-    <string name="settings_default_date_three_days"></string>
-    <string name="settings_default_date_one_week"></string>
-    <string name="settings_default_date_two_weeks"></string>
-    <string name="settings_default_date_four_weeks"></string>
-    <string name="settings_progress_step_1"></string>
-    <string name="settings_progress_step_2"></string>
-    <string name="settings_progress_step_5"></string>
-    <string name="settings_progress_step_10"></string>
-    <string name="settings_progress_step_20"></string>
-    <string name="settings_progress_step_25"></string>
-    <string name="settings_progress_step_50"></string>
-    <string name="settings_progress_step"></string>
-    <string name="settings_disable_alarms_for_readonly"></string>
-    <string name="sync_button_go_to_collections"></string>
-    <string name="buypro_snackbar_please_purchase_pro"></string>
-    <string name="buypro_initial_dialog_title"></string>
-    <string name="error_no_app_found_to_open_entry"></string>
-    <string name="title_activity_main2"></string>
 </resources>

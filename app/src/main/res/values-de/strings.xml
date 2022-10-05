@@ -483,12 +483,12 @@ Danke!"</string>
     <string name="audio_pause">"Pause"</string>
     <string name="audio_error_toast">"Entschuldung, das Playback konnte nicht gestartet werden"</string>
     <string name="sync_in_progress">"Synchronisierung läuft"</string>
-    <string name="saving">"Speichern ..."</string>
-    <string name="saving_pending">"Speichern ..."</string>
+    <string name="saving">"Speichern …"</string>
+    <string name="saving_pending">"Speichern …"</string>
     <string name="invalid_timezone_message">"Bitte wählen Sie eine gültige Zeitzone"</string>
     <string name="invalid_url_message">"Bitte geben Sie eine gültige URL ein!"</string>
     <string name="list_quickadd_dialog_sr_start">"Spracherkennung starten"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Zuhören..."</string>
+    <string name="list_quickadd_dialog_sr_listening">"Zuhören…"</string>
     <string name="details_show_all_options">"Alle Optionen anzeigen"</string>
     <string name="details_attendees_processing_info">"Achtung: Server könnten Teilnehmer automatisch verarbeiten und zB iMIP-Nachrichten versenden."</string>
     <string name="details_toast_entry_deleted">"Eintrag verworfen/gelöscht"</string>
@@ -547,7 +547,5 @@ Danke!"</string>
     <string name="settings_disable_alarms_for_readonly">"Alarme für schreibgeschützte Collections deaktivieren"</string>
     <string name="sync_button_go_to_collections">"Zu den Collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Bitte kaufen Sie jtx Board Pro um dieses Feature zu nutzen."</string>
-    <string name="buypro_initial_dialog_title"></string>
     <string name="error_no_app_found_to_open_entry">"Keine App gefunden um diesen Eintrag zu öffnen."</string>
-    <string name="title_activity_main2"></string>
 </resources>
