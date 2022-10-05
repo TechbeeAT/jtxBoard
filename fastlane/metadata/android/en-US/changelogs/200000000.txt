@@ -1,0 +1,10 @@
+jtx Board 2.0 is here :-)
+Our new version comes with
+- a completely refactored UI to insert and edit entries
+- more flexibility in seeing only the sections that you actually need
+- Android 13 compatibility
+- a language selector
+- performance improvements
+- several smaller improvements
+- the option to deactivate alarms for read-only collections
+- bugfixes
