@@ -272,7 +272,7 @@
     <string name="view_add_audio_note">Add audio</string>
     <string name="view_fab_edit_entry_contentDesc">Edit entry</string>
     <string name="view_subtasks_header">Subtasks</string>
-    <string name="view_progress_label">Progress</string>1
+    <string name="view_progress_label">Progress</string>
     <string name="view_dialog_sure_to_delete_title">Delete \"%1$s\"?</string>
     <string name="view_dialog_sure_to_delete_message">Are you sure you want to delete \"%1$s\"?</string>
     <string name="view_toast_deleted_successfully">\"%1$s\" successfully deleted</string>
