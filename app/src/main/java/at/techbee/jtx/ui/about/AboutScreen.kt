@@ -19,10 +19,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.about.AboutLibraries
+import at.techbee.jtx.ui.about.*
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
-import at.techbee.jtx.ui.about.AboutTabDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
