@@ -161,7 +161,7 @@ fun ListScreenTabContainer(
         topBar = {
             JtxTopAppBar(
                 drawerState = drawerState,
-                title = stringResource(id = R.string.navigation_drawer_board),
+                title = stringResource(id = R.string.app_name),
                 actions = {
                     IconButton(onClick = { topBarMenuExpanded = true }) {
                         Icon(
