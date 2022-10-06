@@ -646,6 +646,5 @@
     <!-- sync content provider -->
     <string name="synccontentprovider_sync_problem">Sorry, jtx is having a hard time to sync. Please close DAVx⁵ and start the sync again.</string>
     <string name="title_activity_list_screen">ListScreen</string>
-    <string name="title_activity_main2">MainActivity2</string>
 
 </resources>
