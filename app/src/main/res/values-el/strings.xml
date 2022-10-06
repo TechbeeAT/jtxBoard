@@ -457,7 +457,7 @@ Global Strings -->
     <string name="buypro_purchase_header_thankyou">"Ευχαριστούμε για την αγορά του jtx Board Pro"</string>
     <string name="buypro_purchase_description_thankyou">"Αυτή η αναβάθμιση επιτρέπει δυνατότητες επεξεργασίας για απομακρυσμένες συλλογές, γρήγορες καταχωρήσεις, γρήγορη επεξεργασία μέσω παρατεταμένου κλικ και δυναμικά χρώματα (διαθέσιμο από το Android 12)."</string>
     <string name="buypro_purchase_date">"Η αγορά πραγματοποιήθηκε στις %1$s"</string>
-    <string name="buypro_order_id">"Κωδικός παραγγελίας: %1$"</string>
+    <string name="buypro_order_id">"Κωδικός παραγγελίας: %1$s"</string>
     <string name="buypro_success_header">"Ευχαριστούμε που αγοράσατε το jtx Board Pro!"</string>
     <string name="buypro_success_description">"Οι δυνατότητες επεξεργασίας για απομακρυσμένες συλλογές, γρήγορες καταχωρίσεις, γρήγορη επεξεργασία μέσω παρατεταμένου κλικ και δυναμικά χρώματα (διαθέσιμα από το Android 12) είναι πλέον ενεργοποιημένες."</string>
     <string name="buypro_success_thankyou">"Ευχαριστούμε!"</string>
