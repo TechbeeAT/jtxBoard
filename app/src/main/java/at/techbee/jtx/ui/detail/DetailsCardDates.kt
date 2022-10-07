@@ -31,6 +31,7 @@ import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.reusable.cards.HorizontalDateCard
 import at.techbee.jtx.util.DateTimeUtils
+import kotlin.time.Duration.Companion.days
 
 
 @Composable
@@ -66,7 +67,7 @@ fun DetailsCardDates(
                     timezone = if((icalObject.due != null && icalObject.dueTimezone == TZ_ALLDAY) || (icalObject.completed != null && icalObject.completedTimezone == TZ_ALLDAY)) TZ_ALLDAY else dtstartTimezone,
                     isEditMode = isEditMode,
                     onDateTimeChanged = { datetime, timezone ->
-                        if((due ?: Long.MAX_VALUE) < (datetime ?: Long.MIN_VALUE)) {
+                        if((due ?: Long.MAX_VALUE) <= (datetime ?: Long.MIN_VALUE)) {
                             Toast.makeText(
                                 context,
                                 context.getText(R.string.edit_validation_errors_dialog_due_date_before_dtstart),
@@ -78,7 +79,12 @@ fun DetailsCardDates(
                             onDtstartChanged(datetime, timezone)
                         }
                     },
-                    pickerMaxDate = DateTimeUtils.getDateWithoutTime(due, dueTimezone),
+                    pickerMaxDate = DateTimeUtils.getDateWithoutTime(due, dueTimezone)?.let {
+                        if(dueTimezone == TZ_ALLDAY)
+                            it - (1).days.inWholeMilliseconds
+                        else
+                            it
+                        },
                     labelTop = if(icalObject.module == Module.TODO.name)
                         stringResource(id = R.string.started)
                     else
@@ -95,7 +101,7 @@ fun DetailsCardDates(
                     timezone = if((dtstart != null && dtstartTimezone == TZ_ALLDAY) || (completed != null && completedTimezone == TZ_ALLDAY)) TZ_ALLDAY else dueTimezone,
                     isEditMode = isEditMode,
                     onDateTimeChanged = { datetime, timezone ->
-                        if((datetime ?: Long.MAX_VALUE) < (dtstart ?: Long.MIN_VALUE)) {
+                        if((datetime ?: Long.MAX_VALUE) <= (dtstart ?: Long.MIN_VALUE)) {
                             Toast.makeText(
                                 context,
                                 context.getText(R.string.edit_validation_errors_dialog_due_date_before_dtstart),
@@ -109,7 +115,12 @@ fun DetailsCardDates(
                         //icalObject.due = due
                         //icalObject.dueTimezone = dueTimezone
                     },
-                    pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone),
+                    pickerMinDate = DateTimeUtils.getDateWithoutTime(dtstart, dtstartTimezone)?.let {
+                        if(dtstartTimezone == TZ_ALLDAY)
+                            it + (1).days.inWholeMilliseconds
+                        else
+                            it
+                    },
                     labelTop = stringResource(id = R.string.due),
                     allowNull = icalObject.module == Module.TODO.name,
                     dateOnly = (dtstart != null && dtstartTimezone == TZ_ALLDAY) || (completed != null && completedTimezone == TZ_ALLDAY)
