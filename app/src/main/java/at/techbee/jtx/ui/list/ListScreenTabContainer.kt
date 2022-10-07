@@ -240,7 +240,6 @@ fun ListScreenTabContainer(
                                 collectionId = proposedCollectionId
                             }
                         }
-                        newICalObject.dirty = false
                         val newIcalObjectId = db.insertICalObject(newICalObject)
                         navController.navigate("details/$newIcalObjectId?isEditMode=true")
                     }
