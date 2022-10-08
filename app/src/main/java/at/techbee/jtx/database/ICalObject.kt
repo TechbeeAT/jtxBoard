@@ -30,6 +30,7 @@ import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
 import at.techbee.jtx.util.DateTimeUtils.convertLongToFullDateTimeString
 import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
+import at.techbee.jtx.util.UiUtil.asDayOfWeek
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
@@ -903,24 +904,32 @@ data class ICalObject(
             {
                 Recur.Frequency.DAILY ->
                 {
-                    for(i in 1..count) {
-                        recurList.add(zonedDtstart.toInstant().toEpochMilli())
-                        Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstart.toInstant().toEpochMilli(), dtstartTimezone))
-                        zonedDtstart = zonedDtstart.plusDays(interval)
+                    if(rRule.dayList.isEmpty()) {
+                        for (i in 1..count) {
+                            recurList.add(zonedDtstart.toInstant().toEpochMilli())
+                            Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstart.toInstant().toEpochMilli(), dtstartTimezone))
+                            zonedDtstart = zonedDtstart.plusDays(interval)
+                        }
+                    } else {
+                        // Considering a day list. This is currently not possible to be entered in jtx Board, but might come from Thunderbird
+                        var iteration = 0
+                        while (iteration < count) {
+                            if(rRule.dayList.any { weekday -> weekday.asDayOfWeek() == zonedDtstart.dayOfWeek}) {
+                                recurList.add(zonedDtstart.toInstant().toEpochMilli())
+                                Log.d("calculatedDay", convertLongToFullDateTimeString(zonedDtstart.toInstant().toEpochMilli(), dtstartTimezone))
+                                iteration += 1
+                            }
+                            zonedDtstart = zonedDtstart.plusDays(interval)
+                        }
                     }
                 }
                 Recur.Frequency.WEEKLY -> {
 
                     val selectedWeekdays = mutableListOf<DayOfWeek>()
 
-                    if (rRule.dayList.any { it.day == WeekDay.Day.MO }) selectedWeekdays.add(DayOfWeek.MONDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.TU }) selectedWeekdays.add(DayOfWeek.TUESDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.WE }) selectedWeekdays.add(DayOfWeek.WEDNESDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.TH }) selectedWeekdays.add(DayOfWeek.THURSDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.FR }) selectedWeekdays.add(DayOfWeek.FRIDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.SA }) selectedWeekdays.add(DayOfWeek.SATURDAY)
-                    if (rRule.dayList.any { it.day == WeekDay.Day.SU }) selectedWeekdays.add(DayOfWeek.SUNDAY)
-
+                    rRule.dayList.forEach { weekDay ->
+                        weekDay.asDayOfWeek()?.let { selectedWeekdays.add(it) }
+                    }
 
                     for(i in 1..count) {
                         var zonedDtstartWeekloop = zonedDtstart
@@ -1105,12 +1114,6 @@ data class ICalObject(
                     triggerTime?.let { trigger -> it.scheduleNotification(context, trigger, instance.ICalCollection?.readonly ?: true, instance.property.summary, instance.property.description) }
                 }
             }
-
-            //TODO: How to deal with relatedTo?
-
-            //TODO Check further attributes!
-            //TODO Check also rdate
-
         }
     }
 

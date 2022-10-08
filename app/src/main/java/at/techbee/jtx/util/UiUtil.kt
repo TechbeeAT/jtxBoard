@@ -13,6 +13,8 @@ import android.provider.ContactsContract
 import android.util.Log
 import androidx.core.util.PatternsCompat
 import at.techbee.jtx.database.properties.Attendee
+import net.fortuna.ical4j.model.WeekDay
+import java.time.DayOfWeek
 import java.util.regex.Matcher
 
 
@@ -93,6 +95,19 @@ object UiUtil {
             filesize < 1024 -> "$filesize Bytes"
             filesize / 1024 < 1024 -> "${filesize / 1024} KB"
             else -> "${filesize / 1024 / 1024} MB"
+        }
+    }
+
+    fun WeekDay.asDayOfWeek(): DayOfWeek? {
+        return when(this) {
+            WeekDay.MO -> DayOfWeek.MONDAY
+            WeekDay.TU -> DayOfWeek.TUESDAY
+            WeekDay.WE -> DayOfWeek.WEDNESDAY
+            WeekDay.TH -> DayOfWeek.THURSDAY
+            WeekDay.FR -> DayOfWeek.FRIDAY
+            WeekDay.SA -> DayOfWeek.SATURDAY
+            WeekDay.SU -> DayOfWeek.SUNDAY
+            else -> null
         }
     }
 }

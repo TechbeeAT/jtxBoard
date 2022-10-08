@@ -31,6 +31,7 @@ import at.techbee.jtx.ui.reusable.dialogs.UnsupportedRRuleDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
+import at.techbee.jtx.util.UiUtil.asDayOfWeek
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.Recur.Frequency
@@ -68,7 +69,7 @@ fun DetailsCardRecur(
     var interval by rememberSaveable { mutableStateOf(icalObject.getRecur()?.interval) }
     var count by rememberSaveable { mutableStateOf(icalObject.getRecur()?.count) }
     var until by rememberSaveable { mutableStateOf(icalObject.getRecur()?.until) }
-    val dayList = remember { icalObject.getRecur()?.dayList?.toMutableStateList() ?: mutableStateListOf(dtstartWeekday) }
+    val dayList = remember { icalObject.getRecur()?.dayList?.toMutableStateList() ?: mutableStateListOf() }
     val monthDayList = remember { mutableStateListOf(icalObject.getRecur()?.monthDayList?.firstOrNull() ?: 1) }
 
     var frequencyExpanded by rememberSaveable { mutableStateOf(false) }
@@ -92,9 +93,11 @@ fun DetailsCardRecur(
                     count(count ?: -1)
                 frequency(frequency ?: Frequency.DAILY)
 
-                if(frequency == Frequency.WEEKLY) {
+                if(frequency == Frequency.WEEKLY || dayList.isNotEmpty()) {    // there might be a dayList also for DAILY recurrences coming from Thunderbird!
                     val newDayList = WeekDayList().apply {
                         dayList.forEach { weekDay -> this.add(weekDay) }
+                        if(!dayList.contains(dtstartWeekday))
+                            dayList.add(dtstartWeekday)
                     }
                     dayList(newDayList)
                 }
@@ -286,7 +289,7 @@ fun DetailsCardRecur(
                     }
 
 
-                    AnimatedVisibility(frequency == Frequency.WEEKLY) {
+                    AnimatedVisibility(frequency == Frequency.WEEKLY || dayList.isNotEmpty()) {
 
                         val weekdays = if (DateTimeUtils.isLocalizedWeekstartMonday())
                             listOf(
@@ -332,39 +335,10 @@ fun DetailsCardRecur(
                                     enabled = dtstartWeekday != weekday,
                                     label = {
                                         Text(
-                                            when (weekday) {
-                                                WeekDay.MO -> DayOfWeek.MONDAY.getDisplayName(
-                                                    java.time.format.TextStyle.SHORT,
-                                                    Locale.getDefault()
-                                                )
-                                                WeekDay.TU -> DayOfWeek.TUESDAY.getDisplayName(
-                                                    java.time.format.TextStyle.SHORT,
-                                                    Locale.getDefault()
-                                                )
-                                                WeekDay.WE -> DayOfWeek.WEDNESDAY.getDisplayName(
-                                                    java.time.format.TextStyle.SHORT,
-                                                    Locale.getDefault()
-                                                )
-                                                WeekDay.TH -> DayOfWeek.THURSDAY.getDisplayName(
-                                                    java.time.format.TextStyle.SHORT,
-                                                    Locale.getDefault()
-                                                )
-                                                WeekDay.FR -> DayOfWeek.FRIDAY.getDisplayName(
-                                                    java.time.format.TextStyle.SHORT,
-                                                    Locale.getDefault()
-                                                )
-                                                WeekDay.SA -> DayOfWeek.SATURDAY.getDisplayName(
-                                                    java.time.format.TextStyle.SHORT,
-                                                    Locale.getDefault()
-                                                )
-                                                WeekDay.SU -> DayOfWeek.SUNDAY.getDisplayName(
-                                                    java.time.format.TextStyle.SHORT,
-                                                    Locale.getDefault()
-                                                )
-                                                else -> {
-                                                    ""
-                                                }
-                                            }
+                                        weekday.asDayOfWeek()?.getDisplayName(
+                                                java.time.format.TextStyle.SHORT,
+                                                Locale.getDefault()
+                                            ) ?: ""
                                         )
                                     }
                                 )
@@ -543,7 +517,8 @@ fun DetailsCardRecur(
                 }
             }
 
-            icalObject.rrule = buildRRule()?.toString()
+            if(isEditMode)
+                icalObject.rrule = buildRRule()?.toString()
             icalObject.getInstancesFromRrule().forEach { instanceDate ->
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                     Text(
