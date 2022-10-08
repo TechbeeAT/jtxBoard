@@ -44,6 +44,7 @@ import at.techbee.jtx.ui.detail.DetailsScreen
 import at.techbee.jtx.ui.list.ListScreenTabContainer
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
+import at.techbee.jtx.ui.reusable.dialogs.Jtx20ReleaseInfoDialog
 import at.techbee.jtx.ui.reusable.dialogs.OSERequestDonationDialog
 import at.techbee.jtx.ui.reusable.dialogs.ProInfoDialog
 import at.techbee.jtx.ui.reusable.screens.*
@@ -331,6 +332,16 @@ fun MainNavHost(
             }
         )
     }
+
+    if(settingsStateHolder.showJtx20releaseinfo.value) {
+        Jtx20ReleaseInfoDialog(
+            onOK = {
+                settingsStateHolder.showJtx20releaseinfo.value = false
+                settingsStateHolder.showJtx20releaseinfo = settingsStateHolder.showJtx20releaseinfo
+            }
+        )
+    }
+
 }
 
 @Preview(showBackground = true)

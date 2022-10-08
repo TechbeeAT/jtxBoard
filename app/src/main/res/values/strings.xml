@@ -42,6 +42,7 @@
     <string name="save_and_edit">Save &amp; edit</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="close">Close</string>
     <string name="delete">Delete</string>
     <string name="discard">Discard</string>
     <string name="gotit">Got it</string>
