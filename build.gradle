@@ -37,9 +37,6 @@ buildscript {
         google()
         mavenCentral()
 
-        // Maven repository address for the HUAWEI Ads SDK.
-        maven { url 'https://developer.huawei.com/repo/' }
-
         // AboutLibraries
         maven { url "https://plugins.gradle.org/m2/" }
     }
@@ -55,7 +52,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://developer.huawei.com/repo/' }  // Maven repository address for the HUAWEI Ads SDK.
 
         // ical4android
         maven { url 'https://jitpack.io' }

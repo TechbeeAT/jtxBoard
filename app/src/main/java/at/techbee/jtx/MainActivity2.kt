@@ -32,7 +32,6 @@ import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_GOOGLEPLAY
 import at.techbee.jtx.MainActivity2.Companion.BUILD_FLAVOR_OSE
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
-import at.techbee.jtx.flavored.AdManager
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.flavored.JtxReviewManager
 import at.techbee.jtx.ui.GlobalStateHolder
@@ -74,7 +73,7 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
         const val BUILD_FLAVOR_OSE = "ose"
         const val BUILD_FLAVOR_GOOGLEPLAY = "gplay"
-        const val BUILD_FLAVOR_HUAWEI = "huawei"
+        const val BUILD_FLAVOR_GENERIC = "generic"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,15 +89,7 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
         TimeZoneRegistryFactory.getInstance().createRegistry() // necessary for ical4j
         createNotificationChannel()   // Register Notification Channel for Reminders
-
         BillingManager.getInstance().initialise(this)
-
-        /* TODO
-        billingManager?.isProPurchased?.observe(this) { isPurchased ->
-            if(!isPurchased)
-                AdManager.getInstance()?.checkOrRequestConsentAndLoadAds(this, applicationContext)
-        }
-         */
 
         setContent {
             val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState()
@@ -123,7 +114,6 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
 
     override fun onResume() {
         super.onResume()
-        AdManager.getInstance()?.resumeAds()
 
         //handle intents, but only if it wasn't already handled
         if(intent.hashCode() != lastProcessedIntentHash) {
@@ -177,12 +167,6 @@ const val AUTHORITY_FILEPROVIDER = "at.techbee.jtx.fileprovider"
             lastProcessedIntentHash = intent.hashCode()
         }
     }
-
-    override fun onPause() {
-        super.onPause()
-        AdManager.getInstance()?.pauseAds()
-    }
-
 
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
@@ -273,7 +257,6 @@ fun MainNavHost(
                 navController = navController)
         }
         composable(NavigationDrawerDestination.DONATE.name) { DonateScreen(navController) }
-        composable(NavigationDrawerDestination.ADINFO.name) { AdInfoScreen(navController) }
         composable(NavigationDrawerDestination.ABOUT.name) {
             val viewModel: AboutViewModel = viewModel()
             AboutScreen(
@@ -341,7 +324,6 @@ fun MainNavHost(
             }
         )
     }
-
 }
 
 @Preview(showBackground = true)

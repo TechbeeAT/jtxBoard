@@ -83,13 +83,13 @@ android {
             dimension 'version'
             versionNameSuffix '.gplay'
         }
-        huawei {
-            dimension 'version'
-            versionNameSuffix '.huawei'
-        }
         ose {
             dimension 'version'
             versionNameSuffix '.ose'
+        }
+        generic {
+            dimension 'version'
+            versionNameSuffix '.generic'
         }
     }
 
@@ -181,11 +181,6 @@ dependencies {
     gplayImplementation "com.google.maps.android:maps-compose:2.2.0"
     gplayImplementation "com.google.android.gms:play-services-maps:18.1.0"
     gplayImplementation "com.google.android.gms:play-services-location:20.0.0"
-
-    // Huawei Ads Lite (works only on Huawei phones)
-    huaweiImplementation "com.huawei.hms:ads:3.4.49.301"    // should be replaced by ads-lite when it can be tested with a huawei phone
-    //implementation "com.huawei.hms:ads-lite:13.4.49.301"
-    huaweiImplementation "com.huawei.hms:ads-consent:3.4.49.301"
 
     // Workmanager support
     implementation "androidx.work:work-runtime-ktx:$version_work"
